@@ -1,0 +1,6 @@
+[submodule "Libraries/JEToolkit"]
+	path = Libraries/JEToolkit
+	url = git@github.com:JohnEstropia/JEToolkit.git
+[submodule "Libraries/GCDKit"]
+	path = Libraries/GCDKit
+	url = git@github.com:JohnEstropia/GCDKit.git

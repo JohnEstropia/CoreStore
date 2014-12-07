@@ -23,7 +23,38 @@ class HardcoreDataTests: XCTestCase {
     
     func testExample() {
         // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+        
+        #if DEBUG
+            let resetStoreOnMigrationFailure = true
+            #else
+            let resetStoreOnMigrationFailure = false
+        #endif
+        
+        switch HardcoreData.defaultStack.addSQLiteStore(resetStoreOnMigrationFailure: resetStoreOnMigrationFailure) {
+            
+        case .Failure(let error):
+            NSException(
+                name: "CoreDataMigrationException",
+                reason: error.localizedDescription,
+                userInfo: error.userInfo).raise()
+            
+        default: break
+        }
+        
+        HardcoreData.performTransaction { (transaction) -> () in
+            
+            let obj = transaction.context.findFirst(FlickrPhoto)
+            transaction.commit { (result) -> () in
+                
+                switch result {
+                    
+                case .Success(let hasChanges):
+                    JEDump(hasChanges, "hasChanges")
+                case .Failure(let error):
+                    JEDump(error, "error")
+                }
+            }
+        }
     }
     
     func testPerformanceExample() {

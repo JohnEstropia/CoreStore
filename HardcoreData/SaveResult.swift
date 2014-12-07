@@ -1,5 +1,5 @@
 //
-//  HardcoreData.h
+//  SaveResult.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -23,8 +23,43 @@
 //  SOFTWARE.
 //
 
-#import <CoreData/CoreData.h>
+import Foundation
 
-FOUNDATION_EXPORT double HardcoreDataVersionNumber;
-FOUNDATION_EXPORT const unsigned char HardcoreDataVersionString[];
+public enum SaveResult {
+    
+    case Success(hasChanges: Bool)
+    case Failure(NSError)
+    
+    internal init(hasChanges: Bool) {
+        
+        self = .Success(hasChanges: hasChanges)
+    }
+    
+    internal init(_ error: NSError) {
+        
+        self = .Failure(error)
+    }
+    
+    internal init(_ errorCode: HardcoreDataErrorCode) {
+        
+        self.init(errorCode, userInfo: nil)
+    }
+    
+    internal init(_ errorCode: HardcoreDataErrorCode, userInfo: [NSObject: AnyObject]?) {
+        
+        self.init(NSError(
+            hardcoreDataErrorCode: errorCode,
+            userInfo: userInfo))
+    }
+}
 
+extension SaveResult: BooleanType {
+    
+    public var boolValue: Bool {
+        
+        switch self {
+        case .Success: return true
+        case .Failure: return false
+        }
+    }
+}

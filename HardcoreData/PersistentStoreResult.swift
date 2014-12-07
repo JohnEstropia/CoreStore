@@ -1,5 +1,5 @@
 //
-//  HardcoreData.h
+//  PersistentStoreResult.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -23,8 +23,44 @@
 //  SOFTWARE.
 //
 
-#import <CoreData/CoreData.h>
+import Foundation
+import CoreData
 
-FOUNDATION_EXPORT double HardcoreDataVersionNumber;
-FOUNDATION_EXPORT const unsigned char HardcoreDataVersionString[];
+public enum PersistentStoreResult {
+    
+    case Success(NSPersistentStore)
+    case Failure(NSError)
+    
+    internal init(_ store: NSPersistentStore) {
+        
+        self = .Success(store)
+    }
+    
+    internal init(_ error: NSError) {
+        
+        self = .Failure(error)
+    }
+    
+    internal init(_ errorCode: HardcoreDataErrorCode) {
+        
+        self.init(errorCode, userInfo: nil)
+    }
+    
+    internal init(_ errorCode: HardcoreDataErrorCode, userInfo: [NSObject: AnyObject]?) {
+        
+        self.init(NSError(
+            hardcoreDataErrorCode: errorCode,
+            userInfo: userInfo))
+    }
+}
 
+extension PersistentStoreResult: BooleanType {
+    
+    public var boolValue: Bool {
+        
+        switch self {
+        case .Success: return true
+        case .Failure: return false
+        }
+    }
+}

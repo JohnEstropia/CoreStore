@@ -1,5 +1,5 @@
 //
-//  HardcoreData.h
+//  NSPersistentStoreCoordinator+HardcoreData.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -23,8 +23,22 @@
 //  SOFTWARE.
 //
 
-#import <CoreData/CoreData.h>
+import Foundation
+import CoreData
 
-FOUNDATION_EXPORT double HardcoreDataVersionNumber;
-FOUNDATION_EXPORT const unsigned char HardcoreDataVersionString[];
-
+public extension NSPersistentStoreCoordinator {
+    
+    public func performSynchronously(closure: () -> ()) {
+        
+        if self.respondsToSelector("performBlockAndWait:") {
+        
+            self.performBlockAndWait(closure)
+        }
+        else {
+            
+            self.lock()
+            autoreleasepool(closure)
+            self.unlock()
+        }
+    }
+}
