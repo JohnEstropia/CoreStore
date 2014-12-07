@@ -30,7 +30,7 @@ public extension NSManagedObject {
     
     public class var entityName: String {
         
-        return self.className().componentsSeparatedByString(".").last!
+        return NSStringFromClass(self).componentsSeparatedByString(".").last!
     }
     
     public class func createInContext(context: NSManagedObjectContext) -> Self {
@@ -49,7 +49,7 @@ public extension NSManagedObject {
                 
                 HardcoreData.handleError(
                     permanentIDError!,
-                    message: "Failed to obtain permanent ID for object.")
+                    "Failed to obtain permanent ID for object.")
                 return nil
             }
         }
@@ -62,7 +62,7 @@ public extension NSManagedObject {
         
         HardcoreData.handleError(
             existingObjectError!,
-            message: "Failed to load existing NSManagedObject in context.")
+            "Failed to load existing NSManagedObject in context.")
         return nil;
     }
     

@@ -24,7 +24,6 @@
 //
 
 import CoreData
-import JEToolkit
 
 /**
 HardcoreData - Simple, elegant, and smart Core Data management with Swift
@@ -41,30 +40,29 @@ public struct HardcoreData {
     public static var defaultStack = DataStack()
     
     /**
-    The closure that handles all errors that occur within HardcoreData. The default errorHandler logs errors via JEDumpAlert().
+    The closure that handles all errors that occur within HardcoreData. The default errorHandler logs errors via the logHandler closure.
     */
-    public static var errorHandler = { (error: NSError, message: String, fileName: String, lineNumber: UWord, functionName: StaticString) -> () in
+    public static var errorHandler = { (error: NSError, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
     
-        JEDumpAlert(
-            error,
-            message,
-            fileName: fileName,
-            lineNumber: lineNumber,
-            functionName: functionName)
+        HardcoreData.logHandler("\(message): \(error)", fileName, lineNumber, functionName)
     }
     
-    public static var assertHandler = { (condition: @autoclosure() -> Bool, message: String, fileName: String, lineNumber: UWord, functionName: StaticString) -> () in
+    /**
+    The closure that handles all assertions that occur within HardcoreData. The default assertHandler calls assert().
+    */
+    public static var assertHandler = { (condition: @autoclosure() -> Bool, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
         
-        JEAssert(
-            condition,
-            message,
-            fileName: fileName,
-            lineNumber: lineNumber,
-            functionName: functionName)
+        assert(condition, message, file: fileName, line: lineNumber)
     }
     
-    public static var logHandler = { (message: String, fileName: String, lineNumber: Int32, functionName: String) -> () in
+    /**
+    The closure that handles all logging that occur within HardcoreData. The default logHandler logs via println() when DEBUG is defined; does nothing otherwise.
+    */
+    public static var logHandler = { (message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
         
+        #if DEBUG
+            println("[\(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL))] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n\(message)")
+        #endif
     }
     
     /**
@@ -88,14 +86,14 @@ public struct HardcoreData {
         return self.defaultStack.performTransactionAndWait(closure)
     }
     
-    internal static func handleError(error: NSError, _ message: String, fileName: String = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
+    internal static func handleError(error: NSError, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
         
-        self.errorHandler(error, message, fileName.lastPathComponent, lineNumber, functionName)
+        self.errorHandler(error, message, fileName, lineNumber, functionName)
     }
     
-    internal static func assert(condition: @autoclosure() -> Bool, _ message: String, fileName: String = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
+    internal static func assert(condition: @autoclosure() -> Bool, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
         
-        self.assertHandler(condition, message, fileName.lastPathComponent, lineNumber, functionName)
+        self.assertHandler(condition, message, fileName, lineNumber, functionName)
     }
 }
 

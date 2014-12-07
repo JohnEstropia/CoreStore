@@ -70,7 +70,7 @@ public extension NSManagedObjectContext {
                 
                 HardcoreData.handleError(
                     error!,
-                    message: "Failed executing fetch request.")
+                    "Failed executing fetch request.")
             }
         }
         
@@ -98,7 +98,7 @@ public extension NSManagedObjectContext {
                 
                 HardcoreData.handleError(
                     error!,
-                    message: "Failed executing fetch request.")
+                    "Failed executing fetch request.")
             }
         }
         
@@ -144,7 +144,7 @@ public extension NSManagedObjectContext {
                 
                 HardcoreData.handleError(
                     error,
-                    message: "Failed to save NSManagedObjectContext.")
+                    "Failed to save NSManagedObjectContext.")
                 result = SaveResult(error)
             }
             else {
@@ -198,7 +198,7 @@ public extension NSManagedObjectContext {
                 
                 HardcoreData.handleError(
                     error,
-                    message: "Failed to save NSManagedObjectContext.")
+                    "Failed to save NSManagedObjectContext.")
                 if let completion = completion {
                     
                     GCDBlock.async(.Main) {
@@ -233,20 +233,54 @@ public extension NSManagedObjectContext {
         context.parentContext = rootContext
         context.setupForHardcoreDataWithContextName("com.hardcoredata.maincontext")
         context.shouldCascadeSavesToParent = true
-        context.registerForNotificationsWithName(
-            NSManagedObjectContextDidSaveNotification,
-            fromObject: rootContext,
-            targetQueue: NSOperationQueue.mainQueue()) {
-            [unowned context] (note) -> () in
+        context.observerForDidSaveNotification = NotificationObserver(
+            notificationName: NSManagedObjectContextDidSaveNotification,
+            object: rootContext,
+            closure: { [weak context] (note) -> () in
                 
-            context.mergeChangesFromContextDidSaveNotification(note)
-        }
+                context?.mergeChangesFromContextDidSaveNotification(note)
+                return
+        })
         
         return context
     }
     
     
     // MARK: - Private
+    
+    private struct ObserverKeys {
+        
+        static var willSaveNotification: AnyObject?
+        static var didSaveNotification: AnyObject?
+    }
+    
+    private var observerForWillSaveNotification: NotificationObserver? {
+        
+        get {
+            
+            return self.getAssociatedObjectForKey(&ObserverKeys.willSaveNotification)
+        }
+        set {
+            
+            self.setAssociatedRetainedObject(
+                newValue,
+                forKey: &ObserverKeys.willSaveNotification)
+        }
+    }
+    
+    private var observerForDidSaveNotification: NotificationObserver? {
+        
+        get {
+            
+            return self.getAssociatedObjectForKey(&ObserverKeys.didSaveNotification)
+        }
+        set {
+        
+            self.setAssociatedRetainedObject(
+                newValue,
+                forKey: &ObserverKeys.didSaveNotification)
+        }
+    }
     
     private var shouldCascadeSavesToParent: Bool {
         
@@ -275,28 +309,30 @@ public extension NSManagedObjectContext {
             self.name = contextName
         }
         
-        self.registerForNotificationsWithName(NSManagedObjectContextWillSaveNotification, fromObject: self) {
-            (note) -> () in
-            
-            let context: NSManagedObjectContext = note.object as NSManagedObjectContext
-            let insertedObjects = context.insertedObjects
-            if insertedObjects.count <= 0 {
+        self.observerForWillSaveNotification = NotificationObserver(
+            notificationName: NSManagedObjectContextWillSaveNotification,
+            object: self,
+            closure: { (note) -> () in
                 
-                return
-            }
-            
-            var permanentIDError: NSError?
-            if context.obtainPermanentIDsForObjects(insertedObjects.allObjects, error: &permanentIDError) {
+                let context = note.object as NSManagedObjectContext
+                let insertedObjects = context.insertedObjects
+                if insertedObjects.count <= 0 {
+                    
+                    return
+                }
                 
-                return
-            }
-            
-            if let error = permanentIDError {
+                var permanentIDError: NSError?
+                if context.obtainPermanentIDsForObjects(insertedObjects.allObjects, error: &permanentIDError) {
+                    
+                    return
+                }
                 
-                HardcoreData.handleError(
-                    error,
-                    message: "Failed to obtain permanent IDs for inserted objects.")
-            }
-        }
+                if let error = permanentIDError {
+                    
+                    HardcoreData.handleError(
+                        error,
+                        "Failed to obtain permanent IDs for inserted objects.")
+                }
+        })
     }
 }

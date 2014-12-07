@@ -21,7 +21,8 @@
 		B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D39A0119FD00C9000E91BB /* Foundation.framework */; };
 		B5D39A0419FD00DE000E91BB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D39A0319FD00DE000E91BB /* UIKit.framework */; };
 		B5D8080E1A3471A500A44484 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D808021A34715700A44484 /* GCDKit.framework */; };
-		B5D8080F1A3471A900A44484 /* JEToolkit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D808081A34715700A44484 /* JEToolkit.framework */; };
+		B5D808161A34947300A44484 /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808151A34947300A44484 /* NotificationObserver.swift */; };
+		B5D8081A1A3495BD00A44484 /* NSObject+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808191A3495BD00A44484 /* NSObject+HardcoreData.swift */; };
 		B5E209E01A0726460089C9D4 /* NSManagedObject+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */; };
 		B5F539901A17A6FC00EC763B /* QueryDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F5398F1A17A6FC00EC763B /* QueryDescriptor.swift */; };
 /* End PBXBuildFile section */
@@ -40,20 +41,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 2FBBCAD619A9FE610070E4AB;
 			remoteInfo = GCDKitTests;
-		};
-		B5D808071A34715700A44484 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D8074E1A34715700A44484 /* JEToolkit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2F74E6F519DFCC7A00FB0C88;
-			remoteInfo = JEToolkit;
-		};
-		B5D808091A34715700A44484 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D8074E1A34715700A44484 /* JEToolkit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2F74E70019DFCC7A00FB0C88;
-			remoteInfo = JEToolkitTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -76,7 +63,8 @@
 		B5D39A0119FD00C9000E91BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B5D39A0319FD00DE000E91BB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B5D806C51A34715700A44484 /* GCDKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GCDKit.xcodeproj; sourceTree = "<group>"; };
-		B5D8074E1A34715700A44484 /* JEToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = JEToolkit.xcodeproj; sourceTree = "<group>"; };
+		B5D808151A34947300A44484 /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationObserver.swift; sourceTree = "<group>"; };
+		B5D808191A3495BD00A44484 /* NSObject+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5F3D98419F3EB8E009690A6 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		B5F5398F1A17A6FC00EC763B /* QueryDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryDescriptor.swift; sourceTree = "<group>"; };
@@ -87,7 +75,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5D8080F1A3471A900A44484 /* JEToolkit.framework in Frameworks */,
 				B5D8080E1A3471A500A44484 /* GCDKit.framework in Frameworks */,
 				B5D39A0419FD00DE000E91BB /* UIKit.framework in Frameworks */,
 				B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */,
@@ -139,6 +126,7 @@
 				B5F5398F1A17A6FC00EC763B /* QueryDescriptor.swift */,
 				B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */,
 				B5CFD36D1A0775F000B7885F /* SaveResult.swift */,
+				B5D808141A34945A00A44484 /* Internal */,
 				2F03A53319C5C6DA005002A5 /* Supporting Files */,
 			);
 			path = HardcoreData;
@@ -184,7 +172,6 @@
 			isa = PBXGroup;
 			children = (
 				B5D806BC1A34715700A44484 /* GCDKit */,
-				B5D806CD1A34715700A44484 /* JEToolkit */,
 			);
 			path = Libraries;
 			sourceTree = "<group>";
@@ -206,21 +193,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B5D806CD1A34715700A44484 /* JEToolkit */ = {
+		B5D808141A34945A00A44484 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				B5D8074E1A34715700A44484 /* JEToolkit.xcodeproj */,
+				B5D808151A34947300A44484 /* NotificationObserver.swift */,
+				B5D808191A3495BD00A44484 /* NSObject+HardcoreData.swift */,
 			);
-			path = JEToolkit;
-			sourceTree = "<group>";
-		};
-		B5D8074F1A34715700A44484 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B5D808081A34715700A44484 /* JEToolkit.framework */,
-				B5D8080A1A34715700A44484 /* JEToolkitTests.xctest */,
-			);
-			name = Products;
+			name = Internal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -305,10 +284,6 @@
 					ProductGroup = B5D806C61A34715700A44484 /* Products */;
 					ProjectRef = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
 				},
-				{
-					ProductGroup = B5D8074F1A34715700A44484 /* Products */;
-					ProjectRef = B5D8074E1A34715700A44484 /* JEToolkit.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -331,20 +306,6 @@
 			fileType = wrapper.cfbundle;
 			path = GCDKitTests.xctest;
 			remoteRef = B5D808031A34715700A44484 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B5D808081A34715700A44484 /* JEToolkit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = JEToolkit.framework;
-			remoteRef = B5D808071A34715700A44484 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B5D8080A1A34715700A44484 /* JEToolkitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = JEToolkitTests.xctest;
-			remoteRef = B5D808091A34715700A44484 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -378,9 +339,11 @@
 				B5D1E22C19FA9FBC003B2874 /* NSError+HardcoreData.swift in Sources */,
 				B5CFF23E19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* HardcoreData.swift in Sources */,
+				B5D8081A1A3495BD00A44484 /* NSObject+HardcoreData.swift in Sources */,
 				B5E209E01A0726460089C9D4 /* NSManagedObject+HardcoreData.swift in Sources */,
 				B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */,
 				B5D399F119FC818E000E91BB /* DataStack.swift in Sources */,
+				B5D808161A34947300A44484 /* NotificationObserver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,15 +454,12 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/johnestropia/Documents/XCode,
-					"Projects/JEToolkit/build/Debug-iphoneos",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/PhotoSearch-dzwflhandxxuvngptapvysfpcwdx/Build/Products/Debug-iphoneos",
-					/Users/johnestropia/Documents/XCode,
-					"Projects/JEToolkit/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = HardcoreData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -517,15 +477,12 @@
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/johnestropia/Documents/XCode,
-					"Projects/JEToolkit/build/Debug-iphoneos",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/PhotoSearch-dzwflhandxxuvngptapvysfpcwdx/Build/Products/Debug-iphoneos",
-					/Users/johnestropia/Documents/XCode,
-					"Projects/JEToolkit/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = HardcoreData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};

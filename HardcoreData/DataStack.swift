@@ -27,6 +27,12 @@ import Foundation
 import CoreData
 import GCDKit
 
+
+private let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as NSURL
+
+private let applicationName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as String
+
+
 /**
 The DataStack encapsulates the data model for the Core Data stack. Each DataStack can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own NSPersistentStoreCoordinator, a root NSManagedObjectContext for disk saves, and a shared NSManagedObjectContext acting as a model interface for NSManagedObjects.
 */
@@ -101,14 +107,14 @@ public class DataStack: NSObject {
             
             HardcoreData.handleError(
                 error,
-                message: "Failed to add in-memory NSPersistentStore.")
+                "Failed to add in-memory NSPersistentStore.")
             return PersistentStoreResult(error)
         }
         else {
             
             HardcoreData.handleError(
                 NSError(hardcoreDataErrorCode: .UnknownError),
-                message: "Failed to add in-memory NSPersistentStore.")
+                "Failed to add in-memory NSPersistentStore.")
         }
         return PersistentStoreResult(.UnknownError)
     }
@@ -125,7 +131,7 @@ public class DataStack: NSObject {
     public func addSQLiteStore(fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
         return self.addSQLiteStore(
-            fileURL: NSURL.applicationSupportDirectory().URLByAppendingPathComponent(fileName, isDirectory: false),
+            fileURL: applicationSupportDirectory.URLByAppendingPathComponent(fileName, isDirectory: false),
             configuration: configuration,
             automigrating: automigrating,
             resetStoreOnMigrationFailure: resetStoreOnMigrationFailure)
@@ -140,7 +146,7 @@ public class DataStack: NSObject {
     :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
     :returns: a PersistentStoreResult indicating success or failure.
     */
-    public func addSQLiteStore(fileURL: NSURL = NSURL.applicationSupportDirectory().URLByAppendingPathComponent(NSString.applicationName(), isDirectory: true).URLByAppendingPathExtension("sqlite"), configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
+    public func addSQLiteStore(fileURL: NSURL = applicationSupportDirectory.URLByAppendingPathComponent(applicationName, isDirectory: true).URLByAppendingPathExtension("sqlite"), configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
         let coordinator = self.coordinator;
         if let store = coordinator.persistentStoreForURL(fileURL) {
@@ -155,7 +161,7 @@ public class DataStack: NSObject {
             
             HardcoreData.handleError(
                 NSError(hardcoreDataErrorCode: .DifferentPersistentStoreExistsAtURL),
-                message: "Failed to add SQLite NSPersistentStore at \"\(fileURL)\" because a different NSPersistentStore at that URL already exists.")
+                "Failed to add SQLite NSPersistentStore at \"\(fileURL)\" because a different NSPersistentStore at that URL already exists.")
             return PersistentStoreResult(.DifferentPersistentStoreExistsAtURL)
         }
         
@@ -169,7 +175,7 @@ public class DataStack: NSObject {
                 
                 HardcoreData.handleError(
                     directoryError!,
-                    message: "Failed to create directory for SQLite store at \"\(fileURL)\".")
+                    "Failed to create directory for SQLite store at \"\(fileURL)\".")
                 return PersistentStoreResult(directoryError!)
         }
         
@@ -231,14 +237,14 @@ public class DataStack: NSObject {
             
             HardcoreData.handleError(
                 error,
-                message: "Failed to add SQLite NSPersistentStore at \"\(fileURL)\".")
+                "Failed to add SQLite NSPersistentStore at \"\(fileURL)\".")
             return PersistentStoreResult(error)
         }
         else {
             
             HardcoreData.handleError(
                 NSError(hardcoreDataErrorCode: .UnknownError),
-                message: "Failed to add SQLite NSPersistentStore at \"\(fileURL)\".")
+                "Failed to add SQLite NSPersistentStore at \"\(fileURL)\".")
         }
         return PersistentStoreResult(.UnknownError)
     }
