@@ -16,6 +16,8 @@
 		B5CFF24019FD383100D6DFC4 /* DataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */; };
 		B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */; };
 		B5D1E22C19FA9FBC003B2874 /* NSError+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */; };
+		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
+		B5D372861A39CDDB00F583D9 /* TestEntity1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D372851A39CDDB00F583D9 /* TestEntity1.swift */; };
 		B5D399F119FC818E000E91BB /* DataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D399F019FC818E000E91BB /* DataStack.swift */; };
 		B5D399F519FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D399F419FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift */; };
 		B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D39A0119FD00C9000E91BB /* Foundation.framework */; };
@@ -24,10 +26,18 @@
 		B5D808161A34947300A44484 /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808151A34947300A44484 /* NotificationObserver.swift */; };
 		B5D8081A1A3495BD00A44484 /* NSObject+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808191A3495BD00A44484 /* NSObject+HardcoreData.swift */; };
 		B5E209E01A0726460089C9D4 /* NSManagedObject+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */; };
-		B5F539901A17A6FC00EC763B /* QueryDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F5398F1A17A6FC00EC763B /* QueryDescriptor.swift */; };
+		B5E472271A35E84700804CE1 /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E472261A35E84700804CE1 /* Queryable.swift */; };
+		B5F539901A17A6FC00EC763B /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F5398F1A17A6FC00EC763B /* Query.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B5D372871A39CF4D00F583D9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2F03A52719C5C6DA005002A5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2F03A52F19C5C6DA005002A5;
+			remoteInfo = HardcoreData;
+		};
 		B5D808011A34715700A44484 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
@@ -58,6 +68,8 @@
 		B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataTransaction.swift; sourceTree = "<group>"; };
 		B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentStoreResult.swift; sourceTree = "<group>"; };
 		B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+HardcoreData.swift"; sourceTree = "<group>"; };
+		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		B5D372851A39CDDB00F583D9 /* TestEntity1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity1.swift; sourceTree = "<group>"; };
 		B5D399F019FC818E000E91BB /* DataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStack.swift; sourceTree = "<group>"; };
 		B5D399F419FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5D39A0119FD00C9000E91BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -66,8 +78,9 @@
 		B5D808151A34947300A44484 /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationObserver.swift; sourceTree = "<group>"; };
 		B5D808191A3495BD00A44484 /* NSObject+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+HardcoreData.swift"; sourceTree = "<group>"; };
+		B5E472261A35E84700804CE1 /* Queryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queryable.swift; sourceTree = "<group>"; };
 		B5F3D98419F3EB8E009690A6 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		B5F5398F1A17A6FC00EC763B /* QueryDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryDescriptor.swift; sourceTree = "<group>"; };
+		B5F5398F1A17A6FC00EC763B /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				B5D399F019FC818E000E91BB /* DataStack.swift */,
+				B5E472261A35E84700804CE1 /* Queryable.swift */,
 				B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */,
 				2F03A53519C5C6DA005002A5 /* HardcoreData.h */,
 				2F291E2619C6D3CF007AF63F /* HardcoreData.swift */,
@@ -123,7 +137,7 @@
 				B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */,
 				B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */,
 				B5D399F419FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift */,
-				B5F5398F1A17A6FC00EC763B /* QueryDescriptor.swift */,
+				B5F5398F1A17A6FC00EC763B /* Query.swift */,
 				B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */,
 				B5CFD36D1A0775F000B7885F /* SaveResult.swift */,
 				B5D808141A34945A00A44484 /* Internal */,
@@ -145,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				2F03A53F19C5C6DA005002A5 /* HardcoreDataTests.swift */,
+				B5D372851A39CDDB00F583D9 /* TestEntity1.swift */,
 				2F03A53D19C5C6DA005002A5 /* Supporting Files */,
 			);
 			path = HardcoreDataTests;
@@ -153,6 +168,7 @@
 		2F03A53D19C5C6DA005002A5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */,
 				2F03A53E19C5C6DA005002A5 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -245,6 +261,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B5D372881A39CF4D00F583D9 /* PBXTargetDependency */,
 			);
 			name = HardcoreDataTests;
 			productName = HardcoreDataTests;
@@ -332,7 +349,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5F539901A17A6FC00EC763B /* QueryDescriptor.swift in Sources */,
+				B5F539901A17A6FC00EC763B /* Query.swift in Sources */,
 				B5CFF24019FD383100D6DFC4 /* DataTransaction.swift in Sources */,
 				B5D399F519FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift in Sources */,
 				B5CFD36E1A0775F000B7885F /* SaveResult.swift in Sources */,
@@ -342,6 +359,7 @@
 				B5D8081A1A3495BD00A44484 /* NSObject+HardcoreData.swift in Sources */,
 				B5E209E01A0726460089C9D4 /* NSManagedObject+HardcoreData.swift in Sources */,
 				B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */,
+				B5E472271A35E84700804CE1 /* Queryable.swift in Sources */,
 				B5D399F119FC818E000E91BB /* DataStack.swift in Sources */,
 				B5D808161A34947300A44484 /* NotificationObserver.swift in Sources */,
 			);
@@ -352,10 +370,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				2F03A54019C5C6DA005002A5 /* HardcoreDataTests.swift in Sources */,
+				B5D372861A39CDDB00F583D9 /* TestEntity1.swift in Sources */,
+				B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B5D372881A39CF4D00F583D9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2F03A52F19C5C6DA005002A5 /* HardcoreData */;
+			targetProxy = B5D372871A39CF4D00F583D9 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2F03A54119C5C6DA005002A5 /* Debug */ = {
@@ -436,6 +464,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -482,7 +511,6 @@
 				INFOPLIST_FILE = HardcoreData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -549,6 +577,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B5D372831A39CD6900F583D9 /* Model.xcdatamodel */,
+			);
+			currentVersion = B5D372831A39CD6900F583D9 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2F03A52719C5C6DA005002A5 /* Project object */;
 }

@@ -50,7 +50,7 @@ public class DataTransaction {
     public func create<T: NSManagedObject>(entity: T.Type) -> T {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to create an NSManagedObject outside a transaction queue.")
-        HardcoreData.assert(!self.isTransactionCommited, "Attempted to create an NSManagedObject from an already commited DataTransaction.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to create an NSManagedObject from an already committed DataTransaction.")
         return T.createInContext(self.context)
     }
     
@@ -63,7 +63,7 @@ public class DataTransaction {
     public func update<T: NSManagedObject>(object: T) -> T? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to update an NSManagedObject outside a transaction queue.")
-        HardcoreData.assert(!self.isTransactionCommited, "Attempted to update an NSManagedObject from an already commited DataTransaction.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to update an NSManagedObject from an already committed DataTransaction.")
         return object.inContext(self.context)
     }
     
@@ -75,11 +75,21 @@ public class DataTransaction {
     public func delete(object: NSManagedObject) {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to delete an NSManagedObject outside a transaction queue.")
-        HardcoreData.assert(!self.isTransactionCommited, "Attempted to delete an NSManagedObject from an already commited DataTransaction.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to delete an NSManagedObject from an already committed DataTransaction.")
         object.deleteFromContext()
     }
     
     // MARK: Saving changes
+    
+    /**
+    Rolls back the transaction by resetting the NSManagedObjectContext. Note that after calling this method, all NSManagedObjects fetched within the transaction will become invalid.
+    */
+    public func rollback() {
+        
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to rollback a DataTransaction outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to rollback an already committed DataTransaction.")
+        self.context.reset()
+    }
     
     /**
     Saves the transaction changes asynchronously. Note that this method should not be used after either the commit(_:) or commitAndWait() method was already called once.
@@ -89,9 +99,9 @@ public class DataTransaction {
     public func commit(completion: (result: SaveResult) -> ()) {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to commit a DataTransaction outside a transaction queue.")
-        HardcoreData.assert(!self.isTransactionCommited, "Attempted to commit a DataTransaction more than once.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to commit a DataTransaction more than once.")
         
-        self.isTransactionCommited = true
+        self.isCommitted = true
         self.context.saveAsynchronouslyWithCompletion { [weak self] (result) -> () in
             
             self?.result = result
@@ -107,9 +117,9 @@ public class DataTransaction {
     public func commitAndWait() -> SaveResult {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to commit a DataTransaction outside a transaction queue.")
-        HardcoreData.assert(!self.isTransactionCommited, "Attempted to commit a DataTransaction more than once.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to commit a DataTransaction more than once.")
         
-        self.isTransactionCommited = true
+        self.isCommitted = true
         let result = self.context.saveSynchronously()
         self.result = result
         return result
@@ -131,7 +141,7 @@ public class DataTransaction {
         self.transactionQueue.barrierAsync {
             
             self.closure(transaction: self)
-            if !self.isTransactionCommited {
+            if !self.isCommitted {
                 
                 self.commit { (result) -> () in }
             }
@@ -143,7 +153,7 @@ public class DataTransaction {
         self.transactionQueue.barrierSync {
             
             self.closure(transaction: self)
-            if !self.isTransactionCommited {
+            if !self.isCommitted {
                 
                 self.commitAndWait()
             }
@@ -154,9 +164,45 @@ public class DataTransaction {
     
     // MARK: - Private
     
-    private var isTransactionCommited = false
+    private var isCommitted = false
     private var result: SaveResult?
     private let mainContext: NSManagedObjectContext
     private let transactionQueue: GCDQueue
     private let closure: (transaction: DataTransaction) -> ()
+}
+
+
+// MARK: - DataContextProvider
+
+extension DataTransaction: Queryable {
+    
+    public func findFirst<T: NSManagedObject>(entity: T.Type) -> T? {
+        
+        return self.context.findFirst(entity)
+    }
+    
+    public func findFirst<T: NSManagedObject>(query: Query<T>) -> T? {
+        
+        return self.context.findFirst(query)
+    }
+    
+    public func findAll<T: NSManagedObject>(entity: T.Type) -> [T]? {
+        
+        return self.context.findAll(entity)
+    }
+    
+    public func findAll<T: NSManagedObject>(query: Query<T>) -> [T]? {
+        
+        return self.context.findAll(query)
+    }
+    
+    public func count<T: NSManagedObject>(entity: T.Type) -> Int {
+        
+        return self.context.count(entity)
+    }
+    
+    public func count<T: NSManagedObject>(query: Query<T>) -> Int {
+        
+        return self.context.count(query)
+    }
 }

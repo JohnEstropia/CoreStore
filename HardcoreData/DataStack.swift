@@ -30,7 +30,7 @@ import GCDKit
 
 private let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as NSURL
 
-private let applicationName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as String
+private let applicationName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String ?? "CoreData"
 
 
 /**
@@ -45,7 +45,7 @@ public class DataStack: NSObject {
     */
     public convenience override init() {
         
-        self.init(managedObjectModel: NSManagedObjectModel.mergedModelFromBundles(nil)!)
+        self.init(managedObjectModel: NSManagedObjectModel.mergedModelFromBundles(NSBundle.allBundles())!)
     }
     
     /**
@@ -207,10 +207,10 @@ public class DataStack: NSObject {
                     
                     fileManager.removeItemAtURL(fileURL, error: nil)
                     fileManager.removeItemAtPath(
-                        fileURL.absoluteString!.stringByAppendingString("-shm"),
+                        fileURL.path!.stringByAppendingString("-shm"),
                         error: nil)
                     fileManager.removeItemAtPath(
-                        fileURL.absoluteString!.stringByAppendingString("-wal"),
+                        fileURL.path!.stringByAppendingString("-wal"),
                         error: nil)
                     
                     var store: NSPersistentStore?
@@ -256,11 +256,10 @@ public class DataStack: NSObject {
     */
     public func performTransaction(closure: (transaction: DataTransaction) -> ()) {
         
-        let transaction = DataTransaction(
+        DataTransaction(
             mainContext: self.mainContext,
             queue: self.transactionQueue,
-            closure: closure)
-        transaction.perform()
+            closure: closure).perform()
     }
     
     /**
@@ -271,11 +270,10 @@ public class DataStack: NSObject {
     */
     public func performTransactionAndWait(closure: (transaction: DataTransaction) -> ()) -> SaveResult {
         
-        let transaction = DataTransaction(
+        return DataTransaction(
             mainContext: self.mainContext,
             queue: self.transactionQueue,
-            closure: closure)
-        return transaction.performAndWait()
+            closure: closure).performAndWait()
     }
     
     // MARK: - Internal

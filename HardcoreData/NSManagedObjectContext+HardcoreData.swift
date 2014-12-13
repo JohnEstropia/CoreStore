@@ -27,8 +27,6 @@ import Foundation
 import CoreData
 import GCDKit
 
-private var _HardcoreData_NSManagedObjectContext_shouldCascadeSavesToParent: Void?
-
 public extension NSManagedObjectContext {
     
     // MARK: - Public
@@ -43,66 +41,6 @@ public extension NSManagedObjectContext {
         context.shouldCascadeSavesToParent = true
         
         return context
-    }
-    
-    
-    // MARK: Querying
-    
-    public func findFirst<T: NSManagedObject>(entity: T.Type) -> T? {
-        
-        return self.findFirst(T.self, predicate: NSPredicate(value: true))
-    }
-    
-    public func findFirst<T: NSManagedObject>(entity: T.Type, predicate: NSPredicate) -> T? {
-        
-        let fetchRequest = NSFetchRequest()
-        fetchRequest.entity = NSEntityDescription.entityForName(
-            entity.entityName,
-            inManagedObjectContext: self)
-        fetchRequest.fetchLimit = 1
-        
-        var fetchResults: [T]?
-        self.performBlockAndWait {
-            
-            var error: NSError?
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
-            if fetchResults == nil {
-                
-                HardcoreData.handleError(
-                    error!,
-                    "Failed executing fetch request.")
-            }
-        }
-        
-        return fetchResults?.first
-    }
-
-    public func findAll<T: NSManagedObject>(entity: T.Type) -> [T]? {
-        
-        return self.findAll(QueryDescriptor<T>(entity: entity))
-    }
-    
-    public func findAll<T: NSManagedObject>(query: QueryDescriptor<T>) -> [T]? {
-        
-        let fetchRequest = NSFetchRequest()
-        fetchRequest.entity = NSEntityDescription.entityForName(
-            query.entityName,
-            inManagedObjectContext: self)
-        
-        var fetchResults: [T]?
-        self.performBlockAndWait {
-            
-            var error: NSError?
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
-            if fetchResults == nil {
-                
-                HardcoreData.handleError(
-                    error!,
-                    "Failed executing fetch request.")
-            }
-        }
-        
-        return fetchResults
     }
     
     
@@ -248,23 +186,24 @@ public extension NSManagedObjectContext {
     
     // MARK: - Private
     
-    private struct ObserverKeys {
+    private struct PropertyKeys {
         
-        static var willSaveNotification: AnyObject?
-        static var didSaveNotification: AnyObject?
+        static var observerForWillSaveNotification: Void?
+        static var observerForDidSaveNotification: Void?
+        static var shouldCascadeSavesToParent: Void?
     }
     
     private var observerForWillSaveNotification: NotificationObserver? {
         
         get {
             
-            return self.getAssociatedObjectForKey(&ObserverKeys.willSaveNotification)
+            return self.getAssociatedObjectForKey(&PropertyKeys.observerForWillSaveNotification)
         }
         set {
             
             self.setAssociatedRetainedObject(
                 newValue,
-                forKey: &ObserverKeys.willSaveNotification)
+                forKey: &PropertyKeys.observerForWillSaveNotification)
         }
     }
     
@@ -272,13 +211,13 @@ public extension NSManagedObjectContext {
         
         get {
             
-            return self.getAssociatedObjectForKey(&ObserverKeys.didSaveNotification)
+            return self.getAssociatedObjectForKey(&PropertyKeys.observerForDidSaveNotification)
         }
         set {
         
             self.setAssociatedRetainedObject(
                 newValue,
-                forKey: &ObserverKeys.didSaveNotification)
+                forKey: &PropertyKeys.observerForDidSaveNotification)
         }
     }
     
@@ -286,19 +225,14 @@ public extension NSManagedObjectContext {
         
         get {
             
-            if let value = objc_getAssociatedObject(self, &_HardcoreData_NSManagedObjectContext_shouldCascadeSavesToParent) as? NSNumber {
-                
-                return value.boolValue
-            }
-            return false
+            let number: NSNumber? = self.getAssociatedObjectForKey(&PropertyKeys.observerForDidSaveNotification)
+            return number?.boolValue ?? false
         }
         set {
             
-            objc_setAssociatedObject(
-                self,
-                &_HardcoreData_NSManagedObjectContext_shouldCascadeSavesToParent,
-                newValue,
-                objc_AssociationPolicy(OBJC_ASSOCIATION_ASSIGN))
+            self.setAssociatedCopiedObject(
+                NSNumber(bool: newValue),
+                forKey: &PropertyKeys.shouldCascadeSavesToParent)
         }
     }
     
@@ -334,5 +268,89 @@ public extension NSManagedObjectContext {
                         "Failed to obtain permanent IDs for inserted objects.")
                 }
         })
+    }
+}
+
+
+// MARK: - DataContextProvider
+
+extension NSManagedObjectContext: Queryable {
+    
+    public func findFirst<T: NSManagedObject>(entity: T.Type) -> T? {
+        
+        return self.findFirst(Query(entity: entity))
+    }
+    
+    public func findFirst<T: NSManagedObject>(query: Query<T>) -> T? {
+        
+        var query = query
+        query.fetchLimit = 1
+        let fetchRequest = query.createFetchRequestInContext(self)
+        
+        var fetchResults: [T]?
+        self.performBlockAndWait {
+            
+            var error: NSError?
+            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
+            if fetchResults == nil {
+                
+                HardcoreData.handleError(
+                    error!,
+                    "Failed executing fetch request.")
+            }
+        }
+        
+        return fetchResults?.first
+    }
+    
+    public func findAll<T: NSManagedObject>(entity: T.Type) -> [T]? {
+        
+        return self.findAll(Query(entity: entity))
+    }
+    
+    public func findAll<T: NSManagedObject>(query: Query<T>) -> [T]? {
+        
+        let fetchRequest = query.createFetchRequestInContext(self)
+        
+        var fetchResults: [T]?
+        self.performBlockAndWait {
+            
+            var error: NSError?
+            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
+            if fetchResults == nil {
+                
+                HardcoreData.handleError(
+                    error!,
+                    "Failed executing fetch request.")
+            }
+        }
+        
+        return fetchResults
+    }
+    
+    public func count<T: NSManagedObject>(entity: T.Type) -> Int {
+        
+        return self.count(Query(entity: entity))
+    }
+    
+    public func count<T: NSManagedObject>(query: Query<T>) -> Int {
+        
+        let fetchRequest = query.createFetchRequestInContext(self)
+        
+        var count = 0
+        var error: NSError?
+        self.performBlockAndWait {
+            
+            count = self.countForFetchRequest(fetchRequest, error: &error)
+        }
+        if count == NSNotFound {
+            
+            HardcoreData.handleError(
+                error!,
+                "Failed executing fetch request.")
+            return 0
+        }
+        
+        return count
     }
 }

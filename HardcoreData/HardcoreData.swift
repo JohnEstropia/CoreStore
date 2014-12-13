@@ -24,6 +24,8 @@
 //
 
 import CoreData
+import GCDKit
+
 
 /**
 HardcoreData - Simple, elegant, and smart Core Data management with Swift
@@ -35,34 +37,28 @@ public struct HardcoreData {
     /**
     The default DataStack instance to be used. If defaultStack is not set before the first time accessed, a default-configured DataStack will be created.
     
-    Note that changing the defaultStack is not thread safe.
+    Changing the defaultStack is thread safe.
     */
-    public static var defaultStack = DataStack()
-    
-    /**
-    The closure that handles all errors that occur within HardcoreData. The default errorHandler logs errors via the logHandler closure.
-    */
-    public static var errorHandler = { (error: NSError, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
-    
-        HardcoreData.logHandler("\(message): \(error)", fileName, lineNumber, functionName)
-    }
-    
-    /**
-    The closure that handles all assertions that occur within HardcoreData. The default assertHandler calls assert().
-    */
-    public static var assertHandler = { (condition: @autoclosure() -> Bool, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
+    public static var defaultStack: DataStack {
         
-        assert(condition, message, file: fileName, line: lineNumber)
-    }
-    
-    /**
-    The closure that handles all logging that occur within HardcoreData. The default logHandler logs via println() when DEBUG is defined; does nothing otherwise.
-    */
-    public static var logHandler = { (message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
+        get {
         
-        #if DEBUG
-            println("[\(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL))] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n\(message)")
-        #endif
+            self.defaultStackBarrierQueue.barrierSync {
+        
+                if self.defaultStackInstance == nil {
+        
+                    self.defaultStackInstance = DataStack()
+                }
+            }
+            return self.defaultStackInstance!
+        }
+        set {
+            
+            self.defaultStackBarrierQueue.barrierAsync {
+                
+                self.defaultStackInstance = newValue
+            }
+        }
     }
     
     /**
@@ -86,14 +82,100 @@ public struct HardcoreData {
         return self.defaultStack.performTransactionAndWait(closure)
     }
     
+    
+    public enum LogLevel {
+        
+        case Trace
+        case Notice
+        case Alert
+        case Fatal
+    }
+    
+    public typealias LogHandlerType = (level: LogLevel, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> ()
+    
+    public typealias ErrorHandlerType = (error: NSError, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> ()
+    
+    public typealias AssertionHandlerType = (condition: @autoclosure() -> Bool, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> ()
+    
+    
+    /**
+    Sets the closure that handles all logging that occur within HardcoreData. The default logHandler logs via println() only when DEBUG is defined.
+    */
+    public static func setLogHandler(logHandler: LogHandlerType) {
+        
+        self.logHandler = logHandler
+    }
+    
+    /**
+    Sets the closure that handles all errors that occur within HardcoreData. The default errorHandler logs via println() only when DEBUG is defined.
+    */
+    public static func setErrorHandler(errorHandler: ErrorHandlerType) {
+        
+        self.errorHandler = errorHandler
+    }
+    
+    /**
+    Sets the closure that handles all assertions that occur within HardcoreData. The default assertHandler calls assert().
+    */
+    public static func setAssertionHandler(assertionHandler: AssertionHandlerType) {
+        
+        self.assertionHandler = assertionHandler
+    }
+    
+    internal static func log(level: LogLevel, message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
+        
+        self.logHandler(
+            level: level,
+            message: message,
+            fileName: fileName,
+            lineNumber: lineNumber,
+            functionName: functionName)
+    }
+    
     internal static func handleError(error: NSError, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
         
-        self.errorHandler(error, message, fileName, lineNumber, functionName)
+        self.errorHandler(
+            error: error,
+            message: message,
+            fileName: fileName,
+            lineNumber: lineNumber,
+            functionName: functionName)
     }
     
     internal static func assert(condition: @autoclosure() -> Bool, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
         
-        self.assertHandler(condition, message, fileName, lineNumber, functionName)
+        self.assertionHandler(
+            condition: condition,
+            message: message,
+            fileName: fileName,
+            lineNumber: lineNumber,
+            functionName: functionName)
+    }
+    
+    
+    private static let defaultStackBarrierQueue = GCDQueue.createConcurrent("com.hardcoredata.defaultstackbarrierqueue")
+    
+    private static var defaultStackInstance: DataStack?
+    
+    private static var logHandler: LogHandlerType = { (level: LogLevel, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
+        
+        #if DEBUG
+            println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+        #endif
+    }
+    
+    private static var errorHandler: ErrorHandlerType = { (error: NSError, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
+        
+        #if DEBUG
+            println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message): \(error)\n")
+        #endif
+    }
+    
+    private static var assertionHandler: AssertionHandlerType = { (condition: @autoclosure() -> Bool, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
+        
+        #if DEBUG
+            assert(condition, message, file: fileName, line: lineNumber)
+        #endif
     }
 }
 

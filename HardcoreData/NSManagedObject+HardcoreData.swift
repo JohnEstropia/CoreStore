@@ -28,18 +28,67 @@ import CoreData
 
 public extension NSManagedObject {
     
+    // MARK: - Entity Utilities
+    
     public class var entityName: String {
         
         return NSStringFromClass(self).componentsSeparatedByString(".").last!
     }
     
-    public class func createInContext(context: NSManagedObjectContext) -> Self {
+    public func inContext(context: NSManagedObjectContext) -> Self? {
+        
+        return self.typedObjectInContext(context)
+    }
+    
+    public func deleteFromContext() {
+        
+        self.managedObjectContext?.deleteObject(self)
+    }
+    
+    
+    // MARK: Querying
+    
+    public class func WHERE(predicate: NSPredicate) -> Query<NSManagedObject> {
+        
+        return Query(entity: self).WHERE(predicate)
+    }
+    
+    public class func WHERE(value: Bool) -> Query<NSManagedObject> {
+        
+        return self.WHERE(NSPredicate(value: value))
+    }
+    
+    public class func WHERE(format: String, _ args: CVarArgType...) -> Query<NSManagedObject> {
+        
+        return self.WHERE(NSPredicate(format: format, arguments: withVaList(args, { $0 })))
+    }
+    
+    public class func WHERE(format: String, argumentArray: [AnyObject]?) -> Query<NSManagedObject> {
+        
+        return self.WHERE(NSPredicate(format: format, argumentArray: argumentArray))
+    }
+    
+    public class func SORTEDBY(order: [SortOrder]) -> Query<NSManagedObject> {
+        
+        return Query(entity: self).SORTEDBY(order)
+    }
+    
+    public class func SORTEDBY(order: SortOrder, _ subOrder: SortOrder...) -> Query<NSManagedObject> {
+        
+        return self.SORTEDBY([order] + subOrder)
+    }
+    
+    
+    
+    // MARK: - Internal
+    
+    internal class func createInContext(context: NSManagedObjectContext) -> Self {
         
         return self(entity: NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: context)!,
             insertIntoManagedObjectContext: context)
     }
     
-    public func inContext<T: NSManagedObject>(context: NSManagedObjectContext) -> T? {
+    private func typedObjectInContext<T: NSManagedObject>(context: NSManagedObjectContext) -> T? {
         
         let objectID = self.objectID
         if objectID.temporaryID {
@@ -64,10 +113,5 @@ public extension NSManagedObject {
             existingObjectError!,
             "Failed to load existing NSManagedObject in context.")
         return nil;
-    }
-    
-    public func deleteFromContext() {
-        
-        self.managedObjectContext?.deleteObject(self)
     }
 }
