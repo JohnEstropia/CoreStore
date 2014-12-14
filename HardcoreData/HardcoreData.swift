@@ -28,8 +28,6 @@ import GCDKit
 
 
 /**
-HardcoreData - Simple, elegant, and smart Core Data management with Swift
-
 The HardcoreData struct is the main entry point for all other APIs.
 */
 public struct HardcoreData {
@@ -75,9 +73,9 @@ public struct HardcoreData {
     Using the defaultStack, begins a transaction asynchronously where NSManagedObject creates, updates, and deletes can be made.
     
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
-    :returns: a SaveResult value indicating success or failure.
+    :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
     */
-    public static func performTransactionAndWait(closure: (transaction: DataTransaction) -> ()) -> SaveResult {
+    public static func performTransactionAndWait(closure: (transaction: DataTransaction) -> ()) -> SaveResult? {
         
         return self.defaultStack.performTransactionAndWait(closure)
     }
@@ -87,7 +85,7 @@ public struct HardcoreData {
         
         case Trace
         case Notice
-        case Alert
+        case Warning
         case Fatal
     }
     

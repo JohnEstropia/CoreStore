@@ -266,9 +266,9 @@ public class DataStack: NSObject {
     Begins a transaction synchronously where NSManagedObject creates, updates, and deletes can be made.
     
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
-    :returns: a SaveResult value indicating success or failure.
+    :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
     */
-    public func performTransactionAndWait(closure: (transaction: DataTransaction) -> ()) -> SaveResult {
+    public func performTransactionAndWait(closure: (transaction: DataTransaction) -> ()) -> SaveResult? {
         
         return DataTransaction(
             mainContext: self.mainContext,

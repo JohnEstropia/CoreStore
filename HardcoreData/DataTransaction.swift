@@ -30,7 +30,7 @@ import GCDKit
 /**
 The DataTransaction provides an interface for NSManagedObject creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from DataStack.performTransaction(_:), or from HardcoreData.performTransaction(_:).
 */
-public class DataTransaction {
+public final class DataTransaction {
     
     // MARK: - Public
     
@@ -102,9 +102,9 @@ public class DataTransaction {
         HardcoreData.assert(!self.isCommitted, "Attempted to commit a DataTransaction more than once.")
         
         self.isCommitted = true
-        self.context.saveAsynchronouslyWithCompletion { [weak self] (result) -> () in
+        self.context.saveAsynchronouslyWithCompletion { (result) -> () in
             
-            self?.result = result
+            self.result = result
             completion(result: result)
         }
     }
@@ -114,15 +114,13 @@ public class DataTransaction {
     
     :returns: a SaveResult value indicating success or failure.
     */
-    public func commitAndWait() -> SaveResult {
+    public func commitAndWait() {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to commit a DataTransaction outside a transaction queue.")
         HardcoreData.assert(!self.isCommitted, "Attempted to commit a DataTransaction more than once.")
         
         self.isCommitted = true
-        let result = self.context.saveSynchronously()
-        self.result = result
-        return result
+        self.result = self.context.saveSynchronously()
     }
     
     
@@ -141,24 +139,16 @@ public class DataTransaction {
         self.transactionQueue.barrierAsync {
             
             self.closure(transaction: self)
-            if !self.isCommitted {
-                
-                self.commit { (result) -> () in }
-            }
         }
     }
     
-    internal func performAndWait() -> SaveResult {
+    internal func performAndWait() -> SaveResult? {
         
         self.transactionQueue.barrierSync {
             
             self.closure(transaction: self)
-            if !self.isCommitted {
-                
-                self.commitAndWait()
-            }
         }
-        return self.result!
+        return self.result
     }
     
     
@@ -174,16 +164,26 @@ public class DataTransaction {
 
 // MARK: - DataContextProvider
 
-extension DataTransaction: Queryable {
+extension DataTransaction: ObjectQueryable {
     
     public func findFirst<T: NSManagedObject>(entity: T.Type) -> T? {
         
         return self.context.findFirst(entity)
     }
     
-    public func findFirst<T: NSManagedObject>(query: Query<T>) -> T? {
+    public func findFirst<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> T? {
+        
+        return self.context.findFirst(entity, customizeFetch: customizeFetch)
+    }
+    
+    public func findFirst<T: NSManagedObject>(query: ObjectQuery<T>) -> T? {
         
         return self.context.findFirst(query)
+    }
+    
+    public func findFirst<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> T? {
+        
+        return self.context.findFirst(query, customizeFetch: customizeFetch)
     }
     
     public func findAll<T: NSManagedObject>(entity: T.Type) -> [T]? {
@@ -191,9 +191,19 @@ extension DataTransaction: Queryable {
         return self.context.findAll(entity)
     }
     
-    public func findAll<T: NSManagedObject>(query: Query<T>) -> [T]? {
+    public func findAll<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> [T]? {
+        
+        return self.context.findAll(entity, customizeFetch: customizeFetch)
+    }
+    
+    public func findAll<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]? {
         
         return self.context.findAll(query)
+    }
+    
+    public func findAll<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> [T]? {
+        
+        return self.context.findAll(query, customizeFetch: customizeFetch)
     }
     
     public func count<T: NSManagedObject>(entity: T.Type) -> Int {
@@ -201,7 +211,7 @@ extension DataTransaction: Queryable {
         return self.context.count(entity)
     }
     
-    public func count<T: NSManagedObject>(query: Query<T>) -> Int {
+    public func count<T: NSManagedObject>(query: ObjectQuery<T>) -> Int {
         
         return self.context.count(query)
     }

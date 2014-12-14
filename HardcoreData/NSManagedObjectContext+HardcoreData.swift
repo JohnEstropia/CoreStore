@@ -101,7 +101,7 @@ public extension NSManagedObjectContext {
             self.reset()
             if let completion = completion {
                 
-                GCDBlock.async(.Main) {
+                GCDQueue.Main.async {
                     
                     completion(result: SaveResult(hasChanges: false))
                 }
@@ -126,7 +126,7 @@ public extension NSManagedObjectContext {
                 
                 if let completion = completion {
                     
-                    GCDBlock.async(.Main) {
+                    GCDQueue.Main.async {
                         
                         completion(result: SaveResult(hasChanges: true))
                     }
@@ -139,7 +139,7 @@ public extension NSManagedObjectContext {
                     "Failed to save NSManagedObjectContext.")
                 if let completion = completion {
                     
-                    GCDBlock.async(.Main) {
+                    GCDQueue.Main.async {
                         
                         completion(result: SaveResult(error))
                     }
@@ -147,7 +147,7 @@ public extension NSManagedObjectContext {
             }
             else if let completion = completion {
                 
-                GCDBlock.async(.Main) {
+                GCDQueue.Main.async {
                     
                     completion(result: SaveResult(hasChanges: false))
                 }
@@ -274,30 +274,40 @@ public extension NSManagedObjectContext {
 
 // MARK: - DataContextProvider
 
-extension NSManagedObjectContext: Queryable {
+extension NSManagedObjectContext: ObjectQueryable {
     
     public func findFirst<T: NSManagedObject>(entity: T.Type) -> T? {
         
-        return self.findFirst(Query(entity: entity))
+        return self.findFirst(entity, customizeFetch: nil)
     }
     
-    public func findFirst<T: NSManagedObject>(query: Query<T>) -> T? {
+    public func findFirst<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> T? {
         
-        var query = query
-        query.fetchLimit = 1
-        let fetchRequest = query.createFetchRequestInContext(self)
+        return self.findFirst(ObjectQuery(entity: entity), customizeFetch: customizeFetch)
+    }
+    
+    public func findFirst<T: NSManagedObject>(query: ObjectQuery<T>) -> T? {
+        
+        return self.findFirst(query, customizeFetch: nil)
+    }
+    
+    public func findFirst<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> T? {
+        
+        let fetchRequest = query.createFetchRequestForContext(self)
+        customizeFetch?(fetchRequest: fetchRequest)
+        fetchRequest.fetchLimit = 1
+        fetchRequest.resultType = .ManagedObjectResultType
         
         var fetchResults: [T]?
+        var error: NSError?
         self.performBlockAndWait {
             
-            var error: NSError?
             fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
-            if fetchResults == nil {
-                
-                HardcoreData.handleError(
-                    error!,
-                    "Failed executing fetch request.")
-            }
+        }
+        if fetchResults == nil {
+            
+            HardcoreData.handleError(error!, "Failed executing fetch request.")
+            return nil
         }
         
         return fetchResults?.first
@@ -305,24 +315,34 @@ extension NSManagedObjectContext: Queryable {
     
     public func findAll<T: NSManagedObject>(entity: T.Type) -> [T]? {
         
-        return self.findAll(Query(entity: entity))
+        return self.findAll(entity, customizeFetch: nil)
     }
     
-    public func findAll<T: NSManagedObject>(query: Query<T>) -> [T]? {
+    public func findAll<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> [T]? {
         
-        let fetchRequest = query.createFetchRequestInContext(self)
+        return self.findAll(ObjectQuery(entity: entity), customizeFetch: customizeFetch)
+    }
+    
+    public func findAll<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]? {
+        
+        return self.findAll(query, customizeFetch: nil)
+    }
+    
+    public func findAll<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> [T]? {
+        
+        let fetchRequest = query.createFetchRequestForContext(self)
+        fetchRequest.fetchLimit = 0
         
         var fetchResults: [T]?
+        var error: NSError?
         self.performBlockAndWait {
             
-            var error: NSError?
             fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
-            if fetchResults == nil {
-                
-                HardcoreData.handleError(
-                    error!,
-                    "Failed executing fetch request.")
-            }
+        }
+        if fetchResults == nil {
+            
+            HardcoreData.handleError(error!, "Failed executing fetch request.")
+            return nil
         }
         
         return fetchResults
@@ -330,12 +350,12 @@ extension NSManagedObjectContext: Queryable {
     
     public func count<T: NSManagedObject>(entity: T.Type) -> Int {
         
-        return self.count(Query(entity: entity))
+        return self.count(ObjectQuery(entity: entity))
     }
     
-    public func count<T: NSManagedObject>(query: Query<T>) -> Int {
+    public func count<T: NSManagedObject>(query: ObjectQuery<T>) -> Int {
         
-        let fetchRequest = query.createFetchRequestInContext(self)
+        let fetchRequest = query.createFetchRequestForContext(self)
         
         var count = 0
         var error: NSError?
@@ -345,9 +365,7 @@ extension NSManagedObjectContext: Queryable {
         }
         if count == NSNotFound {
             
-            HardcoreData.handleError(
-                error!,
-                "Failed executing fetch request.")
+            HardcoreData.handleError( error!, "Failed executing fetch request.")
             return 0
         }
         

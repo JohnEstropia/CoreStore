@@ -30,18 +30,17 @@ import HardcoreData
 class HardcoreDataTests: XCTestCase {
     
     override func setUp() {
+        
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        
         super.tearDown()
     }
     
     func testExample() {
-        // This is an example of a functional test case.
-        NSLog("Test aaaa")
+        
         #if DEBUG
             let resetStoreOnMigrationFailure = true
             #else
@@ -56,33 +55,33 @@ class HardcoreDataTests: XCTestCase {
                 reason: error.localizedDescription,
                 userInfo: error.userInfo).raise()
             
-        default: break
+        default:
+            break
         }
         
-        HardcoreData.performTransaction { (transaction) -> () in
+        HardcoreData.performTransactionAndWait({ (transaction) -> () in
+        
+            let obj = transaction.create(TestEntity1)
+            obj.testEntityID = 1
+            obj.testString = "lololol"
+            obj.testNumber = 42
+            obj.testDate = NSDate()
+
+            transaction.commitAndWait()
+        })
+        
+        HardcoreData.performTransactionAndWait({ (transaction) -> () in
             
-            let obj = transaction.findFirst(
+            let obj = transaction.findAll(
                 TestEntity1
-                    .WHERE(true)
-                    .SORTEDBY(.Ascending("testEntityID"), .Descending("testString")))
-            transaction.commit { (result) -> () in
-                
-                switch result {
+                    .WHERE("testEntityID", isEqualTo: 1)
+                    .SORTEDBY(.Ascending("testEntityID"), .Descending("testString")),
+                customizeFetch: { (fetchRequest) -> () in
                     
-                case .Success(let hasChanges):
-                    dump(hasChanges, name: "hasChanges")
-                case .Failure(let error):
-                    dump(error, name: "error")
+                    fetchRequest.includesPendingChanges = true
                 }
-            }
-        }
+            )
+            NSLog("%@", obj ?? [])
+        })
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock() {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
 }

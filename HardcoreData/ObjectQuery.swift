@@ -1,5 +1,5 @@
 //
-//  Query.swift
+//  ObjectQuery.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -35,39 +35,55 @@ public enum SortOrder {
     case Descending(AttributeName)
 }
 
-public class Query<T: NSManagedObject> {
+public final class ObjectQuery<T: NSManagedObject> {
+    
+    public var fetchLimit: Int = 0
+    public var fetchOffset: Int = 0
+    public var fetchBatchSize: Int = 0
     
     public var entityName: String {
         
         return self.entity.entityName
     }
     
-    public func WHERE(predicate: NSPredicate) -> Query<T> {
+    public func WHERE(predicate: NSPredicate) -> ObjectQuery<T> {
         
         if self.predicate != nil {
             
+            HardcoreData.log(.Warning, message: "Attempted to set a Query's WHERE clause more than once. The last predicate set will be used.")
         }
         self.predicate = predicate
         return self
     }
     
-    public func WHERE(value: Bool) -> Query<T> {
+    public func WHERE(value: Bool) -> ObjectQuery<T> {
         
         return self.WHERE(NSPredicate(value: value))
     }
     
-    public func WHERE(format: String, _ args: CVarArgType...) -> Query<T> {
+    public func WHERE(format: String, _ args: CVarArgType...) -> ObjectQuery<T> {
         
-        return self.WHERE(NSPredicate(format: format, arguments: withVaList(args, { $0 })))
+        return self.WHERE(NSPredicate(format: format, arguments: getVaList(args)))
     }
     
-    public func WHERE(format: String, argumentArray: [AnyObject]?) -> Query<T> {
+    public func WHERE(format: String, argumentArray: [AnyObject]?) -> ObjectQuery<T> {
         
         return self.WHERE(NSPredicate(format: format, argumentArray: argumentArray))
     }
     
-    public func SORTEDBY(order: [SortOrder]) -> Query<T> {
+    public func WHERE(attributeName: AttributeName, isEqualTo value: NSObject?) -> ObjectQuery<T> {
         
+        return self.WHERE(value == nil
+            ? NSPredicate(format: "\(attributeName) == nil")!
+            : NSPredicate(format: "\(attributeName) == %@", value!)!)
+    }
+    
+    public func SORTEDBY(order: [SortOrder]) -> ObjectQuery<T> {
+        
+        if self.sortDescriptors != nil {
+            
+            HardcoreData.log(.Warning, message: "Attempted to set a Query's SORTEDBY clause more than once. The last sort order set will be used.")
+        }
         self.sortDescriptors = order.map { sortOrder in
             
             switch sortOrder {
@@ -86,23 +102,9 @@ public class Query<T: NSManagedObject> {
         return self
     }
     
-    public func SORTEDBY(order: SortOrder, _ subOrder: SortOrder...) -> Query<T> {
+    public func SORTEDBY(order: SortOrder, _ subOrder: SortOrder...) -> ObjectQuery<T> {
         
         return self.SORTEDBY([order] + subOrder)
-    }
-    
-    public func createFetchRequestInContext(context: NSManagedObjectContext) -> NSFetchRequest {
-        
-        let fetchRequest = NSFetchRequest()
-        fetchRequest.entity = NSEntityDescription.entityForName(
-            self.entityName,
-            inManagedObjectContext: context)
-        fetchRequest.fetchLimit = self.fetchLimit
-        fetchRequest.fetchOffset = self.fetchOffset
-        fetchRequest.fetchBatchSize = self.fetchBatchSize
-        fetchRequest.predicate = self.predicate
-        
-        return fetchRequest
     }
     
     // MARK: Internal
@@ -112,12 +114,21 @@ public class Query<T: NSManagedObject> {
         self.entity = entity
     }
     
+    internal func createFetchRequestForContext(context: NSManagedObjectContext) -> NSFetchRequest {
+        
+        let fetchRequest = NSFetchRequest()
+        fetchRequest.entity = NSEntityDescription.entityForName(
+            self.entityName,
+            inManagedObjectContext: context)
+        fetchRequest.predicate = self.predicate
+        fetchRequest.sortDescriptors = self.sortDescriptors
+        
+        return fetchRequest
+    }
+    
     
     // MARK: Private
     private let entity: T.Type
-    public var fetchLimit: Int = 0
-    public var fetchOffset: Int = 0
-    public var fetchBatchSize: Int = 0
-    public var predicate: NSPredicate?
-    public var sortDescriptors: [NSSortDescriptor]?
+    private var predicate: NSPredicate?
+    private var sortDescriptors: [NSSortDescriptor]?
 }

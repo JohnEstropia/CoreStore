@@ -25,9 +25,10 @@
 		B5D8080E1A3471A500A44484 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D808021A34715700A44484 /* GCDKit.framework */; };
 		B5D808161A34947300A44484 /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808151A34947300A44484 /* NotificationObserver.swift */; };
 		B5D8081A1A3495BD00A44484 /* NSObject+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808191A3495BD00A44484 /* NSObject+HardcoreData.swift */; };
+		B5E186351A3C5CDE002171F0 /* ValueQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E186341A3C5CDE002171F0 /* ValueQueryable.swift */; };
 		B5E209E01A0726460089C9D4 /* NSManagedObject+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */; };
-		B5E472271A35E84700804CE1 /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E472261A35E84700804CE1 /* Queryable.swift */; };
-		B5F539901A17A6FC00EC763B /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F5398F1A17A6FC00EC763B /* Query.swift */; };
+		B5E472271A35E84700804CE1 /* ObjectQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E472261A35E84700804CE1 /* ObjectQueryable.swift */; };
+		B5F539901A17A6FC00EC763B /* ObjectQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F5398F1A17A6FC00EC763B /* ObjectQuery.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,10 +78,11 @@
 		B5D806C51A34715700A44484 /* GCDKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GCDKit.xcodeproj; sourceTree = "<group>"; };
 		B5D808151A34947300A44484 /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationObserver.swift; sourceTree = "<group>"; };
 		B5D808191A3495BD00A44484 /* NSObject+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+HardcoreData.swift"; sourceTree = "<group>"; };
+		B5E186341A3C5CDE002171F0 /* ValueQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueQueryable.swift; sourceTree = "<group>"; };
 		B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+HardcoreData.swift"; sourceTree = "<group>"; };
-		B5E472261A35E84700804CE1 /* Queryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queryable.swift; sourceTree = "<group>"; };
+		B5E472261A35E84700804CE1 /* ObjectQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectQueryable.swift; sourceTree = "<group>"; };
 		B5F3D98419F3EB8E009690A6 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		B5F5398F1A17A6FC00EC763B /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
+		B5F5398F1A17A6FC00EC763B /* ObjectQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectQuery.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +131,6 @@
 			isa = PBXGroup;
 			children = (
 				B5D399F019FC818E000E91BB /* DataStack.swift */,
-				B5E472261A35E84700804CE1 /* Queryable.swift */,
 				B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */,
 				2F03A53519C5C6DA005002A5 /* HardcoreData.h */,
 				2F291E2619C6D3CF007AF63F /* HardcoreData.swift */,
@@ -137,7 +138,9 @@
 				B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */,
 				B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */,
 				B5D399F419FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift */,
-				B5F5398F1A17A6FC00EC763B /* Query.swift */,
+				B5F5398F1A17A6FC00EC763B /* ObjectQuery.swift */,
+				B5E472261A35E84700804CE1 /* ObjectQueryable.swift */,
+				B5E186341A3C5CDE002171F0 /* ValueQueryable.swift */,
 				B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */,
 				B5CFD36D1A0775F000B7885F /* SaveResult.swift */,
 				B5D808141A34945A00A44484 /* Internal */,
@@ -349,17 +352,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5F539901A17A6FC00EC763B /* Query.swift in Sources */,
+				B5F539901A17A6FC00EC763B /* ObjectQuery.swift in Sources */,
 				B5CFF24019FD383100D6DFC4 /* DataTransaction.swift in Sources */,
 				B5D399F519FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift in Sources */,
 				B5CFD36E1A0775F000B7885F /* SaveResult.swift in Sources */,
 				B5D1E22C19FA9FBC003B2874 /* NSError+HardcoreData.swift in Sources */,
 				B5CFF23E19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift in Sources */,
+				B5E186351A3C5CDE002171F0 /* ValueQueryable.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* HardcoreData.swift in Sources */,
 				B5D8081A1A3495BD00A44484 /* NSObject+HardcoreData.swift in Sources */,
 				B5E209E01A0726460089C9D4 /* NSManagedObject+HardcoreData.swift in Sources */,
 				B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */,
-				B5E472271A35E84700804CE1 /* Queryable.swift in Sources */,
+				B5E472271A35E84700804CE1 /* ObjectQueryable.swift in Sources */,
 				B5D399F119FC818E000E91BB /* DataStack.swift in Sources */,
 				B5D808161A34947300A44484 /* NotificationObserver.swift in Sources */,
 			);

@@ -25,7 +25,7 @@
 
 import Foundation
 
-internal class NotificationObserver {
+internal final class NotificationObserver {
     
     let notificationName: String
     let object: AnyObject?

@@ -48,32 +48,37 @@ public extension NSManagedObject {
     
     // MARK: Querying
     
-    public class func WHERE(predicate: NSPredicate) -> Query<NSManagedObject> {
+    public class func WHERE(predicate: NSPredicate) -> ObjectQuery<NSManagedObject> {
         
-        return Query(entity: self).WHERE(predicate)
+        return ObjectQuery(entity: self).WHERE(predicate)
     }
     
-    public class func WHERE(value: Bool) -> Query<NSManagedObject> {
+    public class func WHERE(value: Bool) -> ObjectQuery<NSManagedObject> {
         
         return self.WHERE(NSPredicate(value: value))
     }
     
-    public class func WHERE(format: String, _ args: CVarArgType...) -> Query<NSManagedObject> {
+    public class func WHERE(format: String, _ args: CVarArgType...) -> ObjectQuery<NSManagedObject> {
         
-        return self.WHERE(NSPredicate(format: format, arguments: withVaList(args, { $0 })))
+        return self.WHERE(NSPredicate(format: format, arguments: getVaList(args)))
     }
     
-    public class func WHERE(format: String, argumentArray: [AnyObject]?) -> Query<NSManagedObject> {
+    public class func WHERE(format: String, argumentArray: [AnyObject]?) -> ObjectQuery<NSManagedObject> {
         
         return self.WHERE(NSPredicate(format: format, argumentArray: argumentArray))
     }
     
-    public class func SORTEDBY(order: [SortOrder]) -> Query<NSManagedObject> {
+    public class func WHERE(attributeName: AttributeName, isEqualTo value: NSObject?) -> ObjectQuery<NSManagedObject> {
         
-        return Query(entity: self).SORTEDBY(order)
+        return ObjectQuery(entity: self).WHERE(attributeName, isEqualTo: value)
     }
     
-    public class func SORTEDBY(order: SortOrder, _ subOrder: SortOrder...) -> Query<NSManagedObject> {
+    public class func SORTEDBY(order: [SortOrder]) -> ObjectQuery<NSManagedObject> {
+        
+        return ObjectQuery(entity: self).SORTEDBY(order)
+    }
+    
+    public class func SORTEDBY(order: SortOrder, _ subOrder: SortOrder...) -> ObjectQuery<NSManagedObject> {
         
         return self.SORTEDBY([order] + subOrder)
     }
