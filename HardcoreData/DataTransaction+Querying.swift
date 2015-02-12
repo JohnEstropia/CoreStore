@@ -1,8 +1,8 @@
 //
-//  NSObject+HardcoreData.swift
+//  DataTransaction+Querying.swift
 //  HardcoreData
 //
-//  Copyright (c) 2014 John Rommel Estropia
+//  Copyright (c) 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,29 +24,38 @@
 //
 
 import Foundation
+import CoreData
 
 
-// MARK: - NSObject+HardcoreData
-
-internal extension NSObject {
+extension DataTransaction {
     
-    internal func getAssociatedObjectForKey<T: AnyObject>(key: UnsafePointer<Void>) -> T? {
+    public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
         
-        return objc_getAssociatedObject(self, key) as? T
+        return self.context.fetchOne(entity, queryClauses)
     }
     
-    internal func setAssociatedRetainedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
+    public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
         
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        return self.context.fetchOne(entity, queryClauses)
     }
     
-    internal func setAssociatedCopiedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
+    public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [T]? {
         
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_COPY_NONATOMIC))
+        return self.context.fetchAll(entity, queryClauses)
     }
     
-    internal func setAssociatedAssignedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
+    public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
         
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_ASSIGN))
+        return self.context.fetchAll(entity, queryClauses)
+    }
+    
+    public func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int {
+        
+        return self.context.queryCount(entity, queryClauses)
+    }
+    
+    public func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int {
+        
+        return self.context.queryCount(entity, queryClauses)
     }
 }

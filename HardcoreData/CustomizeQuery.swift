@@ -1,8 +1,8 @@
 //
-//  NSObject+HardcoreData.swift
+//  CustomizeQuery.swift
 //  HardcoreData
 //
-//  Copyright (c) 2014 John Rommel Estropia
+//  Copyright (c) 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,29 +24,28 @@
 //
 
 import Foundation
+import CoreData
 
 
-// MARK: - NSObject+HardcoreData
+// MARK: - CustomizeQuery
 
-internal extension NSObject {
+public struct CustomizeQuery: FetchClause {
     
-    internal func getAssociatedObjectForKey<T: AnyObject>(key: UnsafePointer<Void>) -> T? {
+    // MARK: Public
+    
+    public init(_ customization: (fetchRequest: NSFetchRequest) -> Void) {
         
-        return objc_getAssociatedObject(self, key) as? T
+        self.customization = customization
     }
     
-    internal func setAssociatedRetainedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
+    
+    // MARK: QueryClause
+    
+    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        self.customization(fetchRequest: fetchRequest)
     }
     
-    internal func setAssociatedCopiedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
-        
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_COPY_NONATOMIC))
-    }
     
-    internal func setAssociatedAssignedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
-        
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_ASSIGN))
-    }
+    private let customization: (fetchRequest: NSFetchRequest) -> Void
 }

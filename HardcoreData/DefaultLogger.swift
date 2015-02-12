@@ -1,8 +1,8 @@
 //
-//  NSObject+HardcoreData.swift
+//  DefaultLogger.swift
 //  HardcoreData
 //
-//  Copyright (c) 2014 John Rommel Estropia
+//  Copyright (c) 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,27 +26,26 @@
 import Foundation
 
 
-// MARK: - NSObject+HardcoreData
-
-internal extension NSObject {
-    
-    internal func getAssociatedObjectForKey<T: AnyObject>(key: UnsafePointer<Void>) -> T? {
+public final class DefaultLogger: HardcoreDataLogger {
+   
+    public func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) {
         
-        return objc_getAssociatedObject(self, key) as? T
+        #if DEBUG
+            Swift.println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+        #endif
     }
     
-    internal func setAssociatedRetainedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
+    public func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) {
         
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        #if DEBUG
+            Swift.println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message): \(error)\n")
+        #endif
     }
     
-    internal func setAssociatedCopiedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
+    public func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) {
         
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_COPY_NONATOMIC))
-    }
-    
-    internal func setAssociatedAssignedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
-        
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_ASSIGN))
+        #if DEBUG
+            Swift.assert(condition, message, file: fileName, line: lineNumber)
+        #endif
     }
 }

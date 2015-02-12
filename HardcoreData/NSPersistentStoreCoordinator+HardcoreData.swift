@@ -26,6 +26,9 @@
 import Foundation
 import CoreData
 
+
+// MARK: - NSPersistentStoreCoordinator+HardcoreData
+
 public extension NSPersistentStoreCoordinator {
     
     public func performSynchronously(closure: () -> ()) {

@@ -41,13 +41,22 @@ class HardcoreDataTests: XCTestCase {
     
     func testExample() {
         
-        #if DEBUG
-            let resetStoreOnMigrationFailure = true
-            #else
-            let resetStoreOnMigrationFailure = false
-        #endif
+        let stack = DataStack()
+        HardcoreData.defaultStack = stack
+        XCTAssertEqual(HardcoreData.defaultStack, stack, "HardcoreData.defaultStack == stack")
         
-        switch HardcoreData.defaultStack.addSQLiteStore(resetStoreOnMigrationFailure: resetStoreOnMigrationFailure) {
+        switch stack.addSQLiteStore("Config1Store", configuration: "Config1", resetStoreOnMigrationFailure: true){
+            
+        case .Failure(let error):
+            NSException(
+                name: "CoreDataMigrationException",
+                reason: error.localizedDescription,
+                userInfo: error.userInfo).raise()
+            
+        default:
+            break
+        }
+        switch stack.addSQLiteStore("Config2Store", configuration: "Config2", resetStoreOnMigrationFailure: true){
             
         case .Failure(let error):
             NSException(
@@ -61,27 +70,43 @@ class HardcoreDataTests: XCTestCase {
         
         HardcoreData.performTransactionAndWait({ (transaction) -> () in
         
-            let obj = transaction.create(TestEntity1)
-            obj.testEntityID = 1
-            obj.testString = "lololol"
-            obj.testNumber = 42
-            obj.testDate = NSDate()
-
+            let obj1 = transaction.create(TestEntity1)
+            obj1.testEntityID = 1
+            obj1.testString = "lololol"
+            obj1.testNumber = 42
+            obj1.testDate = NSDate()
+            
+            let obj2 = transaction.create(TestEntity2)
+            obj2.testEntityID = 2
+            obj2.testString = "hahaha"
+            obj2.testNumber = 7
+            obj2.testDate = NSDate()
+            
             transaction.commitAndWait()
         })
-        
         HardcoreData.performTransactionAndWait({ (transaction) -> () in
             
-            let obj = transaction.findAll(
-                TestEntity1
-                    .WHERE("testEntityID", isEqualTo: 1)
-                    .SORTEDBY(.Ascending("testEntityID"), .Descending("testString")),
-                customizeFetch: { (fetchRequest) -> () in
+            let obj1 = transaction.fetchOne(
+                TestEntity1.self,
+                Where("testEntityID", isEqualTo: 1),
+                SortedBy(.Ascending("testEntityID"), .Descending("testString")),
+                CustomizeQuery { (fetchRequest) -> Void in
                     
                     fetchRequest.includesPendingChanges = true
                 }
             )
-            NSLog("%@", obj ?? [])
+            NSLog(">>>>> %@", obj1 ?? "nil")
+            
+            let objs2 = transaction.fetchAll(
+                TestEntity2.self,
+                Where("testEntityID", isEqualTo: 2) && Where("testNumber", isEqualTo: 7),
+                SortedBy(.Ascending("testEntityID"), .Descending("testString")),
+                CustomizeQuery { (fetchRequest) -> () in
+                    
+                    fetchRequest.includesPendingChanges = true
+                }
+            )
+            NSLog(">>>>> %@", objs2 ?? "nil")
         })
     }
 }

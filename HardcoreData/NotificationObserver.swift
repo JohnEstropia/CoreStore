@@ -25,6 +25,9 @@
 
 import Foundation
 
+
+// MARK: - NotificationObserver
+
 internal final class NotificationObserver {
     
     let notificationName: String

@@ -1,5 +1,5 @@
 //
-//  ValueQueryable.swift
+//  TestEntity1.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -24,15 +24,13 @@
 //
 
 import Foundation
+import CoreData
 
-public protocol ValueQueryable {
+class TestEntity2: NSManagedObject {
     
-    func findFirst<T: NSManagedObject>(entity: T.Type) -> T?
-    func findFirst<T: NSManagedObject>(query: ObjectQuery<T>) -> T?
+    @NSManaged var testEntityID: NSNumber?
+    @NSManaged var testString: String?
+    @NSManaged var testNumber: NSNumber?
+    @NSManaged var testDate: NSDate?
     
-    func findAll<T: NSManagedObject>(entity: T.Type) -> [T]?
-    func findAll<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]?
-    
-    func count<T: NSManagedObject>(entity: T.Type) -> Int
-    func count<T: NSManagedObject>(query: ObjectQuery<T>) -> Int
 }

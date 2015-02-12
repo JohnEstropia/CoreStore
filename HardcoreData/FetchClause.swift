@@ -1,5 +1,5 @@
 //
-//  NSObject+HardcoreData.swift
+//  FetchClause.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -24,29 +24,12 @@
 //
 
 import Foundation
+import CoreData
 
 
-// MARK: - NSObject+HardcoreData
+// MARK: - FetchClause
 
-internal extension NSObject {
-    
-    internal func getAssociatedObjectForKey<T: AnyObject>(key: UnsafePointer<Void>) -> T? {
-        
-        return objc_getAssociatedObject(self, key) as? T
-    }
-    
-    internal func setAssociatedRetainedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
-        
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
-    }
-    
-    internal func setAssociatedCopiedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
-        
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_COPY_NONATOMIC))
-    }
-    
-    internal func setAssociatedAssignedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
-        
-        objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_ASSIGN))
-    }
+public protocol FetchClause {
+
+    func applyToFetchRequest(fetchRequest: NSFetchRequest)
 }

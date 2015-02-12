@@ -28,10 +28,12 @@ import CoreData
 import GCDKit
 
 
-private let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as NSURL
+private let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL
 
-private let applicationName = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String ?? "CoreData"
+private let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData")
 
+
+// MARK: DataStack
 
 /**
 The DataStack encapsulates the data model for the Core Data stack. Each DataStack can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own NSPersistentStoreCoordinator, a root NSManagedObjectContext for disk saves, and a shared NSManagedObjectContext acting as a model interface for NSManagedObjects.
@@ -283,3 +285,59 @@ public class DataStack: NSObject {
     private let mainContext: NSManagedObjectContext
     private let transactionQueue: GCDQueue;
 }
+
+
+// MARK: - DataStack+DataContextProvider
+
+//extension DataStack: ObjectQueryable {
+//    
+//    public func firstObject<T: NSManagedObject>(entity: T.Type) -> T? {
+//        
+//        return self.mainContext.firstObject(entity)
+//    }
+//    
+//    public func firstObject<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> T? {
+//        
+//        return self.mainContext.firstObject(entity, customizeFetch: customizeFetch)
+//    }
+//    
+//    public func firstObject<T: NSManagedObject>(query: ObjectQuery<T>) -> T? {
+//        
+//        return self.mainContext.firstObject(query)
+//    }
+//    
+//    public func firstObject<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> T? {
+//        
+//        return self.mainContext.firstObject(query, customizeFetch: customizeFetch)
+//    }
+//    
+//    public func allObjects<T: NSManagedObject>(entity: T.Type) -> [T]? {
+//        
+//        return self.mainContext.allObjects(entity)
+//    }
+//    
+//    public func allObjects<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> [T]? {
+//        
+//        return self.mainContext.allObjects(entity, customizeFetch: customizeFetch)
+//    }
+//    
+//    public func allObjects<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]? {
+//        
+//        return self.mainContext.allObjects(query)
+//    }
+//    
+//    public func allObjects<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> [T]? {
+//        
+//        return self.mainContext.allObjects(query, customizeFetch: customizeFetch)
+//    }
+//    
+//    public func countObjects<T: NSManagedObject>(entity: T.Type) -> Int {
+//        
+//        return self.mainContext.countObjects(entity)
+//    }
+//    
+//    public func countObjects<T: NSManagedObject>(query: ObjectQuery<T>) -> Int {
+//        
+//        return self.mainContext.countObjects(query)
+//    }
+//}

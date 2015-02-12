@@ -26,63 +26,18 @@
 import Foundation
 import CoreData
 
-public extension NSManagedObject {
+
+// MARK: - NSManagedObject+HardcoreData
+
+extension NSManagedObject {
     
     // MARK: - Entity Utilities
     
     public class var entityName: String {
         
+        // TODO: map from model file
         return NSStringFromClass(self).componentsSeparatedByString(".").last!
     }
-    
-    public func inContext(context: NSManagedObjectContext) -> Self? {
-        
-        return self.typedObjectInContext(context)
-    }
-    
-    public func deleteFromContext() {
-        
-        self.managedObjectContext?.deleteObject(self)
-    }
-    
-    
-    // MARK: Querying
-    
-    public class func WHERE(predicate: NSPredicate) -> ObjectQuery<NSManagedObject> {
-        
-        return ObjectQuery(entity: self).WHERE(predicate)
-    }
-    
-    public class func WHERE(value: Bool) -> ObjectQuery<NSManagedObject> {
-        
-        return self.WHERE(NSPredicate(value: value))
-    }
-    
-    public class func WHERE(format: String, _ args: CVarArgType...) -> ObjectQuery<NSManagedObject> {
-        
-        return self.WHERE(NSPredicate(format: format, arguments: getVaList(args)))
-    }
-    
-    public class func WHERE(format: String, argumentArray: [AnyObject]?) -> ObjectQuery<NSManagedObject> {
-        
-        return self.WHERE(NSPredicate(format: format, argumentArray: argumentArray))
-    }
-    
-    public class func WHERE(attributeName: AttributeName, isEqualTo value: NSObject?) -> ObjectQuery<NSManagedObject> {
-        
-        return ObjectQuery(entity: self).WHERE(attributeName, isEqualTo: value)
-    }
-    
-    public class func SORTEDBY(order: [SortOrder]) -> ObjectQuery<NSManagedObject> {
-        
-        return ObjectQuery(entity: self).SORTEDBY(order)
-    }
-    
-    public class func SORTEDBY(order: SortOrder, _ subOrder: SortOrder...) -> ObjectQuery<NSManagedObject> {
-        
-        return self.SORTEDBY([order] + subOrder)
-    }
-    
     
     
     // MARK: - Internal
@@ -91,6 +46,16 @@ public extension NSManagedObject {
         
         return self(entity: NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: context)!,
             insertIntoManagedObjectContext: context)
+    }
+    
+    internal func inContext(context: NSManagedObjectContext) -> Self? {
+        
+        return self.typedObjectInContext(context)
+    }
+    
+    internal func deleteFromContext() {
+        
+        self.managedObjectContext?.deleteObject(self)
     }
     
     private func typedObjectInContext<T: NSManagedObject>(context: NSManagedObjectContext) -> T? {
@@ -111,7 +76,7 @@ public extension NSManagedObject {
         var existingObjectError: NSError?
         if let existingObject = context.existingObjectWithID(objectID, error: &existingObjectError) {
             
-            return (existingObject as T)
+            return (existingObject as! T)
         }
         
         HardcoreData.handleError(

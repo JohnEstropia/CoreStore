@@ -25,6 +25,9 @@
 
 import Foundation
 
+
+// MARK: - SaveResult
+
 public enum SaveResult {
     
     case Success(hasChanges: Bool)
@@ -52,6 +55,9 @@ public enum SaveResult {
             userInfo: userInfo))
     }
 }
+
+
+// MARK: - SaveResult+BooleanType
 
 extension SaveResult: BooleanType {
     

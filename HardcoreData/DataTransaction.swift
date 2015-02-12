@@ -27,6 +27,9 @@ import Foundation
 import CoreData
 import GCDKit
 
+
+// MARK: - DataTransaction
+
 /**
 The DataTransaction provides an interface for NSManagedObject creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from DataStack.performTransaction(_:), or from HardcoreData.performTransaction(_:).
 */
@@ -60,7 +63,7 @@ public final class DataTransaction {
     :param: object the NSManagedObject type to be edited
     :returns: an editable proxy for the specified NSManagedObject.
     */
-    public func update<T: NSManagedObject>(object: T) -> T? {
+    public func fetch<T: NSManagedObject>(object: T) -> T? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to update an NSManagedObject outside a transaction queue.")
         HardcoreData.assert(!self.isCommitted, "Attempted to update an NSManagedObject from an already committed DataTransaction.")
@@ -132,6 +135,8 @@ public final class DataTransaction {
         self.transactionQueue = queue
         self.context = mainContext.temporaryContext()
         self.closure = closure
+        
+        self.context.parentTransaction = self
     }
     
     internal func perform() {
@@ -159,60 +164,4 @@ public final class DataTransaction {
     private let mainContext: NSManagedObjectContext
     private let transactionQueue: GCDQueue
     private let closure: (transaction: DataTransaction) -> ()
-}
-
-
-// MARK: - DataContextProvider
-
-extension DataTransaction: ObjectQueryable {
-    
-    public func findFirst<T: NSManagedObject>(entity: T.Type) -> T? {
-        
-        return self.context.findFirst(entity)
-    }
-    
-    public func findFirst<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> T? {
-        
-        return self.context.findFirst(entity, customizeFetch: customizeFetch)
-    }
-    
-    public func findFirst<T: NSManagedObject>(query: ObjectQuery<T>) -> T? {
-        
-        return self.context.findFirst(query)
-    }
-    
-    public func findFirst<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> T? {
-        
-        return self.context.findFirst(query, customizeFetch: customizeFetch)
-    }
-    
-    public func findAll<T: NSManagedObject>(entity: T.Type) -> [T]? {
-        
-        return self.context.findAll(entity)
-    }
-    
-    public func findAll<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> [T]? {
-        
-        return self.context.findAll(entity, customizeFetch: customizeFetch)
-    }
-    
-    public func findAll<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]? {
-        
-        return self.context.findAll(query)
-    }
-    
-    public func findAll<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> [T]? {
-        
-        return self.context.findAll(query, customizeFetch: customizeFetch)
-    }
-    
-    public func count<T: NSManagedObject>(entity: T.Type) -> Int {
-        
-        return self.context.count(entity)
-    }
-    
-    public func count<T: NSManagedObject>(query: ObjectQuery<T>) -> Int {
-        
-        return self.context.count(query)
-    }
 }

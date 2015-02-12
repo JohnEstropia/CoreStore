@@ -46,6 +46,9 @@ public enum HardcoreDataErrorCode: Int {
     case DifferentPersistentStoreExistsAtURL
 }
 
+
+// MARK: - NSError+HardcoreData
+
 public extension NSError {
    
     /**
@@ -57,6 +60,9 @@ public extension NSError {
             ? HardcoreDataErrorCode(rawValue: self.code)
             : nil)
     }
+    
+    
+    // MARK: Internal
     
     internal convenience init(hardcoreDataErrorCode: HardcoreDataErrorCode) {
         

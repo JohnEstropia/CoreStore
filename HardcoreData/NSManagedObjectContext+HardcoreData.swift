@@ -27,6 +27,9 @@ import Foundation
 import CoreData
 import GCDKit
 
+
+// MARK: - NSManagedObjectContext+HardcoreData
+
 public extension NSManagedObjectContext {
     
     // MARK: - Public
@@ -39,12 +42,52 @@ public extension NSManagedObjectContext {
         context.parentContext = self
         context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
         context.shouldCascadeSavesToParent = true
+        context.parentStack = self.parentStack
+        context.parentTransaction = self.parentTransaction
         
         return context
     }
     
     
     // MARK: - Internal
+    
+    internal var parentStack: DataStack? {
+        
+        get {
+            
+            return self.getAssociatedObjectForKey(&PropertyKeys.parentStack)
+        }
+        set {
+            
+            self.setAssociatedAssignedObject(
+                newValue,
+                forKey: &PropertyKeys.parentStack)
+        }
+    }
+    
+    internal var parentTransaction: DataTransaction? {
+        
+        get {
+            
+            return self.getAssociatedObjectForKey(&PropertyKeys.parentTransaction)
+        }
+        set {
+            
+            self.setAssociatedAssignedObject(
+                newValue,
+                forKey: &PropertyKeys.parentTransaction)
+        }
+    }
+    
+    internal func temporaryContextInTransaction(transaction: DataTransaction?) -> NSManagedObjectContext {
+        
+        let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        context.parentContext = self
+        context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
+        context.shouldCascadeSavesToParent = true
+        
+        return context
+    }
     
     internal func saveSynchronously() -> SaveResult {
         
@@ -109,8 +152,7 @@ public extension NSManagedObjectContext {
             return
         }
         
-        self.performBlock {
-            [unowned self] () -> () in
+        self.performBlock { () -> () in
             
             var saveError: NSError?
             if self.save(&saveError) {
@@ -191,6 +233,8 @@ public extension NSManagedObjectContext {
         static var observerForWillSaveNotification: Void?
         static var observerForDidSaveNotification: Void?
         static var shouldCascadeSavesToParent: Void?
+        static var parentStack: Void?
+        static var parentTransaction: Void?
     }
     
     private var observerForWillSaveNotification: NotificationObserver? {
@@ -248,7 +292,7 @@ public extension NSManagedObjectContext {
             object: self,
             closure: { (note) -> () in
                 
-                let context = note.object as NSManagedObjectContext
+                let context = note.object as! NSManagedObjectContext
                 let insertedObjects = context.insertedObjects
                 if insertedObjects.count <= 0 {
                     
@@ -256,7 +300,7 @@ public extension NSManagedObjectContext {
                 }
                 
                 var permanentIDError: NSError?
-                if context.obtainPermanentIDsForObjects(insertedObjects.allObjects, error: &permanentIDError) {
+                if context.obtainPermanentIDsForObjects(Array(insertedObjects), error: &permanentIDError) {
                     
                     return
                 }
@@ -271,104 +315,3 @@ public extension NSManagedObjectContext {
     }
 }
 
-
-// MARK: - DataContextProvider
-
-extension NSManagedObjectContext: ObjectQueryable {
-    
-    public func findFirst<T: NSManagedObject>(entity: T.Type) -> T? {
-        
-        return self.findFirst(entity, customizeFetch: nil)
-    }
-    
-    public func findFirst<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> T? {
-        
-        return self.findFirst(ObjectQuery(entity: entity), customizeFetch: customizeFetch)
-    }
-    
-    public func findFirst<T: NSManagedObject>(query: ObjectQuery<T>) -> T? {
-        
-        return self.findFirst(query, customizeFetch: nil)
-    }
-    
-    public func findFirst<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> T? {
-        
-        let fetchRequest = query.createFetchRequestForContext(self)
-        customizeFetch?(fetchRequest: fetchRequest)
-        fetchRequest.fetchLimit = 1
-        fetchRequest.resultType = .ManagedObjectResultType
-        
-        var fetchResults: [T]?
-        var error: NSError?
-        self.performBlockAndWait {
-            
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
-        }
-        if fetchResults == nil {
-            
-            HardcoreData.handleError(error!, "Failed executing fetch request.")
-            return nil
-        }
-        
-        return fetchResults?.first
-    }
-    
-    public func findAll<T: NSManagedObject>(entity: T.Type) -> [T]? {
-        
-        return self.findAll(entity, customizeFetch: nil)
-    }
-    
-    public func findAll<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> [T]? {
-        
-        return self.findAll(ObjectQuery(entity: entity), customizeFetch: customizeFetch)
-    }
-    
-    public func findAll<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]? {
-        
-        return self.findAll(query, customizeFetch: nil)
-    }
-    
-    public func findAll<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> [T]? {
-        
-        let fetchRequest = query.createFetchRequestForContext(self)
-        fetchRequest.fetchLimit = 0
-        
-        var fetchResults: [T]?
-        var error: NSError?
-        self.performBlockAndWait {
-            
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
-        }
-        if fetchResults == nil {
-            
-            HardcoreData.handleError(error!, "Failed executing fetch request.")
-            return nil
-        }
-        
-        return fetchResults
-    }
-    
-    public func count<T: NSManagedObject>(entity: T.Type) -> Int {
-        
-        return self.count(ObjectQuery(entity: entity))
-    }
-    
-    public func count<T: NSManagedObject>(query: ObjectQuery<T>) -> Int {
-        
-        let fetchRequest = query.createFetchRequestForContext(self)
-        
-        var count = 0
-        var error: NSError?
-        self.performBlockAndWait {
-            
-            count = self.countForFetchRequest(fetchRequest, error: &error)
-        }
-        if count == NSNotFound {
-            
-            HardcoreData.handleError( error!, "Failed executing fetch request.")
-            return 0
-        }
-        
-        return count
-    }
-}

@@ -27,6 +27,11 @@ import CoreData
 import GCDKit
 
 
+typealias HCD = HardcoreData
+
+
+// MARK: HardcoreData
+
 /**
 The HardcoreData struct is the main entry point for all other APIs.
 */
@@ -59,6 +64,55 @@ public struct HardcoreData {
         }
     }
     
+    
+    /**
+    The HardcoreDataLogger instance to be used. The default logger is an instance of a DefaultLogger.
+    */
+    public static var logger: HardcoreDataLogger = DefaultLogger()
+    
+    
+    internal static func log(level: LogLevel, message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
+        
+        self.logger.log(
+            level: level,
+            message: message,
+            fileName: fileName,
+            lineNumber:
+            lineNumber,
+            functionName:
+            functionName
+        )
+    }
+    
+    internal static func handleError(error: NSError, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
+        
+        self.logger.handleError(
+            error: error,
+            message: message,
+            fileName: fileName,
+            lineNumber: lineNumber,
+            functionName: functionName)
+    }
+    
+    internal static func assert(@autoclosure condition: () -> Bool, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
+        
+        self.logger.assert(
+            condition,
+            message: message,
+            fileName: fileName,
+            lineNumber: lineNumber,
+            functionName: functionName)
+    }
+    
+    
+    private static let defaultStackBarrierQueue = GCDQueue.createConcurrent("com.hardcoreData.defaultStackBarrierQueue")
+    
+    private static var defaultStackInstance: DataStack?
+}
+
+
+extension HardcoreData {
+    
     /**
     Using the defaultStack, begins a transaction asynchronously where NSManagedObject creates, updates, and deletes can be made.
     
@@ -79,102 +133,59 @@ public struct HardcoreData {
         
         return self.defaultStack.performTransactionAndWait(closure)
     }
-    
-    
-    public enum LogLevel {
-        
-        case Trace
-        case Notice
-        case Warning
-        case Fatal
-    }
-    
-    public typealias LogHandlerType = (level: LogLevel, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> ()
-    
-    public typealias ErrorHandlerType = (error: NSError, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> ()
-    
-    public typealias AssertionHandlerType = (condition: @autoclosure() -> Bool, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> ()
-    
-    
-    /**
-    Sets the closure that handles all logging that occur within HardcoreData. The default logHandler logs via println() only when DEBUG is defined.
-    */
-    public static func setLogHandler(logHandler: LogHandlerType) {
-        
-        self.logHandler = logHandler
-    }
-    
-    /**
-    Sets the closure that handles all errors that occur within HardcoreData. The default errorHandler logs via println() only when DEBUG is defined.
-    */
-    public static func setErrorHandler(errorHandler: ErrorHandlerType) {
-        
-        self.errorHandler = errorHandler
-    }
-    
-    /**
-    Sets the closure that handles all assertions that occur within HardcoreData. The default assertHandler calls assert().
-    */
-    public static func setAssertionHandler(assertionHandler: AssertionHandlerType) {
-        
-        self.assertionHandler = assertionHandler
-    }
-    
-    internal static func log(level: LogLevel, message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
-        
-        self.logHandler(
-            level: level,
-            message: message,
-            fileName: fileName,
-            lineNumber: lineNumber,
-            functionName: functionName)
-    }
-    
-    internal static func handleError(error: NSError, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
-        
-        self.errorHandler(
-            error: error,
-            message: message,
-            fileName: fileName,
-            lineNumber: lineNumber,
-            functionName: functionName)
-    }
-    
-    internal static func assert(condition: @autoclosure() -> Bool, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
-        
-        self.assertionHandler(
-            condition: condition,
-            message: message,
-            fileName: fileName,
-            lineNumber: lineNumber,
-            functionName: functionName)
-    }
-    
-    
-    private static let defaultStackBarrierQueue = GCDQueue.createConcurrent("com.hardcoredata.defaultstackbarrierqueue")
-    
-    private static var defaultStackInstance: DataStack?
-    
-    private static var logHandler: LogHandlerType = { (level: LogLevel, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
-        
-        #if DEBUG
-            println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
-        #endif
-    }
-    
-    private static var errorHandler: ErrorHandlerType = { (error: NSError, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
-        
-        #if DEBUG
-            println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message): \(error)\n")
-        #endif
-    }
-    
-    private static var assertionHandler: AssertionHandlerType = { (condition: @autoclosure() -> Bool, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) -> () in
-        
-        #if DEBUG
-            assert(condition, message, file: fileName, line: lineNumber)
-        #endif
-    }
 }
 
+
+//extension HardcoreData {
+//    
+//    public static func firstObject<T: NSManagedObject>(entity: T.Type) -> T? {
+//        
+//        return self.defaultStack.firstObject(entity)
+//    }
+//    
+//    public static func firstObject<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> T? {
+//        
+//        return self.defaultStack.firstObject(entity, customizeFetch: customizeFetch)
+//    }
+//    
+//    public static func firstObject<T: NSManagedObject>(query: ObjectQuery<T>) -> T? {
+//        
+//        return self.defaultStack.firstObject(query)
+//    }
+//    
+//    public static func firstObject<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> T? {
+//        
+//        return self.defaultStack.firstObject(query, customizeFetch: customizeFetch)
+//    }
+//    
+//    public static func allObjects<T: NSManagedObject>(entity: T.Type) -> [T]? {
+//        
+//        return self.defaultStack.allObjects(entity)
+//    }
+//    
+//    public static func allObjects<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> [T]? {
+//        
+//        return self.defaultStack.allObjects(entity, customizeFetch: customizeFetch)
+//    }
+//    
+//    public static func allObjects<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]? {
+//        
+//        return self.defaultStack.allObjects(query)
+//    }
+//    
+//    public static func allObjects<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> [T]? {
+//        
+//        return self.defaultStack.allObjects(query, customizeFetch: customizeFetch)
+//    }
+//    
+//    public static func countObjects<T: NSManagedObject>(entity: T.Type) -> Int {
+//        
+//        return self.defaultStack.countObjects(entity)
+//    }
+//    
+//    public static func countObjects<T: NSManagedObject>(query: ObjectQuery<T>) -> Int {
+//        
+//        return self.defaultStack.countObjects(query)
+//    }
+//}
 

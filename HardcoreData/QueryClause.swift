@@ -1,5 +1,5 @@
 //
-//  ObjectQueryable.swift
+//  FetchClause.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -23,25 +23,13 @@
 //  SOFTWARE.
 //
 
-import UIKit
+import Foundation
+import CoreData
 
 
-public typealias FetchRequestCustomization = (fetchRequest: NSFetchRequest) -> ()
+// MARK: - QueryClause
 
-public protocol ObjectQueryable {
+public protocol QueryClause {
     
-    func findFirst<T: NSManagedObject>(entity: T.Type) -> T?
-    func findFirst<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> T?
-    
-    func findFirst<T: NSManagedObject>(query: ObjectQuery<T>) -> T?
-    func findFirst<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> T?
-    
-    func findAll<T: NSManagedObject>(entity: T.Type) -> [T]?
-    func findAll<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> [T]?
-    
-    func findAll<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]?
-    func findAll<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> [T]?
-    
-    func count<T: NSManagedObject>(entity: T.Type) -> Int
-    func count<T: NSManagedObject>(query: ObjectQuery<T>) -> Int
+    func applyToFetchRequest(fetchRequest: NSFetchRequest)
 }

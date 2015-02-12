@@ -26,6 +26,9 @@
 import Foundation
 import CoreData
 
+
+// MARK: - PersistentStoreResult
+
 public enum PersistentStoreResult {
     
     case Success(NSPersistentStore)
@@ -53,6 +56,9 @@ public enum PersistentStoreResult {
             userInfo: userInfo))
     }
 }
+
+
+// MARK: - PersistentStoreResult+BooleanType
 
 extension PersistentStoreResult: BooleanType {
     
