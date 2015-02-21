@@ -254,7 +254,7 @@ public class DataStack: NSObject {
     
     // MARK: Internal
     
-    public let mainContext: NSManagedObjectContext
+    internal let mainContext: NSManagedObjectContext
     internal let transactionQueue: GCDQueue;
     
     

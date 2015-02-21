@@ -63,9 +63,9 @@ public struct Where: FetchClause {
         self.init(NSPredicate(value: value))
     }
     
-    public init(_ format: String, _ args: CVarArgType...) {
+    public init(_ format: String, _ args: NSObject...) {
         
-        self.init(NSPredicate(format: format, arguments: getVaList(args)))
+        self.init(NSPredicate(format: format, argumentArray: args))
     }
     
     public init(_ format: String, argumentArray: [AnyObject]?) {

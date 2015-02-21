@@ -114,28 +114,3 @@ public struct HardcoreData {
     
     private static var defaultStackInstance: DataStack?
 }
-
-
-extension HardcoreData {
-    
-    /**
-    Using the defaultStack, begins a transaction asynchronously where NSManagedObject creates, updates, and deletes can be made.
-    
-    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
-    */
-    public static func performTransaction(closure: (transaction: DataTransaction) -> Void) {
-        
-        self.defaultStack.performTransaction(closure)
-    }
-    
-    /**
-    Using the defaultStack, begins a transaction asynchronously where NSManagedObject creates, updates, and deletes can be made.
-    
-    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
-    :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
-    */
-    public static func performTransactionAndWait(closure: (transaction: DataTransaction) -> Void) -> SaveResult? {
-        
-        return self.defaultStack.performTransactionAndWait(closure)
-    }
-}

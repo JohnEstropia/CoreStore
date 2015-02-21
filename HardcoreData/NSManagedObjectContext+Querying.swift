@@ -27,9 +27,11 @@ import Foundation
 import CoreData
 
 
-// MARK: - NSManagedObjectContext+Querying
+// MARK: - NSManagedObjectContext
 
 extension NSManagedObjectContext {
+    
+    // MARK: Public
     
     public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
         

@@ -106,7 +106,7 @@ class HardcoreDataTests: XCTestCase {
             
             let objs2 = transaction.fetchAll(
                 TestEntity2.self,
-                Where("testNumber", isEqualTo: 100) || Where("testNumber", isEqualTo: 90),
+                Where("testNumber", isEqualTo: 100) || Where("%K == %@", "testNumber", 90),
                 SortedBy(.Ascending("testEntityID"), .Descending("testString")),
                 CustomizeQuery { (fetchRequest) -> Void in
                     

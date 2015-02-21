@@ -1,5 +1,5 @@
 //
-//  DataTransaction+Querying.swift
+//  HardcoreData+Querying.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -24,42 +24,40 @@
 //
 
 import Foundation
-import CoreData
 
+// MARK: - HardcoreData
 
-// MARK: - DataTransaction
-
-extension DataTransaction {
+extension HardcoreData {
     
     // MARK: Public
     
-    public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
+    public static func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
         
-        return self.context.fetchOne(entity, queryClauses)
+        return self.defaultStack.mainContext.fetchOne(entity, queryClauses)
     }
     
-    public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
+    public static func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
         
-        return self.context.fetchOne(entity, queryClauses)
+        return self.defaultStack.mainContext.fetchOne(entity, queryClauses)
     }
     
-    public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [T]? {
+    public static func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [T]? {
         
-        return self.context.fetchAll(entity, queryClauses)
+        return self.defaultStack.mainContext.fetchAll(entity, queryClauses)
     }
     
-    public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
+    public static func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
         
-        return self.context.fetchAll(entity, queryClauses)
+        return self.defaultStack.mainContext.fetchAll(entity, queryClauses)
     }
     
-    public func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int {
+    public static func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int {
         
-        return self.context.queryCount(entity, queryClauses)
+        return self.defaultStack.mainContext.queryCount(entity, queryClauses)
     }
     
-    public func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int {
+    public static func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int {
         
-        return self.context.queryCount(entity, queryClauses)
+        return self.defaultStack.mainContext.queryCount(entity, queryClauses)
     }
 }
