@@ -58,6 +58,9 @@ extension NSManagedObject {
         self.managedObjectContext?.deleteObject(self)
     }
     
+    
+    // MARK: Private
+    
     private func typedObjectInContext<T: NSManagedObject>(context: NSManagedObjectContext) -> T? {
         
         let objectID = self.objectID

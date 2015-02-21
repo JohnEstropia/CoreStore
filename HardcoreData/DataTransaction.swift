@@ -99,15 +99,17 @@ public final class DataTransaction {
     
     :param: completion the block executed after the save completes. Success or failure is reported by the SaveResult argument of the block.
     */
-    public func commit(completion: (result: SaveResult) -> ()) {
+    public func commit(completion: (result: SaveResult) -> Void) {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to commit a DataTransaction outside a transaction queue.")
         HardcoreData.assert(!self.isCommitted, "Attempted to commit a DataTransaction more than once.")
         
         self.isCommitted = true
-        self.context.saveAsynchronouslyWithCompletion { (result) -> () in
+        let result = self.context.saveSynchronously()
+        self.result = result
+        
+        GCDQueue.Main.async {
             
-            self.result = result
             completion(result: result)
         }
     }
@@ -129,19 +131,23 @@ public final class DataTransaction {
     
     // MARK: - Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: DataTransaction) -> ()) {
+    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: DataTransaction) -> Void) {
         
         self.mainContext = mainContext
         self.transactionQueue = queue
-        self.context = mainContext.temporaryContext()
+        
+        let context = mainContext.temporaryContext()
+        context.retainsRegisteredObjects = true
+        self.context = context
+        
         self.closure = closure
         
-        self.context.parentTransaction = self
+        context.parentTransaction = self
     }
     
     internal func perform() {
         
-        self.transactionQueue.barrierAsync {
+        self.transactionQueue.async {
             
             self.closure(transaction: self)
         }
@@ -149,7 +155,7 @@ public final class DataTransaction {
     
     internal func performAndWait() -> SaveResult? {
         
-        self.transactionQueue.barrierSync {
+        self.transactionQueue.sync {
             
             self.closure(transaction: self)
         }
@@ -163,5 +169,5 @@ public final class DataTransaction {
     private var result: SaveResult?
     private let mainContext: NSManagedObjectContext
     private let transactionQueue: GCDQueue
-    private let closure: (transaction: DataTransaction) -> ()
+    private let closure: (transaction: DataTransaction) -> Void
 }

@@ -45,30 +45,26 @@ class HardcoreDataTests: XCTestCase {
         HardcoreData.defaultStack = stack
         XCTAssertEqual(HardcoreData.defaultStack, stack, "HardcoreData.defaultStack == stack")
         
-        switch stack.addSQLiteStore("Config1Store", configuration: "Config1", resetStoreOnMigrationFailure: true){
+        switch stack.addSQLiteStore("Config1Store.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true){
             
         case .Failure(let error):
-            NSException(
-                name: "CoreDataMigrationException",
-                reason: error.localizedDescription,
-                userInfo: error.userInfo).raise()
-            
-        default:
-            break
-        }
-        switch stack.addSQLiteStore("Config2Store", configuration: "Config2", resetStoreOnMigrationFailure: true){
-            
-        case .Failure(let error):
-            NSException(
-                name: "CoreDataMigrationException",
-                reason: error.localizedDescription,
-                userInfo: error.userInfo).raise()
+            XCTFail(error.description)
             
         default:
             break
         }
         
-        HardcoreData.performTransactionAndWait({ (transaction) -> () in
+        switch stack.addSQLiteStore("Config2Store.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true){
+            
+        case .Failure(let error):
+            XCTFail(error.description)
+            
+        default:
+            break
+        }
+        
+        let createExpectation = self.expectationWithDescription("Entity creation")
+        HardcoreData.performTransaction { (transaction) -> Void in
         
             let obj1 = transaction.create(TestEntity1)
             obj1.testEntityID = 1
@@ -79,34 +75,61 @@ class HardcoreDataTests: XCTestCase {
             let obj2 = transaction.create(TestEntity2)
             obj2.testEntityID = 2
             obj2.testString = "hahaha"
-            obj2.testNumber = 7
+            obj2.testNumber = 100
             obj2.testDate = NSDate()
             
-            transaction.commitAndWait()
-        })
-        HardcoreData.performTransactionAndWait({ (transaction) -> () in
+            let obj3 = transaction.create(TestEntity2)
+            obj3.testEntityID = 3
+            obj3.testString = "hohoho"
+            obj3.testNumber = 90
+            obj3.testDate = NSDate()
             
-            let obj1 = transaction.fetchOne(
-                TestEntity1.self,
-                Where("testEntityID", isEqualTo: 1),
+            transaction.commit { (result) -> Void in
+                
+                XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
+                switch result {
+                    
+                case .Success(let hasChanges):
+                    createExpectation.fulfill()
+                    
+                case .Failure(let error):
+                    XCTFail(error.description)
+                }
+            }
+        }
+        
+        let queryExpectation = self.expectationWithDescription("Query creation")
+        HardcoreData.performTransaction{ (transaction) -> Void in
+            
+            let obj1 = transaction.fetchOne(TestEntity1)
+            XCTAssertNotNil(obj1, "obj1 != nil")
+            
+            let objs2 = transaction.fetchAll(
+                TestEntity2.self,
+                Where("testNumber", isEqualTo: 100) || Where("testNumber", isEqualTo: 90),
                 SortedBy(.Ascending("testEntityID"), .Descending("testString")),
                 CustomizeQuery { (fetchRequest) -> Void in
                     
                     fetchRequest.includesPendingChanges = true
                 }
             )
-            NSLog(">>>>> %@", obj1 ?? "nil")
+            XCTAssertNotNil(objs2, "objs2 != nil")
+            XCTAssertTrue(objs2?.count == 2, "objs2?.count == 2")
             
-            let objs2 = transaction.fetchAll(
-                TestEntity2.self,
-                Where("testEntityID", isEqualTo: 2) && Where("testNumber", isEqualTo: 7),
-                SortedBy(.Ascending("testEntityID"), .Descending("testString")),
-                CustomizeQuery { (fetchRequest) -> () in
+            transaction.commit { (result) -> Void in
+                
+                XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
+                switch result {
                     
-                    fetchRequest.includesPendingChanges = true
+                case .Success(let hasChanges):
+                    queryExpectation.fulfill()
+                    
+                case .Failure(let error):
+                    XCTFail(error.description)
                 }
-            )
-            NSLog(">>>>> %@", objs2 ?? "nil")
-        })
+            }
+        }
+        
+        self.waitForExpectationsWithTimeout(10, handler: nil)
     }
 }

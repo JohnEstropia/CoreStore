@@ -27,6 +27,9 @@ import CoreData
 import GCDKit
 
 
+/**
+Okay, okay. This one's shorter.
+*/
 typealias HCD = HardcoreData
 
 
@@ -70,6 +73,8 @@ public struct HardcoreData {
     */
     public static var logger: HardcoreDataLogger = DefaultLogger()
     
+    
+    // MARK: Internal
     
     internal static func log(level: LogLevel, message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
         
@@ -118,7 +123,7 @@ extension HardcoreData {
     
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     */
-    public static func performTransaction(closure: (transaction: DataTransaction) -> ()) {
+    public static func performTransaction(closure: (transaction: DataTransaction) -> Void) {
         
         self.defaultStack.performTransaction(closure)
     }
@@ -129,63 +134,8 @@ extension HardcoreData {
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
     */
-    public static func performTransactionAndWait(closure: (transaction: DataTransaction) -> ()) -> SaveResult? {
+    public static func performTransactionAndWait(closure: (transaction: DataTransaction) -> Void) -> SaveResult? {
         
         return self.defaultStack.performTransactionAndWait(closure)
     }
 }
-
-
-//extension HardcoreData {
-//    
-//    public static func firstObject<T: NSManagedObject>(entity: T.Type) -> T? {
-//        
-//        return self.defaultStack.firstObject(entity)
-//    }
-//    
-//    public static func firstObject<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> T? {
-//        
-//        return self.defaultStack.firstObject(entity, customizeFetch: customizeFetch)
-//    }
-//    
-//    public static func firstObject<T: NSManagedObject>(query: ObjectQuery<T>) -> T? {
-//        
-//        return self.defaultStack.firstObject(query)
-//    }
-//    
-//    public static func firstObject<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> T? {
-//        
-//        return self.defaultStack.firstObject(query, customizeFetch: customizeFetch)
-//    }
-//    
-//    public static func allObjects<T: NSManagedObject>(entity: T.Type) -> [T]? {
-//        
-//        return self.defaultStack.allObjects(entity)
-//    }
-//    
-//    public static func allObjects<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> [T]? {
-//        
-//        return self.defaultStack.allObjects(entity, customizeFetch: customizeFetch)
-//    }
-//    
-//    public static func allObjects<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]? {
-//        
-//        return self.defaultStack.allObjects(query)
-//    }
-//    
-//    public static func allObjects<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> [T]? {
-//        
-//        return self.defaultStack.allObjects(query, customizeFetch: customizeFetch)
-//    }
-//    
-//    public static func countObjects<T: NSManagedObject>(entity: T.Type) -> Int {
-//        
-//        return self.defaultStack.countObjects(entity)
-//    }
-//    
-//    public static func countObjects<T: NSManagedObject>(query: ObjectQuery<T>) -> Int {
-//        
-//        return self.defaultStack.countObjects(query)
-//    }
-//}
-

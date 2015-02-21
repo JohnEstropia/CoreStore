@@ -31,7 +31,7 @@ import CoreData
 
 public extension NSPersistentStoreCoordinator {
     
-    public func performSynchronously(closure: () -> ()) {
+    public func performSynchronously(closure: () -> Void) {
         
         if self.respondsToSelector("performBlockAndWait:") {
         

@@ -27,6 +27,8 @@ import Foundation
 import CoreData
 
 
+// MARK: - DataTransaction+Querying
+
 extension DataTransaction {
     
     public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {

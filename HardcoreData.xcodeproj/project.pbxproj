@@ -15,6 +15,7 @@
 		B5CFD36E1A0775F000B7885F /* SaveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFD36D1A0775F000B7885F /* SaveResult.swift */; };
 		B5CFF23E19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */; };
 		B5CFF24019FD383100D6DFC4 /* DataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */; };
+		B5D022661A90CD340070CA63 /* DataStack+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */; };
 		B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */; };
 		B5D1E22C19FA9FBC003B2874 /* NSError+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */; };
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
@@ -27,7 +28,6 @@
 		B5D8080E1A3471A500A44484 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D808021A34715700A44484 /* GCDKit.framework */; };
 		B5D808161A34947300A44484 /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808151A34947300A44484 /* NotificationObserver.swift */; };
 		B5D8081A1A3495BD00A44484 /* NSObject+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808191A3495BD00A44484 /* NSObject+HardcoreData.swift */; };
-		B5D853791A8CF6930055EB32 /* QueryClause.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D853781A8CF6930055EB32 /* QueryClause.swift */; };
 		B5E126551A7DCE1400AD8B39 /* Where.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E126541A7DCE1400AD8B39 /* Where.swift */; };
 		B5E126571A7DCE5900AD8B39 /* SortedBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E126561A7DCE5900AD8B39 /* SortedBy.swift */; };
 		B5E209E01A0726460089C9D4 /* NSManagedObject+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */; };
@@ -68,13 +68,14 @@
 		2F03A53519C5C6DA005002A5 /* HardcoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HardcoreData.h; sourceTree = "<group>"; };
 		2F03A53B19C5C6DA005002A5 /* HardcoreDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HardcoreDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F03A53E19C5C6DA005002A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2F03A53F19C5C6DA005002A5 /* HardcoreDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardcoreDataTests.swift; sourceTree = "<group>"; };
+		2F03A53F19C5C6DA005002A5 /* HardcoreDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HardcoreDataTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		2F03A54C19C5C872005002A5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		2F291E2619C6D3CF007AF63F /* HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HardcoreData.swift; sourceTree = "<group>"; };
+		2F291E2619C6D3CF007AF63F /* HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HardcoreData.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B57078AF1A50392D007E33F2 /* FetchClause.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchClause.swift; sourceTree = "<group>"; };
 		B5CFD36D1A0775F000B7885F /* SaveResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveResult.swift; sourceTree = "<group>"; };
 		B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataTransaction.swift; sourceTree = "<group>"; };
+		B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Transaction.swift"; sourceTree = "<group>"; };
 		B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentStoreResult.swift; sourceTree = "<group>"; };
 		B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
@@ -85,9 +86,8 @@
 		B5D39A0319FD00DE000E91BB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity2.swift; sourceTree = "<group>"; };
 		B5D806C51A34715700A44484 /* GCDKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GCDKit.xcodeproj; sourceTree = "<group>"; };
-		B5D808151A34947300A44484 /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationObserver.swift; sourceTree = "<group>"; };
+		B5D808151A34947300A44484 /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NotificationObserver.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B5D808191A3495BD00A44484 /* NSObject+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+HardcoreData.swift"; sourceTree = "<group>"; };
-		B5D853781A8CF6930055EB32 /* QueryClause.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryClause.swift; sourceTree = "<group>"; };
 		B5E126541A7DCE1400AD8B39 /* Where.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Where.swift; sourceTree = "<group>"; };
 		B5E126561A7DCE5900AD8B39 /* SortedBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedBy.swift; sourceTree = "<group>"; };
 		B5E209DF1A0726460089C9D4 /* NSManagedObject+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+HardcoreData.swift"; sourceTree = "<group>"; };
@@ -145,7 +145,6 @@
 			isa = PBXGroup;
 			children = (
 				B5D399F019FC818E000E91BB /* DataStack.swift */,
-				B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */,
 				2F03A53519C5C6DA005002A5 /* HardcoreData.h */,
 				2F291E2619C6D3CF007AF63F /* HardcoreData.swift */,
 				B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */,
@@ -153,7 +152,7 @@
 				B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */,
 				B5D399F419FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift */,
 				B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */,
-				B5CFD36D1A0775F000B7885F /* SaveResult.swift */,
+				B5D022621A90BCC60070CA63 /* Saving and Processing */,
 				B5F409E51A8B11B600A228EA /* Logging */,
 				B5E126531A7DCCE400AD8B39 /* Fetching and Querying */,
 				B5D808141A34945A00A44484 /* Internal */,
@@ -201,6 +200,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		B5D022621A90BCC60070CA63 /* Saving and Processing */ = {
+			isa = PBXGroup;
+			children = (
+				B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */,
+				B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */,
+				B5CFD36D1A0775F000B7885F /* SaveResult.swift */,
+			);
+			name = "Saving and Processing";
+			sourceTree = "<group>";
+		};
 		B5D806BB1A34715700A44484 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,7 +248,6 @@
 			isa = PBXGroup;
 			children = (
 				B57078AF1A50392D007E33F2 /* FetchClause.swift */,
-				B5D853781A8CF6930055EB32 /* QueryClause.swift */,
 				B5E126541A7DCE1400AD8B39 /* Where.swift */,
 				B5E126561A7DCE5900AD8B39 /* SortedBy.swift */,
 				B5F409F01A8B27A600A228EA /* CustomizeQuery.swift */,
@@ -392,11 +400,11 @@
 				B5CFF24019FD383100D6DFC4 /* DataTransaction.swift in Sources */,
 				B5D399F519FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift in Sources */,
 				B5CFD36E1A0775F000B7885F /* SaveResult.swift in Sources */,
+				B5D022661A90CD340070CA63 /* DataStack+Transaction.swift in Sources */,
 				B5D1E22C19FA9FBC003B2874 /* NSError+HardcoreData.swift in Sources */,
 				B5CFF23E19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift in Sources */,
 				B5E126571A7DCE5900AD8B39 /* SortedBy.swift in Sources */,
 				B5F409EF1A8B243D00A228EA /* DataTransaction+Querying.swift in Sources */,
-				B5D853791A8CF6930055EB32 /* QueryClause.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* HardcoreData.swift in Sources */,
 				B5F409E91A8B11CE00A228EA /* HardcoreDataLogger.swift in Sources */,
 				B5D8081A1A3495BD00A44484 /* NSObject+HardcoreData.swift in Sources */,

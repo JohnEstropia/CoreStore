@@ -31,9 +31,13 @@ public func +(left: SortedBy, right: SortedBy) -> SortedBy {
     return SortedBy(left.sortDescriptors + right.sortDescriptors)
 }
 
+
+// MARK: - AttributeName
     
 public typealias AttributeName = Selector
 
+
+// MARK: - SortOrder
 
 public enum SortOrder {
     

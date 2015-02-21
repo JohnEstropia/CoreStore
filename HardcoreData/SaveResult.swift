@@ -57,7 +57,7 @@ public enum SaveResult {
 }
 
 
-// MARK: - SaveResult+BooleanType
+// MARK: - SaveResult: BooleanType
 
 extension SaveResult: BooleanType {
     

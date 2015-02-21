@@ -26,6 +26,8 @@
 import Foundation
 
 
+// MARK: - LogLevel
+
 public enum LogLevel {
     
     case Trace
@@ -34,6 +36,8 @@ public enum LogLevel {
     case Fatal
 }
 
+
+// MARK: - HardcoreDataLogger
 
 public protocol HardcoreDataLogger {
     

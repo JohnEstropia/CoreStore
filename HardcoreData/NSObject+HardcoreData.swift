@@ -26,13 +26,36 @@
 import Foundation
 
 
+private class WeakObject {
+    
+    private(set) weak var object: AnyObject?
+    
+    init(_ object: AnyObject) {
+        
+        self.object = object
+    }
+}
+
+
 // MARK: - NSObject+HardcoreData
 
 internal extension NSObject {
     
+    // MARK: Internal
+    
     internal func getAssociatedObjectForKey<T: AnyObject>(key: UnsafePointer<Void>) -> T? {
         
-        return objc_getAssociatedObject(self, key) as? T
+        switch objc_getAssociatedObject(self, key) {
+            
+        case let object as T:
+            return object
+            
+        case let object as WeakObject:
+            return object.object as? T
+            
+        default:
+            return nil
+        }
     }
     
     internal func setAssociatedRetainedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
@@ -48,5 +71,17 @@ internal extension NSObject {
     internal func setAssociatedAssignedObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
         
         objc_setAssociatedObject(self, key, object, UInt(OBJC_ASSOCIATION_ASSIGN))
+    }
+    
+    internal func setAssociatedWeakObject<T: AnyObject>(object: T?, forKey key: UnsafePointer<Void>) {
+        
+        if let object = object {
+            
+            objc_setAssociatedObject(self, key, WeakObject(object), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        }
+        else {
+            
+            objc_setAssociatedObject(self, key, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        }
     }
 }

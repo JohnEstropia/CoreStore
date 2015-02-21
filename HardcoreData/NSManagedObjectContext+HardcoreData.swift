@@ -51,7 +51,7 @@ public extension NSManagedObjectContext {
     
     // MARK: - Internal
     
-    internal var parentStack: DataStack? {
+    internal weak var parentStack: DataStack? {
         
         get {
             
@@ -59,13 +59,13 @@ public extension NSManagedObjectContext {
         }
         set {
             
-            self.setAssociatedAssignedObject(
+            self.setAssociatedWeakObject(
                 newValue,
                 forKey: &PropertyKeys.parentStack)
         }
     }
     
-    internal var parentTransaction: DataTransaction? {
+    internal weak var parentTransaction: DataTransaction? {
         
         get {
             
@@ -73,7 +73,7 @@ public extension NSManagedObjectContext {
         }
         set {
             
-            self.setAssociatedAssignedObject(
+            self.setAssociatedWeakObject(
                 newValue,
                 forKey: &PropertyKeys.parentTransaction)
         }
@@ -91,15 +91,15 @@ public extension NSManagedObjectContext {
     
     internal func saveSynchronously() -> SaveResult {
         
-        var result: SaveResult = SaveResult(hasChanges: false)
-        if !self.hasChanges {
-            
-            self.reset()
-            return result
-        }
-        
+        var result = SaveResult(hasChanges: false)
         self.performBlockAndWait {
-            [unowned self] () -> () in
+            [unowned self] () -> Void in
+            
+            if !self.hasChanges {
+                
+                self.reset()
+                return
+            }
             
             var saveError: NSError?
             if self.save(&saveError) {
@@ -137,22 +137,21 @@ public extension NSManagedObjectContext {
         return result
     }
     
-    internal func saveAsynchronouslyWithCompletion(completion: ((result: SaveResult) -> ())?) {
+    internal func saveAsynchronouslyWithCompletion(completion: ((result: SaveResult) -> Void)?) {
         
-        if !self.hasChanges {
+        self.performBlock { () -> Void in
             
-            self.reset()
-            if let completion = completion {
+            if !self.hasChanges {
                 
-                GCDQueue.Main.async {
+                if let completion = completion {
                     
-                    completion(result: SaveResult(hasChanges: false))
+                    GCDQueue.Main.async {
+                        
+                        completion(result: SaveResult(hasChanges: false))
+                    }
                 }
+                return
             }
-            return
-        }
-        
-        self.performBlock { () -> () in
             
             var saveError: NSError?
             if self.save(&saveError) {
@@ -216,7 +215,7 @@ public extension NSManagedObjectContext {
         context.observerForDidSaveNotification = NotificationObserver(
             notificationName: NSManagedObjectContextDidSaveNotification,
             object: rootContext,
-            closure: { [weak context] (note) -> () in
+            closure: { [weak context] (note) -> Void in
                 
                 context?.mergeChangesFromContextDidSaveNotification(note)
                 return
@@ -290,7 +289,7 @@ public extension NSManagedObjectContext {
         self.observerForWillSaveNotification = NotificationObserver(
             notificationName: NSManagedObjectContextWillSaveNotification,
             object: self,
-            closure: { (note) -> () in
+            closure: { (note) -> Void in
                 
                 let context = note.object as! NSManagedObjectContext
                 let insertedObjects = context.insertedObjects

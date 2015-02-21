@@ -33,14 +33,14 @@ private let applicationSupportDirectory = NSFileManager.defaultManager().URLsFor
 private let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData")
 
 
-// MARK: DataStack
+// MARK: - DataStack
 
 /**
 The DataStack encapsulates the data model for the Core Data stack. Each DataStack can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own NSPersistentStoreCoordinator, a root NSManagedObjectContext for disk saves, and a shared NSManagedObjectContext acting as a model interface for NSManagedObjects.
 */
 public class DataStack: NSObject {
     
-    // MARK: - Public
+    // MARK: Public
     
     /**
     Initializes a DataStack from merged model in the app bundle.
@@ -251,93 +251,15 @@ public class DataStack: NSObject {
         return PersistentStoreResult(.UnknownError)
     }
     
-    /**
-    Begins a transaction asynchronously where NSManagedObject creates, updates, and deletes can be made.
     
-    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
-    */
-    public func performTransaction(closure: (transaction: DataTransaction) -> ()) {
-        
-        DataTransaction(
-            mainContext: self.mainContext,
-            queue: self.transactionQueue,
-            closure: closure).perform()
-    }
+    // MARK: Internal
     
-    /**
-    Begins a transaction synchronously where NSManagedObject creates, updates, and deletes can be made.
+    public let mainContext: NSManagedObjectContext
+    internal let transactionQueue: GCDQueue;
     
-    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
-    :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
-    */
-    public func performTransactionAndWait(closure: (transaction: DataTransaction) -> ()) -> SaveResult? {
-        
-        return DataTransaction(
-            mainContext: self.mainContext,
-            queue: self.transactionQueue,
-            closure: closure).performAndWait()
-    }
     
-    // MARK: - Internal
+    // MARK: Private
     
     private let coordinator: NSPersistentStoreCoordinator
     private let rootSavingContext: NSManagedObjectContext
-    private let mainContext: NSManagedObjectContext
-    private let transactionQueue: GCDQueue;
 }
-
-
-// MARK: - DataStack+DataContextProvider
-
-//extension DataStack: ObjectQueryable {
-//    
-//    public func firstObject<T: NSManagedObject>(entity: T.Type) -> T? {
-//        
-//        return self.mainContext.firstObject(entity)
-//    }
-//    
-//    public func firstObject<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> T? {
-//        
-//        return self.mainContext.firstObject(entity, customizeFetch: customizeFetch)
-//    }
-//    
-//    public func firstObject<T: NSManagedObject>(query: ObjectQuery<T>) -> T? {
-//        
-//        return self.mainContext.firstObject(query)
-//    }
-//    
-//    public func firstObject<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> T? {
-//        
-//        return self.mainContext.firstObject(query, customizeFetch: customizeFetch)
-//    }
-//    
-//    public func allObjects<T: NSManagedObject>(entity: T.Type) -> [T]? {
-//        
-//        return self.mainContext.allObjects(entity)
-//    }
-//    
-//    public func allObjects<T: NSManagedObject>(entity: T.Type, customizeFetch: FetchRequestCustomization?) -> [T]? {
-//        
-//        return self.mainContext.allObjects(entity, customizeFetch: customizeFetch)
-//    }
-//    
-//    public func allObjects<T: NSManagedObject>(query: ObjectQuery<T>) -> [T]? {
-//        
-//        return self.mainContext.allObjects(query)
-//    }
-//    
-//    public func allObjects<T: NSManagedObject>(query: ObjectQuery<T>, customizeFetch: FetchRequestCustomization?) -> [T]? {
-//        
-//        return self.mainContext.allObjects(query, customizeFetch: customizeFetch)
-//    }
-//    
-//    public func countObjects<T: NSManagedObject>(entity: T.Type) -> Int {
-//        
-//        return self.mainContext.countObjects(entity)
-//    }
-//    
-//    public func countObjects<T: NSManagedObject>(query: ObjectQuery<T>) -> Int {
-//        
-//        return self.mainContext.countObjects(query)
-//    }
-//}

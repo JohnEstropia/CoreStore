@@ -31,8 +31,13 @@ import CoreData
 
 public enum PersistentStoreResult {
     
+    // MARK: Public
+    
     case Success(NSPersistentStore)
     case Failure(NSError)
+    
+    
+    // MARK: Internal
     
     internal init(_ store: NSPersistentStore) {
         
@@ -58,13 +63,16 @@ public enum PersistentStoreResult {
 }
 
 
-// MARK: - PersistentStoreResult+BooleanType
+// MARK: - PersistentStoreResult: BooleanType
 
 extension PersistentStoreResult: BooleanType {
+    
+    // MARK: Public
     
     public var boolValue: Bool {
         
         switch self {
+            
         case .Success: return true
         case .Failure: return false
         }

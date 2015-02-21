@@ -26,6 +26,8 @@
 import Foundation
 
 
+// MARK: - DefaultLogger
+
 public final class DefaultLogger: HardcoreDataLogger {
    
     public func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) {
