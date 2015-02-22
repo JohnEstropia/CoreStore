@@ -134,15 +134,13 @@ public final class DataTransaction {
     
     internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: DataTransaction) -> Void) {
         
-        self.mainContext = mainContext
         self.transactionQueue = queue
-        
-        let context = mainContext.temporaryContext()
-        context.retainsRegisteredObjects = true
-        self.context = context
-        
         self.closure = closure
         
+        let context = mainContext.temporaryContextInTransaction(nil)
+        self.context = context
+        
+        context.retainsRegisteredObjects = true
         context.parentTransaction = self
     }
     
@@ -168,7 +166,6 @@ public final class DataTransaction {
     
     private var isCommitted = false
     private var result: SaveResult?
-    private let mainContext: NSManagedObjectContext
     private let transactionQueue: GCDQueue
     private let closure: (transaction: DataTransaction) -> Void
 }

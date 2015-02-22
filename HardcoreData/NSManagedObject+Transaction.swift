@@ -1,5 +1,5 @@
 //
-//  NSManagedObject+HardcoreData.swift
+//  NSManagedObject+Transaction.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -27,9 +27,9 @@ import Foundation
 import CoreData
 
 
-// MARK: - NSManagedObject+HardcoreData
+// MARK: - NSManagedObject
 
-extension NSManagedObject {
+internal extension NSManagedObject {
     
     // MARK: - Internal
     

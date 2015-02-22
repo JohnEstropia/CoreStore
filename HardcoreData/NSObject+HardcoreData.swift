@@ -26,18 +26,7 @@
 import Foundation
 
 
-private class WeakObject {
-    
-    private(set) weak var object: AnyObject?
-    
-    init(_ object: AnyObject) {
-        
-        self.object = object
-    }
-}
-
-
-// MARK: - NSObject+HardcoreData
+// MARK: - NSObject
 
 internal extension NSObject {
     

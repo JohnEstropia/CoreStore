@@ -1,5 +1,5 @@
 //
-//  DataTransaction+Querying.swift
+//  WeakObject.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -24,42 +24,21 @@
 //
 
 import Foundation
-import CoreData
 
 
-// MARK: - DataTransaction
+// MARK: - WeakObject
 
-public extension DataTransaction {
+internal final class WeakObject {
     
-    // MARK: Public
+    // MARK: Internal
     
-    public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
+    internal init(_ object: AnyObject) {
         
-        return self.context.fetchOne(entity, queryClauses)
+        self.object = object
     }
     
-    public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
-        
-        return self.context.fetchOne(entity, queryClauses)
-    }
     
-    public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [T]? {
-        
-        return self.context.fetchAll(entity, queryClauses)
-    }
+    // MARK: Private
     
-    public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
-        
-        return self.context.fetchAll(entity, queryClauses)
-    }
-    
-    public func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int {
-        
-        return self.context.queryCount(entity, queryClauses)
-    }
-    
-    public func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int {
-        
-        return self.context.queryCount(entity, queryClauses)
-    }
+    private(set) weak var object: AnyObject?
 }

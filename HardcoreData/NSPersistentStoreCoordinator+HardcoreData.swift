@@ -27,11 +27,13 @@ import Foundation
 import CoreData
 
 
-// MARK: - NSPersistentStoreCoordinator+HardcoreData
+// MARK: - NSPersistentStoreCoordinator
 
-public extension NSPersistentStoreCoordinator {
+internal extension NSPersistentStoreCoordinator {
     
-    public func performSynchronously(closure: () -> Void) {
+    // MARK: Internal
+    
+    internal func performSynchronously(closure: () -> Void) {
         
         if self.respondsToSelector("performBlockAndWait:") {
         

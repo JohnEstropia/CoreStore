@@ -27,7 +27,7 @@ import Foundation
 
 // MARK: - HardcoreData
 
-extension HardcoreData {
+public extension HardcoreData {
     
     // MARK: Public
     

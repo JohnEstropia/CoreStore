@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - NSManagedObjectContext
 
-extension NSManagedObjectContext {
+public extension NSManagedObjectContext {
     
     // MARK: Public
     

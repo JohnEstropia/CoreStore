@@ -30,61 +30,22 @@ import GCDKit
 
 // MARK: - NSManagedObjectContext
 
-public extension NSManagedObjectContext {
-    
-    // MARK: NSObject
-    
-    // MARK: Transactions
-    
-    public func temporaryContext() -> NSManagedObjectContext {
-        
-        let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        context.parentContext = self
-        context.parentStack = self.parentStack
-        context.parentTransaction = self.parentTransaction
-        context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
-        context.shouldCascadeSavesToParent = true
-        
-        return context
-    }
-    
+internal extension NSManagedObjectContext {
     
     // MARK: - Internal
     
-    internal weak var parentStack: DataStack? {
+    internal var shouldCascadeSavesToParent: Bool {
         
         get {
             
-            if let parentContext = self.parentContext {
-                
-                return parentContext.parentStack
-            }
-            return self.getAssociatedObjectForKey(&PropertyKeys.parentStack)
+            let number: NSNumber? = self.getAssociatedObjectForKey(&PropertyKeys.shouldCascadeSavesToParent)
+            return number?.boolValue ?? false
         }
         set {
             
-            if let parentContext = self.parentContext {
-                
-                return
-            }
-
-            self.setAssociatedWeakObject(
-                newValue,
-                forKey: &PropertyKeys.parentStack)
-        }
-    }
-    
-    internal weak var parentTransaction: DataTransaction? {
-        
-        get {
-            
-            return self.getAssociatedObjectForKey(&PropertyKeys.parentTransaction)
-        }
-        set {
-            
-            self.setAssociatedWeakObject(
-                newValue,
-                forKey: &PropertyKeys.parentTransaction)
+            self.setAssociatedCopiedObject(
+                NSNumber(bool: newValue),
+                forKey: &PropertyKeys.shouldCascadeSavesToParent)
         }
     }
     
@@ -100,215 +61,7 @@ public extension NSManagedObjectContext {
         return nil
     }
     
-    internal func temporaryContextInTransaction(transaction: DataTransaction?) -> NSManagedObjectContext {
-        
-        let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        context.parentContext = self
-        context.parentStack = self.parentStack
-        context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
-        context.shouldCascadeSavesToParent = true
-        
-        return context
-    }
-    
-    internal func saveSynchronously() -> SaveResult {
-        
-        var result = SaveResult(hasChanges: false)
-        self.performBlockAndWait {
-            [unowned self] () -> Void in
-            
-            if !self.hasChanges {
-                
-                self.reset()
-                return
-            }
-            
-            var saveError: NSError?
-            if self.save(&saveError) {
-                
-                if self.shouldCascadeSavesToParent {
-                    
-                    if let parentContext = self.parentContext {
-                        
-                        switch parentContext.saveSynchronously() {
-                            
-                        case .Success(let hasChanges):
-                            result = SaveResult(hasChanges: true)
-                        case .Failure(let error):
-                            result = SaveResult(error)
-                        }
-                        return
-                    }
-                }
-                
-                result = SaveResult(hasChanges: true)
-            }
-            else if let error = saveError {
-                
-                HardcoreData.handleError(
-                    error,
-                    "Failed to save NSManagedObjectContext.")
-                result = SaveResult(error)
-            }
-            else {
-                
-                result = SaveResult(hasChanges: false)
-            }
-        }
-        
-        return result
-    }
-    
-    internal func saveAsynchronouslyWithCompletion(completion: ((result: SaveResult) -> Void)?) {
-        
-        self.performBlock { () -> Void in
-            
-            if !self.hasChanges {
-                
-                if let completion = completion {
-                    
-                    GCDQueue.Main.async {
-                        
-                        completion(result: SaveResult(hasChanges: false))
-                    }
-                }
-                return
-            }
-            
-            var saveError: NSError?
-            if self.save(&saveError) {
-                
-                if self.shouldCascadeSavesToParent {
-                    
-                    if let parentContext = self.parentContext {
-                        
-                        let result = parentContext.saveSynchronously()
-                        if let completion = completion {
-                            
-                            GCDQueue.Main.async {
-                                
-                                completion(result: result)
-                            }
-                        }
-                        return
-                    }
-                }
-                
-                if let completion = completion {
-                    
-                    GCDQueue.Main.async {
-                        
-                        completion(result: SaveResult(hasChanges: true))
-                    }
-                }
-            }
-            else if let error = saveError {
-                
-                HardcoreData.handleError(
-                    error,
-                    "Failed to save NSManagedObjectContext.")
-                if let completion = completion {
-                    
-                    GCDQueue.Main.async {
-                        
-                        completion(result: SaveResult(error))
-                    }
-                }
-            }
-            else if let completion = completion {
-                
-                GCDQueue.Main.async {
-                    
-                    completion(result: SaveResult(hasChanges: false))
-                }
-            }
-        }
-    }
-    
-    internal class func rootSavingContextForCoordinator(coordinator: NSPersistentStoreCoordinator) -> NSManagedObjectContext {
-        
-        let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        context.persistentStoreCoordinator = coordinator
-        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        context.setupForHardcoreDataWithContextName("com.hardcoredata.rootcontext")
-        
-        return context
-    }
-    
-    internal class func mainContextForRootContext(rootContext: NSManagedObjectContext) -> NSManagedObjectContext {
-        
-        let context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        context.parentContext = rootContext
-        context.setupForHardcoreDataWithContextName("com.hardcoredata.maincontext")
-        context.shouldCascadeSavesToParent = true
-        context.observerForDidSaveNotification = NotificationObserver(
-            notificationName: NSManagedObjectContextDidSaveNotification,
-            object: rootContext,
-            closure: { [weak context] (note) -> Void in
-                
-                context?.mergeChangesFromContextDidSaveNotification(note)
-                return
-        })
-        
-        return context
-    }
-    
-    
-    // MARK: - Private
-    
-    private struct PropertyKeys {
-        
-        static var observerForWillSaveNotification: Void?
-        static var observerForDidSaveNotification: Void?
-        static var shouldCascadeSavesToParent: Void?
-        static var parentStack: Void?
-        static var parentTransaction: Void?
-    }
-    
-    private var observerForWillSaveNotification: NotificationObserver? {
-        
-        get {
-            
-            return self.getAssociatedObjectForKey(&PropertyKeys.observerForWillSaveNotification)
-        }
-        set {
-            
-            self.setAssociatedRetainedObject(
-                newValue,
-                forKey: &PropertyKeys.observerForWillSaveNotification)
-        }
-    }
-    
-    private var observerForDidSaveNotification: NotificationObserver? {
-        
-        get {
-            
-            return self.getAssociatedObjectForKey(&PropertyKeys.observerForDidSaveNotification)
-        }
-        set {
-        
-            self.setAssociatedRetainedObject(
-                newValue,
-                forKey: &PropertyKeys.observerForDidSaveNotification)
-        }
-    }
-    
-    private var shouldCascadeSavesToParent: Bool {
-        
-        get {
-            
-            let number: NSNumber? = self.getAssociatedObjectForKey(&PropertyKeys.observerForDidSaveNotification)
-            return number?.boolValue ?? false
-        }
-        set {
-            
-            self.setAssociatedCopiedObject(
-                NSNumber(bool: newValue),
-                forKey: &PropertyKeys.shouldCascadeSavesToParent)
-        }
-    }
-    
-    private func setupForHardcoreDataWithContextName(contextName: String) {
+    internal func setupForHardcoreDataWithContextName(contextName: String) {
         
         if self.respondsToSelector("setName:") {
             
@@ -340,6 +93,29 @@ public extension NSManagedObjectContext {
                         "Failed to obtain permanent IDs for inserted objects.")
                 }
         })
+    }
+    
+    
+    // MARK: - Private
+    
+    private struct PropertyKeys {
+        
+        static var observerForWillSaveNotification: Void?
+        static var shouldCascadeSavesToParent: Void?
+    }
+    
+    private var observerForWillSaveNotification: NotificationObserver? {
+        
+        get {
+            
+            return self.getAssociatedObjectForKey(&PropertyKeys.observerForWillSaveNotification)
+        }
+        set {
+            
+            self.setAssociatedRetainedObject(
+                newValue,
+                forKey: &PropertyKeys.observerForWillSaveNotification)
+        }
     }
 }
 
