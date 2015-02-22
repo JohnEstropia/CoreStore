@@ -105,13 +105,14 @@ public final class DataTransaction {
         HardcoreData.assert(!self.isCommitted, "Attempted to commit a DataTransaction more than once.")
         
         self.isCommitted = true
-        let result = self.context.saveSynchronously()
-        self.result = result
-        
-        GCDQueue.Main.async {
+        let semaphore = GCDSemaphore(0)
+        self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             
+            self.result = result
             completion(result: result)
+            semaphore.signal()
         }
+        semaphore.wait()
     }
     
     /**

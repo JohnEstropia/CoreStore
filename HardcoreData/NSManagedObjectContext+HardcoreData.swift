@@ -28,11 +28,11 @@ import CoreData
 import GCDKit
 
 
-// MARK: - NSManagedObjectContext+HardcoreData
+// MARK: - NSManagedObjectContext
 
 public extension NSManagedObjectContext {
     
-    // MARK: - Public
+    // MARK: NSObject
     
     // MARK: Transactions
     
@@ -40,10 +40,10 @@ public extension NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         context.parentContext = self
-        context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
-        context.shouldCascadeSavesToParent = true
         context.parentStack = self.parentStack
         context.parentTransaction = self.parentTransaction
+        context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
+        context.shouldCascadeSavesToParent = true
         
         return context
     }
@@ -55,10 +55,19 @@ public extension NSManagedObjectContext {
         
         get {
             
+            if let parentContext = self.parentContext {
+                
+                return parentContext.parentStack
+            }
             return self.getAssociatedObjectForKey(&PropertyKeys.parentStack)
         }
         set {
             
+            if let parentContext = self.parentContext {
+                
+                return
+            }
+
             self.setAssociatedWeakObject(
                 newValue,
                 forKey: &PropertyKeys.parentStack)
@@ -79,10 +88,23 @@ public extension NSManagedObjectContext {
         }
     }
     
+    internal func entityDescriptionForEntityClass(entity: NSManagedObject.Type) -> NSEntityDescription? {
+        
+        if let entityName = self.parentStack?.entityNameForEntityClass(entity) {
+
+            return NSEntityDescription.entityForName(
+                entityName,
+                inManagedObjectContext: self
+            )
+        }
+        return nil
+    }
+    
     internal func temporaryContextInTransaction(transaction: DataTransaction?) -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         context.parentContext = self
+        context.parentStack = self.parentStack
         context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
         context.shouldCascadeSavesToParent = true
         
@@ -160,7 +182,14 @@ public extension NSManagedObjectContext {
                     
                     if let parentContext = self.parentContext {
                         
-                        parentContext.saveAsynchronouslyWithCompletion(completion)
+                        let result = parentContext.saveSynchronously()
+                        if let completion = completion {
+                            
+                            GCDQueue.Main.async {
+                                
+                                completion(result: result)
+                            }
+                        }
                         return
                     }
                 }

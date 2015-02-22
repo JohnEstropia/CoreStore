@@ -43,7 +43,7 @@ class HardcoreDataTests: XCTestCase {
         
         let stack = DataStack()
         HardcoreData.defaultStack = stack
-        XCTAssertEqual(HardcoreData.defaultStack, stack, "HardcoreData.defaultStack == stack")
+        XCTAssert(HardcoreData.defaultStack === stack, "HardcoreData.defaultStack === stack")
         
         switch stack.addSQLiteStore("Config1Store.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true){
             
@@ -99,7 +99,7 @@ class HardcoreDataTests: XCTestCase {
         }
         
         let queryExpectation = self.expectationWithDescription("Query creation")
-        HardcoreData.performTransaction{ (transaction) -> Void in
+        HardcoreData.performTransaction { (transaction) -> Void in
             
             let obj1 = transaction.fetchOne(TestEntity1)
             XCTAssertNotNil(obj1, "obj1 != nil")
@@ -130,6 +130,6 @@ class HardcoreDataTests: XCTestCase {
             }
         }
         
-        self.waitForExpectationsWithTimeout(10, handler: nil)
+        self.waitForExpectationsWithTimeout(100, handler: nil)
     }
 }

@@ -30,15 +30,17 @@ import GCDKit
 /**
 Okay, okay. This one's shorter.
 */
-typealias HCD = HardcoreData
+public typealias HCD = HardcoreData
 
 
-// MARK: HardcoreData
+// MARK: - HardcoreData
 
 /**
-The HardcoreData struct is the main entry point for all other APIs.
+HardcoreData is the main entry point for all other APIs.
 */
-public struct HardcoreData {
+public enum HardcoreData {
+    
+    // MARK: Public
     
     /**
     The default DataStack instance to be used. If defaultStack is not set before the first time accessed, a default-configured DataStack will be created.
@@ -109,6 +111,8 @@ public struct HardcoreData {
             functionName: functionName)
     }
     
+    
+    // MARK: Private
     
     private static let defaultStackBarrierQueue = GCDQueue.createConcurrent("com.hardcoreData.defaultStackBarrierQueue")
     

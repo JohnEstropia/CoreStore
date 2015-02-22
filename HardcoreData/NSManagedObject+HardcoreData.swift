@@ -31,21 +31,14 @@ import CoreData
 
 extension NSManagedObject {
     
-    // MARK: - Entity Utilities
-    
-    public class var entityName: String {
-        
-        // TODO: map from model file
-        return NSStringFromClass(self).componentsSeparatedByString(".").last!
-    }
-    
-    
     // MARK: - Internal
     
     internal class func createInContext(context: NSManagedObjectContext) -> Self {
         
-        return self(entity: NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: context)!,
-            insertIntoManagedObjectContext: context)
+        return self(
+            entity: context.entityDescriptionForEntityClass(self)!,
+            insertIntoManagedObjectContext: context
+        )
     }
     
     internal func inContext(context: NSManagedObjectContext) -> Self? {

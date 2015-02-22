@@ -41,9 +41,7 @@ extension NSManagedObjectContext {
     public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
         
         let fetchRequest = NSFetchRequest()
-        fetchRequest.entity = NSEntityDescription.entityForName(
-            entity.entityName,
-            inManagedObjectContext: self)
+        fetchRequest.entity = self.entityDescriptionForEntityClass(entity)
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .ManagedObjectResultType
         
@@ -75,9 +73,7 @@ extension NSManagedObjectContext {
     public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
         
         let fetchRequest = NSFetchRequest()
-        fetchRequest.entity = NSEntityDescription.entityForName(
-            entity.entityName,
-            inManagedObjectContext: self)
+        fetchRequest.entity = self.entityDescriptionForEntityClass(entity)
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         
@@ -109,9 +105,7 @@ extension NSManagedObjectContext {
     public func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int {
         
         let fetchRequest = NSFetchRequest()
-        fetchRequest.entity = NSEntityDescription.entityForName(
-            entity.entityName,
-            inManagedObjectContext: self)
+        fetchRequest.entity = self.entityDescriptionForEntityClass(entity)
         
         for clause in queryClauses {
             

@@ -38,14 +38,14 @@ private let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey
 /**
 The DataStack encapsulates the data model for the Core Data stack. Each DataStack can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own NSPersistentStoreCoordinator, a root NSManagedObjectContext for disk saves, and a shared NSManagedObjectContext acting as a model interface for NSManagedObjects.
 */
-public class DataStack: NSObject {
+public class DataStack {
     
     // MARK: Public
     
     /**
     Initializes a DataStack from merged model in the app bundle.
     */
-    public convenience override init() {
+    public convenience init() {
         
         self.init(managedObjectModel: NSManagedObjectModel.mergedModelFromBundles(NSBundle.allBundles())!)
     }
@@ -74,8 +74,18 @@ public class DataStack: NSObject {
         self.rootSavingContext = NSManagedObjectContext.rootSavingContextForCoordinator(self.coordinator)
         self.mainContext = NSManagedObjectContext.mainContextForRootContext(self.rootSavingContext)
         self.transactionQueue = .createSerial("com.hardcoredata.datastack.transactionqueue")
+        self.entityNameMapping = (managedObjectModel.entities as! [NSEntityDescription]).reduce([EntityClassNameType: EntityNameType]()) { (var mapping, entityDescription) in
+            
+            if let entityName = entityDescription.name {
+                
+                mapping[entityDescription.managedObjectClassName] = entityName
+            }
+            return mapping
+        }
         
-        super.init()
+        println(self.entityNameMapping)
+        
+        self.rootSavingContext.parentStack = self
     }
     
     /**
@@ -133,10 +143,14 @@ public class DataStack: NSObject {
     public func addSQLiteStore(fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
         return self.addSQLiteStore(
-            fileURL: applicationSupportDirectory.URLByAppendingPathComponent(fileName, isDirectory: false),
+            fileURL: applicationSupportDirectory.URLByAppendingPathComponent(
+                fileName,
+                isDirectory: false
+            ),
             configuration: configuration,
             automigrating: automigrating,
-            resetStoreOnMigrationFailure: resetStoreOnMigrationFailure)
+            resetStoreOnMigrationFailure: resetStoreOnMigrationFailure
+        )
     }
     
     /**
@@ -257,9 +271,18 @@ public class DataStack: NSObject {
     internal let mainContext: NSManagedObjectContext
     internal let transactionQueue: GCDQueue;
     
+    internal func entityNameForEntityClass(entityClass: NSManagedObject.Type) -> String? {
+        
+        return self.entityNameMapping[NSStringFromClass(entityClass)]
+    }
+    
     
     // MARK: Private
     
+    private typealias EntityClassNameType = String
+    private typealias EntityNameType = String
+    
     private let coordinator: NSPersistentStoreCoordinator
     private let rootSavingContext: NSManagedObjectContext
+    private let entityNameMapping: [EntityClassNameType: EntityNameType]
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7517.1" systemVersion="14C109" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="TestEntity1" representedClassName="HardcoreDataTests.TestEntity1" syncable="YES">
+    <entity name="TestEntity1AAA" representedClassName="HardcoreDataTests.TestEntity1" syncable="YES">
         <attribute name="testDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="testEntityID" attributeType="Integer 64" syncable="YES"/>
         <attribute name="testNumber" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
@@ -13,13 +13,13 @@
         <attribute name="testString" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <configuration name="Config1">
-        <memberEntity name="TestEntity1"/>
+        <memberEntity name="TestEntity1AAA"/>
     </configuration>
     <configuration name="Config2">
         <memberEntity name="TestEntity2"/>
     </configuration>
     <elements>
-        <element name="TestEntity1" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="TestEntity1AAA" positionX="-63" positionY="-18" width="128" height="105"/>
         <element name="TestEntity2" positionX="-63" positionY="9" width="128" height="103"/>
     </elements>
 </model>
