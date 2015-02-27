@@ -180,6 +180,5 @@ public final class DataTransaction {
     private var result: SaveResult?
     private let transactionQueue: GCDQueue
     private let closure: (transaction: DataTransaction) -> Void
-    
-    private lazy var childTransactionQueue: GCDQueue = .createSerial("com.hardcoredata.datastack.childtransactionqueue")
+    private let childTransactionQueue: GCDQueue = .createSerial("com.hardcoredata.datastack.childtransactionqueue")
 }
