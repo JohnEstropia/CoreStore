@@ -54,7 +54,7 @@ internal extension NSManagedObjectContext {
         context.parentContext = self
         context.parentStack = self.parentStack
         context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
-        context.shouldCascadeSavesToParent = true
+        context.shouldCascadeSavesToParent = (self.concurrencyType == .MainQueueConcurrencyType)
         
         return context
     }
@@ -67,7 +67,6 @@ internal extension NSManagedObjectContext {
             
             if !self.hasChanges {
                 
-                self.reset()
                 return
             }
             

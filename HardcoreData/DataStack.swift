@@ -73,7 +73,6 @@ public class DataStack {
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         self.rootSavingContext = NSManagedObjectContext.rootSavingContextForCoordinator(self.coordinator)
         self.mainContext = NSManagedObjectContext.mainContextForRootContext(self.rootSavingContext)
-        self.transactionQueue = .createSerial("com.hardcoredata.datastack.transactionqueue")
         self.entityNameMapping = (managedObjectModel.entities as! [NSEntityDescription]).reduce([EntityClassNameType: EntityNameType]()) { (var mapping, entityDescription) in
             
             if let entityName = entityDescription.name {
@@ -269,7 +268,7 @@ public class DataStack {
     // MARK: Internal
     
     internal let mainContext: NSManagedObjectContext
-    internal let transactionQueue: GCDQueue;
+    internal let transactionQueue: GCDQueue = .createSerial("com.hardcoredata.datastack.transactionqueue")
     
     internal func entityNameForEntityClass(entityClass: NSManagedObject.Type) -> String? {
         

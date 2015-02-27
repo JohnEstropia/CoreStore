@@ -30,24 +30,24 @@ import Foundation
 
 public final class DefaultLogger: HardcoreDataLogger {
    
-    public func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) {
+    public func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
             Swift.println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         #endif
     }
     
-    public func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) {
+    public func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
             Swift.println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message): \(error)\n")
         #endif
     }
     
-    public func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString) {
+    public func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.assert(condition, message, file: fileName, line: lineNumber)
+            Swift.assert(condition, message, file: fileName, line: numericCast(lineNumber))
         #endif
     }
 }

@@ -78,7 +78,7 @@ public enum HardcoreData {
     
     // MARK: Internal
     
-    internal static func log(level: LogLevel, message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
+    internal static func log(level: LogLevel, message: String, fileName: StaticString = __FILE__, lineNumber: Int = __LINE__, functionName: StaticString = __FUNCTION__) {
         
         self.logger.log(
             level: level,
@@ -91,7 +91,7 @@ public enum HardcoreData {
         )
     }
     
-    internal static func handleError(error: NSError, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
+    internal static func handleError(error: NSError, _ message: String, fileName: StaticString = __FILE__, lineNumber: Int = __LINE__, functionName: StaticString = __FUNCTION__) {
         
         self.logger.handleError(
             error: error,
@@ -101,7 +101,7 @@ public enum HardcoreData {
             functionName: functionName)
     }
     
-    internal static func assert(@autoclosure condition: () -> Bool, _ message: String, fileName: StaticString = __FILE__, lineNumber: UWord = __LINE__, functionName: StaticString = __FUNCTION__) {
+    internal static func assert(@autoclosure condition: () -> Bool, _ message: String, fileName: StaticString = __FILE__, lineNumber: Int = __LINE__, functionName: StaticString = __FUNCTION__) {
         
         self.logger.assert(
             condition,

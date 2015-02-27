@@ -41,11 +41,12 @@ internal extension NSManagedObjectContext {
                 
                 return parentContext.parentStack
             }
+            
             return self.getAssociatedObjectForKey(&PropertyKeys.parentStack)
         }
         set {
             
-            if let parentContext = self.parentContext {
+            if self.parentContext != nil {
                 
                 return
             }

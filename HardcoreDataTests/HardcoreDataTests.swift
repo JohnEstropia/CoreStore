@@ -32,6 +32,7 @@ class HardcoreDataTests: XCTestCase {
     override func setUp() {
         
         super.setUp()
+        NSFileManager.defaultManager().removeItemAtURL(NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL, error: nil)
     }
     
     override func tearDown() {
@@ -84,7 +85,34 @@ class HardcoreDataTests: XCTestCase {
             obj3.testNumber = 90
             obj3.testDate = NSDate()
             
+        
+            transaction.performTransactionAndWait { (transaction) -> Void in
+                
+                let obj4 = transaction.create(TestEntity2)
+                obj4.testEntityID = 4
+                obj4.testString = "hehehehe"
+                obj4.testNumber = 80
+                obj4.testDate = NSDate()
+                
+                let objs4test = transaction.fetchOne(
+                    TestEntity2.self,
+                    Where("testEntityID", isEqualTo: 4),
+                    CustomizeQuery { (fetchRequest) -> Void in
+                        
+                        fetchRequest.includesPendingChanges = true
+                    }
+                )
+                XCTAssertNotNil(objs4test, "objs4test != nil")
+                // Dont commit1
+            }
+            
             transaction.commit { (result) -> Void in
+                
+                let objs4test = HardcoreData.fetchOne(
+                    TestEntity2.self,
+                    Where("testEntityID", isEqualTo: 4)
+                )
+                XCTAssertNil(objs4test, "objs4test == nil")
                 
                 XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
                 switch result {
@@ -115,6 +143,7 @@ class HardcoreDataTests: XCTestCase {
             )
             XCTAssertNotNil(objs2, "objs2 != nil")
             XCTAssertTrue(objs2?.count == 2, "objs2?.count == 2")
+            print(objs2)
             
             transaction.commit { (result) -> Void in
                 

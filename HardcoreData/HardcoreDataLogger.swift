@@ -41,9 +41,9 @@ public enum LogLevel {
 
 public protocol HardcoreDataLogger {
     
-    func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString)
+    func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
-    func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString)
+    func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
-    func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: UWord, functionName: StaticString)
+    func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
 }

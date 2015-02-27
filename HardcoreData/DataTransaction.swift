@@ -37,10 +37,6 @@ public final class DataTransaction {
     
     // MARK: - Public
     
-    /**
-    The background concurrent context managed by the transaction.
-    */
-    public let context: NSManagedObjectContext
     
     // MARK: Object management
     
@@ -129,8 +125,24 @@ public final class DataTransaction {
         self.result = self.context.saveSynchronously()
     }
     
+    /**
+    Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made.
+    
+    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
+    :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
+    */
+    public func performTransactionAndWait(closure: (transaction: DataTransaction) -> Void) -> SaveResult? {
+        
+        return DataTransaction(
+            mainContext: self.context,
+            queue: self.childTransactionQueue,
+            closure: closure).performAndWait()
+    }
+    
     
     // MARK: - Internal
+    
+    internal let context: NSManagedObjectContext
     
     internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: DataTransaction) -> Void) {
         
@@ -168,4 +180,6 @@ public final class DataTransaction {
     private var result: SaveResult?
     private let transactionQueue: GCDQueue
     private let closure: (transaction: DataTransaction) -> Void
+    
+    private lazy var childTransactionQueue: GCDQueue = .createSerial("com.hardcoredata.datastack.childtransactionqueue")
 }
