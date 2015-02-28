@@ -21,6 +21,8 @@
 		B5CFF23E19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */; };
 		B5CFF24019FD383100D6DFC4 /* DataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */; };
 		B5D022661A90CD340070CA63 /* DataStack+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */; };
+		B5D19BFB1AA14063001D1A99 /* AsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D19BFA1AA14063001D1A99 /* AsynchronousDataTransaction.swift */; };
+		B5D19BFF1AA14351001D1A99 /* SynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D19BFE1AA14351001D1A99 /* SynchronousDataTransaction.swift */; };
 		B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */; };
 		B5D1E22C19FA9FBC003B2874 /* NSError+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */; };
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
@@ -86,6 +88,8 @@
 		B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataTransaction.swift; sourceTree = "<group>"; };
 		B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Transaction.swift"; sourceTree = "<group>"; };
+		B5D19BFA1AA14063001D1A99 /* AsynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsynchronousDataTransaction.swift; sourceTree = "<group>"; };
+		B5D19BFE1AA14351001D1A99 /* SynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SynchronousDataTransaction.swift; sourceTree = "<group>"; };
 		B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentStoreResult.swift; sourceTree = "<group>"; };
 		B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
@@ -237,6 +241,8 @@
 			isa = PBXGroup;
 			children = (
 				B5CFF23F19FD383100D6DFC4 /* DataTransaction.swift */,
+				B5D19BFE1AA14351001D1A99 /* SynchronousDataTransaction.swift */,
+				B5D19BFA1AA14063001D1A99 /* AsynchronousDataTransaction.swift */,
 				B5CFD36D1A0775F000B7885F /* SaveResult.swift */,
 				B582DF851A98B11B003F09C6 /* HardcoreData+Transaction.swift */,
 				B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */,
@@ -450,8 +456,10 @@
 				B5F409E91A8B11CE00A228EA /* HardcoreDataLogger.swift in Sources */,
 				B5D8081A1A3495BD00A44484 /* NSObject+HardcoreData.swift in Sources */,
 				B595CAC41A9A11C1009A397F /* NSManagedObjectContext+Setup.swift in Sources */,
+				B5D19BFF1AA14351001D1A99 /* SynchronousDataTransaction.swift in Sources */,
 				B5E209E01A0726460089C9D4 /* NSManagedObject+Transaction.swift in Sources */,
 				B582DF821A98B0E7003F09C6 /* HardcoreData+Querying.swift in Sources */,
+				B5D19BFB1AA14063001D1A99 /* AsynchronousDataTransaction.swift in Sources */,
 				B595CAC81A9A161B009A397F /* WeakObject.swift in Sources */,
 				B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */,
 				B5F409F11A8B27A600A228EA /* CustomizeQuery.swift in Sources */,

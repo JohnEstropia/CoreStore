@@ -37,7 +37,7 @@ public extension HardcoreData {
     
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     */
-    public static func performTransaction(closure: (transaction: DataTransaction) -> Void) {
+    public static func performTransaction(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
         self.defaultStack.performTransaction(closure)
     }
@@ -48,7 +48,7 @@ public extension HardcoreData {
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
     */
-    public static func performTransactionAndWait(closure: (transaction: DataTransaction) -> Void) -> SaveResult? {
+    public static func performTransactionAndWait(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         return self.defaultStack.performTransactionAndWait(closure)
     }

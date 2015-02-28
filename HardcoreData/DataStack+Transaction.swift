@@ -38,11 +38,11 @@ public extension DataStack {
     
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     */
-    public func performTransaction(closure: (transaction: DataTransaction) -> Void) {
+    public func performTransaction(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
-        DataTransaction(
+        AsynchronousDataTransaction(
             mainContext: self.mainContext,
-            queue: self.transactionQueue,
+            queue: self.childTransactionQueue,
             closure: closure).perform()
     }
     
@@ -52,11 +52,11 @@ public extension DataStack {
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
     */
-    public func performTransactionAndWait(closure: (transaction: DataTransaction) -> Void) -> SaveResult? {
+    public func performTransactionAndWait(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
-        return DataTransaction(
+        return SynchronousDataTransaction(
             mainContext: self.mainContext,
-            queue: self.transactionQueue,
+            queue: self.childTransactionQueue,
             closure: closure).performAndWait()
     }
 }

@@ -66,7 +66,7 @@ public class DataStack {
     /**
     Initializes a DataStack from an NSManagedObjectModel.
     
-    :param: modelName the name of the "momd" (or xcdatamodeld) file.
+    :param: managedObjectModel the NSManagedObjectModel of the (.xcdatamodeld) model file.
     */
     public required init(managedObjectModel: NSManagedObjectModel) {
         
@@ -81,8 +81,6 @@ public class DataStack {
             }
             return mapping
         }
-        
-        println(self.entityNameMapping)
         
         self.rootSavingContext.parentStack = self
     }
@@ -268,7 +266,7 @@ public class DataStack {
     // MARK: Internal
     
     internal let mainContext: NSManagedObjectContext
-    internal let transactionQueue: GCDQueue = .createSerial("com.hardcoredata.datastack.transactionqueue")
+    internal let childTransactionQueue: GCDQueue = .createSerial("com.hardcoredata.datastack.childtransactionqueue")
     
     internal func entityNameForEntityClass(entityClass: NSManagedObject.Type) -> String? {
         

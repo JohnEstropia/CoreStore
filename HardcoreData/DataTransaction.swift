@@ -33,10 +33,7 @@ import GCDKit
 /**
 The DataTransaction provides an interface for NSManagedObject creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from DataStack.performTransaction(_:), or from HardcoreData.performTransaction(_:).
 */
-public final class DataTransaction {
-    
-    // MARK: - Public
-    
+public /*abstract*/ class DataTransaction {
     
     // MARK: Object management
     
@@ -48,8 +45,9 @@ public final class DataTransaction {
     */
     public func create<T: NSManagedObject>(entity: T.Type) -> T {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to create an NSManagedObject outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to create an NSManagedObject from an already committed DataTransaction.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to create an entity of type \(entity) outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to create an NSManagedObject from an already committed \(self.dynamicType).")
+        
         return T.createInContext(self.context)
     }
     
@@ -61,8 +59,9 @@ public final class DataTransaction {
     */
     public func fetch<T: NSManagedObject>(object: T) -> T? {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to update an NSManagedObject outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to update an NSManagedObject from an already committed DataTransaction.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to update an entity of type \(object.dynamicType) outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to update an entity of type \(object.dynamicType) from an already committed \(self.dynamicType).")
+        
         return object.inContext(self.context)
     }
     
@@ -73,8 +72,9 @@ public final class DataTransaction {
     */
     public func delete(object: NSManagedObject) {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to delete an NSManagedObject outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to delete an NSManagedObject from an already committed DataTransaction.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to delete an entity of type \(object.dynamicType) outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to delete an entity of type \(object.dynamicType) from an already committed \(self.dynamicType).")
+        
         object.deleteFromContext()
     }
     
@@ -85,69 +85,25 @@ public final class DataTransaction {
     */
     public func rollback() {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to rollback a DataTransaction outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to rollback an already committed DataTransaction.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to rollback a \(self.dynamicType) outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to rollback an already committed \(self.dynamicType).")
+        
         self.context.reset()
     }
     
-    /**
-    Saves the transaction changes asynchronously. Note that this method should not be used after either the commit(_:) or commitAndWait() method was already called once.
     
-    :param: completion the block executed after the save completes. Success or failure is reported by the SaveResult argument of the block.
-    */
-    public func commit(completion: (result: SaveResult) -> Void) {
-        
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to commit a DataTransaction outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to commit a DataTransaction more than once.")
-        
-        self.isCommitted = true
-        let semaphore = GCDSemaphore(0)
-        self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
-            
-            self.result = result
-            completion(result: result)
-            semaphore.signal()
-        }
-        semaphore.wait()
-    }
-    
-    /**
-    Saves the transaction changes and waits for completion synchronously. Note that this method should not be used after either the commit(_:) or commitAndWait() method was already called once.
-    
-    :returns: a SaveResult value indicating success or failure.
-    */
-    public func commitAndWait() {
-        
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to commit a DataTransaction outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to commit a DataTransaction more than once.")
-        
-        self.isCommitted = true
-        self.result = self.context.saveSynchronously()
-    }
-    
-    /**
-    Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made.
-    
-    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
-    :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
-    */
-    public func performTransactionAndWait(closure: (transaction: DataTransaction) -> Void) -> SaveResult? {
-        
-        return DataTransaction(
-            mainContext: self.context,
-            queue: self.childTransactionQueue,
-            closure: closure).performAndWait()
-    }
-    
-    
-    // MARK: - Internal
+    // MARK: Internal
     
     internal let context: NSManagedObjectContext
+    internal let transactionQueue: GCDQueue
+    internal let childTransactionQueue: GCDQueue = .createSerial("com.hardcoredata.datastack.childtransactionqueue")
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: DataTransaction) -> Void) {
+    internal var isCommitted = false
+    internal var result: SaveResult?
+    
+    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue) {
         
         self.transactionQueue = queue
-        self.closure = closure
         
         let context = mainContext.temporaryContextInTransaction(nil)
         self.context = context
@@ -155,30 +111,4 @@ public final class DataTransaction {
         context.retainsRegisteredObjects = true
         context.parentTransaction = self
     }
-    
-    internal func perform() {
-        
-        self.transactionQueue.async {
-            
-            self.closure(transaction: self)
-        }
-    }
-    
-    internal func performAndWait() -> SaveResult? {
-        
-        self.transactionQueue.sync {
-            
-            self.closure(transaction: self)
-        }
-        return self.result
-    }
-    
-    
-    // MARK: - Private
-    
-    private var isCommitted = false
-    private var result: SaveResult?
-    private let transactionQueue: GCDQueue
-    private let closure: (transaction: DataTransaction) -> Void
-    private let childTransactionQueue: GCDQueue = .createSerial("com.hardcoredata.datastack.childtransactionqueue")
 }
