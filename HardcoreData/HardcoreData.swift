@@ -70,48 +70,6 @@ public enum HardcoreData {
     }
     
     
-    /**
-    The HardcoreDataLogger instance to be used. The default logger is an instance of a DefaultLogger.
-    */
-    public static var logger: HardcoreDataLogger = DefaultLogger()
-    
-    
-    // MARK: Internal
-    
-    internal static func log(level: LogLevel, message: String, fileName: StaticString = __FILE__, lineNumber: Int = __LINE__, functionName: StaticString = __FUNCTION__) {
-        
-        self.logger.log(
-            level: level,
-            message: message,
-            fileName: fileName,
-            lineNumber:
-            lineNumber,
-            functionName:
-            functionName
-        )
-    }
-    
-    internal static func handleError(error: NSError, _ message: String, fileName: StaticString = __FILE__, lineNumber: Int = __LINE__, functionName: StaticString = __FUNCTION__) {
-        
-        self.logger.handleError(
-            error: error,
-            message: message,
-            fileName: fileName,
-            lineNumber: lineNumber,
-            functionName: functionName)
-    }
-    
-    internal static func assert(@autoclosure condition: () -> Bool, _ message: String, fileName: StaticString = __FILE__, lineNumber: Int = __LINE__, functionName: StaticString = __FUNCTION__) {
-        
-        self.logger.assert(
-            condition,
-            message: message,
-            fileName: fileName,
-            lineNumber: lineNumber,
-            functionName: functionName)
-    }
-    
-    
     // MARK: Private
     
     private static let defaultStackBarrierQueue = GCDQueue.createConcurrent("com.hardcoreData.defaultStackBarrierQueue")

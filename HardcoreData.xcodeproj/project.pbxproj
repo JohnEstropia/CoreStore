@@ -23,6 +23,7 @@
 		B5D022661A90CD340070CA63 /* DataStack+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */; };
 		B5D19BFB1AA14063001D1A99 /* AsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D19BFA1AA14063001D1A99 /* AsynchronousDataTransaction.swift */; };
 		B5D19BFF1AA14351001D1A99 /* SynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D19BFE1AA14351001D1A99 /* SynchronousDataTransaction.swift */; };
+		B5D19C011AA15E1F001D1A99 /* HardcoreData+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D19C001AA15E1F001D1A99 /* HardcoreData+Logging.swift */; };
 		B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */; };
 		B5D1E22C19FA9FBC003B2874 /* NSError+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */; };
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
@@ -90,6 +91,7 @@
 		B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Transaction.swift"; sourceTree = "<group>"; };
 		B5D19BFA1AA14063001D1A99 /* AsynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsynchronousDataTransaction.swift; sourceTree = "<group>"; };
 		B5D19BFE1AA14351001D1A99 /* SynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SynchronousDataTransaction.swift; sourceTree = "<group>"; };
+		B5D19C001AA15E1F001D1A99 /* HardcoreData+Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Logging.swift"; sourceTree = "<group>"; };
 		B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentStoreResult.swift; sourceTree = "<group>"; };
 		B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 			children = (
 				B5F409E81A8B11CE00A228EA /* HardcoreDataLogger.swift */,
 				B5F409EA1A8B199600A228EA /* DefaultLogger.swift */,
+				B5D19C001AA15E1F001D1A99 /* HardcoreData+Logging.swift */,
 			);
 			name = Logging;
 			sourceTree = "<group>";
@@ -443,6 +446,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5CFF24019FD383100D6DFC4 /* DataTransaction.swift in Sources */,
+				B5D19C011AA15E1F001D1A99 /* HardcoreData+Logging.swift in Sources */,
 				B5D399F519FCF4E0000E91BB /* NSPersistentStoreCoordinator+HardcoreData.swift in Sources */,
 				B5CFD36E1A0775F000B7885F /* SaveResult.swift in Sources */,
 				B5D022661A90CD340070CA63 /* DataStack+Transaction.swift in Sources */,

@@ -75,23 +75,21 @@ internal extension NSManagedObjectContext {
                 
                 let context = note.object as! NSManagedObjectContext
                 let insertedObjects = context.insertedObjects
-                if insertedObjects.count <= 0 {
+                let numberOfInsertedObjects = insertedObjects.count
+                if numberOfInsertedObjects <= 0 {
                     
                     return
                 }
                 
-                var permanentIDError: NSError?
-                if context.obtainPermanentIDsForObjects(Array(insertedObjects), error: &permanentIDError) {
+                var error: NSError?
+                if context.obtainPermanentIDsForObjects(Array(insertedObjects), error: &error) {
                     
                     return
                 }
                 
-                if let error = permanentIDError {
-                    
-                    HardcoreData.handleError(
-                        error,
-                        "Failed to obtain permanent IDs for inserted objects.")
-                }
+                HardcoreData.handleError(
+                    error ?? NSError(hardcoreDataErrorCode: .UnknownError),
+                    "Failed to obtain permanent ID(s) for \(numberOfInsertedObjects) inserted object(s).")
         })
     }
     

@@ -58,7 +58,9 @@ public extension NSManagedObjectContext {
         }
         if fetchResults == nil {
             
-            HardcoreData.handleError(error!, "Failed executing fetch request.")
+            HardcoreData.handleError(
+                error ?? NSError(hardcoreDataErrorCode: .UnknownError),
+                "Failed executing fetch request.")
             return nil
         }
         
@@ -90,7 +92,9 @@ public extension NSManagedObjectContext {
         }
         if fetchResults == nil {
             
-            HardcoreData.handleError(error!, "Failed executing fetch request.")
+            HardcoreData.handleError(
+                error ?? NSError(hardcoreDataErrorCode: .UnknownError),
+                "Failed executing fetch request.")
             return nil
         }
         
@@ -120,7 +124,9 @@ public extension NSManagedObjectContext {
         }
         if count == NSNotFound {
             
-            HardcoreData.handleError(error!, "Failed executing fetch request.")
+            HardcoreData.handleError(
+                error ?? NSError(hardcoreDataErrorCode: .UnknownError),
+                "Failed executing fetch request.")
             return 0
         }
         

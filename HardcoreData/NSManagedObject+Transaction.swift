@@ -59,25 +59,25 @@ internal extension NSManagedObject {
         let objectID = self.objectID
         if objectID.temporaryID {
             
-            var permanentIDError: NSError?
-            if !context.obtainPermanentIDsForObjects([self], error: &permanentIDError) {
+            var error: NSError?
+            if !context.obtainPermanentIDsForObjects([self], error: &error) {
                 
                 HardcoreData.handleError(
-                    permanentIDError!,
+                    error ?? NSError(hardcoreDataErrorCode: .UnknownError),
                     "Failed to obtain permanent ID for object.")
                 return nil
             }
         }
         
-        var existingObjectError: NSError?
-        if let existingObject = context.existingObjectWithID(objectID, error: &existingObjectError) {
+        var error: NSError?
+        if let existingObject = context.existingObjectWithID(objectID, error: &error) {
             
             return (existingObject as! T)
         }
         
         HardcoreData.handleError(
-            existingObjectError!,
-            "Failed to load existing NSManagedObject in context.")
+            error ?? NSError(hardcoreDataErrorCode: .UnknownError),
+            "Failed to load existing \(T.self) in context.")
         return nil;
     }
 }

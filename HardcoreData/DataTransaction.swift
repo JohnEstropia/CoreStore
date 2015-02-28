@@ -46,7 +46,7 @@ public /*abstract*/ class DataTransaction {
     public func create<T: NSManagedObject>(entity: T.Type) -> T {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to create an entity of type \(entity) outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to create an NSManagedObject from an already committed \(self.dynamicType).")
+        HardcoreData.assert(!self.isCommitted, "Attempted to create an entity of type \(entity) from an already committed \(self.dynamicType).")
         
         return T.createInContext(self.context)
     }

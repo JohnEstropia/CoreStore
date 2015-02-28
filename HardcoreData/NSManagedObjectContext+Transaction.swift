@@ -94,7 +94,7 @@ internal extension NSManagedObjectContext {
                 
                 HardcoreData.handleError(
                     error,
-                    "Failed to save NSManagedObjectContext.")
+                    "Failed to save \(NSManagedObjectContext.self).")
                 result = SaveResult(error)
             }
             else {
@@ -153,7 +153,7 @@ internal extension NSManagedObjectContext {
                 
                 HardcoreData.handleError(
                     error,
-                    "Failed to save NSManagedObjectContext.")
+                    "Failed to save \(NSManagedObjectContext.self).")
                 if let completion = completion {
                     
                     GCDQueue.Main.async {

@@ -94,7 +94,7 @@ public class DataStack {
     public func addInMemoryStore(configuration: String? = nil) -> PersistentStoreResult {
         
         let coordinator = self.coordinator;
-        var persistentStoreError: NSError?
+        var error: NSError?
         
         var store: NSPersistentStore?
         coordinator.performSynchronously {
@@ -104,7 +104,7 @@ public class DataStack {
                 configuration: configuration,
                 URL: nil,
                 options: nil,
-                error: &persistentStoreError)
+                error: &error)
         }
         
         if let store = store {
@@ -112,20 +112,20 @@ public class DataStack {
             return PersistentStoreResult(store)
         }
         
-        if let error = persistentStoreError {
+        if let error = error {
             
             HardcoreData.handleError(
                 error,
-                "Failed to add in-memory NSPersistentStore.")
+                "Failed to add in-memory \(NSPersistentStore.self).")
             return PersistentStoreResult(error)
         }
         else {
             
             HardcoreData.handleError(
                 NSError(hardcoreDataErrorCode: .UnknownError),
-                "Failed to add in-memory NSPersistentStore.")
+                "Failed to add in-memory \(NSPersistentStore.self).")
+            return PersistentStoreResult(.UnknownError)
         }
-        return PersistentStoreResult(.UnknownError)
     }
     
     /**
@@ -174,7 +174,8 @@ public class DataStack {
             
             HardcoreData.handleError(
                 NSError(hardcoreDataErrorCode: .DifferentPersistentStoreExistsAtURL),
-                "Failed to add SQLite NSPersistentStore at \"\(fileURL)\" because a different NSPersistentStore at that URL already exists.")
+                "Failed to add SQLite \(NSPersistentStore.self) at \"\(fileURL)\" because a different \(NSPersistentStore.self) at that URL already exists.")
+            
             return PersistentStoreResult(.DifferentPersistentStoreExistsAtURL)
         }
         
@@ -187,7 +188,7 @@ public class DataStack {
             error: &directoryError) {
                 
                 HardcoreData.handleError(
-                    directoryError!,
+                    directoryError ?? NSError(hardcoreDataErrorCode: .UnknownError),
                     "Failed to create directory for SQLite store at \"\(fileURL)\".")
                 return PersistentStoreResult(directoryError!)
         }
@@ -211,54 +212,45 @@ public class DataStack {
             return PersistentStoreResult(store)
         }
         
-        if let error = persistentStoreError {
-            
-            if resetStoreOnMigrationFailure
-                && (error.code == NSPersistentStoreIncompatibleVersionHashError
-                    || error.code == NSMigrationMissingSourceModelError)
-                && error.domain == NSCocoaErrorDomain {
+        if let error = persistentStoreError
+            where (
+                resetStoreOnMigrationFailure
+                    && (error.code == NSPersistentStoreIncompatibleVersionHashError
+                        || error.code == NSMigrationMissingSourceModelError)
+                    && error.domain == NSCocoaErrorDomain
+            ) {
+                
+                fileManager.removeItemAtURL(fileURL, error: nil)
+                fileManager.removeItemAtPath(
+                    fileURL.path!.stringByAppendingString("-shm"),
+                    error: nil)
+                fileManager.removeItemAtPath(
+                    fileURL.path!.stringByAppendingString("-wal"),
+                    error: nil)
+                
+                var store: NSPersistentStore?
+                coordinator.performSynchronously {
                     
-                    fileManager.removeItemAtURL(fileURL, error: nil)
-                    fileManager.removeItemAtPath(
-                        fileURL.path!.stringByAppendingString("-shm"),
-                        error: nil)
-                    fileManager.removeItemAtPath(
-                        fileURL.path!.stringByAppendingString("-wal"),
-                        error: nil)
+                    store = coordinator.addPersistentStoreWithType(
+                        NSSQLiteStoreType,
+                        configuration: configuration,
+                        URL: fileURL,
+                        options: [NSSQLitePragmasOption: ["WAL": "journal_mode"],
+                            NSInferMappingModelAutomaticallyOption: true,
+                            NSMigratePersistentStoresAutomaticallyOption: automigrating],
+                        error: &persistentStoreError)
+                }
+                
+                if let store = store {
                     
-                    var store: NSPersistentStore?
-                    coordinator.performSynchronously {
-                        
-                        store = coordinator.addPersistentStoreWithType(
-                            NSSQLiteStoreType,
-                            configuration: configuration,
-                            URL: fileURL,
-                            options: [NSSQLitePragmasOption: ["WAL": "journal_mode"],
-                                NSInferMappingModelAutomaticallyOption: true,
-                                NSMigratePersistentStoresAutomaticallyOption: automigrating],
-                            error: &persistentStoreError)
-                    }
-                    
-                    if let store = store {
-                        
-                        return PersistentStoreResult(store)
-                    }
-            }
+                    return PersistentStoreResult(store)
+                }
         }
         
-        if let error = persistentStoreError {
-            
-            HardcoreData.handleError(
-                error,
-                "Failed to add SQLite NSPersistentStore at \"\(fileURL)\".")
-            return PersistentStoreResult(error)
-        }
-        else {
-            
-            HardcoreData.handleError(
-                NSError(hardcoreDataErrorCode: .UnknownError),
-                "Failed to add SQLite NSPersistentStore at \"\(fileURL)\".")
-        }
+        HardcoreData.handleError(
+            persistentStoreError ?? NSError(hardcoreDataErrorCode: .UnknownError),
+            "Failed to add SQLite \(NSPersistentStore.self) at \"\(fileURL)\".")
+        
         return PersistentStoreResult(.UnknownError)
     }
     
