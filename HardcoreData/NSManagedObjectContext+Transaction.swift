@@ -32,7 +32,7 @@ import GCDKit
 
 internal extension NSManagedObjectContext {
     
-    // MARK: - Internal
+    // MARK: Internal
     
     internal weak var parentTransaction: DataTransaction? {
         
@@ -94,7 +94,7 @@ internal extension NSManagedObjectContext {
                 
                 HardcoreData.handleError(
                     error,
-                    "Failed to save \(NSManagedObjectContext.self).")
+                    "Failed to save <\(NSManagedObjectContext.self)>.")
                 result = SaveResult(error)
             }
             else {
@@ -153,7 +153,7 @@ internal extension NSManagedObjectContext {
                 
                 HardcoreData.handleError(
                     error,
-                    "Failed to save \(NSManagedObjectContext.self).")
+                    "Failed to save <\(NSManagedObjectContext.self)>.")
                 if let completion = completion {
                     
                     GCDQueue.Main.async {

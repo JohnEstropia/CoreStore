@@ -45,8 +45,8 @@ public /*abstract*/ class DataTransaction {
     */
     public func create<T: NSManagedObject>(entity: T.Type) -> T {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to create an entity of type \(entity) outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to create an entity of type \(entity) from an already committed \(self.dynamicType).")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to create an entity of type <\(entity)> outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to create an entity of type <\(entity)> from an already committed <\(self.dynamicType)>.")
         
         return T.createInContext(self.context)
     }
@@ -59,8 +59,8 @@ public /*abstract*/ class DataTransaction {
     */
     public func fetch<T: NSManagedObject>(object: T) -> T? {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to update an entity of type \(object.dynamicType) outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to update an entity of type \(object.dynamicType) from an already committed \(self.dynamicType).")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type <\(object.dynamicType)> outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to update an entity of type <\(object.dynamicType)> from an already committed <\(self.dynamicType)>.")
         
         return object.inContext(self.context)
     }
@@ -72,8 +72,8 @@ public /*abstract*/ class DataTransaction {
     */
     public func delete(object: NSManagedObject) {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to delete an entity of type \(object.dynamicType) outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to delete an entity of type \(object.dynamicType) from an already committed \(self.dynamicType).")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity of type <\(object.dynamicType)> outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to delete an entity of type <\(object.dynamicType)> from an already committed <\(self.dynamicType)>.")
         
         object.deleteFromContext()
     }
@@ -85,8 +85,8 @@ public /*abstract*/ class DataTransaction {
     */
     public func rollback() {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to rollback a \(self.dynamicType) outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to rollback an already committed \(self.dynamicType).")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to rollback a <\(self.dynamicType)> outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to rollback an already committed <\(self.dynamicType)>.")
         
         self.context.reset()
     }

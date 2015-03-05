@@ -89,7 +89,7 @@ public struct Where: FetchClause {
         
         if fetchRequest.predicate != nil {
             
-            HardcoreData.log(.Warning, message: "An existing predicate for the \(NSFetchRequest.self) was overwritten by \(self.dynamicType) query clause.")
+            HardcoreData.log(.Warning, message: "An existing predicate for the <\(NSFetchRequest.self)> was overwritten by <\(self.dynamicType)> query clause.")
         }
         
         fetchRequest.predicate = self.predicate

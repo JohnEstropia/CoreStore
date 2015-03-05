@@ -32,7 +32,7 @@ import GCDKit
 
 internal extension NSManagedObjectContext {
     
-    // MARK: - Internal
+    // MARK: Internal
     
     internal var shouldCascadeSavesToParent: Bool {
         
@@ -94,7 +94,7 @@ internal extension NSManagedObjectContext {
     }
     
     
-    // MARK: - Private
+    // MARK: Private
     
     private struct PropertyKeys {
         

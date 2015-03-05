@@ -52,7 +52,7 @@ public enum HardcoreDataErrorCode: Int {
 public extension NSError {
    
     /**
-    If the error's domain is HardcoreDataErrorDomain, returns the associated HardcoreDataErrorCode. For other domains, returns nil.
+    If the error's domain is equal to HardcoreDataErrorDomain, returns the associated HardcoreDataErrorCode. For other domains, returns nil.
     */
     public var hardcoreDataErrorCode: HardcoreDataErrorCode? {
         

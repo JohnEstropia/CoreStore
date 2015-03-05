@@ -33,31 +33,63 @@ public extension HardcoreData {
     
     public static func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
         
-        return self.defaultStack.mainContext.fetchOne(entity, queryClauses)
+        return self.defaultStack.fetchOne(entity, queryClauses)
     }
     
     public static func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
         
-        return self.defaultStack.mainContext.fetchOne(entity, queryClauses)
+        return self.defaultStack.fetchOne(entity, queryClauses)
     }
     
     public static func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [T]? {
         
-        return self.defaultStack.mainContext.fetchAll(entity, queryClauses)
+        return self.defaultStack.fetchAll(entity, queryClauses)
     }
     
     public static func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
         
-        return self.defaultStack.mainContext.fetchAll(entity, queryClauses)
+        return self.defaultStack.fetchAll(entity, queryClauses)
     }
     
-    public static func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int {
+    public static func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
         
-        return self.defaultStack.mainContext.queryCount(entity, queryClauses)
+        return self.defaultStack.fetchCount(entity, queryClauses)
     }
     
-    public static func queryCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int {
+    public static func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
         
-        return self.defaultStack.mainContext.queryCount(entity, queryClauses)
+        return self.defaultStack.fetchCount(entity, queryClauses)
+    }
+    
+    public static func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
+        
+        return self.defaultStack.deleteAll(entity, queryClauses)
+    }
+    
+    public static func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
+        
+        return self.defaultStack.deleteAll(entity, queryClauses)
+    }
+    
+    public static func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> Int? {
+        
+        let result = self.defaultStack.queryAggregate(entity, function: function, queryClauses)
+        return result
+    }
+    
+    public static func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> Int? {
+        
+        let result = self.defaultStack.queryAggregate(entity, function: function, queryClauses)
+        return result
+    }
+    
+    public static func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> U? {
+        
+        return self.defaultStack.queryAggregate(entity, function: function, queryClauses)
+    }
+    
+    public static func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> U? {
+        
+        return self.defaultStack.queryAggregate(entity, function: function, queryClauses)
     }
 }

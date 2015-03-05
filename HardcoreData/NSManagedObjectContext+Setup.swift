@@ -31,7 +31,7 @@ import CoreData
 
 internal extension NSManagedObjectContext {
     
-    // MARK: - Internal
+    // MARK: Internal
     
     internal weak var parentStack: DataStack? {
         
@@ -62,6 +62,7 @@ internal extension NSManagedObjectContext {
         let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         context.persistentStoreCoordinator = coordinator
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        context.undoManager = nil
         context.setupForHardcoreDataWithContextName("com.hardcoredata.rootcontext")
         
         return context
@@ -73,6 +74,7 @@ internal extension NSManagedObjectContext {
         context.parentContext = rootContext
         context.setupForHardcoreDataWithContextName("com.hardcoredata.maincontext")
         context.shouldCascadeSavesToParent = true
+        context.undoManager = nil
         context.observerForDidSaveNotification = NotificationObserver(
             notificationName: NSManagedObjectContextDidSaveNotification,
             object: rootContext,

@@ -31,7 +31,7 @@ import CoreData
 
 internal extension NSManagedObject {
     
-    // MARK: - Internal
+    // MARK: Internal
     
     internal class func createInContext(context: NSManagedObjectContext) -> Self {
         
@@ -77,7 +77,7 @@ internal extension NSManagedObject {
         
         HardcoreData.handleError(
             error ?? NSError(hardcoreDataErrorCode: .UnknownError),
-            "Failed to load existing \(T.self) in context.")
+            "Failed to load existing <\(T.self)> in context.")
         return nil;
     }
 }

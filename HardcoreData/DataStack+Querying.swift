@@ -1,5 +1,5 @@
 //
-//  DataTransaction+Querying.swift
+//  DataStack+Querying.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -27,71 +27,71 @@ import Foundation
 import CoreData
 
 
-// MARK: - DataTransaction
+// MARK: - DataStack
 
-public extension DataTransaction {
+public extension DataStack {
     
     // MARK: Public
     
     public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
         
-        return self.context.fetchOne(entity, queryClauses)
+        return self.mainContext.fetchOne(entity, queryClauses)
     }
     
     public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
         
-        return self.context.fetchOne(entity, queryClauses)
+        return self.mainContext.fetchOne(entity, queryClauses)
     }
     
     public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [T]? {
         
-        return self.context.fetchAll(entity, queryClauses)
+        return self.mainContext.fetchAll(entity, queryClauses)
     }
     
     public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
         
-        return self.context.fetchAll(entity, queryClauses)
+        return self.mainContext.fetchAll(entity, queryClauses)
     }
     
     public func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
         
-        return self.context.fetchCount(entity, queryClauses)
+        return self.mainContext.fetchCount(entity, queryClauses)
     }
     
     public func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
         
-        return self.context.fetchCount(entity, queryClauses)
+        return self.mainContext.fetchCount(entity, queryClauses)
     }
     
     public func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
         
-        return self.context.deleteAll(entity, queryClauses)
+        return self.mainContext.deleteAll(entity, queryClauses)
     }
     
     public func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
         
-        return self.context.deleteAll(entity, queryClauses)
+        return self.mainContext.deleteAll(entity, queryClauses)
     }
     
     public func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> Int? {
         
-        let result = self.context.queryAggregate(entity, function: function, queryClauses)
+        let result = self.mainContext.queryAggregate(entity, function: function, queryClauses)
         return result
     }
     
     public func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> Int? {
         
-        let result = self.context.queryAggregate(entity, function: function, queryClauses)
+        let result = self.mainContext.queryAggregate(entity, function: function, queryClauses)
         return result
     }
     
     public func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> U? {
         
-        return self.context.queryAggregate(entity, function: function, queryClauses)
+        return self.mainContext.queryAggregate(entity, function: function, queryClauses)
     }
     
     public func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> U? {
         
-        return self.context.queryAggregate(entity, function: function, queryClauses)
+        return self.mainContext.queryAggregate(entity, function: function, queryClauses)
     }
 }

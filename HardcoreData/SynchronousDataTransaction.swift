@@ -20,8 +20,8 @@ public class SynchronousDataTransaction: DataTransaction {
     */
     public func commitAndWait() {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext() == true, "Attempted to commit a \(self.dynamicType) outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to commit a \(self.dynamicType) more than once.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a <\(self.dynamicType)> outside a transaction queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to commit a <\(self.dynamicType)> more than once.")
         
         self.isCommitted = true
         self.result = self.context.saveSynchronously()
@@ -51,7 +51,7 @@ public class SynchronousDataTransaction: DataTransaction {
             self.closure(transaction: self)
             if !self.isCommitted {
                 
-                HardcoreData.log(.Warning, message: "The closure for the \(self.dynamicType) completed without being committed. All changes made within the transaction were discarded.")
+                HardcoreData.log(.Warning, message: "The closure for the <\(self.dynamicType)> completed without being committed. All changes made within the transaction were discarded.")
             }
         }
         return self.result
@@ -65,7 +65,7 @@ public class SynchronousDataTransaction: DataTransaction {
     }
     
     
-    // MARK: - Private
+    // MARK: Private
     
     private let closure: (transaction: SynchronousDataTransaction) -> Void
 }

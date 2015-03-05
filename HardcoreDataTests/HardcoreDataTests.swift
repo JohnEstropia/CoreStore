@@ -32,11 +32,12 @@ class HardcoreDataTests: XCTestCase {
     override func setUp() {
         
         super.setUp()
-        NSFileManager.defaultManager().removeItemAtURL(NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL, error: nil)
+        self.deleteStores()
     }
     
     override func tearDown() {
         
+        self.deleteStores()
         super.tearDown()
     }
     
@@ -72,6 +73,12 @@ class HardcoreDataTests: XCTestCase {
             obj1.testString = "lololol"
             obj1.testNumber = 42
             obj1.testDate = NSDate()
+            
+            let count = transaction.queryAggregate(
+                TestEntity1.self,
+                function: .Count("testNumber")
+            )
+            XCTAssertTrue(count == 0, "count == 0 (actual: \(count))") // counts only objects in store
             
             let obj2 = transaction.create(TestEntity2)
             obj2.testEntityID = 2
@@ -143,7 +150,6 @@ class HardcoreDataTests: XCTestCase {
             )
             XCTAssertNotNil(objs2, "objs2 != nil")
             XCTAssertTrue(objs2?.count == 2, "objs2?.count == 2")
-            print(objs2)
             
             transaction.commit { (result) -> Void in
                 
@@ -160,5 +166,48 @@ class HardcoreDataTests: XCTestCase {
         }
         
         self.waitForExpectationsWithTimeout(100, handler: nil)
+        
+        let max1 = HardcoreData.queryAggregate(
+            TestEntity2.self,
+            function: .Maximum("testNumber")
+        )
+        XCTAssertTrue(max1 == 100, "max == 100 (actual: \(max1))")
+        
+        let max2 = HardcoreData.queryAggregate(
+            TestEntity2.self,
+            function: .Maximum("testNumber"),
+            Where("%K > %@", "testEntityID", 2)
+        )
+        XCTAssertTrue(max2 == 90, "max == 90 (actual: \(max2))")
+        
+        HardcoreData.performTransactionAndWait { (transaction) -> Void in
+            
+            let numberOfDeletedObjects1 = transaction.deleteAll(TestEntity1)
+            XCTAssertTrue(numberOfDeletedObjects1 == 1, "numberOfDeletedObjects1 == 1 (actual: \(numberOfDeletedObjects1))")
+            
+            let numberOfDeletedObjects2 = transaction.deleteAll(
+                TestEntity2.self,
+                Where("%K > %@", "testEntityID", 2)
+            )
+            XCTAssertTrue(numberOfDeletedObjects2 == 1, "numberOfDeletedObjects2 == 1 (actual: \(numberOfDeletedObjects2))")
+            
+            transaction.commitAndWait()
+        }
+        
+        let objs1 = HardcoreData.fetchAll(TestEntity1)
+        XCTAssertNotNil(objs1, "objs1 != nil")
+        XCTAssertTrue(objs1?.count == 0, "objs1?.count == 0")
+        
+        let objs2 = HardcoreData.fetchAll(TestEntity2)
+        XCTAssertNotNil(objs2, "objs2 != nil")
+        XCTAssertTrue(objs2?.count == 1, "objs2?.count == 1")
+    }
+    
+    private func deleteStores() {
+        
+        NSFileManager.defaultManager().removeItemAtURL(
+            NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL,
+            error: nil
+        )
     }
 }
