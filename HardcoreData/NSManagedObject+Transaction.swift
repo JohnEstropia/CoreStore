@@ -60,7 +60,15 @@ internal extension NSManagedObject {
         if objectID.temporaryID {
             
             var error: NSError?
-            if !context.obtainPermanentIDsForObjects([self], error: &error) {
+            var didSucceed: Bool?
+            if let managedObjectContext = self.managedObjectContext {
+                
+                managedObjectContext.performBlockAndWait {
+                    
+                    didSucceed = managedObjectContext.obtainPermanentIDsForObjects([self], error: &error)
+                }
+            }
+            if didSucceed != true {
                 
                 HardcoreData.handleError(
                     error ?? NSError(hardcoreDataErrorCode: .UnknownError),

@@ -41,7 +41,7 @@ public extension DataStack {
     public func performTransaction(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
         AsynchronousDataTransaction(
-            mainContext: self.mainContext,
+            mainContext: self.rootSavingContext,
             queue: self.childTransactionQueue,
             closure: closure).perform()
     }
@@ -55,7 +55,7 @@ public extension DataStack {
     public func performTransactionAndWait(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         return SynchronousDataTransaction(
-            mainContext: self.mainContext,
+            mainContext: self.rootSavingContext,
             queue: self.childTransactionQueue,
             closure: closure).performAndWait()
     }

@@ -45,11 +45,14 @@ public class DataStack {
     // MARK: Public
     
     /**
-    Initializes a DataStack from merged model in the app bundle.
+    Initializes a DataStack from a model created by merging all the models found in all bundles.
     */
     public convenience init() {
         
-        self.init(managedObjectModel: NSManagedObjectModel.mergedModelFromBundles(NSBundle.allBundles())!)
+        let mergedModel: NSManagedObjectModel! = NSManagedObjectModel.mergedModelFromBundles(NSBundle.allBundles())
+        HardcoreData.assert(mergedModel != nil, "Could not create a merged <\(NSManagedObjectModel.self)> from all bundles.")
+        
+        self.init(managedObjectModel: mergedModel)
     }
     
     /**
@@ -59,8 +62,11 @@ public class DataStack {
     */
     public convenience init(modelName: String) {
         
-        let modelFilePath = NSBundle.mainBundle().pathForResource(modelName, ofType: "momd")!
-        let managedObjectModel = NSManagedObjectModel(contentsOfURL: NSURL(fileURLWithPath: modelFilePath)!)!
+        let modelFilePath: String! = NSBundle.mainBundle().pathForResource(modelName, ofType: "momd")
+        HardcoreData.assert(modelFilePath != nil, "Could not find a \"momd\" resource from the main bundle.")
+        
+        let managedObjectModel: NSManagedObjectModel! = NSManagedObjectModel(contentsOfURL: NSURL(fileURLWithPath: modelFilePath)!)
+        HardcoreData.assert(managedObjectModel != nil, "Could not create an <\(NSManagedObjectModel.self)> from the resource at path \"\(modelFilePath)\".")
         
         self.init(managedObjectModel: managedObjectModel)
     }
@@ -218,7 +224,8 @@ public class DataStack {
             where (
                 resetStoreOnMigrationFailure
                     && (error.code == NSPersistentStoreIncompatibleVersionHashError
-                        || error.code == NSMigrationMissingSourceModelError)
+                        || error.code == NSMigrationMissingSourceModelError
+                        || error.code == NSMigrationError)
                     && error.domain == NSCocoaErrorDomain
             ) {
                 
@@ -259,6 +266,7 @@ public class DataStack {
     
     // MARK: Internal
     
+    internal let rootSavingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
     internal let childTransactionQueue: GCDQueue = .createSerial("com.hardcoredata.datastack.childtransactionqueue")
     
@@ -274,6 +282,5 @@ public class DataStack {
     private typealias EntityNameType = String
     
     private let coordinator: NSPersistentStoreCoordinator
-    private let rootSavingContext: NSManagedObjectContext
     private let entityNameMapping: [EntityClassNameType: EntityNameType]
 }

@@ -54,7 +54,7 @@ internal extension NSManagedObjectContext {
         context.parentContext = self
         context.parentStack = self.parentStack
         context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
-        context.shouldCascadeSavesToParent = (self.concurrencyType == .MainQueueConcurrencyType)
+        context.shouldCascadeSavesToParent = (self.parentStack?.rootSavingContext == self)
         
         return context
     }
