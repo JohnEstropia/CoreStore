@@ -1,5 +1,5 @@
 //
-//  DataTransaction+Querying.swift
+//  BaseDataTransaction+Querying.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - DataTransaction
 
-public extension DataTransaction {
+public extension BaseDataTransaction {
     
     // MARK: Public
     

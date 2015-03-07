@@ -40,7 +40,7 @@ private let defaultSQLiteStoreURL = applicationSupportDirectory.URLByAppendingPa
 /**
 The DataStack encapsulates the data model for the Core Data stack. Each DataStack can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own NSPersistentStoreCoordinator, a root NSManagedObjectContext for disk saves, and a shared NSManagedObjectContext designed as a read-only model interface for NSManagedObjects.
 */
-public class DataStack {
+public final class DataStack {
     
     // MARK: Public
     

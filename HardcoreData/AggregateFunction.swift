@@ -43,7 +43,7 @@ public enum AggregateFunction {
     
     // MARK: Internal
     
-    internal func toExpression() -> NSExpression {
+    internal func createExpression() -> NSExpression {
         
         switch self {
             

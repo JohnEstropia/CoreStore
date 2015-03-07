@@ -65,8 +65,10 @@ class HardcoreDataTests: XCTestCase {
             break
         }
         
+        let detachedTransaction = HardcoreData.beginDetached()
+        
         let createExpectation = self.expectationWithDescription("Entity creation")
-        HardcoreData.performTransaction { (transaction) -> Void in
+        HardcoreData.beginAsynchronous { (transaction) -> Void in
         
             let obj1 = transaction.create(TestEntity1)
             obj1.testEntityID = 1
@@ -93,7 +95,7 @@ class HardcoreDataTests: XCTestCase {
             obj3.testDate = NSDate()
             
         
-            transaction.performTransactionAndWait { (transaction) -> Void in
+            transaction.beginSynchronous { (transaction) -> Void in
                 
                 let obj4 = transaction.create(TestEntity2)
                 obj4.testEntityID = 4
@@ -121,10 +123,14 @@ class HardcoreDataTests: XCTestCase {
                 )
                 XCTAssertNil(objs4test, "objs4test == nil")
                 
+                let objs5test = detachedTransaction.fetchCount(TestEntity2)
+                XCTAssertTrue(objs5test == 2, "objs5test == 2")
+                
                 XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
                 switch result {
                     
                 case .Success(let hasChanges):
+                    XCTAssertTrue(hasChanges, "hasChanges == true")
                     createExpectation.fulfill()
                     
                 case .Failure(let error):
@@ -134,7 +140,7 @@ class HardcoreDataTests: XCTestCase {
         }
         
         let queryExpectation = self.expectationWithDescription("Query creation")
-        HardcoreData.performTransaction { (transaction) -> Void in
+        HardcoreData.beginAsynchronous { (transaction) -> Void in
             
             let obj1 = transaction.fetchOne(TestEntity1)
             XCTAssertNotNil(obj1, "obj1 != nil")
@@ -157,6 +163,7 @@ class HardcoreDataTests: XCTestCase {
                 switch result {
                     
                 case .Success(let hasChanges):
+                    XCTAssertFalse(hasChanges, "hasChanges == false")
                     queryExpectation.fulfill()
                     
                 case .Failure(let error):
@@ -180,7 +187,7 @@ class HardcoreDataTests: XCTestCase {
         )
         XCTAssertTrue(max2 == 90, "max == 90 (actual: \(max2))")
         
-        HardcoreData.performTransactionAndWait { (transaction) -> Void in
+        HardcoreData.beginSynchronous { (transaction) -> Void in
             
             let numberOfDeletedObjects1 = transaction.deleteAll(TestEntity1)
             XCTAssertTrue(numberOfDeletedObjects1 == 1, "numberOfDeletedObjects1 == 1 (actual: \(numberOfDeletedObjects1))")
@@ -201,6 +208,62 @@ class HardcoreDataTests: XCTestCase {
         let objs2 = HardcoreData.fetchAll(TestEntity2)
         XCTAssertNotNil(objs2, "objs2 != nil")
         XCTAssertTrue(objs2?.count == 1, "objs2?.count == 1")
+        
+        let detachedExpectation = self.expectationWithDescription("Query creation")
+        
+        let obj5 = detachedTransaction.create(TestEntity1)
+        obj5.testEntityID = 5
+        obj5.testString = "hihihi"
+        obj5.testNumber = 70
+        obj5.testDate = NSDate()
+        
+        detachedTransaction.commit { (result) -> Void in
+            
+            XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
+            switch result {
+                
+            case .Success(let hasChanges):
+                XCTAssertTrue(hasChanges, "hasChanges == true")
+                
+                let count = HardcoreData.queryAggregate(
+                    TestEntity1.self,
+                    function: .Count("testNumber")
+                )
+                XCTAssertTrue(count == 1, "count == 1 (actual: \(count))")
+                
+                let obj6 = detachedTransaction.create(TestEntity1)
+                obj6.testEntityID = 6
+                obj6.testString = "huehuehue"
+                obj6.testNumber = 130
+                obj6.testDate = NSDate()
+                
+                detachedTransaction.commit { (result) -> Void in
+                    
+                    XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
+                    switch result {
+                        
+                    case .Success(let hasChanges):
+                        XCTAssertTrue(hasChanges, "hasChanges == true")
+                        
+                        let count = HardcoreData.queryAggregate(
+                            TestEntity1.self,
+                            function: .Count("testNumber")
+                        )
+                        XCTAssertTrue(count == 2, "count == 2 (actual: \(count))")
+                        
+                        detachedExpectation.fulfill()
+                        
+                    case .Failure(let error):
+                        XCTFail(error.description)
+                    }
+                }
+                
+            case .Failure(let error):
+                XCTFail(error.description)
+            }
+        }
+        
+        self.waitForExpectationsWithTimeout(100, handler: nil)
     }
     
     private func deleteStores() {

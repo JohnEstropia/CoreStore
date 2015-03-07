@@ -37,9 +37,9 @@ public extension HardcoreData {
     
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     */
-    public static func performTransaction(closure: (transaction: AsynchronousDataTransaction) -> Void) {
+    public static func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
-        self.defaultStack.performTransaction(closure)
+        self.defaultStack.beginAsynchronous(closure)
     }
     
     /**
@@ -48,8 +48,18 @@ public extension HardcoreData {
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
     */
-    public static func performTransactionAndWait(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    public static func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
-        return self.defaultStack.performTransactionAndWait(closure)
+        return self.defaultStack.beginSynchronous(closure)
+    }
+    
+    /**
+    Using the defaultStack, begins a non-contiguous transaction where NSManagedObject creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
+    
+    :returns: a DetachedDataTransaction instance where creates, updates, and deletes can be made.
+    */
+    public static func beginDetached() -> DetachedDataTransaction {
+        
+        return self.defaultStack.beginDetached()
     }
 }

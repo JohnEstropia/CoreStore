@@ -38,7 +38,7 @@ public extension DataStack {
     
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     */
-    public func performTransaction(closure: (transaction: AsynchronousDataTransaction) -> Void) {
+    public func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
         AsynchronousDataTransaction(
             mainContext: self.rootSavingContext,
@@ -52,11 +52,23 @@ public extension DataStack {
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
     */
-    public func performTransactionAndWait(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         return SynchronousDataTransaction(
             mainContext: self.rootSavingContext,
             queue: self.childTransactionQueue,
             closure: closure).performAndWait()
+    }
+    
+    /**
+    Begins a non-contiguous transaction where NSManagedObject creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
+    
+    :returns: a DetachedDataTransaction instance where creates, updates, and deletes can be made.
+    */
+    public func beginDetached() -> DetachedDataTransaction {
+        
+        return DetachedDataTransaction(
+            mainContext: self.rootSavingContext,
+            queue: .Main)
     }
 }

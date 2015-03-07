@@ -34,7 +34,7 @@ internal extension NSManagedObjectContext {
     
     // MARK: Internal
     
-    internal weak var parentTransaction: DataTransaction? {
+    internal weak var parentTransaction: BaseDataTransaction? {
         
         get {
             
@@ -48,13 +48,14 @@ internal extension NSManagedObjectContext {
         }
     }
     
-    internal func temporaryContextInTransaction(transaction: DataTransaction?) -> NSManagedObjectContext {
+    internal func temporaryContextInTransactionWithConcurrencyType(concurrencyType: NSManagedObjectContextConcurrencyType) -> NSManagedObjectContext {
         
-        let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        let context = NSManagedObjectContext(concurrencyType: concurrencyType)
         context.parentContext = self
         context.parentStack = self.parentStack
         context.setupForHardcoreDataWithContextName("com.hardcoredata.temporarycontext")
         context.shouldCascadeSavesToParent = (self.parentStack?.rootSavingContext == self)
+        context.retainsRegisteredObjects = true
         
         return context
     }

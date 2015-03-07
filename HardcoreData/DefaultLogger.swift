@@ -33,14 +33,21 @@ public final class DefaultLogger: HardcoreDataLogger {
     public func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+            let levelString: String
+            switch level {
+            case .Trace: levelString = "Trace"
+            case .Notice: levelString = "Notice"
+            case .Warning: levelString = "Warning"
+            case .Fatal: levelString = "Fatal"
+            }
+            Swift.println("[HardcoreData:\(levelString)] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         #endif
     }
     
     public func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.println("[HardcoreData] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message): \(error)\n")
+            Swift.println("[HardcoreData:Error] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message): \(error)\n")
         #endif
     }
     

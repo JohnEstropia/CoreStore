@@ -203,7 +203,7 @@ internal extension NSManagedObjectContext {
         let expressionDescription = NSExpressionDescription()
         expressionDescription.name = "queryAggregate"
         expressionDescription.expressionResultType = U.attributeType
-        expressionDescription.expression = function.toExpression()
+        expressionDescription.expression = function.createExpression()
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = self.entityDescriptionForEntityClass(entity)

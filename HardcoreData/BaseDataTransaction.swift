@@ -1,5 +1,5 @@
 //
-//  DataTransaction.swift
+//  BaseDataTransaction.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -28,17 +28,22 @@ import CoreData
 import GCDKit
 
 
-// MARK: - DataTransaction
+// MARK: - BaseDataTransaction
 
 /**
-The DataTransaction provides an interface for NSManagedObject creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from DataStack.performTransaction(_:), or from HardcoreData.performTransaction(_:).
+The BaseDataTransaction is an abstract interface for NSManagedObject creates, updates, and deletes. All BaseDataTransaction subclasses manage a private NSManagedObjectContext which are direct children of the NSPersistentStoreCoordinator's root NSManagedObjectContext. This means that all updates are saved first to the persistent store, and then propagated up to the read-only NSManagedObjectContext.
 */
-public /*abstract*/ class DataTransaction {
+public /*abstract*/ class BaseDataTransaction {
     
     // MARK: Object management
     
+    var hasChanges: Bool {
+        
+        return self.context.hasChanges
+    }
+    
     /**
-    Creates a new NSManagedObject with the specified entity type. Note that this method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Creates a new NSManagedObject with the specified entity type.
     
     :param: entity the NSManagedObject type to be created
     :returns: a new NSManagedObject instance of the specified entity type.
@@ -46,13 +51,12 @@ public /*abstract*/ class DataTransaction {
     public func create<T: NSManagedObject>(entity: T.Type) -> T {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to create an entity of type <\(entity)> outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to create an entity of type <\(entity)> from an already committed <\(self.dynamicType)>.")
         
         return T.createInContext(self.context)
     }
     
     /**
-    Returns an editable proxy of a specified NSManagedObject. Note that this method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Returns an editable proxy of a specified NSManagedObject.
     
     :param: object the NSManagedObject type to be edited
     :returns: an editable proxy for the specified NSManagedObject.
@@ -60,20 +64,18 @@ public /*abstract*/ class DataTransaction {
     public func fetch<T: NSManagedObject>(object: T) -> T? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type <\(object.dynamicType)> outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to update an entity of type <\(object.dynamicType)> from an already committed <\(self.dynamicType)>.")
         
         return object.inContext(self.context)
     }
     
     /**
-    Deletes a specified NSManagedObject. Note that this method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Deletes a specified NSManagedObject.
     
     :param: object the NSManagedObject type to be deleted
     */
     public func delete(object: NSManagedObject) {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity of type <\(object.dynamicType)> outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to delete an entity of type <\(object.dynamicType)> from an already committed <\(self.dynamicType)>.")
         
         object.deleteFromContext()
     }
@@ -81,12 +83,11 @@ public /*abstract*/ class DataTransaction {
     // MARK: Saving changes
     
     /**
-    Rolls back the transaction by resetting the NSManagedObjectContext. Note that after calling this method, all NSManagedObjects fetched within the transaction will become invalid.
+    Rolls back the transaction by resetting the NSManagedObjectContext. After calling this method, all NSManagedObjects fetched within the transaction will become invalid.
     */
     public func rollback() {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to rollback a <\(self.dynamicType)> outside a transaction queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to rollback an already committed <\(self.dynamicType)>.")
         
         self.context.reset()
     }
@@ -105,10 +106,13 @@ public /*abstract*/ class DataTransaction {
         
         self.transactionQueue = queue
         
-        let context = mainContext.temporaryContextInTransaction(nil)
+        let context = mainContext.temporaryContextInTransactionWithConcurrencyType(
+            queue == .Main
+                ? .MainQueueConcurrencyType
+                : .PrivateQueueConcurrencyType
+        )
         self.context = context
         
-        context.retainsRegisteredObjects = true
         context.parentTransaction = self
     }
 }
