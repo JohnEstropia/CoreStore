@@ -105,7 +105,7 @@ public final class DataStack {
         var error: NSError?
         
         var store: NSPersistentStore?
-        coordinator.performSynchronously {
+        coordinator.performBlockAndWait {
             
             store = coordinator.addPersistentStoreWithType(
                 NSInMemoryStoreType,
@@ -203,7 +203,7 @@ public final class DataStack {
         
         var store: NSPersistentStore?
         var persistentStoreError: NSError?
-        coordinator.performSynchronously {
+        coordinator.performBlockAndWait {
             
             store = coordinator.addPersistentStoreWithType(
                 NSSQLiteStoreType,
@@ -238,7 +238,7 @@ public final class DataStack {
                     error: nil)
                 
                 var store: NSPersistentStore?
-                coordinator.performSynchronously {
+                coordinator.performBlockAndWait {
                     
                     store = coordinator.addPersistentStoreWithType(
                         NSSQLiteStoreType,

@@ -35,63 +35,113 @@ public extension BaseDataTransaction {
     
     public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
         
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
+        
         return self.context.fetchOne(entity, queryClauses)
     }
     
     public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
+        
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
         
         return self.context.fetchOne(entity, queryClauses)
     }
     
     public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [T]? {
         
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
+        
         return self.context.fetchAll(entity, queryClauses)
     }
     
     public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
+        
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
         
         return self.context.fetchAll(entity, queryClauses)
     }
     
     public func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
         
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
+        
         return self.context.fetchCount(entity, queryClauses)
     }
     
     public func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
         
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
+        
         return self.context.fetchCount(entity, queryClauses)
     }
     
+    public func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> NSManagedObjectID? {
+        
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
+        
+        return self.context.fetchObjectID(entity, queryClauses)
+    }
+    
+    public func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> NSManagedObjectID? {
+        
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
+        
+        return self.context.fetchObjectID(entity, queryClauses)
+    }
+    
+    public func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [NSManagedObjectID]? {
+        
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
+        
+        return self.context.fetchObjectIDs(entity, queryClauses)
+    }
+    
+    public func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [NSManagedObjectID]? {
+        
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside its designated queue.")
+        
+        return self.context.fetchObjectIDs(entity, queryClauses)
+    }
+    
     public func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
+        
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete from a <\(self.dynamicType)> outside its designated queue.")
         
         return self.context.deleteAll(entity, queryClauses)
     }
     
     public func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
         
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete from a <\(self.dynamicType)> outside its designated queue.")
+        
         return self.context.deleteAll(entity, queryClauses)
     }
     
-    public func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> Int? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: FetchClause...) -> U? {
         
-        let result = self.context.queryAggregate(entity, function: function, queryClauses)
-        return result
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to query from a <\(self.dynamicType)> outside its designated queue.")
+        
+        return self.context.queryValue(entity, selectClause, queryClauses)
     }
     
-    public func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> Int? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: [FetchClause]) -> U? {
         
-        let result = self.context.queryAggregate(entity, function: function, queryClauses)
-        return result
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to query from a <\(self.dynamicType)> outside its designated queue.")
+        
+        return self.context.queryValue(entity, selectClause, queryClauses)
     }
     
-    public func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> U? {
+    public func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
-        return self.context.queryAggregate(entity, function: function, queryClauses)
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to query from a <\(self.dynamicType)> outside its designated queue.")
+        
+        return self.context.queryAttributes(entity, selectClause, queryClauses)
     }
     
-    public func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> U? {
+    public func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         
-        return self.context.queryAggregate(entity, function: function, queryClauses)
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to query from a <\(self.dynamicType)> outside its designated queue.")
+        
+        return self.context.queryAttributes(entity, selectClause, queryClauses)
     }
 }

@@ -1,8 +1,8 @@
 //
-//  FetchClause.swift
+//  CustomizeFetch.swift
 //  HardcoreData
 //
-//  Copyright (c) 2014 John Rommel Estropia
+//  Copyright (c) 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,25 @@ import Foundation
 import CoreData
 
 
-// MARK: - FetchClause
+// MARK: - CustomizeFetch
 
-public protocol FetchClause: QueryClause { }
+public struct CustomizeFetch: FetchClause {
+    
+    // MARK: Public
+    
+    public init(_ customization: (fetchRequest: NSFetchRequest) -> Void) {
+        
+        self.customization = customization
+    }
+    
+    
+    // MARK: QueryClause
+    
+    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+        
+        self.customization(fetchRequest: fetchRequest)
+    }
+    
+    
+    private let customization: (fetchRequest: NSFetchRequest) -> Void
+}

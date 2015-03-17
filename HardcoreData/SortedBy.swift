@@ -32,17 +32,17 @@ public func +(left: SortedBy, right: SortedBy) -> SortedBy {
 }
 
 
-// MARK: - AttributeName
+// MARK: - KeyPath
     
-public typealias AttributeName = Selector
+public typealias KeyPath = String
 
 
 // MARK: - SortOrder
 
 public enum SortOrder {
     
-    case Ascending(AttributeName)
-    case Descending(AttributeName)
+    case Ascending(KeyPath)
+    case Descending(KeyPath)
 }
 
 
@@ -69,21 +69,19 @@ public struct SortedBy: FetchClause {
     
     public init(_ order: [SortOrder]) {
         
-        self.init(order.map { sortOrder -> NSSortDescriptor in
-            
-            switch sortOrder {
+        self.init(
+            order.map { sortOrder -> NSSortDescriptor in
                 
-            case .Ascending(let attributeName):
-                return NSSortDescriptor(
-                    key: NSStringFromSelector(attributeName),
-                    ascending: true)
-                
-            case .Descending(let attributeName):
-                return NSSortDescriptor(
-                    key: NSStringFromSelector(attributeName),
-                    ascending: false)
+                switch sortOrder {
+                    
+                case .Ascending(let keyPath):
+                    return NSSortDescriptor(key: keyPath, ascending: true)
+                    
+                case .Descending(let keyPath):
+                    return NSSortDescriptor(key: keyPath, ascending: false)
+                }
             }
-            })
+        )
     }
     
     public init(_ order: SortOrder, _ subOrder: SortOrder...) {

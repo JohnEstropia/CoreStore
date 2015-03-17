@@ -61,6 +61,26 @@ public extension HardcoreData {
         return self.defaultStack.fetchCount(entity, queryClauses)
     }
     
+    public static func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> NSManagedObjectID? {
+        
+        return self.defaultStack.fetchObjectID(entity, queryClauses)
+    }
+    
+    public static func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> NSManagedObjectID? {
+        
+        return self.defaultStack.fetchObjectID(entity, queryClauses)
+    }
+    
+    public static func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [NSManagedObjectID]? {
+        
+        return self.defaultStack.fetchObjectIDs(entity, queryClauses)
+    }
+    
+    public static func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [NSManagedObjectID]? {
+        
+        return self.defaultStack.fetchObjectIDs(entity, queryClauses)
+    }
+    
     public static func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
         
         return self.defaultStack.deleteAll(entity, queryClauses)
@@ -71,25 +91,23 @@ public extension HardcoreData {
         return self.defaultStack.deleteAll(entity, queryClauses)
     }
     
-    public static func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> Int? {
+    public static func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: FetchClause...) -> U? {
         
-        let result = self.defaultStack.queryAggregate(entity, function: function, queryClauses)
-        return result
+        return self.defaultStack.queryValue(entity, selectClause, queryClauses)
     }
     
-    public static func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> Int? {
+    public static func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: [FetchClause]) -> U? {
         
-        let result = self.defaultStack.queryAggregate(entity, function: function, queryClauses)
-        return result
+        return self.defaultStack.queryValue(entity, selectClause, queryClauses)
     }
     
-    public static func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> U? {
+    public static func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
-        return self.defaultStack.queryAggregate(entity, function: function, queryClauses)
+        return self.defaultStack.queryAttributes(entity, selectClause, queryClauses)
     }
     
-    public static func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> U? {
+    public static func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         
-        return self.defaultStack.queryAggregate(entity, function: function, queryClauses)
+        return self.defaultStack.queryAttributes(entity, selectClause, queryClauses)
     }
 }

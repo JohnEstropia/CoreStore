@@ -1,8 +1,8 @@
 //
-//  NSPersistentStoreCoordinator+HardcoreData.swift
+//  QueryClause.swift
 //  HardcoreData
 //
-//  Copyright (c) 2014 John Rommel Estropia
+//  Copyright (c) 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,23 +27,9 @@ import Foundation
 import CoreData
 
 
-// MARK: - NSPersistentStoreCoordinator
+// MARK: - QueryClause
 
-internal extension NSPersistentStoreCoordinator {
+public protocol QueryClause {
     
-    // MARK: Internal
-    
-    internal func performSynchronously(closure: () -> Void) {
-        
-        if self.respondsToSelector("performBlockAndWait:") {
-        
-            self.performBlockAndWait(closure)
-        }
-        else {
-            
-            self.lock()
-            autoreleasepool(closure)
-            self.unlock()
-        }
-    }
+    func applyToFetchRequest(fetchRequest: NSFetchRequest)
 }

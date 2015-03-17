@@ -1,5 +1,5 @@
 //
-//  CustomizeQuery.swift
+//  DataStack+Observing.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -25,27 +25,26 @@
 
 import Foundation
 import CoreData
+import GCDKit
 
 
-// MARK: - CustomizeQuery
+// MARK: - DataStack
 
-public struct CustomizeQuery: FetchClause {
+public extension DataStack {
     
     // MARK: Public
     
-    public init(_ customization: (fetchRequest: NSFetchRequest) -> Void) {
+    public func observeObjectList<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> ManagedObjectListController<T> {
         
-        self.customization = customization
-    }
-    
-    
-    // MARK: QueryClause
-    
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        self.customization(fetchRequest: fetchRequest)
+        // TODO: sectionNameKeyPath and cacheResults
+        return ManagedObjectListController(
+            dataStack: self,
+            entity: entity,
+            sectionNameKeyPath: nil,
+            cacheResults: false,
+            queryClauses: queryClauses
+        )
     }
-    
-    
-    private let customization: (fetchRequest: NSFetchRequest) -> Void
 }

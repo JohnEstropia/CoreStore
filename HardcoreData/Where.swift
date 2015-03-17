@@ -68,16 +68,16 @@ public struct Where: FetchClause {
         self.init(NSPredicate(format: format, argumentArray: args))
     }
     
-    public init(_ format: String, argumentArray: [AnyObject]?) {
+    public init(_ format: String, argumentArray: [NSObject]?) {
         
         self.init(NSPredicate(format: format, argumentArray: argumentArray))
     }
     
-    public init(_ attributeName: AttributeName, isEqualTo value: NSObject?) {
+    public init(_ keyPath: KeyPath, isEqualTo value: NSObject?) {
         
         self.init(value == nil
-            ? NSPredicate(format: "\(attributeName) == nil")
-            : NSPredicate(format: "\(attributeName) == %@", value!))
+            ? NSPredicate(format: "\(keyPath) == nil")
+            : NSPredicate(format: "\(keyPath) == %@", value!))
     }
     
     public let predicate: NSPredicate

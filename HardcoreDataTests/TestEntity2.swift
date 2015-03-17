@@ -33,4 +33,5 @@ class TestEntity2: NSManagedObject {
     @NSManaged var testNumber: NSNumber?
     @NSManaged var testDate: NSDate?
     
+    var testProperty: NSNumber?
 }

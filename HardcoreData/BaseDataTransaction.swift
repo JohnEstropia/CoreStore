@@ -50,7 +50,7 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func create<T: NSManagedObject>(entity: T.Type) -> T {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to create an entity of type <\(entity)> outside a transaction queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to create an entity of type <\(entity)> outside its designated queue.")
         
         return T.createInContext(self.context)
     }
@@ -63,7 +63,7 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func fetch<T: NSManagedObject>(object: T) -> T? {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type <\(object.dynamicType)> outside a transaction queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type <\(object.dynamicType)> outside its designated queue.")
         
         return object.inContext(self.context)
     }
@@ -75,7 +75,7 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func delete(object: NSManagedObject) {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity of type <\(object.dynamicType)> outside a transaction queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity of type <\(object.dynamicType)> outside its designated queue.")
         
         object.deleteFromContext()
     }
@@ -87,7 +87,7 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func rollback() {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to rollback a <\(self.dynamicType)> outside a transaction queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to rollback a <\(self.dynamicType)> outside its designated queue.")
         
         self.context.reset()
     }

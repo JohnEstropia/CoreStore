@@ -25,6 +25,7 @@
 
 import Foundation
 import CoreData
+import GCDKit
 
 
 // MARK: - DataStack
@@ -40,6 +41,8 @@ public extension DataStack {
     */
     public func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
+        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to begin a transaction from a <\(self.dynamicType)> outside the main queue.")
+        
         AsynchronousDataTransaction(
             mainContext: self.rootSavingContext,
             queue: self.childTransactionQueue,
@@ -54,6 +57,8 @@ public extension DataStack {
     */
     public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
+        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to begin a transaction from a <\(self.dynamicType)> outside the main queue.")
+        
         return SynchronousDataTransaction(
             mainContext: self.rootSavingContext,
             queue: self.childTransactionQueue,
@@ -66,6 +71,8 @@ public extension DataStack {
     :returns: a DetachedDataTransaction instance where creates, updates, and deletes can be made.
     */
     public func beginDetached() -> DetachedDataTransaction {
+        
+        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to begin a transaction from a <\(self.dynamicType)> outside the main queue.")
         
         return DetachedDataTransaction(
             mainContext: self.rootSavingContext,

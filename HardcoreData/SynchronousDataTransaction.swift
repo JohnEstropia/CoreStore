@@ -20,7 +20,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     */
     public func commitAndWait() {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a <\(self.dynamicType)> outside a transaction queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a <\(self.dynamicType)> outside its designated queue.")
         HardcoreData.assert(!self.isCommitted, "Attempted to commit a <\(self.dynamicType)> more than once.")
         
         self.isCommitted = true
@@ -35,6 +35,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     */
     public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to begin a child transaction from a <\(self.dynamicType)> outside its designated queue.")
         HardcoreData.assert(!self.isCommitted, "Attempted to begin a child transaction from an already committed <\(self.dynamicType)>.")
         
         return SynchronousDataTransaction(

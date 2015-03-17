@@ -32,5 +32,4 @@ class TestEntity1: NSManagedObject {
     @NSManaged var testString: String?
     @NSManaged var testNumber: NSNumber?
     @NSManaged var testDate: NSDate?
-
 }

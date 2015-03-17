@@ -133,6 +133,74 @@ internal extension NSManagedObjectContext {
         return count
     }
     
+    internal func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> NSManagedObjectID? {
+        
+        return self.fetchObjectID(entity, queryClauses)
+    }
+    
+    internal func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> NSManagedObjectID? {
+        
+        let fetchRequest = NSFetchRequest()
+        fetchRequest.entity = self.entityDescriptionForEntityClass(entity)
+        fetchRequest.fetchLimit = 1
+        fetchRequest.resultType = .ManagedObjectIDResultType
+        
+        for clause in queryClauses {
+            
+            clause.applyToFetchRequest(fetchRequest)
+        }
+        
+        var fetchResults: [NSManagedObjectID]?
+        var error: NSError?
+        self.performBlockAndWait {
+            
+            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [NSManagedObjectID]
+        }
+        if fetchResults == nil {
+            
+            HardcoreData.handleError(
+                error ?? NSError(hardcoreDataErrorCode: .UnknownError),
+                "Failed executing fetch request.")
+            return nil
+        }
+        
+        return fetchResults?.first
+    }
+    
+    internal func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [NSManagedObjectID]? {
+        
+        return self.fetchObjectIDs(entity, queryClauses)
+    }
+    
+    internal func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [NSManagedObjectID]? {
+        
+        let fetchRequest = NSFetchRequest()
+        fetchRequest.entity = self.entityDescriptionForEntityClass(entity)
+        fetchRequest.fetchLimit = 0
+        fetchRequest.resultType = .ManagedObjectIDResultType
+        
+        for clause in queryClauses {
+            
+            clause.applyToFetchRequest(fetchRequest)
+        }
+        
+        var fetchResults: [NSManagedObjectID]?
+        var error: NSError?
+        self.performBlockAndWait {
+            
+            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [NSManagedObjectID]
+        }
+        if fetchResults == nil {
+            
+            HardcoreData.handleError(
+                error ?? NSError(hardcoreDataErrorCode: .UnknownError),
+                "Failed executing fetch request.")
+            return nil
+        }
+        
+        return fetchResults
+    }
+    
     internal func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
         
         return self.deleteAll(entity, queryClauses)
@@ -178,38 +246,18 @@ internal extension NSManagedObjectContext {
         return numberOfDeletedObjects
     }
     
-    internal func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> Int? {
+    internal func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: FetchClause...) -> U? {
         
-        return self.queryAggregateImplementation(entity, function: function, queryClauses)
+        return self.queryValue(entity, selectClause, queryClauses)
     }
     
-    internal func queryAggregate<T: NSManagedObject>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> Int? {
-        
-        return self.queryAggregateImplementation(entity, function: function, queryClauses)
-    }
-    
-    internal func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: FetchClause...) -> U? {
-        
-        return self.queryAggregateImplementation(entity, function: function, queryClauses)
-    }
-    
-    internal func queryAggregate<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> U? {
-        
-        return self.queryAggregateImplementation(entity, function: function, queryClauses)
-    }
-    
-    internal func queryAggregateImplementation<T: NSManagedObject, U: AggregateResultType>(entity: T.Type, function: AggregateFunction, _ queryClauses: [FetchClause]) -> U? {
-        
-        let expressionDescription = NSExpressionDescription()
-        expressionDescription.name = "queryAggregate"
-        expressionDescription.expressionResultType = U.attributeType
-        expressionDescription.expression = function.createExpression()
+    internal func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: [FetchClause]) -> U? {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = self.entityDescriptionForEntityClass(entity)
-        fetchRequest.resultType = .DictionaryResultType
-        fetchRequest.propertiesToFetch = [expressionDescription]
-        fetchRequest.includesPendingChanges = false
+        fetchRequest.fetchLimit = 0
+        
+        selectClause.applyToFetchRequest(fetchRequest)
         
         for clause in queryClauses {
             
@@ -222,19 +270,54 @@ internal extension NSManagedObjectContext {
             
             fetchResults = self.executeFetchRequest(fetchRequest, error: &error)
         }
-        if fetchResults == nil {
+        if let fetchResults = fetchResults {
             
-            HardcoreData.handleError(
-                error ?? NSError(hardcoreDataErrorCode: .UnknownError),
-                "Failed executing fetch request.")
+            if let rawResult = fetchResults.first as? NSDictionary,
+                let rawObject: AnyObject = rawResult[selectClause.keyPathForFirstSelectTerm()] {
+                    
+                    return Select<U>.ReturnType.fromResultObject(rawObject)
+            }
             return nil
         }
         
-        if let result: AnyObject = (fetchResults?.first as! [String: AnyObject])[expressionDescription.name] {
+        HardcoreData.handleError(
+            error ?? NSError(hardcoreDataErrorCode: .UnknownError),
+            "Failed executing fetch request.")
+        return nil
+    }
+    
+    internal func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
+        
+        return self.queryAttributes(entity, selectClause, queryClauses)
+    }
+    
+    internal func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
+        
+        let fetchRequest = NSFetchRequest()
+        fetchRequest.entity = self.entityDescriptionForEntityClass(entity)
+        fetchRequest.fetchLimit = 0
+        
+        selectClause.applyToFetchRequest(fetchRequest)
+        
+        for clause in queryClauses {
             
-            return U.fromResultObject(result)
+            clause.applyToFetchRequest(fetchRequest)
         }
         
+        var fetchResults: [AnyObject]?
+        var error: NSError?
+        self.performBlockAndWait {
+            
+            fetchResults = self.executeFetchRequest(fetchRequest, error: &error)
+        }
+        if let fetchResults = fetchResults {
+            
+            return Select<NSDictionary>.ReturnType.fromResultObjects(fetchResults)
+        }
+        
+        HardcoreData.handleError(
+            error ?? NSError(hardcoreDataErrorCode: .UnknownError),
+            "Failed executing fetch request.")
         return nil
     }
 }

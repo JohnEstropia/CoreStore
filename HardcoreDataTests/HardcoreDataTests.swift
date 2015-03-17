@@ -76,9 +76,9 @@ class HardcoreDataTests: XCTestCase {
             obj1.testNumber = 42
             obj1.testDate = NSDate()
             
-            let count = transaction.queryAggregate(
+            let count = transaction.queryValue(
                 TestEntity1.self,
-                function: .Count("testNumber")
+                Select<Int>(.Count("testNumber"))
             )
             XCTAssertTrue(count == 0, "count == 0 (actual: \(count))") // counts only objects in store
             
@@ -90,9 +90,15 @@ class HardcoreDataTests: XCTestCase {
             
             let obj3 = transaction.create(TestEntity2)
             obj3.testEntityID = 3
-            obj3.testString = "hohoho"
+            obj3.testString = "hahaha"
             obj3.testNumber = 90
             obj3.testDate = NSDate()
+            
+            let obj4 = transaction.create(TestEntity2)
+            obj4.testEntityID = 5
+            obj4.testString = "hohoho"
+            obj4.testNumber = 80
+            obj4.testDate = NSDate()
             
         
             transaction.beginSynchronous { (transaction) -> Void in
@@ -106,12 +112,23 @@ class HardcoreDataTests: XCTestCase {
                 let objs4test = transaction.fetchOne(
                     TestEntity2.self,
                     Where("testEntityID", isEqualTo: 4),
-                    CustomizeQuery { (fetchRequest) -> Void in
+                    CustomizeFetch { (fetchRequest) -> Void in
                         
                         fetchRequest.includesPendingChanges = true
                     }
                 )
                 XCTAssertNotNil(objs4test, "objs4test != nil")
+                
+                let objs5test = transaction.fetchOne(
+                    TestEntity2.self,
+                    Where("testEntityID", isEqualTo: 4),
+                    CustomizeFetch { (fetchRequest) -> Void in
+                        
+                        fetchRequest.includesPendingChanges = false
+                    }
+                )
+                XCTAssertNil(objs5test, "objs5test == nil")
+                
                 // Dont commit1
             }
             
@@ -119,12 +136,16 @@ class HardcoreDataTests: XCTestCase {
                 
                 let objs4test = HardcoreData.fetchOne(
                     TestEntity2.self,
-                    Where("testEntityID", isEqualTo: 4)
+                    Where("testEntityID", isEqualTo: 4),
+                    CustomizeFetch { (fetchRequest) -> Void in
+                        
+                        fetchRequest.includesPendingChanges = false
+                    }
                 )
                 XCTAssertNil(objs4test, "objs4test == nil")
                 
                 let objs5test = detachedTransaction.fetchCount(TestEntity2)
-                XCTAssertTrue(objs5test == 2, "objs5test == 2")
+                XCTAssertTrue(objs5test == 3, "objs5test == 3")
                 
                 XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
                 switch result {
@@ -149,7 +170,7 @@ class HardcoreDataTests: XCTestCase {
                 TestEntity2.self,
                 Where("testNumber", isEqualTo: 100) || Where("%K == %@", "testNumber", 90),
                 SortedBy(.Ascending("testEntityID"), .Descending("testString")),
-                CustomizeQuery { (fetchRequest) -> Void in
+                CustomizeFetch { (fetchRequest) -> Void in
                     
                     fetchRequest.includesPendingChanges = true
                 }
@@ -158,6 +179,13 @@ class HardcoreDataTests: XCTestCase {
             XCTAssertTrue(objs2?.count == 2, "objs2?.count == 2")
             
             transaction.commit { (result) -> Void in
+                
+                let counts = HardcoreData.queryAttributes(
+                    TestEntity2.self,
+                    Select(.Count("testString", As: "count"), "testString"),
+                    GroupBy("testString")
+                )
+                println(counts)
                 
                 XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
                 switch result {
@@ -174,15 +202,15 @@ class HardcoreDataTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(100, handler: nil)
         
-        let max1 = HardcoreData.queryAggregate(
+        let max1 = HardcoreData.queryValue(
             TestEntity2.self,
-            function: .Maximum("testNumber")
+            Select<Int>(.Maximum("testNumber"))
         )
         XCTAssertTrue(max1 == 100, "max == 100 (actual: \(max1))")
         
-        let max2 = HardcoreData.queryAggregate(
+        let max2 = HardcoreData.queryValue(
             TestEntity2.self,
-            function: .Maximum("testNumber"),
+            Select<NSNumber>(.Maximum("testNumber")),
             Where("%K > %@", "testEntityID", 2)
         )
         XCTAssertTrue(max2 == 90, "max == 90 (actual: \(max2))")
@@ -196,7 +224,7 @@ class HardcoreDataTests: XCTestCase {
                 TestEntity2.self,
                 Where("%K > %@", "testEntityID", 2)
             )
-            XCTAssertTrue(numberOfDeletedObjects2 == 1, "numberOfDeletedObjects2 == 1 (actual: \(numberOfDeletedObjects2))")
+            XCTAssertTrue(numberOfDeletedObjects2 == 2, "numberOfDeletedObjects2 == 2 (actual: \(numberOfDeletedObjects2))")
             
             transaction.commitAndWait()
         }
@@ -225,9 +253,9 @@ class HardcoreDataTests: XCTestCase {
             case .Success(let hasChanges):
                 XCTAssertTrue(hasChanges, "hasChanges == true")
                 
-                let count = HardcoreData.queryAggregate(
+                let count: Int? = HardcoreData.queryValue(
                     TestEntity1.self,
-                    function: .Count("testNumber")
+                    Select(.Count("testNumber"))
                 )
                 XCTAssertTrue(count == 1, "count == 1 (actual: \(count))")
                 
@@ -245,9 +273,9 @@ class HardcoreDataTests: XCTestCase {
                     case .Success(let hasChanges):
                         XCTAssertTrue(hasChanges, "hasChanges == true")
                         
-                        let count = HardcoreData.queryAggregate(
+                        let count = HardcoreData.queryValue(
                             TestEntity1.self,
-                            function: .Count("testNumber")
+                            Select<Int>(.Count("testNumber"))
                         )
                         XCTAssertTrue(count == 2, "count == 2 (actual: \(count))")
                         
