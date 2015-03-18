@@ -80,7 +80,10 @@ internal extension NSManagedObjectContext {
             object: rootContext,
             closure: { [weak context] (note) -> Void in
                 
-                context?.mergeChangesFromContextDidSaveNotification(note)
+                context?.performBlockAndWait { () -> Void in
+                    
+                    context?.mergeChangesFromContextDidSaveNotification(note)
+                }
                 return
             }
         )
