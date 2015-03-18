@@ -152,7 +152,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         self.transactionQueue.async {
             
             self.closure(transaction: self)
-            if !self.isCommitted {
+            if !self.isCommitted && self.hasChanges {
                 
                 HardcoreData.log(.Warning, message: "The closure for the <\(self.dynamicType)> completed without being committed. All changes made within the transaction were discarded.")
             }
@@ -164,7 +164,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         self.transactionQueue.sync {
             
             self.closure(transaction: self)
-            if !self.isCommitted {
+            if !self.isCommitted && self.hasChanges {
                 
                 HardcoreData.log(.Warning, message: "The closure for the <\(self.dynamicType)> completed without being committed. All changes made within the transaction were discarded.")
             }
