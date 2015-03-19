@@ -5,7 +5,6 @@
 
 Simple, elegant, and smart Core Data programming with Swift
 
-
 ## Features
 - Supports multiple persistent stores per *data stack*, just the way .xcdatamodeld files are supposed to. HardcoreData will also manage one *data stack* by default, but you can create and manage as many as you need. (see "Setting up")
 - Ability to plug-in your own logging framework (or your favorite 3rd-party logger). (see "Logging and error handling")
@@ -13,10 +12,50 @@ Simple, elegant, and smart Core Data programming with Swift
 - Provides convenient API for common use cases. (see "Fetching and querying")
 - Pleasant API designed around Swift’s code elegance and type safety. (see "TL;DR sample codes")
 
-
-
 #### TL;DR sample codes
+
+Quick-setup:
 ```swift
+HardcoreData.defaultStack.addSQLiteStore("MyStore.sqlite")
+```
+
+Simple transactions:
+```swift
+HardcoreData.beginAsynchronous { (transaction) -> Void in
+    let object = transaction.create(MyEntity)
+    object.entityID = 1
+    object.name = "test entity"
+
+    transaction.commit { (result) -> Void in
+        switch result {
+            case .Success(let hasChanges): println("success!")
+            case .Failure(let error): println(error)
+        }
+    }
+}
+```
+
+Easy fetching:
+```swift
+let objects = HardcoreData.fetchAll(MyEntity)
+```
+```swift
+let objects = HardcoreData.fetchAll(
+    MyEntity.self,
+    Where("entityID", isEqualTo: 1),
+    SortedBy(.Ascending("entityID"), .Descending("name")),
+    CustomizeFetch { (fetchRequest) -> Void in
+        fetchRequest.includesPendingChanges = true
+    }
+)
+```
+
+Simple queries:
+```swift
+let count = HardcoreData.queryValue(
+    MyEntity.self,
+    Select<Int>(.Count("entityID"))
+)
 ```
 
 
