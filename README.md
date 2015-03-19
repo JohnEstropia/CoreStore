@@ -67,15 +67,17 @@ If you are already familiar with the inner workings of CoreData, here is a mappi
 
 | *Core Data* | *HardcoreData* |
 | --- | --- |
-| `NSManagedObjectModel` / `NSPersistentStoreCoordinator`<br>(.xcdatamodeld file) | `DataStack` |
-| `NSPersistentStore`<br>("Configuration"s in the .xcdatamodeld file) | `DataStack` configuration<br>(multiple sqlite / in-memory stores per stack) |
-| `NSManagedObjectContext` | `BaseDataTransaction` subclasses<br>(`SynchronousDataTransaction`, `AsynchronousDataTransaction`, `DetachedDataTransaction`) |
+| `NSManagedObjectModel` / `NSPersistentStoreCoordinator`<br />(.xcdatamodeld file) | `DataStack` |
+| `NSPersistentStore`<br />("Configuration"s in the .xcdatamodeld file) | `DataStack` configuration<br />(multiple sqlite / in-memory stores per stack) |
+| `NSManagedObjectContext` | `BaseDataTransaction` subclasses<br />(`SynchronousDataTransaction`, `AsynchronousDataTransaction`, `DetachedDataTransaction`) |
 
-RestKit and MagicalRecord set up their `NSManagedObjectContext` this way:
+RestKit and MagicalRecord set up their `NSManagedObjectContext`s this way:
+<img src="https://cloud.githubusercontent.com/assets/3029684/6734049/40579660-ce99-11e4-9d38-829877386afb.png" alt="nested contexts" height=271 />
 
-This ensures maximum data integrity between contexts without blocking the main queue. But as <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">Florian Kugler's investigation</a> found out, merging contexts is still by far faster than nesting contexts. HardcoreData's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context, and only allows changes to be made within *transactions*:
+This ensures maximum data integrity between contexts without blocking the main queue. But as <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">Florian Kugler's investigation</a> found out, merging contexts is still by far faster than saving nested contexts. HardcoreData's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context, and only allows changes to be made within *transactions*:
+<img src="https://cloud.githubusercontent.com/assets/3029684/6734050/4078b642-ce99-11e4-95ea-c0c1d24fbe80.png" alt="nested contexts and merge hybrid" height=212 />
 
-This allows for a butter-smooth main thread, while still benefitting from the safety of nested contexts.
+This allows for a butter-smooth main thread, while still taking advantage of safe nested contexts.
 
 
 
