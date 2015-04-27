@@ -77,7 +77,7 @@ class HardcoreDataTests: XCTestCase {
             obj1.testDate = NSDate()
             
             let count = transaction.queryValue(
-                TestEntity1.self,
+                From(TestEntity1),
                 Select<Int>(.Count("testNumber"))
             )
             XCTAssertTrue(count == 0, "count == 0 (actual: \(count))") // counts only objects in store
@@ -110,7 +110,7 @@ class HardcoreDataTests: XCTestCase {
                 obj4.testDate = NSDate()
                 
                 let objs4test = transaction.fetchOne(
-                    TestEntity2.self,
+                    From(TestEntity2),
                     Where("testEntityID", isEqualTo: 4),
                     CustomizeFetch { (fetchRequest) -> Void in
                         
@@ -120,7 +120,7 @@ class HardcoreDataTests: XCTestCase {
                 XCTAssertNotNil(objs4test, "objs4test != nil")
                 
                 let objs5test = transaction.fetchOne(
-                    TestEntity2.self,
+                    From(TestEntity2),
                     Where("testEntityID", isEqualTo: 4),
                     CustomizeFetch { (fetchRequest) -> Void in
                         
@@ -135,7 +135,7 @@ class HardcoreDataTests: XCTestCase {
             transaction.commit { (result) -> Void in
                 
                 let objs4test = HardcoreData.fetchOne(
-                    TestEntity2.self,
+                    From(TestEntity2),
                     Where("testEntityID", isEqualTo: 4),
                     CustomizeFetch { (fetchRequest) -> Void in
                         
@@ -144,7 +144,7 @@ class HardcoreDataTests: XCTestCase {
                 )
                 XCTAssertNil(objs4test, "objs4test == nil")
                 
-                let objs5test = detachedTransaction.fetchCount(TestEntity2)
+                let objs5test = detachedTransaction.fetchCount(From(TestEntity2))
                 XCTAssertTrue(objs5test == 3, "objs5test == 3")
                 
                 XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
@@ -163,11 +163,11 @@ class HardcoreDataTests: XCTestCase {
         let queryExpectation = self.expectationWithDescription("Query creation")
         HardcoreData.beginAsynchronous { (transaction) -> Void in
             
-            let obj1 = transaction.fetchOne(TestEntity1)
+            let obj1 = transaction.fetchOne(From(TestEntity1))
             XCTAssertNotNil(obj1, "obj1 != nil")
             
             let objs2 = transaction.fetchAll(
-                TestEntity2.self,
+                From(TestEntity2),
                 Where("testNumber", isEqualTo: 100) || Where("%K == %@", "testNumber", 90),
                 SortedBy(.Ascending("testEntityID"), .Descending("testString")),
                 CustomizeFetch { (fetchRequest) -> Void in
@@ -181,7 +181,7 @@ class HardcoreDataTests: XCTestCase {
             transaction.commit { (result) -> Void in
                 
                 let counts = HardcoreData.queryAttributes(
-                    TestEntity2.self,
+                    From(TestEntity2),
                     Select(.Count("testString", As: "count"), "testString"),
                     GroupBy("testString")
                 )
@@ -203,13 +203,13 @@ class HardcoreDataTests: XCTestCase {
         self.waitForExpectationsWithTimeout(100, handler: nil)
         
         let max1 = HardcoreData.queryValue(
-            TestEntity2.self,
+            From(TestEntity2),
             Select<Int>(.Maximum("testNumber"))
         )
         XCTAssertTrue(max1 == 100, "max == 100 (actual: \(max1))")
         
         let max2 = HardcoreData.queryValue(
-            TestEntity2.self,
+            From(TestEntity2),
             Select<NSNumber>(.Maximum("testNumber")),
             Where("%K > %@", "testEntityID", 2)
         )
@@ -217,11 +217,11 @@ class HardcoreDataTests: XCTestCase {
         
         HardcoreData.beginSynchronous { (transaction) -> Void in
             
-            let numberOfDeletedObjects1 = transaction.deleteAll(TestEntity1)
+            let numberOfDeletedObjects1 = transaction.deleteAll(From(TestEntity1))
             XCTAssertTrue(numberOfDeletedObjects1 == 1, "numberOfDeletedObjects1 == 1 (actual: \(numberOfDeletedObjects1))")
             
             let numberOfDeletedObjects2 = transaction.deleteAll(
-                TestEntity2.self,
+                From(TestEntity2),
                 Where("%K > %@", "testEntityID", 2)
             )
             XCTAssertTrue(numberOfDeletedObjects2 == 2, "numberOfDeletedObjects2 == 2 (actual: \(numberOfDeletedObjects2))")
@@ -229,11 +229,11 @@ class HardcoreDataTests: XCTestCase {
             transaction.commitAndWait()
         }
         
-        let objs1 = HardcoreData.fetchAll(TestEntity1)
+        let objs1 = HardcoreData.fetchAll(From(TestEntity1))
         XCTAssertNotNil(objs1, "objs1 != nil")
         XCTAssertTrue(objs1?.count == 0, "objs1?.count == 0")
         
-        let objs2 = HardcoreData.fetchAll(TestEntity2)
+        let objs2 = HardcoreData.fetchAll(From(TestEntity2))
         XCTAssertNotNil(objs2, "objs2 != nil")
         XCTAssertTrue(objs2?.count == 1, "objs2?.count == 1")
         
@@ -254,7 +254,7 @@ class HardcoreDataTests: XCTestCase {
                 XCTAssertTrue(hasChanges, "hasChanges == true")
                 
                 let count: Int? = HardcoreData.queryValue(
-                    TestEntity1.self,
+                    From(TestEntity1),
                     Select(.Count("testNumber"))
                 )
                 XCTAssertTrue(count == 1, "count == 1 (actual: \(count))")
@@ -274,7 +274,7 @@ class HardcoreDataTests: XCTestCase {
                         XCTAssertTrue(hasChanges, "hasChanges == true")
                         
                         let count = HardcoreData.queryValue(
-                            TestEntity1.self,
+                            From(TestEntity1),
                             Select<Int>(.Count("testNumber"))
                         )
                         XCTAssertTrue(count == 2, "count == 2 (actual: \(count))")

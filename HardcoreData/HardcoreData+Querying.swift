@@ -31,83 +31,83 @@ public extension HardcoreData {
     
     // MARK: Public
     
-    public static func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
+    public static func fetchOne<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> T? {
         
-        return self.defaultStack.fetchOne(entity, queryClauses)
+        return self.defaultStack.fetchOne(from, queryClauses)
     }
     
-    public static func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
+    public static func fetchOne<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> T? {
         
-        return self.defaultStack.fetchOne(entity, queryClauses)
+        return self.defaultStack.fetchOne(from, queryClauses)
     }
     
-    public static func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [T]? {
+    public static func fetchAll<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> [T]? {
         
-        return self.defaultStack.fetchAll(entity, queryClauses)
+        return self.defaultStack.fetchAll(from, queryClauses)
     }
     
-    public static func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
+    public static func fetchAll<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> [T]? {
         
-        return self.defaultStack.fetchAll(entity, queryClauses)
+        return self.defaultStack.fetchAll(from, queryClauses)
     }
     
-    public static func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
+    public static func fetchCount<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> Int? {
         
-        return self.defaultStack.fetchCount(entity, queryClauses)
+        return self.defaultStack.fetchCount(from, queryClauses)
     }
     
-    public static func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
+    public static func fetchCount<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> Int? {
         
-        return self.defaultStack.fetchCount(entity, queryClauses)
+        return self.defaultStack.fetchCount(from, queryClauses)
     }
     
-    public static func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> NSManagedObjectID? {
+    public static func fetchObjectID<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> NSManagedObjectID? {
         
-        return self.defaultStack.fetchObjectID(entity, queryClauses)
+        return self.defaultStack.fetchObjectID(from, queryClauses)
     }
     
-    public static func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> NSManagedObjectID? {
+    public static func fetchObjectID<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> NSManagedObjectID? {
         
-        return self.defaultStack.fetchObjectID(entity, queryClauses)
+        return self.defaultStack.fetchObjectID(from, queryClauses)
     }
     
-    public static func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public static func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> [NSManagedObjectID]? {
         
-        return self.defaultStack.fetchObjectIDs(entity, queryClauses)
+        return self.defaultStack.fetchObjectIDs(from, queryClauses)
     }
     
-    public static func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public static func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
-        return self.defaultStack.fetchObjectIDs(entity, queryClauses)
+        return self.defaultStack.fetchObjectIDs(from, queryClauses)
     }
     
-    public static func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
+    public static func deleteAll<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> Int? {
         
-        return self.defaultStack.deleteAll(entity, queryClauses)
+        return self.defaultStack.deleteAll(from, queryClauses)
     }
     
-    public static func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
+    public static func deleteAll<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> Int? {
         
-        return self.defaultStack.deleteAll(entity, queryClauses)
+        return self.defaultStack.deleteAll(from, queryClauses)
     }
     
-    public static func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: FetchClause...) -> U? {
+    public static func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: FetchClause...) -> U? {
         
-        return self.defaultStack.queryValue(entity, selectClause, queryClauses)
+        return self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
     
-    public static func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: [FetchClause]) -> U? {
+    public static func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [FetchClause]) -> U? {
         
-        return self.defaultStack.queryValue(entity, selectClause, queryClauses)
+        return self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
     
-    public static func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
+    public static func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
-        return self.defaultStack.queryAttributes(entity, selectClause, queryClauses)
+        return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }
     
-    public static func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
+    public static func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         
-        return self.defaultStack.queryAttributes(entity, selectClause, queryClauses)
+        return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }
 }

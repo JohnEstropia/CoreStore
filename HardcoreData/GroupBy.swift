@@ -60,21 +60,5 @@ public struct GroupBy: QueryClause {
         }
         
         fetchRequest.propertiesToGroupBy = self.keyPaths
-        
-//        let entityDescription = fetchRequest.entity!
-//        let propertyMapping = entityDescription.propertiesByName
-//        fetchRequest.propertiesToGroupBy = self.keyPaths.reduce([AnyObject]()) { (var properties, keyPath) -> [AnyObject] in
-//            
-//            if let propertyDescription: AnyObject = propertyMapping[keyPath] {
-//                
-//                properties.append(propertyDescription)
-//            }
-//            else {
-//                
-//                HardcoreData.log(.Warning, message: "The property \"\(keyPath)\" does not exist in entity <\(entityDescription.managedObjectClassName)> and will be ignored by <\(self.dynamicType)> query clause.")
-//            }
-//            
-//            return properties
-//        }
     }
 }

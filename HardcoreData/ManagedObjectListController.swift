@@ -30,7 +30,7 @@ import GCDKit
 
 // MARK: - ManagedObjectListController
 
-public final class ManagedObjectListController<T: NSManagedObject>: NSFetchedResultsControllerDelegate {
+public final class ManagedObjectListController<T: NSManagedObject>: FetchedResultsControllerHandler {
     
     // MARK: Public
     
@@ -51,25 +51,25 @@ public final class ManagedObjectListController<T: NSManagedObject>: NSFetchedRes
     }
     
     
-    // MARK: NSFetchedResultsControllerDelegate
+    // MARK: FetchedResultsControllerHandler
     
-    private func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
     }
     
-    private func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         
     }
     
-    private func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
     }
     
-    private func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
     }
     
-    private func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+    func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
         
         return nil
     }
@@ -100,19 +100,22 @@ public final class ManagedObjectListController<T: NSManagedObject>: NSFetchedRes
                 : nil)
         )
         
+        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
         
         self.fetchedResultsController = fetchedResultsController
+        self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         self.parentStack = dataStack
         self.observers = NSHashTable.weakObjectsHashTable()
         
-        fetchedResultsController.delegate = self
+        fetchedResultsControllerDelegate.handler = self
+        fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
         
         var error: NSError?
         if !fetchedResultsController.performFetch(&error) {
             
             HardcoreData.handleError(
                 error ?? NSError(hardcoreDataErrorCode: .UnknownError),
-                "Failed to perform fetch on \(NSFetchedResultsController.self)")
+                "Failed to perform fetch on <\(NSFetchedResultsController.self)>.")
         }
     }
     
@@ -120,6 +123,74 @@ public final class ManagedObjectListController<T: NSManagedObject>: NSFetchedRes
     // MARK: Private
     
     private let fetchedResultsController: NSFetchedResultsController
+    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private weak var parentStack: DataStack?
     private let observers: NSHashTable
+}
+
+
+// MARK: - FetchedResultsControllerHandler
+
+private protocol FetchedResultsControllerHandler: class {
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?)
+    
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType)
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController)
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController)
+    
+    func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String?
+}
+
+
+// MARK: - FetchedResultsControllerDelegate
+
+private final class FetchedResultsControllerDelegate: NSFetchedResultsControllerDelegate {
+    
+    // MARK: NSFetchedResultsControllerDelegate
+    
+    @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        
+        self.handler?.controller(controller, didChangeObject: anObject, atIndexPath: indexPath, forChangeType: type, newIndexPath: newIndexPath)
+    }
+    
+    @objc func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        
+        self.handler?.controller(controller, didChangeSection: sectionInfo, atIndex: sectionIndex, forChangeType: type)
+    }
+    
+    @objc func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        
+        self.handler?.controllerWillChangeContent(controller)
+    }
+    
+    @objc func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        
+        self.handler?.controllerDidChangeContent(controller)
+    }
+    
+    @objc func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+        
+        return self.handler?.controller(controller, sectionIndexTitleForSectionName: sectionName)
+    }
+    
+    
+    // MARK: Private
+    
+    weak var handler: FetchedResultsControllerHandler?
+    weak var fetchedResultsController: NSFetchedResultsController? {
+        
+        didSet {
+            
+            oldValue?.delegate = nil
+            self.fetchedResultsController?.delegate = self
+        }
+    }
+    
+    deinit {
+        
+        self.fetchedResultsController?.delegate = nil
+    }
 }

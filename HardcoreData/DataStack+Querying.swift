@@ -34,115 +34,115 @@ public extension DataStack {
     
     // MARK: Public
     
-    public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> T? {
+    public func fetchOne<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> T? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchOne(entity, queryClauses)
+        return self.mainContext.fetchOne(from, queryClauses)
     }
     
-    public func fetchOne<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> T? {
+    public func fetchOne<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> T? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchOne(entity, queryClauses)
+        return self.mainContext.fetchOne(from, queryClauses)
     }
     
-    public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> [T]? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchAll(entity, queryClauses)
+        return self.mainContext.fetchAll(from, queryClauses)
     }
     
-    public func fetchAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> [T]? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchAll(entity, queryClauses)
+        return self.mainContext.fetchAll(from, queryClauses)
     }
     
-    public func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
+    public func fetchCount<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> Int? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchCount(entity, queryClauses)
+        return self.mainContext.fetchCount(from, queryClauses)
     }
     
-    public func fetchCount<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
+    public func fetchCount<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> Int? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchCount(entity, queryClauses)
+        return self.mainContext.fetchCount(from, queryClauses)
     }
     
-    public func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> NSManagedObjectID? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchObjectID(entity, queryClauses)
+        return self.mainContext.fetchObjectID(from, queryClauses)
     }
     
-    public func fetchObjectID<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> NSManagedObjectID? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchObjectID(entity, queryClauses)
+        return self.mainContext.fetchObjectID(from, queryClauses)
     }
     
-    public func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchObjectIDs(entity, queryClauses)
+        return self.mainContext.fetchObjectIDs(from, queryClauses)
     }
     
-    public func fetchObjectIDs<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.fetchObjectIDs(entity, queryClauses)
+        return self.mainContext.fetchObjectIDs(from, queryClauses)
     }
     
-    public func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> Int? {
+    public func deleteAll<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> Int? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to delete from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.deleteAll(entity, queryClauses)
+        return self.mainContext.deleteAll(from, queryClauses)
     }
     
-    public func deleteAll<T: NSManagedObject>(entity: T.Type, _ queryClauses: [FetchClause]) -> Int? {
+    public func deleteAll<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> Int? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to delete from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.deleteAll(entity, queryClauses)
+        return self.mainContext.deleteAll(from, queryClauses)
     }
     
-    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: FetchClause...) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: FetchClause...) -> U? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to query from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.queryValue(entity, selectClause, queryClauses)
+        return self.mainContext.queryValue(from, selectClause, queryClauses)
     }
     
-    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(entity: T.Type, _ selectClause: Select<U>, _ queryClauses: [FetchClause]) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [FetchClause]) -> U? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to query from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.queryValue(entity, selectClause, queryClauses)
+        return self.mainContext.queryValue(from, selectClause, queryClauses)
     }
     
-    public func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
+    public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to query from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.queryAttributes(entity, selectClause, queryClauses)
+        return self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }
     
-    public func queryAttributes<T: NSManagedObject>(entity: T.Type, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
+    public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to query from a <\(self.dynamicType)> outside the main queue.")
         
-        return self.mainContext.queryAttributes(entity, selectClause, queryClauses)
+        return self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }
 }
