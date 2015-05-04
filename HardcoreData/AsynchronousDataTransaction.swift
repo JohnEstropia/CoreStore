@@ -41,8 +41,8 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     */
     public func commit(completion: (result: SaveResult) -> Void) {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a <\(self.dynamicType)> outside its designated queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to commit a <\(self.dynamicType)> more than once.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a \(typeName(self)) outside its designated queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to commit a \(typeName(self)) more than once.")
         
         self.isCommitted = true
         let semaphore = GCDSemaphore(0)
@@ -62,8 +62,8 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     */
     public func commitAndWait() {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a <\(self.dynamicType)> outside its designated queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to commit a <\(self.dynamicType)> more than once.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a \(typeName(self)) outside its designated queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to commit a \(typeName(self)) more than once.")
         
         self.isCommitted = true
         self.result = self.context.saveSynchronously()
@@ -77,8 +77,8 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     */
     public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to begin a child transaction from a <\(self.dynamicType)> outside its designated queue.")
-        HardcoreData.assert(!self.isCommitted, "Attempted to begin a child transaction from an already committed <\(self.dynamicType)>.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to begin a child transaction from a \(typeName(self)) outside its designated queue.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to begin a child transaction from an already committed \(typeName(self)).")
         
         return SynchronousDataTransaction(
             mainContext: self.context,
@@ -97,7 +97,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     */
     public override func create<T: NSManagedObject>(entity: T.Type) -> T {
         
-        HardcoreData.assert(!self.isCommitted, "Attempted to create an entity of type <\(entity)> from an already committed <\(self.dynamicType)>.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to create an entity of type <\(entity)> from an already committed \(typeName(self)).")
         
         return super.create(entity)
     }
@@ -110,7 +110,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     */
     public override func fetch<T: NSManagedObject>(object: T) -> T? {
         
-        HardcoreData.assert(!self.isCommitted, "Attempted to update an entity of type <\(object.dynamicType)> from an already committed <\(self.dynamicType)>.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to update an entity of type \(typeName(object)) from an already committed \(typeName(self)).")
         
         return super.fetch(object)
     }
@@ -122,7 +122,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     */
     public override func delete(object: NSManagedObject) {
         
-        HardcoreData.assert(!self.isCommitted, "Attempted to delete an entity of type <\(object.dynamicType)> from an already committed <\(self.dynamicType)>.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to delete an entity of type \(typeName(object)) from an already committed \(typeName(self)).")
         
         super.delete(object)
     }
@@ -132,7 +132,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     */
     public override func rollback() {
         
-        HardcoreData.assert(!self.isCommitted, "Attempted to rollback an already committed <\(self.dynamicType)>.")
+        HardcoreData.assert(!self.isCommitted, "Attempted to rollback an already committed \(typeName(self)).")
         
         super.rollback()
     }
@@ -154,7 +154,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
             self.closure(transaction: self)
             if !self.isCommitted && self.hasChanges {
                 
-                HardcoreData.log(.Warning, message: "The closure for the <\(self.dynamicType)> completed without being committed. All changes made within the transaction were discarded.")
+                HardcoreData.log(.Warning, message: "The closure for the \(typeName(self)) completed without being committed. All changes made within the transaction were discarded.")
             }
         }
     }
@@ -166,7 +166,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
             self.closure(transaction: self)
             if !self.isCommitted && self.hasChanges {
                 
-                HardcoreData.log(.Warning, message: "The closure for the <\(self.dynamicType)> completed without being committed. All changes made within the transaction were discarded.")
+                HardcoreData.log(.Warning, message: "The closure for the \(typeName(self)) completed without being committed. All changes made within the transaction were discarded.")
             }
         }
         return self.result

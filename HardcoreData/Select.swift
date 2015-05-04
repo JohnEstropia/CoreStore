@@ -155,7 +155,7 @@ public struct Select<T: SelectResultType> {
         
         if fetchRequest.propertiesToFetch != nil {
             
-            HardcoreData.log(.Warning, message: "An existing \"propertiesToFetch\" for the <\(NSFetchRequest.self)> was overwritten by <\(self.dynamicType)> query clause.")
+            HardcoreData.log(.Warning, message: "An existing \"propertiesToFetch\" for the <\(NSFetchRequest.self)> was overwritten by \(typeName(self)) query clause.")
         }
         
         fetchRequest.includesPendingChanges = false
@@ -177,7 +177,7 @@ public struct Select<T: SelectResultType> {
                 }
                 else {
                     
-                    HardcoreData.log(.Warning, message: "The property \"\(keyPath)\" does not exist in entity <\(entityDescription.managedObjectClassName)> and will be ignored by <\(self.dynamicType)> query clause.")
+                    HardcoreData.log(.Warning, message: "The property \"\(keyPath)\" does not exist in entity <\(entityDescription.managedObjectClassName)> and will be ignored by \(typeName(self)) query clause.")
                 }
                 
             case .Aggregate(let function, let keyPath, let alias):
@@ -195,7 +195,7 @@ public struct Select<T: SelectResultType> {
                 }
                 else {
                     
-                    HardcoreData.log(.Warning, message: "The attribute \"\(keyPath)\" does not exist in entity <\(entityDescription.managedObjectClassName)> and will be ignored by <\(self.dynamicType)> query clause.")
+                    HardcoreData.log(.Warning, message: "The attribute \"\(keyPath)\" does not exist in entity <\(entityDescription.managedObjectClassName)> and will be ignored by \(typeName(self)) query clause.")
                 }
             }
         }

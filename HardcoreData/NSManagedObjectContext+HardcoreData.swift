@@ -38,14 +38,19 @@ internal extension NSManagedObjectContext {
         
         get {
             
-            let number: NSNumber? = self.getAssociatedObjectForKey(&PropertyKeys.shouldCascadeSavesToParent)
+            let number: NSNumber? = getAssociatedObjectForKey(
+                &PropertyKeys.shouldCascadeSavesToParent,
+                inObject: self
+            )
             return number?.boolValue ?? false
         }
         set {
             
-            self.setAssociatedCopiedObject(
+            setAssociatedCopiedObject(
                 NSNumber(bool: newValue),
-                forKey: &PropertyKeys.shouldCascadeSavesToParent)
+                forKey: &PropertyKeys.shouldCascadeSavesToParent,
+                inObject: self
+            )
         }
     }
     
@@ -106,13 +111,18 @@ internal extension NSManagedObjectContext {
         
         get {
             
-            return self.getAssociatedObjectForKey(&PropertyKeys.observerForWillSaveNotification)
+            return getAssociatedObjectForKey(
+                &PropertyKeys.observerForWillSaveNotification,
+                inObject: self
+            )
         }
         set {
             
-            self.setAssociatedRetainedObject(
+            setAssociatedRetainedObject(
                 newValue,
-                forKey: &PropertyKeys.observerForWillSaveNotification)
+                forKey: &PropertyKeys.observerForWillSaveNotification,
+                inObject: self
+            )
         }
     }
 }

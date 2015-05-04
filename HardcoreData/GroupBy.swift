@@ -56,7 +56,7 @@ public struct GroupBy: QueryClause {
         
         if fetchRequest.propertiesToGroupBy != nil {
             
-            HardcoreData.log(.Warning, message: "An existing \"propertiesToGroupBy\" for the <\(NSFetchRequest.self)> was overwritten by <\(self.dynamicType)> query clause.")
+            HardcoreData.log(.Warning, message: "An existing \"propertiesToGroupBy\" for the <\(NSFetchRequest.self)> was overwritten by \(typeName(self)) query clause.")
         }
         
         fetchRequest.propertiesToGroupBy = self.keyPaths

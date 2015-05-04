@@ -5,7 +5,7 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>FE56D6CC-DFA6-4581-B49D-F2486374A545</string>
+	<string>7C5E31AC-5DD0-43DA-A5C6-AF73B4532D86</string>
 	<key>IDESourceControlProjectName</key>
 	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
@@ -16,13 +16,13 @@
 		<string>github.com:JohnEstropia/GCDKit.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>HardcoreData.xcodeproj/project.xcworkspace</string>
+	<string>HardcoreDataDemo/HardcoreDataDemo.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>4B60F1BCB491FF717C56441AE7783C74F417BE48</key>
-		<string>../..</string>
+		<string>../../..</string>
 		<key>8B2E522D57154DFA93A06982C36315ECBEA4FA97</key>
-		<string>../..Libraries/GCDKit</string>
+		<string>../../../Libraries/GCDKit</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:JohnEstropia/HardcoreData.git</string>

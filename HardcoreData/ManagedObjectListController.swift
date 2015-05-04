@@ -28,48 +28,260 @@ import CoreData
 import GCDKit
 
 
+private let ManagedObjectListControllerWillChangeListNotification = "ManagedObjectListControllerWillChangeListNotification"
+private let ManagedObjectListControllerDidChangeListNotification = "ManagedObjectListControllerDidChangeListNotification"
+private let ManagedObjectListControllerDidInsertObjectNotification = "ManagedObjectListControllerDidInsertObjectNotification"
+private let ManagedObjectListControllerDidDeleteObjectNotification = "ManagedObjectListControllerDidDeleteObjectNotification"
+private let ManagedObjectListControllerDidUpdateObjectNotification = "ManagedObjectListControllerDidUpdateObjectNotification"
+private let ManagedObjectListControllerDidMoveObjectNotification = "ManagedObjectListControllerDidMoveObjectNotification"
+
+private let UserInfoKeyObject = "UserInfoKeyObject"
+private let UserInfoKeyIndexPath = "UserInfoKeyIndexPath"
+private let UserInfoKeyNewIndexPath = "UserInfoKeyNewIndexPath"
+
+private struct NotificationKey {
+    
+    static var willChangeList: Void?
+    static var didChangeList: Void?
+    static var didInsertObject: Void?
+    static var didDeleteObject: Void?
+    static var didUpdateObject: Void?
+    static var didMoveObject: Void?
+}
+
 // MARK: - ManagedObjectListController
 
 public final class ManagedObjectListController<T: NSManagedObject>: FetchedResultsControllerHandler {
     
     // MARK: Public
     
-    public typealias EntityType = T
-    
-    public func addObserver<U: ManagedObjectListObserver where U.EntityType == EntityType>(observer: U) {
+    public subscript(indexPath: NSIndexPath) -> T {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to add a <\(U.self)> outside the main queue.")
-        
-        self.observers.addObject(observer)
+        return self.fetchedResultsController.objectAtIndexPath(indexPath) as! T
     }
     
-    public func removeObserver<U: ManagedObjectListObserver where U.EntityType == EntityType>(observer: U) {
+    public func numberOfSections() -> Int {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to remove a <\(U.self)> outside the main queue.")
-        
-        self.observers.removeObject(observer)
+        return self.fetchedResultsController.sections?.count ?? 0
     }
     
+    public func numberOfItemsInSection(section: Int) -> Int {
+        
+        return (self.fetchedResultsController.sections?[section] as? NSFetchedResultsSectionInfo)?.numberOfObjects ?? 0
+    }
+    
+    public func addObserver<U: ManagedObjectListObserver where U.EntityType == T>(observer: U) {
+        
+        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to add a \(typeName(observer)) outside the main queue.")
+        
+        setAssociatedRetainedObject(
+            NotificationObserver(
+                notificationName: ManagedObjectListControllerWillChangeListNotification,
+                object: self,
+                closure: { [weak self, weak observer] (note) -> Void in
+                    
+                    if let strongSelf = self, let strongObserver = observer {
+                        
+                        strongObserver.managedObjectListWillChange(strongSelf)
+                    }
+                }
+            ),
+            forKey: &NotificationKey.willChangeList,
+            inObject: observer
+        )
+        setAssociatedRetainedObject(
+            NotificationObserver(
+                notificationName: ManagedObjectListControllerDidChangeListNotification,
+                object: self,
+                closure: { [weak self, weak observer] (note) -> Void in
+                    
+                    if let strongSelf = self, let strongObserver = observer {
+                        
+                        strongObserver.managedObjectListDidChange(strongSelf)
+                    }
+                }
+            ),
+            forKey: &NotificationKey.willChangeList,
+            inObject: observer
+        )
+        setAssociatedRetainedObject(
+            NotificationObserver(
+                notificationName: ManagedObjectListControllerDidInsertObjectNotification,
+                object: self,
+                closure: { [weak self, weak observer] (note) -> Void in
+                    
+                    if let strongSelf = self,
+                        let strongObserver = observer,
+                        let userInfo = note.userInfo,
+                        let object = userInfo[UserInfoKeyObject] as? T,
+                        let newIndexPath = userInfo[UserInfoKeyNewIndexPath] as? NSIndexPath {
+                            
+                            strongObserver.managedObjectList(
+                                strongSelf,
+                                didInsertObject: object,
+                                toIndexPath: newIndexPath
+                            )
+                    }
+                }
+            ),
+            forKey: &NotificationKey.didInsertObject,
+            inObject: observer
+        )
+        setAssociatedRetainedObject(
+            NotificationObserver(
+                notificationName: ManagedObjectListControllerDidDeleteObjectNotification,
+                object: self,
+                closure: { [weak self, weak observer] (note) -> Void in
+                    
+                    if let strongSelf = self,
+                        let strongObserver = observer,
+                        let userInfo = note.userInfo,
+                        let object = userInfo[UserInfoKeyObject] as? T,
+                        let indexPath = userInfo[UserInfoKeyIndexPath] as? NSIndexPath {
+                            
+                            strongObserver.managedObjectList(
+                                strongSelf,
+                                didDeleteObject: object,
+                                fromIndexPath: indexPath
+                            )
+                    }
+                }
+            ),
+            forKey: &NotificationKey.didDeleteObject,
+            inObject: observer
+        )
+        setAssociatedRetainedObject(
+            NotificationObserver(
+                notificationName: ManagedObjectListControllerDidUpdateObjectNotification,
+                object: self,
+                closure: { [weak self, weak observer] (note) -> Void in
+                    
+                    if let strongSelf = self,
+                        let strongObserver = observer,
+                        let userInfo = note.userInfo,
+                        let object = userInfo[UserInfoKeyObject] as? T,
+                        let indexPath = userInfo[UserInfoKeyIndexPath] as? NSIndexPath {
+                            
+                            strongObserver.managedObjectList(
+                                strongSelf,
+                                didUpdateObject: object,
+                                atIndexPath: indexPath
+                            )
+                    }
+                }
+            ),
+            forKey: &NotificationKey.didUpdateObject,
+            inObject: observer
+        )
+        setAssociatedRetainedObject(
+            NotificationObserver(
+                notificationName: ManagedObjectListControllerDidMoveObjectNotification,
+                object: self,
+                closure: { [weak self, weak observer] (note) -> Void in
+                    
+                    if let strongSelf = self,
+                        let strongObserver = observer,
+                        let userInfo = note.userInfo,
+                        let object = userInfo[UserInfoKeyObject] as? T,
+                        let indexPath = userInfo[UserInfoKeyIndexPath] as? NSIndexPath ,
+                        let newIndexPath = userInfo[UserInfoKeyNewIndexPath] as? NSIndexPath {
+                            
+                            strongObserver.managedObjectList(
+                                strongSelf,
+                                didMoveObject: object,
+                                fromIndexPath: indexPath,
+                                toIndexPath: newIndexPath
+                            )
+                    }
+                }
+            ),
+            forKey: &NotificationKey.didMoveObject,
+            inObject: observer
+        )
+    }
+    
+    public func removeObserver<U: ManagedObjectListObserver where U.EntityType == T>(observer: U) {
+        
+        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to remove a \(typeName(observer)) outside the main queue.")
+        
+        setAssociatedRetainedObject(nil as AnyObject?, forKey: &NotificationKey.willChangeList, inObject: observer)
+        setAssociatedRetainedObject(nil as AnyObject?, forKey: &NotificationKey.didChangeList, inObject: observer)
+        setAssociatedRetainedObject(nil as AnyObject?, forKey: &NotificationKey.didInsertObject, inObject: observer)
+        setAssociatedRetainedObject(nil as AnyObject?, forKey: &NotificationKey.didDeleteObject, inObject: observer)
+        setAssociatedRetainedObject(nil as AnyObject?, forKey: &NotificationKey.didUpdateObject, inObject: observer)
+        setAssociatedRetainedObject(nil as AnyObject?, forKey: &NotificationKey.didMoveObject, inObject: observer)
+    }
     
     // MARK: FetchedResultsControllerHandler
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    private func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        
+        switch type {
+            
+        case .Insert:
+            NSNotificationCenter.defaultCenter().postNotificationName(
+                ManagedObjectListControllerDidInsertObjectNotification,
+                object: self,
+                userInfo: [
+                    UserInfoKeyObject: anObject,
+                    UserInfoKeyNewIndexPath: newIndexPath!
+                ]
+            )
+            
+        case .Delete:
+            NSNotificationCenter.defaultCenter().postNotificationName(
+                ManagedObjectListControllerDidDeleteObjectNotification,
+                object: self,
+                userInfo: [
+                    UserInfoKeyObject: anObject,
+                    UserInfoKeyIndexPath: indexPath!
+                ]
+            )
+            
+        case .Update:
+            NSNotificationCenter.defaultCenter().postNotificationName(
+                ManagedObjectListControllerDidUpdateObjectNotification,
+                object: self,
+                userInfo: [
+                    UserInfoKeyObject: anObject,
+                    UserInfoKeyIndexPath: indexPath!
+                ]
+            )
+            
+        case .Move:
+            NSNotificationCenter.defaultCenter().postNotificationName(
+                ManagedObjectListControllerDidMoveObjectNotification,
+                object: self,
+                userInfo: [
+                    UserInfoKeyObject: anObject,
+                    UserInfoKeyIndexPath: indexPath!,
+                    UserInfoKeyNewIndexPath: newIndexPath!
+                ]
+            )
+        }
+    }
+    
+    private func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    private func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
+        NSNotificationCenter.defaultCenter().postNotificationName(
+            ManagedObjectListControllerWillChangeListNotification,
+            object: self
+        )
     }
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    private func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
+        NSNotificationCenter.defaultCenter().postNotificationName(
+            ManagedObjectListControllerDidChangeListNotification,
+            object: self
+        )
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        
-    }
-    
-    func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+    private func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
         
         return nil
     }
@@ -96,7 +308,7 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
             managedObjectContext: context,
             sectionNameKeyPath: sectionNameKeyPath,
             cacheName: (cacheResults
-                ? "\(ManagedObjectListController<T>.self).\(NSUUID())"
+                ? "\(self.dynamicType).\(NSUUID())"
                 : nil)
         )
         
@@ -105,7 +317,6 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         self.parentStack = dataStack
-        self.observers = NSHashTable.weakObjectsHashTable()
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
@@ -125,7 +336,6 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
     private let fetchedResultsController: NSFetchedResultsController
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private weak var parentStack: DataStack?
-    private let observers: NSHashTable
 }
 
 

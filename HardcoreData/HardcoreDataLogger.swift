@@ -47,3 +47,11 @@ public protocol HardcoreDataLogger {
     
     func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
 }
+
+
+// MARK: - Utilities
+
+internal func typeName<T>(value: T) -> String {
+    
+    return "<\(_stdlib_getDemangledTypeName(value))>"
+}

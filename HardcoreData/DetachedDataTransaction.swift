@@ -41,7 +41,7 @@ public final class DetachedDataTransaction: BaseDataTransaction {
     */
     public func commit(completion: (result: SaveResult) -> Void) {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a <\(self.dynamicType)> outside its designated queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a \(typeName(self)) outside its designated queue.")
         
         self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             

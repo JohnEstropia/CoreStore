@@ -32,7 +32,7 @@ private let applicationSupportDirectory = NSFileManager.defaultManager().URLsFor
 
 private let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData")
 
-private let defaultSQLiteStoreURL = applicationSupportDirectory.URLByAppendingPathComponent(applicationName, isDirectory: true).URLByAppendingPathExtension("sqlite")
+private let defaultSQLiteStoreURL = applicationSupportDirectory.URLByAppendingPathComponent(applicationName, isDirectory: false).URLByAppendingPathExtension("sqlite")
 
 
 // MARK: - DataStack

@@ -38,13 +38,18 @@ internal extension NSManagedObjectContext {
         
         get {
             
-            return self.getAssociatedObjectForKey(&PropertyKeys.parentTransaction)
+            return getAssociatedObjectForKey(
+                &PropertyKeys.parentTransaction,
+                inObject: self
+            )
         }
         set {
             
-            self.setAssociatedWeakObject(
+            setAssociatedWeakObject(
                 newValue,
-                forKey: &PropertyKeys.parentTransaction)
+                forKey: &PropertyKeys.parentTransaction,
+                inObject: self
+            )
         }
     }
     

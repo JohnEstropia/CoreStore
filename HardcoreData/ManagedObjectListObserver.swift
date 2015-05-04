@@ -45,33 +45,17 @@ public protocol ManagedObjectListObserver: class {
 //    func managedObjectList(listController: ManagedObjectListController<EntityType>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int)
     
     
-    func managedObjectList(listController: ManagedObjectListController<EntityType>, didInsertObject object: EntityType, toItemIndex itemIndex: Int)
+    func managedObjectList(listController: ManagedObjectListController<EntityType>, didInsertObject object: EntityType, toIndexPath indexPath: NSIndexPath)
     
-    func managedObjectList(listController: ManagedObjectListController<EntityType>, didDeleteObject object: EntityType, fromItemIndex itemIndex: Int)
+    func managedObjectList(listController: ManagedObjectListController<EntityType>, didDeleteObject object: EntityType, fromIndexPath indexPath: NSIndexPath)
     
-    func managedObjectList(listController: ManagedObjectListController<EntityType>, didUpdateObject object: EntityType, atItemIndex itemIndex: Int)
+    func managedObjectList(listController: ManagedObjectListController<EntityType>, didUpdateObject object: EntityType, atIndexPath indexPath: NSIndexPath)
     
-    func managedObjectList(listController: ManagedObjectListController<EntityType>, didMoveObject object: EntityType, fromItemIndex: Int, toItemIndex: Int)
+    func managedObjectList(listController: ManagedObjectListController<EntityType>, didMoveObject object: EntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
     
     
     func managedObjectListDidChange(listController: ManagedObjectListController<EntityType>)
     
-    
-//    private func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-//    
-//    }
-//    
-//    private func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-//    
-//    }
-//    
-//    private func controllerWillChangeContent(controller: NSFetchedResultsController) {
-//    
-//    }
-//    
-//    private func controllerDidChangeContent(controller: NSFetchedResultsController) {
-//    
-//    }
 //    
 //    private func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
 //    

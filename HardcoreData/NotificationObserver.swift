@@ -44,7 +44,8 @@ internal final class NotificationObserver {
             notificationName,
             object: object,
             queue: nil,
-            usingBlock: closure)
+            usingBlock: closure
+        )
     }
     
     deinit {
@@ -52,6 +53,7 @@ internal final class NotificationObserver {
         NSNotificationCenter.defaultCenter().removeObserver(
             self.observer,
             name: self.notificationName,
-            object: self.object)
+            object: self.object
+        )
     }
 }

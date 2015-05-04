@@ -42,7 +42,7 @@ internal extension NSManagedObjectContext {
                 return parentContext.parentStack
             }
             
-            return self.getAssociatedObjectForKey(&PropertyKeys.parentStack)
+            return getAssociatedObjectForKey(&PropertyKeys.parentStack, inObject: self)
         }
         set {
             
@@ -51,9 +51,11 @@ internal extension NSManagedObjectContext {
                 return
             }
             
-            self.setAssociatedWeakObject(
+            setAssociatedWeakObject(
                 newValue,
-                forKey: &PropertyKeys.parentStack)
+                forKey: &PropertyKeys.parentStack,
+                inObject: self
+            )
         }
     }
     
@@ -72,9 +74,9 @@ internal extension NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.parentContext = rootContext
-        context.setupForHardcoreDataWithContextName("com.hardcoredata.maincontext")
         context.shouldCascadeSavesToParent = true
         context.undoManager = nil
+        context.setupForHardcoreDataWithContextName("com.hardcoredata.maincontext")
         context.observerForDidSaveNotification = NotificationObserver(
             notificationName: NSManagedObjectContextDidSaveNotification,
             object: rootContext,
@@ -104,13 +106,18 @@ internal extension NSManagedObjectContext {
         
         get {
             
-            return self.getAssociatedObjectForKey(&PropertyKeys.observerForDidSaveNotification)
+            return getAssociatedObjectForKey(
+                &PropertyKeys.observerForDidSaveNotification,
+                inObject: self
+            )
         }
         set {
             
-            self.setAssociatedRetainedObject(
+            setAssociatedRetainedObject(
                 newValue,
-                forKey: &PropertyKeys.observerForDidSaveNotification)
+                forKey: &PropertyKeys.observerForDidSaveNotification,
+                inObject: self
+            )
         }
     }
 }

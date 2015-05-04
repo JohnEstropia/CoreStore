@@ -34,14 +34,14 @@ public extension DataStack {
     
     // MARK: Public
     
-    public func observeObjectList<T: NSManagedObject>(entity: T.Type, _ queryClauses: FetchClause...) -> ManagedObjectListController<T> {
+    public func observeObjectList<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> ManagedObjectListController<T> {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a <\(self.dynamicType)> outside the main queue.")
+        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
         
         // TODO: sectionNameKeyPath and cacheResults
         return ManagedObjectListController(
             dataStack: self,
-            entity: entity,
+            entity: T.self,
             sectionNameKeyPath: nil,
             cacheResults: false,
             queryClauses: queryClauses

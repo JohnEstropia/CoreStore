@@ -47,7 +47,7 @@ class HardcoreDataTests: XCTestCase {
         HardcoreData.defaultStack = stack
         XCTAssert(HardcoreData.defaultStack === stack, "HardcoreData.defaultStack === stack")
         
-        switch stack.addSQLiteStore("Config1Store.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true){
+        switch stack.addSQLiteStore("ConfigStore1.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true){
             
         case .Failure(let error):
             XCTFail(error.description)
@@ -56,7 +56,7 @@ class HardcoreDataTests: XCTestCase {
             break
         }
         
-        switch stack.addSQLiteStore("Config2Store.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true){
+        switch stack.addSQLiteStore("ConfigStore2.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true){
             
         case .Failure(let error):
             XCTFail(error.description)

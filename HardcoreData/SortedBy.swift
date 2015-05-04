@@ -98,7 +98,7 @@ public struct SortedBy: FetchClause {
         
         if fetchRequest.sortDescriptors != nil {
             
-            HardcoreData.log(.Warning, message: "Existing sortDescriptors for the <\(NSFetchRequest.self)> was overwritten by <\(self.dynamicType)> query clause.")
+            HardcoreData.log(.Warning, message: "Existing sortDescriptors for the <\(NSFetchRequest.self)> was overwritten by \(typeName(self)) query clause.")
         }
         
         fetchRequest.sortDescriptors = self.sortDescriptors

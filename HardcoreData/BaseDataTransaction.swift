@@ -63,7 +63,7 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func fetch<T: NSManagedObject>(object: T) -> T? {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type <\(object.dynamicType)> outside its designated queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type \(typeName(object)) outside its designated queue.")
         
         return object.inContext(self.context)
     }
@@ -75,7 +75,7 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func delete(object: NSManagedObject) {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity of type <\(object.dynamicType)> outside its designated queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity of type \(typeName(object)) outside its designated queue.")
         
         object.deleteFromContext()
     }
@@ -87,7 +87,7 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func rollback() {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to rollback a <\(self.dynamicType)> outside its designated queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to rollback a \(typeName(self)) outside its designated queue.")
         
         self.context.reset()
     }
