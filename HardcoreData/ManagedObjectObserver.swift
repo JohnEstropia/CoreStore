@@ -1,5 +1,5 @@
 //
-//  DataStack+Observing.swift
+//  ManagedObjectObserver.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -25,36 +25,17 @@
 
 import Foundation
 import CoreData
-import GCDKit
 
 
-// MARK: - DataStack
+// MARK: - ManagedObjectObserver
 
-public extension DataStack {
+public protocol ManagedObjectObserver: class {
     
-    // MARK: Public
+    typealias EntityType: NSManagedObject
     
-    public func observeObject<T: NSManagedObject>(object: T) -> ManagedObjectController<T> {
-        
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to observe objects from \(typeName(self)) outside the main queue.")
-        
-        return ManagedObjectController(
-            dataStack: self,
-            object: object
-        )
-    }
+    func managedObjectWillUpdate(objectController: ManagedObjectController<EntityType>, object: EntityType)
     
-    public func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: FetchClause...) -> ManagedObjectListController<T> {
-        
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to observe objects from \(typeName(self)) outside the main queue.")
-        
-        // TODO: sectionNameKeyPath and cacheResults
-        return ManagedObjectListController(
-            dataStack: self,
-            entity: T.self,
-            sectionNameKeyPath: groupBy?.keyPaths.first,
-            cacheResults: false,
-            queryClauses: queryClauses
-        )
-    }
+    func managedObjectWasUpdated(objectController: ManagedObjectController<EntityType>, object: EntityType)
+    
+    func managedObjectWasDeleted(objectController: ManagedObjectController<EntityType>, object: EntityType)
 }

@@ -27,23 +27,21 @@ import Foundation
 import CoreData
 
 
-// MARK: - ManagedObjectListObserver
+// MARK: - ManagedObjectListChangeObserver
 
-public protocol ManagedObjectListObserver: class {
+public protocol ManagedObjectListChangeObserver: class {
     
     typealias EntityType: NSManagedObject
-
+    
     func managedObjectListWillChange(listController: ManagedObjectListController<EntityType>)
     
-    
-//    func managedObjectList(listController: ManagedObjectListController<EntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
-//    
-//    func managedObjectList(listController: ManagedObjectListController<EntityType>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int)
-//    
-//    func managedObjectList(listController: ManagedObjectListController<EntityType>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int)
-//    
-//    func managedObjectList(listController: ManagedObjectListController<EntityType>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int)
-    
+    func managedObjectListDidChange(listController: ManagedObjectListController<EntityType>)
+}
+
+
+// MARK: - ManagedObjectListObjectObserver
+
+public protocol ManagedObjectListObjectObserver: ManagedObjectListChangeObserver {
     
     func managedObjectList(listController: ManagedObjectListController<EntityType>, didInsertObject object: EntityType, toIndexPath indexPath: NSIndexPath)
     
@@ -54,11 +52,19 @@ public protocol ManagedObjectListObserver: class {
     func managedObjectList(listController: ManagedObjectListController<EntityType>, didMoveObject object: EntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
     
     
-    func managedObjectListDidChange(listController: ManagedObjectListController<EntityType>)
-    
 //    
 //    private func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
 //    
 //    return nil
 //    }
+}
+
+
+// MARK: - ManagedObjectListSectionObserver
+
+public protocol ManagedObjectListSectionObserver: ManagedObjectListObjectObserver {
+    
+    func managedObjectList(listController: ManagedObjectListController<EntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
+
+    func managedObjectList(listController: ManagedObjectListController<EntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 }

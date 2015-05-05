@@ -10,6 +10,17 @@ import UIKit
 import HardcoreData
 
 
+let paletteList: ManagedObjectListController<Palette> = {
+    
+    HardcoreData.defaultStack.addSQLiteStore()
+    return HardcoreData.defaultStack.observeObjectList(
+        From(Palette),
+        GroupBy("colorName"),
+        SortedBy(.Ascending("hue"), .Ascending("dateAdded"))
+    )
+}()
+
+
 // MARK: - AppDelegate
 
 @UIApplicationMain

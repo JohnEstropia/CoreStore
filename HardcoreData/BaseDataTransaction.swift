@@ -77,7 +77,7 @@ public /*abstract*/ class BaseDataTransaction {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity of type \(typeName(object)) outside its designated queue.")
         
-        object.deleteFromContext()
+        object.inContext(self.context)?.deleteFromContext()
     }
     
     // MARK: Saving changes
