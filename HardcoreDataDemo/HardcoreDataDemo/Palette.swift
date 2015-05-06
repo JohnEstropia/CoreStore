@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import CoreData
 
 class Palette: NSManagedObject {
@@ -54,5 +55,28 @@ class Palette: NSManagedObject {
             self.setPrimitiveValue(newValue, forKey: key)
             self.didChangeValueForKey(key)
         }
+    }
+    
+    var color: UIColor {
+        
+        return UIColor(
+            hue: CGFloat(self.hue) / 360.0,
+            saturation: CGFloat(self.saturation),
+            brightness: CGFloat(self.brightness),
+            alpha: 1.0
+        )
+    }
+    
+    var colorText: String {
+        
+        return "H: \(self.hue)˚, S: \(round(self.saturation * 100.0))%, B: \(round(self.brightness * 100.0))%"
+    }
+    
+    func setInitialValues() {
+        
+        self.hue = Int32(arc4random_uniform(360))
+        self.saturation = 1.0
+        self.brightness = 0.5
+        self.dateAdded = NSDate()
     }
 }

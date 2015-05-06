@@ -35,10 +35,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
             HardcoreData.beginSynchronous { (transaction) -> Void in
                 
                 let palette = transaction.create(Palette)
-                palette.hue = Int32(arc4random_uniform(360))
-                palette.saturation = 1.0
-                palette.brightness = 0.5
-                palette.dateAdded = NSDate()
+                palette.setInitialValues()
                 
                 transaction.commitAndWait()
             }
@@ -156,15 +153,12 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
     
     func reloadPaletteInfo(palette: Palette) {
         
-        let color = UIColor(
-            hue: CGFloat(palette.hue) / 360.0,
-            saturation: CGFloat(palette.saturation),
-            brightness: CGFloat(palette.brightness),
-            alpha: 1.0
-        )
-        self.colorNameLabel?.textColor = color
         self.colorNameLabel?.text = palette.colorName
+        
+        let color = palette.color
+        self.colorNameLabel?.textColor = color
         self.colorView?.backgroundColor = color
+        
         self.hsbLabel?.text = "H: \(palette.hue)˚, S: \(round(palette.saturation * 100.0))%, B: \(round(palette.brightness * 100.0))%"
         
         let dateString = NSDateFormatter.localizedStringFromDate(

@@ -74,8 +74,11 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("PaletteTableViewCell") as! PaletteTableViewCell
+        
         let palette = paletteList[indexPath]
-        cell.setHue(palette.hue, saturation: palette.saturation, brightness: palette.brightness)
+        cell.colorView?.backgroundColor = palette.color
+        cell.label?.text = palette.colorText
+        
         return cell
     }
     
@@ -132,11 +135,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     func managedObjectList(listController: ManagedObjectListController<Palette>, didUpdateObject object: Palette, atIndexPath indexPath: NSIndexPath) {
         
-        if let cell = self.tableView.cellForRowAtIndexPath(indexPath) as? PaletteTableViewCell {
-            
-            let palette = paletteList[indexPath]
-            cell.setHue(palette.hue, saturation: palette.saturation, brightness: palette.brightness)
-        }
+        self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
     
     func managedObjectList(listController: ManagedObjectListController<Palette>, didMoveObject object: Palette, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
@@ -176,10 +175,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
             for _ in 0 ... 2 {
                 
                 let palette = transaction.create(Palette)
-                palette.hue = Int32(arc4random_uniform(360))
-                palette.saturation = 1.0
-                palette.brightness = 0.5
-                palette.dateAdded = NSDate()
+                palette.setInitialValues()
             }
             
             transaction.commit { (result) -> Void in }
