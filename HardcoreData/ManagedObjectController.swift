@@ -169,9 +169,9 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
         fetchRequest.entity = context.entityDescriptionForEntityClass(T.self)
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .ManagedObjectResultType
+        fetchRequest.sortDescriptors = []
         
         Where("SELF", isEqualTo: object).applyToFetchRequest(fetchRequest)
-        SortedBy(.Ascending("objectID")).applyToFetchRequest(fetchRequest)
         
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,

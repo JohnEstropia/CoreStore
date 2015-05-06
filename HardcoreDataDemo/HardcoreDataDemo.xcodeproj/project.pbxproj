@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		B54AAD4F1AF4D26E00848AE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54AAD4E1AF4D26E00848AE0 /* AppDelegate.swift */; };
 		B54AAD521AF4D26E00848AE0 /* HardcoreDataDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B54AAD501AF4D26E00848AE0 /* HardcoreDataDemo.xcdatamodeld */; };
-		B54AAD541AF4D26E00848AE0 /* PalettesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54AAD531AF4D26E00848AE0 /* PalettesViewController.swift */; };
+		B54AAD541AF4D26E00848AE0 /* ObjectListObserverDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54AAD531AF4D26E00848AE0 /* ObjectListObserverDemoViewController.swift */; };
 		B54AAD591AF4D26E00848AE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B54AAD571AF4D26E00848AE0 /* Main.storyboard */; };
 		B54AAD5B1AF4D26E00848AE0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B54AAD5A1AF4D26E00848AE0 /* Images.xcassets */; };
 		B54AAD5E1AF4D26E00848AE0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B54AAD5C1AF4D26E00848AE0 /* LaunchScreen.xib */; };
@@ -18,6 +18,7 @@
 		B583A9211AF5F542001F76AF /* HardcoreData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B583A91B1AF5F4F4001F76AF /* HardcoreData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5BC26E41AF8F67900276889 /* PaletteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC26E31AF8F67900276889 /* PaletteTableViewCell.swift */; };
 		B5BC26E81AF8FD9600276889 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC26E71AF8FD9600276889 /* Palette.swift */; };
+		B5BC271B1AFA4E6900276889 /* ObjectObserverDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC271A1AFA4E6900276889 /* ObjectObserverDemoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,7 +78,7 @@
 		B54AAD4D1AF4D26E00848AE0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B54AAD4E1AF4D26E00848AE0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B54AAD511AF4D26E00848AE0 /* HardcoreDataDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HardcoreDataDemo.xcdatamodel; sourceTree = "<group>"; };
-		B54AAD531AF4D26E00848AE0 /* PalettesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PalettesViewController.swift; sourceTree = "<group>"; };
+		B54AAD531AF4D26E00848AE0 /* ObjectListObserverDemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectListObserverDemoViewController.swift; sourceTree = "<group>"; };
 		B54AAD581AF4D26E00848AE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B54AAD5A1AF4D26E00848AE0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B54AAD5D1AF4D26E00848AE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -88,6 +89,7 @@
 		B583A9251AF5F547001F76AF /* GCDKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = GCDKit.framework; path = "/Users/johnestropia/Library/Developer/Xcode/DerivedData/HardcoreDataDemo-ftknhsqfpsthfogvisxisgpbbhsj/Build/Products/Debug-iphoneos/GCDKit.framework"; sourceTree = "<absolute>"; };
 		B5BC26E31AF8F67900276889 /* PaletteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaletteTableViewCell.swift; sourceTree = "<group>"; };
 		B5BC26E71AF8FD9600276889 /* Palette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
+		B5BC271A1AFA4E6900276889 /* ObjectObserverDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectObserverDemoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,7 +135,8 @@
 			isa = PBXGroup;
 			children = (
 				B54AAD4E1AF4D26E00848AE0 /* AppDelegate.swift */,
-				B5BC26E51AF8F67D00276889 /* DataSources */,
+				B5BC26E51AF8F67D00276889 /* Cells */,
+				B5BC27191AFA4E0500276889 /* Demo */,
 				B5BC26E61AF8F68200276889 /* Entities */,
 				B54AAD571AF4D26E00848AE0 /* Main.storyboard */,
 				B54AAD5A1AF4D26E00848AE0 /* Images.xcassets */,
@@ -178,13 +181,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B5BC26E51AF8F67D00276889 /* DataSources */ = {
+		B5BC26E51AF8F67D00276889 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				B54AAD531AF4D26E00848AE0 /* PalettesViewController.swift */,
 				B5BC26E31AF8F67900276889 /* PaletteTableViewCell.swift */,
 			);
-			name = DataSources;
+			name = Cells;
 			sourceTree = "<group>";
 		};
 		B5BC26E61AF8F68200276889 /* Entities */ = {
@@ -193,6 +195,15 @@
 				B5BC26E71AF8FD9600276889 /* Palette.swift */,
 			);
 			name = Entities;
+			sourceTree = "<group>";
+		};
+		B5BC27191AFA4E0500276889 /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				B54AAD531AF4D26E00848AE0 /* ObjectListObserverDemoViewController.swift */,
+				B5BC271A1AFA4E6900276889 /* ObjectObserverDemoViewController.swift */,
+			);
+			name = Demo;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -323,9 +334,10 @@
 			files = (
 				B54AAD521AF4D26E00848AE0 /* HardcoreDataDemo.xcdatamodeld in Sources */,
 				B54AAD4F1AF4D26E00848AE0 /* AppDelegate.swift in Sources */,
+				B5BC271B1AFA4E6900276889 /* ObjectObserverDemoViewController.swift in Sources */,
 				B5BC26E41AF8F67900276889 /* PaletteTableViewCell.swift in Sources */,
 				B5BC26E81AF8FD9600276889 /* Palette.swift in Sources */,
-				B54AAD541AF4D26E00848AE0 /* PalettesViewController.swift in Sources */,
+				B54AAD541AF4D26E00848AE0 /* ObjectListObserverDemoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

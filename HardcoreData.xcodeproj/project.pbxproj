@@ -26,6 +26,7 @@
 		B595CAC61A9A1260009A397F /* NSManagedObjectContext+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595CAC51A9A1260009A397F /* NSManagedObjectContext+Transaction.swift */; };
 		B595CAC81A9A161B009A397F /* WeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595CAC71A9A161B009A397F /* WeakObject.swift */; };
 		B5BC26DD1AF78A8800276889 /* ManagedObjectObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC26DC1AF78A8800276889 /* ManagedObjectObserver.swift */; };
+		B5BC271D1AFA500400276889 /* HardcoreData+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC271C1AFA500400276889 /* HardcoreData+Observing.swift */; };
 		B5CFD36E1A0775F000B7885F /* SaveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFD36D1A0775F000B7885F /* SaveResult.swift */; };
 		B5CFF23E19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */; };
 		B5CFF24019FD383100D6DFC4 /* BaseDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFF23F19FD383100D6DFC4 /* BaseDataTransaction.swift */; };
@@ -104,6 +105,7 @@
 		B595CAC51A9A1260009A397F /* NSManagedObjectContext+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Transaction.swift"; sourceTree = "<group>"; };
 		B595CAC71A9A161B009A397F /* WeakObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakObject.swift; sourceTree = "<group>"; };
 		B5BC26DC1AF78A8800276889 /* ManagedObjectObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectObserver.swift; sourceTree = "<group>"; };
+		B5BC271C1AFA500400276889 /* HardcoreData+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Observing.swift"; sourceTree = "<group>"; };
 		B5CFD36D1A0775F000B7885F /* SaveResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveResult.swift; sourceTree = "<group>"; };
 		B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5CFF23F19FD383100D6DFC4 /* BaseDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDataTransaction.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				B52B68B91AAB46AD00CE7F48 /* ManagedObjectController.swift */,
 				B5BC26DC1AF78A8800276889 /* ManagedObjectObserver.swift */,
 				B52B68BD1AAB484C00CE7F48 /* DataStack+Observing.swift */,
+				B5BC271C1AFA500400276889 /* HardcoreData+Observing.swift */,
 			);
 			name = Observing;
 			sourceTree = "<group>";
@@ -532,6 +535,7 @@
 				B5E209E01A0726460089C9D4 /* NSManagedObject+Transaction.swift in Sources */,
 				B582DF821A98B0E7003F09C6 /* HardcoreData+Querying.swift in Sources */,
 				B5D19BFB1AA14063001D1A99 /* AsynchronousDataTransaction.swift in Sources */,
+				B5BC271D1AFA500400276889 /* HardcoreData+Observing.swift in Sources */,
 				B595CAC81A9A161B009A397F /* WeakObject.swift in Sources */,
 				B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */,
 				B5398AA21AA8938D00B66388 /* DetachedDataTransaction.swift in Sources */,

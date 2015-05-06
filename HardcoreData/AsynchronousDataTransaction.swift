@@ -108,7 +108,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     :param: object the NSManagedObject type to be edited
     :returns: an editable proxy for the specified NSManagedObject.
     */
-    public override func fetch<T: NSManagedObject>(object: T) -> T? {
+    public override func fetch<T: NSManagedObject>(object: T?) -> T? {
         
         HardcoreData.assert(!self.isCommitted, "Attempted to update an entity of type \(typeName(object)) from an already committed \(typeName(self)).")
         
@@ -120,7 +120,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     
     :param: object the NSManagedObject type to be deleted
     */
-    public override func delete(object: NSManagedObject) {
+    public override func delete(object: NSManagedObject?) {
         
         HardcoreData.assert(!self.isCommitted, "Attempted to delete an entity of type \(typeName(object)) from an already committed \(typeName(self)).")
         

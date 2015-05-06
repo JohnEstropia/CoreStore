@@ -46,6 +46,11 @@ public extension DataStack {
     
     public func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: FetchClause...) -> ManagedObjectListController<T> {
         
+        return self.observeObjectList(from, groupBy, queryClauses)
+    }
+    
+    public func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: [FetchClause]) -> ManagedObjectListController<T> {
+        
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to observe objects from \(typeName(self)) outside the main queue.")
         
         // TODO: sectionNameKeyPath and cacheResults

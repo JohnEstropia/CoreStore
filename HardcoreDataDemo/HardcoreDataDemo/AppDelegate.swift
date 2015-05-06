@@ -13,7 +13,7 @@ import HardcoreData
 let paletteList: ManagedObjectListController<Palette> = {
     
     HardcoreData.defaultStack.addSQLiteStore()
-    return HardcoreData.defaultStack.observeObjectList(
+    return HardcoreData.observeObjectList(
         From(Palette),
         GroupBy("colorName"),
         SortedBy(.Ascending("hue"), .Ascending("dateAdded"))

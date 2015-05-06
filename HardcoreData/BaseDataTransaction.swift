@@ -61,11 +61,11 @@ public /*abstract*/ class BaseDataTransaction {
     :param: object the NSManagedObject type to be edited
     :returns: an editable proxy for the specified NSManagedObject.
     */
-    public func fetch<T: NSManagedObject>(object: T) -> T? {
+    public func fetch<T: NSManagedObject>(object: T?) -> T? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type \(typeName(object)) outside its designated queue.")
         
-        return object.inContext(self.context)
+        return object?.inContext(self.context)
     }
     
     /**
@@ -73,11 +73,11 @@ public /*abstract*/ class BaseDataTransaction {
     
     :param: object the NSManagedObject type to be deleted
     */
-    public func delete(object: NSManagedObject) {
+    public func delete(object: NSManagedObject?) {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity of type \(typeName(object)) outside its designated queue.")
         
-        object.inContext(self.context)?.deleteFromContext()
+        object?.inContext(self.context)?.deleteFromContext()
     }
     
     // MARK: Saving changes

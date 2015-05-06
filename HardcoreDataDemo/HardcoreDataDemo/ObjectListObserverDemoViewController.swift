@@ -1,5 +1,5 @@
 //
-//  PalettesViewController.swift
+//  ObjectListObserverDemoViewController.swift
 //  HardcoreDataDemo
 //
 //  Created by John Rommel Estropia on 2015/05/02.
@@ -10,9 +10,9 @@ import UIKit
 import HardcoreData
 
 
-// MARK: - PalettesViewController
+// MARK: - ObjectListObserverDemoViewController
 
-class PalettesViewController: UITableViewController, ManagedObjectListSectionObserver {
+class ObjectListObserverDemoViewController: UITableViewController, ManagedObjectListSectionObserver {
     
     // MARK: NSObject
     
@@ -30,10 +30,32 @@ class PalettesViewController: UITableViewController, ManagedObjectListSectionObs
         
         self.navigationItem.leftBarButtonItems = [
             self.editButtonItem(),
-            UIBarButtonItem(barButtonSystemItem: .Trash, target: self, action: "resetBarButtonItemTouched:")
+            UIBarButtonItem(
+                barButtonSystemItem: .Trash,
+                target: self,
+                action: "resetBarButtonItemTouched:"
+            )
         ]
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addBarButtonItemTouched:")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .Add,
+            target: self,
+            action: "addBarButtonItemTouched:"
+        )
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        
         paletteList.addObserver(self)
+        self.tableView.reloadData()
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        
+        super.viewDidDisappear(animated)
+        
+        paletteList.removeObserver(self)
     }
     
     
@@ -110,9 +132,11 @@ class PalettesViewController: UITableViewController, ManagedObjectListSectionObs
     
     func managedObjectList(listController: ManagedObjectListController<Palette>, didUpdateObject object: Palette, atIndexPath indexPath: NSIndexPath) {
         
-        let cell = self.tableView.cellForRowAtIndexPath(indexPath) as! PaletteTableViewCell
-        let palette = paletteList[indexPath]
-        cell.setHue(palette.hue, saturation: palette.saturation, brightness: palette.brightness)
+        if let cell = self.tableView.cellForRowAtIndexPath(indexPath) as? PaletteTableViewCell {
+            
+            let palette = paletteList[indexPath]
+            cell.setHue(palette.hue, saturation: palette.saturation, brightness: palette.brightness)
+        }
     }
     
     func managedObjectList(listController: ManagedObjectListController<Palette>, didMoveObject object: Palette, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
@@ -149,11 +173,14 @@ class PalettesViewController: UITableViewController, ManagedObjectListSectionObs
         
         HardcoreData.beginAsynchronous { (transaction) -> Void in
             
-            let palette = transaction.create(Palette)
-            palette.hue = Int32(arc4random_uniform(360))
-            palette.saturation = 1.0
-            palette.brightness = 0.5
-            palette.dateAdded = NSDate()
+            for _ in 0 ... 2 {
+                
+                let palette = transaction.create(Palette)
+                palette.hue = Int32(arc4random_uniform(360))
+                palette.saturation = 1.0
+                palette.brightness = 0.5
+                palette.dateAdded = NSDate()
+            }
             
             transaction.commit { (result) -> Void in }
         }
