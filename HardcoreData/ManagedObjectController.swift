@@ -28,9 +28,7 @@ import CoreData
 import GCDKit
 
 
-private let ManagedObjectListControllerWillChangeListNotification = "ManagedObjectListControllerWillChangeListNotification"
-private let ManagedObjectListControllerDidChangeListNotification = "ManagedObjectListControllerDidChangeListNotification"
-
+private let ManagedObjectListControllerWillChangeObjectNotification = "ManagedObjectListControllerWillChangeObjectNotification"
 private let ManagedObjectListControllerDidDeleteObjectNotification = "ManagedObjectListControllerDidDeleteObjectNotification"
 private let ManagedObjectListControllerDidUpdateObjectNotification = "ManagedObjectListControllerDidUpdateObjectNotification"
 
@@ -38,9 +36,7 @@ private let UserInfoKeyObject = "UserInfoKeyObject"
 
 private struct NotificationKey {
     
-    static var willChangeList: Void?
-    static var didChangeList: Void?
-    
+    static var willChangeObject: Void?
     static var didDeleteObject: Void?
     static var didUpdateObject: Void?
 }
@@ -67,25 +63,24 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to add a \(typeName(observer)) outside the main queue.")
         
         self.registerChangeNotification(
-            &NotificationKey.willChangeList,
-            name: ManagedObjectListControllerWillChangeListNotification,
+            &NotificationKey.willChangeObject,
+            name: ManagedObjectListControllerWillChangeObjectNotification,
             toObserver: observer,
-            callback: { [weak observer, weak self] (objectController) -> Void in
+            callback: { [weak self, weak observer] (objectController) -> Void in
                 
-                if let observer = observer, let object = self?.object {
+                if let strongSelf = self, let object = strongSelf.object, let observer = observer {
                     
                     observer.managedObjectWillUpdate(objectController, object: object)
                 }
             }
         )
-        
         self.registerObjectNotification(
             &NotificationKey.didDeleteObject,
             name: ManagedObjectListControllerDidDeleteObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (objectController, object) -> Void in
+            callback: { [weak self, weak observer] (objectController, object) -> Void in
                 
-                if let observer = observer {
+                if let strongSelf = self, let observer = observer {
                     
                     observer.managedObjectWasDeleted(objectController, object: object)
                 }
@@ -95,11 +90,28 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
             &NotificationKey.didUpdateObject,
             name: ManagedObjectListControllerDidUpdateObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (objectController, object) -> Void in
+            callback: { [weak self, weak observer] (objectController, object) -> Void in
                 
-                if let observer = observer {
+                if let strongSelf = self, let observer = observer {
                     
-                    observer.managedObjectWasUpdated(objectController, object: object)
+                    let previousCommitedAttributes = strongSelf.lastCommittedAttributes
+                    let currentCommitedAttributes = object.committedValuesForKeys(nil) as! [NSString: NSObject]
+                    
+                    var changedKeys = Set<String>()
+                    for key in currentCommitedAttributes.keys {
+                        
+                        if previousCommitedAttributes[key] != currentCommitedAttributes[key] {
+                            
+                            changedKeys.insert(key as String)
+                        }
+                    }
+                    
+                    strongSelf.lastCommittedAttributes = currentCommitedAttributes
+                    observer.managedObjectWasUpdated(
+                        objectController,
+                        object: object,
+                        changedPersistentKeys: changedKeys
+                    )
                 }
             }
         )
@@ -110,8 +122,7 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to remove a \(typeName(observer)) outside the main queue.")
         
         let nilValue: AnyObject? = nil
-        setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.willChangeList, inObject: observer)
-        
+        setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.willChangeObject, inObject: observer)
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.didDeleteObject, inObject: observer)
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.didUpdateObject, inObject: observer)
     }
@@ -145,15 +156,7 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
     private func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
         NSNotificationCenter.defaultCenter().postNotificationName(
-            ManagedObjectListControllerWillChangeListNotification,
-            object: self
-        )
-    }
-    
-    private func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            ManagedObjectListControllerDidChangeListNotification,
+            ManagedObjectListControllerWillChangeObjectNotification,
             object: self
         )
     }
@@ -171,7 +174,8 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.sortDescriptors = []
         
-        Where("SELF", isEqualTo: object).applyToFetchRequest(fetchRequest)
+        let originalObjectID = object.objectID
+        Where("SELF", isEqualTo: originalObjectID).applyToFetchRequest(fetchRequest)
         
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
@@ -182,6 +186,7 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
         
         let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
         
+        self.originalObjectID = originalObjectID
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         self.parentStack = dataStack
@@ -196,13 +201,17 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
                 error ?? NSError(hardcoreDataErrorCode: .UnknownError),
                 "Failed to perform fetch on <\(NSFetchedResultsController.self)>.")
         }
+        
+        self.lastCommittedAttributes = (self.object?.committedValuesForKeys(nil) as? [NSString: NSObject]) ?? [:]
     }
     
     
     // MARK: Private
     
+    private let originalObjectID: NSManagedObjectID
     private let fetchedResultsController: NSFetchedResultsController
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
+    private var lastCommittedAttributes = [NSString: NSObject]()
     private weak var parentStack: DataStack?
     
     private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (objectController: ManagedObjectController<T>) -> Void) {
@@ -257,8 +266,6 @@ private protocol FetchedResultsControllerHandler: class {
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?)
     
     func controllerWillChangeContent(controller: NSFetchedResultsController)
-    
-    func controllerDidChangeContent(controller: NSFetchedResultsController)
 }
 
 
@@ -271,11 +278,6 @@ private final class FetchedResultsControllerDelegate: NSFetchedResultsController
     @objc func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
         self.handler?.controllerWillChangeContent(controller)
-    }
-    
-    @objc func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        
-        self.handler?.controllerDidChangeContent(controller)
     }
     
     @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {

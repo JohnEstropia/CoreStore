@@ -73,7 +73,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         
         if let palette = self.objectController?.object {
             
-            self.reloadPaletteInfo(palette)
+            self.reloadPaletteInfo(palette, changedKeys: nil)
         }
     }
     
@@ -85,9 +85,9 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         // none
     }
     
-    func managedObjectWasUpdated(objectController: ManagedObjectController<Palette>, object: Palette) {
+    func managedObjectWasUpdated(objectController: ManagedObjectController<Palette>, object: Palette, changedPersistentKeys: Set<KeyPath>) {
         
-        self.reloadPaletteInfo(object)
+        self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
     }
     
     func managedObjectWasDeleted(objectController: ManagedObjectController<Palette>, object: Palette) {
@@ -166,7 +166,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         }
     }
     
-    func reloadPaletteInfo(palette: Palette) {
+    func reloadPaletteInfo(palette: Palette, changedKeys: Set<String>?) {
         
         self.colorNameLabel?.text = palette.colorName
         
@@ -179,17 +179,18 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let hue = palette.hue
         let saturation = palette.saturation
         let brightness = palette.brightness
-        if Int32(self.hueSlider?.value ?? 0) != hue {
+        
+        if changedKeys == nil || changedKeys?.contains("hue") == true {
             
-            self.hueSlider?.value = Float(hue)
+            self.hueSlider?.value = Float(palette.hue)
         }
-        if self.saturationSlider?.value != saturation {
+        if changedKeys == nil || changedKeys?.contains("saturation") == true {
             
-            self.saturationSlider?.value = saturation
+            self.saturationSlider?.value = palette.saturation
         }
-        if self.brightnessSlider?.value != brightness {
+        if changedKeys == nil || changedKeys?.contains("brightness") == true {
             
-            self.brightnessSlider?.value = brightness
+            self.brightnessSlider?.value = palette.brightness
         }
     }
 }

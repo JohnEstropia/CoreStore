@@ -35,7 +35,7 @@ public protocol ManagedObjectObserver: class {
     
     func managedObjectWillUpdate(objectController: ManagedObjectController<EntityType>, object: EntityType)
     
-    func managedObjectWasUpdated(objectController: ManagedObjectController<EntityType>, object: EntityType)
+    func managedObjectWasUpdated(objectController: ManagedObjectController<EntityType>, object: EntityType, changedPersistentKeys: Set<KeyPath>)
     
     func managedObjectWasDeleted(objectController: ManagedObjectController<EntityType>, object: EntityType)
 }
