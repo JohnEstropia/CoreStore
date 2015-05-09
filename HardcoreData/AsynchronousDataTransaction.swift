@@ -38,7 +38,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     // MARK: Public
     
     /**
-    Saves the transaction changes asynchronously. This method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Saves the transaction changes asynchronously. This method should not be used after the commit() method was already called once.
     
     :param: completion the block executed after the save completes. Success or failure is reported by the SaveResult argument of the block.
     */
@@ -59,11 +59,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Saves the transaction changes and waits for completion synchronously. This method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Saves the transaction changes and waits for completion synchronously. This method should not be used after the commit() method was already called once.
     
     :returns: a SaveResult value indicating success or failure.
     */
-    public func commitAndWait() {
+    public func commit() {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a \(typeName(self)) outside its designated queue.")
         HardcoreData.assert(!self.isCommitted, "Attempted to commit a \(typeName(self)) more than once.")
@@ -73,7 +73,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made. This method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made. This method should not be used after he commit() method was already called once.
     
     :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
     :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
@@ -93,7 +93,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     // MARK: BaseDataTransaction
     
     /**
-    Creates a new NSManagedObject with the specified entity type. This method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Creates a new NSManagedObject with the specified entity type. This method should not be used after the commit() method was already called once.
     
     :param: entity the NSManagedObject type to be created
     :returns: a new NSManagedObject instance of the specified entity type.
@@ -106,7 +106,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Returns an editable proxy of a specified NSManagedObject. This method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Returns an editable proxy of a specified NSManagedObject. This method should not be used after the commit() method was already called once.
     
     :param: object the NSManagedObject type to be edited
     :returns: an editable proxy for the specified NSManagedObject.
@@ -119,7 +119,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Deletes a specified NSManagedObject. This method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Deletes a specified NSManagedObject. This method should not be used after the commit() method was already called once.
     
     :param: object the NSManagedObject type to be deleted
     */
@@ -131,7 +131,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Rolls back the transaction by resetting the NSManagedObjectContext. After calling this method, all NSManagedObjects fetched within the transaction will become invalid. This method should not be used after either the commit(_:) or commitAndWait() method was already called once.
+    Rolls back the transaction by resetting the NSManagedObjectContext. After calling this method, all NSManagedObjects fetched within the transaction will become invalid. This method should not be used after the commit() method was already called once.
     */
     public override func rollback() {
         

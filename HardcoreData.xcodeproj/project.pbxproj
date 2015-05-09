@@ -11,6 +11,7 @@
 		2F03A54019C5C6DA005002A5 /* HardcoreDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53F19C5C6DA005002A5 /* HardcoreDataTests.swift */; };
 		2F03A54D19C5C872005002A5 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F03A54C19C5C872005002A5 /* CoreData.framework */; };
 		2F291E2719C6D3CF007AF63F /* HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F291E2619C6D3CF007AF63F /* HardcoreData.swift */; };
+		B503FAE71AFDE20C00F90881 /* NSManagedObject+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FAE61AFDE20C00F90881 /* NSManagedObject+Convenience.swift */; };
 		B50DD9DD1ABD34F800D62F2B /* From.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50DD9DC1ABD34F800D62F2B /* From.swift */; };
 		B52B68BA1AAB46AD00CE7F48 /* ManagedObjectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B68B91AAB46AD00CE7F48 /* ManagedObjectController.swift */; };
 		B52B68BC1AAB46BD00CE7F48 /* ManagedObjectListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B68BB1AAB46BD00CE7F48 /* ManagedObjectListController.swift */; };
@@ -90,6 +91,7 @@
 		2F03A53F19C5C6DA005002A5 /* HardcoreDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HardcoreDataTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		2F03A54C19C5C872005002A5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2F291E2619C6D3CF007AF63F /* HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HardcoreData.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		B503FAE61AFDE20C00F90881 /* NSManagedObject+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Convenience.swift"; sourceTree = "<group>"; };
 		B50DD9DC1ABD34F800D62F2B /* From.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = From.swift; sourceTree = "<group>"; };
 		B52B68B91AAB46AD00CE7F48 /* ManagedObjectController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectController.swift; sourceTree = "<group>"; };
 		B52B68BB1AAB46BD00CE7F48 /* ManagedObjectListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectListController.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 				B5F409E51A8B11B600A228EA /* Logging */,
 				B5E126531A7DCCE400AD8B39 /* Fetching and Querying */,
 				B52B68B61AAB45FB00CE7F48 /* Observing */,
+				B503FAE31AFDE1E500F90881 /* Convenience Helpers */,
 				B5D808141A34945A00A44484 /* Internal */,
 				2F03A53319C5C6DA005002A5 /* Supporting Files */,
 			);
@@ -235,6 +238,14 @@
 				B5D39A0319FD00DE000E91BB /* UIKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B503FAE31AFDE1E500F90881 /* Convenience Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B503FAE61AFDE20C00F90881 /* NSManagedObject+Convenience.swift */,
+			);
+			name = "Convenience Helpers";
 			sourceTree = "<group>";
 		};
 		B52B68B61AAB45FB00CE7F48 /* Observing */ = {
@@ -523,6 +534,7 @@
 				B5CFF23E19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift in Sources */,
 				B54A9F071AA7654400AFEC05 /* DataStack+Querying.swift in Sources */,
 				B5E126571A7DCE5900AD8B39 /* SortedBy.swift in Sources */,
+				B503FAE71AFDE20C00F90881 /* NSManagedObject+Convenience.swift in Sources */,
 				B54D53071AB3538500D55BA8 /* QueryClause.swift in Sources */,
 				B5F409EF1A8B243D00A228EA /* BaseDataTransaction+Querying.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* HardcoreData.swift in Sources */,

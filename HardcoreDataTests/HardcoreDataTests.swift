@@ -226,7 +226,7 @@ class HardcoreDataTests: XCTestCase {
             )
             XCTAssertTrue(numberOfDeletedObjects2 == 2, "numberOfDeletedObjects2 == 2 (actual: \(numberOfDeletedObjects2))")
             
-            transaction.commitAndWait()
+            transaction.commit()
         }
         
         let objs1 = HardcoreData.fetchAll(From(TestEntity1))

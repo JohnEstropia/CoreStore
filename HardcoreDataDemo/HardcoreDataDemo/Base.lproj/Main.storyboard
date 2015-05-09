@@ -120,20 +120,20 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="359" translatesAutoresizingMaskIntoConstraints="NO" id="YQ6-fq-3Wb">
-                                <rect key="frame" x="98" y="149" width="488" height="31"/>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="359" translatesAutoresizingMaskIntoConstraints="NO" id="YQ6-fq-3Wb">
+                                <rect key="frame" x="98" y="148" width="488" height="31"/>
                                 <connections>
                                     <action selector="hueSliderValueDidChange:" destination="dX3-kR-CYC" eventType="valueChanged" id="9Hy-3h-llE"/>
                                 </connections>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXz-78-tAd">
-                                <rect key="frame" x="98" y="187" width="488" height="31"/>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXz-78-tAd">
+                                <rect key="frame" x="98" y="186" width="488" height="31"/>
                                 <connections>
                                     <action selector="saturationSliderValueDidChange:" destination="dX3-kR-CYC" eventType="valueChanged" id="qtU-ua-ZTc"/>
                                 </connections>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hpy-2d-eOP">
-                                <rect key="frame" x="98" y="225" width="488" height="31"/>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hpy-2d-eOP">
+                                <rect key="frame" x="98" y="224" width="488" height="31"/>
                                 <connections>
                                     <action selector="brightnessSliderValueDidChange:" destination="dX3-kR-CYC" eventType="valueChanged" id="F09-EP-2iD"/>
                                 </connections>
@@ -269,7 +269,6 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="DAz-BE-6Ca">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="268"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PaletteTableViewCell" id="G3X-70-BCD" customClass="PaletteTableViewCell" customModule="HardcoreDataDemo" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
@@ -387,6 +386,11 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="6XA-6M-yvZ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="0.75362819430000005" green="0.91446238759999998" blue="0.99948346610000005" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" red="0.49803921580314636" green="0.49803921580314636" blue="0.49803921580314636" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -406,6 +410,11 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="wJo-mp-1pS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="0.7536281943321228" green="0.9144623875617981" blue="0.99948346614837646" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -421,6 +430,6 @@
         <image name="second" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="fIB-GS-Ppk"/>
+        <segue reference="hyN-De-zte"/>
     </inferredMetricsTieBreakers>
 </document>

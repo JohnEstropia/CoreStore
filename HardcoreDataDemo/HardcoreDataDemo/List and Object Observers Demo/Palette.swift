@@ -16,7 +16,6 @@ import HardcoreData
 
 class Palette: NSManagedObject {
 
-    @NSManaged var dateAdded: NSDate
     @NSManaged var hue: Int32
     @NSManaged var saturation: Float
     @NSManaged var brightness: Float
@@ -25,12 +24,8 @@ class Palette: NSManagedObject {
         
         get {
             
-            let key = "colorName"
-            self.willAccessValueForKey(key)
-            let value: AnyObject? = self.primitiveValueForKey(key)
-            self.didAccessValueForKey(key)
-            
-            if let colorName = value as? String {
+            let KVCKey = "colorName"
+            if let colorName = self.accessValueForKVCKey(KVCKey) as? String {
                 
                 return colorName
             }
@@ -49,15 +44,12 @@ class Palette: NSManagedObject {
             default: colorName = "Upper Reds"
             }
             
-            self.setPrimitiveValue(colorName, forKey: key)
+            self.setPrimitiveValue(colorName, forKey: KVCKey)
             return colorName
         }
         set {
             
-            let key = "colorName"
-            self.willChangeValueForKey(key)
-            self.setPrimitiveValue(newValue, forKey: key)
-            self.didChangeValueForKey(key)
+            self.setValue(newValue, forKVCKey: "colorName")
         }
     }
     
@@ -80,7 +72,6 @@ class Palette: NSManagedObject {
         
         self.hue = Int32(arc4random_uniform(360))
         self.saturation = 1.0
-        self.brightness = 0.5
-        self.dateAdded = NSDate()
+        self.brightness = Float(arc4random_uniform(70) + 30) / 100.0
     }
 }

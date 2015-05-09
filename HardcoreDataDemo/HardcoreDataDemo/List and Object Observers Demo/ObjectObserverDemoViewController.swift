@@ -56,7 +56,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
                 let palette = transaction.create(Palette)
                 palette.setInitialValues()
                 
-                transaction.commitAndWait()
+                transaction.commit()
             }
             
             let palette = HardcoreData.fetchOne(From(Palette), SortedBy(.Ascending("hue")))!
@@ -126,8 +126,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
             if let palette = transaction.fetch(self?.objectController?.object) {
                 
                 palette.hue = Int32(hue)
-                palette.dateAdded = NSDate()
-                transaction.commit { (result) -> Void in }
+                transaction.commit()
             }
         }
     }
@@ -140,8 +139,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
             if let palette = transaction.fetch(self?.objectController?.object) {
                 
                 palette.saturation = saturation
-                palette.dateAdded = NSDate()
-                transaction.commit { (result) -> Void in }
+                transaction.commit()
             }
         }
     }
@@ -154,8 +152,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
             if let palette = transaction.fetch(self?.objectController?.object) {
                 
                 palette.brightness = brightness
-                palette.dateAdded = NSDate()
-                transaction.commit { (result) -> Void in }
+                transaction.commit()
             }
         }
     }
@@ -165,7 +162,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         HardcoreData.beginAsynchronous { [weak self] (transaction) -> Void in
             
             transaction.delete(self?.objectController?.object)
-            transaction.commit { (result) -> Void in }
+            transaction.commit()
         }
     }
     
@@ -177,12 +174,11 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         self.colorNameLabel?.textColor = color
         self.colorView?.backgroundColor = color
         
+        self.hsbLabel?.text = palette.colorText
+        
         let hue = palette.hue
         let saturation = palette.saturation
         let brightness = palette.brightness
-        
-        self.hsbLabel?.text = "H: \(hue)˚, S: \(Int(saturation * 100))%, B: \(Int(brightness * 100))%"
-        
         if Int32(self.hueSlider?.value ?? 0) != hue {
             
             self.hueSlider?.value = Float(hue)

@@ -1,5 +1,5 @@
 //
-//  From.swift
+//  NSManagedObject+Convenience.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -27,10 +27,23 @@ import Foundation
 import CoreData
 
 
-// MARK: - From
+// MARK: - NSManagedObject
 
-public struct From<T: NSManagedObject> {
+public extension NSManagedObject {
     
-    public init(){ }
-    public init(_ entity: T.Type) { }
+    public func accessValueForKVCKey(KVCKey: KeyPath) -> AnyObject? {
+        
+        self.willAccessValueForKey(KVCKey)
+        let primitiveValue: AnyObject? = self.primitiveValueForKey(KVCKey)
+        self.didAccessValueForKey(KVCKey)
+        
+        return primitiveValue
+    }
+    
+    public func setValue(value: AnyObject?, forKVCKey KVCKey: KeyPath) {
+        
+        self.willChangeValueForKey(KVCKey)
+        self.setPrimitiveValue(value, forKey: KVCKey)
+        self.didChangeValueForKey(KVCKey)
+    }
 }

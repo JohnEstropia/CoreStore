@@ -15,7 +15,7 @@ struct Shared {
     static let palettes = HardcoreData.observeObjectList(
         From(Palette),
         GroupBy("colorName"),
-        SortedBy(.Ascending("hue"), .Ascending("dateAdded"))
+        SortedBy(.Ascending("hue"))
     )
 }
 
@@ -191,7 +191,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
         HardcoreData.beginAsynchronous { (transaction) -> Void in
             
             transaction.deleteAll(From(Palette))
-            transaction.commit { (result) -> Void in }
+            transaction.commit()
         }
     }
     
@@ -202,7 +202,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
             let palette = transaction.create(Palette)
             palette.setInitialValues()
             
-            transaction.commit { (result) -> Void in }
+            transaction.commit()
         }
     }
 }

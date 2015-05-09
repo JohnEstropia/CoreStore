@@ -3,14 +3,11 @@
     <entity name="Palette" representedClassName="HardcoreDataDemo.Palette">
         <attribute name="brightness" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="colorName" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
-        <attribute name="dateAdded" optional="YES" attributeType="Date">
-            <userInfo/>
-        </attribute>
         <attribute name="hue" optional="YES" attributeType="Integer 32" defaultValueString="0.0" syncable="YES"/>
         <attribute name="saturation" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <userInfo/>
     </entity>
     <elements>
-        <element name="Palette" positionX="261" positionY="189" width="128" height="120"/>
+        <element name="Palette" positionX="261" positionY="189" width="128" height="105"/>
     </elements>
 </model>
