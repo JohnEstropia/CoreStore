@@ -10,17 +10,6 @@ import UIKit
 import HardcoreData
 
 
-let paletteList: ManagedObjectListController<Palette> = {
-    
-    HardcoreData.defaultStack.addSQLiteStore()
-    return HardcoreData.observeObjectList(
-        From(Palette),
-        GroupBy("colorName"),
-        SortedBy(.Ascending("hue"), .Ascending("dateAdded"))
-    )
-}()
-
-
 // MARK: - AppDelegate
 
 @UIApplicationMain
@@ -32,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
+        HardcoreData.defaultStack.addSQLiteStore()
         return true
     }
 }

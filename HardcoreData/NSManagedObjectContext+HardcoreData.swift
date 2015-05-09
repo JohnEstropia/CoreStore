@@ -94,8 +94,10 @@ internal extension NSManagedObjectContext {
                 
                 HardcoreData.handleError(
                     error ?? NSError(hardcoreDataErrorCode: .UnknownError),
-                    "Failed to obtain permanent ID(s) for \(numberOfInsertedObjects) inserted object(s).")
-        })
+                    "Failed to obtain permanent ID(s) for \(numberOfInsertedObjects) inserted object(s)."
+                )
+            }
+        )
     }
     
     

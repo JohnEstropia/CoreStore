@@ -27,6 +27,8 @@ import Foundation
 import GCDKit
 
 
+// MARK: - DetachedDataTransaction
+
 /**
 The DetachedDataTransaction provides an interface for non-contiguous NSManagedObject creates, updates, and deletes. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
 */

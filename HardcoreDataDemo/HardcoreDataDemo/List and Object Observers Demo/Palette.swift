@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 import CoreData
+import HardcoreData
+
+
+// MARK: - Palette
 
 class Palette: NSManagedObject {
 

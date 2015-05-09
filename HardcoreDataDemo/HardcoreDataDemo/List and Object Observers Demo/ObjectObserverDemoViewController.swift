@@ -14,11 +14,30 @@ import HardcoreData
 
 class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver {
     
+    var palette: Palette? {
+        
+        get {
+            
+            return self.objectController?.object
+        }
+        set {
+            
+            if let palette = newValue {
+                
+                self.objectController = HardcoreData.observeObject(palette)
+            }
+            else {
+                
+                self.objectController = nil
+            }
+        }
+    }
+    
     // MARK: NSObject
     
     deinit {
         
-        self.objectController.removeObserver(self)
+        self.objectController?.removeObserver(self)
     }
     
 
@@ -50,14 +69,11 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        self.objectController.addObserver(self)
+        self.objectController?.addObserver(self)
         
-        if let palette = self.objectController.object {
+        if let palette = self.objectController?.object {
             
             self.reloadPaletteInfo(palette)
-            self.hueSlider?.value = Float(palette.hue)
-            self.saturationSlider?.value = palette.saturation
-            self.brightnessSlider?.value = palette.brightness
         }
     }
     
@@ -66,6 +82,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
     
     func managedObjectWillUpdate(objectController: ManagedObjectController<Palette>, object: Palette) {
         
+        // none
     }
     
     func managedObjectWasUpdated(objectController: ManagedObjectController<Palette>, object: Palette) {
@@ -75,10 +92,13 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
     
     func managedObjectWasDeleted(objectController: ManagedObjectController<Palette>, object: Palette) {
         
+        self.navigationItem.rightBarButtonItem?.enabled = false
+        
         self.colorNameLabel?.alpha = 0.3
         self.colorView?.alpha = 0.3
-        self.dateLabel?.text = "Deleted"
-        self.dateLabel?.textColor = UIColor.redColor()
+        
+        self.hsbLabel?.text = "Deleted"
+        self.hsbLabel?.textColor = UIColor.redColor()
         
         self.hueSlider?.enabled = false
         self.saturationSlider?.enabled = false
@@ -88,7 +108,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
     
     // MARK: Private
     
-    let objectController: ManagedObjectController<Palette>
+    var objectController: ManagedObjectController<Palette>?
     
     @IBOutlet weak var colorNameLabel: UILabel?
     @IBOutlet weak var colorView: UIView?
@@ -103,7 +123,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let hue = self.hueSlider?.value ?? 0
         HardcoreData.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            if let palette = transaction.fetch(self?.objectController.object) {
+            if let palette = transaction.fetch(self?.objectController?.object) {
                 
                 palette.hue = Int32(hue)
                 palette.dateAdded = NSDate()
@@ -117,7 +137,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let saturation = self.saturationSlider?.value ?? 0
         HardcoreData.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            if let palette = transaction.fetch(self?.objectController.object) {
+            if let palette = transaction.fetch(self?.objectController?.object) {
                 
                 palette.saturation = saturation
                 palette.dateAdded = NSDate()
@@ -131,7 +151,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let brightness = self.brightnessSlider?.value ?? 0
         HardcoreData.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            if let palette = transaction.fetch(self?.objectController.object) {
+            if let palette = transaction.fetch(self?.objectController?.object) {
                 
                 palette.brightness = brightness
                 palette.dateAdded = NSDate()
@@ -144,11 +164,9 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         
         HardcoreData.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            transaction.delete(self?.objectController.object)
+            transaction.delete(self?.objectController?.object)
             transaction.commit { (result) -> Void in }
         }
-        
-        (sender as? UIBarButtonItem)?.enabled = false
     }
     
     func reloadPaletteInfo(palette: Palette) {
@@ -159,13 +177,23 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         self.colorNameLabel?.textColor = color
         self.colorView?.backgroundColor = color
         
-        self.hsbLabel?.text = "H: \(palette.hue)˚, S: \(round(palette.saturation * 100.0))%, B: \(round(palette.brightness * 100.0))%"
+        let hue = palette.hue
+        let saturation = palette.saturation
+        let brightness = palette.brightness
         
-        let dateString = NSDateFormatter.localizedStringFromDate(
-            palette.dateAdded,
-            dateStyle: .ShortStyle,
-            timeStyle: .LongStyle
-        )
-        self.dateLabel?.text = "Updated: \(dateString)"
+        self.hsbLabel?.text = "H: \(hue)˚, S: \(Int(saturation * 100))%, B: \(Int(brightness * 100))%"
+        
+        if Int32(self.hueSlider?.value ?? 0) != hue {
+            
+            self.hueSlider?.value = Float(hue)
+        }
+        if self.saturationSlider?.value != saturation {
+            
+            self.saturationSlider?.value = saturation
+        }
+        if self.brightnessSlider?.value != brightness {
+            
+            self.brightnessSlider?.value = brightness
+        }
     }
 }

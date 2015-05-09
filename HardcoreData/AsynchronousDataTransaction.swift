@@ -24,8 +24,11 @@
 //
 
 import Foundation
+import CoreData
 import GCDKit
 
+
+// MARK: - AsynchronousDataTransaction
 
 /**
 The AsynchronousDataTransaction provides an interface for NSManagedObject creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from DataStack.beginAsynchronous(_:), or from HardcoreData.beginAsynchronous(_:).

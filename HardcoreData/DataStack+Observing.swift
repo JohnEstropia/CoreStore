@@ -53,7 +53,6 @@ public extension DataStack {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to observe objects from \(typeName(self)) outside the main queue.")
         
-        // TODO: sectionNameKeyPath and cacheResults
         return ManagedObjectListController(
             dataStack: self,
             entity: T.self,

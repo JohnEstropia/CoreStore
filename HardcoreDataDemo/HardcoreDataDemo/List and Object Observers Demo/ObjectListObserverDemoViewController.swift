@@ -10,6 +10,16 @@ import UIKit
 import HardcoreData
 
 
+struct Shared {
+    
+    static let palettes = HardcoreData.observeObjectList(
+        From(Palette),
+        GroupBy("colorName"),
+        SortedBy(.Ascending("hue"), .Ascending("dateAdded"))
+    )
+}
+
+
 // MARK: - ObjectListObserverDemoViewController
 
 class ObjectListObserverDemoViewController: UITableViewController, ManagedObjectListSectionObserver {
@@ -18,7 +28,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     deinit {
         
-        paletteList.removeObserver(self)
+        Shared.palettes.removeObserver(self)
     }
     
     
@@ -41,21 +51,22 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
             target: self,
             action: "addBarButtonItemTouched:"
         )
+        
+        Shared.palettes.addObserver(self)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        super.viewWillAppear(animated)
+        super.prepareForSegue(segue, sender: sender)
         
-        paletteList.addObserver(self)
-        self.tableView.reloadData()
-    }
-    
-    override func viewDidDisappear(animated: Bool) {
-        
-        super.viewDidDisappear(animated)
-        
-        paletteList.removeObserver(self)
+        switch (segue.identifier, segue.destinationViewController, sender) {
+            
+        case (.Some("ObjectObserverDemoViewController"), let destinationViewController as ObjectObserverDemoViewController, let palette as Palette):
+            destinationViewController.palette = palette
+            
+        default:
+            break
+        }
     }
     
     
@@ -63,19 +74,19 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        return paletteList.numberOfSections()
+        return Shared.palettes.numberOfSections()
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return paletteList.numberOfObjectsInSection(section)
+        return Shared.palettes.numberOfObjectsInSection(section)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("PaletteTableViewCell") as! PaletteTableViewCell
         
-        let palette = paletteList[indexPath]
+        let palette = Shared.palettes[indexPath]
         cell.colorView?.backgroundColor = palette.color
         cell.label?.text = palette.colorText
         
@@ -85,12 +96,22 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     // MARK: UITableViewDelegate
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        self.performSegueWithIdentifier(
+            "ObjectObserverDemoViewController",
+            sender: Shared.palettes[indexPath]
+        )
+    }
+    
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
         switch editingStyle {
             
         case .Delete:
-            let palette = paletteList[indexPath]
+            let palette = Shared.palettes[indexPath]
             HardcoreData.beginAsynchronous{ (transaction) -> Void in
                 
                 transaction.delete(palette)
@@ -104,7 +125,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        return paletteList.sectionInfoAtIndex(section).name
+        return Shared.palettes.sectionInfoAtIndex(section).name
     }
     
     
@@ -135,12 +156,18 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     func managedObjectList(listController: ManagedObjectListController<Palette>, didUpdateObject object: Palette, atIndexPath indexPath: NSIndexPath) {
         
-        self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        if let cell = self.tableView.cellForRowAtIndexPath(indexPath) as? PaletteTableViewCell {
+            
+            let palette = Shared.palettes[indexPath]
+            cell.colorView?.backgroundColor = palette.color
+            cell.label?.text = palette.colorText
+        }
     }
     
     func managedObjectList(listController: ManagedObjectListController<Palette>, didMoveObject object: Palette, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
         
-        self.tableView.moveRowAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
+        self.tableView.deleteRowsAtIndexPaths([fromIndexPath], withRowAnimation: .Automatic)
+        self.tableView.insertRowsAtIndexPaths([toIndexPath], withRowAnimation: .Automatic)
     }
     
     
@@ -172,11 +199,8 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
         
         HardcoreData.beginAsynchronous { (transaction) -> Void in
             
-            for _ in 0 ... 2 {
-                
-                let palette = transaction.create(Palette)
-                palette.setInitialValues()
-            }
+            let palette = transaction.create(Palette)
+            palette.setInitialValues()
             
             transaction.commit { (result) -> Void in }
         }
