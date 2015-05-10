@@ -12,9 +12,9 @@ import HardcoreData
 
 struct Shared {
     
-    static let palettes = HardcoreData.observeObjectList(
+    static let palettes = HardcoreData.observeSectionedList(
         From(Palette),
-        GroupBy("colorName"),
+        SectionedBy("colorName"),
         SortedBy(.Ascending("hue"))
     )
 }

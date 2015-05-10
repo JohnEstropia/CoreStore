@@ -48,7 +48,7 @@ public enum SortOrder {
 
 // MARK: - SortedBy
 
-public struct SortedBy: FetchClause {
+public struct SortedBy: FetchClause, QueryClause, DeleteClause {
     
     // MARK: Public
     
@@ -92,7 +92,7 @@ public struct SortedBy: FetchClause {
     public let sortDescriptors: [NSSortDescriptor]
     
     
-    // MARK: QueryClause
+    // MARK: FetchClause, QueryClause, DeleteClause
     
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         

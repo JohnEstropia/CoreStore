@@ -28,36 +28,25 @@ import CoreData
 import GCDKit
 
 
-private let ManagedObjectListControllerWillChangeListNotification = "ManagedObjectListControllerWillChangeListNotification"
-private let ManagedObjectListControllerDidChangeListNotification = "ManagedObjectListControllerDidChangeListNotification"
+// MARK: - SectionedBy
 
-private let ManagedObjectListControllerDidInsertObjectNotification = "ManagedObjectListControllerDidInsertObjectNotification"
-private let ManagedObjectListControllerDidDeleteObjectNotification = "ManagedObjectListControllerDidDeleteObjectNotification"
-private let ManagedObjectListControllerDidUpdateObjectNotification = "ManagedObjectListControllerDidUpdateObjectNotification"
-private let ManagedObjectListControllerDidMoveObjectNotification = "ManagedObjectListControllerDidMoveObjectNotification"
-
-private let ManagedObjectListControllerDidInsertSectionNotification = "ManagedObjectListControllerDidInsertSectionNotification"
-private let ManagedObjectListControllerDidDeleteSectionNotification = "ManagedObjectListControllerDidDeleteSectionNotification"
-
-private let UserInfoKeyObject = "UserInfoKeyObject"
-private let UserInfoKeyIndexPath = "UserInfoKeyIndexPath"
-private let UserInfoKeyNewIndexPath = "UserInfoKeyNewIndexPath"
-
-private let UserInfoKeySectionInfo = "UserInfoKeySectionInfo"
-private let UserInfoKeySectionIndex = "UserInfoKeySectionIndex"
-
-private struct NotificationKey {
+public struct SectionedBy {
     
-    static var willChangeList: Void?
-    static var didChangeList: Void?
+    // MARK: Public
     
-    static var didInsertObject: Void?
-    static var didDeleteObject: Void?
-    static var didUpdateObject: Void?
-    static var didMoveObject: Void?
+    public init(_ sectionKeyPath: KeyPath) {
+        
+        self.init(sectionKeyPath, { $0 })
+    }
     
-    static var didInsertSection: Void?
-    static var didDeleteSection: Void?
+    public init(_ sectionKeyPath: KeyPath, _ sectionNameTransformer: (sectionKeyPath: KeyPath?) -> String?) {
+        
+        self.sectionKeyPath = sectionKeyPath
+        self.sectionNameTransformer = sectionNameTransformer
+    }
+    
+    internal let sectionKeyPath: KeyPath
+    internal let sectionNameTransformer: (sectionKeyPath: KeyPath?) -> String?
 }
 
 
@@ -456,13 +445,13 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
     
     private func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
         
-        return nil
+        return self.sectionNameTransformer(sectionKeyPath: sectionName)
     }
     
     
     // MARK: Internal
     
-    internal init(dataStack: DataStack, entity: T.Type, sectionNameKeyPath: KeyPath?, cacheResults: Bool, queryClauses: [FetchClause]) {
+    internal init(dataStack: DataStack, entity: T.Type, sectionedBy: SectionedBy?, fetchClauses: [FetchClause]) {
         
         let context = dataStack.mainContext
         
@@ -471,7 +460,7 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         
-        for clause in queryClauses {
+        for clause in fetchClauses {
             
             clause.applyToFetchRequest(fetchRequest)
         }
@@ -479,10 +468,8 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
-            sectionNameKeyPath: sectionNameKeyPath,
-            cacheName: (cacheResults
-                ? "\(self.dynamicType).\(NSUUID())"
-                : nil)
+            sectionNameKeyPath: sectionedBy?.sectionKeyPath,
+            cacheName: nil
         )
         
         let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
@@ -490,6 +477,16 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         self.parentStack = dataStack
+        
+        if let sectionNameTransformer = sectionedBy?.sectionNameTransformer {
+            
+            self.sectionNameTransformer = sectionNameTransformer
+        }
+        else {
+            
+            self.sectionNameTransformer = { $0 }
+        }
+        
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
@@ -508,6 +505,7 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
     
     private let fetchedResultsController: NSFetchedResultsController
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
+    private let sectionNameTransformer: (sectionKeyPath: KeyPath?) -> String?
     private weak var parentStack: DataStack?
     
     private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (listController: ManagedObjectListController<T>) -> Void) {
@@ -647,4 +645,37 @@ private final class FetchedResultsControllerDelegate: NSFetchedResultsController
         
         self.fetchedResultsController?.delegate = nil
     }
+}
+
+
+private let ManagedObjectListControllerWillChangeListNotification = "ManagedObjectListControllerWillChangeListNotification"
+private let ManagedObjectListControllerDidChangeListNotification = "ManagedObjectListControllerDidChangeListNotification"
+
+private let ManagedObjectListControllerDidInsertObjectNotification = "ManagedObjectListControllerDidInsertObjectNotification"
+private let ManagedObjectListControllerDidDeleteObjectNotification = "ManagedObjectListControllerDidDeleteObjectNotification"
+private let ManagedObjectListControllerDidUpdateObjectNotification = "ManagedObjectListControllerDidUpdateObjectNotification"
+private let ManagedObjectListControllerDidMoveObjectNotification = "ManagedObjectListControllerDidMoveObjectNotification"
+
+private let ManagedObjectListControllerDidInsertSectionNotification = "ManagedObjectListControllerDidInsertSectionNotification"
+private let ManagedObjectListControllerDidDeleteSectionNotification = "ManagedObjectListControllerDidDeleteSectionNotification"
+
+private let UserInfoKeyObject = "UserInfoKeyObject"
+private let UserInfoKeyIndexPath = "UserInfoKeyIndexPath"
+private let UserInfoKeyNewIndexPath = "UserInfoKeyNewIndexPath"
+
+private let UserInfoKeySectionInfo = "UserInfoKeySectionInfo"
+private let UserInfoKeySectionIndex = "UserInfoKeySectionIndex"
+
+private struct NotificationKey {
+    
+    static var willChangeList: Void?
+    static var didChangeList: Void?
+    
+    static var didInsertObject: Void?
+    static var didDeleteObject: Void?
+    static var didUpdateObject: Void?
+    static var didMoveObject: Void?
+    
+    static var didInsertSection: Void?
+    static var didDeleteSection: Void?
 }

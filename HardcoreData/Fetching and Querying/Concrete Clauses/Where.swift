@@ -44,7 +44,7 @@ public prefix func !(clause: Where) -> Where {
 
 // MARK: - Where
 
-public struct Where: FetchClause {
+public struct Where: FetchClause, QueryClause, DeleteClause {
     
     // MARK: Public
     
@@ -83,7 +83,7 @@ public struct Where: FetchClause {
     public let predicate: NSPredicate
     
     
-    // MARK: QueryClause
+    // MARK: FetchClause, QueryClause, DeleteClause
     
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         

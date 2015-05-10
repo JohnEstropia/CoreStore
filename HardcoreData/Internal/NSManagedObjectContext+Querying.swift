@@ -33,19 +33,19 @@ internal extension NSManagedObjectContext {
     
     // MARK: Public
     
-    internal func fetchOne<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> T? {
+    internal func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
-        return self.fetchOne(from, queryClauses)
+        return self.fetchOne(from, fetchClauses)
     }
     
-    internal func fetchOne<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> T? {
+    internal func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = self.entityDescriptionForEntityClass(T)
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .ManagedObjectResultType
         
-        for clause in queryClauses {
+        for clause in fetchClauses {
             
             clause.applyToFetchRequest(fetchRequest)
         }
@@ -67,19 +67,19 @@ internal extension NSManagedObjectContext {
         return fetchResults?.first
     }
     
-    internal func fetchAll<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> [T]? {
+    internal func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
-        return self.fetchAll(from, queryClauses)
+        return self.fetchAll(from, fetchClauses)
     }
     
-    internal func fetchAll<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> [T]? {
+    internal func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = self.entityDescriptionForEntityClass(T)
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         
-        for clause in queryClauses {
+        for clause in fetchClauses {
             
             clause.applyToFetchRequest(fetchRequest)
         }
@@ -101,17 +101,17 @@ internal extension NSManagedObjectContext {
         return fetchResults
     }
     
-    internal func fetchCount<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> Int? {
+    internal func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
     
-        return self.fetchCount(from, queryClauses)
+        return self.fetchCount(from, fetchClauses)
     }
     
-    internal func fetchCount<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> Int? {
+    internal func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = self.entityDescriptionForEntityClass(T)
         
-        for clause in queryClauses {
+        for clause in fetchClauses {
             
             clause.applyToFetchRequest(fetchRequest)
         }
@@ -133,19 +133,19 @@ internal extension NSManagedObjectContext {
         return count
     }
     
-    internal func fetchObjectID<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> NSManagedObjectID? {
+    internal func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
-        return self.fetchObjectID(from, queryClauses)
+        return self.fetchObjectID(from, fetchClauses)
     }
     
-    internal func fetchObjectID<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> NSManagedObjectID? {
+    internal func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = self.entityDescriptionForEntityClass(T)
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .ManagedObjectIDResultType
         
-        for clause in queryClauses {
+        for clause in fetchClauses {
             
             clause.applyToFetchRequest(fetchRequest)
         }
@@ -167,19 +167,19 @@ internal extension NSManagedObjectContext {
         return fetchResults?.first
     }
     
-    internal func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> [NSManagedObjectID]? {
+    internal func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
-        return self.fetchObjectIDs(from, queryClauses)
+        return self.fetchObjectIDs(from, fetchClauses)
     }
     
-    internal func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    internal func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = self.entityDescriptionForEntityClass(T)
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectIDResultType
         
-        for clause in queryClauses {
+        for clause in fetchClauses {
             
             clause.applyToFetchRequest(fetchRequest)
         }
@@ -201,12 +201,12 @@ internal extension NSManagedObjectContext {
         return fetchResults
     }
     
-    internal func deleteAll<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> Int? {
+    internal func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
         
-        return self.deleteAll(from, queryClauses)
+        return self.deleteAll(from, deleteClauses)
     }
     
-    internal func deleteAll<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> Int? {
+    internal func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = self.entityDescriptionForEntityClass(T)
@@ -214,7 +214,7 @@ internal extension NSManagedObjectContext {
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.returnsObjectsAsFaults = true
         
-        for clause in queryClauses {
+        for clause in deleteClauses {
             
             clause.applyToFetchRequest(fetchRequest)
         }
@@ -246,12 +246,12 @@ internal extension NSManagedObjectContext {
         return numberOfDeletedObjects
     }
     
-    internal func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: FetchClause...) -> U? {
+    internal func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         return self.queryValue(from, selectClause, queryClauses)
     }
     
-    internal func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [FetchClause]) -> U? {
+    internal func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = self.entityDescriptionForEntityClass(T)

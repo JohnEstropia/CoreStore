@@ -1,5 +1,5 @@
 //
-//  FetchClause.swift
+//  ClauseTypes.swift
 //  HardcoreData
 //
 //  Copyright (c) 2014 John Rommel Estropia
@@ -29,4 +29,23 @@ import CoreData
 
 // MARK: - FetchClause
 
-public protocol FetchClause: QueryClause { }
+public protocol FetchClause {
+    
+    func applyToFetchRequest(fetchRequest: NSFetchRequest)
+}
+
+
+// MARK: - QueryClause
+
+public protocol QueryClause {
+    
+    func applyToFetchRequest(fetchRequest: NSFetchRequest)
+}
+
+
+// MARK: - DeleteClause
+
+public protocol DeleteClause {
+    
+    func applyToFetchRequest(fetchRequest: NSFetchRequest)
+}

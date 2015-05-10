@@ -44,21 +44,37 @@ public extension DataStack {
         )
     }
     
-    public func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: FetchClause...) -> ManagedObjectListController<T> {
+    public func observeObjectList<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> ManagedObjectListController<T> {
         
-        return self.observeObjectList(from, groupBy, queryClauses)
+        return self.observeObjectList(from, fetchClauses)
     }
     
-    public func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: [FetchClause]) -> ManagedObjectListController<T> {
+    public func observeObjectList<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> ManagedObjectListController<T> {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to observe objects from \(typeName(self)) outside the main queue.")
         
         return ManagedObjectListController(
             dataStack: self,
             entity: T.self,
-            sectionNameKeyPath: groupBy?.keyPaths.first,
-            cacheResults: false,
-            queryClauses: queryClauses
+            sectionedBy: nil,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    public func observeSectionedList<T: NSManagedObject>(from: From<T>, _ sectionedBy: SectionedBy, _ fetchClauses: FetchClause...) -> ManagedObjectListController<T> {
+     
+        return self.observeSectionedList(from, sectionedBy, fetchClauses)
+    }
+    
+    public func observeSectionedList<T: NSManagedObject>(from: From<T>, _ sectionedBy: SectionedBy, _ fetchClauses: [FetchClause]) -> ManagedObjectListController<T> {
+        
+        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to observe objects from \(typeName(self)) outside the main queue.")
+        
+        return ManagedObjectListController(
+            dataStack: self,
+            entity: T.self,
+            sectionedBy: sectionedBy,
+            fetchClauses: fetchClauses
         )
     }
 }

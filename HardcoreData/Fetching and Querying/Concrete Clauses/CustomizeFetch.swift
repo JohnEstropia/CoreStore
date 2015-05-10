@@ -1,5 +1,5 @@
 //
-//  HardcoreData+Observing.swift
+//  CustomizeFetch.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -27,19 +27,25 @@ import Foundation
 import CoreData
 
 
-// MARK: - HardcoreData
+// MARK: - CustomizeFetch
 
-public extension HardcoreData {
+public struct CustomizeFetch: FetchClause, QueryClause, DeleteClause {
     
     // MARK: Public
     
-    public static func observeObject<T: NSManagedObject>(object: T) -> ManagedObjectController<T> {
+    public init(_ customization: (fetchRequest: NSFetchRequest) -> Void) {
         
-        return self.defaultStack.observeObject(object)
+        self.customization = customization
     }
     
-    public static func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: FetchClause...) -> ManagedObjectListController<T> {
+    
+    // MARK: FetchClause, QueryClause, DeleteClause
+    
+    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        return self.defaultStack.observeObjectList(from, groupBy, queryClauses)
+        self.customization(fetchRequest: fetchRequest)
     }
+    
+    
+    private let customization: (fetchRequest: NSFetchRequest) -> Void
 }

@@ -11,51 +11,50 @@
 		2F03A54019C5C6DA005002A5 /* HardcoreDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53F19C5C6DA005002A5 /* HardcoreDataTests.swift */; };
 		2F03A54D19C5C872005002A5 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F03A54C19C5C872005002A5 /* CoreData.framework */; };
 		2F291E2719C6D3CF007AF63F /* HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F291E2619C6D3CF007AF63F /* HardcoreData.swift */; };
-		B503FAE71AFDE20C00F90881 /* NSManagedObject+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FAE61AFDE20C00F90881 /* NSManagedObject+Convenience.swift */; };
-		B50DD9DD1ABD34F800D62F2B /* From.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50DD9DC1ABD34F800D62F2B /* From.swift */; };
-		B52B68BA1AAB46AD00CE7F48 /* ManagedObjectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B68B91AAB46AD00CE7F48 /* ManagedObjectController.swift */; };
-		B52B68BC1AAB46BD00CE7F48 /* ManagedObjectListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B68BB1AAB46BD00CE7F48 /* ManagedObjectListController.swift */; };
-		B52B68BE1AAB484C00CE7F48 /* DataStack+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B68BD1AAB484C00CE7F48 /* DataStack+Observing.swift */; };
-		B52B68C01AAB9DAD00CE7F48 /* ManagedObjectListObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B68BF1AAB9DAD00CE7F48 /* ManagedObjectListObserver.swift */; };
-		B5398AA21AA8938D00B66388 /* DetachedDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5398AA11AA8938D00B66388 /* DetachedDataTransaction.swift */; };
-		B54A9F071AA7654400AFEC05 /* DataStack+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54A9F061AA7654400AFEC05 /* DataStack+Querying.swift */; };
-		B54D53071AB3538500D55BA8 /* QueryClause.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54D53061AB3538500D55BA8 /* QueryClause.swift */; };
-		B57078B01A50392D007E33F2 /* FetchClause.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57078AF1A50392D007E33F2 /* FetchClause.swift */; };
-		B582DF821A98B0E7003F09C6 /* HardcoreData+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B582DF811A98B0E7003F09C6 /* HardcoreData+Querying.swift */; };
-		B582DF861A98B11B003F09C6 /* HardcoreData+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B582DF851A98B11B003F09C6 /* HardcoreData+Transaction.swift */; };
-		B595CAC41A9A11C1009A397F /* NSManagedObjectContext+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595CAC31A9A11C1009A397F /* NSManagedObjectContext+Setup.swift */; };
-		B595CAC61A9A1260009A397F /* NSManagedObjectContext+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595CAC51A9A1260009A397F /* NSManagedObjectContext+Transaction.swift */; };
-		B595CAC81A9A161B009A397F /* WeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595CAC71A9A161B009A397F /* WeakObject.swift */; };
-		B5BC26DD1AF78A8800276889 /* ManagedObjectObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC26DC1AF78A8800276889 /* ManagedObjectObserver.swift */; };
-		B5BC271D1AFA500400276889 /* HardcoreData+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BC271C1AFA500400276889 /* HardcoreData+Observing.swift */; };
-		B5CFD36E1A0775F000B7885F /* SaveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFD36D1A0775F000B7885F /* SaveResult.swift */; };
-		B5CFF23E19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */; };
-		B5CFF24019FD383100D6DFC4 /* BaseDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CFF23F19FD383100D6DFC4 /* BaseDataTransaction.swift */; };
-		B5D022661A90CD340070CA63 /* DataStack+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */; };
-		B5D10DC01AB42C85004B4EEA /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D10DBF1AB42C85004B4EEA /* GroupBy.swift */; };
-		B5D10DC21AB4590F004B4EEA /* Select.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D10DC11AB4590F004B4EEA /* Select.swift */; };
-		B5D19BFB1AA14063001D1A99 /* AsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D19BFA1AA14063001D1A99 /* AsynchronousDataTransaction.swift */; };
-		B5D19BFF1AA14351001D1A99 /* SynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D19BFE1AA14351001D1A99 /* SynchronousDataTransaction.swift */; };
-		B5D19C011AA15E1F001D1A99 /* HardcoreData+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D19C001AA15E1F001D1A99 /* HardcoreData+Logging.swift */; };
-		B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */; };
 		B5D1E22C19FA9FBC003B2874 /* NSError+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */; };
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		B5D372861A39CDDB00F583D9 /* TestEntity1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D372851A39CDDB00F583D9 /* TestEntity1.swift */; };
-		B5D399F119FC818E000E91BB /* DataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D399F019FC818E000E91BB /* DataStack.swift */; };
 		B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D39A0119FD00C9000E91BB /* Foundation.framework */; };
 		B5D39A0419FD00DE000E91BB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D39A0319FD00DE000E91BB /* UIKit.framework */; };
 		B5D5E0CF1A4D6AAB006468AF /* TestEntity2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */; };
 		B5D8080E1A3471A500A44484 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D808021A34715700A44484 /* GCDKit.framework */; };
-		B5D808161A34947300A44484 /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808151A34947300A44484 /* NotificationObserver.swift */; };
-		B5D8081A1A3495BD00A44484 /* AssociatedObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D808191A3495BD00A44484 /* AssociatedObjects.swift */; };
-		B5E126551A7DCE1400AD8B39 /* Where.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E126541A7DCE1400AD8B39 /* Where.swift */; };
-		B5E126571A7DCE5900AD8B39 /* SortedBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E126561A7DCE5900AD8B39 /* SortedBy.swift */; };
-		B5E209E01A0726460089C9D4 /* NSManagedObject+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E209DF1A0726460089C9D4 /* NSManagedObject+Transaction.swift */; };
-		B5F409E91A8B11CE00A228EA /* HardcoreDataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F409E81A8B11CE00A228EA /* HardcoreDataLogger.swift */; };
-		B5F409EB1A8B199600A228EA /* DefaultLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F409EA1A8B199600A228EA /* DefaultLogger.swift */; };
-		B5F409ED1A8B200700A228EA /* NSManagedObjectContext+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F409EC1A8B200700A228EA /* NSManagedObjectContext+Querying.swift */; };
-		B5F409EF1A8B243D00A228EA /* BaseDataTransaction+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F409EE1A8B243D00A228EA /* BaseDataTransaction+Querying.swift */; };
-		B5F409F11A8B27A600A228EA /* CustomizeFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F409F01A8B27A600A228EA /* CustomizeFetch.swift */; };
+		B5E84EDF1AFF84500064E85B /* DataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EDB1AFF84500064E85B /* DataStack.swift */; };
+		B5E84EE11AFF84500064E85B /* PersistentStoreResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EDE1AFF84500064E85B /* PersistentStoreResult.swift */; };
+		B5E84EE61AFF84610064E85B /* DefaultLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EE31AFF84610064E85B /* DefaultLogger.swift */; };
+		B5E84EE71AFF84610064E85B /* HardcoreData+Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EE41AFF84610064E85B /* HardcoreData+Logging.swift */; };
+		B5E84EE81AFF84610064E85B /* HardcoreDataLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EE51AFF84610064E85B /* HardcoreDataLogger.swift */; };
+		B5E84EF41AFF846E0064E85B /* AsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EEA1AFF846E0064E85B /* AsynchronousDataTransaction.swift */; };
+		B5E84EF51AFF846E0064E85B /* BaseDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EEB1AFF846E0064E85B /* BaseDataTransaction.swift */; };
+		B5E84EF61AFF846E0064E85B /* DataStack+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EEC1AFF846E0064E85B /* DataStack+Transaction.swift */; };
+		B5E84EF71AFF846E0064E85B /* DetachedDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EED1AFF846E0064E85B /* DetachedDataTransaction.swift */; };
+		B5E84EF81AFF846E0064E85B /* HardcoreData+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EEE1AFF846E0064E85B /* HardcoreData+Transaction.swift */; };
+		B5E84EFB1AFF846E0064E85B /* SaveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EF21AFF846E0064E85B /* SaveResult.swift */; };
+		B5E84EFC1AFF846E0064E85B /* SynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EF31AFF846E0064E85B /* SynchronousDataTransaction.swift */; };
+		B5E84F0D1AFF847B0064E85B /* BaseDataTransaction+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EFE1AFF847B0064E85B /* BaseDataTransaction+Querying.swift */; };
+		B5E84F0E1AFF847B0064E85B /* CustomizeFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F001AFF847B0064E85B /* CustomizeFetch.swift */; };
+		B5E84F0F1AFF847B0064E85B /* From.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F011AFF847B0064E85B /* From.swift */; };
+		B5E84F101AFF847B0064E85B /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F021AFF847B0064E85B /* GroupBy.swift */; };
+		B5E84F111AFF847B0064E85B /* Select.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F031AFF847B0064E85B /* Select.swift */; };
+		B5E84F121AFF847B0064E85B /* SortedBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F041AFF847B0064E85B /* SortedBy.swift */; };
+		B5E84F131AFF847B0064E85B /* Where.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F051AFF847B0064E85B /* Where.swift */; };
+		B5E84F141AFF847B0064E85B /* DataStack+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F061AFF847B0064E85B /* DataStack+Querying.swift */; };
+		B5E84F151AFF847B0064E85B /* HardcoreData+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F071AFF847B0064E85B /* HardcoreData+Querying.swift */; };
+		B5E84F201AFF84860064E85B /* DataStack+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1A1AFF84860064E85B /* DataStack+Observing.swift */; };
+		B5E84F211AFF84860064E85B /* HardcoreData+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1B1AFF84860064E85B /* HardcoreData+Observing.swift */; };
+		B5E84F221AFF84860064E85B /* ManagedObjectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1C1AFF84860064E85B /* ManagedObjectController.swift */; };
+		B5E84F231AFF84860064E85B /* ManagedObjectListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1D1AFF84860064E85B /* ManagedObjectListController.swift */; };
+		B5E84F241AFF84860064E85B /* ManagedObjectListObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1E1AFF84860064E85B /* ManagedObjectListObserver.swift */; };
+		B5E84F251AFF84860064E85B /* ManagedObjectObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1F1AFF84860064E85B /* ManagedObjectObserver.swift */; };
+		B5E84F281AFF84920064E85B /* NSManagedObject+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F271AFF84920064E85B /* NSManagedObject+Convenience.swift */; };
+		B5E84F2E1AFF849C0064E85B /* AssociatedObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2A1AFF849C0064E85B /* AssociatedObjects.swift */; };
+		B5E84F2F1AFF849C0064E85B /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2B1AFF849C0064E85B /* NotificationObserver.swift */; };
+		B5E84F301AFF849C0064E85B /* NSManagedObjectContext+HardcoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2C1AFF849C0064E85B /* NSManagedObjectContext+HardcoreData.swift */; };
+		B5E84F311AFF849C0064E85B /* WeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2D1AFF849C0064E85B /* WeakObject.swift */; };
+		B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */; };
+		B5E84F371AFF85470064E85B /* NSManagedObjectContext+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */; };
+		B5E84F381AFF85470064E85B /* NSManagedObject+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F341AFF85470064E85B /* NSManagedObject+Transaction.swift */; };
+		B5E84F391AFF85470064E85B /* NSManagedObjectContext+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */; };
+		B5E84F411AFF8CCD0064E85B /* ClauseTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,53 +90,52 @@
 		2F03A53F19C5C6DA005002A5 /* HardcoreDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HardcoreDataTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		2F03A54C19C5C872005002A5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2F291E2619C6D3CF007AF63F /* HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HardcoreData.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		B503FAE61AFDE20C00F90881 /* NSManagedObject+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Convenience.swift"; sourceTree = "<group>"; };
-		B50DD9DC1ABD34F800D62F2B /* From.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = From.swift; sourceTree = "<group>"; };
-		B52B68B91AAB46AD00CE7F48 /* ManagedObjectController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectController.swift; sourceTree = "<group>"; };
-		B52B68BB1AAB46BD00CE7F48 /* ManagedObjectListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectListController.swift; sourceTree = "<group>"; };
-		B52B68BD1AAB484C00CE7F48 /* DataStack+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Observing.swift"; sourceTree = "<group>"; };
-		B52B68BF1AAB9DAD00CE7F48 /* ManagedObjectListObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectListObserver.swift; sourceTree = "<group>"; };
-		B5398AA11AA8938D00B66388 /* DetachedDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetachedDataTransaction.swift; sourceTree = "<group>"; };
-		B54A9F061AA7654400AFEC05 /* DataStack+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Querying.swift"; sourceTree = "<group>"; };
-		B54D53061AB3538500D55BA8 /* QueryClause.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryClause.swift; sourceTree = "<group>"; };
-		B57078AF1A50392D007E33F2 /* FetchClause.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchClause.swift; sourceTree = "<group>"; };
-		B582DF811A98B0E7003F09C6 /* HardcoreData+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Querying.swift"; sourceTree = "<group>"; };
-		B582DF851A98B11B003F09C6 /* HardcoreData+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Transaction.swift"; sourceTree = "<group>"; };
-		B595CAC31A9A11C1009A397F /* NSManagedObjectContext+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Setup.swift"; sourceTree = "<group>"; };
-		B595CAC51A9A1260009A397F /* NSManagedObjectContext+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Transaction.swift"; sourceTree = "<group>"; };
-		B595CAC71A9A161B009A397F /* WeakObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakObject.swift; sourceTree = "<group>"; };
-		B5BC26DC1AF78A8800276889 /* ManagedObjectObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectObserver.swift; sourceTree = "<group>"; };
-		B5BC271C1AFA500400276889 /* HardcoreData+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Observing.swift"; sourceTree = "<group>"; };
-		B5CFD36D1A0775F000B7885F /* SaveResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveResult.swift; sourceTree = "<group>"; };
-		B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+HardcoreData.swift"; sourceTree = "<group>"; };
-		B5CFF23F19FD383100D6DFC4 /* BaseDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDataTransaction.swift; sourceTree = "<group>"; };
-		B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Transaction.swift"; sourceTree = "<group>"; };
-		B5D10DBF1AB42C85004B4EEA /* GroupBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupBy.swift; sourceTree = "<group>"; };
-		B5D10DC11AB4590F004B4EEA /* Select.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Select.swift; sourceTree = "<group>"; };
-		B5D10DC41AB9C747004B4EEA /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		B5D19BFA1AA14063001D1A99 /* AsynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsynchronousDataTransaction.swift; sourceTree = "<group>"; };
-		B5D19BFE1AA14351001D1A99 /* SynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SynchronousDataTransaction.swift; sourceTree = "<group>"; };
-		B5D19C001AA15E1F001D1A99 /* HardcoreData+Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Logging.swift"; sourceTree = "<group>"; };
-		B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentStoreResult.swift; sourceTree = "<group>"; };
 		B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+HardcoreData.swift"; sourceTree = "<group>"; };
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		B5D372851A39CDDB00F583D9 /* TestEntity1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity1.swift; sourceTree = "<group>"; };
-		B5D399F019FC818E000E91BB /* DataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStack.swift; sourceTree = "<group>"; };
 		B5D39A0119FD00C9000E91BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B5D39A0319FD00DE000E91BB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity2.swift; sourceTree = "<group>"; };
 		B5D806C51A34715700A44484 /* GCDKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GCDKit.xcodeproj; sourceTree = "<group>"; };
-		B5D808151A34947300A44484 /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NotificationObserver.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		B5D808191A3495BD00A44484 /* AssociatedObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssociatedObjects.swift; sourceTree = "<group>"; };
-		B5E126541A7DCE1400AD8B39 /* Where.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Where.swift; sourceTree = "<group>"; };
-		B5E126561A7DCE5900AD8B39 /* SortedBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedBy.swift; sourceTree = "<group>"; };
-		B5E209DF1A0726460089C9D4 /* NSManagedObject+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Transaction.swift"; sourceTree = "<group>"; };
-		B5F3D98419F3EB8E009690A6 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		B5F409E81A8B11CE00A228EA /* HardcoreDataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HardcoreDataLogger.swift; sourceTree = "<group>"; };
-		B5F409EA1A8B199600A228EA /* DefaultLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultLogger.swift; sourceTree = "<group>"; };
-		B5F409EC1A8B200700A228EA /* NSManagedObjectContext+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Querying.swift"; sourceTree = "<group>"; };
-		B5F409EE1A8B243D00A228EA /* BaseDataTransaction+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+Querying.swift"; sourceTree = "<group>"; };
-		B5F409F01A8B27A600A228EA /* CustomizeFetch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizeFetch.swift; sourceTree = "<group>"; };
+		B5E84ED81AFF82360064E85B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		B5E84ED91AFF82360064E85B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
+		B5E84EDB1AFF84500064E85B /* DataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStack.swift; sourceTree = "<group>"; };
+		B5E84EDE1AFF84500064E85B /* PersistentStoreResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentStoreResult.swift; sourceTree = "<group>"; };
+		B5E84EE31AFF84610064E85B /* DefaultLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultLogger.swift; sourceTree = "<group>"; };
+		B5E84EE41AFF84610064E85B /* HardcoreData+Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Logging.swift"; sourceTree = "<group>"; };
+		B5E84EE51AFF84610064E85B /* HardcoreDataLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HardcoreDataLogger.swift; sourceTree = "<group>"; };
+		B5E84EEA1AFF846E0064E85B /* AsynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsynchronousDataTransaction.swift; sourceTree = "<group>"; };
+		B5E84EEB1AFF846E0064E85B /* BaseDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseDataTransaction.swift; sourceTree = "<group>"; };
+		B5E84EEC1AFF846E0064E85B /* DataStack+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Transaction.swift"; sourceTree = "<group>"; };
+		B5E84EED1AFF846E0064E85B /* DetachedDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetachedDataTransaction.swift; sourceTree = "<group>"; };
+		B5E84EEE1AFF846E0064E85B /* HardcoreData+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Transaction.swift"; sourceTree = "<group>"; };
+		B5E84EF21AFF846E0064E85B /* SaveResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SaveResult.swift; sourceTree = "<group>"; };
+		B5E84EF31AFF846E0064E85B /* SynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SynchronousDataTransaction.swift; sourceTree = "<group>"; };
+		B5E84EFE1AFF847B0064E85B /* BaseDataTransaction+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+Querying.swift"; sourceTree = "<group>"; };
+		B5E84F001AFF847B0064E85B /* CustomizeFetch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomizeFetch.swift; sourceTree = "<group>"; };
+		B5E84F011AFF847B0064E85B /* From.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = From.swift; sourceTree = "<group>"; };
+		B5E84F021AFF847B0064E85B /* GroupBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupBy.swift; sourceTree = "<group>"; };
+		B5E84F031AFF847B0064E85B /* Select.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Select.swift; sourceTree = "<group>"; };
+		B5E84F041AFF847B0064E85B /* SortedBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedBy.swift; sourceTree = "<group>"; };
+		B5E84F051AFF847B0064E85B /* Where.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Where.swift; sourceTree = "<group>"; };
+		B5E84F061AFF847B0064E85B /* DataStack+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Querying.swift"; sourceTree = "<group>"; };
+		B5E84F071AFF847B0064E85B /* HardcoreData+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Querying.swift"; sourceTree = "<group>"; };
+		B5E84F1A1AFF84860064E85B /* DataStack+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Observing.swift"; sourceTree = "<group>"; };
+		B5E84F1B1AFF84860064E85B /* HardcoreData+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HardcoreData+Observing.swift"; sourceTree = "<group>"; };
+		B5E84F1C1AFF84860064E85B /* ManagedObjectController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectController.swift; sourceTree = "<group>"; };
+		B5E84F1D1AFF84860064E85B /* ManagedObjectListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectListController.swift; sourceTree = "<group>"; };
+		B5E84F1E1AFF84860064E85B /* ManagedObjectListObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectListObserver.swift; sourceTree = "<group>"; };
+		B5E84F1F1AFF84860064E85B /* ManagedObjectObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectObserver.swift; sourceTree = "<group>"; };
+		B5E84F271AFF84920064E85B /* NSManagedObject+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Convenience.swift"; sourceTree = "<group>"; };
+		B5E84F2A1AFF849C0064E85B /* AssociatedObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssociatedObjects.swift; sourceTree = "<group>"; };
+		B5E84F2B1AFF849C0064E85B /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationObserver.swift; sourceTree = "<group>"; };
+		B5E84F2C1AFF849C0064E85B /* NSManagedObjectContext+HardcoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+HardcoreData.swift"; sourceTree = "<group>"; };
+		B5E84F2D1AFF849C0064E85B /* WeakObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakObject.swift; sourceTree = "<group>"; };
+		B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Setup.swift"; sourceTree = "<group>"; };
+		B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Transaction.swift"; sourceTree = "<group>"; };
+		B5E84F341AFF85470064E85B /* NSManagedObject+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Transaction.swift"; sourceTree = "<group>"; };
+		B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Querying.swift"; sourceTree = "<group>"; };
+		B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClauseTypes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,13 +186,13 @@
 				2F03A53519C5C6DA005002A5 /* HardcoreData.h */,
 				2F291E2619C6D3CF007AF63F /* HardcoreData.swift */,
 				B5D1E22B19FA9FBC003B2874 /* NSError+HardcoreData.swift */,
-				B595CAC01A9A0AC4009A397F /* Setting Up */,
-				B5D022621A90BCC60070CA63 /* Saving and Processing */,
-				B5F409E51A8B11B600A228EA /* Logging */,
-				B5E126531A7DCCE400AD8B39 /* Fetching and Querying */,
-				B52B68B61AAB45FB00CE7F48 /* Observing */,
-				B503FAE31AFDE1E500F90881 /* Convenience Helpers */,
-				B5D808141A34945A00A44484 /* Internal */,
+				B5E84EDA1AFF84500064E85B /* Setting Up */,
+				B5E84EE21AFF84610064E85B /* Logging */,
+				B5E84EE91AFF846E0064E85B /* Saving and Processing */,
+				B5E84EFD1AFF847B0064E85B /* Fetching and Querying */,
+				B5E84F191AFF84860064E85B /* Observing */,
+				B5E84F261AFF84920064E85B /* Convenience Helpers */,
+				B5E84F291AFF849C0064E85B /* Internal */,
 				2F03A53319C5C6DA005002A5 /* Supporting Files */,
 			);
 			path = HardcoreData;
@@ -203,9 +201,9 @@
 		2F03A53319C5C6DA005002A5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B5F3D98419F3EB8E009690A6 /* LICENSE */,
-				B5D10DC41AB9C747004B4EEA /* README.md */,
 				2F03A53419C5C6DA005002A5 /* Info.plist */,
+				B5E84ED81AFF82360064E85B /* README.md */,
+				B5E84ED91AFF82360064E85B /* LICENSE */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -240,99 +238,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B503FAE31AFDE1E500F90881 /* Convenience Helpers */ = {
-			isa = PBXGroup;
-			children = (
-				B503FAE61AFDE20C00F90881 /* NSManagedObject+Convenience.swift */,
-			);
-			name = "Convenience Helpers";
-			sourceTree = "<group>";
-		};
-		B52B68B61AAB45FB00CE7F48 /* Observing */ = {
-			isa = PBXGroup;
-			children = (
-				B52B68BB1AAB46BD00CE7F48 /* ManagedObjectListController.swift */,
-				B52B68BF1AAB9DAD00CE7F48 /* ManagedObjectListObserver.swift */,
-				B52B68B91AAB46AD00CE7F48 /* ManagedObjectController.swift */,
-				B5BC26DC1AF78A8800276889 /* ManagedObjectObserver.swift */,
-				B52B68BD1AAB484C00CE7F48 /* DataStack+Observing.swift */,
-				B5BC271C1AFA500400276889 /* HardcoreData+Observing.swift */,
-			);
-			name = Observing;
-			sourceTree = "<group>";
-		};
-		B54A9EFF1AA763D100AFEC05 /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				B5F409EC1A8B200700A228EA /* NSManagedObjectContext+Querying.swift */,
-			);
-			name = Internal;
-			sourceTree = "<group>";
-		};
-		B54D53041AB350CF00D55BA8 /* Fetching */ = {
-			isa = PBXGroup;
-			children = (
-				B57078AF1A50392D007E33F2 /* FetchClause.swift */,
-				B50DD9DC1ABD34F800D62F2B /* From.swift */,
-				B5E126541A7DCE1400AD8B39 /* Where.swift */,
-				B5E126561A7DCE5900AD8B39 /* SortedBy.swift */,
-				B5F409F01A8B27A600A228EA /* CustomizeFetch.swift */,
-			);
-			name = Fetching;
-			sourceTree = "<group>";
-		};
-		B54D53051AB350FF00D55BA8 /* Querying */ = {
-			isa = PBXGroup;
-			children = (
-				B54D53061AB3538500D55BA8 /* QueryClause.swift */,
-				B5D10DC11AB4590F004B4EEA /* Select.swift */,
-				B5D10DBF1AB42C85004B4EEA /* GroupBy.swift */,
-			);
-			name = Querying;
-			sourceTree = "<group>";
-		};
-		B595CAC01A9A0AC4009A397F /* Setting Up */ = {
-			isa = PBXGroup;
-			children = (
-				B5D399F019FC818E000E91BB /* DataStack.swift */,
-				B5D1E22919FA9E63003B2874 /* PersistentStoreResult.swift */,
-				B595CAC91A9A1802009A397F /* Internal */,
-			);
-			name = "Setting Up";
-			sourceTree = "<group>";
-		};
-		B595CAC91A9A1802009A397F /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				B595CAC31A9A11C1009A397F /* NSManagedObjectContext+Setup.swift */,
-			);
-			name = Internal;
-			sourceTree = "<group>";
-		};
-		B595CACA1A9A1818009A397F /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				B5E209DF1A0726460089C9D4 /* NSManagedObject+Transaction.swift */,
-				B595CAC51A9A1260009A397F /* NSManagedObjectContext+Transaction.swift */,
-			);
-			name = Internal;
-			sourceTree = "<group>";
-		};
-		B5D022621A90BCC60070CA63 /* Saving and Processing */ = {
-			isa = PBXGroup;
-			children = (
-				B5CFF23F19FD383100D6DFC4 /* BaseDataTransaction.swift */,
-				B5398AA11AA8938D00B66388 /* DetachedDataTransaction.swift */,
-				B5D19BFE1AA14351001D1A99 /* SynchronousDataTransaction.swift */,
-				B5D19BFA1AA14063001D1A99 /* AsynchronousDataTransaction.swift */,
-				B5CFD36D1A0775F000B7885F /* SaveResult.swift */,
-				B582DF851A98B11B003F09C6 /* HardcoreData+Transaction.swift */,
-				B5D022651A90CD340070CA63 /* DataStack+Transaction.swift */,
-				B595CACA1A9A1818009A397F /* Internal */,
-			);
-			name = "Saving and Processing";
-			sourceTree = "<group>";
-		};
 		B5D806BB1A34715700A44484 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -358,38 +263,106 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B5D808141A34945A00A44484 /* Internal */ = {
+		B5E84EDA1AFF84500064E85B /* Setting Up */ = {
 			isa = PBXGroup;
 			children = (
-				B5D808151A34947300A44484 /* NotificationObserver.swift */,
-				B595CAC71A9A161B009A397F /* WeakObject.swift */,
-				B5D808191A3495BD00A44484 /* AssociatedObjects.swift */,
-				B5CFF23D19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift */,
+				B5E84EDB1AFF84500064E85B /* DataStack.swift */,
+				B5E84EDE1AFF84500064E85B /* PersistentStoreResult.swift */,
 			);
-			name = Internal;
+			path = "Setting Up";
 			sourceTree = "<group>";
 		};
-		B5E126531A7DCCE400AD8B39 /* Fetching and Querying */ = {
+		B5E84EE21AFF84610064E85B /* Logging */ = {
 			isa = PBXGroup;
 			children = (
-				B582DF811A98B0E7003F09C6 /* HardcoreData+Querying.swift */,
-				B54A9F061AA7654400AFEC05 /* DataStack+Querying.swift */,
-				B5F409EE1A8B243D00A228EA /* BaseDataTransaction+Querying.swift */,
-				B54D53041AB350CF00D55BA8 /* Fetching */,
-				B54D53051AB350FF00D55BA8 /* Querying */,
-				B54A9EFF1AA763D100AFEC05 /* Internal */,
+				B5E84EE31AFF84610064E85B /* DefaultLogger.swift */,
+				B5E84EE41AFF84610064E85B /* HardcoreData+Logging.swift */,
+				B5E84EE51AFF84610064E85B /* HardcoreDataLogger.swift */,
 			);
-			name = "Fetching and Querying";
+			path = Logging;
 			sourceTree = "<group>";
 		};
-		B5F409E51A8B11B600A228EA /* Logging */ = {
+		B5E84EE91AFF846E0064E85B /* Saving and Processing */ = {
 			isa = PBXGroup;
 			children = (
-				B5F409E81A8B11CE00A228EA /* HardcoreDataLogger.swift */,
-				B5F409EA1A8B199600A228EA /* DefaultLogger.swift */,
-				B5D19C001AA15E1F001D1A99 /* HardcoreData+Logging.swift */,
+				B5E84EEA1AFF846E0064E85B /* AsynchronousDataTransaction.swift */,
+				B5E84EEB1AFF846E0064E85B /* BaseDataTransaction.swift */,
+				B5E84EEC1AFF846E0064E85B /* DataStack+Transaction.swift */,
+				B5E84EED1AFF846E0064E85B /* DetachedDataTransaction.swift */,
+				B5E84EEE1AFF846E0064E85B /* HardcoreData+Transaction.swift */,
+				B5E84EF21AFF846E0064E85B /* SaveResult.swift */,
+				B5E84EF31AFF846E0064E85B /* SynchronousDataTransaction.swift */,
 			);
-			name = Logging;
+			path = "Saving and Processing";
+			sourceTree = "<group>";
+		};
+		B5E84EFD1AFF847B0064E85B /* Fetching and Querying */ = {
+			isa = PBXGroup;
+			children = (
+				B5E84EFE1AFF847B0064E85B /* BaseDataTransaction+Querying.swift */,
+				B5E84F061AFF847B0064E85B /* DataStack+Querying.swift */,
+				B5E84F071AFF847B0064E85B /* HardcoreData+Querying.swift */,
+				B5E84F0A1AFF847B0064E85B /* Protocol Clauses */,
+				B5E84EFF1AFF847B0064E85B /* Concrete Clauses */,
+			);
+			path = "Fetching and Querying";
+			sourceTree = "<group>";
+		};
+		B5E84EFF1AFF847B0064E85B /* Concrete Clauses */ = {
+			isa = PBXGroup;
+			children = (
+				B5E84F001AFF847B0064E85B /* CustomizeFetch.swift */,
+				B5E84F011AFF847B0064E85B /* From.swift */,
+				B5E84F021AFF847B0064E85B /* GroupBy.swift */,
+				B5E84F031AFF847B0064E85B /* Select.swift */,
+				B5E84F041AFF847B0064E85B /* SortedBy.swift */,
+				B5E84F051AFF847B0064E85B /* Where.swift */,
+			);
+			path = "Concrete Clauses";
+			sourceTree = "<group>";
+		};
+		B5E84F0A1AFF847B0064E85B /* Protocol Clauses */ = {
+			isa = PBXGroup;
+			children = (
+				B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */,
+			);
+			path = "Protocol Clauses";
+			sourceTree = "<group>";
+		};
+		B5E84F191AFF84860064E85B /* Observing */ = {
+			isa = PBXGroup;
+			children = (
+				B5E84F1A1AFF84860064E85B /* DataStack+Observing.swift */,
+				B5E84F1B1AFF84860064E85B /* HardcoreData+Observing.swift */,
+				B5E84F1C1AFF84860064E85B /* ManagedObjectController.swift */,
+				B5E84F1D1AFF84860064E85B /* ManagedObjectListController.swift */,
+				B5E84F1E1AFF84860064E85B /* ManagedObjectListObserver.swift */,
+				B5E84F1F1AFF84860064E85B /* ManagedObjectObserver.swift */,
+			);
+			path = Observing;
+			sourceTree = "<group>";
+		};
+		B5E84F261AFF84920064E85B /* Convenience Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				B5E84F271AFF84920064E85B /* NSManagedObject+Convenience.swift */,
+			);
+			path = "Convenience Helpers";
+			sourceTree = "<group>";
+		};
+		B5E84F291AFF849C0064E85B /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				B5E84F2A1AFF849C0064E85B /* AssociatedObjects.swift */,
+				B5E84F2B1AFF849C0064E85B /* NotificationObserver.swift */,
+				B5E84F341AFF85470064E85B /* NSManagedObject+Transaction.swift */,
+				B5E84F2C1AFF849C0064E85B /* NSManagedObjectContext+HardcoreData.swift */,
+				B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */,
+				B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */,
+				B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */,
+				B5E84F2D1AFF849C0064E85B /* WeakObject.swift */,
+			);
+			path = Internal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -523,46 +496,45 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5CFF24019FD383100D6DFC4 /* BaseDataTransaction.swift in Sources */,
-				B5D19C011AA15E1F001D1A99 /* HardcoreData+Logging.swift in Sources */,
-				B5CFD36E1A0775F000B7885F /* SaveResult.swift in Sources */,
-				B5D022661A90CD340070CA63 /* DataStack+Transaction.swift in Sources */,
-				B582DF861A98B11B003F09C6 /* HardcoreData+Transaction.swift in Sources */,
+				B5E84F221AFF84860064E85B /* ManagedObjectController.swift in Sources */,
 				B5D1E22C19FA9FBC003B2874 /* NSError+HardcoreData.swift in Sources */,
-				B595CAC61A9A1260009A397F /* NSManagedObjectContext+Transaction.swift in Sources */,
-				B50DD9DD1ABD34F800D62F2B /* From.swift in Sources */,
-				B5CFF23E19FD1D1C00D6DFC4 /* NSManagedObjectContext+HardcoreData.swift in Sources */,
-				B54A9F071AA7654400AFEC05 /* DataStack+Querying.swift in Sources */,
-				B5E126571A7DCE5900AD8B39 /* SortedBy.swift in Sources */,
-				B503FAE71AFDE20C00F90881 /* NSManagedObject+Convenience.swift in Sources */,
-				B54D53071AB3538500D55BA8 /* QueryClause.swift in Sources */,
-				B5F409EF1A8B243D00A228EA /* BaseDataTransaction+Querying.swift in Sources */,
+				B5E84F131AFF847B0064E85B /* Where.swift in Sources */,
+				B5E84F141AFF847B0064E85B /* DataStack+Querying.swift in Sources */,
+				B5E84F371AFF85470064E85B /* NSManagedObjectContext+Transaction.swift in Sources */,
+				B5E84F0E1AFF847B0064E85B /* CustomizeFetch.swift in Sources */,
+				B5E84F121AFF847B0064E85B /* SortedBy.swift in Sources */,
+				B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */,
+				B5E84EE71AFF84610064E85B /* HardcoreData+Logging.swift in Sources */,
+				B5E84F111AFF847B0064E85B /* Select.swift in Sources */,
+				B5E84EE11AFF84500064E85B /* PersistentStoreResult.swift in Sources */,
+				B5E84F251AFF84860064E85B /* ManagedObjectObserver.swift in Sources */,
+				B5E84F2F1AFF849C0064E85B /* NotificationObserver.swift in Sources */,
+				B5E84F381AFF85470064E85B /* NSManagedObject+Transaction.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* HardcoreData.swift in Sources */,
-				B5F409E91A8B11CE00A228EA /* HardcoreDataLogger.swift in Sources */,
-				B5D8081A1A3495BD00A44484 /* AssociatedObjects.swift in Sources */,
-				B595CAC41A9A11C1009A397F /* NSManagedObjectContext+Setup.swift in Sources */,
-				B5D19BFF1AA14351001D1A99 /* SynchronousDataTransaction.swift in Sources */,
-				B5BC26DD1AF78A8800276889 /* ManagedObjectObserver.swift in Sources */,
-				B5D10DC21AB4590F004B4EEA /* Select.swift in Sources */,
-				B5E209E01A0726460089C9D4 /* NSManagedObject+Transaction.swift in Sources */,
-				B582DF821A98B0E7003F09C6 /* HardcoreData+Querying.swift in Sources */,
-				B5D19BFB1AA14063001D1A99 /* AsynchronousDataTransaction.swift in Sources */,
-				B5BC271D1AFA500400276889 /* HardcoreData+Observing.swift in Sources */,
-				B595CAC81A9A161B009A397F /* WeakObject.swift in Sources */,
-				B5D1E22A19FA9E63003B2874 /* PersistentStoreResult.swift in Sources */,
-				B5398AA21AA8938D00B66388 /* DetachedDataTransaction.swift in Sources */,
-				B5F409F11A8B27A600A228EA /* CustomizeFetch.swift in Sources */,
-				B5F409EB1A8B199600A228EA /* DefaultLogger.swift in Sources */,
-				B52B68C01AAB9DAD00CE7F48 /* ManagedObjectListObserver.swift in Sources */,
-				B5D399F119FC818E000E91BB /* DataStack.swift in Sources */,
-				B5D808161A34947300A44484 /* NotificationObserver.swift in Sources */,
-				B52B68BE1AAB484C00CE7F48 /* DataStack+Observing.swift in Sources */,
-				B57078B01A50392D007E33F2 /* FetchClause.swift in Sources */,
-				B5F409ED1A8B200700A228EA /* NSManagedObjectContext+Querying.swift in Sources */,
-				B5D10DC01AB42C85004B4EEA /* GroupBy.swift in Sources */,
-				B5E126551A7DCE1400AD8B39 /* Where.swift in Sources */,
-				B52B68BC1AAB46BD00CE7F48 /* ManagedObjectListController.swift in Sources */,
-				B52B68BA1AAB46AD00CE7F48 /* ManagedObjectController.swift in Sources */,
+				B5E84F411AFF8CCD0064E85B /* ClauseTypes.swift in Sources */,
+				B5E84F0D1AFF847B0064E85B /* BaseDataTransaction+Querying.swift in Sources */,
+				B5E84EF61AFF846E0064E85B /* DataStack+Transaction.swift in Sources */,
+				B5E84EDF1AFF84500064E85B /* DataStack.swift in Sources */,
+				B5E84F231AFF84860064E85B /* ManagedObjectListController.swift in Sources */,
+				B5E84EF71AFF846E0064E85B /* DetachedDataTransaction.swift in Sources */,
+				B5E84EF51AFF846E0064E85B /* BaseDataTransaction.swift in Sources */,
+				B5E84EFB1AFF846E0064E85B /* SaveResult.swift in Sources */,
+				B5E84F0F1AFF847B0064E85B /* From.swift in Sources */,
+				B5E84EFC1AFF846E0064E85B /* SynchronousDataTransaction.swift in Sources */,
+				B5E84F281AFF84920064E85B /* NSManagedObject+Convenience.swift in Sources */,
+				B5E84F391AFF85470064E85B /* NSManagedObjectContext+Querying.swift in Sources */,
+				B5E84EE81AFF84610064E85B /* HardcoreDataLogger.swift in Sources */,
+				B5E84F311AFF849C0064E85B /* WeakObject.swift in Sources */,
+				B5E84F101AFF847B0064E85B /* GroupBy.swift in Sources */,
+				B5E84F201AFF84860064E85B /* DataStack+Observing.swift in Sources */,
+				B5E84EF81AFF846E0064E85B /* HardcoreData+Transaction.swift in Sources */,
+				B5E84F301AFF849C0064E85B /* NSManagedObjectContext+HardcoreData.swift in Sources */,
+				B5E84F211AFF84860064E85B /* HardcoreData+Observing.swift in Sources */,
+				B5E84EE61AFF84610064E85B /* DefaultLogger.swift in Sources */,
+				B5E84EF41AFF846E0064E85B /* AsynchronousDataTransaction.swift in Sources */,
+				B5E84F151AFF847B0064E85B /* HardcoreData+Querying.swift in Sources */,
+				B5E84F241AFF84860064E85B /* ManagedObjectListObserver.swift in Sources */,
+				B5E84F2E1AFF849C0064E85B /* AssociatedObjects.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,98 +33,98 @@ public extension BaseDataTransaction {
     
     // MARK: Public
     
-    public func fetchOne<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> T? {
+    public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchOne(from, queryClauses)
+        return self.context.fetchOne(from, fetchClauses)
     }
     
-    public func fetchOne<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> T? {
+    public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchOne(from, queryClauses)
+        return self.context.fetchOne(from, fetchClauses)
     }
     
-    public func fetchAll<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchAll(from, queryClauses)
+        return self.context.fetchAll(from, fetchClauses)
     }
     
-    public func fetchAll<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchAll(from, queryClauses)
+        return self.context.fetchAll(from, fetchClauses)
     }
     
-    public func fetchCount<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> Int? {
+    public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchCount(from, queryClauses)
+        return self.context.fetchCount(from, fetchClauses)
     }
     
-    public func fetchCount<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> Int? {
+    public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchCount(from, queryClauses)
+        return self.context.fetchCount(from, fetchClauses)
     }
     
-    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchObjectID(from, queryClauses)
+        return self.context.fetchObjectID(from, fetchClauses)
     }
     
-    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchObjectID(from, queryClauses)
+        return self.context.fetchObjectID(from, fetchClauses)
     }
     
-    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchObjectIDs(from, queryClauses)
+        return self.context.fetchObjectIDs(from, fetchClauses)
     }
     
-    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.fetchObjectIDs(from, queryClauses)
+        return self.context.fetchObjectIDs(from, fetchClauses)
     }
     
-    public func deleteAll<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> Int? {
+    public func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.deleteAll(from, queryClauses)
+        return self.context.deleteAll(from, deleteClauses)
     }
     
-    public func deleteAll<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> Int? {
+    public func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete from a \(typeName(self)) outside its designated queue.")
         
-        return self.context.deleteAll(from, queryClauses)
+        return self.context.deleteAll(from, deleteClauses)
     }
     
-    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: FetchClause...) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to query from a \(typeName(self)) outside its designated queue.")
         
         return self.context.queryValue(from, selectClause, queryClauses)
     }
     
-    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [FetchClause]) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to query from a \(typeName(self)) outside its designated queue.")
         
