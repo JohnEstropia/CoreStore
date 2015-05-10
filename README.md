@@ -91,10 +91,10 @@ HardcoreData.defaultStack.addSQLiteStore()
 This one-liner does the following:
 - Triggers the lazy-initialization of `HardcoreData.defaultStack` with a default `DataStack`
 - Sets up the stack's `NSPersistentStoreCoordinator`, the root saving `NSManagedObjectContext`, and the read-only main `NSManagedObjectContext`
-- Adds an automigrating SQLite store in the *"Application Support"* directory with the file name *"<App bundle name>.sqlite"*
+- Adds an automigrating SQLite store in the *"Application Support"* directory with the file name *"[App bundle name].sqlite"*
 - Creates and returns the `NSPersistentStore` instance on success, or an `NSError` on failure
 
-For most cases this, confuguration is already appropriate. For more hardcore settings, here is a semi-complete example:
+For most cases, this configuration is usable as it is. But for more hardcore settings, refer to this extensive example:
 ```swift
 let dataStack = DataStack(modelName: "MyModel") // loads from the "MyModel.xcdatamodeld" file
 
