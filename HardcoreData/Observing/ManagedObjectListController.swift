@@ -39,14 +39,14 @@ public struct SectionedBy {
         self.init(sectionKeyPath, { $0 })
     }
     
-    public init(_ sectionKeyPath: KeyPath, _ sectionNameTransformer: (sectionKeyPath: KeyPath?) -> String?) {
+    public init(_ sectionKeyPath: KeyPath, _ sectionIndexTransformer: (sectionName: String?) -> String?) {
         
         self.sectionKeyPath = sectionKeyPath
-        self.sectionNameTransformer = sectionNameTransformer
+        self.sectionIndexTransformer = sectionIndexTransformer
     }
     
     internal let sectionKeyPath: KeyPath
-    internal let sectionNameTransformer: (sectionKeyPath: KeyPath?) -> String?
+    internal let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
 }
 
 
@@ -445,7 +445,7 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
     
     private func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
         
-        return self.sectionNameTransformer(sectionKeyPath: sectionName)
+        return self.sectionIndexTransformer(sectionName: sectionName)
     }
     
     
@@ -478,13 +478,13 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         self.parentStack = dataStack
         
-        if let sectionNameTransformer = sectionedBy?.sectionNameTransformer {
+        if let sectionIndexTransformer = sectionedBy?.sectionIndexTransformer {
             
-            self.sectionNameTransformer = sectionNameTransformer
+            self.sectionIndexTransformer = sectionIndexTransformer
         }
         else {
             
-            self.sectionNameTransformer = { $0 }
+            self.sectionIndexTransformer = { $0 }
         }
         
         
@@ -505,7 +505,7 @@ public final class ManagedObjectListController<T: NSManagedObject>: FetchedResul
     
     private let fetchedResultsController: NSFetchedResultsController
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
-    private let sectionNameTransformer: (sectionKeyPath: KeyPath?) -> String?
+    private let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
     private weak var parentStack: DataStack?
     
     private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (listController: ManagedObjectListController<T>) -> Void) {
