@@ -1,5 +1,5 @@
 //
-//  SortedBy.swift
+//  OrderBy.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -26,9 +26,9 @@
 import Foundation
 
 
-public func +(left: SortedBy, right: SortedBy) -> SortedBy {
+public func +(left: OrderBy, right: OrderBy) -> OrderBy {
     
-    return SortedBy(left.sortDescriptors + right.sortDescriptors)
+    return OrderBy(left.sortDescriptors + right.sortDescriptors)
 }
 
 
@@ -37,42 +37,73 @@ public func +(left: SortedBy, right: SortedBy) -> SortedBy {
 public typealias KeyPath = String
 
 
-// MARK: - SortOrder
+// MARK: - SortKey
 
-public enum SortOrder {
+/**
+The `SortKey` is passed to the `OrderBy` clause to indicate the sort keys and their sort direction.
+*/
+public enum SortKey {
     
+    /**
+    Indicates that the `KeyPath` should be sorted in ascending order
+    */
     case Ascending(KeyPath)
+    
+    /**
+    Indicates that the `KeyPath` should be sorted in descending order
+    */
     case Descending(KeyPath)
 }
 
 
-// MARK: - SortedBy
+// MARK: - OrderBy
 
-public struct SortedBy: FetchClause, QueryClause, DeleteClause {
+/**
+The `OrderBy` clause specifies the sort order for results for a fetch or a query.
+*/
+public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     
     // MARK: Public
     
+    /**
+    Initializes a `OrderBy` clause with a list of sort descriptors
+    
+    :param: sortDescriptors a series of `NSSortDescriptor`'s
+    */
     public init(_ sortDescriptors: [NSSortDescriptor]) {
         
         self.sortDescriptors = sortDescriptors
     }
     
+    /**
+    Initializes a `OrderBy` clause with an empty list of sort descriptors
+    */
     public init() {
         
         self.init([NSSortDescriptor]())
     }
     
+    /**
+    Initializes a `OrderBy` clause with a single sort descriptor
+    
+    :param: sortDescriptor a `NSSortDescriptor`
+    */
     public init(_ sortDescriptor: NSSortDescriptor) {
         
         self.init([sortDescriptor])
     }
     
-    public init(_ order: [SortOrder]) {
+    /**
+    Initializes a `OrderBy` clause with a series of `SortKey`'s
+    
+    :param: sortKey a series of `SortKey`'s
+    */
+    public init(_ sortKey: [SortKey]) {
         
         self.init(
-            order.map { sortOrder -> NSSortDescriptor in
+            sortKey.map { SortKey -> NSSortDescriptor in
                 
-                switch sortOrder {
+                switch SortKey {
                     
                 case .Ascending(let keyPath):
                     return NSSortDescriptor(key: keyPath, ascending: true)
@@ -84,9 +115,15 @@ public struct SortedBy: FetchClause, QueryClause, DeleteClause {
         )
     }
     
-    public init(_ order: SortOrder, _ subOrder: SortOrder...) {
+    /**
+    Initializes a `OrderBy` clause with a series of `SortKey`'s
+    
+    :param: sortKey a single `SortKey`
+    :param: sortKeys a series of `SortKey`'s
+    */
+    public init(_ sortKey: SortKey, _ sortKeys: SortKey...) {
         
-        self.init([order] + subOrder)
+        self.init([sortKey] + sortKeys)
     }
     
     public let sortDescriptors: [NSSortDescriptor]

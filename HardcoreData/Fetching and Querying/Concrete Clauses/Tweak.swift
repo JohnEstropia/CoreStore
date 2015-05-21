@@ -1,5 +1,5 @@
 //
-//  CustomizeFetch.swift
+//  Tweak.swift
 //  HardcoreData
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -27,12 +27,30 @@ import Foundation
 import CoreData
 
 
-// MARK: - CustomizeFetch
+// MARK: - Tweak
 
-public struct CustomizeFetch: FetchClause, QueryClause, DeleteClause {
+/**
+The `Tweak` clause allows fine-tuning the `NSFetchRequest` for a fetch or query.
+
+Sample usage:
+
+    let employees = transaction.fetchAll(
+        From(MyPersonEntity),
+        Tweak { (fetchRequest) -> Void in
+            fetchRequest.includesPendingChanges = false
+            fetchRequest.fetchLimit = 5
+        }
+    )
+*/
+public struct Tweak: FetchClause, QueryClause, DeleteClause {
     
     // MARK: Public
     
+    /**
+    Initializes a `Tweak` clause with a closure where the `NSFetchRequest` may be configured.
+    
+    :param: customization a list of key path strings to group results with
+    */
     public init(_ customization: (fetchRequest: NSFetchRequest) -> Void) {
         
         self.customization = customization

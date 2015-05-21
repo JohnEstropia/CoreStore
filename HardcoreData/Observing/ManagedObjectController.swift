@@ -44,23 +44,52 @@ private struct NotificationKey {
 
 // MARK: - ManagedObjectController
 
-public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsControllerHandler {
+/**
+The `ManagedObjectController` monitors changes to a single `NSManagedObject` instance. Observers that implement the `ManagedObjectObserver` protocol may then register themselves to the `ManagedObjectController`'s `addObserver(_:)` method:
+
+    let objectController = HardcoreData.observeObject(object)
+    objectController.addObserver(self)
+
+The created `ManagedObjectController` instance needs to be held on (retained) for as long as the object needs to be observed.
+
+Observers registered via `addObserver(_:)` are not retained. `ManagedObjectController` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
+*/
+public final class ManagedObjectController<T: NSManagedObject> {
     
     // MARK: Public
     
+    /**
+    Returns the `NSManagedObject` instance being observed, or `nil` if the object was already deleted.
+    */
     public var object: T? {
         
         return self.fetchedResultsController.fetchedObjects?.first as? T
     }
     
+    /**
+    Returns `true` if the `NSManagedObject` instance being observed still exists, or `false` if the object was already deleted.
+    */
     public var isObjectDeleted: Bool {
         
         return self.object?.managedObjectContext == nil
     }
     
+    /**
+    Registers a `ManagedObjectObserver` to be notified when changes to the receiver's `object` are made.
+    
+    To prevent retain-cycles, `ManagedObjectController` only keeps `weak` references to its observers.
+    
+    For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
+    
+    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ManagedObjectController` unregisters previous notifications to the observer before re-registering them.
+    
+    :param: observer a `ManagedObjectObserver` to send change notifications to
+    */
     public func addObserver<U: ManagedObjectObserver where U.EntityType == T>(observer: U) {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to add a \(typeName(observer)) outside the main queue.")
+        
+        self.removeObserver(observer)
         
         self.registerChangeNotification(
             &NotificationKey.willChangeObject,
@@ -117,6 +146,13 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
         )
     }
     
+    /**
+    Unregisters a `ManagedObjectObserver` from receiving notifications for changes to the receiver's `object`.
+    
+    For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
+    
+    :param: observer a `ManagedObjectObserver` to unregister notifications to
+    */
     public func removeObserver<U: ManagedObjectObserver where U.EntityType == T>(observer: U) {
         
         HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to remove a \(typeName(observer)) outside the main queue.")
@@ -125,40 +161,6 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.willChangeObject, inObject: observer)
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.didDeleteObject, inObject: observer)
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.didUpdateObject, inObject: observer)
-    }
-    
-    
-    // MARK: FetchedResultsControllerHandler
-    
-    private func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        
-        switch type {
-            
-        case .Delete:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidDeleteObjectNotification,
-                object: self,
-                userInfo: [UserInfoKeyObject: anObject]
-            )
-            
-        case .Update:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidUpdateObjectNotification,
-                object: self,
-                userInfo: [UserInfoKeyObject: anObject]
-            )
-            
-        default:
-            break
-        }
-    }
-    
-    private func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            ManagedObjectListControllerWillChangeObjectNotification,
-            object: self
-        )
     }
     
     
@@ -254,6 +256,45 @@ public final class ManagedObjectController<T: NSManagedObject>: FetchedResultsCo
             ),
             forKey: notificationKey,
             inObject: observer
+        )
+    }
+}
+
+
+// MARK: - ManagedObjectController: FetchedResultsControllerHandler
+
+extension ManagedObjectController: FetchedResultsControllerHandler {
+    
+    // MARK: FetchedResultsControllerHandler
+    
+    private func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        
+        switch type {
+            
+        case .Delete:
+            NSNotificationCenter.defaultCenter().postNotificationName(
+                ManagedObjectListControllerDidDeleteObjectNotification,
+                object: self,
+                userInfo: [UserInfoKeyObject: anObject]
+            )
+            
+        case .Update:
+            NSNotificationCenter.defaultCenter().postNotificationName(
+                ManagedObjectListControllerDidUpdateObjectNotification,
+                object: self,
+                userInfo: [UserInfoKeyObject: anObject]
+            )
+            
+        default:
+            break
+        }
+    }
+    
+    private func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(
+            ManagedObjectListControllerWillChangeObjectNotification,
+            object: self
         )
     }
 }

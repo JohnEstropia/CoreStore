@@ -6,11 +6,13 @@
 Simple, elegant, and smart Core Data programming with Swift
 
 ## Features
-- Supports multiple persistent stores per *data stack*, just the way .xcdatamodeld files are supposed to. HardcoreData will also manage one *data stack* by default, but you can create and manage as many as you need. (see "Setting up")
-- Ability to plug-in your own logging framework (or your favorite 3rd-party logger). (see "Logging and error handling")
-- Makes it hard to fall into common concurrency mistakes. All Core Data tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability. (see "Saving and processing transactions")
-- Provides convenient API for common use cases. (see "Fetching and querying")
-- Pleasant API designed around Swift’s code elegance and type safety. (see "TL;DR sample codes")
+- Supports multiple persistent stores per *data stack*, just the way .xcdatamodeld files are supposed to. HardcoreData will also manage one *data stack* by default, but you can create and manage as many as you need.
+- Ability to plug-in your own logging framework (or any of your favorite 3rd-party logger)
+- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. HardcoreData loads entity-to-class mappings from the .xcdatamodeld file, so you are free to name them independently.
+- Observe a list of `NSManagedObject`'s using `ManagedObjectListController`, a clean wrapper for `NSFetchedResultsController`. Another controller, `ManagedObjectController`, lets you observe changes for a single object without using KVO. Both controllers can have multiple observers as well, so there is no extra overhead when sharing the same data source for multiple screens.
+- Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
+- Provides convenient API for common use cases.
+- Clean API designed around Swift’s code elegance and type safety.
 
 #### TL;DR sample codes
 
@@ -43,8 +45,8 @@ let objects = HardcoreData.fetchAll(From(MyEntity))
 let objects = HardcoreData.fetchAll(
     From(MyEntity),
     Where("entityID", isEqualTo: 1),
-    SortedBy(.Ascending("entityID"), .Descending("name")),
-    CustomizeFetch { (fetchRequest) -> Void in
+    OrderBy(.Ascending("entityID"), .Descending("name")),
+    Tweak { (fetchRequest) -> Void in
         fetchRequest.includesPendingChanges = true
     }
 )
@@ -119,7 +121,7 @@ case .Failure(let error): // error is an NSError instance
 HardcoreData.defaultStack = dataStack // pass the dataStack to HardcoreData for easier access later on
 ```
 
-Note that you dont need to do the `HardcoreData.defaultStack = dataStack` line. You can just as well hold a stack like this and call all methods directly from the `DataStack` instance:
+Note that you dont need to do the `HardcoreData.defaultStack = dataStack` line. You can just as well hold a stack like below and call all methods directly from the `DataStack` instance:
 ```swift
 class MyViewController: UIViewController {
     let dataStack = DataStack(modelName: "MyModel")
@@ -139,7 +141,7 @@ The difference is when you set the stack as the `HardcoreData.defaultStack`, you
 class MyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        HardcoreData.dataStack.addSQLiteStore()
+        HardcoreData.addSQLiteStore()
     }
     func methodToBeCalledLaterOn() {
         let objects = HardcoreData.fetchAll(From(MyEntity))

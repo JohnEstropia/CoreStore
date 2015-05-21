@@ -29,11 +29,41 @@ import CoreData
 
 // MARK: - PersistentStoreResult
 
+/**
+The `PersistentStoreResult` indicates the result of initializing the persistent store.
+The `PersistentStoreResult` can be treated as a boolean:
+
+    let result = HardcoreData.addSQLiteStore()
+    if result {
+    	// succeeded
+    }
+    else {
+    	// failed
+    }
+
+or as an `enum`, where the resulting associated object can also be inspected:
+
+    let result = HardcoreData.addSQLiteStore()
+    switch result {
+    case .Success(let persistentStore):
+        // persistentStore is the related NSPersistentStore instance
+    case .Failure(let error):
+        // error is the NSError instance for the failure
+    }
+```
+*/
 public enum PersistentStoreResult {
     
     // MARK: Public
     
+    /**
+    `PersistentStoreResult.Success` indicates that the persistent store process succeeded. The associated object for this `enum` value is the related `NSPersistentStore` instance.
+    */
     case Success(NSPersistentStore)
+    
+    /**
+    `PersistentStoreResult.Failure` indicates that the persistent store process failed. The associated object for this value is the related `NSError` instance.
+    */
     case Failure(NSError)
     
     

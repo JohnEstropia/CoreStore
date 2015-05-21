@@ -44,35 +44,69 @@ public prefix func !(clause: Where) -> Where {
 
 // MARK: - Where
 
+/**
+The `Where` clause specifies the conditions for a fetch or a query.
+*/
 public struct Where: FetchClause, QueryClause, DeleteClause {
     
     // MARK: Public
     
+    /**
+    Initializes a `Where` clause with an `NSPredicate`
+    
+    :param: predicate the `NSPredicate` for the fetch or query
+    */
     public init(_ predicate: NSPredicate) {
         
         self.predicate = predicate
     }
     
+    /**
+    Initializes a `Where` clause with a predicate that always evaluates to `true`
+    */
     public init() {
         
         self.init(true)
     }
     
+    /**
+    Initializes a `Where` clause with a predicate that always evaluates to the specified boolean value
+    
+    :param: value the boolean value for the predicate
+    */
     public init(_ value: Bool) {
         
         self.init(NSPredicate(value: value))
     }
     
+    /**
+    Initializes a `Where` clause with a predicate using the specified string format and arguments
+    
+    :param: format the format string for the predicate
+    :param: args the arguments for `format`
+    */
     public init(_ format: String, _ args: NSObject...) {
         
         self.init(NSPredicate(format: format, argumentArray: args))
     }
     
+    /**
+    Initializes a `Where` clause with a predicate using the specified string format and arguments
+    
+    :param: format the format string for the predicate
+    :param: argumentArray the arguments for `format`
+    */
     public init(_ format: String, argumentArray: [NSObject]?) {
         
         self.init(NSPredicate(format: format, argumentArray: argumentArray))
     }
     
+    /**
+    Initializes a `Where` clause with a predicate using the specified string format and arguments
+    
+    :param: format the format string for the predicate
+    :param: argumentArray the arguments for `format`
+    */
     public init(_ keyPath: KeyPath, isEqualTo value: NSObject?) {
         
         self.init(value == nil

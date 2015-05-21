@@ -45,7 +45,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
     
     required init(coder aDecoder: NSCoder) {
         
-        if let palette = HardcoreData.fetchOne(From(Palette), SortedBy(.Ascending("hue"))) {
+        if let palette = HardcoreData.fetchOne(From(Palette), OrderBy(.Ascending("hue"))) {
             
             self.objectController = HardcoreData.observeObject(palette)
         }
@@ -59,7 +59,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
                 transaction.commit()
             }
             
-            let palette = HardcoreData.fetchOne(From(Palette), SortedBy(.Ascending("hue")))!
+            let palette = HardcoreData.fetchOne(From(Palette), OrderBy(.Ascending("hue")))!
             self.objectController = HardcoreData.observeObject(palette)
         }
         

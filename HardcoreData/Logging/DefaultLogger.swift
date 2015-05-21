@@ -28,6 +28,13 @@ import Foundation
 
 // MARK: - DefaultLogger
 
+/**
+The `DefaultLogger` is a basic implementation of the `HardcoreDataLogger` protocol.
+
+- The `log(...)` method calls `println(...)` to print the level, source file name, line number, function name, and the log message.
+- The `handleError(...)` method calls `println(...)` to print the source file name, line number, function name, and the error message.
+- The `assert(...)` method calls `assert(...)` on the arguments.
+*/
 public final class DefaultLogger: HardcoreDataLogger {
    
     public func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {

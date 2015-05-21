@@ -28,10 +28,51 @@ import Foundation
 
 // MARK: - SaveResult
 
+/**
+The `SaveResult` indicates the result of a `commit(...)` for a transaction.
+The `SaveResult` can be treated as a boolean:
+
+    HardcoreData.beginAsynchronous { transaction in
+        // ...
+        let result = transaction.commit()
+        if result {
+            // succeeded
+        }
+        else {
+            // failed
+        }
+    }
+
+or as an `enum`, where the resulting associated object can also be inspected:
+
+    HardcoreData.beginAsynchronous { transaction in
+        // ...
+        let result = transaction.commit()
+        switch result {
+        case .Success(let hasChanges):
+            // hasChanges indicates if there were changes or not
+        case .Failure(let error):
+            // error is the NSError instance for the failure
+        }
+    }
+```
+*/
 public enum SaveResult {
     
+    // MARK: Public
+    
+    /**
+    `SaveResult.Success` indicates that the `commit()` for the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated value `hasChanges` indicates if there were saved changes or not.
+    */
     case Success(hasChanges: Bool)
+    
+    /**
+    `SaveResult.Failure` indicates that the `commit()` for the transaction failed. The associated object for this value is the related `NSError` instance.
+    */
     case Failure(NSError)
+    
+    
+    // MARK: Internal
     
     internal init(hasChanges: Bool) {
         

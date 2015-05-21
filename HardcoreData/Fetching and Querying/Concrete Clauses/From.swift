@@ -29,6 +29,9 @@ import CoreData
 
 // MARK: - From
 
+/**
+A `Form` clause binds the `NSManagedObject` entity type to the generics type system.
+*/
 public struct From<T: NSManagedObject> {
     
     public init(){ }

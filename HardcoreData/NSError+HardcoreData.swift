@@ -26,12 +26,12 @@
 import Foundation
 
 /**
-The NSError error domain for HardcoreData.
+The `NSError` error domain for `HardcoreData`.
 */
 public let HardcoreDataErrorDomain = "com.hardcoredata.error"
 
 /**
-The NSError error codes for HardcoreDataErrorDomain.
+The `NSError` error codes for `HardcoreDataErrorDomain`.
 */
 public enum HardcoreDataErrorCode: Int {
     
@@ -41,7 +41,7 @@ public enum HardcoreDataErrorCode: Int {
     case UnknownError
     
     /**
-    The NSPersistentStore could note be initialized because another store existed at the specified NSURL.
+    The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
     */
     case DifferentPersistentStoreExistsAtURL
 }
@@ -52,7 +52,7 @@ public enum HardcoreDataErrorCode: Int {
 public extension NSError {
    
     /**
-    If the error's domain is equal to HardcoreDataErrorDomain, returns the associated HardcoreDataErrorCode. For other domains, returns nil.
+    If the error's domain is equal to `HardcoreDataErrorDomain`, returns the associated `HardcoreDataErrorCode`. For other domains, returns `nil`.
     */
     public var hardcoreDataErrorCode: HardcoreDataErrorCode? {
         

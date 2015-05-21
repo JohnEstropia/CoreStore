@@ -29,23 +29,40 @@ import CoreData
 
 // MARK: - GroupBy
 
+/**
+The `GroupBy` clause specifies that the result of a query be grouped accoording to the specified key path.
+*/
 public struct GroupBy: QueryClause {
     
     // MARK: Public
     
+    /**
+    Initializes a `GroupBy` clause with a list of key path strings
+    
+    :param: keyPaths a list of key path strings to group results with
+    */
     public init(_ keyPaths: [KeyPath]) {
         
         self.keyPaths = keyPaths
     }
     
+    /**
+    Initializes a `GroupBy` clause with an empty list of key path strings
+    */
     public init() {
         
         self.init([])
     }
     
-    public init(_ keyPath: KeyPath, _ subKeyPaths: KeyPath...) {
+    /**
+    Initializes a `GroupBy` clause with a list of key path strings
+    
+    :param: keyPath a key path string to group results with
+    :param: keyPaths a series of key path strings to group results with
+    */
+    public init(_ keyPath: KeyPath, _ keyPaths: KeyPath...) {
         
-        self.init([keyPath] + subKeyPaths)
+        self.init([keyPath] + keyPaths)
     }
     
     public let keyPaths: [KeyPath]

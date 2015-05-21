@@ -112,7 +112,7 @@ class HardcoreDataTests: XCTestCase {
                 let objs4test = transaction.fetchOne(
                     From(TestEntity2),
                     Where("testEntityID", isEqualTo: 4),
-                    CustomizeFetch { (fetchRequest) -> Void in
+                    Tweak { (fetchRequest) -> Void in
                         
                         fetchRequest.includesPendingChanges = true
                     }
@@ -122,7 +122,7 @@ class HardcoreDataTests: XCTestCase {
                 let objs5test = transaction.fetchOne(
                     From(TestEntity2),
                     Where("testEntityID", isEqualTo: 4),
-                    CustomizeFetch { (fetchRequest) -> Void in
+                    Tweak { (fetchRequest) -> Void in
                         
                         fetchRequest.includesPendingChanges = false
                     }
@@ -137,7 +137,7 @@ class HardcoreDataTests: XCTestCase {
                 let objs4test = HardcoreData.fetchOne(
                     From(TestEntity2),
                     Where("testEntityID", isEqualTo: 4),
-                    CustomizeFetch { (fetchRequest) -> Void in
+                    Tweak { (fetchRequest) -> Void in
                         
                         fetchRequest.includesPendingChanges = false
                     }
@@ -169,8 +169,8 @@ class HardcoreDataTests: XCTestCase {
             let objs2 = transaction.fetchAll(
                 From(TestEntity2),
                 Where("testNumber", isEqualTo: 100) || Where("%K == %@", "testNumber", 90),
-                SortedBy(.Ascending("testEntityID"), .Descending("testString")),
-                CustomizeFetch { (fetchRequest) -> Void in
+                OrderBy(.Ascending("testEntityID"), .Descending("testString")),
+                Tweak { (fetchRequest) -> Void in
                     
                     fetchRequest.includesPendingChanges = true
                 }

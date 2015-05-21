@@ -35,9 +35,9 @@ public extension DataStack {
     // MARK: Public
     
     /**
-    Begins a transaction asynchronously where NSManagedObject creates, updates, and deletes can be made.
+    Begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
     
-    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
+    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
     */
     public func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
@@ -50,10 +50,10 @@ public extension DataStack {
     }
     
     /**
-    Begins a transaction synchronously where NSManagedObject creates, updates, and deletes can be made.
+    Begins a transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made.
     
-    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
-    :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
+    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+    :returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
     */
     public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
@@ -66,9 +66,9 @@ public extension DataStack {
     }
     
     /**
-    Begins a non-contiguous transaction where NSManagedObject creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
+    Begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
     
-    :returns: a DetachedDataTransaction instance where creates, updates, and deletes can be made.
+    :returns: a `DetachedDataTransaction` instance where creates, updates, and deletes can be made.
     */
     public func beginDetached() -> DetachedDataTransaction {
         

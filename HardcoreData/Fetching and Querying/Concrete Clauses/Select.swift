@@ -29,11 +29,17 @@ import CoreData
 
 // MARK: - SelectResultType
 
+/**
+The `SelectResultType` protocol is implemented by return types supported by the `Select` clause.
+*/
 public protocol SelectResultType { }
 
 
 // MARK: - SelectValueResultType
 
+/**
+The `SelectValueResultType` protocol is implemented by return types supported by the `queryValue(...)` methods.
+*/
 public protocol SelectValueResultType: SelectResultType {
     
     static func fromResultObject(result: AnyObject) -> Self?
@@ -42,6 +48,9 @@ public protocol SelectValueResultType: SelectResultType {
 
 // MARK: - SelectAttributesResultType
 
+/**
+The `SelectValueResultType` protocol is implemented by return types supported by the `queryAttributes(...)` methods.
+*/
 public protocol SelectAttributesResultType: SelectResultType {
     
     static func fromResultObjects(result: [AnyObject]) -> [[NSString: AnyObject]]
@@ -50,99 +59,268 @@ public protocol SelectAttributesResultType: SelectResultType {
 
 // MARK: - SelectTerm
 
+/**
+The `SelectTerm` is passed to the `Select` clause to indicate the attributes/aggregate keys to be queried.
+*/
 public enum SelectTerm: StringLiteralConvertible {
     
-    case Attribute(KeyPath)
-    case Aggregate(function: String, KeyPath, As: String)
+    // MARK: Public
     
+    /**
+    Provides a `SelectTerm` to a `Select` clause for querying an entity attribute. A shorter way to do the same is to assign from the string keypath directly:
+    
+        let fullName = HardcoreData.queryValue(
+            From(MyPersonEntity),
+            Select<String>(.Attribute("fullName")),
+            Where("employeeID", isEqualTo: 1111)
+        )
+    
+    is equivalent to:
+    
+        let fullName = HardcoreData.queryValue(
+            From(MyPersonEntity),
+            Select<String>("fullName"),
+            Where("employeeID", isEqualTo: 1111)
+        )
+    
+    :param: keyPath the attribute name
+    :returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
+    */
+    public static func Attribute(keyPath: KeyPath) -> SelectTerm {
+        
+        return ._Attribute(keyPath)
+    }
+    
+    /**
+    Provides a `SelectTerm` to a `Select` clause for querying the average value of an attribute.
+
+        let averageAge = HardcoreData.queryValue(
+            From(MyPersonEntity),
+            Select<Int>(.Average("age"))
+        )
+    
+    :param: keyPath the attribute name
+    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
+    :returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
+    */
     public static func Average(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
-        return .Aggregate(
+        return ._Aggregate(
             function: "average:",
             keyPath,
             As: alias ?? "average(\(keyPath))"
         )
     }
     
+    /**
+    Provides a `SelectTerm` to a `Select` clause for a count query.
+    
+        let numberOfEmployees = HardcoreData.queryValue(
+            From(MyPersonEntity),
+            Select<Int>(.Count("employeeID"))
+        )
+    
+    :param: keyPath the attribute name
+    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
+    :returns: a `SelectTerm` to a `Select` clause for a count query
+    */
     public static func Count(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
-        return .Aggregate(
+        return ._Aggregate(
             function: "count:",
             keyPath,
             As: alias ?? "count(\(keyPath))"
         )
     }
     
+    /**
+    Provides a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute.
+    
+        let maximumAge = HardcoreData.queryValue(
+            From(MyPersonEntity),
+            Select<Int>(.Maximum("age"))
+        )
+    
+    :param: keyPath the attribute name
+    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
+    :returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
+    */
     public static func Maximum(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
-        return .Aggregate(
+        return ._Aggregate(
             function: "max:",
             keyPath,
             As: alias ?? "max(\(keyPath))"
         )
     }
     
+    /**
+    Provides a `SelectTerm` to a `Select` clause for querying the median value for an attribute.
+    
+        let medianAge = HardcoreData.queryValue(
+            From(MyPersonEntity),
+            Select<Int>(.Median("age"))
+        )
+    
+    :param: keyPath the attribute name
+    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
+    :returns: a `SelectTerm` to a `Select` clause for querying the median value for an attribute
+    */
     public static func Median(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
-        return .Aggregate(
+        return ._Aggregate(
             function: "median:",
             keyPath, As:
             alias ?? "median(\(keyPath))"
         )
     }
     
+    /**
+    Provides a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute.
+    
+        let minimumAge = HardcoreData.queryValue(
+            From(MyPersonEntity),
+            Select<Int>(.Median("age"))
+        )
+    
+    :param: keyPath the attribute name
+    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
+    :returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
+    */
     public static func Minimum(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
-        return .Aggregate(
+        return ._Aggregate(
             function: "min:",
             keyPath,
             As: alias ?? "min(\(keyPath))"
         )
     }
     
+    /**
+    Provides a `SelectTerm` to a `Select` clause for querying the standard deviation value for an attribute.
+    
+        let stddevAge = HardcoreData.queryValue(
+            From(MyPersonEntity),
+            Select<Int>(.StandardDeviation("age"))
+        )
+    
+    :param: keyPath the attribute name
+    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "stddev(<attributeName>)" is used
+    :returns: a `SelectTerm` to a `Select` clause for querying the standard deviation value for an attribute
+    */
     public static func StandardDeviation(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
-        return .Aggregate(
+        return ._Aggregate(
             function: "stddev:",
             keyPath,
             As: alias ?? "stddev(\(keyPath))"
         )
     }
     
+    /**
+    Provides a `SelectTerm` to a `Select` clause for querying the sum value for an attribute.
+    
+        let totalAge = HardcoreData.queryValue(
+            From(MyPersonEntity),
+            Select<Int>(.Sum("age"))
+        )
+    
+    :param: keyPath the attribute name
+    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
+    :returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
+    */
     public static func Sum(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
-        return .Aggregate(
+        return ._Aggregate(
             function: "sum:",
             keyPath,
             As: alias ?? "sum(\(keyPath))"
         )
     }
     
+    
+    // MARK: StringLiteralConvertible
+    
     public init(stringLiteral value: KeyPath) {
         
-        self = .Attribute(value)
+        self = ._Attribute(value)
     }
     
     public init(unicodeScalarLiteral value: KeyPath) {
         
-        self = .Attribute(value)
+        self = ._Attribute(value)
     }
     
     public init(extendedGraphemeClusterLiteral value: KeyPath) {
         
-        self = .Attribute(value)
+        self = ._Attribute(value)
     }
+    
+    
+    // MARK: Internal
+    
+    case _Attribute(KeyPath)
+    case _Aggregate(function: String, KeyPath, As: String)
 }
 
 
 // MARK: - Select
 
+/**
+The `Select` clause indicates the attribute / aggregate value to be queried. The generic type is a `SelectResultType`, and will be used as the return type for the query. 
+
+You can bind the return type by specializing the initializer:
+
+    let maximumAge = HardcoreData.queryValue(
+        From(MyPersonEntity),
+        Select<Int>(.Maximum("age"))
+    )
+
+or by casting the type of the return value:
+
+    let maximumAge: Int = HardcoreData.queryValue(
+        From(MyPersonEntity),
+        Select(.Maximum("age"))
+    )
+
+Valid return types depend on the query:
+
+- for `queryValue(...)` methods:
+    - `Bool`
+    - `Int8`
+    - `Int16`
+    - `Int32`
+    - `Int64`
+    - `Double`
+    - `Float`
+    - `String`
+    - `NSNumber`
+    - `NSString`
+    - `NSDecimalNumber`
+    - `NSDate`
+    - `NSData`
+    - `NSManagedObjectID`
+    - `NSString`
+- for `queryAttributes(...)` methods:
+    - `NSDictionary`
+
+:param: sortDescriptors a series of `NSSortDescriptor`'s
+*/
 public struct Select<T: SelectResultType> {
     
     // MARK: Public
     
+    /**
+    The `SelectResultType` type for the query's return value
+    */
     public typealias ReturnType = T
     
+    /**
+    Initializes a `Select` clause with a list of `SelectTerm`'s
+    
+    :param: selectTerm a `SelectTerm`
+    :param: selectTerms a series of `SelectTerm`'s
+    */
     public init(_ selectTerm: SelectTerm, _ selectTerms: SelectTerm...) {
         
         self.selectTerms = [selectTerm] + selectTerms
@@ -170,7 +348,7 @@ public struct Select<T: SelectResultType> {
             
             switch term {
                 
-            case .Attribute(let keyPath):
+            case ._Attribute(let keyPath):
                 if let propertyDescription = propertiesByName[keyPath] as? NSPropertyDescription {
                     
                     propertiesToFetch.append(propertyDescription)
@@ -180,7 +358,7 @@ public struct Select<T: SelectResultType> {
                     HardcoreData.log(.Warning, message: "The property \"\(keyPath)\" does not exist in entity <\(entityDescription.managedObjectClassName)> and will be ignored by \(typeName(self)) query clause.")
                 }
                 
-            case .Aggregate(let function, let keyPath, let alias):
+            case ._Aggregate(let function, let keyPath, let alias):
                 if let attributeDescription = attributesByName[keyPath] as? NSAttributeDescription {
                     
                     let expressionDescription = NSExpressionDescription()
@@ -207,10 +385,10 @@ public struct Select<T: SelectResultType> {
         
         switch self.selectTerms.first! {
             
-        case .Attribute(let keyPath):
+        case ._Attribute(let keyPath):
             return keyPath
             
-        case .Aggregate(_, _, let alias):
+        case ._Aggregate(_, _, let alias):
             return alias
         }
     }

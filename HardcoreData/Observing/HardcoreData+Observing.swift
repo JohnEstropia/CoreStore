@@ -33,26 +33,62 @@ public extension HardcoreData {
     
     // MARK: Public
     
+    /**
+    Using the `defaultStack`, creates a `ManagedObjectController` for the specified `NSManagedObject`. Multiple `ManagedObjectObserver`'s may then register themselves to be notified when changes are made to the `NSManagedObject`.
+    
+    :param: object the `NSManagedObject` to observe changes from
+    :returns: a `ManagedObjectController` that monitors changes to `object`
+    */
     public static func observeObject<T: NSManagedObject>(object: T) -> ManagedObjectController<T> {
         
         return self.defaultStack.observeObject(object)
     }
     
+    /**
+    Using the `defaultStack`, creates a `ManagedObjectListController` for a list of `NSManagedObject`'s that satisfy the specified fetch clauses. Multiple `ManagedObjectListObserver`'s may then register themselves to be notified when changes are made to the list.
+    
+    :param: from a `From` clause indicating the entity type
+    :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    :returns: a `ManagedObjectListController` instance that monitors changes to the list
+    */
     public static func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: FetchClause...) -> ManagedObjectListController<T> {
         
         return self.defaultStack.observeObjectList(from, queryClauses)
     }
     
+    /**
+    Using the `defaultStack`, creates a `ManagedObjectListController` for a list of `NSManagedObject`'s that satisfy the specified fetch clauses. Multiple `ManagedObjectListObserver`'s may then register themselves to be notified when changes are made to the list.
+    
+    :param: from a `From` clause indicating the entity type
+    :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    :returns: a `ManagedObjectListController` instance that monitors changes to the list
+    */
     public static func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: [FetchClause]) -> ManagedObjectListController<T> {
         
         return self.defaultStack.observeObjectList(from, queryClauses)
     }
     
+    /**
+    Using the `defaultStack`, creates a `ManagedObjectListController` for a sectioned list of `NSManagedObject`'s that satisfy the specified fetch clauses. Multiple `ManagedObjectListObserver`'s may then register themselves to be notified when changes are made to the list.
+    
+    :param: from a `From` clause indicating the entity type
+    :param: sectionedBy a `SectionedBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+    :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    :returns: a `ManagedObjectListController` instance that monitors changes to the list
+    */
     public static func observeSectionedList<T: NSManagedObject>(from: From<T>, _ sectionedBy: SectionedBy, _ fetchClauses: FetchClause...) -> ManagedObjectListController<T> {
         
         return self.defaultStack.observeSectionedList(from, sectionedBy, fetchClauses)
     }
     
+    /**
+    Using the `defaultStack`, creates a `ManagedObjectListController` for a sectioned list of `NSManagedObject`'s that satisfy the specified fetch clauses. Multiple `ManagedObjectListObserver`'s may then register themselves to be notified when changes are made to the list.
+    
+    :param: from a `From` clause indicating the entity type
+    :param: sectionedBy a `SectionedBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+    :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    :returns: a `ManagedObjectListController` instance that monitors changes to the list
+    */
     public static func observeSectionedList<T: NSManagedObject>(from: From<T>, _ sectionedBy: SectionedBy, _ fetchClauses: [FetchClause]) -> ManagedObjectListController<T> {
         
         return self.defaultStack.observeSectionedList(from, sectionedBy, fetchClauses)

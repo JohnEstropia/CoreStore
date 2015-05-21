@@ -31,16 +31,14 @@ import GCDKit
 // MARK: - SynchronousDataTransaction
 
 /**
-The SynchronousDataTransaction provides an interface for NSManagedObject creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from DataStack.beginSynchronous(_:), or from HardcoreData.beginSynchronous(_:).
+The `SynchronousDataTransaction` provides an interface for `NSManagedObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginSynchronous(_:)`, or from `HardcoreData.beginSynchronous(_:)`.
 */
 public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Public
     
     /**
-    Saves the transaction changes and waits for completion synchronously. This method should not be used after the commit() method was already called once.
-    
-    :returns: a SaveResult value indicating success or failure.
+    Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` method was already called once.
     */
     public func commit() {
         
@@ -52,10 +50,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made. This method should not be used after the commit() method was already called once.
+    Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
     
-    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent NSManagedObjectContext.
-    :returns: a SaveResult value indicating success or failure, or nil if the transaction was not comitted synchronously
+    :param: closure the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+    :returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
     */
     public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
@@ -72,10 +70,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     // MARK: BaseDataTransaction
     
     /**
-    Creates a new NSManagedObject with the specified entity type. This method should not be used after the commit() method was already called once.
+    Creates a new `NSManagedObject` with the specified entity type. This method should not be used after the `commit()` method was already called once.
     
-    :param: entity the NSManagedObject type to be created
-    :returns: a new NSManagedObject instance of the specified entity type.
+    :param: entity the `NSManagedObject` type to be created
+    :returns: a new `NSManagedObject` instance of the specified entity type.
     */
     public override func create<T: NSManagedObject>(entity: T.Type) -> T {
         
@@ -85,10 +83,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Returns an editable proxy of a specified NSManagedObject. This method should not be used after the commit() method was already called once.
+    Returns an editable proxy of a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
     
-    :param: object the NSManagedObject type to be edited
-    :returns: an editable proxy for the specified NSManagedObject.
+    :param: object the `NSManagedObject` type to be edited
+    :returns: an editable proxy for the specified `NSManagedObject`.
     */
     public override func fetch<T: NSManagedObject>(object: T?) -> T? {
         
@@ -98,9 +96,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Deletes a specified NSManagedObject. This method should not be used after the commit() method was already called once.
+    Deletes a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
     
-    :param: object the NSManagedObject type to be deleted
+    :param: object the `NSManagedObject` type to be deleted
     */
     public override func delete(object: NSManagedObject?) {
         
@@ -110,7 +108,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Rolls back the transaction by resetting the NSManagedObjectContext. After calling this method, all NSManagedObjects fetched within the transaction will become invalid. This method should not be used after the commit() method was already called once.
+    Rolls back the transaction by resetting the `NSManagedObjectContext`. After calling this method, all `NSManagedObjects` fetched within the transaction will become invalid. This method should not be used after the `commit()` method was already called once.
     */
     public override func rollback() {
         

@@ -33,7 +33,7 @@ public extension HardcoreData {
     // MARK: Public
     
     /**
-    The HardcoreDataLogger instance to be used. The default logger is an instance of a DefaultLogger.
+    The `HardcoreDataLogger` instance to be used. The default logger is an instance of a `DefaultLogger`.
     */
     public static var logger: HardcoreDataLogger = DefaultLogger()
     

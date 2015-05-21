@@ -29,13 +29,41 @@ import CoreData
 
 // MARK: - ManagedObjectObserver
 
+/**
+Implement the `ManagedObjectObserver` protocol to observe changes to a single `NSManagedObject` instance. `ManagedObjectObserver`'s may register themselves to a `ManagedObjectController`'s `addObserver(_:)` method:
+
+    let objectController = HardcoreData.observeObject(object)
+    objectController.addObserver(self)
+*/
 public protocol ManagedObjectObserver: class {
     
+    /**
+    The `NSManagedObject` type for the observed object
+    */
     typealias EntityType: NSManagedObject
     
+    /**
+    Handles processing just before a change to the observed `object` occurs
+    
+    :param: objectController the `ManagedObjectController` monitoring the object being observed
+    :param: object the `NSManagedObject` instance being observed
+    */
     func managedObjectWillUpdate(objectController: ManagedObjectController<EntityType>, object: EntityType)
     
+    /**
+    Handles processing right after a change to the observed `object` occurs
+    
+    :param: objectController the `ManagedObjectController` monitoring the object being observed
+    :param: object the `NSManagedObject` instance being observed
+    :param: changedPersistentKeys a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
+    */
     func managedObjectWasUpdated(objectController: ManagedObjectController<EntityType>, object: EntityType, changedPersistentKeys: Set<KeyPath>)
     
+    /**
+    Handles processing right after `object` is deleted
+    
+    :param: objectController the `ManagedObjectController` monitoring the object being observed
+    :param: object the `NSManagedObject` instance being observed
+    */
     func managedObjectWasDeleted(objectController: ManagedObjectController<EntityType>, object: EntityType)
 }

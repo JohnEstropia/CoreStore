@@ -32,20 +32,20 @@ private let applicationSupportDirectory = NSFileManager.defaultManager().URLsFor
 
 private let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData")
 
-private let defaultSQLiteStoreURL = applicationSupportDirectory.URLByAppendingPathComponent(applicationName, isDirectory: false).URLByAppendingPathExtension("sqlite")
+internal let defaultSQLiteStoreURL = applicationSupportDirectory.URLByAppendingPathComponent(applicationName, isDirectory: false).URLByAppendingPathExtension("sqlite")
 
 
 // MARK: - DataStack
 
 /**
-The DataStack encapsulates the data model for the Core Data stack. Each DataStack can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own NSPersistentStoreCoordinator, a root NSManagedObjectContext for disk saves, and a shared NSManagedObjectContext designed as a read-only model interface for NSManagedObjects.
+The `DataStack` encapsulates the data model for the Core Data stack. Each `DataStack` can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own `NSPersistentStoreCoordinator`, a root `NSManagedObjectContext` for disk saves, and a shared `NSManagedObjectContext` designed as a read-only model interface for `NSManagedObjects`.
 */
 public final class DataStack {
     
     // MARK: Public
     
     /**
-    Initializes a DataStack from a model created by merging all the models found in all bundles.
+    Initializes a `DataStack` from a model created by merging all the models found in all bundles.
     */
     public convenience init() {
         
@@ -56,7 +56,7 @@ public final class DataStack {
     }
     
     /**
-    Initializes a DataStack from the specified model name.
+    Initializes a `DataStack` from the specified model name.
 
     :param: modelName the name of the (.xcdatamodeld) model file.
     */
@@ -72,9 +72,9 @@ public final class DataStack {
     }
     
     /**
-    Initializes a DataStack from an NSManagedObjectModel.
+    Initializes a `DataStack` from an `NSManagedObjectModel`.
     
-    :param: managedObjectModel the NSManagedObjectModel of the (.xcdatamodeld) model file.
+    :param: managedObjectModel the `NSManagedObjectModel` of the (.xcdatamodeld) model file.
     */
     public required init(managedObjectModel: NSManagedObjectModel) {
         
@@ -97,7 +97,7 @@ public final class DataStack {
     Adds an in-memory store to the stack.
     
     :param: configuration an optional configuration name from the model file. If not specified, defaults to nil.
-    :returns: a PersistentStoreResult indicating success or failure.
+    :returns: a `PersistentStoreResult` indicating success or failure.
     */
     public func addInMemoryStore(configuration: String? = nil) -> PersistentStoreResult {
         
@@ -143,7 +143,7 @@ public final class DataStack {
     :param: configuration an optional configuration name from the model file. If not specified, defaults to nil.
     :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
     :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
-    :returns: a PersistentStoreResult indicating success or failure.
+    :returns: a `PersistentStoreResult` indicating success or failure.
     */
     public func addSQLiteStore(fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
@@ -165,7 +165,7 @@ public final class DataStack {
     :param: configuration an optional configuration name from the model file. If not specified, defaults to nil.
     :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
     :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
-    :returns: a PersistentStoreResult indicating success or failure.
+    :returns: a `PersistentStoreResult` indicating success or failure.
     */
     public func addSQLiteStore(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         

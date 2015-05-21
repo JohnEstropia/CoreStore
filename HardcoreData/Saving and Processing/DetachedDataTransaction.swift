@@ -30,16 +30,16 @@ import GCDKit
 // MARK: - DetachedDataTransaction
 
 /**
-The DetachedDataTransaction provides an interface for non-contiguous NSManagedObject creates, updates, and deletes. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
+The `DetachedDataTransaction` provides an interface for non-contiguous `NSManagedObject` creates, updates, and deletes. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
 */
 public final class DetachedDataTransaction: BaseDataTransaction {
     
     // MARK: Public
     
     /**
-    Saves the transaction changes asynchronously. For a DetachedDataTransaction, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
+    Saves the transaction changes asynchronously. For a `DetachedDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
     
-    :param: completion the block executed after the save completes. Success or failure is reported by the SaveResult argument of the block.
+    :param: completion the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
     */
     public func commit(completion: (result: SaveResult) -> Void) {
         

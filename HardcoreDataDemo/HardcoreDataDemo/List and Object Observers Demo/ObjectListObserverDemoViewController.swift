@@ -15,7 +15,7 @@ struct Shared {
     static let palettes = HardcoreData.observeSectionedList(
         From(Palette),
         SectionedBy("colorName"),
-        SortedBy(.Ascending("hue"))
+        OrderBy(.Ascending("hue"))
     )
 }
 

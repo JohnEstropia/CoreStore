@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        HardcoreData.defaultStack.addSQLiteStore(resetStoreOnMigrationFailure: true)
+        HardcoreData.addSQLiteStore(resetStoreOnMigrationFailure: true)
         return true
     }
 }

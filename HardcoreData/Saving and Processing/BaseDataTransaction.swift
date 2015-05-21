@@ -31,22 +31,25 @@ import GCDKit
 // MARK: - BaseDataTransaction
 
 /**
-The BaseDataTransaction is an abstract interface for NSManagedObject creates, updates, and deletes. All BaseDataTransaction subclasses manage a private NSManagedObjectContext which are direct children of the NSPersistentStoreCoordinator's root NSManagedObjectContext. This means that all updates are saved first to the persistent store, and then propagated up to the read-only NSManagedObjectContext.
+The `BaseDataTransaction` is an abstract interface for `NSManagedObject` creates, updates, and deletes. All `BaseDataTransaction` subclasses manage a private `NSManagedObjectContext` which are direct children of the `NSPersistentStoreCoordinator`'s root `NSManagedObjectContext`. This means that all updates are saved first to the persistent store, and then propagated up to the read-only `NSManagedObjectContext`.
 */
 public /*abstract*/ class BaseDataTransaction {
     
     // MARK: Object management
     
-    var hasChanges: Bool {
+    /**
+    Indicates if the transaction has pending changes
+    */
+    public var hasChanges: Bool {
         
         return self.context.hasChanges
     }
     
     /**
-    Creates a new NSManagedObject with the specified entity type.
+    Creates a new `NSManagedObject` with the specified entity type.
     
-    :param: entity the NSManagedObject type to be created
-    :returns: a new NSManagedObject instance of the specified entity type.
+    :param: entity the `NSManagedObject` type to be created
+    :returns: a new `NSManagedObject` instance of the specified entity type.
     */
     public func create<T: NSManagedObject>(entity: T.Type) -> T {
         
@@ -56,10 +59,10 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-    Returns an editable proxy of a specified NSManagedObject.
+    Returns an editable proxy of a specified `NSManagedObject`.
     
-    :param: object the NSManagedObject type to be edited
-    :returns: an editable proxy for the specified NSManagedObject.
+    :param: object the `NSManagedObject` type to be edited
+    :returns: an editable proxy for the specified `NSManagedObject`.
     */
     public func fetch<T: NSManagedObject>(object: T?) -> T? {
         
@@ -69,9 +72,9 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-    Deletes a specified NSManagedObject.
+    Deletes a specified `NSManagedObject`.
     
-    :param: object the NSManagedObject type to be deleted
+    :param: object the `NSManagedObject` type to be deleted
     */
     public func delete(object: NSManagedObject?) {
         
@@ -83,7 +86,7 @@ public /*abstract*/ class BaseDataTransaction {
     // MARK: Saving changes
     
     /**
-    Rolls back the transaction by resetting the NSManagedObjectContext. After calling this method, all NSManagedObjects fetched within the transaction will become invalid.
+    Rolls back the transaction by resetting the `NSManagedObjectContext`. After calling this method, all `NSManagedObjects` fetched within the transaction will become invalid.
     */
     public func rollback() {
         
