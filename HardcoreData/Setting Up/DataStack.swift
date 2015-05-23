@@ -139,8 +139,8 @@ public final class DataStack {
     /**
     Adds to the stack an SQLite store from the given SQLite file name.
     
-    :param: fileName the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil.
+    :param: fileName the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
     :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
     :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
     :returns: a `PersistentStoreResult` indicating success or failure.
@@ -161,8 +161,8 @@ public final class DataStack {
     /**
     Adds to the stack an SQLite store from the given SQLite file URL.
     
-    :param: fileURL the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil.
+    :param: fileURL the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
     :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
     :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
     :returns: a `PersistentStoreResult` indicating success or failure.
@@ -175,7 +175,8 @@ public final class DataStack {
             let isExistingStoreAutomigrating = ((store.options?[NSMigratePersistentStoresAutomaticallyOption] as? Bool) ?? false)
             
             if store.type == NSSQLiteStoreType
-                && isExistingStoreAutomigrating == automigrating {
+                && isExistingStoreAutomigrating == automigrating
+                && store.configurationName == (configuration ?? "PF_DEFAULT_CONFIGURATION_NAME") {
                     
                     return PersistentStoreResult(store)
             }
