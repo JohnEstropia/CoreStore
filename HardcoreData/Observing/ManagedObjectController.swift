@@ -87,7 +87,7 @@ public final class ManagedObjectController<T: NSManagedObject> {
     */
     public func addObserver<U: ManagedObjectObserver where U.EntityType == T>(observer: U) {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to add a \(typeName(observer)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
         
         self.removeObserver(observer)
         
@@ -155,7 +155,7 @@ public final class ManagedObjectController<T: NSManagedObject> {
     */
     public func removeObserver<U: ManagedObjectObserver where U.EntityType == T>(observer: U) {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to remove a \(typeName(observer)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to remove an observer of type \(typeName(observer)) outside the main thread.")
         
         let nilValue: AnyObject? = nil
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.willChangeObject, inObject: observer)

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import HardcoreData
 
 
 // MARK: - AppDelegate
@@ -21,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        HardcoreData.addSQLiteStore(resetStoreOnMigrationFailure: true)
         return true
     }
 }

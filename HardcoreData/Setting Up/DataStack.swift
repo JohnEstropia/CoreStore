@@ -28,6 +28,8 @@ import CoreData
 import GCDKit
 
 
+private let defaultConfigurationName = "PF_DEFAULT_CONFIGURATION_NAME"
+
 private let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL
 
 private let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData")
@@ -81,14 +83,20 @@ public final class DataStack {
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         self.rootSavingContext = NSManagedObjectContext.rootSavingContextForCoordinator(self.coordinator)
         self.mainContext = NSManagedObjectContext.mainContextForRootContext(self.rootSavingContext)
-        self.entityNameMapping = (managedObjectModel.entities as! [NSEntityDescription]).reduce([EntityClassNameType: EntityNameType]()) { (var mapping, entityDescription) in
+        
+        var entityNameMapping = [EntityClassNameType: EntityNameType]()
+        var entityConfigurationsMapping = [EntityClassNameType: Set<String>]()
+        for entityDescription in managedObjectModel.entities as! [NSEntityDescription] {
             
+            let managedObjectClassName = entityDescription.managedObjectClassName
+            entityConfigurationsMapping[managedObjectClassName] = []
             if let entityName = entityDescription.name {
                 
-                mapping[entityDescription.managedObjectClassName] = entityName
+                entityNameMapping[managedObjectClassName] = entityName
             }
-            return mapping
         }
+        self.entityNameMapping = entityNameMapping
+        self.entityConfigurationsMapping = entityConfigurationsMapping
         
         self.rootSavingContext.parentStack = self
     }
@@ -117,6 +125,7 @@ public final class DataStack {
         
         if let store = store {
             
+            self.updateMetadataForPersistentStore(store)
             return PersistentStoreResult(store)
         }
         
@@ -140,7 +149,7 @@ public final class DataStack {
     Adds to the stack an SQLite store from the given SQLite file name.
     
     :param: fileName the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
     :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
     :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
     :returns: a `PersistentStoreResult` indicating success or failure.
@@ -162,7 +171,7 @@ public final class DataStack {
     Adds to the stack an SQLite store from the given SQLite file URL.
     
     :param: fileURL the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
     :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
     :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
     :returns: a `PersistentStoreResult` indicating success or failure.
@@ -176,7 +185,7 @@ public final class DataStack {
             
             if store.type == NSSQLiteStoreType
                 && isExistingStoreAutomigrating == automigrating
-                && store.configurationName == (configuration ?? "PF_DEFAULT_CONFIGURATION_NAME") {
+                && store.configurationName == (configuration ?? defaultConfigurationName) {
                     
                     return PersistentStoreResult(store)
             }
@@ -218,6 +227,7 @@ public final class DataStack {
         
         if let store = store {
             
+            self.updateMetadataForPersistentStore(store)
             return PersistentStoreResult(store)
         }
         
@@ -253,6 +263,7 @@ public final class DataStack {
                 
                 if let store = store {
                     
+                    self.updateMetadataForPersistentStore(store)
                     return PersistentStoreResult(store)
                 }
         }
@@ -276,12 +287,77 @@ public final class DataStack {
         return self.entityNameMapping[NSStringFromClass(entityClass)]
     }
     
+    internal func persistentStoresForEntityClass(entityClass: NSManagedObject.Type) -> [NSPersistentStore]? {
+        
+        var returnValue: [NSPersistentStore]? = nil
+        self.storeMetadataUpdateQueue.barrierSync {
+            
+            let configurationsForEntity = self.entityConfigurationsMapping[NSStringFromClass(entityClass)] ?? []
+            returnValue = map(configurationsForEntity) {
+                
+                return self.configurationStoreMapping[$0]!
+            }
+        }
+        return returnValue
+    }
+    
+    internal func persistentStoreForEntityClass(entityClass: NSManagedObject.Type, configuration: String?, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
+        
+        var returnValue: (store: NSPersistentStore?, isAmbiguous: Bool) = (store: nil, isAmbiguous: false)
+        self.storeMetadataUpdateQueue.barrierSync {
+            
+            let configurationsForEntity = self.entityConfigurationsMapping[NSStringFromClass(entityClass)] ?? []
+            if let configuration = configuration {
+                
+                if configurationsForEntity.contains(configuration) {
+                    
+                    returnValue = (store: self.configurationStoreMapping[configuration], isAmbiguous: false)
+                    return
+                }
+                else if !inferStoreIfPossible {
+                    
+                    return
+                }
+            }
+            
+            switch configurationsForEntity.count {
+                
+            case 0:
+                return
+                
+            case 1 where inferStoreIfPossible:
+                returnValue = (store: self.configurationStoreMapping[configurationsForEntity.first!], isAmbiguous: false)
+                
+            default:
+                returnValue = (store: nil, isAmbiguous: true)
+            }
+        }
+        return returnValue
+    }
+    
     
     // MARK: Private
     
     private typealias EntityClassNameType = String
     private typealias EntityNameType = String
+    private typealias ConfigurationNameType = String
     
     private let coordinator: NSPersistentStoreCoordinator
     private let entityNameMapping: [EntityClassNameType: EntityNameType]
+    private let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.hardcoreData.persistentStoreBarrierQueue")
+    private var configurationStoreMapping = [ConfigurationNameType: NSPersistentStore]()
+    private var entityConfigurationsMapping = [EntityClassNameType: Set<String>]()
+    
+    private func updateMetadataForPersistentStore(persistentStore: NSPersistentStore) {
+        
+        self.storeMetadataUpdateQueue.barrierAsync {
+            
+            let configurationName = persistentStore.configurationName
+            self.configurationStoreMapping[configurationName] = persistentStore
+            for entityDescription in (self.coordinator.managedObjectModel.entitiesForConfiguration(configurationName) as? [NSEntityDescription] ?? []) {
+                
+                self.entityConfigurationsMapping[entityDescription.managedObjectClassName]?.insert(configurationName)
+            }
+        }
+    }
 }

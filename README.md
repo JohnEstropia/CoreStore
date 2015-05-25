@@ -4,6 +4,9 @@
 [![License](https://img.shields.io/cocoapods/l/HardcoreData.svg?style=flat)](http://cocoadocs.org/docsets/HardcoreData)
 
 Simple, elegant, and smart Core Data programming with Swift
+(Swift only, iOS 8+ only)
+
+
 
 ## Features
 - Supports multiple persistent stores per *data stack*, just the way .xcdatamodeld files are supposed to. HardcoreData will also manage one *data stack* by default, but you can create and manage as many as you need.
@@ -18,7 +21,7 @@ Simple, elegant, and smart Core Data programming with Swift
 
 Quick-setup:
 ```swift
-HardcoreData.defaultStack.addSQLiteStore("MyStore.sqlite")
+HardcoreData.addSQLiteStore("MyStore.sqlite")
 ```
 
 Simple transactions:
@@ -61,8 +64,19 @@ let count = HardcoreData.queryValue(
 ```
 
 
+## Quick jumps
 
-## Architecture
+- [Architecture](#architecture)
+- [Setting up](#setup)
+- [Saving and processing transactions](#transactions)
+- [Fetching and querying](#fetch_query)
+- [Logging and error handling](#logging)
+- [Observing changes and notifications](#observing)
+- [Importing data](#importing)
+
+
+
+## <a name="architecture">Architecture</a>
 For maximum safety and performance, HardcoreData will enforce coding patterns and practices it was designed for. (Don't worry, it's not as scary as it sounds.) But it is advisable to understand the "magic" of HardcoreData before you use it in your apps.
 
 If you are already familiar with the inner workings of CoreData, here is a mapping of `HardcoreData` abstractions:
@@ -73,7 +87,7 @@ If you are already familiar with the inner workings of CoreData, here is a mappi
 | `NSPersistentStore`<br />("Configuration"s in the .xcdatamodeld file) | `DataStack` configuration<br />(multiple sqlite / in-memory stores per stack) |
 | `NSManagedObjectContext` | `BaseDataTransaction` subclasses<br />(`SynchronousDataTransaction`, `AsynchronousDataTransaction`, `DetachedDataTransaction`) |
 
-RestKit and MagicalRecord set up their `NSManagedObjectContext`s this way:
+Popular libraries [RestKit](https://github.com/RestKit/RestKit) and [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) set up their `NSManagedObjectContext`s this way:
 
 <img src="https://cloud.githubusercontent.com/assets/3029684/6734049/40579660-ce99-11e4-9d38-829877386afb.png" alt="nested contexts" height=271 />
 
@@ -85,7 +99,7 @@ This allows for a butter-smooth main thread, while still taking advantage of saf
 
 
 
-## Setting up
+## <a name="setup">Setting up</a>
 The simplest way to initialize HardcoreData is to add a default store to the default stack:
 ```swift
 HardcoreData.defaultStack.addSQLiteStore()
@@ -154,23 +168,27 @@ Check out the *HardcoreData.swift* and *DataStack.swift files* if you want to ex
 
 
 
-## Saving and processing transactions
+## <a name="transactions">Saving and processing transactions</a>
 (implemented; README pending)
 
 
-## Fetching and querying
+
+## <a name="fetch_query">Fetching and querying</a>
 (implemented; README pending)
 
 
-## Logging and error handling
+
+## <a name="logging">Logging and error handling</a>
 (implemented; README pending)
 
 
-## Observing changes and notifications
+
+## <a name="observing">Observing changes and notifications</a>
 (implemented; README pending)
 
 
-## Importing data
+
+## <a name="importing">Importing data</a>
 (currently implementing)
 
 

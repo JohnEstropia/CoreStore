@@ -188,7 +188,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     */
     public func addObserver<U: ManagedObjectListChangeObserver where U.EntityType == T>(observer: U) {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to add a \(typeName(observer)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
         
         self.removeObserver(observer)
         
@@ -231,7 +231,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     */
     public func addObserver<U: ManagedObjectListObjectObserver where U.EntityType == T>(observer: U) {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to add a \(typeName(observer)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
         
         self.removeObserver(observer)
         
@@ -340,7 +340,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     */
     public func addObserver<U: ManagedObjectListSectionObserver where U.EntityType == T>(observer: U) {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to add a \(typeName(observer)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
         
         self.removeObserver(observer)
         
@@ -478,7 +478,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     */
     public func removeObserver<U: ManagedObjectListChangeObserver where U.EntityType == T>(observer: U) {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to remove a \(typeName(observer)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to remove an observer of type \(typeName(observer)) outside the main thread.")
         
         let nilValue: AnyObject? = nil
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.willChangeList, inObject: observer)
@@ -496,12 +496,13 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal init(dataStack: DataStack, entity: T.Type, sectionedBy: SectionedBy?, fetchClauses: [FetchClause]) {
+    internal init(dataStack: DataStack, from: From<T>, sectionedBy: SectionedBy?, fetchClauses: [FetchClause]) {
         
         let context = dataStack.mainContext
         
         let fetchRequest = NSFetchRequest()
-        fetchRequest.entity = context.entityDescriptionForEntityClass(entity)
+        from.applyToFetchRequest(fetchRequest, context: context)
+        
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         

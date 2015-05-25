@@ -28,6 +28,86 @@ import CoreData
 import GCDKit
 
 
+// MARK: - Into
+
+/**
+A `Into` clause contains the destination entity and destination persistent store for a `create(...)` method. A common usage is to just indicate the entity:
+
+    let person = transaction.create(Into(MyPersonEntity))
+
+For cases where multiple `NSPersistentStore`'s contain the same entity, the destination configuration's name needs to be specified as well:
+
+    let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
+
+This helps the `NSManagedObjectContext` to determine which
+*/
+public struct Into<T: NSManagedObject> {
+    
+    // MARK: Public
+    
+    /**
+    Initializes an `Into` clause.
+    Sample Usage:
+    
+        let person = transaction.create(Into<MyPersonEntity>())
+    */
+    public init(){
+        
+        self.configuration = nil
+        self.inferStoreIfPossible = true
+    }
+    
+    /**
+    Initializes an `Into` clause with the specified entity type.
+    Sample Usage:
+    
+        let person = transaction.create(Into(MyPersonEntity))
+    
+    :param: entity the `NSManagedObject` type to be created
+    */
+    public init(_ entity: T.Type) {
+        
+        self.configuration = nil
+        self.inferStoreIfPossible = true
+    }
+    
+    /**
+    Initializes an `Into` clause with the specified configuration.
+    Sample Usage:
+    
+        let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
+    
+    :param: configuration the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+    */
+    public init(_ configuration: String?) {
+        
+        self.configuration = configuration
+        self.inferStoreIfPossible = false
+    }
+    
+    /**
+    Initializes an `Into` clause with the specified entity type and configuration.
+    Sample Usage:
+    
+        let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
+    
+    :param: entity the `NSManagedObject` type to be created
+    :param: configuration the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+    */
+    public init(_ entity: T.Type, _ configuration: String?) {
+        
+        self.configuration = configuration
+        self.inferStoreIfPossible = false
+    }
+    
+    
+    // MARK: Internal
+    
+    internal let configuration: String?
+    internal let inferStoreIfPossible: Bool
+}
+
+
 // MARK: - BaseDataTransaction
 
 /**
@@ -48,14 +128,50 @@ public /*abstract*/ class BaseDataTransaction {
     /**
     Creates a new `NSManagedObject` with the specified entity type.
     
-    :param: entity the `NSManagedObject` type to be created
+    :param: into the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
     :returns: a new `NSManagedObject` instance of the specified entity type.
     */
-    public func create<T: NSManagedObject>(entity: T.Type) -> T {
+    public func create<T: NSManagedObject>(into: Into<T>) -> T {
         
-        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to create an entity of type <\(entity)> outside its designated queue.")
+        HardcoreData.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to create an entity of type <\(T.self)> outside its designated queue.")
         
-        return T.createInContext(self.context)
+        let context = self.context
+        let object = T.createInContext(context)
+        
+        if into.inferStoreIfPossible {
+            
+            switch context.parentStack!.persistentStoreForEntityClass(T.self, configuration: nil, inferStoreIfPossible: true) {
+                
+            case (.Some(let persistentStore), _):
+                context.assignObject(object, toPersistentStore: persistentStore)
+                
+            case (.None, true):
+                HardcoreData.assert(false, "Attempted to create an entity of type \(typeName(object)) with ambiguous destination persistent store, but the configuration name was not specified.")
+                
+            default:
+                HardcoreData.assert(false, "Attempted to create an entity of type \(typeName(object)), but a destination persistent store containing the entity type could not be found.")
+            }
+        }
+        else {
+            
+            switch context.parentStack!.persistentStoreForEntityClass(T.self, configuration: into.configuration, inferStoreIfPossible: false) {
+                
+            case (.Some(let persistentStore), _):
+                context.assignObject(object, toPersistentStore: persistentStore)
+                
+            default:
+                if let configuration = into.configuration {
+                    
+                    HardcoreData.assert(false, "Attempted to create an entity of type \(typeName(object)) into the configuration \"\(configuration)\", which it doesn't belong to.")
+                }
+                else {
+                    
+                    HardcoreData.assert(false, "Attempted to create an entity of type \(typeName(object)) into the default configuration, which it doesn't belong to.")
+                }
+            }
+        }
+        
+        return object
     }
     
     /**

@@ -70,31 +70,31 @@ class HardcoreDataTests: XCTestCase {
         let createExpectation = self.expectationWithDescription("Entity creation")
         HardcoreData.beginAsynchronous { (transaction) -> Void in
         
-            let obj1 = transaction.create(TestEntity1)
+            let obj1 = transaction.create(Into(TestEntity1))
             obj1.testEntityID = 1
             obj1.testString = "lololol"
             obj1.testNumber = 42
             obj1.testDate = NSDate()
             
             let count = transaction.queryValue(
-                From(TestEntity1),
+                From<TestEntity1>(),
                 Select<Int>(.Count("testNumber"))
             )
             XCTAssertTrue(count == 0, "count == 0 (actual: \(count))") // counts only objects in store
             
-            let obj2 = transaction.create(TestEntity2)
+            let obj2 = transaction.create(Into<TestEntity2>())
             obj2.testEntityID = 2
             obj2.testString = "hahaha"
             obj2.testNumber = 100
             obj2.testDate = NSDate()
             
-            let obj3 = transaction.create(TestEntity2)
+            let obj3 = transaction.create(Into<TestEntity2>("Config2"))
             obj3.testEntityID = 3
             obj3.testString = "hahaha"
             obj3.testNumber = 90
             obj3.testDate = NSDate()
             
-            let obj4 = transaction.create(TestEntity2)
+            let obj4 = transaction.create(Into(TestEntity2.self, "Config2"))
             obj4.testEntityID = 5
             obj4.testString = "hohoho"
             obj4.testNumber = 80
@@ -103,14 +103,14 @@ class HardcoreDataTests: XCTestCase {
         
             transaction.beginSynchronous { (transaction) -> Void in
                 
-                let obj4 = transaction.create(TestEntity2)
+                let obj4 = transaction.create(Into<TestEntity2>())
                 obj4.testEntityID = 4
                 obj4.testString = "hehehehe"
                 obj4.testNumber = 80
                 obj4.testDate = NSDate()
                 
                 let objs4test = transaction.fetchOne(
-                    From(TestEntity2),
+                    From<TestEntity2>("Config2"),
                     Where("testEntityID", isEqualTo: 4),
                     Tweak { (fetchRequest) -> Void in
                         
@@ -239,7 +239,7 @@ class HardcoreDataTests: XCTestCase {
         
         let detachedExpectation = self.expectationWithDescription("Query creation")
         
-        let obj5 = detachedTransaction.create(TestEntity1)
+        let obj5 = detachedTransaction.create(Into<TestEntity1>("Config1"))
         obj5.testEntityID = 5
         obj5.testString = "hihihi"
         obj5.testNumber = 70
@@ -259,7 +259,7 @@ class HardcoreDataTests: XCTestCase {
                 )
                 XCTAssertTrue(count == 1, "count == 1 (actual: \(count))")
                 
-                let obj6 = detachedTransaction.create(TestEntity1)
+                let obj6 = detachedTransaction.create(Into<TestEntity1>())
                 obj6.testEntityID = 6
                 obj6.testString = "huehuehue"
                 obj6.testNumber = 130

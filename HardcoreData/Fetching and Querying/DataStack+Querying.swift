@@ -43,7 +43,7 @@ public extension DataStack {
     */
     public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchOne(from, fetchClauses)
     }
@@ -57,7 +57,7 @@ public extension DataStack {
     */
     public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchOne(from, fetchClauses)
     }
@@ -71,7 +71,7 @@ public extension DataStack {
     */
     public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchAll(from, fetchClauses)
     }
@@ -85,7 +85,7 @@ public extension DataStack {
     */
     public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchAll(from, fetchClauses)
     }
@@ -99,7 +99,7 @@ public extension DataStack {
     */
     public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchCount(from, fetchClauses)
     }
@@ -113,7 +113,7 @@ public extension DataStack {
     */
     public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchCount(from, fetchClauses)
     }
@@ -127,7 +127,7 @@ public extension DataStack {
     */
     public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchObjectID(from, fetchClauses)
     }
@@ -141,7 +141,7 @@ public extension DataStack {
     */
     public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchObjectID(from, fetchClauses)
     }
@@ -155,7 +155,7 @@ public extension DataStack {
     */
     public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchObjectIDs(from, fetchClauses)
     }
@@ -169,37 +169,9 @@ public extension DataStack {
     */
     public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to fetch from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.fetchObjectIDs(from, fetchClauses)
-    }
-    
-    /**
-    Deletes all `NSManagedObject`'s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    
-    :param: from a `From` clause indicating the entity type
-    :param: deleteClauses a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number of `NSManagedObject`'s deleted
-    */
-    public func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
-        
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to delete from a \(typeName(self)) outside the main queue.")
-        
-        return self.mainContext.deleteAll(from, deleteClauses)
-    }
-    
-    /**
-    Deletes all `NSManagedObject`'s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    
-    :param: from a `From` clause indicating the entity type
-    :param: deleteClauses a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number of `NSManagedObject`'s deleted
-    */
-    public func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
-        
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to delete from a \(typeName(self)) outside the main queue.")
-        
-        return self.mainContext.deleteAll(from, deleteClauses)
     }
     
     /**
@@ -214,7 +186,7 @@ public extension DataStack {
     */
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to query from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to query from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.queryValue(from, selectClause, queryClauses)
     }
@@ -231,7 +203,7 @@ public extension DataStack {
     */
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to query from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to query from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.queryValue(from, selectClause, queryClauses)
     }
@@ -248,7 +220,7 @@ public extension DataStack {
     */
     public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to query from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to query from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }
@@ -265,7 +237,7 @@ public extension DataStack {
     */
     public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to query from a \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to query from a \(typeName(self)) outside the main thread.")
         
         return self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }

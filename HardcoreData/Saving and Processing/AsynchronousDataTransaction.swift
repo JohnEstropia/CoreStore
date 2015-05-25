@@ -91,16 +91,16 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     // MARK: BaseDataTransaction
     
     /**
-    Creates a new `NSManagedObject` with the specified entity type. This method should not be used after the `commit()` method was already called once.
+    Creates a new `NSManagedObject` with the specified entity type.
     
-    :param: entity the `NSManagedObject` type to be created
+    :param: into the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
     :returns: a new `NSManagedObject` instance of the specified entity type.
     */
-    public override func create<T: NSManagedObject>(entity: T.Type) -> T {
+    public override func create<T: NSManagedObject>(into: Into<T>) -> T {
         
-        HardcoreData.assert(!self.isCommitted, "Attempted to create an entity of type <\(entity)> from an already committed \(typeName(self)).")
+        HardcoreData.assert(!self.isCommitted, "Attempted to create an entity of type <\(T.self)> from an already committed \(typeName(self)).")
         
-        return super.create(entity)
+        return super.create(into)
     }
     
     /**

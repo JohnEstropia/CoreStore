@@ -10,13 +10,22 @@ import UIKit
 import HardcoreData
 
 
-struct Shared {
+private struct Static {
     
-    static let palettes = HardcoreData.observeSectionedList(
-        From(Palette),
-        SectionedBy("colorName"),
-        OrderBy(.Ascending("hue"))
-    )
+    static let palettes: ManagedObjectListController<Palette> = {
+        
+        HardcoreData.addSQLiteStore(
+            "ColorsDemo.sqlite",
+            configuration: "ObservingDemo",
+            resetStoreOnMigrationFailure: true
+        )
+        
+        return HardcoreData.observeSectionedList(
+            From(Palette),
+            SectionedBy("colorName"),
+            OrderBy(.Ascending("hue"))
+        )
+    }()
 }
 
 
@@ -28,7 +37,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     deinit {
         
-        Shared.palettes.removeObserver(self)
+        Static.palettes.removeObserver(self)
     }
     
     
@@ -52,7 +61,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
             action: "addBarButtonItemTouched:"
         )
         
-        Shared.palettes.addObserver(self)
+        Static.palettes.addObserver(self)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -74,19 +83,19 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        return Shared.palettes.numberOfSections()
+        return Static.palettes.numberOfSections()
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return Shared.palettes.numberOfObjectsInSection(section)
+        return Static.palettes.numberOfObjectsInSection(section)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("PaletteTableViewCell") as! PaletteTableViewCell
         
-        let palette = Shared.palettes[indexPath]
+        let palette = Static.palettes[indexPath]
         cell.colorView?.backgroundColor = palette.color
         cell.label?.text = palette.colorText
         
@@ -102,7 +111,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
         
         self.performSegueWithIdentifier(
             "ObjectObserverDemoViewController",
-            sender: Shared.palettes[indexPath]
+            sender: Static.palettes[indexPath]
         )
     }
     
@@ -111,7 +120,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
         switch editingStyle {
             
         case .Delete:
-            let palette = Shared.palettes[indexPath]
+            let palette = Static.palettes[indexPath]
             HardcoreData.beginAsynchronous{ (transaction) -> Void in
                 
                 transaction.delete(palette)
@@ -125,7 +134,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        return Shared.palettes.sectionInfoAtIndex(section).name
+        return Static.palettes.sectionInfoAtIndex(section).name
     }
     
     
@@ -158,7 +167,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
         
         if let cell = self.tableView.cellForRowAtIndexPath(indexPath) as? PaletteTableViewCell {
             
-            let palette = Shared.palettes[indexPath]
+            let palette = Static.palettes[indexPath]
             cell.colorView?.backgroundColor = palette.color
             cell.label?.text = palette.colorText
         }
@@ -199,7 +208,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
         
         HardcoreData.beginAsynchronous { (transaction) -> Void in
             
-            let palette = transaction.create(Palette)
+            let palette = transaction.create(Into(Palette))
             palette.setInitialValues()
             
             transaction.commit()

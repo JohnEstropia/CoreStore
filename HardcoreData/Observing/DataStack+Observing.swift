@@ -42,7 +42,7 @@ public extension DataStack {
     */
     public func observeObject<T: NSManagedObject>(object: T) -> ManagedObjectController<T> {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to observe objects from \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to observe objects from \(typeName(self)) outside the main thread.")
         
         return ManagedObjectController(
             dataStack: self,
@@ -71,11 +71,11 @@ public extension DataStack {
     */
     public func observeObjectList<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> ManagedObjectListController<T> {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to observe objects from \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to observe objects from \(typeName(self)) outside the main thread.")
         
         return ManagedObjectListController(
             dataStack: self,
-            entity: T.self,
+            from: from,
             sectionedBy: nil,
             fetchClauses: fetchClauses
         )
@@ -104,11 +104,11 @@ public extension DataStack {
     */
     public func observeSectionedList<T: NSManagedObject>(from: From<T>, _ sectionedBy: SectionedBy, _ fetchClauses: [FetchClause]) -> ManagedObjectListController<T> {
         
-        HardcoreData.assert(GCDQueue.Main.isCurrentExecutionContext(), "Attempted to observe objects from \(typeName(self)) outside the main queue.")
+        HardcoreData.assert(NSThread.isMainThread(), "Attempted to observe objects from \(typeName(self)) outside the main thread.")
         
         return ManagedObjectListController(
             dataStack: self,
-            entity: T.self,
+            from: from,
             sectionedBy: sectionedBy,
             fetchClauses: fetchClauses
         )

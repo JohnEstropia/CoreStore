@@ -53,7 +53,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
             
             HardcoreData.beginSynchronous { (transaction) -> Void in
                 
-                let palette = transaction.create(Palette)
+                let palette = transaction.create(Into(Palette))
                 palette.setInitialValues()
                 
                 transaction.commit()

@@ -34,6 +34,125 @@ A `Form` clause binds the `NSManagedObject` entity type to the generics type sys
 */
 public struct From<T: NSManagedObject> {
     
-    public init(){ }
-    public init(_ entity: T.Type) { }
+    // MARK: Public
+    
+    public init(){
+        
+        self.findPersistentStores = { _ in nil }
+    }
+    
+    public init(_ entity: T.Type) {
+        
+        self.findPersistentStores = { _ in nil }
+    }
+    
+    public init(_ configurations: String...) {
+        
+        self.init(configurations: configurations)
+    }
+    
+    public init(_ configurations: [String]) {
+        
+        self.init(configurations: configurations)
+    }
+    
+    public init(_ entity: T.Type, _ configurations: String...) {
+        
+        self.init(configurations: configurations)
+    }
+    
+    public init(_ entity: T.Type, _ configurations: [String]) {
+        
+        self.init(configurations: configurations)
+    }
+    
+    public init(_ storeURLs: NSURL...) {
+        
+        self.init(storeURLs: storeURLs)
+    }
+    
+    public init(_ storeURLs: [NSURL]) {
+        
+        self.init(storeURLs: storeURLs)
+    }
+    
+    public init(_ entity: T.Type, _ storeURLs: NSURL...) {
+        
+        self.init(storeURLs: storeURLs)
+    }
+    
+    public init(_ entity: T.Type, _ storeURLs: [NSURL]) {
+        
+        self.init(storeURLs: storeURLs)
+    }
+    
+    public init(_ persistentStores: NSPersistentStore...) {
+        
+        self.init(persistentStores: persistentStores)
+    }
+    
+    public init(_ persistentStores: [NSPersistentStore]) {
+        
+        self.init(persistentStores: persistentStores)
+    }
+    
+    public init(_ entity: T.Type, _ persistentStores: NSPersistentStore...) {
+        
+        self.init(persistentStores: persistentStores)
+    }
+    
+    public init(_ entity: T.Type, _ persistentStores: [NSPersistentStore]) {
+        
+        self.init(persistentStores: persistentStores)
+    }
+    
+    
+    // MARK: Internal
+    
+    internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) {
+        
+        fetchRequest.entity = context.entityDescriptionForEntityClass(T.self)
+        fetchRequest.affectedStores = self.findPersistentStores(context: context)
+    }
+    
+    
+    // MARK: Private
+    
+    private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
+    
+    private init(configurations: [String]) {
+        
+        let configurationsSet = Set(configurations)
+        self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
+            
+            return context.parentStack?.persistentStoresForEntityClass(T.self)?.filter {
+                
+                return configurationsSet.contains($0.configurationName)
+            }
+        }
+    }
+    
+    private init(storeURLs: [NSURL]) {
+        
+        let storeURLsSet = Set(storeURLs)
+        self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
+            
+            return context.parentStack?.persistentStoresForEntityClass(T.self)?.filter {
+                
+                return $0.URL != nil && storeURLsSet.contains($0.URL!)
+            }
+        }
+    }
+    
+    private init(persistentStores: [NSPersistentStore]) {
+        
+        let persistentStores = Set(persistentStores)
+        self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
+            
+            return context.parentStack?.persistentStoresForEntityClass(T.self)?.filter {
+                
+                return persistentStores.contains($0)
+            }
+        }
+    }
 }

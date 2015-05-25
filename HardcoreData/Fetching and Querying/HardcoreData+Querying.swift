@@ -152,30 +152,6 @@ public extension HardcoreData {
     }
     
     /**
-    Using the `defaultStack`, deletes all `NSManagedObject`'s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    
-    :param: from a `From` clause indicating the entity type
-    :param: deleteClauses a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number of `NSManagedObject`'s deleted
-    */
-    public static func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
-        
-        return self.defaultStack.deleteAll(from, deleteClauses)
-    }
-    
-    /**
-    Deletes all `NSManagedObject`'s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    
-    :param: from a `From` clause indicating the entity type
-    :param: deleteClauses a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number of `NSManagedObject`'s deleted
-    */
-    public static func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
-        
-        return self.defaultStack.deleteAll(from, deleteClauses)
-    }
-    
-    /**
     Using the `defaultStack`, queries aggregate values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
