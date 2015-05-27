@@ -58,15 +58,11 @@ internal extension NSManagedObject {
         
         let objectID = self.objectID
         if objectID.temporaryID {
-            
+
             var error: NSError?
-            var didSucceed: Bool?
-            if let managedObjectContext = self.managedObjectContext {
+            let didSucceed = withExtendedLifetime(self.managedObjectContext) {
                 
-                managedObjectContext.performBlockAndWait {
-                    
-                    didSucceed = managedObjectContext.obtainPermanentIDsForObjects([self], error: &error)
-                }
+                return $0?.obtainPermanentIDsForObjects([self], error: &error)
             }
             if didSucceed != true {
                 
@@ -76,7 +72,7 @@ internal extension NSManagedObject {
                 return nil
             }
         }
-        
+
         var error: NSError?
         if let existingObject = context.existingObjectWithID(objectID, error: &error) {
             
@@ -85,7 +81,7 @@ internal extension NSManagedObject {
         
         CoreStore.handleError(
             error ?? NSError(coreStoreErrorCode: .UnknownError),
-            "Failed to load existing <\(T.self)> in context.")
+            "Failed to load existing \(typeName(self)) in context.")
         return nil;
     }
 }
