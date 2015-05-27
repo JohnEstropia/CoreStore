@@ -99,6 +99,7 @@
 		B5D39A0319FD00DE000E91BB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity2.swift; sourceTree = "<group>"; };
 		B5D806C51A34715700A44484 /* GCDKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GCDKit.xcodeproj; sourceTree = "<group>"; };
+		B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = CoreStore.podspec; sourceTree = SOURCE_ROOT; };
 		B5E84ED81AFF82360064E85B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		B5E84ED91AFF82360064E85B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 		B5E84EDB1AFF84500064E85B /* DataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStack.swift; sourceTree = "<group>"; };
@@ -206,6 +207,7 @@
 				2F03A53419C5C6DA005002A5 /* Info.plist */,
 				B5E84ED81AFF82360064E85B /* README.md */,
 				B5E84ED91AFF82360064E85B /* LICENSE */,
+				B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
