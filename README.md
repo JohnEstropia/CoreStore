@@ -1,17 +1,17 @@
-# HardcoreData
-[![Version](https://img.shields.io/cocoapods/v/HardcoreData.svg?style=flat)](http://cocoadocs.org/docsets/HardcoreData)
-[![Platform](https://img.shields.io/cocoapods/p/HardcoreData.svg?style=flat)](http://cocoadocs.org/docsets/HardcoreData)
-[![License](https://img.shields.io/cocoapods/l/HardcoreData.svg?style=flat)](http://cocoadocs.org/docsets/HardcoreData)
+# CoreStore
+[![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
+[![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
+[![License](https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 
 Simple, elegant, and smart Core Data programming with Swift
-(Swift only, iOS 8+ only)
+(Swift, iOS 8+)
 
 
 
 ## Features
-- Supports multiple persistent stores per *data stack*, just the way .xcdatamodeld files are supposed to. HardcoreData will also manage one *data stack* by default, but you can create and manage as many as you need.
+- Supports multiple persistent stores per *data stack*, just the way .xcdatamodeld files are supposed to. CoreStore will also manage one *data stack* by default, but you can create and manage as many as you need.
 - Ability to plug-in your own logging framework (or any of your favorite 3rd-party logger)
-- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. HardcoreData loads entity-to-class mappings from the .xcdatamodeld file, so you are free to name them independently.
+- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the .xcdatamodeld file, so you are free to name them independently.
 - Observe a list of `NSManagedObject`'s using `ManagedObjectListController`, a clean wrapper for `NSFetchedResultsController`. Another controller, `ManagedObjectController`, lets you observe changes for a single object without using KVO. Both controllers can have multiple observers as well, so there is no extra overhead when sharing the same data source for multiple screens.
 - Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
 - Provides convenient API for common use cases.
@@ -21,12 +21,12 @@ Simple, elegant, and smart Core Data programming with Swift
 
 Quick-setup:
 ```swift
-HardcoreData.addSQLiteStore("MyStore.sqlite")
+CoreStore.addSQLiteStore("MyStore.sqlite")
 ```
 
 Simple transactions:
 ```swift
-HardcoreData.beginAsynchronous { (transaction) -> Void in
+CoreStore.beginAsynchronous { (transaction) -> Void in
     let object = transaction.create(MyEntity)
     object.entityID = 1
     object.name = "test entity"
@@ -42,10 +42,10 @@ HardcoreData.beginAsynchronous { (transaction) -> Void in
 
 Easy fetching:
 ```swift
-let objects = HardcoreData.fetchAll(From(MyEntity))
+let objects = CoreStore.fetchAll(From(MyEntity))
 ```
 ```swift
-let objects = HardcoreData.fetchAll(
+let objects = CoreStore.fetchAll(
     From(MyEntity),
     Where("entityID", isEqualTo: 1),
     OrderBy(.Ascending("entityID"), .Descending("name")),
@@ -57,7 +57,7 @@ let objects = HardcoreData.fetchAll(
 
 Simple queries:
 ```swift
-let count = HardcoreData.queryValue(
+let count = CoreStore.queryValue(
     From(MyEntity),
     Select<Int>(.Count("entityID"))
 )
@@ -77,11 +77,11 @@ let count = HardcoreData.queryValue(
 
 
 ## <a name="architecture">Architecture</a>
-For maximum safety and performance, HardcoreData will enforce coding patterns and practices it was designed for. (Don't worry, it's not as scary as it sounds.) But it is advisable to understand the "magic" of HardcoreData before you use it in your apps.
+For maximum safety and performance, CoreStore will enforce coding patterns and practices it was designed for. (Don't worry, it's not as scary as it sounds.) But it is advisable to understand the "magic" of CoreStore before you use it in your apps.
 
-If you are already familiar with the inner workings of CoreData, here is a mapping of `HardcoreData` abstractions:
+If you are already familiar with the inner workings of CoreData, here is a mapping of `CoreStore` abstractions:
 
-| *Core Data* | *HardcoreData* |
+| *Core Data* | *CoreStore* |
 | --- | --- |
 | `NSManagedObjectModel` / `NSPersistentStoreCoordinator`<br />(.xcdatamodeld file) | `DataStack` |
 | `NSPersistentStore`<br />("Configuration"s in the .xcdatamodeld file) | `DataStack` configuration<br />(multiple sqlite / in-memory stores per stack) |
@@ -91,7 +91,7 @@ Popular libraries [RestKit](https://github.com/RestKit/RestKit) and [MagicalReco
 
 <img src="https://cloud.githubusercontent.com/assets/3029684/6734049/40579660-ce99-11e4-9d38-829877386afb.png" alt="nested contexts" height=271 />
 
-This ensures maximum data integrity between contexts without blocking the main queue. But as <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">Florian Kugler's investigation</a> found out, merging contexts is still by far faster than saving nested contexts. HardcoreData's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context, and only allows changes to be made within *transactions*:
+This ensures maximum data integrity between contexts without blocking the main queue. But as <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">Florian Kugler's investigation</a> found out, merging contexts is still by far faster than saving nested contexts. CoreStore's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context, and only allows changes to be made within *transactions*:
 
 <img src="https://cloud.githubusercontent.com/assets/3029684/6734050/4078b642-ce99-11e4-95ea-c0c1d24fbe80.png" alt="nested contexts and merge hybrid" height=212 />
 
@@ -100,12 +100,12 @@ This allows for a butter-smooth main thread, while still taking advantage of saf
 
 
 ## <a name="setup">Setting up</a>
-The simplest way to initialize HardcoreData is to add a default store to the default stack:
+The simplest way to initialize CoreStore is to add a default store to the default stack:
 ```swift
-HardcoreData.defaultStack.addSQLiteStore()
+CoreStore.defaultStack.addSQLiteStore()
 ```
 This one-liner does the following:
-- Triggers the lazy-initialization of `HardcoreData.defaultStack` with a default `DataStack`
+- Triggers the lazy-initialization of `CoreStore.defaultStack` with a default `DataStack`
 - Sets up the stack's `NSPersistentStoreCoordinator`, the root saving `NSManagedObjectContext`, and the read-only main `NSManagedObjectContext`
 - Adds an automigrating SQLite store in the *"Application Support"* directory with the file name *"[App bundle name].sqlite"*
 - Creates and returns the `NSPersistentStore` instance on success, or an `NSError` on failure
@@ -132,10 +132,10 @@ case .Failure(let error): // error is an NSError instance
     println("Failed creating an sqlite store with error: \(error.description)"
 }
 
-HardcoreData.defaultStack = dataStack // pass the dataStack to HardcoreData for easier access later on
+CoreStore.defaultStack = dataStack // pass the dataStack to CoreStore for easier access later on
 ```
 
-Note that you dont need to do the `HardcoreData.defaultStack = dataStack` line. You can just as well hold a stack like below and call all methods directly from the `DataStack` instance:
+Note that you dont need to do the `CoreStore.defaultStack = dataStack` line. You can just as well hold a stack like below and call all methods directly from the `DataStack` instance:
 ```swift
 class MyViewController: UIViewController {
     let dataStack = DataStack(modelName: "MyModel")
@@ -149,22 +149,22 @@ class MyViewController: UIViewController {
     }
 }
 ```
-The difference is when you set the stack as the `HardcoreData.defaultStack`, you can call the stack's methods directly from `HardcoreData` itself:
+The difference is when you set the stack as the `CoreStore.defaultStack`, you can call the stack's methods directly from `CoreStore` itself:
 ```swift
 
 class MyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        HardcoreData.addSQLiteStore()
+        CoreStore.addSQLiteStore()
     }
     func methodToBeCalledLaterOn() {
-        let objects = HardcoreData.fetchAll(From(MyEntity))
+        let objects = CoreStore.fetchAll(From(MyEntity))
         println(objects)
     }
 }
 ```
 
-Check out the *HardcoreData.swift* and *DataStack.swift files* if you want to explore the inner workings of the data stack.
+Check out the *CoreStore.swift* and *DataStack.swift files* if you want to explore the inner workings of the data stack.
 
 
 
