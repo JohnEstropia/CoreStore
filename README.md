@@ -27,7 +27,7 @@ CoreStore.addSQLiteStore("MyStore.sqlite")
 Simple transactions:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    let object = transaction.create(MyEntity)
+    let object = transaction.create(Into(MyEntity))
     object.entityID = 1
     object.name = "test entity"
 
@@ -76,7 +76,7 @@ let count = CoreStore.queryValue(
 
 
 
-## <a name="architecture">Architecture</a>
+## <a name="architecture"></a>Architecture
 For maximum safety and performance, CoreStore will enforce coding patterns and practices it was designed for. (Don't worry, it's not as scary as it sounds.) But it is advisable to understand the "magic" of CoreStore before you use it in your apps.
 
 If you are already familiar with the inner workings of CoreData, here is a mapping of `CoreStore` abstractions:
@@ -99,7 +99,7 @@ This allows for a butter-smooth main thread, while still taking advantage of saf
 
 
 
-## <a name="setup">Setting up</a>
+## <a name="setup"></a>Setting up
 The simplest way to initialize CoreStore is to add a default store to the default stack:
 ```swift
 CoreStore.defaultStack.addSQLiteStore()
@@ -170,25 +170,78 @@ Check out the *CoreStore.swift* and *DataStack.swift files* if you want to explo
 
 ## <a name="transactions">Saving and processing transactions</a>
 (implemented; README pending)
+To ensure deterministic state for objects in the read-only `NSManagedObjectContext`, CoreStore does not expose API's for updating and saving directly from the main context (or any other context for that matter.) Instead, you spawn *transactions* from `DataStack` instances:
+
+    let dataStack = self.dataStack
+    dataStack.beginAsynchronous { (transaction) -> Void in
+        // make changes
+        transaction.commit()
+    }
+
+or for the default stack, directly from `CoreStore`:
+
+    CoreStore.beginAsynchronous { (transaction) -> Void in
+        // make changes
+        transaction.commit()
+    }
+
+The `commit()` method saves the changes to the persistent store.
+
+The examples above use `beginAsynchronous(...)`, but there are actually 3 types of transactions at you disposal: *asynchronous*, *synchronous*, and *detached*.
+
+**Asynchronous transactions** are spawned from `beginAsynchronous(...)`. This method returns immediately and executes its closure from a background serial queue:
+
+    CoreStore.beginAsynchronous { (transaction) -> Void in
+        // make changes
+        transaction.commit()
+    }
+
+`transaction`'s created from `beginAsynchronous(...)` are instances of `AsynchronousDataTransaction`.
+
+**Synchronous transactions** are created from `beginSynchronous(...)`. While the syntax is similar to its asynchronous counterpart, `beginSynchronous(...)` waits for its transaction block to complete before returning:
+
+    CoreStore.beginSynchronous { (transaction) -> Void in
+        // make changes
+        transaction.commit()
+    } 
+
+`transaction` above is a `SynchronousDataTransaction` instance. Since `beginSynchronous(...)` technically blocks two queues (the caller's queue and the transaction's background queue), it is considered less safe as it's more prone to deadlock. Take special care that the closure does not block on any other external queues.
+
+**Detached transactions** are special in that they do not enclose updates within a closure:
+
+    let transaction = CoreStore.beginDetached()
+    // make changes
+    downloadJSONWithCompletion({ (json) -> Void in
+
+        // make other changes
+        transaction.commit()
+    })
+    downloadAnotherJSONWithCompletion({ (json) -> Void in
+
+        // make some other changes
+        transaction.commit()
+    })
+    
+This allows for non-contiguous updates. As the above example also shows, only detached transactions are allowed to call `commit()` multiple times (doing so with synchronous and asynchronous transactions will trigger an assert).  
 
 
 
-## <a name="fetch_query">Fetching and querying</a>
+## <a name="fetch_query"></a>Fetching and querying
 (implemented; README pending)
 
 
 
-## <a name="logging">Logging and error handling</a>
+## <a name="logging"></a>Logging and error handling
 (implemented; README pending)
 
 
 
-## <a name="observing">Observing changes and notifications</a>
+## <a name="observing"></a>Observing changes and notifications
 (implemented; README pending)
 
 
 
-## <a name="importing">Importing data</a>
+## <a name="importing"></a>Importing data
 (currently implementing)
 
 
