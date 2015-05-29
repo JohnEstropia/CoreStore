@@ -205,7 +205,9 @@ The examples above use `beginAsynchronous(...)`, but there are actually 3 types 
         transaction.commit()
     } 
 
-`transaction` above is a `SynchronousDataTransaction` instance. Since `beginSynchronous(...)` technically blocks two queues (the caller's queue and the transaction's background queue), it is considered less safe as it's more prone to deadlock. Take special care that the closure does not block on any other external queues.
+`transaction` above is a `SynchronousDataTransaction` instance.
+
+Since `beginSynchronous(...)` technically blocks two queues (the caller's queue and the transaction's background queue), it is considered less safe as it's more prone to deadlock. Take special care that the closure does not block on any other external queues.
 
 **Detached transactions** are special in that they do not enclose updates within a closure:
 
@@ -222,9 +224,26 @@ The examples above use `beginAsynchronous(...)`, but there are actually 3 types 
         transaction.commit()
     })
     
-This allows for non-contiguous updates. As the above example also shows, only detached transactions are allowed to call `commit()` multiple times (doing so with synchronous and asynchronous transactions will trigger an assert).  
+This allows for non-contiguous updates. Do note that this flexibility comes with a price: you are now responsible for managing concurrency for the transaction. As uncle Ben said, "with great power comes great race conditions."
+
+As the above example also shows, only detached transactions are allowed to call `commit()` multiple times; doing so with synchronous and asynchronous transactions will trigger an assert. 
 
 
+You've seen how to create transactions, but we have yet to see how to make *creates*, *updates*, and *deletes*. The 3 types of transactions above are all subclasses of `BaseDataTransaction`, which implements the methods shown below.
+
+### Creating objects
+The `create(...)` method accepts an `Into` clause which specifies the entity for the object you want to create:
+
+    let person = transaction.create(Into(MyPersonEntity))
+
+While the syntax is simple, CoreStore does not just naively insert a new object. This single line does the following:
+- Checks that the entity type exists in any of the transaction's parent persistent store
+- If the entity belongs to only one persistent store, a new object is inserted into that store and returned from `create(...)`
+- If the entity does not belong to any store, an assert will be triggered. This is a programmer error and should never occur in production code.
+
+### Updating objects
+
+### Deleting objects
 
 ## <a name="fetch_query"></a>Fetching and querying
 (implemented; README pending)
@@ -243,6 +262,5 @@ This allows for non-contiguous updates. As the above example also shows, only de
 
 ## <a name="importing"></a>Importing data
 (currently implementing)
-
 
 
