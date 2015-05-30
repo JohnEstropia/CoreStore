@@ -45,6 +45,11 @@ public struct Into<T: NSManagedObject> {
     
     // MARK: Public
     
+    internal static var defaultConfigurationName: String {
+        
+        return "PF_DEFAULT_CONFIGURATION_NAME"
+    }
+    
     /**
     Initializes an `Into` clause.
     Sample Usage:
@@ -180,11 +185,26 @@ public /*abstract*/ class BaseDataTransaction {
     :param: object the `NSManagedObject` type to be edited
     :returns: an editable proxy for the specified `NSManagedObject`.
     */
-    public func fetch<T: NSManagedObject>(object: T?) -> T? {
+    public func edit<T: NSManagedObject>(object: T?) -> T? {
         
         CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type \(typeName(object)) outside its designated queue.")
         
         return object?.inContext(self.context)
+    }
+    
+    /**
+    Returns an editable proxy of the object with the specified `NSManagedObjectID`. 
+    
+    :param: into an `Into` clause specifying the entity type
+    :param: objectID the `NSManagedObjectID` for the object to be edited
+    :returns: an editable proxy for the specified `NSManagedObject`.
+    */
+    public func edit<T: NSManagedObject>(into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
+        
+        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type <\(T.self)> outside its designated queue.")
+        CoreStore.assert(into.inferStoreIfPossible || (into.configuration ?? Into.defaultConfigurationName) == objectID.persistentStore?.configurationName, "Attempted to update an entity of type <\(T.self)> but the specified persistent store do not match the `NSManagedObjectID`.")
+        
+        return T.inContext(self.context, withObjectID: objectID)
     }
     
     /**
@@ -194,9 +214,36 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func delete(object: NSManagedObject?) {
         
-        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity of type \(typeName(object)) outside its designated queue.")
+        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity outside its designated queue.")
         
         object?.inContext(self.context)?.deleteFromContext()
+    }
+    
+    /**
+    Deletes the specified `NSManagedObject`'s.
+    
+    :param: object the `NSManagedObject` type to be deleted
+    :param: objects other `NSManagedObject`'s type to be deleted
+    */
+    public func delete(object: NSManagedObject?, _ objects: NSManagedObject?...) {
+        
+        self.delete([object] + objects)
+    }
+    
+    /**
+    Deletes the specified `NSManagedObject`'s.
+    
+    :param: objects the `NSManagedObject`'s type to be deleted
+    */
+    public func delete(objects: [NSManagedObject?]) {
+        
+        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete entities outside their designated queue.")
+        
+        let context = self.context
+        for object in objects {
+            
+            object?.inContext(context)?.deleteFromContext()
+        }
     }
     
     // MARK: Saving changes

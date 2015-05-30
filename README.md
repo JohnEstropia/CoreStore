@@ -254,8 +254,85 @@ Note that if you do explicitly specify the configuration name, CoreStore will on
 
 ### Updating objects
 
+After creating an object from the transaction, you can simply update it's properties as normal:
+
+    CoreStore.beginAsynchronous { (transaction) -> Void in
+        let person = transaction.create(Into(MyPersonEntity))
+        person.name = "John Smith"
+        person.age = 30
+        transaction.commit()
+    }
+
+To update an existing object, fetch the object's instance from the transaction:
+
+    CoreStore.beginAsynchronous { (transaction) -> Void in
+        let person = transaction.fetchOne(
+            From(MyPersonEntity),
+            Where("name", isEqualTo: "Jane Smith")
+        )
+        person.age = person.age + 1
+        transaction.commit()
+    }
+
+*(For more about fetching, read [Fetching and querying](#fetch_query))*
+
+**Do not update an instance that was not created/fetched from the transaction.** If you have a reference to the object already, use the transaction's `edit(...)` method to get an editable proxy instance for that object:
+
+    let jane: MyPersonEntity = // ...
+
+    CoreStore.beginAsynchronous { (transaction) -> Void in
+        // WRONG: jane.age = jane.age + 1
+        // RIGHT:
+        let jane = transaction.edit(jane) // using the same variable name protects us from misusing the non-transaction instance
+        jane.age = jane.age + 1
+        transaction.commit()
+    }
+
+This is also true when updating an object's relationships. Make sure that the object assigned to the relationship is also created/fetched from the transaction:
+
+    let jane: MyPersonEntity = // ...
+    let john: MyPersonEntity = // ...
+    
+    CoreStore.beginAsynchronous { (transaction) -> Void in
+        // WRONG: jane.friends = [john]
+        // RIGHT:
+        let jane = transaction.edit(jane)
+        let john = transaction.edit(john)
+        jane.friends = [john]
+        transaction.commit()
+    }
 
 ### Deleting objects
+
+Deleting an object is simpler as you can tell a transaction to delete an object directly without fetching an editable proxy (CoreStore does that for you):
+
+    let john: MyPersonEntity = // ...
+    
+    CoreStore.beginAsynchronous { (transaction) -> Void in
+        transaction.delete(john)
+        transaction.commit()
+    }
+
+or several objects at once:
+
+    let john: MyPersonEntity = // ...
+    let jane: MyPersonEntity = // ...
+    
+    CoreStore.beginAsynchronous { (transaction) -> Void in
+        transaction.delete(john, jane)
+        // transaction.delete([john, jane]) is also allowed
+        transaction.commit()
+    }
+
+If you do not have references yet to the objects to be deleted, transactions have a `deleteAll(...)` method you can pass a query to:
+
+    CoreStore.beginAsynchronous { (transaction) -> Void in
+        transaction.deleteAll(
+            From(MyPersonEntity)
+            Where("age > 30")
+        )
+        transaction.commit()
+    }
 
 ## <a name="fetch_query"></a>Fetching and querying
 (implemented; README pending)

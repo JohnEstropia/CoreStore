@@ -28,8 +28,6 @@ import CoreData
 import GCDKit
 
 
-private let defaultConfigurationName = "PF_DEFAULT_CONFIGURATION_NAME"
-
 private let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL
 
 private let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData")
@@ -185,7 +183,7 @@ public final class DataStack {
             
             if store.type == NSSQLiteStoreType
                 && isExistingStoreAutomigrating == automigrating
-                && store.configurationName == (configuration ?? defaultConfigurationName) {
+                && store.configurationName == (configuration ?? Into.defaultConfigurationName) {
                     
                     return PersistentStoreResult(store)
             }

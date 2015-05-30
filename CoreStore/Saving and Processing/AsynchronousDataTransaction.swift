@@ -109,11 +109,25 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     :param: object the `NSManagedObject` type to be edited
     :returns: an editable proxy for the specified `NSManagedObject`.
     */
-    public override func fetch<T: NSManagedObject>(object: T?) -> T? {
+    public override func edit<T: NSManagedObject>(object: T?) -> T? {
         
         CoreStore.assert(!self.isCommitted, "Attempted to update an entity of type \(typeName(object)) from an already committed \(typeName(self)).")
         
-        return super.fetch(object)
+        return super.edit(object)
+    }
+    
+    /**
+    Returns an editable proxy of the object with the specified `NSManagedObjectID`. This method should not be used after the `commit()` method was already called once.
+    
+    :param: into an `Into` clause specifying the entity type
+    :param: objectID the `NSManagedObjectID` for the object to be edited
+    :returns: an editable proxy for the specified `NSManagedObject`.
+    */
+    public override func edit<T: NSManagedObject>(into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
+        
+        CoreStore.assert(!self.isCommitted, "Attempted to update an entity of type <\(T.self)> from an already committed \(typeName(self)).")
+        
+        return super.edit(into, objectID)
     }
     
     /**
@@ -126,6 +140,31 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         CoreStore.assert(!self.isCommitted, "Attempted to delete an entity of type \(typeName(object)) from an already committed \(typeName(self)).")
         
         super.delete(object)
+    }
+    
+    /**
+    Deletes the specified `NSManagedObject`'s.
+    
+    :param: object the `NSManagedObject` type to be deleted
+    :param: objects other `NSManagedObject`'s type to be deleted
+    */
+    public override func delete(object: NSManagedObject?, _ objects: NSManagedObject?...) {
+        
+        CoreStore.assert(!self.isCommitted, "Attempted to delete an entities from an already committed \(typeName(self)).")
+        
+        super.delete([object] + objects)
+    }
+    
+    /**
+    Deletes the specified `NSManagedObject`'s.
+    
+    :param: objects the `NSManagedObject`'s type to be deleted
+    */
+    public override func delete(objects: [NSManagedObject?]) {
+        
+        CoreStore.assert(!self.isCommitted, "Attempted to delete an entities from an already committed \(typeName(self)).")
+        
+        super.delete(objects)
     }
     
     /**

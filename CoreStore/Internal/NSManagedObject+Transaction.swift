@@ -41,6 +41,11 @@ internal extension NSManagedObject {
         )
     }
     
+    internal class func inContext(context: NSManagedObjectContext, withObjectID objectID: NSManagedObjectID) -> Self? {
+        
+        return self.typedObjectInContext(context, objectID: objectID)
+    }
+    
     internal func inContext(context: NSManagedObjectContext) -> Self? {
         
         return self.typedObjectInContext(context)
@@ -53,6 +58,20 @@ internal extension NSManagedObject {
     
     
     // MARK: Private
+    
+    private class func typedObjectInContext<T: NSManagedObject>(context: NSManagedObjectContext, objectID: NSManagedObjectID) -> T? {
+        
+        var error: NSError?
+        if let existingObject = context.existingObjectWithID(objectID, error: &error) {
+            
+            return (existingObject as! T)
+        }
+        
+        CoreStore.handleError(
+            error ?? NSError(coreStoreErrorCode: .UnknownError),
+            "Failed to load existing \(typeName(self)) in context.")
+        return nil;
+    }
     
     private func typedObjectInContext<T: NSManagedObject>(context: NSManagedObjectContext) -> T? {
         

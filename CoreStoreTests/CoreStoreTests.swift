@@ -253,6 +253,17 @@ class CoreStoreTests: XCTestCase {
             case .Success(let hasChanges):
                 XCTAssertTrue(hasChanges, "hasChanges == true")
                 
+                CoreStore.beginSynchronous { (transaction) -> Void in
+                    
+                    let obj5Copy1 = transaction.edit(obj5)
+                    XCTAssertTrue(obj5.objectID == obj5Copy1?.objectID, "obj5.objectID == obj5Copy1?.objectID")
+                    XCTAssertFalse(obj5 == obj5Copy1, "obj5 == obj5Copy1")
+                    
+                    let obj5Copy2 = transaction.edit(Into(TestEntity1), obj5.objectID)
+                    XCTAssertTrue(obj5.objectID == obj5Copy2?.objectID, "obj5.objectID == obj5Copy2?.objectID")
+                    XCTAssertFalse(obj5 == obj5Copy2, "obj5 == obj5Copy2")
+                }
+                
                 let count: Int? = CoreStore.queryValue(
                     From(TestEntity1),
                     Select(.Count("testNumber"))
@@ -278,6 +289,22 @@ class CoreStoreTests: XCTestCase {
                             Select<Int>(.Count("testNumber"))
                         )
                         XCTAssertTrue(count == 2, "count == 2 (actual: \(count))")
+                        
+                        
+                        CoreStore.beginSynchronous { (transaction) -> Void in
+                            
+                            let obj6 = transaction.edit(obj6)
+                            let obj5 = transaction.edit(obj5)
+                            transaction.delete(obj5, obj6)
+                            
+                            transaction.commit()
+                        }
+                        
+                        let count2 = CoreStore.queryValue(
+                            From(TestEntity1),
+                            Select<Int>(.Count("testNumber"))
+                        )
+                        XCTAssertTrue(count2 == 0, "count == 0 (actual: \(count2))")
                         
                         detachedExpectation.fulfill()
                         

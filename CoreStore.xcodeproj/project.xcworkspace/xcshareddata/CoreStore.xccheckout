@@ -22,7 +22,7 @@
 		<key>4B60F1BCB491FF717C56441AE7783C74F417BE48</key>
 		<string>../..</string>
 		<key>8B2E522D57154DFA93A06982C36315ECBEA4FA97</key>
-		<string>../..Libraries/GCDKit/</string>
+		<string>../..Libraries/GCDKit</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:JohnEstropia/CoreStore.git</string>
