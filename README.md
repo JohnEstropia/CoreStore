@@ -184,7 +184,7 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
     transaction.commit()
 }
 ```
-The `commit()` method saves the changes to the persistent store.
+The `commit()` method saves the changes to the persistent store. If `commit()` is not called when the transaction block completes, all changes within the transaction is discarded.
 
 The examples above use `beginAsynchronous(...)`, but there are actually 3 types of transactions at you disposal: *asynchronous*, *synchronous*, and *detached*.
 
@@ -374,6 +374,7 @@ There are currently 5 fetch methods you can call from `CoreStore`, from a `DataS
 Each method's purpose is straightforward, but we need to understand how to set the clauses for the fetch.
 
 **`Where` clause**
+
 The `Where` clause is CoreStore's `NSPredicate` wrapper. It specifies the search filter to use when fetching (or querying). It implements all initializers that `NSPredicate` does (except for `-predicateWithBlock:`, which Core Data does not support):
 ```swift
 var people = CoreStore.fetchAll(
@@ -403,6 +404,7 @@ var people = CoreStore.fetchAll(
 If you do not provide a `Where` clause, all objects that belong to the specified `From` will be returned.
 
 **`OrderBy` clause**
+
 The `OrderBy` clause is CoreStore's `NSSortDescriptor` wrapper. Use it to specify attribute keys in which to sort the fetch (or query) results with.
 ```swift
 var mostValuablePeople = CoreStore.fetchAll(
@@ -425,6 +427,7 @@ var mostValuablePeople = CoreStore.fetchAll(
 ```
 
 **`Tweak` clause**
+
 The `Tweak` clause lets you, well, *tweak* the fetch (or query). `Tweak` exposes the `NSFetchRequest` in a closure where you can make changes to its properties:
 ```swift
 var people = CoreStore.fetchAll(
@@ -444,34 +447,175 @@ The clauses are evaluated the order they appear in the fetch/query, so you typic
 Do note that while `Tweak` lets you micro-configure its `NSFetchRequest`, don't forget that CoreStore already preconfigured that `NSFetchRequest` to suitable defaults. Only use `Tweak` when you know what you are doing!
 
 #### Querying
-
 One of the functionalities overlooked by other Core Data wrapper libraries is raw properties fetching. If you are familiar with `NSDictionaryResultType` and `-[NSFetchedRequest propertiesToFetch]`, you probably know how painful it is to setup a query for raw values and aggregate values. CoreStore makes querying easy by exposing the 2 methods below:
 
-- `queryValue(_:_:_:)` - returns a single raw value for an attribute or for an aggregate value.
+- `queryValue(_:_:_:)` - returns a single raw value for an attribute or for an aggregate value. If there are multiple results, `queryValue(...)` only returns the first item.
 - `queryAttributes(_:_:_:)` - returns an array of dictionaries containing attribute keys with their corresponding values.
 
 Both methods above accept the same parameters: a required `From` clause, a required `Select<T>` clause, and an optional series of `Where`, `OrderBy`, `GroupBy`, and/or `Tweak` clauses.
 
-Setting up the `From`, `Where`, `OrderBy`, `Tweak` clauses is similar to how you would when fetching. For querying, you need to know how to use the `Select<T>` and `GroupBy` clauses as well.
+Setting up the `From`, `Where`, `OrderBy`, and `Tweak` clauses is similar to how you would when fetching. For querying, you also need to know how to use the `Select<T>` and `GroupBy` clauses.
 
 **`Select<T>` clause**
 
+The `Select<T>` clause specifies the target attribute/aggregate key and the return type: 
 ```swift
-let minAge = CoreStore.queryValue(
+let johnsAge = CoreStore.queryValue(
     From(MyPersonEntity),
-    Select<Int>(.Minimum("age"))
+    Select<Int>("age"),
+    Where("name == %@", "John Smith")
 )
-// minAge will be bounds as an Int
+```
+The example above queries the "age" property for the first object that matches the `Where` condition. `johnsAge` will be bound to type `Int?`, as indicated by the `Select<Int>` generic type. For `queryValue(...)`, the following are allowed as the return type (and as the generic type for `Select<T>`):
+- `Bool`
+- `Int8`
+- `Int16`
+- `Int32`
+- `Int64`
+- `Double`
+- `Float`
+- `String`
+- `NSNumber`
+- `NSString`
+- `NSDecimalNumber`
+- `NSDate`
+- `NSData`
+- `NSManagedObjectID`
+- `NSString`
+
+For `queryAttributes(...)`, only `NSDictionary` is valid for `Select`, thus you are allowed omit the generic type:
+```swift
+let allAges = CoreStore.queryAttributes(
+    From(MyPersonEntity),
+    Select("age")
+)
+```
+
+If you only need a value for a particular attribute, you can just specify the key name (like we did with `Select<Int>("age")`), but several aggregate functions can also be used as parameter to `Select`:
+- `.Average(...)`
+- `.Count(...)`
+- `.Maximum(...)`
+- `.Median(...)`
+- `.Minimum(...)`
+- `.StandardDeviation(...)`
+- `.Sum(...)`
+
+```swift
+let oldestAge = CoreStore.queryValue(
+    From(MyPersonEntity),
+    Select<Int>(.Maximum("age"))
+)
+```
+
+For `queryAttributes(...)` which returns an array of dictionaries, you can specify multiple attributes/aggregates to `Select`:
+```swift
+let personJSON = CoreStore.queryAttributes(
+    From(MyPersonEntity),
+    Select("name", "age")
+)
+```
+`personJSON` will then have the value:
+```json
+[
+    [
+        "name": "John Smith",
+        "age": 30
+    ],
+    [
+        "name": "Jane Doe",
+        "age": 22
+    ]
+]
+```
+You can also include an aggregate as well:
+```swift
+let personJSON = CoreStore.queryAttributes(
+    From(MyPersonEntity),
+    Select("name", .Count("friends"))
+)
+```
+which returns:
+```swift
+[
+    [
+        "name": "John Smith",
+        "count(friends)": 42
+    ],
+    [
+        "name": "Jane Doe",
+        "count(friends)": 231
+    ]
+]
+```
+The `"count(friends)"` key name was automatically used by CoreStore, but you can specify your own key alias if you need:
+```swift
+let personJSON = CoreStore.queryAttributes(
+    From(MyPersonEntity),
+    Select("name", .Count("friends", As: "friendsCount"))
+)
+```
+which now returns:
+```swift
+[
+    [
+        "name": "John Smith",
+        "friendsCount": 42
+    ],
+    [
+        "name": "Jane Doe",
+        "friendsCount": 231
+    ]
+]
 ```
 
 **`GroupBy` clause**
 
-
+The `GroupBy` clause lets you group results by a specified attribute/aggregate. This is only useful only for `queryAttributes(...)` since `queryValue(...)` just returns the first value anyway.
+```swift
+let personJSON = CoreStore.queryAttributes(
+    From(MyPersonEntity),
+    Select("age", .Count("age", As: "count")),
+    GroupBy("age")
+)
+```
+this returns dictionaries that shows the count for each `"age"`:
+```swift
+[
+    [
+        "age": 42,
+        "count": 1
+    ],
+    [
+        "age": 22,
+        "count": 1
+    ]
+]
+```
 
 ## <a id="logging"></a>Logging and error handling
-(implemented; README pending)
+One unfortunate thing when using some third-party libraries is that they usually pollute the console with their own logging mechanisms. CoreStore provides it's own default logging class, but you can plug-in your own favorite logger by implementing the `CoreStoreLogger` protocol.
+```swift
+final class MyLogger: CoreStoreLogger {
+    func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        // pass to your logger
+    }
+    
+    func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        // pass to your logger
+    }
+    
+    func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        // pass to your logger
+    }
+}
+```
+Then pass an instance of this class to `CoreStore`:
+```swift
+CoreStore.logger = MyLogger()
+```
+Doing so channels all logging calls to your logger.
 
-
+Note that to keep stack information intact, all calls to these methods are not thread-managed. Thus you have to make sure that your logger is thread-safe or you may otherwise have to dispatch your logging implementation to a serial queue.
 
 ## <a id="observing"></a>Observing changes and notifications
 (implemented; README pending)

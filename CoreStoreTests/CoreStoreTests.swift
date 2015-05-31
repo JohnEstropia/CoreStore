@@ -184,7 +184,7 @@ class CoreStoreTests: XCTestCase {
                 
                 let counts = CoreStore.queryAttributes(
                     From(TestEntity2),
-                    Select(.Count("testString", As: "count"), "testString"),
+                    Select("testString", .Count("testString", As: "count")),
                     GroupBy("testString")
                 )
                 println(counts)
