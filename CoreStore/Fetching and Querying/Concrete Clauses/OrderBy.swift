@@ -31,6 +31,11 @@ public func +(left: OrderBy, right: OrderBy) -> OrderBy {
     return OrderBy(left.sortDescriptors + right.sortDescriptors)
 }
 
+public func +=(inout left: OrderBy, right: OrderBy) {
+    
+    left = left + right
+}
+
 
 // MARK: - KeyPath
     

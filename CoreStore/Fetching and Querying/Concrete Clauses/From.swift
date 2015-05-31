@@ -46,22 +46,22 @@ public struct From<T: NSManagedObject> {
         self.findPersistentStores = { _ in nil }
     }
     
-    public init(_ configurations: String...) {
+    public init(_ configurations: String?...) {
         
         self.init(configurations: configurations)
     }
     
-    public init(_ configurations: [String]) {
+    public init(_ configurations: [String?]) {
         
         self.init(configurations: configurations)
     }
     
-    public init(_ entity: T.Type, _ configurations: String...) {
+    public init(_ entity: T.Type, _ configurations: String?...) {
         
         self.init(configurations: configurations)
     }
     
-    public init(_ entity: T.Type, _ configurations: [String]) {
+    public init(_ entity: T.Type, _ configurations: [String?]) {
         
         self.init(configurations: configurations)
     }
@@ -120,9 +120,9 @@ public struct From<T: NSManagedObject> {
     
     private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
     
-    private init(configurations: [String]) {
+    private init(configurations: [String?]) {
         
-        let configurationsSet = Set(configurations)
+        let configurationsSet = Set(configurations.map { $0 ?? Into.defaultConfigurationName })
         self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
             
             return context.parentStack?.persistentStoresForEntityClass(T.self)?.filter {

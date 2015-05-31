@@ -27,12 +27,6 @@ import CoreData
 import GCDKit
 
 
-/**
-Okay, okay. This one's shorter.
-*/
-public typealias HCD = CoreStore
-
-
 // MARK: - CoreStore
 
 /**

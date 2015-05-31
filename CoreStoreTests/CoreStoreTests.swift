@@ -166,10 +166,12 @@ class CoreStoreTests: XCTestCase {
             let obj1 = transaction.fetchOne(From(TestEntity1))
             XCTAssertNotNil(obj1, "obj1 != nil")
             
+            var orderBy = OrderBy(.Ascending("testEntityID"))
+            orderBy += OrderBy(.Descending("testString"))
             let objs2 = transaction.fetchAll(
                 From(TestEntity2),
                 Where("testNumber", isEqualTo: 100) || Where("%K == %@", "testNumber", 90),
-                OrderBy(.Ascending("testEntityID"), .Descending("testString")),
+                orderBy,
                 Tweak { (fetchRequest) -> Void in
                     
                     fetchRequest.includesPendingChanges = true

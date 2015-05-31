@@ -1,7 +1,7 @@
 # CoreStore
 [![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
-[![License](https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
+[![License](https://img.shields.io/github/license/JohnEstropia/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 
 Simple, elegant, and smart Core Data programming with Swift
 (Swift, iOS 8+)
@@ -16,6 +16,8 @@ Simple, elegant, and smart Core Data programming with Swift
 - Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
 - Provides convenient API for common use cases.
 - Clean API designed around Swift’s code elegance and type safety.
+
+**CoreStore's goal is not to expose shorter, magical syntax, but to provide an API that prioritizes readability, consistency, and safety.**
 
 #### TL;DR sample codes
 
@@ -72,11 +74,10 @@ let count = CoreStore.queryValue(
 - [Fetching and querying](#fetch_query)
 - [Logging and error handling](#logging)
 - [Observing changes and notifications](#observing)
-- [Importing data](#importing)
 
 
 
-## <a name="architecture"></a>Architecture
+## <a id="architecture"></a>Architecture
 For maximum safety and performance, CoreStore will enforce coding patterns and practices it was designed for. (Don't worry, it's not as scary as it sounds.) But it is advisable to understand the "magic" of CoreStore before you use it in your apps.
 
 If you are already familiar with the inner workings of CoreData, here is a mapping of `CoreStore` abstractions:
@@ -99,7 +100,7 @@ This allows for a butter-smooth main thread, while still taking advantage of saf
 
 
 
-## <a name="setup"></a>Setting up
+## <a id="setup"></a>Setting up
 The simplest way to initialize CoreStore is to add a default store to the default stack:
 ```swift
 CoreStore.defaultStack.addSQLiteStore()
@@ -151,7 +152,6 @@ class MyViewController: UIViewController {
 ```
 The difference is when you set the stack as the `CoreStore.defaultStack`, you can call the stack's methods directly from `CoreStore` itself:
 ```swift
-
 class MyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -168,62 +168,61 @@ Check out the *CoreStore.swift* and *DataStack.swift files* if you want to explo
 
 
 
-## <a name="transactions">Saving and processing transactions</a>
-(implemented; README pending)
+## <a id="transactions">Saving and processing transactions</a>
 To ensure deterministic state for objects in the read-only `NSManagedObjectContext`, CoreStore does not expose API's for updating and saving directly from the main context (or any other context for that matter.) Instead, you spawn *transactions* from `DataStack` instances:
-
-    let dataStack = self.dataStack
-    dataStack.beginAsynchronous { (transaction) -> Void in
-        // make changes
-        transaction.commit()
-    }
-
+```swift
+let dataStack = self.dataStack
+dataStack.beginAsynchronous { (transaction) -> Void in
+    // make changes
+    transaction.commit()
+}
+```
 or for the default stack, directly from `CoreStore`:
-
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        // make changes
-        transaction.commit()
-    }
-
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    // make changes
+    transaction.commit()
+}
+```
 The `commit()` method saves the changes to the persistent store.
 
 The examples above use `beginAsynchronous(...)`, but there are actually 3 types of transactions at you disposal: *asynchronous*, *synchronous*, and *detached*.
 
 **Asynchronous transactions** are spawned from `beginAsynchronous(...)`. This method returns immediately and executes its closure from a background serial queue:
-
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        // make changes
-        transaction.commit()
-    }
-
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    // make changes
+    transaction.commit()
+}
+```
 `transaction`'s created from `beginAsynchronous(...)` are instances of `AsynchronousDataTransaction`.
 
 **Synchronous transactions** are created from `beginSynchronous(...)`. While the syntax is similar to its asynchronous counterpart, `beginSynchronous(...)` waits for its transaction block to complete before returning:
-
-    CoreStore.beginSynchronous { (transaction) -> Void in
-        // make changes
-        transaction.commit()
-    } 
-
+```swift
+CoreStore.beginSynchronous { (transaction) -> Void in
+    // make changes
+    transaction.commit()
+} 
+```
 `transaction` above is a `SynchronousDataTransaction` instance.
 
 Since `beginSynchronous(...)` technically blocks two queues (the caller's queue and the transaction's background queue), it is considered less safe as it's more prone to deadlock. Take special care that the closure does not block on any other external queues.
 
 **Detached transactions** are special in that they do not enclose updates within a closure:
+```swift
+let transaction = CoreStore.beginDetached()
+// make changes
+downloadJSONWithCompletion({ (json) -> Void in
 
-    let transaction = CoreStore.beginDetached()
-    // make changes
-    downloadJSONWithCompletion({ (json) -> Void in
+    // make other changes
+    transaction.commit()
+})
+downloadAnotherJSONWithCompletion({ (json) -> Void in
 
-        // make other changes
-        transaction.commit()
-    })
-    downloadAnotherJSONWithCompletion({ (json) -> Void in
-
-        // make some other changes
-        transaction.commit()
-    })
-    
+    // make some other changes
+    transaction.commit()
+})
+```
 This allows for non-contiguous updates. Do note that this flexibility comes with a price: you are now responsible for managing concurrency for the transaction. As uncle Ben said, "with great power comes great race conditions."
 
 As the above example also shows, only detached transactions are allowed to call `commit()` multiple times; doing so with synchronous and asynchronous transactions will trigger an assert. 
@@ -233,9 +232,9 @@ You've seen how to create transactions, but we have yet to see how to make *crea
 
 ### Creating objects
 The `create(...)` method accepts an `Into` clause which specifies the entity for the object you want to create:
-
-    let person = transaction.create(Into(MyPersonEntity))
-
+```swift
+let person = transaction.create(Into(MyPersonEntity))
+```
 While the syntax is straightforward, CoreStore does not just naively insert a new object. This single line does the following:
 - Checks that the entity type exists in any of the transaction's parent persistent store
 - If the entity belongs to only one persistent store, a new object is inserted into that store and returned from `create(...)`
@@ -255,101 +254,260 @@ Note that if you do explicitly specify the configuration name, CoreStore will on
 ### Updating objects
 
 After creating an object from the transaction, you can simply update it's properties as normal:
-
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        let person = transaction.create(Into(MyPersonEntity))
-        person.name = "John Smith"
-        person.age = 30
-        transaction.commit()
-    }
-
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let person = transaction.create(Into(MyPersonEntity))
+    person.name = "John Smith"
+    person.age = 30
+    transaction.commit()
+}
+```
 To update an existing object, fetch the object's instance from the transaction:
-
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        let person = transaction.fetchOne(
-            From(MyPersonEntity),
-            Where("name", isEqualTo: "Jane Smith")
-        )
-        person.age = person.age + 1
-        transaction.commit()
-    }
-
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let person = transaction.fetchOne(
+        From(MyPersonEntity),
+        Where("name", isEqualTo: "Jane Smith")
+    )
+    person.age = person.age + 1
+    transaction.commit()
+}
+```
 *(For more about fetching, read [Fetching and querying](#fetch_query))*
 
 **Do not update an instance that was not created/fetched from the transaction.** If you have a reference to the object already, use the transaction's `edit(...)` method to get an editable proxy instance for that object:
+```swift
+let jane: MyPersonEntity = // ...
 
-    let jane: MyPersonEntity = // ...
-
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        // WRONG: jane.age = jane.age + 1
-        // RIGHT:
-        let jane = transaction.edit(jane) // using the same variable name protects us from misusing the non-transaction instance
-        jane.age = jane.age + 1
-        transaction.commit()
-    }
-
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    // WRONG: jane.age = jane.age + 1
+    // RIGHT:
+    let jane = transaction.edit(jane) // using the same variable name protects us from misusing the non-transaction instance
+    jane.age = jane.age + 1
+    transaction.commit()
+}
+```
 This is also true when updating an object's relationships. Make sure that the object assigned to the relationship is also created/fetched from the transaction:
+```swift
+let jane: MyPersonEntity = // ...
+let john: MyPersonEntity = // ...
 
-    let jane: MyPersonEntity = // ...
-    let john: MyPersonEntity = // ...
-    
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        // WRONG: jane.friends = [john]
-        // RIGHT:
-        let jane = transaction.edit(jane)
-        let john = transaction.edit(john)
-        jane.friends = [john]
-        transaction.commit()
-    }
-
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    // WRONG: jane.friends = [john]
+    // RIGHT:
+    let jane = transaction.edit(jane)
+    let john = transaction.edit(john)
+    jane.friends = [john]
+    transaction.commit()
+}
+```
 ### Deleting objects
 
 Deleting an object is simpler as you can tell a transaction to delete an object directly without fetching an editable proxy (CoreStore does that for you):
+```swift
+let john: MyPersonEntity = // ...
 
-    let john: MyPersonEntity = // ...
-    
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        transaction.delete(john)
-        transaction.commit()
-    }
-
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    transaction.delete(john)
+    transaction.commit()
+}
+```
 or several objects at once:
+```swift
+let john: MyPersonEntity = // ...
+let jane: MyPersonEntity = // ...
 
-    let john: MyPersonEntity = // ...
-    let jane: MyPersonEntity = // ...
-    
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        transaction.delete(john, jane)
-        // transaction.delete([john, jane]) is also allowed
-        transaction.commit()
-    }
-
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    transaction.delete(john, jane)
+    // transaction.delete([john, jane]) is also allowed
+    transaction.commit()
+}
+```
 If you do not have references yet to the objects to be deleted, transactions have a `deleteAll(...)` method you can pass a query to:
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    transaction.deleteAll(
+        From(MyPersonEntity)
+        Where("age > 30")
+    )
+    transaction.commit()
+}
+```
+## <a id="fetch_query"></a>Fetching and querying
+Before we dive in, be aware that CoreStore distinguishes between *fetching* and *querying*:
+- A *fetch* executes searches from a specific *transaction* or *data stack*. This means fetches can include pending objects (i.e. before a transaction calls on `commit()`.) Use fetches when:
+    - results need to be `NSManagedObject` instances
+    - unsaved objects should be included in the search (though fetches can be configured to exclude unsaved ones)
+- A *query* pulls data straight from the persistent store. This means faster searches when computing aggregates such as *count*, *min*, *max*, etc. Use queries when:
+    - you need to compute aggregate functions (see below for a list of supported functions)
+    - results can be raw values like `NSString`'s, `NSNumber`'s, `Int`'s, `NSDate`'s, an `NSDictionary` of key-values, etc.
+    - only specific attribute keys need to be included in the results
+    - unsaved objects should be ignored
 
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        transaction.deleteAll(
-            From(MyPersonEntity)
-            Where("age > 30")
-        )
-        transaction.commit()
+The search conditions for fetches and queries are specified using *clauses*. All fetches and queries require a `From` clause that indicates the target entity type:
+```swift
+let people = CoreStore.fetchAll(From(MyPersonEntity))
+// CoreStore.fetchAll(From<MyPersonEntity>()) works as well
+```
+`people` in the example above will be of type `[MyPersonEntity]`. The `From(MyPersonEntity)` clause indicates a fetch to all persistent stores that `MyPersonEntity` belong to.
+
+If the entity exists in multiple configurations and you need to only search from a particular configuration, provide the `From` clause the configuration name for the destination persistent store:
+```swift
+let people = CoreStore.fetchAll(From<MyPersonEntity>("Config1")) // ignore objects in persistent stores other than the "Config1" configuration
+```
+or if the persistent store is the auto-generated "Default" configuration, specify `nil`:
+```swift
+let person = CoreStore.fetchAll(From<MyPersonEntity>(nil))
+```
+Now we know how to use a `From` clause, let's move on to fetching and querying.
+
+#### Fetching
+
+There are currently 5 fetch methods you can call from `CoreStore`, from a `DataStack` instance, or from a `BaseDataTransaction` instance. All of the methods below accept the same parameters: a required `From` clause, and an optional series of `Where`, `OrderBy`, and/or `Tweak` clauses.
+
+- `fetchAll(_:_:)` - returns an array of all objects that match the criteria.
+- `fetchOne(_:_:)` - returns the first object that match the criteria.
+- `fetchCount(_:_:)` - returns the number of objects that match the criteria.
+- `fetchObjectIDs(_:_:)`` - returns an array of `NSManagedObjectID`'s for all objects that match the criteria.
+- `fetchObjectID(_:_:)` - returns the `NSManagedObjectID`'s for the first objects that match the criteria.
+
+Each method's purpose is straightforward, but we need to understand how to set the clauses for the fetch.
+
+**`Where` clause**
+The `Where` clause is CoreStore's `NSPredicate` wrapper. It specifies the search filter to use when fetching (or querying). It implements all initializers that `NSPredicate` does (except for `-predicateWithBlock:`, which Core Data does not support):
+```swift
+var people = CoreStore.fetchAll(
+    From(MyPersonEntity),
+    Where("%K > %d", "age", 30) // string format initializer
+)
+people = CoreStore.fetchAll(
+    From(MyPersonEntity),
+    Where(true) // boolean initializer
+)
+```
+If you do have an existing `NSPredicate` instance already, you can pass that to `Where` as well:
+```swift
+let predicate = NSPredicate(...)
+var people = CoreStore.fetchAll(
+    From(MyPersonEntity),
+    Where(predicate) // predicate initializer
+)
+```
+`Where` clauses also implement the `&&`, `||`, and `!` logic operators, so you can provide logical conditions without writing too much `AND`, `OR`, and `NOT` strings in the conditions:
+```swift
+var people = CoreStore.fetchAll(
+    From(MyPersonEntity),
+    Where("age > %d", 30) && Where("gender == %@", "M")
+)
+```
+If you do not provide a `Where` clause, all objects that belong to the specified `From` will be returned.
+
+**`OrderBy` clause**
+The `OrderBy` clause is CoreStore's `NSSortDescriptor` wrapper. Use it to specify attribute keys in which to sort the fetch (or query) results with.
+```swift
+var mostValuablePeople = CoreStore.fetchAll(
+    From(MyPersonEntity),
+    OrderBy(.Descending("rating"), .Ascending("surname"))
+)
+```
+As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.Ascending` or `.Descending`. The associated value for the `SortKey` enumeration is the attribute key string.
+
+You can use the `+` and `+=` operator to append `OrderBy`'s together. This is useful when sorting conditionally:
+```swift
+var orderBy = OrderBy(.Descending("rating"))
+if sortFromYoungest {
+    orderBy += OrderBy(.Ascending("age"))
+}
+var mostValuablePeople = CoreStore.fetchAll(
+    From(MyPersonEntity),
+    orderBy
+)
+```
+
+**`Tweak` clause**
+The `Tweak` clause lets you, well, *tweak* the fetch (or query). `Tweak` exposes the `NSFetchRequest` in a closure where you can make changes to its properties:
+```swift
+var people = CoreStore.fetchAll(
+    From(MyPersonEntity),
+    Where("age > %d", 30),
+    OrderBy(.Ascending("surname")),
+    Tweak { (fetchRequest) -> Void in
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.returnsObjectsAsFaults = false
+        fetchRequest.includesSubentities = false
     }
+)
+```
+The clauses are evaluated the order they appear in the fetch/query, so you typically need to set `Tweak` as the last clause.
+`Tweak`'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions.
 
-## <a name="fetch_query"></a>Fetching and querying
+Do note that while `Tweak` lets you micro-configure its `NSFetchRequest`, don't forget that CoreStore already preconfigured that `NSFetchRequest` to suitable defaults. Only use `Tweak` when you know what you are doing!
+
+#### Querying
+
+One of the functionalities overlooked by other Core Data wrapper libraries is raw properties fetching. If you are familiar with `NSDictionaryResultType` and `-[NSFetchedRequest propertiesToFetch]`, you probably know how painful it is to setup a query for raw values and aggregate values. CoreStore makes querying easy by exposing the 2 methods below:
+
+- `queryValue(_:_:_:)` - returns a single raw value for an attribute or for an aggregate value.
+- `queryAttributes(_:_:_:)` - returns an array of dictionaries containing attribute keys with their corresponding values.
+
+Both methods above accept the same parameters: a required `From` clause, a required `Select<T>` clause, and an optional series of `Where`, `OrderBy`, `GroupBy`, and/or `Tweak` clauses.
+
+Setting up the `From`, `Where`, `OrderBy`, `Tweak` clauses is similar to how you would when fetching. For querying, you need to know how to use the `Select<T>` and `GroupBy` clauses as well.
+
+**`Select<T>` clause**
+
+```swift
+let minAge = CoreStore.queryValue(
+    From(MyPersonEntity),
+    Select<Int>(.Minimum("age"))
+)
+// minAge will be bounds as an Int
+```
+
+**`GroupBy` clause**
+
+
+
+## <a id="logging"></a>Logging and error handling
 (implemented; README pending)
 
 
 
-## <a name="logging"></a>Logging and error handling
+## <a id="observing"></a>Observing changes and notifications
 (implemented; README pending)
 
 
 
-## <a name="observing"></a>Observing changes and notifications
-(implemented; README pending)
+# TODO
+- Data importing utilities for transactions
+- Migration utilities
+- Support iCloud stores
 
 
+# Installation
+- Requires iOS 8 SDK and above
+- Swift 1.2
 
-## <a name="importing"></a>Importing data
-(currently implementing)
+### Install with Cocoapods
+```
+pod 'CoreStore'
+```
+This installs CoreStore as a framework.
 
+### Install as Git Submodule
+```
+git submodule add https://github.com/JohnEstropia/CoreStore.git <destination directory>
+```
+#### To install as a framework:
+Drag and drop **CoreStore.xcodeproj** to your project.
+#### To include directly in your app module:
+Add all *.swift* files to your project.
+
+# Contributions
+While CoreStore's design is pretty solid and the unit test and demo app work well, CoreStore is pretty much still in it's early stage. With more exposure to production code usage and criticisms from the developer community, CoreStore hopes to mature as well.
+Please feel free to report any issues, suggestions, or criticisms!
+日本語で連絡していただいても構いません！
+
+## License
+CoreStore is released under an MIT license. See the LICENSE file for more information
 
