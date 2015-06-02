@@ -6,6 +6,7 @@
 Simple, elegant, and smart Core Data programming with Swift
 (Swift, iOS 8+)
 
+[Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
 
 
 ## Features
@@ -66,7 +67,7 @@ let count = CoreStore.queryValue(
 ```
 
 
-## Quick jumps
+## Contents
 
 - [Architecture](#architecture)
 - [Setting up](#setup)
@@ -163,8 +164,6 @@ class MyViewController: UIViewController {
     }
 }
 ```
-
-Check out the *CoreStore.swift* and *DataStack.swift files* if you want to explore the inner workings of the data stack.
 
 
 
