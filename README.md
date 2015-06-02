@@ -92,7 +92,7 @@ Popular libraries [RestKit](https://github.com/RestKit/RestKit) and [MagicalReco
 
 <img src="https://cloud.githubusercontent.com/assets/3029684/6734049/40579660-ce99-11e4-9d38-829877386afb.png" alt="nested contexts" height=271 />
 
-This ensures maximum data integrity between contexts without blocking the main queue. But as <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">Florian Kugler's investigation</a> found out, merging contexts is still by far faster than saving nested contexts. CoreStore's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context, and only allows changes to be made within *transactions*:
+Nesting context saves from child context to the root context ensures maximum data integrity between contexts without blocking the main queue. But as <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">Florian Kugler's investigation</a> found out, merging contexts is still by far faster than saving nested contexts. CoreStore's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context, and only allows changes to be made within *transactions* on the child context:
 
 <img src="https://cloud.githubusercontent.com/assets/3029684/6734050/4078b642-ce99-11e4-95ea-c0c1d24fbe80.png" alt="nested contexts and merge hybrid" height=212 />
 
@@ -103,7 +103,7 @@ This allows for a butter-smooth main thread, while still taking advantage of saf
 ## <a id="setup"></a>Setting up
 The simplest way to initialize CoreStore is to add a default store to the default stack:
 ```swift
-CoreStore.defaultStack.addSQLiteStore()
+CoreStore.addSQLiteStore()
 ```
 This one-liner does the following:
 - Triggers the lazy-initialization of `CoreStore.defaultStack` with a default `DataStack`
@@ -615,12 +615,131 @@ CoreStore.logger = MyLogger()
 ```
 Doing so channels all logging calls to your logger.
 
-Note that to keep stack information intact, all calls to these methods are not thread-managed. Thus you have to make sure that your logger is thread-safe or you may otherwise have to dispatch your logging implementation to a serial queue.
+Note that to keep the call stack information intact, all calls to these methods are not thread-managed. Thus you have to make sure that your logger is thread-safe or you may otherwise have to dispatch your logging implementation to a serial queue.
 
 ## <a id="observing"></a>Observing changes and notifications
-(implemented; README pending)
+CoreStore provides type-safe wrappers for observing managed objects:
 
+- `ManagedObjectController`: use to observe changes to a single `NSManagedObject` instance (instead of Key-Value Observing)
+- `ManagedObjectListController`: use to observe changes to a list of `NSManagedObject` instances (instead of `NSFetchedResultsController`)
 
+#### Observe a single object
+
+To observe an object, implement the `ManagedObjectObserver` protocol and specify the `EntityType`:
+```swift
+class MyViewController: UIViewController, ManagedObjectObserver {
+    func managedObjectWillUpdate(objectController: ManagedObjectController<MyPersonEntity>, object: MyPersonEntity) {
+        // ...
+    }
+    
+    func managedObjectWasUpdated(objectController: ManagedObjectController<MyPersonEntity>, object: MyPersonEntity, changedPersistentKeys: Set<KeyPath>) {
+        // ...
+    }
+    
+    func managedObjectWasDeleted(objectController: ManagedObjectController<MyPersonEntity>, object: MyPersonEntity) {
+        // ...
+    }
+}
+```
+We then need to keep a `ManagedObjectController` instance and register our `ManagedObjectObserver` as an observer:
+```swift
+let person: MyPersonEntity = // ...
+self.objectController = CoreStore.observeObject(person)
+self.objectController.addObserver(self)
+```
+The controller will then notify our observer whenever the object's attributes change. You can add multiple `ManagedObjectObserver`'s to a single `ManagedObjectController` without any problem. This means you can just share around the `ManagedObjectController` instance to different screens without problem.
+
+You can get `ManagedObjectController`'s object through its `object` property. If the object is deleted, the `object` property will become `nil` to prevent further access. 
+
+While `ManagedObjectController` exposes `removeObserver(...)` as well, it only stores `weak` references of the observers and will safely unregister deallocated observers. 
+
+#### Observe a list of objects
+To observe a list of objects, implement one of the `ManagedObjectListChangeObserver` protocols and specify the `EntityType`:
+```swift
+class MyViewController: UIViewController, ManagedObjectListChangeObserver {
+    func managedObjectListWillChange(listController: ManagedObjectListController<MyPersonEntity>) {
+        // ...
+    }
+    
+    func managedObjectListDidChange(listController: ManagedObjectListController<MyPersonEntity>) {
+        // ...
+    }
+}
+```
+Including `ManagedObjectListChangeObserver`, there are 3 observer protocols you can implement depending on how detailed you need to handle a change notification:
+- `ManagedObjectListChangeObserver`: lets you handle these callback methods:
+    - `func managedObjectListWillChange(listController: ManagedObjectListController<T>)`
+    - `func managedObjectListDidChange(listController: ManagedObjectListController<T>)`
+- `ManagedObjectListObjectObserver`: in addition to `ManagedObjectListChangeObserver` methods, also lets you handle object inserts, updates, and deletes:
+    - `func managedObjectList(listController: ManagedObjectListController<T>, didInsertObject object: T, toIndexPath indexPath: NSIndexPath)`
+    - `func managedObjectList(listController: ManagedObjectListController<T>, didDeleteObject object: T, fromIndexPath indexPath: NSIndexPath)`
+    - `func managedObjectList(listController: ManagedObjectListController<T>, didUpdateObject object: T, atIndexPath indexPath: NSIndexPath)`
+    - `func managedObjectList(listController: ManagedObjectListController<T>, didMoveObject object: T, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)`
+- `ManagedObjectListSectionObserver`: in addition to `ManagedObjectListObjectObserver` methods, also lets you handle section inserts and deletes:
+    - `func managedObjectList(listController: ManagedObjectListController<T>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)`
+    - `func managedObjectList(listController: ManagedObjectListController<T>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)`
+
+We then need to create a `ManagedObjectListController` instance and register our `ManagedObjectListChangeObserver` as an observer:
+```swift
+self.listController = CoreStore.observeObjectList(
+    From(MyPersonEntity),
+    Where("age > 30"),
+    OrderBy(.Ascending("name")),
+    Tweak { (fetchRequest) -> Void in
+        fetchRequest.fetchBatchSize = 20
+    }
+)
+self.listController.addObserver(self)
+```
+Similar to `ManagedObjectController`, a `ManagedObjectListController` can also have multiple `ManagedObjectListChangeObserver`'s registered to a single `ManagedObjectListController`.
+
+If you have noticed, the `observeObjectList(...)` method accepts `Where`, `OrderBy`, and `Tweak` clauses exactly like a fetch. As the list maintained by `ManagedObjectListController` needs to have a deterministic order, at least the `From` and `OrderBy` clauses are required.
+
+A `ManagedObjectListController` created from `observeObjectList(...)` will maintain a single-section list. You can therefore access its contents with just an index:
+```swift
+let firstPerson = self.listController[0]
+```
+
+If the list needs to be grouped into sections, create the `ManagedObjectListController` instance with the `observeSectionedList(...)` method and a `SectionedBy` clause:
+```swift
+self.listController = CoreStore.observeSectionedList(
+    From(MyPersonEntity),
+    SectionedBy("age"),
+    Where("gender", isEqualTo: "M"),
+    OrderBy(.Ascending("age"), .Ascending("name")),
+    Tweak { (fetchRequest) -> Void in
+        fetchRequest.fetchBatchSize = 20
+    }
+)
+```
+A list controller created this way will group the objects by the attribute key indicated by the `SectionedBy` clause. One more thing to remember is that the `OrderBy` clause should sort the list in such a way that the `SectionedBy` attribute would be sorted together (a requirement shared by `NSFetchedResultsController`.)
+
+The `SectionedBy` clause can also be passed a closure to transform the section name into a displayable string:
+```swift
+self.listController = CoreStore.observeSectionedList(
+    From(MyPersonEntity),
+    SectionedBy("age") { (sectionName) -> String? in
+        "\(sectionName) years old"
+    },
+    OrderBy(.Ascending("age"), .Ascending("name"))
+)
+```
+This is useful when implementing a `UITableViewDelegate`'s section header:
+```swift
+func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    let sectionInfo = self.listController.sectionInfoAtIndex(section)
+    // sectionInfo is an NSFetchedResultsSectionInfo instance
+    return sectionInfo.name
+}
+```
+
+To access the objects of a sectioned list, use an `NSIndexPath` or a tuple:
+```swift
+let indexPath = NSIndexPath(forRow: 2, inSection: 1)
+let person1 = self.listController[indexPath]
+let person2 = self.listController[1, 2]
+// person1 and person2 are the same object
+```
 
 # TODO
 - Data importing utilities for transactions
@@ -636,7 +755,7 @@ Note that to keep stack information intact, all calls to these methods are not t
 ```
 pod 'CoreStore'
 ```
-This installs CoreStore as a framework.
+This installs CoreStore as a framework. Declare `import CoreStore` in your swift file to use the library.
 
 ### Install as Git Submodule
 ```
