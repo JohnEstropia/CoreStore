@@ -9,11 +9,12 @@ Simple, elegant, and smart Core Data programming with Swift
 [Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
 
 
-## Features
-- Supports multiple persistent stores per data stack, just the way .xcdatamodeld files are supposed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
+## What CoreStore does better:
+- Heavily supports multiple persistent stores per data stack, just the way .xcdatamodeld files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
 - Ability to plug-in your own logging framework (or any of your favorite 3rd-party logger)
 - Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the .xcdatamodeld file, so you are free to name them independently.
-- Observe a list of `NSManagedObject`s using `ManagedObjectListController`, a clean wrapper for `NSFetchedResultsController`. Another controller, `ManagedObjectController`, lets you observe changes for a single object without using KVO. Both controllers can have multiple observers as well, so there is no extra overhead when sharing the same data source for multiple screens.
+- Provides type-safe, easy to configure observers to replace `NSFetchedResultsController` and KVO
+- Exposes API not just for fetching, but also for querying aggregates and property values
 - Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
 - Provides convenient API for common use cases.
 - Clean API designed around Swift’s code elegance and type safety.
@@ -65,6 +66,8 @@ let count = CoreStore.queryValue(
     Select<Int>(.Count("entityID"))
 )
 ```
+
+Check out the **CoreStoreDemo** app as well!
 
 
 ## Contents
