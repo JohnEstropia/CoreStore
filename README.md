@@ -10,10 +10,10 @@ Simple, elegant, and smart Core Data programming with Swift
 
 
 ## Features
-- Supports multiple persistent stores per *data stack*, just the way .xcdatamodeld files are supposed to. CoreStore will also manage one *data stack* by default, but you can create and manage as many as you need.
+- Supports multiple persistent stores per data stack, just the way .xcdatamodeld files are supposed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
 - Ability to plug-in your own logging framework (or any of your favorite 3rd-party logger)
 - Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the .xcdatamodeld file, so you are free to name them independently.
-- Observe a list of `NSManagedObject`'s using `ManagedObjectListController`, a clean wrapper for `NSFetchedResultsController`. Another controller, `ManagedObjectController`, lets you observe changes for a single object without using KVO. Both controllers can have multiple observers as well, so there is no extra overhead when sharing the same data source for multiple screens.
+- Observe a list of `NSManagedObject`s using `ManagedObjectListController`, a clean wrapper for `NSFetchedResultsController`. Another controller, `ManagedObjectController`, lets you observe changes for a single object without using KVO. Both controllers can have multiple observers as well, so there is no extra overhead when sharing the same data source for multiple screens.
 - Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
 - Provides convenient API for common use cases.
 - Clean API designed around Swift’s code elegance and type safety.
@@ -30,16 +30,16 @@ CoreStore.addSQLiteStore("MyStore.sqlite")
 Simple transactions:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    let object = transaction.create(Into(MyEntity))
-    object.entityID = 1
-    object.name = "test entity"
+let object = transaction.create(Into(MyEntity))
+object.entityID = 1
+object.name = "test entity"
 
-    transaction.commit { (result) -> Void in
-        switch result {
-            case .Success(let hasChanges): println("success!")
-            case .Failure(let error): println(error)
-        }
-    }
+transaction.commit { (result) -> Void in
+switch result {
+case .Success(let hasChanges): println("success!")
+case .Failure(let error): println(error)
+}
+}
 }
 ```
 
@@ -49,20 +49,20 @@ let objects = CoreStore.fetchAll(From(MyEntity))
 ```
 ```swift
 let objects = CoreStore.fetchAll(
-    From(MyEntity),
-    Where("entityID", isEqualTo: 1),
-    OrderBy(.Ascending("entityID"), .Descending("name")),
-    Tweak { (fetchRequest) -> Void in
-        fetchRequest.includesPendingChanges = true
-    }
+From(MyEntity),
+Where("entityID", isEqualTo: 1),
+OrderBy(.Ascending("entityID"), .Descending("name")),
+Tweak { (fetchRequest) -> Void in
+fetchRequest.includesPendingChanges = true
+}
 )
 ```
 
 Simple queries:
 ```swift
 let count = CoreStore.queryValue(
-    From(MyEntity),
-    Select<Int>(.Count("entityID"))
+From(MyEntity),
+Select<Int>(.Count("entityID"))
 )
 ```
 
@@ -118,20 +118,20 @@ let dataStack = DataStack(modelName: "MyModel") // loads from the "MyModel.xcdat
 
 switch dataStack.addInMemoryStore(configuration: "Config1") { // creates an in-memory store with entities from the "Config1" configuration in the .xcdatamodeld file
 case .Success(let persistentStore): // persistentStore is an NSPersistentStore instance
-    println("Successfully created an in-memory store: \(persistentStore)"
+println("Successfully created an in-memory store: \(persistentStore)"
 case .Failure(let error): // error is an NSError instance
-    println("Failed creating an in-memory store with error: \(error.description)"
+println("Failed creating an in-memory store with error: \(error.description)"
 }
 
 switch dataStack.addSQLiteStore(
-    fileURL: sqliteFileURL, // set the target file URL for the sqlite file
-    configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
-    automigrating: true, // automatically run lightweight migrations or entity policy migrations when needed
-    resetStoreOnMigrationFailure: true) { // delete and recreate the sqlite file when migration conflicts occur (useful when debugging)
+fileURL: sqliteFileURL, // set the target file URL for the sqlite file
+configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
+automigrating: true, // automatically run lightweight migrations or entity policy migrations when needed
+resetStoreOnMigrationFailure: true) { // delete and recreate the sqlite file when migration conflicts occur (useful when debugging)
 case .Success(let persistentStore): // persistentStore is an NSPersistentStore instance
-    println("Successfully created an sqlite store: \(persistentStore)"
+println("Successfully created an sqlite store: \(persistentStore)"
 case .Failure(let error): // error is an NSError instance
-    println("Failed creating an sqlite store with error: \(error.description)"
+println("Failed creating an sqlite store with error: \(error.description)"
 }
 
 CoreStore.defaultStack = dataStack // pass the dataStack to CoreStore for easier access later on
@@ -140,28 +140,28 @@ CoreStore.defaultStack = dataStack // pass the dataStack to CoreStore for easier
 Note that you dont need to do the `CoreStore.defaultStack = dataStack` line. You can just as well hold a stack like below and call all methods directly from the `DataStack` instance:
 ```swift
 class MyViewController: UIViewController {
-    let dataStack = DataStack(modelName: "MyModel")
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.dataStack.addSQLiteStore()
-    }
-    func methodToBeCalledLaterOn() {
-        let objects = self.dataStack.fetchAll(From(MyEntity))
-        println(objects)
-    }
+let dataStack = DataStack(modelName: "MyModel")
+override func viewDidLoad() {
+super.viewDidLoad()
+self.dataStack.addSQLiteStore()
+}
+func methodToBeCalledLaterOn() {
+let objects = self.dataStack.fetchAll(From(MyEntity))
+println(objects)
+}
 }
 ```
 The difference is when you set the stack as the `CoreStore.defaultStack`, you can call the stack's methods directly from `CoreStore` itself:
 ```swift
 class MyViewController: UIViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        CoreStore.addSQLiteStore()
-    }
-    func methodToBeCalledLaterOn() {
-        let objects = CoreStore.fetchAll(From(MyEntity))
-        println(objects)
-    }
+override func viewDidLoad() {
+super.viewDidLoad()
+CoreStore.addSQLiteStore()
+}
+func methodToBeCalledLaterOn() {
+let objects = CoreStore.fetchAll(From(MyEntity))
+println(objects)
+}
 }
 ```
 
@@ -172,15 +172,15 @@ To ensure deterministic state for objects in the read-only `NSManagedObjectConte
 ```swift
 let dataStack = self.dataStack
 dataStack.beginAsynchronous { (transaction) -> Void in
-    // make changes
-    transaction.commit()
+// make changes
+transaction.commit()
 }
 ```
 or for the default stack, directly from `CoreStore`:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    // make changes
-    transaction.commit()
+// make changes
+transaction.commit()
 }
 ```
 The `commit()` method saves the changes to the persistent store. If `commit()` is not called when the transaction block completes, all changes within the transaction is discarded.
@@ -190,17 +190,17 @@ The examples above use `beginAsynchronous(...)`, but there are actually 3 types 
 **Asynchronous transactions** are spawned from `beginAsynchronous(...)`. This method returns immediately and executes its closure from a background serial queue:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    // make changes
-    transaction.commit()
+// make changes
+transaction.commit()
 }
 ```
-`transaction`'s created from `beginAsynchronous(...)` are instances of `AsynchronousDataTransaction`.
+Transactions created from `beginAsynchronous(...)` are instances of `AsynchronousDataTransaction`.
 
 **Synchronous transactions** are created from `beginSynchronous(...)`. While the syntax is similar to its asynchronous counterpart, `beginSynchronous(...)` waits for its transaction block to complete before returning:
 ```swift
 CoreStore.beginSynchronous { (transaction) -> Void in
-    // make changes
-    transaction.commit()
+// make changes
+transaction.commit()
 } 
 ```
 `transaction` above is a `SynchronousDataTransaction` instance.
@@ -213,13 +213,13 @@ let transaction = CoreStore.beginDetached()
 // make changes
 downloadJSONWithCompletion({ (json) -> Void in
 
-    // make other changes
-    transaction.commit()
+// make other changes
+transaction.commit()
 })
 downloadAnotherJSONWithCompletion({ (json) -> Void in
 
-    // make some other changes
-    transaction.commit()
+// make some other changes
+transaction.commit()
 })
 ```
 This allows for non-contiguous updates. Do note that this flexibility comes with a price: you are now responsible for managing concurrency for the transaction. As uncle Ben said, "with great power comes great race conditions."
@@ -242,34 +242,34 @@ While the syntax is straightforward, CoreStore does not just naively insert a ne
 
 If the entity exists in multiple configurations, you need to provide the configuration name for the destination persistent store:
 
-    let person = transaction.create(Into<MyPersonEntity>("Config1"))
+let person = transaction.create(Into<MyPersonEntity>("Config1"))
 
 or if the persistent store is the auto-generated "Default" configuration, specify `nil`:
 
-    let person = transaction.create(Into<MyPersonEntity>(nil))
+let person = transaction.create(Into<MyPersonEntity>(nil))
 
 Note that if you do explicitly specify the configuration name, CoreStore will only try to insert the created object to that particular store and will fail if that store is not found; it will not fall back to any other store the entity belongs to. 
 
 ### Updating objects
 
-After creating an object from the transaction, you can simply update it's properties as normal:
+After creating an object from the transaction, you can simply update its properties as normal:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    let person = transaction.create(Into(MyPersonEntity))
-    person.name = "John Smith"
-    person.age = 30
-    transaction.commit()
+let person = transaction.create(Into(MyPersonEntity))
+person.name = "John Smith"
+person.age = 30
+transaction.commit()
 }
 ```
 To update an existing object, fetch the object's instance from the transaction:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    let person = transaction.fetchOne(
-        From(MyPersonEntity),
-        Where("name", isEqualTo: "Jane Smith")
-    )
-    person.age = person.age + 1
-    transaction.commit()
+let person = transaction.fetchOne(
+From(MyPersonEntity),
+Where("name", isEqualTo: "Jane Smith")
+)
+person.age = person.age + 1
+transaction.commit()
 }
 ```
 *(For more about fetching, read [Fetching and querying](#fetch_query))*
@@ -279,11 +279,11 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 let jane: MyPersonEntity = // ...
 
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    // WRONG: jane.age = jane.age + 1
-    // RIGHT:
-    let jane = transaction.edit(jane) // using the same variable name protects us from misusing the non-transaction instance
-    jane.age = jane.age + 1
-    transaction.commit()
+// WRONG: jane.age = jane.age + 1
+// RIGHT:
+let jane = transaction.edit(jane) // using the same variable name protects us from misusing the non-transaction instance
+jane.age = jane.age + 1
+transaction.commit()
 }
 ```
 This is also true when updating an object's relationships. Make sure that the object assigned to the relationship is also created/fetched from the transaction:
@@ -292,12 +292,12 @@ let jane: MyPersonEntity = // ...
 let john: MyPersonEntity = // ...
 
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    // WRONG: jane.friends = [john]
-    // RIGHT:
-    let jane = transaction.edit(jane)
-    let john = transaction.edit(john)
-    jane.friends = [john]
-    transaction.commit()
+// WRONG: jane.friends = [john]
+// RIGHT:
+let jane = transaction.edit(jane)
+let john = transaction.edit(john)
+jane.friends = [john]
+transaction.commit()
 }
 ```
 ### Deleting objects
@@ -307,8 +307,8 @@ Deleting an object is simpler as you can tell a transaction to delete an object 
 let john: MyPersonEntity = // ...
 
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    transaction.delete(john)
-    transaction.commit()
+transaction.delete(john)
+transaction.commit()
 }
 ```
 or several objects at once:
@@ -317,31 +317,31 @@ let john: MyPersonEntity = // ...
 let jane: MyPersonEntity = // ...
 
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    transaction.delete(john, jane)
-    // transaction.delete([john, jane]) is also allowed
-    transaction.commit()
+transaction.delete(john, jane)
+// transaction.delete([john, jane]) is also allowed
+transaction.commit()
 }
 ```
 If you do not have references yet to the objects to be deleted, transactions have a `deleteAll(...)` method you can pass a query to:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    transaction.deleteAll(
-        From(MyPersonEntity)
-        Where("age > 30")
-    )
-    transaction.commit()
+transaction.deleteAll(
+From(MyPersonEntity)
+Where("age > 30")
+)
+transaction.commit()
 }
 ```
 ## <a id="fetch_query"></a>Fetching and querying
 Before we dive in, be aware that CoreStore distinguishes between *fetching* and *querying*:
 - A *fetch* executes searches from a specific *transaction* or *data stack*. This means fetches can include pending objects (i.e. before a transaction calls on `commit()`.) Use fetches when:
-    - results need to be `NSManagedObject` instances
-    - unsaved objects should be included in the search (though fetches can be configured to exclude unsaved ones)
+- results need to be `NSManagedObject` instances
+- unsaved objects should be included in the search (though fetches can be configured to exclude unsaved ones)
 - A *query* pulls data straight from the persistent store. This means faster searches when computing aggregates such as *count*, *min*, *max*, etc. Use queries when:
-    - you need to compute aggregate functions (see below for a list of supported functions)
-    - results can be raw values like `NSString`'s, `NSNumber`'s, `Int`'s, `NSDate`'s, an `NSDictionary` of key-values, etc.
-    - only specific attribute keys need to be included in the results
-    - unsaved objects should be ignored
+- you need to compute aggregate functions (see below for a list of supported functions)
+- results can be raw values like `NSString`s, `NSNumber`s, `Int`s, `NSDate`s, an `NSDictionary` of key-values, etc.
+- only specific attribute keys need to be included in the results
+- unsaved objects should be ignored
 
 The search conditions for fetches and queries are specified using *clauses*. All fetches and queries require a `From` clause that indicates the target entity type:
 ```swift
@@ -367,8 +367,8 @@ There are currently 5 fetch methods you can call from `CoreStore`, from a `DataS
 - `fetchAll(_:_:)` - returns an array of all objects that match the criteria.
 - `fetchOne(_:_:)` - returns the first object that match the criteria.
 - `fetchCount(_:_:)` - returns the number of objects that match the criteria.
-- `fetchObjectIDs(_:_:)`` - returns an array of `NSManagedObjectID`'s for all objects that match the criteria.
-- `fetchObjectID(_:_:)` - returns the `NSManagedObjectID`'s for the first objects that match the criteria.
+- `fetchObjectIDs(_:_:)`` - returns an array of `NSManagedObjectID`s for all objects that match the criteria.
+- `fetchObjectID(_:_:)` - returns the `NSManagedObjectID`s for the first objects that match the criteria.
 
 Each method's purpose is straightforward, but we need to understand how to set the clauses for the fetch.
 
@@ -377,27 +377,27 @@ Each method's purpose is straightforward, but we need to understand how to set t
 The `Where` clause is CoreStore's `NSPredicate` wrapper. It specifies the search filter to use when fetching (or querying). It implements all initializers that `NSPredicate` does (except for `-predicateWithBlock:`, which Core Data does not support):
 ```swift
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
-    Where("%K > %d", "age", 30) // string format initializer
+From(MyPersonEntity),
+Where("%K > %d", "age", 30) // string format initializer
 )
 people = CoreStore.fetchAll(
-    From(MyPersonEntity),
-    Where(true) // boolean initializer
+From(MyPersonEntity),
+Where(true) // boolean initializer
 )
 ```
 If you do have an existing `NSPredicate` instance already, you can pass that to `Where` as well:
 ```swift
 let predicate = NSPredicate(...)
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
-    Where(predicate) // predicate initializer
+From(MyPersonEntity),
+Where(predicate) // predicate initializer
 )
 ```
 `Where` clauses also implement the `&&`, `||`, and `!` logic operators, so you can provide logical conditions without writing too much `AND`, `OR`, and `NOT` strings in the conditions:
 ```swift
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
-    Where("age > %d", 30) && Where("gender == %@", "M")
+From(MyPersonEntity),
+Where("age > %d", 30) && Where("gender == %@", "M")
 )
 ```
 If you do not provide a `Where` clause, all objects that belong to the specified `From` will be returned.
@@ -407,21 +407,21 @@ If you do not provide a `Where` clause, all objects that belong to the specified
 The `OrderBy` clause is CoreStore's `NSSortDescriptor` wrapper. Use it to specify attribute keys in which to sort the fetch (or query) results with.
 ```swift
 var mostValuablePeople = CoreStore.fetchAll(
-    From(MyPersonEntity),
-    OrderBy(.Descending("rating"), .Ascending("surname"))
+From(MyPersonEntity),
+OrderBy(.Descending("rating"), .Ascending("surname"))
 )
 ```
 As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.Ascending` or `.Descending`. The associated value for the `SortKey` enumeration is the attribute key string.
 
-You can use the `+` and `+=` operator to append `OrderBy`'s together. This is useful when sorting conditionally:
+You can use the `+` and `+=` operator to append `OrderBy`s together. This is useful when sorting conditionally:
 ```swift
 var orderBy = OrderBy(.Descending("rating"))
 if sortFromYoungest {
-    orderBy += OrderBy(.Ascending("age"))
+orderBy += OrderBy(.Ascending("age"))
 }
 var mostValuablePeople = CoreStore.fetchAll(
-    From(MyPersonEntity),
-    orderBy
+From(MyPersonEntity),
+orderBy
 )
 ```
 
@@ -430,14 +430,14 @@ var mostValuablePeople = CoreStore.fetchAll(
 The `Tweak` clause lets you, well, *tweak* the fetch (or query). `Tweak` exposes the `NSFetchRequest` in a closure where you can make changes to its properties:
 ```swift
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
-    Where("age > %d", 30),
-    OrderBy(.Ascending("surname")),
-    Tweak { (fetchRequest) -> Void in
-        fetchRequest.includesPendingChanges = false
-        fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.includesSubentities = false
-    }
+From(MyPersonEntity),
+Where("age > %d", 30),
+OrderBy(.Ascending("surname")),
+Tweak { (fetchRequest) -> Void in
+fetchRequest.includesPendingChanges = false
+fetchRequest.returnsObjectsAsFaults = false
+fetchRequest.includesSubentities = false
+}
 )
 ```
 The clauses are evaluated the order they appear in the fetch/query, so you typically need to set `Tweak` as the last clause.
@@ -460,9 +460,9 @@ Setting up the `From`, `Where`, `OrderBy`, and `Tweak` clauses is similar to how
 The `Select<T>` clause specifies the target attribute/aggregate key and the return type: 
 ```swift
 let johnsAge = CoreStore.queryValue(
-    From(MyPersonEntity),
-    Select<Int>("age"),
-    Where("name == %@", "John Smith")
+From(MyPersonEntity),
+Select<Int>("age"),
+Where("name == %@", "John Smith")
 )
 ```
 The example above queries the "age" property for the first object that matches the `Where` condition. `johnsAge` will be bound to type `Int?`, as indicated by the `Select<Int>` generic type. For `queryValue(...)`, the following are allowed as the return type (and as the generic type for `Select<T>`):
@@ -485,8 +485,8 @@ The example above queries the "age" property for the first object that matches t
 For `queryAttributes(...)`, only `NSDictionary` is valid for `Select`, thus you are allowed omit the generic type:
 ```swift
 let allAges = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("age")
+From(MyPersonEntity),
+Select("age")
 )
 ```
 
@@ -501,69 +501,69 @@ If you only need a value for a particular attribute, you can just specify the ke
 
 ```swift
 let oldestAge = CoreStore.queryValue(
-    From(MyPersonEntity),
-    Select<Int>(.Maximum("age"))
+From(MyPersonEntity),
+Select<Int>(.Maximum("age"))
 )
 ```
 
 For `queryAttributes(...)` which returns an array of dictionaries, you can specify multiple attributes/aggregates to `Select`:
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("name", "age")
+From(MyPersonEntity),
+Select("name", "age")
 )
 ```
 `personJSON` will then have the value:
 ```json
 [
-    [
-        "name": "John Smith",
-        "age": 30
-    ],
-    [
-        "name": "Jane Doe",
-        "age": 22
-    ]
+[
+"name": "John Smith",
+"age": 30
+],
+[
+"name": "Jane Doe",
+"age": 22
+]
 ]
 ```
 You can also include an aggregate as well:
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("name", .Count("friends"))
+From(MyPersonEntity),
+Select("name", .Count("friends"))
 )
 ```
 which returns:
 ```swift
 [
-    [
-        "name": "John Smith",
-        "count(friends)": 42
-    ],
-    [
-        "name": "Jane Doe",
-        "count(friends)": 231
-    ]
+[
+"name": "John Smith",
+"count(friends)": 42
+],
+[
+"name": "Jane Doe",
+"count(friends)": 231
+]
 ]
 ```
 The `"count(friends)"` key name was automatically used by CoreStore, but you can specify your own key alias if you need:
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("name", .Count("friends", As: "friendsCount"))
+From(MyPersonEntity),
+Select("name", .Count("friends", As: "friendsCount"))
 )
 ```
 which now returns:
 ```swift
 [
-    [
-        "name": "John Smith",
-        "friendsCount": 42
-    ],
-    [
-        "name": "Jane Doe",
-        "friendsCount": 231
-    ]
+[
+"name": "John Smith",
+"friendsCount": 42
+],
+[
+"name": "Jane Doe",
+"friendsCount": 231
+]
 ]
 ```
 
@@ -572,40 +572,40 @@ which now returns:
 The `GroupBy` clause lets you group results by a specified attribute/aggregate. This is only useful only for `queryAttributes(...)` since `queryValue(...)` just returns the first value anyway.
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("age", .Count("age", As: "count")),
-    GroupBy("age")
+From(MyPersonEntity),
+Select("age", .Count("age", As: "count")),
+GroupBy("age")
 )
 ```
 this returns dictionaries that shows the count for each `"age"`:
 ```swift
 [
-    [
-        "age": 42,
-        "count": 1
-    ],
-    [
-        "age": 22,
-        "count": 1
-    ]
+[
+"age": 42,
+"count": 1
+],
+[
+"age": 22,
+"count": 1
+]
 ]
 ```
 
 ## <a id="logging"></a>Logging and error handling
-One unfortunate thing when using some third-party libraries is that they usually pollute the console with their own logging mechanisms. CoreStore provides it's own default logging class, but you can plug-in your own favorite logger by implementing the `CoreStoreLogger` protocol.
+One unfortunate thing when using some third-party libraries is that they usually pollute the console with their own logging mechanisms. CoreStore provides its own default logging class, but you can plug-in your own favorite logger by implementing the `CoreStoreLogger` protocol.
 ```swift
 final class MyLogger: CoreStoreLogger {
-    func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        // pass to your logger
-    }
-    
-    func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        // pass to your logger
-    }
-    
-    func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        // pass to your logger
-    }
+func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+// pass to your logger
+}
+
+func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+// pass to your logger
+}
+
+func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+// pass to your logger
+}
 }
 ```
 Then pass an instance of this class to `CoreStore`:
@@ -627,17 +627,17 @@ CoreStore provides type-safe wrappers for observing managed objects:
 To observe an object, implement the `ManagedObjectObserver` protocol and specify the `EntityType`:
 ```swift
 class MyViewController: UIViewController, ManagedObjectObserver {
-    func managedObjectWillUpdate(objectController: ManagedObjectController<MyPersonEntity>, object: MyPersonEntity) {
-        // ...
-    }
-    
-    func managedObjectWasUpdated(objectController: ManagedObjectController<MyPersonEntity>, object: MyPersonEntity, changedPersistentKeys: Set<KeyPath>) {
-        // ...
-    }
-    
-    func managedObjectWasDeleted(objectController: ManagedObjectController<MyPersonEntity>, object: MyPersonEntity) {
-        // ...
-    }
+func managedObjectWillUpdate(objectController: ManagedObjectController<MyPersonEntity>, object: MyPersonEntity) {
+// ...
+}
+
+func managedObjectWasUpdated(objectController: ManagedObjectController<MyPersonEntity>, object: MyPersonEntity, changedPersistentKeys: Set<KeyPath>) {
+// ...
+}
+
+func managedObjectWasDeleted(objectController: ManagedObjectController<MyPersonEntity>, object: MyPersonEntity) {
+// ...
+}
 }
 ```
 We then need to keep a `ManagedObjectController` instance and register our `ManagedObjectObserver` as an observer:
@@ -646,7 +646,7 @@ let person: MyPersonEntity = // ...
 self.objectController = CoreStore.observeObject(person)
 self.objectController.addObserver(self)
 ```
-The controller will then notify our observer whenever the object's attributes change. You can add multiple `ManagedObjectObserver`'s to a single `ManagedObjectController` without any problem. This means you can just share around the `ManagedObjectController` instance to different screens without problem.
+The controller will then notify our observer whenever the object's attributes change. You can add multiple `ManagedObjectObserver`s to a single `ManagedObjectController` without any problem. This means you can just share around the `ManagedObjectController` instance to different screens without problem.
 
 You can get `ManagedObjectController`'s object through its `object` property. If the object is deleted, the `object` property will become `nil` to prevent further access. 
 
@@ -656,41 +656,41 @@ While `ManagedObjectController` exposes `removeObserver(...)` as well, it only s
 To observe a list of objects, implement one of the `ManagedObjectListChangeObserver` protocols and specify the `EntityType`:
 ```swift
 class MyViewController: UIViewController, ManagedObjectListChangeObserver {
-    func managedObjectListWillChange(listController: ManagedObjectListController<MyPersonEntity>) {
-        // ...
-    }
-    
-    func managedObjectListDidChange(listController: ManagedObjectListController<MyPersonEntity>) {
-        // ...
-    }
+func managedObjectListWillChange(listController: ManagedObjectListController<MyPersonEntity>) {
+// ...
+}
+
+func managedObjectListDidChange(listController: ManagedObjectListController<MyPersonEntity>) {
+// ...
+}
 }
 ```
 Including `ManagedObjectListChangeObserver`, there are 3 observer protocols you can implement depending on how detailed you need to handle a change notification:
 - `ManagedObjectListChangeObserver`: lets you handle these callback methods:
-    - `func managedObjectListWillChange(listController: ManagedObjectListController<T>)`
-    - `func managedObjectListDidChange(listController: ManagedObjectListController<T>)`
+- `func managedObjectListWillChange(listController: ManagedObjectListController<T>)`
+- `func managedObjectListDidChange(listController: ManagedObjectListController<T>)`
 - `ManagedObjectListObjectObserver`: in addition to `ManagedObjectListChangeObserver` methods, also lets you handle object inserts, updates, and deletes:
-    - `func managedObjectList(listController: ManagedObjectListController<T>, didInsertObject object: T, toIndexPath indexPath: NSIndexPath)`
-    - `func managedObjectList(listController: ManagedObjectListController<T>, didDeleteObject object: T, fromIndexPath indexPath: NSIndexPath)`
-    - `func managedObjectList(listController: ManagedObjectListController<T>, didUpdateObject object: T, atIndexPath indexPath: NSIndexPath)`
-    - `func managedObjectList(listController: ManagedObjectListController<T>, didMoveObject object: T, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)`
+- `func managedObjectList(listController: ManagedObjectListController<T>, didInsertObject object: T, toIndexPath indexPath: NSIndexPath)`
+- `func managedObjectList(listController: ManagedObjectListController<T>, didDeleteObject object: T, fromIndexPath indexPath: NSIndexPath)`
+- `func managedObjectList(listController: ManagedObjectListController<T>, didUpdateObject object: T, atIndexPath indexPath: NSIndexPath)`
+- `func managedObjectList(listController: ManagedObjectListController<T>, didMoveObject object: T, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)`
 - `ManagedObjectListSectionObserver`: in addition to `ManagedObjectListObjectObserver` methods, also lets you handle section inserts and deletes:
-    - `func managedObjectList(listController: ManagedObjectListController<T>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)`
-    - `func managedObjectList(listController: ManagedObjectListController<T>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)`
+- `func managedObjectList(listController: ManagedObjectListController<T>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)`
+- `func managedObjectList(listController: ManagedObjectListController<T>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)`
 
 We then need to create a `ManagedObjectListController` instance and register our `ManagedObjectListChangeObserver` as an observer:
 ```swift
 self.listController = CoreStore.observeObjectList(
-    From(MyPersonEntity),
-    Where("age > 30"),
-    OrderBy(.Ascending("name")),
-    Tweak { (fetchRequest) -> Void in
-        fetchRequest.fetchBatchSize = 20
-    }
+From(MyPersonEntity),
+Where("age > 30"),
+OrderBy(.Ascending("name")),
+Tweak { (fetchRequest) -> Void in
+fetchRequest.fetchBatchSize = 20
+}
 )
 self.listController.addObserver(self)
 ```
-Similar to `ManagedObjectController`, a `ManagedObjectListController` can also have multiple `ManagedObjectListChangeObserver`'s registered to a single `ManagedObjectListController`.
+Similar to `ManagedObjectController`, a `ManagedObjectListController` can also have multiple `ManagedObjectListChangeObserver`s registered to a single `ManagedObjectListController`.
 
 If you have noticed, the `observeObjectList(...)` method accepts `Where`, `OrderBy`, and `Tweak` clauses exactly like a fetch. As the list maintained by `ManagedObjectListController` needs to have a deterministic order, at least the `From` and `OrderBy` clauses are required.
 
@@ -702,13 +702,13 @@ let firstPerson = self.listController[0]
 If the list needs to be grouped into sections, create the `ManagedObjectListController` instance with the `observeSectionedList(...)` method and a `SectionedBy` clause:
 ```swift
 self.listController = CoreStore.observeSectionedList(
-    From(MyPersonEntity),
-    SectionedBy("age"),
-    Where("gender", isEqualTo: "M"),
-    OrderBy(.Ascending("age"), .Ascending("name")),
-    Tweak { (fetchRequest) -> Void in
-        fetchRequest.fetchBatchSize = 20
-    }
+From(MyPersonEntity),
+SectionedBy("age"),
+Where("gender", isEqualTo: "M"),
+OrderBy(.Ascending("age"), .Ascending("name")),
+Tweak { (fetchRequest) -> Void in
+fetchRequest.fetchBatchSize = 20
+}
 )
 ```
 A list controller created this way will group the objects by the attribute key indicated by the `SectionedBy` clause. One more thing to remember is that the `OrderBy` clause should sort the list in such a way that the `SectionedBy` attribute would be sorted together (a requirement shared by `NSFetchedResultsController`.)
@@ -716,19 +716,19 @@ A list controller created this way will group the objects by the attribute key i
 The `SectionedBy` clause can also be passed a closure to transform the section name into a displayable string:
 ```swift
 self.listController = CoreStore.observeSectionedList(
-    From(MyPersonEntity),
-    SectionedBy("age") { (sectionName) -> String? in
-        "\(sectionName) years old"
-    },
-    OrderBy(.Ascending("age"), .Ascending("name"))
+From(MyPersonEntity),
+SectionedBy("age") { (sectionName) -> String? in
+"\(sectionName) years old"
+},
+OrderBy(.Ascending("age"), .Ascending("name"))
 )
 ```
 This is useful when implementing a `UITableViewDelegate`'s section header:
 ```swift
 func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    let sectionInfo = self.listController.sectionInfoAtIndex(section)
-    // sectionInfo is an NSFetchedResultsSectionInfo instance
-    return sectionInfo.name
+let sectionInfo = self.listController.sectionInfoAtIndex(section)
+// sectionInfo is an NSFetchedResultsSectionInfo instance
+return sectionInfo.name
 }
 ```
 
@@ -766,8 +766,10 @@ Drag and drop **CoreStore.xcodeproj** to your project.
 Add all *.swift* files to your project.
 
 # Contributions
-While CoreStore's design is pretty solid and the unit test and demo app work well, CoreStore is pretty much still in it's early stage. With more exposure to production code usage and criticisms from the developer community, CoreStore hopes to mature as well.
+While CoreStore's design is pretty solid and the unit test and demo app work well, CoreStore is pretty much still in its early stage. With more exposure to production code usage and criticisms from the developer community, CoreStore hopes to mature as well.
+
 Please feel free to report any issues, suggestions, or criticisms!
+
 日本語で連絡していただいても構いません！
 
 ## License

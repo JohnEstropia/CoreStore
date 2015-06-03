@@ -222,12 +222,13 @@ public /*abstract*/ class BaseDataTransaction {
     /**
     Deletes the specified `NSManagedObject`'s.
     
-    :param: object the `NSManagedObject` type to be deleted
-    :param: objects other `NSManagedObject`'s type to be deleted
+    :param: object1 the `NSManagedObject` type to be deleted
+    :param: object2 another `NSManagedObject` type to be deleted
+    :param: objects other `NSManagedObject`s type to be deleted
     */
-    public func delete(object: NSManagedObject?, _ objects: NSManagedObject?...) {
+    public func delete(object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
         
-        self.delete([object] + objects)
+        self.delete([object1, object2] + objects)
     }
     
     /**

@@ -161,7 +161,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
             
             CoreStore.beginAsynchronous { (transaction) -> Void in
                 
-                let place = transaction.fetch(Static.placeController.object)
+                let place = transaction.edit(Static.placeController.object)
                 place?.coordinate = mapView.convertPoint(
                     gesture.locationInView(mapView),
                     toCoordinateFromView: mapView
@@ -175,7 +175,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
         
         CoreStore.beginSynchronous { (transaction) -> Void in
             
-            let place = transaction.fetch(Static.placeController.object)
+            let place = transaction.edit(Static.placeController.object)
             place?.setInitialValues()
             transaction.commit()
         }
@@ -195,7 +195,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
                 
                 if let strongSelf = self, let placemark = (placemarks as? [CLPlacemark])?.first {
                     
-                    let place = transaction.fetch(Static.placeController.object)
+                    let place = transaction.edit(Static.placeController.object)
                     place?.title = placemark.name
                     place?.subtitle = ABCreateStringWithAddressDictionary(placemark.addressDictionary, true)
                     transaction.commit { (_) -> Void in }

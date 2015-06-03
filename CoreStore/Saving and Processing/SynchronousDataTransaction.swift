@@ -124,14 +124,15 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     /**
     Deletes the specified `NSManagedObject`'s.
     
-    :param: object the `NSManagedObject` type to be deleted
-    :param: objects other `NSManagedObject`'s type to be deleted
+    :param: object1 the `NSManagedObject` type to be deleted
+    :param: object2 another `NSManagedObject` type to be deleted
+    :param: objects other `NSManagedObject`s type to be deleted
     */
-    public override func delete(object: NSManagedObject?, _ objects: NSManagedObject?...) {
+    public override func delete(object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
         
         CoreStore.assert(!self.isCommitted, "Attempted to delete an entities from an already committed \(typeName(self)).")
         
-        super.delete([object] + objects)
+        super.delete([object1, object2] + objects)
     }
     
     /**

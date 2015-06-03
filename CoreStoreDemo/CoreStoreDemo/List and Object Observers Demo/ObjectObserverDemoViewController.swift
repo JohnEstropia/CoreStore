@@ -123,7 +123,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let hue = self.hueSlider?.value ?? 0
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            if let palette = transaction.fetch(self?.objectController?.object) {
+            if let palette = transaction.edit(self?.objectController?.object) {
                 
                 palette.hue = Int32(hue)
                 transaction.commit()
@@ -136,7 +136,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let saturation = self.saturationSlider?.value ?? 0
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            if let palette = transaction.fetch(self?.objectController?.object) {
+            if let palette = transaction.edit(self?.objectController?.object) {
                 
                 palette.saturation = saturation
                 transaction.commit()
@@ -149,7 +149,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let brightness = self.brightnessSlider?.value ?? 0
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            if let palette = transaction.fetch(self?.objectController?.object) {
+            if let palette = transaction.edit(self?.objectController?.object) {
                 
                 palette.brightness = brightness
                 transaction.commit()
