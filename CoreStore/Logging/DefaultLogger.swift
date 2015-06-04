@@ -36,6 +36,8 @@ The `DefaultLogger` is a basic implementation of the `CoreStoreLogger` protocol.
 - The `assert(...)` method calls `assert(...)` on the arguments.
 */
 public final class DefaultLogger: CoreStoreLogger {
+    
+    public init() { }
    
     public func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         

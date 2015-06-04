@@ -80,6 +80,13 @@
 			remoteGlobalIDString = 2FBBCAD619A9FE610070E4AB;
 			remoteInfo = GCDKitTests;
 		};
+		B5D9C9081B20A87D00E64F0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2FBBCACA19A9FE610070E4AB;
+			remoteInfo = GCDKit;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -396,6 +403,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B5D9C9091B20A87D00E64F0E /* PBXTargetDependency */,
 			);
 			name = CoreStore;
 			productName = CoreStore;
@@ -562,6 +570,11 @@
 			isa = PBXTargetDependency;
 			target = 2F03A52F19C5C6DA005002A5 /* CoreStore */;
 			targetProxy = B5D372871A39CF4D00F583D9 /* PBXContainerItemProxy */;
+		};
+		B5D9C9091B20A87D00E64F0E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GCDKit;
+			targetProxy = B5D9C9081B20A87D00E64F0E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

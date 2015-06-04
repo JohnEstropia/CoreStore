@@ -23,8 +23,11 @@
 		B54AAD5E1AF4D26E00848AE0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B54AAD5C1AF4D26E00848AE0 /* LaunchScreen.xib */; };
 		B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */; };
 		B566E3321B11DF3200F4F0C6 /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3311B11DF3200F4F0C6 /* UserAccount.swift */; };
+		B56964C91B20AC780075EE4A /* CustomLoggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964C81B20AC780075EE4A /* CustomLoggerViewController.swift */; };
 		B583A9201AF5F542001F76AF /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B583A91B1AF5F4F4001F76AF /* CoreStore.framework */; };
 		B583A9211AF5F542001F76AF /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B583A91B1AF5F4F4001F76AF /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B5D9C9191B20AB1900E64F0E /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D9C9181B20AB1900E64F0E /* GCDKit.framework */; };
+		B5D9C91A1B20AB1900E64F0E /* GCDKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5D9C9181B20AB1900E64F0E /* GCDKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5E7240F1B11F993006FB83F /* TwitterAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E7240E1B11F993006FB83F /* TwitterAccount.swift */; };
 		B5E724111B11F994006FB83F /* FacebookAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E724101B11F994006FB83F /* FacebookAccount.swift */; };
 /* End PBXBuildFile section */
@@ -67,6 +70,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				B5D9C91A1B20AB1900E64F0E /* GCDKit.framework in Embed Frameworks */,
 				B583A9211AF5F542001F76AF /* CoreStore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -93,8 +97,9 @@
 		B54AAD5D1AF4D26E00848AE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackSetupDemoViewController.swift; sourceTree = "<group>"; };
 		B566E3311B11DF3200F4F0C6 /* UserAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccount.swift; sourceTree = "<group>"; };
+		B56964C81B20AC780075EE4A /* CustomLoggerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLoggerViewController.swift; sourceTree = "<group>"; };
 		B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoreStore.xcodeproj; path = ../CoreStore.xcodeproj; sourceTree = "<group>"; };
-		B583A9251AF5F547001F76AF /* GCDKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = GCDKit.framework; path = "/Users/johnestropia/Library/Developer/Xcode/DerivedData/CoreStoreDemo-ftknhsqfpsthfogvisxisgpbbhsj/Build/Products/Debug-iphoneos/GCDKit.framework"; sourceTree = "<absolute>"; };
+		B5D9C9181B20AB1900E64F0E /* GCDKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GCDKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5E7240E1B11F993006FB83F /* TwitterAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitterAccount.swift; sourceTree = "<group>"; };
 		B5E724101B11F994006FB83F /* FacebookAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FacebookAccount.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -106,6 +111,7 @@
 			files = (
 				B52977E11B120F8A003D50A5 /* CoreLocation.framework in Frameworks */,
 				B52977DF1B120F83003D50A5 /* MapKit.framework in Frameworks */,
+				B5D9C9191B20AB1900E64F0E /* GCDKit.framework in Frameworks */,
 				B583A9201AF5F542001F76AF /* CoreStore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,9 +144,9 @@
 			isa = PBXGroup;
 			children = (
 				B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */,
+				B5D9C9181B20AB1900E64F0E /* GCDKit.framework */,
 				B52977E01B120F8A003D50A5 /* CoreLocation.framework */,
 				B52977DE1B120F83003D50A5 /* MapKit.framework */,
-				B583A9251AF5F547001F76AF /* GCDKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -169,6 +175,7 @@
 				B566E3271B117AE700F4F0C6 /* Stack Setup Demo */,
 				B503FADA1AFDC71700F90881 /* List and Object Observers Demo */,
 				B52977DB1B120F2C003D50A5 /* Transactions Demo */,
+				B56964C61B20AC200075EE4A /* Loggers Demo */,
 				B54AAD571AF4D26E00848AE0 /* Main.storyboard */,
 				B54AAD5A1AF4D26E00848AE0 /* Images.xcassets */,
 				B54AAD5C1AF4D26E00848AE0 /* LaunchScreen.xib */,
@@ -195,6 +202,14 @@
 				B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */,
 			);
 			path = "Stack Setup Demo";
+			sourceTree = "<group>";
+		};
+		B56964C61B20AC200075EE4A /* Loggers Demo */ = {
+			isa = PBXGroup;
+			children = (
+				B56964C81B20AC780075EE4A /* CustomLoggerViewController.swift */,
+			);
+			path = "Loggers Demo";
 			sourceTree = "<group>";
 		};
 		B583A9151AF5F4F3001F76AF /* Products */ = {
@@ -306,6 +321,7 @@
 				B52977E41B121635003D50A5 /* Place.swift in Sources */,
 				B503FAE01AFDC71700F90881 /* ObjectObserverDemoViewController.swift in Sources */,
 				B52977D91B120B80003D50A5 /* ObserversViewController.swift in Sources */,
+				B56964C91B20AC780075EE4A /* CustomLoggerViewController.swift in Sources */,
 				B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */,
 				B5E724111B11F994006FB83F /* FacebookAccount.swift in Sources */,
 				B5E7240F1B11F993006FB83F /* TwitterAccount.swift in Sources */,
@@ -441,6 +457,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CoreStoreDemo-ftknhsqfpsthfogvisxisgpbbhsj/Build/Products/Debug-iphoneos",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CoreStoreDemo-bnajhooxbfnxepepdtkvkfplrqyq/Build/Products/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = CoreStoreDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -456,6 +473,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CoreStoreDemo-ftknhsqfpsthfogvisxisgpbbhsj/Build/Products/Debug-iphoneos",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CoreStoreDemo-bnajhooxbfnxepepdtkvkfplrqyq/Build/Products/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = CoreStoreDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
