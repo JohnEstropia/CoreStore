@@ -1,4 +1,6 @@
 # CoreStore
+
+[![Join the chat at https://gitter.im/JohnEstropia/CoreStore](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/JohnEstropia/CoreStore?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![License](https://img.shields.io/github/license/JohnEstropia/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
