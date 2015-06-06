@@ -108,7 +108,8 @@ public enum SelectTerm: StringLiteralConvertible {
         return ._Aggregate(
             function: "average:",
             keyPath,
-            As: alias ?? "average(\(keyPath))"
+            As: alias ?? "average(\(keyPath))",
+            nativeType: .DecimalAttributeType
         )
     }
     
@@ -129,7 +130,8 @@ public enum SelectTerm: StringLiteralConvertible {
         return ._Aggregate(
             function: "count:",
             keyPath,
-            As: alias ?? "count(\(keyPath))"
+            As: alias ?? "count(\(keyPath))",
+            nativeType: .Integer64AttributeType
         )
     }
     
@@ -150,28 +152,8 @@ public enum SelectTerm: StringLiteralConvertible {
         return ._Aggregate(
             function: "max:",
             keyPath,
-            As: alias ?? "max(\(keyPath))"
-        )
-    }
-    
-    /**
-    Provides a `SelectTerm` to a `Select` clause for querying the median value for an attribute.
-    
-        let medianAge = CoreStore.queryValue(
-            From(MyPersonEntity),
-            Select<Int>(.Median("age"))
-        )
-    
-    :param: keyPath the attribute name
-    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
-    :returns: a `SelectTerm` to a `Select` clause for querying the median value for an attribute
-    */
-    public static func Median(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
-        
-        return ._Aggregate(
-            function: "median:",
-            keyPath, As:
-            alias ?? "median(\(keyPath))"
+            As: alias ?? "max(\(keyPath))",
+            nativeType: .UndefinedAttributeType
         )
     }
     
@@ -180,7 +162,7 @@ public enum SelectTerm: StringLiteralConvertible {
     
         let minimumAge = CoreStore.queryValue(
             From(MyPersonEntity),
-            Select<Int>(.Median("age"))
+            Select<Int>(.Minimum("age"))
         )
     
     :param: keyPath the attribute name
@@ -192,28 +174,8 @@ public enum SelectTerm: StringLiteralConvertible {
         return ._Aggregate(
             function: "min:",
             keyPath,
-            As: alias ?? "min(\(keyPath))"
-        )
-    }
-    
-    /**
-    Provides a `SelectTerm` to a `Select` clause for querying the standard deviation value for an attribute.
-    
-        let stddevAge = CoreStore.queryValue(
-            From(MyPersonEntity),
-            Select<Int>(.StandardDeviation("age"))
-        )
-    
-    :param: keyPath the attribute name
-    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "stddev(<attributeName>)" is used
-    :returns: a `SelectTerm` to a `Select` clause for querying the standard deviation value for an attribute
-    */
-    public static func StandardDeviation(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
-        
-        return ._Aggregate(
-            function: "stddev:",
-            keyPath,
-            As: alias ?? "stddev(\(keyPath))"
+            As: alias ?? "min(\(keyPath))",
+            nativeType: .UndefinedAttributeType
         )
     }
     
@@ -234,7 +196,8 @@ public enum SelectTerm: StringLiteralConvertible {
         return ._Aggregate(
             function: "sum:",
             keyPath,
-            As: alias ?? "sum(\(keyPath))"
+            As: alias ?? "sum(\(keyPath))",
+            nativeType: .DecimalAttributeType
         )
     }
     
@@ -260,7 +223,7 @@ public enum SelectTerm: StringLiteralConvertible {
     // MARK: Internal
     
     case _Attribute(KeyPath)
-    case _Aggregate(function: String, KeyPath, As: String)
+    case _Aggregate(function: String, KeyPath, As: String, nativeType: NSAttributeType)
 }
 
 
@@ -358,12 +321,19 @@ public struct Select<T: SelectResultType> {
                     CoreStore.log(.Warning, message: "The property \"\(keyPath)\" does not exist in entity <\(entityDescription.managedObjectClassName)> and will be ignored by \(typeName(self)) query clause.")
                 }
                 
-            case ._Aggregate(let function, let keyPath, let alias):
+            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
                 if let attributeDescription = attributesByName[keyPath] as? NSAttributeDescription {
                     
                     let expressionDescription = NSExpressionDescription()
                     expressionDescription.name = alias
-                    expressionDescription.expressionResultType = attributeDescription.attributeType
+                    if nativeType == .UndefinedAttributeType {
+                        
+                        expressionDescription.expressionResultType = attributeDescription.attributeType
+                    }
+                    else {
+                        
+                        expressionDescription.expressionResultType = nativeType
+                    }
                     expressionDescription.expression = NSExpression(
                         forFunction: function,
                         arguments: [NSExpression(forKeyPath: keyPath)]
@@ -388,7 +358,7 @@ public struct Select<T: SelectResultType> {
         case ._Attribute(let keyPath):
             return keyPath
             
-        case ._Aggregate(_, _, let alias):
+        case ._Aggregate(_, _, let alias, _):
             return alias
         }
     }

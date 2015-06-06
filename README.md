@@ -1,7 +1,7 @@
 # CoreStore
 [![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
-[![License](https://img.shields.io/github/license/JohnEstropia/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
+[![License](https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat)](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE)
 
 Simple, elegant, and smart Core Data programming with Swift
 (Swift, iOS 8+)
@@ -11,8 +11,8 @@ Simple, elegant, and smart Core Data programming with Swift
 
 ## What CoreStore does better:
 - Heavily supports multiple persistent stores per data stack, just the way .xcdatamodeld files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
-- Ability to plug-in your own logging framework (or any of your favorite 3rd-party logger)
-- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the .xcdatamodeld file, so you are free to name them independently.
+- Ability to plug-in your own logging framework
+- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you are free to name them independently.
 - Provides type-safe, easy to configure observers to replace `NSFetchedResultsController` and KVO
 - Exposes API not just for fetching, but also for querying aggregates and property values
 - Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
@@ -31,9 +31,9 @@ CoreStore.addSQLiteStore("MyStore.sqlite")
 Simple transactions:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    let object = transaction.create(Into(MyEntity))
-    object.entityID = 1
-    object.name = "test entity"
+    let person = transaction.create(Into(MyPersonEntity))
+    person.name = "John Smith"
+    person.age = 42
 
     transaction.commit { (result) -> Void in
         switch result {
@@ -46,24 +46,24 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 
 Easy fetching:
 ```swift
-let objects = CoreStore.fetchAll(From(MyEntity))
+let people = CoreStore.fetchAll(From(MyPersonEntity))
 ```
 ```swift
-let objects = CoreStore.fetchAll(
-    From(MyEntity),
-    Where("entityID", isEqualTo: 1),
-    OrderBy(.Ascending("entityID"), .Descending("name")),
+let people = CoreStore.fetchAll(
+    From(MyPersonEntity),
+    Where("age > 30"),
+    OrderBy(.Ascending("name"), .Descending("age")),
     Tweak { (fetchRequest) -> Void in
-        fetchRequest.includesPendingChanges = true
+        fetchRequest.includesPendingChanges = false
     }
 )
 ```
 
 Simple queries:
 ```swift
-let count = CoreStore.queryValue(
-    From(MyEntity),
-    Select<Int>(.Count("entityID"))
+let maxAge = CoreStore.queryValue(
+    From(MyPersonEntity),
+    Select<Int>(.Maximum("age"))
 )
 ```
 
@@ -497,9 +497,7 @@ If you only need a value for a particular attribute, you can just specify the ke
 - `.Average(...)`
 - `.Count(...)`
 - `.Maximum(...)`
-- `.Median(...)`
 - `.Minimum(...)`
-- `.StandardDeviation(...)`
 - `.Sum(...)`
 
 ```swift
@@ -572,7 +570,7 @@ which now returns:
 
 **`GroupBy` clause**
 
-The `GroupBy` clause lets you group results by a specified attribute/aggregate. This is only useful only for `queryAttributes(...)` since `queryValue(...)` just returns the first value anyway.
+The `GroupBy` clause lets you group results by a specified attribute/aggregate. This is useful only for `queryAttributes(...)` since `queryValue(...)` just returns the first value.
 ```swift
 let personJSON = CoreStore.queryAttributes(
     From(MyPersonEntity),

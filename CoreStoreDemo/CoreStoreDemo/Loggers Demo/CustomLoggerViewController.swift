@@ -22,13 +22,15 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         CoreStore.logger = DefaultLogger()
     }
     
+    let dataStack = DataStack()
     
     // MARK: UIViewController
 
     override func viewDidLoad() {
         
         super.viewDidLoad()
-
+        
+        self.dataStack.addSQLiteStore("emptyStore.sqlite")
         CoreStore.logger = self
     }
     
@@ -52,7 +54,15 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         
         GCDQueue.Main.async { [weak self] in
             
-            self?.textView?.insertText("\(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Log] \(message)\n\n")
+            let levelString: String
+            switch level {
+                
+            case .Trace: levelString = "Trace"
+            case .Notice: levelString = "Notice"
+            case .Warning: levelString = "Warning"
+            case .Fatal: levelString = "Fatal"
+            }
+            self?.textView?.insertText("\(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Log:\(levelString)] \(message)\n\n")
         }
     }
     
@@ -88,21 +98,23 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         switch self.segmentedControl?.selectedSegmentIndex {
             
         case .Some(0):
-            CoreStore.beginAsynchronous { (transaction) -> Void in
+            self.dataStack.beginAsynchronous { (transaction) -> Void in
+                
                 transaction.create(Into(UserAccount))
             }
             
         case .Some(1):
-            CoreStore.addSQLiteStore("dummy.sqlite", configuration: "test1")
-            CoreStore.addSQLiteStore("dummy.sqlite", configuration: "test2")
+            self.dataStack.addSQLiteStore("emptyStore.sqlite", configuration: "invalidStore")
             
         case .Some(2):
-            CoreStore.beginAsynchronous { (transaction) -> Void in
+            self.dataStack.beginAsynchronous { (transaction) -> Void in
+                
                 transaction.commit()
                 transaction.commit()
             }
             
-        default: return
+        default:
+            return
         }
     }
 }

@@ -32,7 +32,7 @@
     </configuration>
     <elements>
         <element name="Palette" positionX="261" positionY="189" width="128" height="105"/>
-        <element name="UserAccount" positionX="261" positionY="216" width="128" height="90"/>
         <element name="Place" positionX="261" positionY="225" width="128" height="105"/>
+        <element name="UserAccount" positionX="261" positionY="216" width="128" height="90"/>
     </elements>
 </model>

@@ -168,9 +168,16 @@ class StackSetupDemoViewController: UITableViewController {
         
         switch section {
             
-        case 0: return "Facebook Accounts"
-        case 1: return "Twitter Accounts"
-        default: return nil
+        case 0:
+            let count = Static.facebookStack.fetchCount(From(UserAccount)) ?? 0
+            return "Facebook Accounts (\(count) users)"
+            
+        case 1:
+            let count = Static.twitterStack.fetchCount(From(UserAccount)) ?? 0
+            return "Twitter Accounts (\(count) users)"
+            
+        default:
+            return nil
         }
     }
     
