@@ -28,9 +28,9 @@ import CoreData
 import GCDKit
 
 
-private let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL
+internal let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL
 
-private let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData")
+internal let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData")
 
 internal let defaultSQLiteStoreURL = applicationSupportDirectory.URLByAppendingPathComponent(applicationName, isDirectory: false).URLByAppendingPathExtension("sqlite")
 
@@ -152,9 +152,9 @@ public final class DataStack {
     :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
     :returns: a `PersistentStoreResult` indicating success or failure.
     */
-    public func addSQLiteStore(fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
+    public func addSQLiteStoreAndWait(fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
-        return self.addSQLiteStore(
+        return self.addSQLiteStoreAndWait(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(
                 fileName,
                 isDirectory: false
@@ -174,7 +174,7 @@ public final class DataStack {
     :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
     :returns: a `PersistentStoreResult` indicating success or failure.
     */
-    public func addSQLiteStore(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
+    public func addSQLiteStoreAndWait(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
         let coordinator = self.coordinator;
         if let store = coordinator.persistentStoreForURL(fileURL) {
@@ -276,6 +276,7 @@ public final class DataStack {
     
     // MARK: Internal
     
+    internal let coordinator: NSPersistentStoreCoordinator
     internal let rootSavingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
     internal let childTransactionQueue: GCDQueue = .createSerial("com.corestore.datastack.childtransactionqueue")
@@ -333,20 +334,7 @@ public final class DataStack {
         return returnValue
     }
     
-    
-    // MARK: Private
-    
-    private typealias EntityClassNameType = String
-    private typealias EntityNameType = String
-    private typealias ConfigurationNameType = String
-    
-    private let coordinator: NSPersistentStoreCoordinator
-    private let entityNameMapping: [EntityClassNameType: EntityNameType]
-    private let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.coreStore.persistentStoreBarrierQueue")
-    private var configurationStoreMapping = [ConfigurationNameType: NSPersistentStore]()
-    private var entityConfigurationsMapping = [EntityClassNameType: Set<String>]()
-    
-    private func updateMetadataForPersistentStore(persistentStore: NSPersistentStore) {
+    internal func updateMetadataForPersistentStore(persistentStore: NSPersistentStore) {
         
         self.storeMetadataUpdateQueue.barrierAsync {
             
@@ -358,4 +346,16 @@ public final class DataStack {
             }
         }
     }
+    
+    
+    // MARK: Private
+    
+    private typealias EntityClassNameType = String
+    private typealias EntityNameType = String
+    private typealias ConfigurationNameType = String
+    
+    private let entityNameMapping: [EntityClassNameType: EntityNameType]
+    private let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.coreStore.persistentStoreBarrierQueue")
+    private var configurationStoreMapping = [ConfigurationNameType: NSPersistentStore]()
+    private var entityConfigurationsMapping = [EntityClassNameType: Set<String>]()
 }

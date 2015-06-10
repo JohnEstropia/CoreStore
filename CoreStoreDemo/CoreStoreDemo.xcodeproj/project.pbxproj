@@ -24,12 +24,14 @@
 		B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */; };
 		B566E3321B11DF3200F4F0C6 /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3311B11DF3200F4F0C6 /* UserAccount.swift */; };
 		B56964C91B20AC780075EE4A /* CustomLoggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964C81B20AC780075EE4A /* CustomLoggerViewController.swift */; };
+		B56964D71B231AE90075EE4A /* StackSetupDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B56964D51B231AE90075EE4A /* StackSetupDemo.xcdatamodeld */; };
+		B56964DA1B231BCA0075EE4A /* MaleAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964D91B231BCA0075EE4A /* MaleAccount.swift */; };
+		B56964DC1B231BCB0075EE4A /* FemaleAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964DB1B231BCB0075EE4A /* FemaleAccount.swift */; };
+		B56964DF1B2321E30075EE4A /* MigrationDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B56964DD1B2321E30075EE4A /* MigrationDemo.xcdatamodeld */; };
 		B583A9201AF5F542001F76AF /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B583A91B1AF5F4F4001F76AF /* CoreStore.framework */; };
 		B583A9211AF5F542001F76AF /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B583A91B1AF5F4F4001F76AF /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5D9C9191B20AB1900E64F0E /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D9C9181B20AB1900E64F0E /* GCDKit.framework */; };
 		B5D9C91A1B20AB1900E64F0E /* GCDKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5D9C9181B20AB1900E64F0E /* GCDKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B5E7240F1B11F993006FB83F /* TwitterAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E7240E1B11F993006FB83F /* TwitterAccount.swift */; };
-		B5E724111B11F994006FB83F /* FacebookAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E724101B11F994006FB83F /* FacebookAccount.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,10 +100,13 @@
 		B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackSetupDemoViewController.swift; sourceTree = "<group>"; };
 		B566E3311B11DF3200F4F0C6 /* UserAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccount.swift; sourceTree = "<group>"; };
 		B56964C81B20AC780075EE4A /* CustomLoggerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLoggerViewController.swift; sourceTree = "<group>"; };
+		B56964D61B231AE90075EE4A /* StackSetupDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = StackSetupDemo.xcdatamodel; sourceTree = "<group>"; };
+		B56964D91B231BCA0075EE4A /* MaleAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaleAccount.swift; sourceTree = "<group>"; };
+		B56964DB1B231BCB0075EE4A /* FemaleAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FemaleAccount.swift; sourceTree = "<group>"; };
+		B56964DE1B2321E30075EE4A /* MigrationDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemo.xcdatamodel; sourceTree = "<group>"; };
+		B56964E01B2326F30075EE4A /* MigrationDemoV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemoV2.xcdatamodel; sourceTree = "<group>"; };
 		B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoreStore.xcodeproj; path = ../CoreStore.xcodeproj; sourceTree = "<group>"; };
 		B5D9C9181B20AB1900E64F0E /* GCDKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GCDKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B5E7240E1B11F993006FB83F /* TwitterAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitterAccount.swift; sourceTree = "<group>"; };
-		B5E724101B11F994006FB83F /* FacebookAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FacebookAccount.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +185,8 @@
 				B54AAD5A1AF4D26E00848AE0 /* Images.xcassets */,
 				B54AAD5C1AF4D26E00848AE0 /* LaunchScreen.xib */,
 				B54AAD501AF4D26E00848AE0 /* CoreStoreDemo.xcdatamodeld */,
+				B56964D51B231AE90075EE4A /* StackSetupDemo.xcdatamodeld */,
+				B56964DD1B2321E30075EE4A /* MigrationDemo.xcdatamodeld */,
 				B54AAD4C1AF4D26E00848AE0 /* Supporting Files */,
 			);
 			path = CoreStoreDemo;
@@ -196,8 +203,8 @@
 		B566E3271B117AE700F4F0C6 /* Stack Setup Demo */ = {
 			isa = PBXGroup;
 			children = (
-				B5E724101B11F994006FB83F /* FacebookAccount.swift */,
-				B5E7240E1B11F993006FB83F /* TwitterAccount.swift */,
+				B56964DB1B231BCB0075EE4A /* FemaleAccount.swift */,
+				B56964D91B231BCA0075EE4A /* MaleAccount.swift */,
 				B566E3311B11DF3200F4F0C6 /* UserAccount.swift */,
 				B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */,
 			);
@@ -318,19 +325,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				B52977DD1B120F3B003D50A5 /* TransactionsDemoViewController.swift in Sources */,
+				B56964DF1B2321E30075EE4A /* MigrationDemo.xcdatamodeld in Sources */,
 				B52977E41B121635003D50A5 /* Place.swift in Sources */,
 				B503FAE01AFDC71700F90881 /* ObjectObserverDemoViewController.swift in Sources */,
 				B52977D91B120B80003D50A5 /* ObserversViewController.swift in Sources */,
 				B56964C91B20AC780075EE4A /* CustomLoggerViewController.swift in Sources */,
 				B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */,
-				B5E724111B11F994006FB83F /* FacebookAccount.swift in Sources */,
-				B5E7240F1B11F993006FB83F /* TwitterAccount.swift in Sources */,
+				B56964DA1B231BCA0075EE4A /* MaleAccount.swift in Sources */,
 				B566E3321B11DF3200F4F0C6 /* UserAccount.swift in Sources */,
 				B54AAD521AF4D26E00848AE0 /* CoreStoreDemo.xcdatamodeld in Sources */,
 				B503FAE11AFDC71700F90881 /* Palette.swift in Sources */,
 				B503FAE21AFDC71700F90881 /* PaletteTableViewCell.swift in Sources */,
 				B503FADF1AFDC71700F90881 /* ObjectListObserverDemoViewController.swift in Sources */,
 				B54AAD4F1AF4D26E00848AE0 /* AppDelegate.swift in Sources */,
+				B56964D71B231AE90075EE4A /* StackSetupDemo.xcdatamodeld in Sources */,
+				B56964DC1B231BCB0075EE4A /* FemaleAccount.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,6 +522,27 @@
 			);
 			currentVersion = B54AAD511AF4D26E00848AE0 /* CoreStoreDemo.xcdatamodel */;
 			path = CoreStoreDemo.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		B56964D51B231AE90075EE4A /* StackSetupDemo.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B56964D61B231AE90075EE4A /* StackSetupDemo.xcdatamodel */,
+			);
+			currentVersion = B56964D61B231AE90075EE4A /* StackSetupDemo.xcdatamodel */;
+			path = StackSetupDemo.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		B56964DD1B2321E30075EE4A /* MigrationDemo.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B56964E01B2326F30075EE4A /* MigrationDemoV2.xcdatamodel */,
+				B56964DE1B2321E30075EE4A /* MigrationDemo.xcdatamodel */,
+			);
+			currentVersion = B56964E01B2326F30075EE4A /* MigrationDemoV2.xcdatamodel */;
+			path = MigrationDemo.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
