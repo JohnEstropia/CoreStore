@@ -77,7 +77,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
         super.viewDidAppear(animated)
         
         let alert = UIAlertController(
-            title: "Observers Demo",
+            title: "Transactions Demo",
             message: "This demo shows how to use the 3 types of transactions to save updates: synchronous, asynchronous, and detached. Long-tap on the map to change the pin location.",
             preferredStyle: .Alert
         )
