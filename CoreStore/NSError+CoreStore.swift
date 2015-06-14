@@ -44,6 +44,21 @@ public enum CoreStoreErrorCode: Int {
     The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
     */
     case DifferentPersistentStoreExistsAtURL
+    
+    /**
+    The `NSPersistentStore` specified could not be found.
+    */
+    case PersistentStoreNotFound
+    
+    /**
+    An `NSMappingModel` could not be found for a specific source and destination model versions.
+    */
+    case MappingModelNotFound
+    
+    /**
+    An `NSMigrationManager` prepared to migrate the store.
+    */
+    case MigrationFailed
 }
 
 
