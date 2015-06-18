@@ -33,7 +33,7 @@ import CoreData
 The `PersistentStoreResult` indicates the result of initializing the persistent store.
 The `PersistentStoreResult` can be treated as a boolean:
 
-    let result = CoreStore.addSQLiteStore()
+    let result = CoreStore.addSQLiteStoreAndWait()
     if result {
     	// succeeded
     }
@@ -43,7 +43,7 @@ The `PersistentStoreResult` can be treated as a boolean:
 
 or as an `enum`, where the resulting associated object can also be inspected:
 
-    let result = CoreStore.addSQLiteStore()
+    let result = CoreStore.addSQLiteStoreAndWait()
     switch result {
     case .Success(let persistentStore):
         // persistentStore is the related NSPersistentStore instance

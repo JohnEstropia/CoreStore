@@ -14,7 +14,7 @@ private struct Static {
     
     static let palettes: ManagedObjectListController<Palette> = {
         
-        CoreStore.addSQLiteStore(
+        CoreStore.addSQLiteStoreAndWait(
             "ColorsDemo.sqlite",
             configuration: "ObservingDemo",
             resetStoreOnMigrationFailure: true

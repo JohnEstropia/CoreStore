@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14D136" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="FemaleAccount" representedClassName="CoreStoreDemo.FemaleAccount" parentEntity="UserAccount" syncable="YES"/>
+    <entity name="MaleAccount" representedClassName="CoreStoreDemo.MaleAccount" parentEntity="UserAccount" syncable="YES"/>
+    <entity name="UserAccount" representedClassName="CoreStoreDemo.UserAccount" isAbstract="YES" syncable="YES">
+        <attribute name="accountType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="friends" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <configuration name="FemaleAccounts">
+        <memberEntity name="FemaleAccount"/>
+        <memberEntity name="UserAccount"/>
+    </configuration>
+    <configuration name="MaleAccounts">
+        <memberEntity name="MaleAccount"/>
+        <memberEntity name="UserAccount"/>
+    </configuration>
+    <elements>
+        <element name="UserAccount" positionX="-63" positionY="-18" width="128" height="90"/>
+        <element name="MaleAccount" positionX="-54" positionY="18" width="128" height="45"/>
+        <element name="FemaleAccount" positionX="-36" positionY="27" width="128" height="45"/>
+    </elements>
+</model>

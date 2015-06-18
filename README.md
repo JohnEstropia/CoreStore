@@ -25,7 +25,7 @@ Simple, elegant, and smart Core Data programming with Swift
 
 Quick-setup:
 ```swift
-CoreStore.addSQLiteStore("MyStore.sqlite")
+CoreStore.addSQLiteStoreAndWait("MyStore.sqlite")
 ```
 
 Simple transactions:
@@ -107,7 +107,7 @@ This allows for a butter-smooth main thread, while still taking advantage of saf
 ## <a id="setup"></a>Setting up
 The simplest way to initialize CoreStore is to add a default store to the default stack:
 ```swift
-CoreStore.addSQLiteStore()
+CoreStore.addSQLiteStoreAndWait()
 ```
 This one-liner does the following:
 - Triggers the lazy-initialization of `CoreStore.defaultStack` with a default `DataStack`
@@ -126,7 +126,7 @@ case .Failure(let error): // error is an NSError instance
     println("Failed creating an in-memory store with error: \(error.description)"
 }
 
-switch dataStack.addSQLiteStore(
+switch dataStack.addSQLiteStoreAndWait(
     fileURL: sqliteFileURL, // set the target file URL for the sqlite file
     configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
     automigrating: true, // automatically run lightweight migrations or entity policy migrations when needed
@@ -146,7 +146,7 @@ class MyViewController: UIViewController {
     let dataStack = DataStack(modelName: "MyModel")
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.dataStack.addSQLiteStore()
+        self.dataStack.addSQLiteStoreAndWait()
     }
     func methodToBeCalledLaterOn() {
         let objects = self.dataStack.fetchAll(From(MyEntity))
@@ -159,7 +159,7 @@ The difference is when you set the stack as the `CoreStore.defaultStack`, you ca
 class MyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        CoreStore.addSQLiteStore()
+        CoreStore.addSQLiteStoreAndWait()
     }
     func methodToBeCalledLaterOn() {
         let objects = CoreStore.fetchAll(From(MyEntity))

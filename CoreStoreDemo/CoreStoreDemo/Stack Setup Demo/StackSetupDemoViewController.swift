@@ -12,34 +12,33 @@ import CoreStore
 
 private struct Static {
     
-    static let johnConfiguration = "SetupDemo_John"
-    static let janeConfiguration = "SetupDemo_Jane"
+    static let maleConfiguration = "MaleAccounts"
+    static let femaleConfiguration = "FemaleAccounts"
     
     static let facebookStack: DataStack = {
         
-        let dataStack = DataStack(modelName: "CoreStoreDemo")
-        dataStack.addSQLiteStore(
-            "AccountsDemo_FB_John.sqlite",
-            configuration: johnConfiguration,
+        let dataStack = DataStack(modelName: "StackSetupDemo")
+        dataStack.addSQLiteStoreAndWait(
+            "AccountsDemo_FB_Male.sqlite",
+            configuration: maleConfiguration,
             resetStoreOnMigrationFailure: true
         )
-        dataStack.addSQLiteStore(
-            "AccountsDemo_FB_Jane.sqlite",
-            configuration: janeConfiguration,
+        dataStack.addSQLiteStoreAndWait(
+            "AccountsDemo_FB_Female.sqlite",
+            configuration: femaleConfiguration,
             resetStoreOnMigrationFailure: true
         )
         
         dataStack.beginSynchronous { (transaction) -> Void in
             
-            transaction.deleteAll(From<UserAccount>(johnConfiguration))
-            transaction.deleteAll(From<UserAccount>(janeConfiguration))
+            transaction.deleteAll(From(UserAccount))
             
-            let account1 = transaction.create(Into<UserAccount>(johnConfiguration))
+            let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
             account1.accountType = "Facebook"
             account1.name = "John Smith HCD"
             account1.friends = 42
             
-            let account2 = transaction.create(Into<UserAccount>(janeConfiguration))
+            let account2 = transaction.create(Into<FemaleAccount>(femaleConfiguration))
             account2.accountType = "Facebook"
             account2.name = "Jane Doe HCD"
             account2.friends = 314
@@ -52,29 +51,28 @@ private struct Static {
     
     static let twitterStack: DataStack = {
         
-        let dataStack = DataStack(modelName: "CoreStoreDemo")
-        dataStack.addSQLiteStore(
-            "AccountsDemo_TW_John.sqlite",
-            configuration: johnConfiguration,
+        let dataStack = DataStack(modelName: "StackSetupDemo")
+        dataStack.addSQLiteStoreAndWait(
+            "AccountsDemo_TW_Male.sqlite",
+            configuration: maleConfiguration,
             resetStoreOnMigrationFailure: true
         )
-        dataStack.addSQLiteStore(
-            "AccountsDemo_TW_Jane.sqlite",
-            configuration: janeConfiguration,
+        dataStack.addSQLiteStoreAndWait(
+            "AccountsDemo_TW_Female.sqlite",
+            configuration: femaleConfiguration,
             resetStoreOnMigrationFailure: true
         )
         
         dataStack.beginSynchronous { (transaction) -> Void in
             
-            transaction.deleteAll(From<UserAccount>(johnConfiguration))
-            transaction.deleteAll(From<UserAccount>(janeConfiguration))
+            transaction.deleteAll(From(UserAccount))
             
-            let account1 = transaction.create(Into<UserAccount>(johnConfiguration))
+            let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
             account1.accountType = "Twitter"
             account1.name = "#johnsmith_hcd"
             account1.friends = 7
             
-            let account2 = transaction.create(Into<UserAccount>(janeConfiguration))
+            let account2 = transaction.create(Into<FemaleAccount>(femaleConfiguration))
             account2.accountType = "Twitter"
             account2.name = "#janedoe_hcd"
             account2.friends = 100
@@ -94,14 +92,8 @@ private struct Static {
 class StackSetupDemoViewController: UITableViewController {
     
     let accounts = [
-        [
-            Static.facebookStack.fetchOne(From<UserAccount>(Static.johnConfiguration))!,
-            Static.facebookStack.fetchOne(From<UserAccount>(Static.janeConfiguration))!
-        ],
-        [
-            Static.twitterStack.fetchOne(From<UserAccount>(Static.johnConfiguration))!,
-            Static.twitterStack.fetchOne(From<UserAccount>(Static.janeConfiguration))!
-        ]
+        Static.facebookStack.fetchAll(From(UserAccount)) ?? [],
+        Static.twitterStack.fetchAll(From(UserAccount)) ?? []
     ]
     
     
@@ -169,11 +161,11 @@ class StackSetupDemoViewController: UITableViewController {
         switch section {
             
         case 0:
-            let count = Static.facebookStack.fetchCount(From(UserAccount)) ?? 0
+            let count = self.accounts[section].count
             return "Facebook Accounts (\(count) users)"
             
         case 1:
-            let count = Static.twitterStack.fetchCount(From(UserAccount)) ?? 0
+            let count = self.accounts[section].count
             return "Twitter Accounts (\(count) users)"
             
         default:
