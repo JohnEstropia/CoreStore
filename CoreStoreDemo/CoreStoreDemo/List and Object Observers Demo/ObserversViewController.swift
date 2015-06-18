@@ -21,7 +21,7 @@ class ObserversViewController: UIViewController {
         
         let alert = UIAlertController(
             title: "Observers Demo",
-            message: "This demo shows how to observe changes to a list of objects. The top and bottom view controllers both observe a single shared \"ManagedObjectListController\" instance.\n\nTap on a row to see another demo that shows how to observe changes to a single object using a \"ManagedObjectController\".",
+            message: "This demo shows how to observe changes to a list of objects. The top and bottom view controllers both observe a single shared \"ManagedObjectListController\" instance.\n\nTap on a row to see how to observe changes made to a single object using a \"ManagedObjectController\".",
             preferredStyle: .Alert
         )
         alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))

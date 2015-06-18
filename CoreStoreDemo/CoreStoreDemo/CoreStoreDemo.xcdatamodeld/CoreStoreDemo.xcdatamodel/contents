@@ -13,6 +13,16 @@
         <attribute name="subtitle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="TimeZone" representedClassName="CoreStoreDemo.TimeZone" syncable="YES">
+        <attribute name="abbreviation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="daylightSavingTimeOffset" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="hasDaylightSavingTime" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="secondsFromGMT" optional="YES" attributeType="Integer 32" defaultValueString="0.0" syncable="YES"/>
+    </entity>
+    <configuration name="FetchingAndQueryingDemo">
+        <memberEntity name="TimeZone"/>
+    </configuration>
     <configuration name="ObservingDemo">
         <memberEntity name="Palette"/>
     </configuration>
@@ -22,5 +32,6 @@
     <elements>
         <element name="Palette" positionX="261" positionY="189" width="128" height="105"/>
         <element name="Place" positionX="261" positionY="225" width="128" height="105"/>
+        <element name="TimeZone" positionX="297" positionY="270" width="128" height="120"/>
     </elements>
 </model>
