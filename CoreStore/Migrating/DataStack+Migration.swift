@@ -102,7 +102,7 @@ public extension DataStack {
     /**
     EXPERIMENTAL
     */
-    public func upgradeSQLiteStoreIfNeeded(fileName: String, configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
+    private func upgradeSQLiteStoreIfNeeded(fileName: String, configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
      
         self.upgradeSQLiteStoreIfNeeded(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(
@@ -117,7 +117,7 @@ public extension DataStack {
     /**
     EXPERIMENTAL
     */
-    public func upgradeSQLiteStoreIfNeeded(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
+    private func upgradeSQLiteStoreIfNeeded(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
         
         var metadataError: NSError?
         let metadata: [NSObject: AnyObject]! = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
