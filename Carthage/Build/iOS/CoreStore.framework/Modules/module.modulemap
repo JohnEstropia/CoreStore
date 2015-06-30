@@ -1,0 +1,10 @@
+framework module CoreStore {
+  umbrella header "CoreStore.h"
+
+  export *
+  module * { export * }
+}
+
+module CoreStore.Swift {
+    header "CoreStore-Swift.h"
+}
