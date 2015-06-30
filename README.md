@@ -2,6 +2,7 @@
 [![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![License](https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat)](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Simple, elegant, and smart Core Data programming with Swift
 (Swift, iOS 8+)
