@@ -1,5 +1,5 @@
 //
-//  ManagedObjectObserver.swift
+//  ObjectObserver.swift
 //  CoreStore
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -27,15 +27,15 @@ import Foundation
 import CoreData
 
 
-// MARK: - ManagedObjectObserver
+// MARK: - ObjectObserver
 
 /**
-Implement the `ManagedObjectObserver` protocol to observe changes to a single `NSManagedObject` instance. `ManagedObjectObserver`'s may register themselves to a `ManagedObjectController`'s `addObserver(_:)` method:
+Implement the `ObjectObserver` protocol to observe changes to a single `NSManagedObject` instance. `ObjectObserver`s may register themselves to a `ObjectMonitor`'s `addObserver(_:)` method:
 
-    let objectController = CoreStore.observeObject(object)
-    objectController.addObserver(self)
+    let monitor = CoreStore.monitorObject(object)
+    monitor.addObserver(self)
 */
-public protocol ManagedObjectObserver: class {
+public protocol ObjectObserver: class {
     
     /**
     The `NSManagedObject` type for the observed object
@@ -45,25 +45,25 @@ public protocol ManagedObjectObserver: class {
     /**
     Handles processing just before a change to the observed `object` occurs
     
-    :param: objectController the `ManagedObjectController` monitoring the object being observed
+    :param: monitor the `ObjectMonitor` monitoring the object being observed
     :param: object the `NSManagedObject` instance being observed
     */
-    func managedObjectWillUpdate(objectController: ManagedObjectController<EntityType>, object: EntityType)
+    func objectMonitor(monitor: ObjectMonitor<EntityType>, willUpdateObject object: EntityType)
     
     /**
     Handles processing right after a change to the observed `object` occurs
     
-    :param: objectController the `ManagedObjectController` monitoring the object being observed
+    :param: monitor the `ObjectMonitor` monitoring the object being observed
     :param: object the `NSManagedObject` instance being observed
     :param: changedPersistentKeys a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
     */
-    func managedObjectWasUpdated(objectController: ManagedObjectController<EntityType>, object: EntityType, changedPersistentKeys: Set<KeyPath>)
+    func objectMonitor(monitor: ObjectMonitor<EntityType>, didUpdateObject object: EntityType, changedPersistentKeys: Set<KeyPath>)
     
     /**
     Handles processing right after `object` is deleted
     
-    :param: objectController the `ManagedObjectController` monitoring the object being observed
+    :param: monitor the `ObjectMonitor` monitoring the object being observed
     :param: object the `NSManagedObject` instance being observed
     */
-    func managedObjectWasDeleted(objectController: ManagedObjectController<EntityType>, object: EntityType)
+    func objectMonitor(monitor: ObjectMonitor<EntityType>, didDeleteObject object: EntityType)
 }

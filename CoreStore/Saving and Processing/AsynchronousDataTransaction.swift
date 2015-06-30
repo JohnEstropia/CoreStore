@@ -143,7 +143,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Deletes the specified `NSManagedObject`'s.
+    Deletes the specified `NSManagedObject`s.
     
     :param: object1 the `NSManagedObject` type to be deleted
     :param: object2 another `NSManagedObject` type to be deleted
@@ -157,9 +157,9 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Deletes the specified `NSManagedObject`'s.
+    Deletes the specified `NSManagedObject`s.
     
-    :param: objects the `NSManagedObject`'s type to be deleted
+    :param: objects the `NSManagedObject`s type to be deleted
     */
     public override func delete(objects: [NSManagedObject?]) {
         

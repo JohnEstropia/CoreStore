@@ -54,7 +54,12 @@ internal extension NSManagedObjectContext {
         }
     }
     
-    internal func entityDescriptionForEntityClass(entity: NSManagedObject.Type) -> NSEntityDescription? {
+    internal func entityDescriptionForEntityType(entity: NSManagedObject.Type) -> NSEntityDescription? {
+        
+        return self.entityDescriptionForEntityClass(entity)
+    }
+    
+    internal func entityDescriptionForEntityClass(entity: AnyClass) -> NSEntityDescription? {
         
         if let entityName = self.parentStack?.entityNameForEntityClass(entity) {
 

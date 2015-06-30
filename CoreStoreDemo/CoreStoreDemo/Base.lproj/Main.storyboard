@@ -88,6 +88,91 @@
             </objects>
             <point key="canvasLocation" x="3694" y="650"/>
         </scene>
+        <!--Evolution-->
+        <scene sceneID="zQS-zk-2T4">
+            <objects>
+                <tableViewController id="hJK-5I-1TQ" customClass="MigrationsDemoViewController" customModule="CoreStoreDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="KpQ-h6-kAe">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="5Hd-jr-1nW">
+                            <rect key="frame" x="0.0" y="64" width="600" height="259"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Organism" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C06-r4-27K">
+                                    <rect key="frame" x="20" y="20" width="102" height="26.5"/>
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
+                                    <color key="textColor" red="0.92549019610000005" green="0.94117647059999998" blue="0.94509803920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="attributes" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fXh-OL-4Qb">
+                                    <rect key="frame" x="20" y="70" width="560" height="20.5"/>
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                                    <color key="textColor" red="0.92549019610000005" green="0.94117647059999998" blue="0.94509803920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" red="0.20392156859999999" green="0.28627450980000002" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstItem="fXh-OL-4Qb" firstAttribute="top" secondItem="C06-r4-27K" secondAttribute="bottom" constant="23.5" id="6d1-A5-Zc5"/>
+                                <constraint firstAttribute="trailing" secondItem="C06-r4-27K" secondAttribute="trailing" constant="20" id="DC3-u7-f9M"/>
+                                <constraint firstItem="fXh-OL-4Qb" firstAttribute="leading" secondItem="C06-r4-27K" secondAttribute="leading" id="SnQ-Ra-KkU"/>
+                                <constraint firstItem="C06-r4-27K" firstAttribute="top" secondItem="5Hd-jr-1nW" secondAttribute="top" constant="20" id="abW-Z0-uln"/>
+                                <constraint firstAttribute="trailing" secondItem="fXh-OL-4Qb" secondAttribute="trailing" constant="20" id="mhR-0c-i0n"/>
+                                <constraint firstItem="C06-r4-27K" firstAttribute="leading" secondItem="5Hd-jr-1nW" secondAttribute="leading" constant="20" id="yiG-c9-BZg"/>
+                            </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="DC3-u7-f9M"/>
+                                </mask>
+                            </variation>
+                        </view>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="UITableViewCell" textLabel="VMh-dq-EWk" detailTextLabel="HIj-ej-FpM" style="IBUITableViewCellStyleValue1" id="hoX-F9-vzZ">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hoX-F9-vzZ" id="9ru-7C-dsE">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="VMh-dq-EWk">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
+                                            <color key="textColor" red="0.17254901959999999" green="0.24313725489999999" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HIj-ej-FpM">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
+                                            <color key="textColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="hJK-5I-1TQ" id="PBz-yT-Uix"/>
+                            <outlet property="delegate" destination="hJK-5I-1TQ" id="eZs-Fj-9qK"/>
+                        </connections>
+                    </tableView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Evolution" id="KvN-Gf-ETO">
+                        <barButtonItem key="rightBarButtonItem" title="Mutate!" id="J3K-Fc-5yB">
+                            <connections>
+                                <action selector="mutateBarButtonTapped:" destination="hJK-5I-1TQ" id="rPl-0R-hKM"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="organismLabel" destination="fXh-OL-4Qb" id="shX-fK-haw"/>
+                        <outlet property="titleLabel" destination="C06-r4-27K" id="zQr-YC-moe"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="H1w-4k-Tpx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3694" y="4113"/>
+        </scene>
         <!--CoreStore Demos-->
         <scene sceneID="0Be-vc-h1W">
             <objects>
@@ -212,6 +297,29 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <segue destination="5yy-0N-QDU" kind="show" id="5D7-Xp-1HT"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="hSG-mG-YBw" detailTextLabel="X9P-TQ-LYh" style="IBUITableViewCellStyleSubtitle" id="xTM-Cf-0if">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xTM-Cf-0if" id="DfO-BW-krd">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Evolution" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hSG-mG-YBw">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="20"/>
+                                                    <color key="textColor" red="0.17254901959999999" green="0.24313725489999999" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Migrating and de-migrating stores" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="X9P-TQ-LYh">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                    <color key="textColor" red="0.17254901959999999" green="0.24313725489999999" blue="0.31372549020000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="hJK-5I-1TQ" kind="show" id="u2O-8c-DSB"/>
                                         </connections>
                                     </tableViewCell>
                                 </cells>
@@ -425,7 +533,7 @@
         <!--List Observer-->
         <scene sceneID="gkX-bd-Rel">
             <objects>
-                <tableViewController id="3AE-ED-0oj" customClass="ObjectListObserverDemoViewController" customModule="CoreStoreDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="3AE-ED-0oj" customClass="ListObserverDemoViewController" customModule="CoreStoreDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="DAz-BE-6Ca">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="268"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -482,7 +590,7 @@
         <!--List Observer-->
         <scene sceneID="iDB-TD-It9">
             <objects>
-                <tableViewController id="lCE-i6-UCT" customClass="ObjectListObserverDemoViewController" customModule="CoreStoreDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="lCE-i6-UCT" customClass="ListObserverDemoViewController" customModule="CoreStoreDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Zba-8M-Zd7">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="268"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -854,6 +962,6 @@
         <image name="second" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hyN-De-zte"/>
+        <segue reference="fIB-GS-Ppk"/>
     </inferredMetricsTieBreakers>
 </document>

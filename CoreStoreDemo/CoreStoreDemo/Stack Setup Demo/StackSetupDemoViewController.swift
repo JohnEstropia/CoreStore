@@ -176,11 +176,11 @@ class StackSetupDemoViewController: UITableViewController {
     
     // MARK: Private
     
-    @IBOutlet weak var accountTypeLabel: UILabel?
-    @IBOutlet weak var nameLabel: UILabel?
-    @IBOutlet weak var friendsLabel: UILabel?
+    @IBOutlet private dynamic weak var accountTypeLabel: UILabel?
+    @IBOutlet private dynamic weak var nameLabel: UILabel?
+    @IBOutlet private dynamic weak var friendsLabel: UILabel?
     
-    func updateDetailsWithAccount(account: UserAccount) {
+    private func updateDetailsWithAccount(account: UserAccount) {
         
         self.accountTypeLabel?.text = account.accountType
         self.nameLabel?.text = account.name

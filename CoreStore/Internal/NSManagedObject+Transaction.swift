@@ -33,15 +33,15 @@ internal extension NSManagedObject {
     
     // MARK: Internal
     
-    internal class func createInContext(context: NSManagedObjectContext) -> Self {
+    internal dynamic class func createInContext(context: NSManagedObjectContext) -> Self {
         
         return self(
-            entity: context.entityDescriptionForEntityClass(self)!,
+            entity: context.entityDescriptionForEntityType(self)!,
             insertIntoManagedObjectContext: context
         )
     }
     
-    internal class func inContext(context: NSManagedObjectContext, withObjectID objectID: NSManagedObjectID) -> Self? {
+    internal dynamic class func inContext(context: NSManagedObjectContext, withObjectID objectID: NSManagedObjectID) -> Self? {
         
         return self.typedObjectInContext(context, objectID: objectID)
     }

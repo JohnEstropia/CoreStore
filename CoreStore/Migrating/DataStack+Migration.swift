@@ -32,55 +32,38 @@ import GCDKit
 
 public extension DataStack {
     
-    // MARK: Public
-    
     /**
-    Initializes a `DataStack` from the specified model name and a version-specific model name.
-    
-    :param: rootModelName the name of the (.xcdatamodeld) model file
-    :param: versionModelName the name of the version-specific (.xcdatamodeld) model file
-    */
-    public convenience init(rootModelName: String, versionModelName: String) {
-        
-        let modelVersionURL: NSURL! = NSBundle.mainBundle().URLForResource(
-            rootModelName.stringByAppendingPathExtension("momd")!.stringByAppendingPathComponent(versionModelName),
-            withExtension: "mom"
-        )
-        CoreStore.assert(modelVersionURL != nil, "Could not find a \"mom\" resource from the main bundle.")
-        
-        let managedObjectModel: NSManagedObjectModel! = NSManagedObjectModel(contentsOfURL: modelVersionURL)
-        CoreStore.assert(managedObjectModel != nil, "Could not create an <\(NSManagedObjectModel.self)> from the resource at URL \"\(modelVersionURL)\".")
-        
-        self.init(managedObjectModel: managedObjectModel)
-    }
-    
-    /**
-    Checks if the store at the specified filename and configuration needs to be migrated to the `DataStack`'s managed object model version.
+    Checks if the store with the specified filename and configuration needs to be migrated to the `DataStack`'s managed object model version.
     
     :param: fileName the local filename for the SQLite persistent store in the "Application Support" directory.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration.
+    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil` which indicates the "Default" configuration.
+    :param: mappingModelBundles an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
+    :return: a `MigrationType` indicating the type of migration required for the store; or `nil` if either inspection of the store failed, or no mapping model was found/inferred. `MigrationType` acts as a `Bool` and evaluates to `false` if no migration is required, and `true` if either a lightweight or custom migration is needed.
     */
-    public func needsMigrationForSQLiteStore(fileName: String, configuration: String? = nil) -> Bool? {
+    public func needsMigrationForSQLiteStore(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as! [NSBundle]) -> MigrationType? {
         
         return needsMigrationForSQLiteStore(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(
                 fileName,
                 isDirectory: false
             ),
-            configuration: configuration
+            configuration: configuration,
+            sourceBundles: sourceBundles
         )
     }
     
     /**
     Checks if the store at the specified file URL and configuration needs to be migrated to the `DataStack`'s managed object model version.
     
-    :param: fileName the local filename for the SQLite persistent store in the "Application Support" directory.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration.
+    :param: fileURL the local file URL for the SQLite persistent store.
+    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil` which indicates the "Default" configuration.
+    :param: sourceBundles an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
+    :return: a `MigrationType` indicating the type of migration required for the store; or `nil` if either inspection of the store failed, or no mapping model was found/inferred. `MigrationType` acts as a `Bool` and evaluates to `false` if no migration is required, and `true` if either a lightweight or custom migration is needed.
     */
-    public func needsMigrationForSQLiteStore(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil) -> Bool? {
+    public func needsMigrationForSQLiteStore(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as! [NSBundle]) -> MigrationType? {
         
         var error: NSError?
-        let metadata = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
+        let metadata: [NSObject : AnyObject]! = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
             NSSQLiteStoreType,
             URL: fileURL,
             error: &error
@@ -89,35 +72,74 @@ public extension DataStack {
             
             CoreStore.handleError(
                 error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed to add SQLite <\(NSPersistentStore.self)> at \"\(fileURL)\".")
+                "Failed to add SQLite <\(NSPersistentStore.self)> at \"\(fileURL)\"."
+            )
             return nil
         }
         
-        return !self.coordinator.managedObjectModel.isConfiguration(
+        let coordinator = self.coordinator;
+        let destinationModel = coordinator.managedObjectModel
+        if destinationModel.isConfiguration(
             configuration,
-            compatibleWithStoreMetadata: metadata
-        )
+            compatibleWithStoreMetadata: metadata) {
+               
+                return .None
+        }
+        
+        let sourceModel = NSManagedObjectModel(
+            byMergingModels: [destinationModel],
+            forStoreMetadata: metadata
+        )!
+        
+        if NSMappingModel(
+            fromBundles: mappingModelBundles,
+            forSourceModel: sourceModel,
+            destinationModel: destinationModel) != nil {
+                
+                return .Heavyweight
+        }
+        
+        if NSMappingModel.inferredMappingModelForSourceModel(
+            sourceModel,
+            destinationModel: destinationModel,
+            error: nil) != nil {
+                
+                return .Lightweight
+        }
+        
+        return nil
     }
     
     /**
-    EXPERIMENTAL
+    Migrates an SQLite store with the specified filename to the `DataStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
+    
+    :param: fileName the local filename for the SQLite persistent store in the "Application Support" directory.
+    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil` which indicates the "Default" configuration.
+    :param: sourceBundles an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.mainBundle()`.
+    :param: sourceBundles an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.mainBundle()`.
     */
-    private func upgradeSQLiteStoreIfNeeded(fileName: String, configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
+    public func upgradeSQLiteStoreIfNeeded(fileName: String, configuration: String? = nil, sourceBundles: [NSBundle]? = nil, completion: (MigrationResult) -> Void) -> MigrationType? {
      
-        self.upgradeSQLiteStoreIfNeeded(
+        return self.upgradeSQLiteStoreIfNeeded(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(
                 fileName,
                 isDirectory: false
             ),
             configuration: configuration,
+            sourceBundles: sourceBundles,
             completion: completion
         )
     }
     
     /**
-    EXPERIMENTAL
+    Migrates an SQLite store at the specified file URL and configuration name to the `DataStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
+    
+    :param: fileName the local filename for the SQLite persistent store in the "Application Support" directory.
+    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil` which indicates the "Default" configuration.
+    :param: sourceBundles an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.mainBundle()`.
+    :param: sourceBundles an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.mainBundle()`.
     */
-    private func upgradeSQLiteStoreIfNeeded(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
+    public func upgradeSQLiteStoreIfNeeded(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, sourceBundles: [NSBundle]? = nil, completion: (MigrationResult) -> Void) -> MigrationType? {
         
         var metadataError: NSError?
         let metadata: [NSObject: AnyObject]! = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
@@ -127,106 +149,79 @@ public extension DataStack {
         )
         if metadata == nil {
             
+            let error = metadataError ?? NSError(coreStoreErrorCode: .UnknownError)
             CoreStore.handleError(
-                metadataError ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed to load SQLite <\(NSPersistentStore.self)> metadata at \"\(fileURL)\".")
+                error,
+                "Failed to load SQLite <\(NSPersistentStore.self)> metadata at \"\(fileURL)\"."
+            )
             
             GCDQueue.Main.async {
                 
-                // TODO: inspect valid errors for metadataForPersistentStoreOfType()
-                completion(PersistentStoreResult(.PersistentStoreNotFound))
+                completion(MigrationResult(error))
             }
-            return
+            return nil
         }
         
         let coordinator = self.coordinator;
-        if let store = coordinator.persistentStoreForURL(fileURL) {
-            
-            let isExistingStoreAutomigrating = ((store.options?[NSMigratePersistentStoresAutomaticallyOption] as? Bool) ?? false)
-            
-            if store.type == NSSQLiteStoreType
-                && isExistingStoreAutomigrating
-                && store.configurationName == (configuration ?? Into.defaultConfigurationName) {
-                    
-                    GCDQueue.Main.async {
-                        
-                        completion(PersistentStoreResult(store))
-                    }
-                    return
-            }
-            
-            CoreStore.handleError(
-                NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL),
-                "Failed to add SQLite <\(NSPersistentStore.self)> at \"\(fileURL)\" because a different <\(NSPersistentStore.self)> at that URL already exists.")
-            
-            GCDQueue.Main.async {
-                
-                completion(PersistentStoreResult(.DifferentPersistentStoreExistsAtURL))
-            }
-            return
-        }
-        
-        let managedObjectModel = self.coordinator.managedObjectModel
-        let migrationManager = NSMigrationManager(
-            sourceModel: NSManagedObjectModel(
-                byMergingModels: [managedObjectModel],
-                forStoreMetadata: metadata!
-            )!,
-            destinationModel: managedObjectModel
-        )
-        
-        var mappingModel: NSMappingModel! = NSMappingModel(
-            fromBundles: nil, // TODO: parametize
-            forSourceModel: migrationManager.sourceModel,
-            destinationModel: migrationManager.destinationModel
-        )
-        var modelError: NSError?
-        if mappingModel == nil {
-            
-            mappingModel = NSMappingModel.inferredMappingModelForSourceModel(
-                migrationManager.sourceModel,
-                destinationModel: migrationManager.destinationModel,
-                error: &modelError
-            )
-        }
-        if mappingModel == nil {
-            
-            CoreStore.handleError(
-                NSError(coreStoreErrorCode: .UnknownError),
-                "Failed to load an <\(NSMappingModel.self)> for migration from version model \"\(migrationManager.sourceModel)\" to version model \"\(migrationManager.destinationModel)\".")
-            
-            GCDQueue.Main.async {
-                
-                completion(PersistentStoreResult(.MappingModelNotFound))
-            }
-            return
-        }
-        
-        let temporaryFileURL = NSURL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)!.URLByAppendingPathComponent(NSProcessInfo().globallyUniqueString)
-        
-        var migrationError: NSError?
-        if !migrationManager.migrateStoreFromURL(
-            fileURL,
-            type: NSSQLiteStoreType,
-            options: nil,
-            withMappingModel: mappingModel,
-            toDestinationURL: temporaryFileURL,
-            destinationType: NSSQLiteStoreType,
-            destinationOptions: nil,
-            error: &migrationError
-            ) {
-                
-                CoreStore.handleError(
-                    migrationError ?? NSError(coreStoreErrorCode: .UnknownError),
-                    "Failed to prepare for migration from version model \"\(migrationManager.sourceModel)\" to version model \"\(migrationManager.destinationModel)\".")
+        let destinationModel = coordinator.managedObjectModel
+        if destinationModel.isConfiguration(
+            configuration,
+            compatibleWithStoreMetadata: metadata) {
                 
                 GCDQueue.Main.async {
                     
-                    completion(PersistentStoreResult(.MigrationFailed))
+                    completion(MigrationResult(.None))
                 }
-                return
+                return .None
         }
         
+        let sourceModel = NSManagedObjectModel(
+            byMergingModels: [destinationModel],
+            forStoreMetadata: metadata
+        )!
+        
+        if let mappingModel = NSMappingModel(
+            fromBundles: sourceBundles,
+            forSourceModel: sourceModel,
+            destinationModel: destinationModel) {
+                
+                self.startMigrationForSQLiteStore(
+                    fileURL,
+                    sourceModel: sourceModel,
+                    destinationModel: destinationModel,
+                    mappingModel: mappingModel,
+                    migrationType: .Heavyweight,
+                    completion: completion
+                )
+                return .Heavyweight
+        }
+        
+        if let mappingModel = NSMappingModel.inferredMappingModelForSourceModel(
+            sourceModel,
+            destinationModel: destinationModel,
+            error: nil) {
+                
+                self.startMigrationForSQLiteStore(
+                    fileURL,
+                    sourceModel: sourceModel,
+                    destinationModel: destinationModel,
+                    mappingModel: mappingModel,
+                    migrationType: .Lightweight,
+                    completion: completion
+                )
+                return .Lightweight
+        }
+        
+        CoreStore.handleError(
+            NSError(coreStoreErrorCode: .UnknownError),
+            "Failed to load an <\(NSMappingModel.self)> for migration from version model \"\(sourceModel)\" to version model \"\(destinationModel)\"."
+        )
+        
+        GCDQueue.Main.async {
+            
+            completion(MigrationResult(.MappingModelNotFound))
+        }
+        return nil
     }
     
     /**
@@ -236,7 +231,7 @@ public extension DataStack {
     :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
     :param: completion the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result.
     */
-    public func addSQLiteStore(fileName: String, configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
+    public func addSQLiteStore(fileName: String, configuration: String? = nil, sourceBundles: [NSBundle]? = nil, completion: (PersistentStoreResult) -> Void) {
         
         self.addSQLiteStore(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(
@@ -244,6 +239,7 @@ public extension DataStack {
                 isDirectory: false
             ),
             configuration: configuration,
+            sourceBundles: sourceBundles,
             completion: completion
         )
     }
@@ -255,25 +251,29 @@ public extension DataStack {
     :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
     :param: completion the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result.
     */
-    public func addSQLiteStore(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
+    public func addSQLiteStore(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, sourceBundles: [NSBundle]? = nil, completion: (PersistentStoreResult) -> Void) {
         
-        var error: NSError?
-        let metadata = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
-            NSSQLiteStoreType,
-            URL: fileURL,
-            error: &error
-        )
-        if metadata == nil {
+        if NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!) {
             
-            CoreStore.handleError(
-                error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed to load SQLite <\(NSPersistentStore.self)> metadata at \"\(fileURL)\".")
-            
-            GCDQueue.Main.async {
+            var error: NSError?
+            let metadata = NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
+                NSSQLiteStoreType,
+                URL: fileURL,
+                error: &error
+            )
+            if metadata == nil {
                 
-                completion(PersistentStoreResult(.UnknownError))
+                CoreStore.handleError(
+                    error ?? NSError(coreStoreErrorCode: .UnknownError),
+                    "Failed to load SQLite <\(NSPersistentStore.self)> metadata at \"\(fileURL)\"."
+                )
+                
+                GCDQueue.Main.async {
+                    
+                    completion(PersistentStoreResult(.UnknownError))
+                }
+                return
             }
-            return
         }
         
         let coordinator = self.coordinator;
@@ -294,7 +294,8 @@ public extension DataStack {
             
             CoreStore.handleError(
                 NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL),
-                "Failed to add SQLite <\(NSPersistentStore.self)> at \"\(fileURL)\" because a different <\(NSPersistentStore.self)> at that URL already exists.")
+                "Failed to add SQLite <\(NSPersistentStore.self)> at \"\(fileURL)\" because a different <\(NSPersistentStore.self)> at that URL already exists."
+            )
             
             GCDQueue.Main.async {
                 
@@ -313,7 +314,9 @@ public extension DataStack {
                 
                 CoreStore.handleError(
                     directoryError ?? NSError(coreStoreErrorCode: .UnknownError),
-                    "Failed to create directory for SQLite store at \"\(fileURL)\".")
+                    "Failed to create directory for SQLite store at \"\(fileURL)\"."
+                )
+                
                 GCDQueue.Main.async {
                     
                     completion(PersistentStoreResult(directoryError!))
@@ -347,10 +350,104 @@ public extension DataStack {
                     
                     CoreStore.handleError(
                         persistentStoreError ?? NSError(coreStoreErrorCode: .UnknownError),
-                        "Failed to add SQLite <\(NSPersistentStore.self)> at \"\(fileURL)\".")
+                        "Failed to add SQLite <\(NSPersistentStore.self)> at \"\(fileURL)\"."
+                    )
                     
                     completion(PersistentStoreResult(.UnknownError))
                 }
+            }
+        }
+    }
+    
+    
+    // MARK: Private
+    
+    private func startMigrationForSQLiteStore(fileURL: NSURL, sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType, completion: (MigrationResult) -> Void) {
+        
+        let migrationManager = NSMigrationManager(
+            sourceModel: sourceModel,
+            destinationModel: destinationModel
+        )
+        
+        self.migrationQueue.async {
+            
+            var lastReportedProgress: Float = -1
+            let timer = GCDTimer.createSuspended(
+                .Main,
+                interval: 0.1,
+                eventHandler: { (timer) -> Void in
+                    
+                    let progress = migrationManager.migrationProgress
+                    if progress > lastReportedProgress {
+                        
+                        // TODO: progress
+                        CoreStore.log(.Trace, message: "migration progress: \(progress)")
+                        lastReportedProgress = progress
+                    }
+                }
+            )
+            
+            let temporaryFileURL = NSURL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)!.URLByAppendingPathComponent(NSProcessInfo().globallyUniqueString)
+            
+            var migrationError: NSError?
+            let migrationCompleted = migrationManager.migrateStoreFromURL(
+                fileURL,
+                type: NSSQLiteStoreType,
+                options: nil,
+                withMappingModel: mappingModel,
+                toDestinationURL: temporaryFileURL,
+                destinationType: NSSQLiteStoreType,
+                destinationOptions: nil,
+                error: &migrationError
+            )
+            
+            timer.suspend()
+            
+            let fileManager = NSFileManager.defaultManager()
+            if !migrationCompleted {
+                
+                fileManager.removeItemAtURL(temporaryFileURL, error: nil)
+                
+                let error = migrationError ?? NSError(coreStoreErrorCode: .UnknownError)
+                CoreStore.handleError(
+                    error,
+                    "Failed to migrate from version model \"\(migrationManager.sourceModel)\" to version model \"\(migrationManager.destinationModel)\"."
+                )
+                
+                GCDQueue.Main.async {
+                    
+                    completion(MigrationResult(error))
+                }
+                return
+            }
+            
+            var replaceError: NSError?
+            if !fileManager.replaceItemAtURL(
+                fileURL,
+                withItemAtURL: temporaryFileURL,
+                backupItemName: nil,
+                options: .allZeros,
+                resultingItemURL: nil,
+                error: &replaceError) {
+                    
+                    fileManager.removeItemAtURL(temporaryFileURL, error: nil)
+                    
+                    let error = replaceError ?? NSError(coreStoreErrorCode: .UnknownError)
+                    CoreStore.handleError(
+                        error,
+                        "Failed to save store after migrating from version model \"\(migrationManager.sourceModel)\" to version model \"\(migrationManager.destinationModel)\"."
+                    )
+                    
+                    GCDQueue.Main.async {
+                        
+                        completion(MigrationResult(error))
+                    }
+                    return
+            }
+            
+            GCDQueue.Main.async {
+                
+                completion(MigrationResult(migrationType))
             }
         }
     }

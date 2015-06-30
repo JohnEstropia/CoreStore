@@ -80,11 +80,11 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, fetches the number of `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Using the `defaultStack`, fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    :returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public static func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
@@ -92,11 +92,11 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, fetches the number of `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Using the `defaultStack`, fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    :returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public static func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
@@ -128,11 +128,11 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, fetches the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Using the `defaultStack`, fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    :returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public static func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
@@ -140,11 +140,11 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, fetches the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Using the `defaultStack`, fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    :returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public static func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
@@ -152,7 +152,7 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, queries aggregate values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Using the `defaultStack`, queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
@@ -167,7 +167,7 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, queries aggregate values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Using the `defaultStack`, queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
@@ -182,7 +182,7 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, queries a dictionary of attribtue values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Using the `defaultStack`, queries a dictionary of attribtue values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
@@ -197,7 +197,7 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, queries a dictionary of attribute values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Using the `defaultStack`, queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     

@@ -1,5 +1,5 @@
 //
-//  ObjectListObserverDemoViewController.swift
+//  ListObserverDemoViewController.swift
 //  CoreStoreDemo
 //
 //  Created by John Rommel Estropia on 2015/05/02.
@@ -12,7 +12,7 @@ import CoreStore
 
 private struct Static {
     
-    static let palettes: ManagedObjectListController<Palette> = {
+    static let palettes: ListMonitor<Palette> = {
         
         CoreStore.addSQLiteStoreAndWait(
             "ColorsDemo.sqlite",
@@ -20,18 +20,18 @@ private struct Static {
             resetStoreOnMigrationFailure: true
         )
         
-        return CoreStore.observeSectionedList(
+        return CoreStore.monitorSectionedList(
             From(Palette),
-            SectionedBy("colorName"),
+            SectionBy("colorName"),
             OrderBy(.Ascending("hue"))
         )
     }()
 }
 
 
-// MARK: - ObjectListObserverDemoViewController
+// MARK: - ListObserverDemoViewController
 
-class ObjectListObserverDemoViewController: UITableViewController, ManagedObjectListSectionObserver {
+class ListObserverDemoViewController: UITableViewController, ListSectionObserver {
     
     // MARK: NSObject
     
@@ -138,32 +138,32 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     }
     
     
-    // MARK: ManagedObjectListChangeObserver
+    // MARK: ListObserver
     
-    func managedObjectListWillChange(listController: ManagedObjectListController<Palette>) {
+    func listMonitorWillChange(monitor: ListMonitor<Palette>) {
         
         self.tableView.beginUpdates()
     }
     
-    func managedObjectListDidChange(listController: ManagedObjectListController<Palette>) {
+    func listMonitorDidChange(monitor: ListMonitor<Palette>) {
         
         self.tableView.endUpdates()
     }
     
     
-    // MARK: ManagedObjectListObjectObserver
+    // MARK: ListObjectObserver
     
-    func managedObjectList(listController: ManagedObjectListController<Palette>, didInsertObject object: Palette, toIndexPath indexPath: NSIndexPath) {
+    func listMonitor(monitor: ListMonitor<Palette>, didInsertObject object: Palette, toIndexPath indexPath: NSIndexPath) {
         
         self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
     
-    func managedObjectList(listController: ManagedObjectListController<Palette>, didDeleteObject object: Palette, fromIndexPath indexPath: NSIndexPath) {
+    func listMonitor(monitor: ListMonitor<Palette>, didDeleteObject object: Palette, fromIndexPath indexPath: NSIndexPath) {
         
         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
     
-    func managedObjectList(listController: ManagedObjectListController<Palette>, didUpdateObject object: Palette, atIndexPath indexPath: NSIndexPath) {
+    func listMonitor(monitor: ListMonitor<Palette>, didUpdateObject object: Palette, atIndexPath indexPath: NSIndexPath) {
         
         if let cell = self.tableView.cellForRowAtIndexPath(indexPath) as? PaletteTableViewCell {
             
@@ -173,21 +173,21 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
         }
     }
     
-    func managedObjectList(listController: ManagedObjectListController<Palette>, didMoveObject object: Palette, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
+    func listMonitor(monitor: ListMonitor<Palette>, didMoveObject object: Palette, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
         
         self.tableView.deleteRowsAtIndexPaths([fromIndexPath], withRowAnimation: .Automatic)
         self.tableView.insertRowsAtIndexPaths([toIndexPath], withRowAnimation: .Automatic)
     }
     
     
-    // MARK: ManagedObjectListSectionObserver
+    // MARK: ListSectionObserver
     
-    func managedObjectList(listController: ManagedObjectListController<Palette>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) {
+    func listMonitor(monitor: ListMonitor<Palette>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) {
         
         self.tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Automatic)
     }
     
-    func managedObjectList(listController: ManagedObjectListController<Palette>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) {
+    func listMonitor(monitor: ListMonitor<Palette>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) {
         
         self.tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Automatic)
     }
@@ -195,7 +195,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
     
     // MARK: Private
     
-    @IBAction dynamic func resetBarButtonItemTouched(sender: AnyObject?) {
+    @IBAction private dynamic func resetBarButtonItemTouched(sender: AnyObject?) {
         
         CoreStore.beginAsynchronous { (transaction) -> Void in
             
@@ -204,7 +204,7 @@ class ObjectListObserverDemoViewController: UITableViewController, ManagedObject
         }
     }
     
-    @IBAction dynamic func addBarButtonItemTouched(sender: AnyObject?) {
+    @IBAction private dynamic func addBarButtonItemTouched(sender: AnyObject?) {
         
         CoreStore.beginAsynchronous { (transaction) -> Void in
             

@@ -45,42 +45,32 @@ public final class DataStack {
     // MARK: Public
     
     /**
-    Initializes a `DataStack` from a model created by merging all the models found in all bundles.
-    */
-    public convenience init() {
-        
-        let mergedModel: NSManagedObjectModel! = NSManagedObjectModel.mergedModelFromBundles(NSBundle.allBundles())
-        CoreStore.assert(mergedModel != nil, "Could not create a merged <\(NSManagedObjectModel.self)> from all bundles.")
-        
-        self.init(managedObjectModel: mergedModel)
-    }
+    Initializes a `DataStack` from an `NSManagedObjectModel`.
     
-    /**
-    Initializes a `DataStack` from the specified model name.
-
-    :param: modelName the name of the (.xcdatamodeld) model file.
+    :param: modelName the name of the (.xcdatamodeld) model file. If not specified, the application name will be used
+    :param: sourceBundle an optional bundle to load models from. If not specified, the main bundle will be used.
+    :param: modelVersions the `MigrationChain` that indicates the heirarchy of the model's version names. If not specified, will default to a non-migrating data stack.
     */
-    public convenience init(modelName: String) {
+    public required init(modelName: String = applicationName, sourceBundle: NSBundle = NSBundle.mainBundle(), modelVersions: MigrationChain = nil) {
         
-        let modelFilePath: String! = NSBundle.mainBundle().pathForResource(modelName, ofType: "momd")
+        let modelFilePath: String! = sourceBundle.pathForResource(
+            modelName,
+            ofType: "momd"
+        )
         CoreStore.assert(modelFilePath != nil, "Could not find a \"momd\" resource from the main bundle.")
         
         let managedObjectModel: NSManagedObjectModel! = NSManagedObjectModel(contentsOfURL: NSURL(fileURLWithPath: modelFilePath)!)
-        CoreStore.assert(managedObjectModel != nil, "Could not create an <\(NSManagedObjectModel.self)> from the resource at path \"\(modelFilePath)\".")
-        
-        self.init(managedObjectModel: managedObjectModel)
-    }
-    
-    /**
-    Initializes a `DataStack` from an `NSManagedObjectModel`.
-    
-    :param: managedObjectModel the `NSManagedObjectModel` of the (.xcdatamodeld) model file.
-    */
-    public required init(managedObjectModel: NSManagedObjectModel) {
+        CoreStore.assert(
+            managedObjectModel != nil,
+            "Could not create an <\(NSManagedObjectModel.self)> from the resource at path \"\(modelFilePath)\"."
+        )
+        // TODO: assert existence of all model versions in the migrationChain
         
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         self.rootSavingContext = NSManagedObjectContext.rootSavingContextForCoordinator(self.coordinator)
         self.mainContext = NSManagedObjectContext.mainContextForRootContext(self.rootSavingContext)
+        self.sourceBundle = sourceBundle
+        self.modelVersions = modelVersions
         
         var entityNameMapping = [EntityClassNameType: EntityNameType]()
         var entityConfigurationsMapping = [EntityClassNameType: Set<String>]()
@@ -279,14 +269,17 @@ public final class DataStack {
     internal let coordinator: NSPersistentStoreCoordinator
     internal let rootSavingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
+    internal let sourceBundle: NSBundle
+    internal let modelVersions: MigrationChain
     internal let childTransactionQueue: GCDQueue = .createSerial("com.corestore.datastack.childtransactionqueue")
+    internal let migrationQueue: GCDQueue = .createSerial("com.corestore.datastack.migrationqueue")
     
-    internal func entityNameForEntityClass(entityClass: NSManagedObject.Type) -> String? {
+    internal func entityNameForEntityClass(entityClass: AnyClass) -> String? {
         
         return self.entityNameMapping[NSStringFromClass(entityClass)]
     }
     
-    internal func persistentStoresForEntityClass(entityClass: NSManagedObject.Type) -> [NSPersistentStore]? {
+    internal func persistentStoresForEntityClass(entityClass: AnyClass) -> [NSPersistentStore]? {
         
         var returnValue: [NSPersistentStore]? = nil
         self.storeMetadataUpdateQueue.barrierSync {
@@ -300,7 +293,7 @@ public final class DataStack {
         return returnValue
     }
     
-    internal func persistentStoreForEntityClass(entityClass: NSManagedObject.Type, configuration: String?, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
+    internal func persistentStoreForEntityClass(entityClass: AnyClass, configuration: String?, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
         
         var returnValue: (store: NSPersistentStore?, isAmbiguous: Bool) = (store: nil, isAmbiguous: false)
         self.storeMetadataUpdateQueue.barrierSync {

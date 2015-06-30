@@ -12,7 +12,11 @@
 		2F03A54D19C5C872005002A5 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F03A54C19C5C872005002A5 /* CoreData.framework */; };
 		2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F291E2619C6D3CF007AF63F /* CoreStore.swift */; };
 		B504D0D61B02362500B2BBB1 /* CoreStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B504D0D51B02362500B2BBB1 /* CoreStore+Setup.swift */; };
+		B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007101B3F6BD500A9A8F9 /* Into.swift */; };
+		B56007141B3F6C2800A9A8F9 /* SectionBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007131B3F6C2800A9A8F9 /* SectionBy.swift */; };
+		B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007151B4018AB00A9A8F9 /* MigrationChain.swift */; };
 		B56964D41B22FFAD0075EE4A /* DataStack+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */; };
+		B56965241B356B820075EE4A /* MigrationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965231B356B820075EE4A /* MigrationResult.swift */; };
 		B5D1E22C19FA9FBC003B2874 /* NSError+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */; };
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		B5D372861A39CDDB00F583D9 /* TestEntity1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D372851A39CDDB00F583D9 /* TestEntity1.swift */; };
@@ -43,10 +47,10 @@
 		B5E84F151AFF847B0064E85B /* CoreStore+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F071AFF847B0064E85B /* CoreStore+Querying.swift */; };
 		B5E84F201AFF84860064E85B /* DataStack+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1A1AFF84860064E85B /* DataStack+Observing.swift */; };
 		B5E84F211AFF84860064E85B /* CoreStore+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1B1AFF84860064E85B /* CoreStore+Observing.swift */; };
-		B5E84F221AFF84860064E85B /* ManagedObjectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1C1AFF84860064E85B /* ManagedObjectController.swift */; };
-		B5E84F231AFF84860064E85B /* ManagedObjectListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1D1AFF84860064E85B /* ManagedObjectListController.swift */; };
-		B5E84F241AFF84860064E85B /* ManagedObjectListObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1E1AFF84860064E85B /* ManagedObjectListObserver.swift */; };
-		B5E84F251AFF84860064E85B /* ManagedObjectObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1F1AFF84860064E85B /* ManagedObjectObserver.swift */; };
+		B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1C1AFF84860064E85B /* ObjectMonitor.swift */; };
+		B5E84F231AFF84860064E85B /* ListMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1D1AFF84860064E85B /* ListMonitor.swift */; };
+		B5E84F241AFF84860064E85B /* ListObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1E1AFF84860064E85B /* ListObserver.swift */; };
+		B5E84F251AFF84860064E85B /* ObjectObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F1F1AFF84860064E85B /* ObjectObserver.swift */; };
 		B5E84F281AFF84920064E85B /* NSManagedObject+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F271AFF84920064E85B /* NSManagedObject+Convenience.swift */; };
 		B5E84F2E1AFF849C0064E85B /* AssociatedObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2A1AFF849C0064E85B /* AssociatedObjects.swift */; };
 		B5E84F2F1AFF849C0064E85B /* NotificationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2B1AFF849C0064E85B /* NotificationObserver.swift */; };
@@ -100,7 +104,11 @@
 		2F03A54C19C5C872005002A5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2F291E2619C6D3CF007AF63F /* CoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CoreStore.swift; sourceTree = "<group>"; };
 		B504D0D51B02362500B2BBB1 /* CoreStore+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+Setup.swift"; sourceTree = "<group>"; };
+		B56007101B3F6BD500A9A8F9 /* Into.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Into.swift; sourceTree = "<group>"; };
+		B56007131B3F6C2800A9A8F9 /* SectionBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionBy.swift; sourceTree = "<group>"; };
+		B56007151B4018AB00A9A8F9 /* MigrationChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationChain.swift; sourceTree = "<group>"; };
 		B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Migration.swift"; sourceTree = "<group>"; };
+		B56965231B356B820075EE4A /* MigrationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationResult.swift; sourceTree = "<group>"; };
 		B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+CoreStore.swift"; sourceTree = "<group>"; };
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		B5D372851A39CDDB00F583D9 /* TestEntity1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity1.swift; sourceTree = "<group>"; };
@@ -134,10 +142,10 @@
 		B5E84F071AFF847B0064E85B /* CoreStore+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+Querying.swift"; sourceTree = "<group>"; };
 		B5E84F1A1AFF84860064E85B /* DataStack+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Observing.swift"; sourceTree = "<group>"; };
 		B5E84F1B1AFF84860064E85B /* CoreStore+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+Observing.swift"; sourceTree = "<group>"; };
-		B5E84F1C1AFF84860064E85B /* ManagedObjectController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectController.swift; sourceTree = "<group>"; };
-		B5E84F1D1AFF84860064E85B /* ManagedObjectListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectListController.swift; sourceTree = "<group>"; };
-		B5E84F1E1AFF84860064E85B /* ManagedObjectListObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectListObserver.swift; sourceTree = "<group>"; };
-		B5E84F1F1AFF84860064E85B /* ManagedObjectObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectObserver.swift; sourceTree = "<group>"; };
+		B5E84F1C1AFF84860064E85B /* ObjectMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectMonitor.swift; sourceTree = "<group>"; };
+		B5E84F1D1AFF84860064E85B /* ListMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListMonitor.swift; sourceTree = "<group>"; };
+		B5E84F1E1AFF84860064E85B /* ListObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListObserver.swift; sourceTree = "<group>"; };
+		B5E84F1F1AFF84860064E85B /* ObjectObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectObserver.swift; sourceTree = "<group>"; };
 		B5E84F271AFF84920064E85B /* NSManagedObject+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Convenience.swift"; sourceTree = "<group>"; };
 		B5E84F2A1AFF849C0064E85B /* AssociatedObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssociatedObjects.swift; sourceTree = "<group>"; };
 		B5E84F2B1AFF849C0064E85B /* NotificationObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationObserver.swift; sourceTree = "<group>"; };
@@ -256,6 +264,8 @@
 			isa = PBXGroup;
 			children = (
 				B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */,
+				B56007151B4018AB00A9A8F9 /* MigrationChain.swift */,
+				B56965231B356B820075EE4A /* MigrationResult.swift */,
 			);
 			path = Migrating;
 			sourceTree = "<group>";
@@ -308,6 +318,7 @@
 		B5E84EE91AFF846E0064E85B /* Saving and Processing */ = {
 			isa = PBXGroup;
 			children = (
+				B56007101B3F6BD500A9A8F9 /* Into.swift */,
 				B5E84EEB1AFF846E0064E85B /* BaseDataTransaction.swift */,
 				B5E84EEA1AFF846E0064E85B /* AsynchronousDataTransaction.swift */,
 				B5E84EEC1AFF846E0064E85B /* DataStack+Transaction.swift */,
@@ -355,12 +366,13 @@
 		B5E84F191AFF84860064E85B /* Observing */ = {
 			isa = PBXGroup;
 			children = (
+				B56007131B3F6C2800A9A8F9 /* SectionBy.swift */,
 				B5E84F1A1AFF84860064E85B /* DataStack+Observing.swift */,
 				B5E84F1B1AFF84860064E85B /* CoreStore+Observing.swift */,
-				B5E84F1C1AFF84860064E85B /* ManagedObjectController.swift */,
-				B5E84F1F1AFF84860064E85B /* ManagedObjectObserver.swift */,
-				B5E84F1D1AFF84860064E85B /* ManagedObjectListController.swift */,
-				B5E84F1E1AFF84860064E85B /* ManagedObjectListObserver.swift */,
+				B5E84F1C1AFF84860064E85B /* ObjectMonitor.swift */,
+				B5E84F1F1AFF84860064E85B /* ObjectObserver.swift */,
+				B5E84F1D1AFF84860064E85B /* ListMonitor.swift */,
+				B5E84F1E1AFF84860064E85B /* ListObserver.swift */,
 			);
 			path = Observing;
 			sourceTree = "<group>";
@@ -520,27 +532,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5E84F221AFF84860064E85B /* ManagedObjectController.swift in Sources */,
+				B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */,
 				B504D0D61B02362500B2BBB1 /* CoreStore+Setup.swift in Sources */,
 				B5D1E22C19FA9FBC003B2874 /* NSError+CoreStore.swift in Sources */,
 				B5E84F131AFF847B0064E85B /* Where.swift in Sources */,
 				B5E84F141AFF847B0064E85B /* DataStack+Querying.swift in Sources */,
+				B56007141B3F6C2800A9A8F9 /* SectionBy.swift in Sources */,
 				B5E84F371AFF85470064E85B /* NSManagedObjectContext+Transaction.swift in Sources */,
+				B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */,
 				B5E84F0E1AFF847B0064E85B /* Tweak.swift in Sources */,
 				B5E84F121AFF847B0064E85B /* OrderBy.swift in Sources */,
 				B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */,
 				B5E84EE71AFF84610064E85B /* CoreStore+Logging.swift in Sources */,
+				B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */,
 				B5E84F111AFF847B0064E85B /* Select.swift in Sources */,
 				B5E84EE11AFF84500064E85B /* PersistentStoreResult.swift in Sources */,
-				B5E84F251AFF84860064E85B /* ManagedObjectObserver.swift in Sources */,
+				B5E84F251AFF84860064E85B /* ObjectObserver.swift in Sources */,
 				B5E84F2F1AFF849C0064E85B /* NotificationObserver.swift in Sources */,
 				B5E84F381AFF85470064E85B /* NSManagedObject+Transaction.swift in Sources */,
+				B56965241B356B820075EE4A /* MigrationResult.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */,
 				B5E84F411AFF8CCD0064E85B /* ClauseTypes.swift in Sources */,
 				B5E84F0D1AFF847B0064E85B /* BaseDataTransaction+Querying.swift in Sources */,
 				B5E84EF61AFF846E0064E85B /* DataStack+Transaction.swift in Sources */,
 				B5E84EDF1AFF84500064E85B /* DataStack.swift in Sources */,
-				B5E84F231AFF84860064E85B /* ManagedObjectListController.swift in Sources */,
+				B5E84F231AFF84860064E85B /* ListMonitor.swift in Sources */,
 				B5E84EF71AFF846E0064E85B /* DetachedDataTransaction.swift in Sources */,
 				B56964D41B22FFAD0075EE4A /* DataStack+Migration.swift in Sources */,
 				B5E84EF51AFF846E0064E85B /* BaseDataTransaction.swift in Sources */,
@@ -559,7 +575,7 @@
 				B5E84EE61AFF84610064E85B /* DefaultLogger.swift in Sources */,
 				B5E84EF41AFF846E0064E85B /* AsynchronousDataTransaction.swift in Sources */,
 				B5E84F151AFF847B0064E85B /* CoreStore+Querying.swift in Sources */,
-				B5E84F241AFF84860064E85B /* ManagedObjectListObserver.swift in Sources */,
+				B5E84F241AFF84860064E85B /* ListObserver.swift in Sources */,
 				B5E84F2E1AFF849C0064E85B /* AssociatedObjects.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

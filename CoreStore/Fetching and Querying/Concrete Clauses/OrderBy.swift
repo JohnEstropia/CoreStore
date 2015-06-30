@@ -73,7 +73,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `OrderBy` clause with a list of sort descriptors
     
-    :param: sortDescriptors a series of `NSSortDescriptor`'s
+    :param: sortDescriptors a series of `NSSortDescriptor`s
     */
     public init(_ sortDescriptors: [NSSortDescriptor]) {
         
@@ -99,9 +99,9 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     }
     
     /**
-    Initializes a `OrderBy` clause with a series of `SortKey`'s
+    Initializes a `OrderBy` clause with a series of `SortKey`s
     
-    :param: sortKey a series of `SortKey`'s
+    :param: sortKey a series of `SortKey`s
     */
     public init(_ sortKey: [SortKey]) {
         
@@ -121,10 +121,10 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     }
     
     /**
-    Initializes a `OrderBy` clause with a series of `SortKey`'s
+    Initializes a `OrderBy` clause with a series of `SortKey`s
     
     :param: sortKey a single `SortKey`
-    :param: sortKeys a series of `SortKey`'s
+    :param: sortKeys a series of `SortKey`s
     */
     public init(_ sortKey: SortKey, _ sortKeys: SortKey...) {
         

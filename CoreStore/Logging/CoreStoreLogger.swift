@@ -88,3 +88,13 @@ internal func typeName<T>(value: T) -> String {
     
     return "<\(_stdlib_getDemangledTypeName(value))>"
 }
+
+internal func typeName<T>(value: T.Type) -> String {
+    
+    return "<\(value)>"
+}
+
+internal func typeName(value: AnyClass) -> String {
+    
+    return "<\(value)>"
+}

@@ -12,23 +12,23 @@ import CoreStore
 
 // MARK: - ObjectObserverDemoViewController
 
-class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver {
+class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     var palette: Palette? {
         
         get {
             
-            return self.objectController?.object
+            return self.monitor?.object
         }
         set {
             
             if let palette = newValue {
                 
-                self.objectController = CoreStore.observeObject(palette)
+                self.monitor = CoreStore.monitorObject(palette)
             }
             else {
                 
-                self.objectController = nil
+                self.monitor = nil
             }
         }
     }
@@ -37,7 +37,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
     
     deinit {
         
-        self.objectController?.removeObserver(self)
+        self.monitor?.removeObserver(self)
     }
     
 
@@ -47,7 +47,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         
         if let palette = CoreStore.fetchOne(From(Palette), OrderBy(.Ascending("hue"))) {
             
-            self.objectController = CoreStore.observeObject(palette)
+            self.monitor = CoreStore.monitorObject(palette)
         }
         else {
             
@@ -60,7 +60,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
             }
             
             let palette = CoreStore.fetchOne(From(Palette), OrderBy(.Ascending("hue")))!
-            self.objectController = CoreStore.observeObject(palette)
+            self.monitor = CoreStore.monitorObject(palette)
         }
         
         super.init(coder: aDecoder)
@@ -69,28 +69,28 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        self.objectController?.addObserver(self)
+        self.monitor?.addObserver(self)
         
-        if let palette = self.objectController?.object {
+        if let palette = self.monitor?.object {
             
             self.reloadPaletteInfo(palette, changedKeys: nil)
         }
     }
     
     
-    // MARK: ManagedObjectObserver
+    // MARK: ObjectObserver
     
-    func managedObjectWillUpdate(objectController: ManagedObjectController<Palette>, object: Palette) {
+    func objectMonitor(monitor: ObjectMonitor<Palette>, willUpdateObject object: Palette) {
         
         // none
     }
     
-    func managedObjectWasUpdated(objectController: ManagedObjectController<Palette>, object: Palette, changedPersistentKeys: Set<KeyPath>) {
+    func objectMonitor(monitor: ObjectMonitor<Palette>, didUpdateObject object: Palette, changedPersistentKeys: Set<KeyPath>) {
         
         self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
     }
     
-    func managedObjectWasDeleted(objectController: ManagedObjectController<Palette>, object: Palette) {
+    func objectMonitor(monitor: ObjectMonitor<Palette>, didDeleteObject object: Palette) {
         
         self.navigationItem.rightBarButtonItem?.enabled = false
         
@@ -108,7 +108,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
     
     // MARK: Private
     
-    var objectController: ManagedObjectController<Palette>?
+    var monitor: ObjectMonitor<Palette>?
     
     @IBOutlet weak var colorNameLabel: UILabel?
     @IBOutlet weak var colorView: UIView?
@@ -123,7 +123,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let hue = self.hueSlider?.value ?? 0
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            if let palette = transaction.edit(self?.objectController?.object) {
+            if let palette = transaction.edit(self?.monitor?.object) {
                 
                 palette.hue = Int32(hue)
                 transaction.commit()
@@ -136,7 +136,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let saturation = self.saturationSlider?.value ?? 0
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            if let palette = transaction.edit(self?.objectController?.object) {
+            if let palette = transaction.edit(self?.monitor?.object) {
                 
                 palette.saturation = saturation
                 transaction.commit()
@@ -149,7 +149,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         let brightness = self.brightnessSlider?.value ?? 0
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            if let palette = transaction.edit(self?.objectController?.object) {
+            if let palette = transaction.edit(self?.monitor?.object) {
                 
                 palette.brightness = brightness
                 transaction.commit()
@@ -161,7 +161,7 @@ class ObjectObserverDemoViewController: UIViewController, ManagedObjectObserver 
         
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
             
-            transaction.delete(self?.objectController?.object)
+            transaction.delete(self?.monitor?.object)
             transaction.commit()
         }
     }

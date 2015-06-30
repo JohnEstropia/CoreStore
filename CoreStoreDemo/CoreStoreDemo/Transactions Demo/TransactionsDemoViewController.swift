@@ -16,7 +16,7 @@ import GCDKit
 
 private struct Static {
     
-    static let placeController: ManagedObjectController<Place> = {
+    static let placeController: ObjectMonitor<Place> = {
         
         CoreStore.addSQLiteStoreAndWait(
             "PlaceDemo.sqlite",
@@ -37,14 +37,14 @@ private struct Static {
             place = CoreStore.fetchOne(From(Place))
         }
         
-        return CoreStore.observeObject(place!)
+        return CoreStore.monitorObject(place!)
     }()
 }
 
 
 // MARK: - TransactionsDemoViewController
 
-class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, ManagedObjectObserver {
+class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, ObjectObserver {
     
     // MARK: NSObject
     
@@ -120,14 +120,14 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
     }
     
     
-    // MARK: ManagedObjectObserver
+    // MARK: ObjectObserver
     
-    func managedObjectWillUpdate(objectController: ManagedObjectController<Place>, object: Place) {
+    func objectMonitor(monitor: ObjectMonitor<Place>, willUpdateObject object: Place) {
         
         // none
     }
     
-    func managedObjectWasUpdated(objectController: ManagedObjectController<Place>, object: Place, changedPersistentKeys: Set<KeyPath>) {
+    func objectMonitor(monitor: ObjectMonitor<Place>, didUpdateObject object: Place, changedPersistentKeys: Set<KeyPath>) {
         
         if let mapView = self.mapView {
             
@@ -143,7 +143,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
         }
     }
     
-    func managedObjectWasDeleted(objectController: ManagedObjectController<Place>, object: Place) {
+    func objectMonitor(monitor: ObjectMonitor<Place>, didDeleteObject object: Place) {
         
         // none
     }

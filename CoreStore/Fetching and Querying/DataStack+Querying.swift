@@ -91,11 +91,11 @@ public extension DataStack {
     }
     
     /**
-    Fetches the number of `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    :returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
@@ -105,11 +105,11 @@ public extension DataStack {
     }
     
     /**
-    Fetches the number of `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    :returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
@@ -147,11 +147,11 @@ public extension DataStack {
     }
     
     /**
-    Fetches the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    :returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
@@ -161,11 +161,11 @@ public extension DataStack {
     }
     
     /**
-    Fetches the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    :returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
@@ -175,7 +175,7 @@ public extension DataStack {
     }
     
     /**
-    Queries aggregate values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
@@ -192,7 +192,7 @@ public extension DataStack {
     }
     
     /**
-    Queries aggregate values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
@@ -209,7 +209,7 @@ public extension DataStack {
     }
     
     /**
-    Queries a dictionary of attribute values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
@@ -226,7 +226,7 @@ public extension DataStack {
     }
     
     /**
-    Queries a dictionary of attribute values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     

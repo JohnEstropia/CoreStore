@@ -43,7 +43,7 @@ class CoreStoreTests: XCTestCase {
     
     func testExample() {
         
-        let stack = DataStack()
+        let stack = DataStack(sourceBundles: NSBundle.allBundles() as? [NSBundle])
         CoreStore.defaultStack = stack
         XCTAssert(CoreStore.defaultStack === stack, "CoreStore.defaultStack === stack")
         

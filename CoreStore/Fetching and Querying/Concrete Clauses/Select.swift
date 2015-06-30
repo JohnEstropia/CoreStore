@@ -267,7 +267,7 @@ Valid return types depend on the query:
 - for `queryAttributes(...)` methods:
     - `NSDictionary`
 
-:param: sortDescriptors a series of `NSSortDescriptor`'s
+:param: sortDescriptors a series of `NSSortDescriptor`s
 */
 public struct Select<T: SelectResultType> {
     
@@ -279,10 +279,10 @@ public struct Select<T: SelectResultType> {
     public typealias ReturnType = T
     
     /**
-    Initializes a `Select` clause with a list of `SelectTerm`'s
+    Initializes a `Select` clause with a list of `SelectTerm`s
     
     :param: selectTerm a `SelectTerm`
-    :param: selectTerms a series of `SelectTerm`'s
+    :param: selectTerms a series of `SelectTerm`s
     */
     public init(_ selectTerm: SelectTerm, _ selectTerms: SelectTerm...) {
         

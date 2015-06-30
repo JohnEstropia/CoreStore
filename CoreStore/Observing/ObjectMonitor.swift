@@ -1,5 +1,5 @@
 //
-//  ManagedObjectController.swift
+//  ObjectMonitor.swift
 //  CoreStore
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -28,9 +28,9 @@ import CoreData
 import GCDKit
 
 
-private let ManagedObjectListControllerWillChangeObjectNotification = "ManagedObjectListControllerWillChangeObjectNotification"
-private let ManagedObjectListControllerDidDeleteObjectNotification = "ManagedObjectListControllerDidDeleteObjectNotification"
-private let ManagedObjectListControllerDidUpdateObjectNotification = "ManagedObjectListControllerDidUpdateObjectNotification"
+private let ObjectMonitorWillChangeObjectNotification = "ObjectMonitorWillChangeObjectNotification"
+private let ObjectMonitorDidDeleteObjectNotification = "ObjectMonitorDidDeleteObjectNotification"
+private let ObjectMonitorDidUpdateObjectNotification = "ObjectMonitorDidUpdateObjectNotification"
 
 private let UserInfoKeyObject = "UserInfoKeyObject"
 
@@ -42,19 +42,19 @@ private struct NotificationKey {
 }
 
 
-// MARK: - ManagedObjectController
+// MARK: - ObjectMonitor
 
 /**
-The `ManagedObjectController` monitors changes to a single `NSManagedObject` instance. Observers that implement the `ManagedObjectObserver` protocol may then register themselves to the `ManagedObjectController`'s `addObserver(_:)` method:
+The `ObjectMonitor` monitors changes to a single `NSManagedObject` instance. Observers that implement the `ObjectObserver` protocol may then register themselves to the `ObjectMonitor`'s `addObserver(_:)` method:
 
-    let objectController = CoreStore.observeObject(object)
-    objectController.addObserver(self)
+    let monitor = CoreStore.monitorObject(object)
+    monitor.addObserver(self)
 
-The created `ManagedObjectController` instance needs to be held on (retained) for as long as the object needs to be observed.
+The created `ObjectMonitor` instance needs to be held on (retained) for as long as the object needs to be observed.
 
-Observers registered via `addObserver(_:)` are not retained. `ManagedObjectController` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
+Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
 */
-public final class ManagedObjectController<T: NSManagedObject> {
+public final class ObjectMonitor<T: NSManagedObject> {
     
     // MARK: Public
     
@@ -75,17 +75,17 @@ public final class ManagedObjectController<T: NSManagedObject> {
     }
     
     /**
-    Registers a `ManagedObjectObserver` to be notified when changes to the receiver's `object` are made.
+    Registers an `ObjectObserver` to be notified when changes to the receiver's `object` are made.
     
-    To prevent retain-cycles, `ManagedObjectController` only keeps `weak` references to its observers.
+    To prevent retain-cycles, `ObjectMonitor` only keeps `weak` references to its observers.
     
     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
     
-    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ManagedObjectController` unregisters previous notifications to the observer before re-registering them.
+    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ObjectMonitor` unregisters previous notifications to the observer before re-registering them.
     
-    :param: observer a `ManagedObjectObserver` to send change notifications to
+    :param: observer an `ObjectObserver` to send change notifications to
     */
-    public func addObserver<U: ManagedObjectObserver where U.EntityType == T>(observer: U) {
+    public func addObserver<U: ObjectObserver where U.EntityType == T>(observer: U) {
         
         CoreStore.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
         
@@ -93,33 +93,33 @@ public final class ManagedObjectController<T: NSManagedObject> {
         
         self.registerChangeNotification(
             &NotificationKey.willChangeObject,
-            name: ManagedObjectListControllerWillChangeObjectNotification,
+            name: ObjectMonitorWillChangeObjectNotification,
             toObserver: observer,
-            callback: { [weak self, weak observer] (objectController) -> Void in
+            callback: { [weak self, weak observer] (monitor) -> Void in
                 
                 if let strongSelf = self, let object = strongSelf.object, let observer = observer {
                     
-                    observer.managedObjectWillUpdate(objectController, object: object)
+                    observer.objectMonitor(monitor, willUpdateObject: object)
                 }
             }
         )
         self.registerObjectNotification(
             &NotificationKey.didDeleteObject,
-            name: ManagedObjectListControllerDidDeleteObjectNotification,
+            name: ObjectMonitorDidDeleteObjectNotification,
             toObserver: observer,
-            callback: { [weak self, weak observer] (objectController, object) -> Void in
+            callback: { [weak self, weak observer] (monitor, object) -> Void in
                 
                 if let strongSelf = self, let observer = observer {
                     
-                    observer.managedObjectWasDeleted(objectController, object: object)
+                    observer.objectMonitor(monitor, didDeleteObject: object)
                 }
             }
         )
         self.registerObjectNotification(
             &NotificationKey.didUpdateObject,
-            name: ManagedObjectListControllerDidUpdateObjectNotification,
+            name: ObjectMonitorDidUpdateObjectNotification,
             toObserver: observer,
-            callback: { [weak self, weak observer] (objectController, object) -> Void in
+            callback: { [weak self, weak observer] (monitor, object) -> Void in
                 
                 if let strongSelf = self, let observer = observer {
                     
@@ -136,9 +136,9 @@ public final class ManagedObjectController<T: NSManagedObject> {
                     }
                     
                     strongSelf.lastCommittedAttributes = currentCommitedAttributes
-                    observer.managedObjectWasUpdated(
-                        objectController,
-                        object: object,
+                    observer.objectMonitor(
+                        monitor,
+                        didUpdateObject: object,
                         changedPersistentKeys: changedKeys
                     )
                 }
@@ -147,13 +147,13 @@ public final class ManagedObjectController<T: NSManagedObject> {
     }
     
     /**
-    Unregisters a `ManagedObjectObserver` from receiving notifications for changes to the receiver's `object`.
+    Unregisters an `ObjectObserver` from receiving notifications for changes to the receiver's `object`.
     
     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
     
-    :param: observer a `ManagedObjectObserver` to unregister notifications to
+    :param: observer an `ObjectObserver` to unregister notifications to
     */
-    public func removeObserver<U: ManagedObjectObserver where U.EntityType == T>(observer: U) {
+    public func removeObserver<U: ObjectObserver where U.EntityType == T>(observer: U) {
         
         CoreStore.assert(NSThread.isMainThread(), "Attempted to remove an observer of type \(typeName(observer)) outside the main thread.")
         
@@ -171,7 +171,8 @@ public final class ManagedObjectController<T: NSManagedObject> {
         let context = dataStack.mainContext
         
         let fetchRequest = NSFetchRequest()
-        fetchRequest.entity = context.entityDescriptionForEntityClass(T.self)
+        fetchRequest.entity = object.entity
+        
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.sortDescriptors = []
@@ -216,7 +217,7 @@ public final class ManagedObjectController<T: NSManagedObject> {
     private var lastCommittedAttributes = [NSString: NSObject]()
     private weak var parentStack: DataStack?
     
-    private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (objectController: ManagedObjectController<T>) -> Void) {
+    private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<T>) -> Void) {
         
         setAssociatedRetainedObject(
             NotificationObserver(
@@ -226,7 +227,7 @@ public final class ManagedObjectController<T: NSManagedObject> {
                     
                     if let strongSelf = self {
                         
-                        callback(objectController: strongSelf)
+                        callback(monitor: strongSelf)
                     }
                 }
             ),
@@ -235,7 +236,7 @@ public final class ManagedObjectController<T: NSManagedObject> {
         )
     }
     
-    private func registerObjectNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (objectController: ManagedObjectController<T>, object: T) -> Void) {
+    private func registerObjectNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<T>, object: T) -> Void) {
         
         setAssociatedRetainedObject(
             NotificationObserver(
@@ -248,7 +249,7 @@ public final class ManagedObjectController<T: NSManagedObject> {
                         let object = userInfo[UserInfoKeyObject] as? T {
                             
                             callback(
-                                objectController: strongSelf,
+                                monitor: strongSelf,
                                 object: object
                             )
                     }
@@ -261,9 +262,9 @@ public final class ManagedObjectController<T: NSManagedObject> {
 }
 
 
-// MARK: - ManagedObjectController: FetchedResultsControllerHandler
+// MARK: - ObjectMonitor: FetchedResultsControllerHandler
 
-extension ManagedObjectController: FetchedResultsControllerHandler {
+extension ObjectMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
     
@@ -273,14 +274,14 @@ extension ManagedObjectController: FetchedResultsControllerHandler {
             
         case .Delete:
             NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidDeleteObjectNotification,
+                ObjectMonitorDidDeleteObjectNotification,
                 object: self,
                 userInfo: [UserInfoKeyObject: anObject]
             )
             
         case .Update:
             NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidUpdateObjectNotification,
+                ObjectMonitorDidUpdateObjectNotification,
                 object: self,
                 userInfo: [UserInfoKeyObject: anObject]
             )
@@ -293,7 +294,7 @@ extension ManagedObjectController: FetchedResultsControllerHandler {
     private func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
         NSNotificationCenter.defaultCenter().postNotificationName(
-            ManagedObjectListControllerWillChangeObjectNotification,
+            ObjectMonitorWillChangeObjectNotification,
             object: self
         )
     }

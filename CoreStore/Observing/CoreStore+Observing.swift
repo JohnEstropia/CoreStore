@@ -34,63 +34,63 @@ public extension CoreStore {
     // MARK: Public
     
     /**
-    Using the `defaultStack`, creates a `ManagedObjectController` for the specified `NSManagedObject`. Multiple `ManagedObjectObserver`'s may then register themselves to be notified when changes are made to the `NSManagedObject`.
+    Using the `defaultStack`, creates a `ObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
     
     :param: object the `NSManagedObject` to observe changes from
-    :returns: a `ManagedObjectController` that monitors changes to `object`
+    :returns: a `ObjectMonitor` that monitors changes to `object`
     */
-    public static func observeObject<T: NSManagedObject>(object: T) -> ManagedObjectController<T> {
+    public static func monitorObject<T: NSManagedObject>(object: T) -> ObjectMonitor<T> {
         
-        return self.defaultStack.observeObject(object)
+        return self.defaultStack.monitorObject(object)
     }
     
     /**
-    Using the `defaultStack`, creates a `ManagedObjectListController` for a list of `NSManagedObject`'s that satisfy the specified fetch clauses. Multiple `ManagedObjectListObserver`'s may then register themselves to be notified when changes are made to the list.
+    Using the `defaultStack`, creates a `ListMonitor` for a list of `NSManagedObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: a `ManagedObjectListController` instance that monitors changes to the list
+    :returns: a `ListMonitor` instance that monitors changes to the list
     */
-    public static func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: FetchClause...) -> ManagedObjectListController<T> {
+    public static func monitorList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: FetchClause...) -> ListMonitor<T> {
         
-        return self.defaultStack.observeObjectList(from, queryClauses)
+        return self.defaultStack.monitorList(from, queryClauses)
     }
     
     /**
-    Using the `defaultStack`, creates a `ManagedObjectListController` for a list of `NSManagedObject`'s that satisfy the specified fetch clauses. Multiple `ManagedObjectListObserver`'s may then register themselves to be notified when changes are made to the list.
+    Using the `defaultStack`, creates a `ListMonitor` for a list of `NSManagedObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list.
     
     :param: from a `From` clause indicating the entity type
     :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: a `ManagedObjectListController` instance that monitors changes to the list
+    :returns: a `ListMonitor` instance that monitors changes to the list
     */
-    public static func observeObjectList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: [FetchClause]) -> ManagedObjectListController<T> {
+    public static func monitorList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: [FetchClause]) -> ListMonitor<T> {
         
-        return self.defaultStack.observeObjectList(from, queryClauses)
+        return self.defaultStack.monitorList(from, queryClauses)
     }
     
     /**
-    Using the `defaultStack`, creates a `ManagedObjectListController` for a sectioned list of `NSManagedObject`'s that satisfy the specified fetch clauses. Multiple `ManagedObjectListObserver`'s may then register themselves to be notified when changes are made to the list.
+    Using the `defaultStack`, creates a `ListMonitor` for a sectioned list of `NSManagedObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list.
     
     :param: from a `From` clause indicating the entity type
-    :param: sectionedBy a `SectionedBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+    :param: sectionBy a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
     :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: a `ManagedObjectListController` instance that monitors changes to the list
+    :returns: a `ListMonitor` instance that monitors changes to the list
     */
-    public static func observeSectionedList<T: NSManagedObject>(from: From<T>, _ sectionedBy: SectionedBy, _ fetchClauses: FetchClause...) -> ManagedObjectListController<T> {
+    public static func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
-        return self.defaultStack.observeSectionedList(from, sectionedBy, fetchClauses)
+        return self.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)
     }
     
     /**
-    Using the `defaultStack`, creates a `ManagedObjectListController` for a sectioned list of `NSManagedObject`'s that satisfy the specified fetch clauses. Multiple `ManagedObjectListObserver`'s may then register themselves to be notified when changes are made to the list.
+    Using the `defaultStack`, creates a `ListMonitor` for a sectioned list of `NSManagedObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list.
     
     :param: from a `From` clause indicating the entity type
-    :param: sectionedBy a `SectionedBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+    :param: sectionBy a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
     :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: a `ManagedObjectListController` instance that monitors changes to the list
+    :returns: a `ListMonitor` instance that monitors changes to the list
     */
-    public static func observeSectionedList<T: NSManagedObject>(from: From<T>, _ sectionedBy: SectionedBy, _ fetchClauses: [FetchClause]) -> ManagedObjectListController<T> {
+    public static func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
-        return self.defaultStack.observeSectionedList(from, sectionedBy, fetchClauses)
+        return self.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)
     }
 }
