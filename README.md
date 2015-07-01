@@ -2,6 +2,7 @@
 [![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![License](https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat)](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Unleashing the real power of Core Data with the elegance and safety of Swift
 (Swift, iOS 8+)
@@ -820,6 +821,11 @@ The protocols above had their methods renamed as well, to retain the natural lan
 pod 'CoreStore'
 ```
 This installs CoreStore as a framework. Declare `import CoreStore` in your swift file to use the library.
+
+### Install with Carthage
+```
+github "JohnEstropia/CoreStore" >= 0.2.0
+```
 
 ### Install as Git Submodule
 ```
