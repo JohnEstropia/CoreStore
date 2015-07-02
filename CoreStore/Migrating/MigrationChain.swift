@@ -35,8 +35,14 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     public func contains(version: String) -> Bool {
         
-        return self.latestVersion == version
-            || find(self.versionTree.keys, version) != nil
+        return self.rootVersions.contains(version)
+            || self.leafVersions.contains(version)
+            || self.versionTree[version] != nil
+    }
+    
+    public func nextVersionFrom(version: String) -> String? {
+        
+        return self.versionTree[version]
     }
     
     
@@ -44,8 +50,9 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     public init(nilLiteral: ()) {
         
-        self.latestVersion = nil
         self.versionTree = [:]
+        self.rootVersions = []
+        self.leafVersions = []
     }
     
     
@@ -53,16 +60,18 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     public init(stringLiteral value: String) {
         
-        self.latestVersion = value
         self.versionTree = [:]
+        self.rootVersions = [value]
+        self.leafVersions = [value]
     }
     
     // MARK: ExtendedGraphemeClusterLiteralConvertible
     
     public init(extendedGraphemeClusterLiteral value: String) {
         
-        self.latestVersion = value
         self.versionTree = [:]
+        self.rootVersions = [value]
+        self.leafVersions = [value]
     }
     
     
@@ -70,8 +79,9 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     public init(unicodeScalarLiteral value: String) {
         
-        self.latestVersion = value
         self.versionTree = [:]
+        self.rootVersions = [value]
+        self.leafVersions = [value]
     }
     
     
@@ -84,15 +94,17 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
             versionTree[tuple.0] = tuple.1
             return versionTree
         }
-        let latestVersions = elements.filter { (tuple: (String, String)) -> Bool in
-            
-            return versionTree[tuple.1] == nil
-        }
+        let leafVersions = Set(
+            elements.filter { (tuple: (String, String)) -> Bool in
+                
+                return versionTree[tuple.1] == nil
+                
+            }.map { $1 }
+        )
         
-        CoreStore.assert(latestVersions.count == 1, "\(typeName(MigrationChain))'s migration chain could not be resolved due to multiple leaf versions.")
-        
-        self.latestVersion = latestVersions.first?.1
         self.versionTree = versionTree
+        self.rootVersions = Set(versionTree.keys).subtract(versionTree.values)
+        self.leafVersions = leafVersions
     }
     
     
@@ -114,13 +126,15 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         }
         
         self.versionTree = versionTree
-        self.latestVersion = elements.last
+        self.rootVersions = Set(flatMap([elements.first]) { $0 == nil ? [] : [$0!] })
+        self.leafVersions = Set(flatMap([elements.last]) { $0 == nil ? [] : [$0!] })
     }
     
     
     // MARK: Internal
     
-    internal let latestVersion: String?
+    internal let rootVersions: Set<String>
+    internal let leafVersions: Set<String>
     
     
     // MARK: Private

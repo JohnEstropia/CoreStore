@@ -48,7 +48,7 @@ public extension DataStack {
                 isDirectory: false
             ),
             configuration: configuration,
-            sourceBundles: sourceBundles
+            mappingModelBundles: mappingModelBundles
         )
     }
     
@@ -57,7 +57,7 @@ public extension DataStack {
     
     :param: fileURL the local file URL for the SQLite persistent store.
     :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil` which indicates the "Default" configuration.
-    :param: sourceBundles an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
+    :param: mappingModelBundles an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
     :return: a `MigrationType` indicating the type of migration required for the store; or `nil` if either inspection of the store failed, or no mapping model was found/inferred. `MigrationType` acts as a `Bool` and evaluates to `false` if no migration is required, and `true` if either a lightweight or custom migration is needed.
     */
     public func needsMigrationForSQLiteStore(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as! [NSBundle]) -> MigrationType? {

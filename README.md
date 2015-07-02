@@ -406,7 +406,7 @@ There are currently 5 fetch methods you can call from `CoreStore`, from a `DataS
 - `fetchAll(...)` - returns an array of all objects that match the criteria.
 - `fetchOne(...)` - returns the first object that match the criteria.
 - `fetchCount(...)` - returns the number of objects that match the criteria.
-- `fetchObjectIDs(...)`` - returns an array of `NSManagedObjectID`s for all objects that match the criteria.
+- `fetchObjectIDs(...)` - returns an array of `NSManagedObjectID`s for all objects that match the criteria.
 - `fetchObjectID(...)` - returns the `NSManagedObjectID`s for the first objects that match the criteria.
 
 Each method's purpose is straightforward, but we need to understand how to set the clauses for the fetch.
@@ -450,7 +450,7 @@ var mostValuablePeople = CoreStore.fetchAll(
     OrderBy(.Descending("rating"), .Ascending("surname"))
 )
 ```
-As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.Ascending` or `.Descending`. The associated value for the `SortKey` enumeration is the attribute key string.
+As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.Ascending` or `.Descending`.
 
 You can use the `+` and `+=` operator to append `OrderBy`s together. This is useful when sorting conditionally:
 ```swift

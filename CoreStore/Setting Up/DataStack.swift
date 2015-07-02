@@ -57,7 +57,10 @@ public final class DataStack {
             modelName,
             ofType: "momd"
         )
-        CoreStore.assert(modelFilePath != nil, "Could not find a \"momd\" resource from the main bundle.")
+        CoreStore.assert(
+            modelFilePath != nil,
+            "Could not find a \"momd\" resource from the main bundle."
+        )
         
         let managedObjectModel: NSManagedObjectModel! = NSManagedObjectModel(contentsOfURL: NSURL(fileURLWithPath: modelFilePath)!)
         CoreStore.assert(
