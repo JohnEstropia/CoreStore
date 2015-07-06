@@ -28,9 +28,9 @@ import CoreData
 import GCDKit
 
 
-internal let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL
+internal let applicationSupportDirectory = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first!
 
-internal let applicationName = ((NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData")
+internal let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
 
 internal let defaultSQLiteStoreURL = applicationSupportDirectory.URLByAppendingPathComponent(applicationName, isDirectory: false).URLByAppendingPathExtension("sqlite")
 
@@ -47,47 +47,26 @@ public final class DataStack {
     /**
     Initializes a `DataStack` from an `NSManagedObjectModel`.
     
-    :param: modelName the name of the (.xcdatamodeld) model file. If not specified, the application name will be used
-    :param: sourceBundle an optional bundle to load models from. If not specified, the main bundle will be used.
-    :param: modelVersions the `MigrationChain` that indicates the heirarchy of the model's version names. If not specified, will default to a non-migrating data stack.
+    - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name will be used
+    - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
+    - parameter migrationChain: the `MigrationChain` that indicates the heirarchy of the model's version names. If not specified, will default to a non-migrating data stack.
     */
-    public required init(modelName: String = applicationName, sourceBundle: NSBundle = NSBundle.mainBundle(), modelVersions: MigrationChain = nil) {
+    public required init(modelName: String = applicationName, bundle: NSBundle = NSBundle.mainBundle(), migrationChain: MigrationChain = nil) {
         
-        let modelFilePath: String! = sourceBundle.pathForResource(
-            modelName,
-            ofType: "momd"
-        )
-        CoreStore.assert(
-            modelFilePath != nil,
-            "Could not find a \"momd\" resource from the main bundle."
+        let model = NSManagedObjectModel.fromBundle(
+            bundle,
+            modelName: modelName,
+            modelVersion: migrationChain.leafVersions.first
         )
         
-        let managedObjectModel: NSManagedObjectModel! = NSManagedObjectModel(contentsOfURL: NSURL(fileURLWithPath: modelFilePath)!)
-        CoreStore.assert(
-            managedObjectModel != nil,
-            "Could not create an <\(NSManagedObjectModel.self)> from the resource at path \"\(modelFilePath)\"."
-        )
         // TODO: assert existence of all model versions in the migrationChain
         
-        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
+        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
         self.rootSavingContext = NSManagedObjectContext.rootSavingContextForCoordinator(self.coordinator)
         self.mainContext = NSManagedObjectContext.mainContextForRootContext(self.rootSavingContext)
-        self.sourceBundle = sourceBundle
-        self.modelVersions = modelVersions
-        
-        var entityNameMapping = [EntityClassNameType: EntityNameType]()
-        var entityConfigurationsMapping = [EntityClassNameType: Set<String>]()
-        for entityDescription in managedObjectModel.entities as! [NSEntityDescription] {
-            
-            let managedObjectClassName = entityDescription.managedObjectClassName
-            entityConfigurationsMapping[managedObjectClassName] = []
-            if let entityName = entityDescription.name {
-                
-                entityNameMapping[managedObjectClassName] = entityName
-            }
-        }
-        self.entityNameMapping = entityNameMapping
-        self.entityConfigurationsMapping = entityConfigurationsMapping
+        self.bundle = bundle
+        self.model = model
+        self.migrationChain = migrationChain
         
         self.rootSavingContext.parentStack = self
     }
@@ -95,23 +74,30 @@ public final class DataStack {
     /**
     Adds an in-memory store to the stack.
     
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil.
-    :returns: a `PersistentStoreResult` indicating success or failure.
+    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
+    - returns: a `PersistentStoreResult` indicating success or failure.
     */
-    public func addInMemoryStore(configuration: String? = nil) -> PersistentStoreResult {
+    public func addInMemoryStore(configuration configuration: String? = nil) -> PersistentStoreResult {
         
         let coordinator = self.coordinator;
-        var error: NSError?
         
         var store: NSPersistentStore?
+        var storeError: NSError?
         coordinator.performBlockAndWait {
             
-            store = coordinator.addPersistentStoreWithType(
-                NSInMemoryStoreType,
-                configuration: configuration,
-                URL: nil,
-                options: nil,
-                error: &error)
+            do {
+                
+                store = try coordinator.addPersistentStoreWithType(
+                    NSInMemoryStoreType,
+                    configuration: configuration,
+                    URL: nil,
+                    options: nil
+                )
+            }
+            catch {
+                
+                storeError = error as NSError
+            }
         }
         
         if let store = store {
@@ -120,18 +106,20 @@ public final class DataStack {
             return PersistentStoreResult(store)
         }
         
-        if let error = error {
+        if let error = storeError {
             
             CoreStore.handleError(
                 error,
-                "Failed to add in-memory <\(NSPersistentStore.self)>.")
+                "Failed to add in-memory \(typeName(NSPersistentStore))."
+            )
             return PersistentStoreResult(error)
         }
         else {
             
             CoreStore.handleError(
                 NSError(coreStoreErrorCode: .UnknownError),
-                "Failed to add in-memory <\(NSPersistentStore.self)>.")
+                "Failed to add in-memory \(typeName(NSPersistentStore))."
+            )
             return PersistentStoreResult(.UnknownError)
         }
     }
@@ -139,11 +127,11 @@ public final class DataStack {
     /**
     Adds to the stack an SQLite store from the given SQLite file name.
     
-    :param: fileName the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-    :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
-    :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
-    :returns: a `PersistentStoreResult` indicating success or failure.
+    - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+    - parameter automigrating: Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
+    - parameter resetStoreOnMigrationFailure: Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
+    - returns: a `PersistentStoreResult` indicating success or failure.
     */
     public func addSQLiteStoreAndWait(fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
@@ -161,18 +149,18 @@ public final class DataStack {
     /**
     Adds to the stack an SQLite store from the given SQLite file URL.
     
-    :param: fileURL the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-    :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
-    :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
-    :returns: a `PersistentStoreResult` indicating success or failure.
+    - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+    - parameter automigrating: Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
+    - parameter resetStoreOnMigrationFailure: Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
+    - returns: a `PersistentStoreResult` indicating success or failure.
     */
-    public func addSQLiteStoreAndWait(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
+    public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
         let coordinator = self.coordinator;
         if let store = coordinator.persistentStoreForURL(fileURL) {
             
-            let isExistingStoreAutomigrating = ((store.options?[NSMigratePersistentStoresAutomaticallyOption] as? Bool) ?? false)
+            let isExistingStoreAutomigrating = (store.options?[NSMigratePersistentStoresAutomaticallyOption] as? Bool) == true
             
             if store.type == NSSQLiteStoreType
                 && isExistingStoreAutomigrating == automigrating
@@ -183,37 +171,44 @@ public final class DataStack {
             
             CoreStore.handleError(
                 NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL),
-                "Failed to add SQLite <\(NSPersistentStore.self)> at \"\(fileURL)\" because a different <\(NSPersistentStore.self)> at that URL already exists.")
+                "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+            )
             
             return PersistentStoreResult(.DifferentPersistentStoreExistsAtURL)
         }
         
         let fileManager = NSFileManager.defaultManager()
-        var directoryError: NSError?
-        if !fileManager.createDirectoryAtURL(
-            fileURL.URLByDeletingLastPathComponent!,
-            withIntermediateDirectories: true,
-            attributes: nil,
-            error: &directoryError) {
-                
-                CoreStore.handleError(
-                    directoryError ?? NSError(coreStoreErrorCode: .UnknownError),
-                    "Failed to create directory for SQLite store at \"\(fileURL)\".")
-                return PersistentStoreResult(directoryError!)
+        do {
+            
+            try fileManager.createDirectoryAtURL(
+                fileURL.URLByDeletingLastPathComponent!,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
         }
+        catch _ { }
         
         var store: NSPersistentStore?
-        var persistentStoreError: NSError?
+        var storeError: NSError?
         coordinator.performBlockAndWait {
             
-            store = coordinator.addPersistentStoreWithType(
-                NSSQLiteStoreType,
-                configuration: configuration,
-                URL: fileURL,
-                options: [NSSQLitePragmasOption: ["WAL": "journal_mode"],
-                    NSInferMappingModelAutomaticallyOption: true,
-                    NSMigratePersistentStoresAutomaticallyOption: automigrating],
-                error: &persistentStoreError)
+            do {
+                
+                store = try coordinator.addPersistentStoreWithType(
+                    NSSQLiteStoreType,
+                    configuration: configuration,
+                    URL: fileURL,
+                    options: [
+                        NSSQLitePragmasOption: ["WAL": "journal_mode"],
+                        NSInferMappingModelAutomaticallyOption: true,
+                        NSMigratePersistentStoresAutomaticallyOption: automigrating
+                    ]
+                )
+            }
+            catch {
+                
+                storeError = error as NSError
+            }
         }
         
         if let store = store {
@@ -222,7 +217,7 @@ public final class DataStack {
             return PersistentStoreResult(store)
         }
         
-        if let error = persistentStoreError
+        if let error = storeError
             where (
                 resetStoreOnMigrationFailure
                     && (error.code == NSPersistentStoreIncompatibleVersionHashError
@@ -231,25 +226,44 @@ public final class DataStack {
                     && error.domain == NSCocoaErrorDomain
             ) {
                 
-                fileManager.removeItemAtURL(fileURL, error: nil)
-                fileManager.removeItemAtPath(
-                    fileURL.path!.stringByAppendingString("-shm"),
-                    error: nil)
-                fileManager.removeItemAtPath(
-                    fileURL.path!.stringByAppendingString("-wal"),
-                    error: nil)
+                do {
+                    
+                    try fileManager.removeItemAtURL(fileURL)
+                }
+                catch _ { }
+                
+                do {
+                    
+                    try fileManager.removeItemAtPath(fileURL.path!.stringByAppendingString("-shm"))
+                }
+                catch _ { }
+                
+                do {
+                    
+                    try fileManager.removeItemAtPath(fileURL.path!.stringByAppendingString("-wal"))
+                }
+                catch _ { }
                 
                 var store: NSPersistentStore?
                 coordinator.performBlockAndWait {
                     
-                    store = coordinator.addPersistentStoreWithType(
-                        NSSQLiteStoreType,
-                        configuration: configuration,
-                        URL: fileURL,
-                        options: [NSSQLitePragmasOption: ["WAL": "journal_mode"],
-                            NSInferMappingModelAutomaticallyOption: true,
-                            NSMigratePersistentStoresAutomaticallyOption: automigrating],
-                        error: &persistentStoreError)
+                    do {
+                        
+                        store = try coordinator.addPersistentStoreWithType(
+                            NSSQLiteStoreType,
+                            configuration: configuration,
+                            URL: fileURL,
+                            options: [
+                                NSSQLitePragmasOption: ["WAL": "journal_mode"],
+                                NSInferMappingModelAutomaticallyOption: true,
+                                NSMigratePersistentStoresAutomaticallyOption: automigrating
+                            ]
+                        )
+                    }
+                    catch {
+                        
+                        storeError = error as NSError
+                    }
                 }
                 
                 if let store = store {
@@ -260,8 +274,9 @@ public final class DataStack {
         }
         
         CoreStore.handleError(
-            persistentStoreError ?? NSError(coreStoreErrorCode: .UnknownError),
-            "Failed to add SQLite <\(NSPersistentStore.self)> at \"\(fileURL)\".")
+            storeError ?? NSError(coreStoreErrorCode: .UnknownError),
+            "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\"."
+        )
         
         return PersistentStoreResult(.UnknownError)
     }
@@ -272,14 +287,23 @@ public final class DataStack {
     internal let coordinator: NSPersistentStoreCoordinator
     internal let rootSavingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
-    internal let sourceBundle: NSBundle
-    internal let modelVersions: MigrationChain
+    internal let bundle: NSBundle
+    internal let model: NSManagedObjectModel
+    internal let migrationChain: MigrationChain
     internal let childTransactionQueue: GCDQueue = .createSerial("com.corestore.datastack.childtransactionqueue")
-    internal let migrationQueue: GCDQueue = .createSerial("com.corestore.datastack.migrationqueue")
+    internal let migrationQueue: NSOperationQueue = {
+        
+        let migrationQueue = NSOperationQueue()
+        migrationQueue.maxConcurrentOperationCount = 1
+        migrationQueue.name = "com.coreStore.migrationOperationQueue"
+        migrationQueue.qualityOfService = .Utility
+        migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
+        return migrationQueue
+    }()
     
     internal func entityNameForEntityClass(entityClass: AnyClass) -> String? {
         
-        return self.entityNameMapping[NSStringFromClass(entityClass)]
+        return self.model.entityNameForClass(entityClass)
     }
     
     internal func persistentStoresForEntityClass(entityClass: AnyClass) -> [NSPersistentStore]? {
@@ -287,11 +311,10 @@ public final class DataStack {
         var returnValue: [NSPersistentStore]? = nil
         self.storeMetadataUpdateQueue.barrierSync {
             
-            let configurationsForEntity = self.entityConfigurationsMapping[NSStringFromClass(entityClass)] ?? []
-            returnValue = map(configurationsForEntity) {
+            returnValue = self.entityConfigurationsMapping[NSStringFromClass(entityClass)]?.map {
                 
                 return self.configurationStoreMapping[$0]!
-            }
+            } ?? []
         }
         return returnValue
     }
@@ -336,8 +359,12 @@ public final class DataStack {
             
             let configurationName = persistentStore.configurationName
             self.configurationStoreMapping[configurationName] = persistentStore
-            for entityDescription in (self.coordinator.managedObjectModel.entitiesForConfiguration(configurationName) as? [NSEntityDescription] ?? []) {
+            for entityDescription in (self.coordinator.managedObjectModel.entitiesForConfiguration(configurationName) ?? []) {
                 
+                if self.entityConfigurationsMapping[entityDescription.managedObjectClassName] == nil {
+                    
+                    self.entityConfigurationsMapping[entityDescription.managedObjectClassName] = []
+                }
                 self.entityConfigurationsMapping[entityDescription.managedObjectClassName]?.insert(configurationName)
             }
         }
@@ -346,12 +373,7 @@ public final class DataStack {
     
     // MARK: Private
     
-    private typealias EntityClassNameType = String
-    private typealias EntityNameType = String
-    private typealias ConfigurationNameType = String
-    
-    private let entityNameMapping: [EntityClassNameType: EntityNameType]
     private let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.coreStore.persistentStoreBarrierQueue")
-    private var configurationStoreMapping = [ConfigurationNameType: NSPersistentStore]()
-    private var entityConfigurationsMapping = [EntityClassNameType: Set<String>]()
+    private var configurationStoreMapping = [String: NSPersistentStore]()
+    private var entityConfigurationsMapping = [String: Set<String>]()
 }

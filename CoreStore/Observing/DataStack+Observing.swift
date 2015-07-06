@@ -37,12 +37,15 @@ public extension DataStack {
     /**
     Creates a `ObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
     
-    :param: object the `NSManagedObject` to observe changes from
-    :returns: a `ObjectMonitor` that monitors changes to `object`
+    - parameter object: the `NSManagedObject` to observe changes from
+    - returns: a `ObjectMonitor` that monitors changes to `object`
     */
     public func monitorObject<T: NSManagedObject>(object: T) -> ObjectMonitor<T> {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to observe objects from \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to observe objects from \(typeName(self)) outside the main thread."
+        )
         
         return ObjectMonitor(
             dataStack: self,
@@ -53,9 +56,9 @@ public extension DataStack {
     /**
     Creates a `ListMonitor` for a list of `NSManagedObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: a `ListMonitor` instance that monitors changes to the list
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: a `ListMonitor` instance that monitors changes to the list
     */
     public func monitorList<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
@@ -65,13 +68,16 @@ public extension DataStack {
     /**
     Creates a `ListMonitor` for a list of `NSManagedObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: a `ListMonitor` instance that monitors changes to the list
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: a `ListMonitor` instance that monitors changes to the list
     */
     public func monitorList<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to observe objects from \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to observe objects from \(typeName(self)) outside the main thread."
+        )
         
         return ListMonitor(
             dataStack: self,
@@ -84,10 +90,10 @@ public extension DataStack {
     /**
     Creates a `ListMonitor` for a sectioned list of `NSManagedObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list.
     
-    :param: from a `From` clause indicating the entity type
-    :param: sectionBy a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
-    :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: a `ListMonitor` instance that monitors changes to the list
+    - parameter from: a `From` clause indicating the entity type
+    - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+    - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: a `ListMonitor` instance that monitors changes to the list
     */
     public func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
      
@@ -97,14 +103,17 @@ public extension DataStack {
     /**
     Creates a `ListMonitor` for a sectioned list of `NSManagedObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list.
     
-    :param: from a `From` clause indicating the entity type
-    :param: sectionBy a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
-    :param: fetchClauses a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: a `ListMonitor` instance that monitors changes to the list
+    - parameter from: a `From` clause indicating the entity type
+    - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+    - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: a `ListMonitor` instance that monitors changes to the list
     */
     public func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to observe objects from \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to observe objects from \(typeName(self)) outside the main thread."
+        )
         
         return ListMonitor(
             dataStack: self,
