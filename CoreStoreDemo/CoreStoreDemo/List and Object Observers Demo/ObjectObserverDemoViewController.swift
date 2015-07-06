@@ -176,10 +176,6 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         
         self.hsbLabel?.text = palette.colorText
         
-        let hue = palette.hue
-        let saturation = palette.saturation
-        let brightness = palette.brightness
-        
         if changedKeys == nil || changedKeys?.contains("hue") == true {
             
             self.hueSlider?.value = Float(palette.hue)

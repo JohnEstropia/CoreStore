@@ -54,7 +54,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `Where` clause with an `NSPredicate`
     
-    :param: predicate the `NSPredicate` for the fetch or query
+    - parameter predicate: the `NSPredicate` for the fetch or query
     */
     public init(_ predicate: NSPredicate) {
         
@@ -72,7 +72,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `Where` clause with a predicate that always evaluates to the specified boolean value
     
-    :param: value the boolean value for the predicate
+    - parameter value: the boolean value for the predicate
     */
     public init(_ value: Bool) {
         
@@ -82,8 +82,8 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `Where` clause with a predicate using the specified string format and arguments
     
-    :param: format the format string for the predicate
-    :param: args the arguments for `format`
+    - parameter format: the format string for the predicate
+    - parameter args: the arguments for `format`
     */
     public init(_ format: String, _ args: NSObject...) {
         
@@ -93,8 +93,8 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `Where` clause with a predicate using the specified string format and arguments
     
-    :param: format the format string for the predicate
-    :param: argumentArray the arguments for `format`
+    - parameter format: the format string for the predicate
+    - parameter argumentArray: the arguments for `format`
     */
     public init(_ format: String, argumentArray: [NSObject]?) {
         
@@ -104,8 +104,8 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `Where` clause with a predicate using the specified string format and arguments
     
-    :param: format the format string for the predicate
-    :param: argumentArray the arguments for `format`
+    - parameter format: the format string for the predicate
+    - parameter argumentArray: the arguments for `format`
     */
     public init(_ keyPath: KeyPath, isEqualTo value: NSObject?) {
         
@@ -123,7 +123,10 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
         
         if fetchRequest.predicate != nil {
             
-            CoreStore.log(.Warning, message: "An existing predicate for the <\(NSFetchRequest.self)> was overwritten by \(typeName(self)) query clause.")
+            CoreStore.log(
+                .Warning,
+                message: "An existing predicate for the \(typeName(NSFetchRequest)) was overwritten by \(typeName(self)) query clause."
+            )
         }
         
         fetchRequest.predicate = self.predicate

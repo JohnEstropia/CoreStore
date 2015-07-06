@@ -36,7 +36,7 @@ internal final class NotificationObserver {
     let object: AnyObject?
     let observer: NSObjectProtocol
     
-    init(notificationName: String, object: AnyObject?, closure: (note: NSNotification!) -> Void) {
+    init(notificationName: String, object: AnyObject?, closure: (note: NSNotification) -> Void) {
         
         self.notificationName = notificationName
         self.object = object

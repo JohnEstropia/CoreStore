@@ -39,11 +39,14 @@ public final class DetachedDataTransaction: BaseDataTransaction {
     /**
     Saves the transaction changes asynchronously. For a `DetachedDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
     
-    :param: completion the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
+    - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
     */
     public func commit(completion: (result: SaveResult) -> Void) {
         
-        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to commit a \(typeName(self)) outside its designated queue.")
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to commit a \(typeName(self)) outside its designated queue."
+        )
         
         self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             

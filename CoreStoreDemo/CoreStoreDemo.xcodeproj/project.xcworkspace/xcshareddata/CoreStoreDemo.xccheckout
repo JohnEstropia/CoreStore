@@ -7,7 +7,7 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>B6855E48-4B19-4321-B1C7-CB2706E12777</string>
 	<key>IDESourceControlProjectName</key>
-	<string>CoreStoreDemo</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>4B60F1BCB491FF717C56441AE7783C74F417BE48</key>
@@ -16,7 +16,7 @@
 		<string>github.com:JohnEstropia/GCDKit.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>CoreStoreDemo/CoreStoreDemo.xcodeproj</string>
+	<string>CoreStoreDemo/CoreStoreDemo.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>4B60F1BCB491FF717C56441AE7783C74F417BE48</key>

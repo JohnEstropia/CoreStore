@@ -45,7 +45,7 @@ public struct SectionBy {
     /**
     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
     
-    :param: sectionKeyPath the key path to use to group the objects into sections
+    - parameter sectionKeyPath: the key path to use to group the objects into sections
     */
     public init(_ sectionKeyPath: KeyPath) {
         
@@ -55,8 +55,8 @@ public struct SectionBy {
     /**
     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
     
-    :param: sectionKeyPath the key path to use to group the objects into sections
-    :param: sectionIndexTransformer a closure to transform the value for the key path to an appropriate section name
+    - parameter sectionKeyPath: the key path to use to group the objects into sections
+    - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
     */
     public init(_ sectionKeyPath: KeyPath, _ sectionIndexTransformer: (sectionName: String?) -> String?) {
         

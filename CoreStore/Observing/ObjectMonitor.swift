@@ -83,11 +83,14 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     Calling `addObserver(_:)` multiple times on the same observer is safe, as `ObjectMonitor` unregisters previous notifications to the observer before re-registering them.
     
-    :param: observer an `ObjectObserver` to send change notifications to
+    - parameter observer: an `ObjectObserver` to send change notifications to
     */
     public func addObserver<U: ObjectObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         self.removeObserver(observer)
         
@@ -95,9 +98,9 @@ public final class ObjectMonitor<T: NSManagedObject> {
             &NotificationKey.willChangeObject,
             name: ObjectMonitorWillChangeObjectNotification,
             toObserver: observer,
-            callback: { [weak self, weak observer] (monitor) -> Void in
+            callback: { [weak observer] (monitor) -> Void in
                 
-                if let strongSelf = self, let object = strongSelf.object, let observer = observer {
+                if let object = monitor.object, let observer = observer {
                     
                     observer.objectMonitor(monitor, willUpdateObject: object)
                 }
@@ -107,9 +110,9 @@ public final class ObjectMonitor<T: NSManagedObject> {
             &NotificationKey.didDeleteObject,
             name: ObjectMonitorDidDeleteObjectNotification,
             toObserver: observer,
-            callback: { [weak self, weak observer] (monitor, object) -> Void in
+            callback: { [weak observer] (monitor, object) -> Void in
                 
-                if let strongSelf = self, let observer = observer {
+                if let observer = observer {
                     
                     observer.objectMonitor(monitor, didDeleteObject: object)
                 }
@@ -124,15 +127,15 @@ public final class ObjectMonitor<T: NSManagedObject> {
                 if let strongSelf = self, let observer = observer {
                     
                     let previousCommitedAttributes = strongSelf.lastCommittedAttributes
-                    let currentCommitedAttributes = object.committedValuesForKeys(nil) as! [NSString: NSObject]
+                    let currentCommitedAttributes = object.committedValuesForKeys(nil) as! [String: NSObject]
                     
-                    var changedKeys = Set<String>()
-                    for key in currentCommitedAttributes.keys {
+                    let changedKeys = currentCommitedAttributes.keys.reduce(Set<String>()) { (var changedKeys, key) -> Set<String> in
                         
                         if previousCommitedAttributes[key] != currentCommitedAttributes[key] {
                             
-                            changedKeys.insert(key as String)
+                            changedKeys.insert(key)
                         }
+                        return changedKeys
                     }
                     
                     strongSelf.lastCommittedAttributes = currentCommitedAttributes
@@ -151,11 +154,14 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
     
-    :param: observer an `ObjectObserver` to unregister notifications to
+    - parameter observer: an `ObjectObserver` to unregister notifications to
     */
     public func removeObserver<U: ObjectObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to remove an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to remove an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         let nilValue: AnyObject? = nil
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.willChangeObject, inObject: observer)
@@ -197,15 +203,20 @@ public final class ObjectMonitor<T: NSManagedObject> {
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
         
-        var error: NSError?
-        if !fetchedResultsController.performFetch(&error) {
+        
+        do {
+            
+            try fetchedResultsController.performFetch()
+        }
+        catch {
             
             CoreStore.handleError(
-                error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed to perform fetch on <\(NSFetchedResultsController.self)>.")
+                error as NSError,
+                "Failed to perform fetch for \(typeName(NSFetchedResultsController))."
+            )
         }
         
-        self.lastCommittedAttributes = (self.object?.committedValuesForKeys(nil) as? [NSString: NSObject]) ?? [:]
+        self.lastCommittedAttributes = (self.object?.committedValuesForKeys(nil) as? [String: NSObject]) ?? [:]
     }
     
     
@@ -214,7 +225,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
     private let originalObjectID: NSManagedObjectID
     private let fetchedResultsController: NSFetchedResultsController
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
-    private var lastCommittedAttributes = [NSString: NSObject]()
+    private var lastCommittedAttributes = [String: NSObject]()
     private weak var parentStack: DataStack?
     
     private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<T>) -> Void) {
@@ -313,16 +324,16 @@ private protocol FetchedResultsControllerHandler: class {
 
 // MARK: - FetchedResultsControllerDelegate
 
-private final class FetchedResultsControllerDelegate: NSFetchedResultsControllerDelegate {
+private final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: NSFetchedResultsControllerDelegate
     
-    @objc func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    @objc dynamic func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
         self.handler?.controllerWillChangeContent(controller)
     }
     
-    @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: NSManagedObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
         self.handler?.controller(controller, didChangeObject: anObject, atIndexPath: indexPath, forChangeType: type, newIndexPath: newIndexPath)
     }

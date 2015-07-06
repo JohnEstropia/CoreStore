@@ -56,7 +56,7 @@ public protocol CoreStoreLogger {
     :lineNumber: the source line number
     :functionName: the source function name
     */
-    func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
     Handles errors sent by the `CoreStore` framework.
@@ -67,7 +67,7 @@ public protocol CoreStoreLogger {
     :lineNumber: the source line number
     :functionName: the source function name
     */
-    func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
     Handles assertions made throughout the `CoreStore` framework.
@@ -79,6 +79,16 @@ public protocol CoreStoreLogger {
     :functionName: the source function name
     */
     func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    
+    /**
+    Handles fatal errors made throughout the `CoreStore` framework. Implementations should guarantee that the method does not return, either by calling fatalError() or preconditionFailure(), or by raising an exception.
+    
+    :message: the error message
+    :fileName: the source file name
+    :lineNumber: the source line number
+    :functionName: the source function name
+    */
+    @noreturn func fatalError(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
 }
 
 
@@ -97,4 +107,10 @@ internal func typeName<T>(value: T.Type) -> String {
 internal func typeName(value: AnyClass) -> String {
     
     return "<\(value)>"
+}
+
+internal func typeName(name: String?) -> String {
+    
+    let typeName = name ?? "unknown"
+    return "<\(typeName)>"
 }

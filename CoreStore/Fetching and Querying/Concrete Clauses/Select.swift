@@ -83,8 +83,8 @@ public enum SelectTerm: StringLiteralConvertible {
             Where("employeeID", isEqualTo: 1111)
         )
     
-    :param: keyPath the attribute name
-    :returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
+    - parameter keyPath: the attribute name
+    - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
     */
     public static func Attribute(keyPath: KeyPath) -> SelectTerm {
         
@@ -99,9 +99,9 @@ public enum SelectTerm: StringLiteralConvertible {
             Select<Int>(.Average("age"))
         )
     
-    :param: keyPath the attribute name
-    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
-    :returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
+    - parameter keyPath: the attribute name
+    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
+    - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
     */
     public static func Average(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
@@ -121,9 +121,9 @@ public enum SelectTerm: StringLiteralConvertible {
             Select<Int>(.Count("employeeID"))
         )
     
-    :param: keyPath the attribute name
-    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
-    :returns: a `SelectTerm` to a `Select` clause for a count query
+    - parameter keyPath: the attribute name
+    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
+    - returns: a `SelectTerm` to a `Select` clause for a count query
     */
     public static func Count(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
@@ -143,9 +143,9 @@ public enum SelectTerm: StringLiteralConvertible {
             Select<Int>(.Maximum("age"))
         )
     
-    :param: keyPath the attribute name
-    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
-    :returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
+    - parameter keyPath: the attribute name
+    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
+    - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
     */
     public static func Maximum(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
@@ -165,9 +165,9 @@ public enum SelectTerm: StringLiteralConvertible {
             Select<Int>(.Minimum("age"))
         )
     
-    :param: keyPath the attribute name
-    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
-    :returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
+    - parameter keyPath: the attribute name
+    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
+    - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
     */
     public static func Minimum(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
@@ -187,9 +187,9 @@ public enum SelectTerm: StringLiteralConvertible {
             Select<Int>(.Sum("age"))
         )
     
-    :param: keyPath the attribute name
-    :param: alias the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
-    :returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
+    - parameter keyPath: the attribute name
+    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
+    - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
     */
     public static func Sum(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
@@ -267,7 +267,7 @@ Valid return types depend on the query:
 - for `queryAttributes(...)` methods:
     - `NSDictionary`
 
-:param: sortDescriptors a series of `NSSortDescriptor`s
+- parameter sortDescriptors: a series of `NSSortDescriptor`s
 */
 public struct Select<T: SelectResultType> {
     
@@ -281,8 +281,8 @@ public struct Select<T: SelectResultType> {
     /**
     Initializes a `Select` clause with a list of `SelectTerm`s
     
-    :param: selectTerm a `SelectTerm`
-    :param: selectTerms a series of `SelectTerm`s
+    - parameter selectTerm: a `SelectTerm`
+    - parameter selectTerms: a series of `SelectTerm`s
     */
     public init(_ selectTerm: SelectTerm, _ selectTerms: SelectTerm...) {
         
@@ -296,7 +296,10 @@ public struct Select<T: SelectResultType> {
         
         if fetchRequest.propertiesToFetch != nil {
             
-            CoreStore.log(.Warning, message: "An existing \"propertiesToFetch\" for the <\(NSFetchRequest.self)> was overwritten by \(typeName(self)) query clause.")
+            CoreStore.log(
+                .Warning,
+                message: "An existing \"propertiesToFetch\" for the \(typeName(NSFetchRequest)) was overwritten by \(typeName(self)) query clause."
+            )
         }
         
         fetchRequest.includesPendingChanges = false
@@ -312,17 +315,20 @@ public struct Select<T: SelectResultType> {
             switch term {
                 
             case ._Attribute(let keyPath):
-                if let propertyDescription = propertiesByName[keyPath] as? NSPropertyDescription {
+                if let propertyDescription = propertiesByName[keyPath] {
                     
                     propertiesToFetch.append(propertyDescription)
                 }
                 else {
                     
-                    CoreStore.log(.Warning, message: "The property \"\(keyPath)\" does not exist in entity <\(entityDescription.managedObjectClassName)> and will be ignored by \(typeName(self)) query clause.")
+                    CoreStore.log(
+                        .Warning,
+                        message: "The property \"\(keyPath)\" does not exist in entity \(typeName(entityDescription.managedObjectClassName)) and will be ignored by \(typeName(self)) query clause."
+                    )
                 }
                 
             case ._Aggregate(let function, let keyPath, let alias, let nativeType):
-                if let attributeDescription = attributesByName[keyPath] as? NSAttributeDescription {
+                if let attributeDescription = attributesByName[keyPath] {
                     
                     let expressionDescription = NSExpressionDescription()
                     expressionDescription.name = alias
@@ -343,7 +349,10 @@ public struct Select<T: SelectResultType> {
                 }
                 else {
                     
-                    CoreStore.log(.Warning, message: "The attribute \"\(keyPath)\" does not exist in entity <\(entityDescription.managedObjectClassName)> and will be ignored by \(typeName(self)) query clause.")
+                    CoreStore.log(
+                        .Warning,
+                        message: "The attribute \"\(keyPath)\" does not exist in entity \(typeName(entityDescription.managedObjectClassName)) and will be ignored by \(typeName(self)) query clause."
+                    )
                 }
             }
         }
@@ -572,7 +581,7 @@ extension NSString: SelectValueResultType {
 
 // MARK: - NSDecimalNumber: SelectValueResultType
 
-extension NSDecimalNumber: SelectValueResultType {
+extension NSDecimalNumber {
     
     public override class var attributeType: NSAttributeType {
         

@@ -35,8 +35,8 @@ public extension CoreStore {
     /**
     Adds an in-memory store to the `defaultStack`.
     
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil.
-    :returns: a `PersistentStoreResult` indicating success or failure.
+    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
+    - returns: a `PersistentStoreResult` indicating success or failure.
     */
     public static func addInMemoryStore(configuration: String? = nil) -> PersistentStoreResult {
         
@@ -46,11 +46,11 @@ public extension CoreStore {
     /**
     Adds to the `defaultStack` an SQLite store from the given SQLite file name.
     
-    :param: fileName the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil.
-    :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
-    :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
-    :returns: a `PersistentStoreResult` indicating success or failure.
+    - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist.
+    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
+    - parameter automigrating: Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
+    - parameter resetStoreOnMigrationFailure: Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
+    - returns: a `PersistentStoreResult` indicating success or failure.
     */
     public static func addSQLiteStoreAndWait(fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
@@ -65,11 +65,11 @@ public extension CoreStore {
     /**
     Adds to the `defaultStack` an SQLite store from the given SQLite file URL.
     
-    :param: fileURL the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory.
-    :param: configuration an optional configuration name from the model file. If not specified, defaults to nil.
-    :param: automigrating Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
-    :param: resetStoreOnMigrationFailure Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
-    :returns: a `PersistentStoreResult` indicating success or failure.
+    - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory.
+    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
+    - parameter automigrating: Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
+    - parameter resetStoreOnMigrationFailure: Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
+    - returns: a `PersistentStoreResult` indicating success or failure.
     */
     public static func addSQLiteStoreAndWait(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         

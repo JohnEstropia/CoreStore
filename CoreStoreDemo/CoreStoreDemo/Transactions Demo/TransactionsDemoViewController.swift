@@ -100,7 +100,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
     
     // MARK: MKMapViewDelegate
     
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         let identifier = "MKAnnotationView"
         var annotationView: MKPinAnnotationView! = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier) as? MKPinAnnotationView
@@ -187,13 +187,13 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         
         self.geocoder?.cancelGeocode()
         
-        var geocoder = CLGeocoder()
+        let geocoder = CLGeocoder()
         self.geocoder = geocoder
         geocoder.reverseGeocodeLocation(
             CLLocation(latitude: place.latitude, longitude: place.longitude),
             completionHandler: { [weak self] (placemarks, error) -> Void in
                 
-                if let strongSelf = self, let placemark = (placemarks as? [CLPlacemark])?.first {
+                if let placemark = placemarks?.first {
                     
                     let place = transaction.edit(Static.placeController.object)
                     place?.title = placemark.name

@@ -21,7 +21,6 @@
 		B54AAD591AF4D26E00848AE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B54AAD571AF4D26E00848AE0 /* Main.storyboard */; };
 		B54AAD5B1AF4D26E00848AE0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B54AAD5A1AF4D26E00848AE0 /* Images.xcassets */; };
 		B54AAD5E1AF4D26E00848AE0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B54AAD5C1AF4D26E00848AE0 /* LaunchScreen.xib */; };
-		B56007011B3EC87400A9A8F9 /* OrganismV2ToV3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = B56007001B3EC87400A9A8F9 /* OrganismV2ToV3.xcmappingmodel */; };
 		B560070F1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B560070E1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift */; };
 		B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */; };
 		B566E3321B11DF3200F4F0C6 /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3311B11DF3200F4F0C6 /* UserAccount.swift */; };
@@ -43,6 +42,7 @@
 		B5EE258C1B36E40D0000406B /* MigrationsDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE258B1B36E40D0000406B /* MigrationsDemoViewController.swift */; };
 		B5EE259B1B3EA4890000406B /* OrganismV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE259A1B3EA4890000406B /* OrganismV3.swift */; };
 		B5EE259E1B3EC1B20000406B /* OrganismProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE259D1B3EC1B20000406B /* OrganismProtocol.swift */; };
+		B5F45A611B4AE5A700831F2F /* OrganismV2ToV3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = B5F45A601B4AE5A700831F2F /* OrganismV2ToV3.xcmappingmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,7 +108,6 @@
 		B54AAD581AF4D26E00848AE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B54AAD5A1AF4D26E00848AE0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B54AAD5D1AF4D26E00848AE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		B56007001B3EC87400A9A8F9 /* OrganismV2ToV3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = OrganismV2ToV3.xcmappingmodel; sourceTree = "<group>"; };
 		B560070E1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganismV2ToV3MigrationPolicy.swift; sourceTree = "<group>"; };
 		B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackSetupDemoViewController.swift; sourceTree = "<group>"; };
 		B566E3311B11DF3200F4F0C6 /* UserAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccount.swift; sourceTree = "<group>"; };
@@ -130,6 +129,7 @@
 		B5EE258B1B36E40D0000406B /* MigrationsDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationsDemoViewController.swift; sourceTree = "<group>"; };
 		B5EE259A1B3EA4890000406B /* OrganismV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganismV3.swift; sourceTree = "<group>"; };
 		B5EE259D1B3EC1B20000406B /* OrganismProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganismProtocol.swift; sourceTree = "<group>"; };
+		B5F45A601B4AE5A700831F2F /* OrganismV2ToV3.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = OrganismV2ToV3.xcmappingmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -263,7 +263,7 @@
 				B5EE25861B36E2520000406B /* OrganismV2.swift */,
 				B5EE25841B36E23C0000406B /* OrganismV1.swift */,
 				B5EE258B1B36E40D0000406B /* MigrationsDemoViewController.swift */,
-				B56007001B3EC87400A9A8F9 /* OrganismV2ToV3.xcmappingmodel */,
+				B5F45A601B4AE5A700831F2F /* OrganismV2ToV3.xcmappingmodel */,
 				B560070E1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift */,
 			);
 			path = "Migrations Demo";
@@ -307,7 +307,8 @@
 		B54AAD411AF4D26E00848AE0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "John Rommel Estropia";
 				TargetAttributes = {
 					B54AAD481AF4D26E00848AE0 = {
@@ -385,12 +386,12 @@
 				B503FAE01AFDC71700F90881 /* ObjectObserverDemoViewController.swift in Sources */,
 				B52977D91B120B80003D50A5 /* ObserversViewController.swift in Sources */,
 				B56964C91B20AC780075EE4A /* CustomLoggerViewController.swift in Sources */,
-				B56007011B3EC87400A9A8F9 /* OrganismV2ToV3.xcmappingmodel in Sources */,
 				B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */,
 				B56964DA1B231BCA0075EE4A /* MaleAccount.swift in Sources */,
 				B566E3321B11DF3200F4F0C6 /* UserAccount.swift in Sources */,
 				B54AAD521AF4D26E00848AE0 /* CoreStoreDemo.xcdatamodeld in Sources */,
 				B5EE259B1B3EA4890000406B /* OrganismV3.swift in Sources */,
+				B5F45A611B4AE5A700831F2F /* OrganismV2ToV3.xcmappingmodel in Sources */,
 				B503FAE11AFDC71700F90881 /* Palette.swift in Sources */,
 				B503FAE21AFDC71700F90881 /* PaletteTableViewCell.swift in Sources */,
 				B560070F1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift in Sources */,
@@ -460,6 +461,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -475,7 +477,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -513,7 +515,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -524,14 +526,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CoreStoreDemo-ftknhsqfpsthfogvisxisgpbbhsj/Build/Products/Debug-iphoneos",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CoreStoreDemo-bnajhooxbfnxepepdtkvkfplrqyq/Build/Products/Debug-iphoneos",
-				);
 				INFOPLIST_FILE = CoreStoreDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.CoreStoreDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -540,14 +538,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CoreStoreDemo-ftknhsqfpsthfogvisxisgpbbhsj/Build/Products/Debug-iphoneos",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/CoreStoreDemo-bnajhooxbfnxepepdtkvkfplrqyq/Build/Products/Debug-iphoneos",
-				);
 				INFOPLIST_FILE = CoreStoreDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.CoreStoreDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

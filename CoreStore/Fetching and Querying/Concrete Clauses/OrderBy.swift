@@ -73,7 +73,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `OrderBy` clause with a list of sort descriptors
     
-    :param: sortDescriptors a series of `NSSortDescriptor`s
+    - parameter sortDescriptors: a series of `NSSortDescriptor`s
     */
     public init(_ sortDescriptors: [NSSortDescriptor]) {
         
@@ -91,7 +91,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `OrderBy` clause with a single sort descriptor
     
-    :param: sortDescriptor a `NSSortDescriptor`
+    - parameter sortDescriptor: a `NSSortDescriptor`
     */
     public init(_ sortDescriptor: NSSortDescriptor) {
         
@@ -101,14 +101,14 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `OrderBy` clause with a series of `SortKey`s
     
-    :param: sortKey a series of `SortKey`s
+    - parameter sortKey: a series of `SortKey`s
     */
     public init(_ sortKey: [SortKey]) {
         
         self.init(
-            sortKey.map { SortKey -> NSSortDescriptor in
+            sortKey.map { sortKey -> NSSortDescriptor in
                 
-                switch SortKey {
+                switch sortKey {
                     
                 case .Ascending(let keyPath):
                     return NSSortDescriptor(key: keyPath, ascending: true)
@@ -123,8 +123,8 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `OrderBy` clause with a series of `SortKey`s
     
-    :param: sortKey a single `SortKey`
-    :param: sortKeys a series of `SortKey`s
+    - parameter sortKey: a single `SortKey`
+    - parameter sortKeys: a series of `SortKey`s
     */
     public init(_ sortKey: SortKey, _ sortKeys: SortKey...) {
         
@@ -140,7 +140,10 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
         
         if fetchRequest.sortDescriptors != nil {
             
-            CoreStore.log(.Warning, message: "Existing sortDescriptors for the <\(NSFetchRequest.self)> was overwritten by \(typeName(self)) query clause.")
+            CoreStore.log(
+                .Warning,
+                message: "Existing sortDescriptors for the \(typeName(NSFetchRequest)) was overwritten by \(typeName(self)) query clause."
+            )
         }
         
         fetchRequest.sortDescriptors = self.sortDescriptors

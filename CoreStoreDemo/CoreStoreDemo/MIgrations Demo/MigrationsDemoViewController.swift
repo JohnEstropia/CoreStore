@@ -10,36 +10,6 @@ import UIKit
 import CoreStore
 
 
-private struct Static {
-    
-    static let migrationStack: DataStack = {
-        
-        let dataStack = DataStack(
-            modelName: "MigrationDemo",
-            modelVersions: ["MigrationDemo", "MigrationDemoV2", "MigrationDemoV3"]
-        )
-        dataStack.addSQLiteStoreAndWait(
-            "MigrationsDemo.sqlite",
-            automigrating: true, // default is true anyway
-            resetStoreOnMigrationFailure: true
-        )
-        
-        dataStack.beginSynchronous { (transaction) -> Void in
-            
-            transaction.deleteAll(From(OrganismV1))
-            
-            let organism = transaction.create(Into(OrganismV1))
-            organism.hasHead = true
-            organism.hasTail = true
-            
-            transaction.commit()
-        }
-        
-        return dataStack
-    }()
-}
-
-
 // MARK: - MigrationsDemoViewController
 
 class MigrationsDemoViewController: UITableViewController {
@@ -62,7 +32,7 @@ class MigrationsDemoViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell", forIndexPath: indexPath)
         cell.textLabel?.text = self.models[indexPath.row].version
         return cell
     }
@@ -83,12 +53,27 @@ class MigrationsDemoViewController: UITableViewController {
     
     // MARK: Private
     
-    private typealias ModelMetadata = (version: String, entityType: AnyClass)
+    private typealias ModelMetadata = (version: String, entityType: AnyClass, migrationChain: MigrationChain)
     
     private let models: [ModelMetadata] = [
-        (version: "MigrationDemo", entityType: OrganismV1.self),
-        (version: "MigrationDemoV2", entityType: OrganismV2.self),
-        (version: "MigrationDemoV3", entityType: OrganismV3.self)
+        (
+            version: "MigrationDemo",
+            entityType: OrganismV1.self,
+            migrationChain: ["MigrationDemoV3", "MigrationDemoV2", "MigrationDemo"]
+        ),
+        (
+            version: "MigrationDemoV2",
+            entityType: OrganismV2.self,
+            migrationChain: [
+                "MigrationDemo": "MigrationDemoV2",
+                "MigrationDemoV3": "MigrationDemoV2"
+            ]
+        ),
+        (
+            version: "MigrationDemoV3",
+            entityType: OrganismV3.self,
+            migrationChain: ["MigrationDemo", "MigrationDemoV2", "MigrationDemoV3"]
+        )
     ]
     
     private var dataStack: DataStack?
@@ -124,46 +109,76 @@ class MigrationsDemoViewController: UITableViewController {
         
         let dataStack = DataStack(
             modelName: "MigrationDemo",
-            modelVersions: ["MigrationDemo", "MigrationDemoV2", "MigrationDemoV3"]
+            migrationChain: model.migrationChain
         )
-        self.dataStack = dataStack
         
+        self.setEnabled(false)
         dataStack.addSQLiteStore(
             "MigrationDemo.sqlite",
             completion: { [weak self] (result) -> Void in
                 
-                if let strongSelf = self {
+                guard let strongSelf = self else {
                     
-                    if let organism = dataStack.fetchOne(From(model.entityType)) {
-                        
-                        strongSelf.organism = organism
-                    }
-                    else {
-                        
-                        dataStack.beginSynchronous { (transaction) -> Void in
-                            
-                            let organism = transaction.create(Into(model.entityType))
-                            (organism as! OrganismProtocol).mutate()
-                            
-                            transaction.commit()
-                        }
-                        strongSelf.organism = dataStack.fetchOne(From(model.entityType))!
-                    }
-                    
-                    strongSelf.updateDisplay()
-                    strongSelf.tableView.selectRowAtIndexPath(
-                        NSIndexPath(
-                            forRow: find(
-                                strongSelf.models.map { $0.version },
-                                model.version
-                            )!,
-                            inSection: 0
-                        ),
-                        animated: false,
-                        scrollPosition: .None
-                    )
+                    return
                 }
+                
+                guard case .Success = result else {
+                    
+                    strongSelf.setEnabled(true)
+                    return
+                }
+                
+                strongSelf.dataStack = dataStack
+                if let organism = dataStack.fetchOne(From(model.entityType)) {
+                    
+                    strongSelf.organism = organism
+                }
+                else {
+                    
+                    dataStack.beginSynchronous { (transaction) -> Void in
+                        
+                        let organism = transaction.create(Into(model.entityType))
+                        (organism as! OrganismProtocol).mutate()
+                        
+                        transaction.commit()
+                    }
+                    strongSelf.organism = dataStack.fetchOne(From(model.entityType))!
+                }
+                
+                strongSelf.updateDisplay()
+                strongSelf.tableView.selectRowAtIndexPath(
+                    NSIndexPath(
+                        forRow: strongSelf.models.map { $0.version }.indexOf(model.version)!,
+                        inSection: 0
+                    ),
+                    animated: false,
+                    scrollPosition: .None
+                )
+                strongSelf.setEnabled(true)
             }
+        )
+    }
+    
+    func setEnabled(enabled: Bool) {
+        
+        UIView.animateKeyframesWithDuration(
+            0.2,
+            delay: 0,
+            options: .BeginFromCurrentState,
+            animations: { () -> Void in
+                
+                let navigationItem = self.navigationItem
+                navigationItem.leftBarButtonItem?.enabled = enabled
+                navigationItem.rightBarButtonItem?.enabled = enabled
+                navigationItem.backBarButtonItem?.enabled = enabled
+                
+                if let tableView = self.tableView {
+                    
+                    tableView.alpha = enabled ? 1.0 : 0.5
+                    tableView.userInteractionEnabled = enabled
+                }
+            },
+            completion: nil
         )
     }
     
@@ -173,7 +188,7 @@ class MigrationsDemoViewController: UITableViewController {
         var organismType = ""
         if let organism = self.organism {
             
-            for property in organism.entity.properties as! [NSPropertyDescription] {
+            for property in organism.entity.properties {
                 
                 let value: AnyObject = organism.valueForKey(property.name) ?? NSNull()
                 lines.append("\(property.name): \(value)")

@@ -91,9 +91,7 @@ public enum SaveResult {
     
     internal init(_ errorCode: CoreStoreErrorCode, userInfo: [NSObject: AnyObject]?) {
         
-        self.init(NSError(
-            coreStoreErrorCode: errorCode,
-            userInfo: userInfo))
+        self.init(NSError(coreStoreErrorCode: errorCode, userInfo: userInfo))
     }
 }
 

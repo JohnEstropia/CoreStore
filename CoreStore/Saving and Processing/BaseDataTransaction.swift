@@ -48,62 +48,68 @@ public /*abstract*/ class BaseDataTransaction {
     /**
     Creates a new `NSManagedObject` with the specified entity type.
     
-    :param: into the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
-    :returns: a new `NSManagedObject` instance of the specified entity type.
+    - parameter into: the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
+    - returns: a new `NSManagedObject` instance of the specified entity type.
     */
     public func create<T: NSManagedObject>(into: Into<T>) -> T {
         
-        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to create an entity of type <\(T.self)> outside its designated queue.")
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to create an entity of type \(typeName(T)) outside its designated queue."
+        )
         
         let context = self.context
         let entityClass = (into.entityClass as! NSManagedObject.Type)
-        let object = entityClass.createInContext(context) as! T
-        
         if into.inferStoreIfPossible {
             
             switch context.parentStack!.persistentStoreForEntityClass(entityClass, configuration: nil, inferStoreIfPossible: true) {
                 
-            case (.Some(let persistentStore), _):
+            case (let persistentStore?, _):
+                let object = entityClass.createInContext(context) as! T
                 context.assignObject(object, toPersistentStore: persistentStore)
+                return object
                 
             case (.None, true):
-                CoreStore.assert(false, "Attempted to create an entity of type <\(entityClass)> with ambiguous destination persistent store, but the configuration name was not specified.")
+                CoreStore.fatalError("Attempted to create an entity of type \(typeName(entityClass)) with ambiguous destination persistent store, but the configuration name was not specified.")
                 
             default:
-                CoreStore.assert(false, "Attempted to create an entity of type <\(entityClass)>, but a destination persistent store containing the entity type could not be found.")
+                CoreStore.fatalError("Attempted to create an entity of type \(typeName(entityClass)), but a destination persistent store containing the entity type could not be found.")
             }
         }
         else {
             
             switch context.parentStack!.persistentStoreForEntityClass(entityClass, configuration: into.configuration, inferStoreIfPossible: false) {
                 
-            case (.Some(let persistentStore), _):
+            case (let persistentStore?, _):
+                let object = entityClass.createInContext(context) as! T
                 context.assignObject(object, toPersistentStore: persistentStore)
+                return object
                 
             default:
                 if let configuration = into.configuration {
                     
-                    CoreStore.assert(false, "Attempted to create an entity of type <\(entityClass)> into the configuration \"\(configuration)\", which it doesn't belong to.")
+                    CoreStore.fatalError("Attempted to create an entity of type \(typeName(entityClass)) into the configuration \"\(configuration)\", which it doesn't belong to.")
                 }
                 else {
                     
-                    CoreStore.assert(false, "Attempted to create an entity of type <\(entityClass)> into the default configuration, which it doesn't belong to.")
+                    CoreStore.fatalError("Attempted to create an entity of type \(typeName(entityClass)) into the default configuration, which it doesn't belong to.")
                 }
             }
         }
-        
-        return object
     }
     
     /**
     Returns an editable proxy of a specified `NSManagedObject`.
     
-    :param: object the `NSManagedObject` type to be edited
-    :returns: an editable proxy for the specified `NSManagedObject`.
+    - parameter object: the `NSManagedObject` type to be edited
+    - returns: an editable proxy for the specified `NSManagedObject`.
     */
     public func edit<T: NSManagedObject>(object: T?) -> T? {
         
-        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type \(typeName(object)) outside its designated queue.")
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to update an entity of type \(typeName(object)) outside its designated queue."
+        )
         
         return object?.inContext(self.context)
     }
@@ -111,14 +117,21 @@ public /*abstract*/ class BaseDataTransaction {
     /**
     Returns an editable proxy of the object with the specified `NSManagedObjectID`. 
     
-    :param: into an `Into` clause specifying the entity type
-    :param: objectID the `NSManagedObjectID` for the object to be edited
-    :returns: an editable proxy for the specified `NSManagedObject`.
+    - parameter into: an `Into` clause specifying the entity type
+    - parameter objectID: the `NSManagedObjectID` for the object to be edited
+    - returns: an editable proxy for the specified `NSManagedObject`.
     */
     public func edit<T: NSManagedObject>(into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
-        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to update an entity of type <\(T.self)> outside its designated queue.")
-        CoreStore.assert(into.inferStoreIfPossible || (into.configuration ?? Into.defaultConfigurationName) == objectID.persistentStore?.configurationName, "Attempted to update an entity of type <\(T.self)> but the specified persistent store do not match the `NSManagedObjectID`.")
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to update an entity of type \(typeName(T)) outside its designated queue."
+        )
+        CoreStore.assert(
+            into.inferStoreIfPossible
+                || (into.configuration ?? Into.defaultConfigurationName) == objectID.persistentStore?.configurationName,
+            "Attempted to update an entity of type \(typeName(T)) but the specified persistent store do not match the `NSManagedObjectID`."
+        )
         
         return (into.entityClass as! NSManagedObject.Type).inContext(self.context, withObjectID: objectID) as? T
     }
@@ -126,11 +139,14 @@ public /*abstract*/ class BaseDataTransaction {
     /**
     Deletes a specified `NSManagedObject`.
     
-    :param: object the `NSManagedObject` to be deleted
+    - parameter object: the `NSManagedObject` to be deleted
     */
     public func delete(object: NSManagedObject?) {
         
-        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete an entity outside its designated queue.")
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to delete an entity outside its designated queue."
+        )
         
         object?.inContext(self.context)?.deleteFromContext()
     }
@@ -138,9 +154,9 @@ public /*abstract*/ class BaseDataTransaction {
     /**
     Deletes the specified `NSManagedObject`s.
     
-    :param: object1 the `NSManagedObject` to be deleted
-    :param: object2 another `NSManagedObject` to be deleted
-    :param: objects other `NSManagedObject`s to be deleted
+    - parameter object1: the `NSManagedObject` to be deleted
+    - parameter object2: another `NSManagedObject` to be deleted
+    - parameter objects: other `NSManagedObject`s to be deleted
     */
     public func delete(object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
         
@@ -150,11 +166,14 @@ public /*abstract*/ class BaseDataTransaction {
     /**
     Deletes the specified `NSManagedObject`s.
     
-    :param: objects the `NSManagedObject`s to be deleted
+    - parameter objects: the `NSManagedObject`s to be deleted
     */
     public func delete(objects: [NSManagedObject?]) {
         
-        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to delete entities outside their designated queue.")
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to delete entities outside their designated queue."
+        )
         
         let context = self.context
         for object in objects {
@@ -170,7 +189,10 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func rollback() {
         
-        CoreStore.assert(self.transactionQueue.isCurrentExecutionContext(), "Attempted to rollback a \(typeName(self)) outside its designated queue.")
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to rollback a \(typeName(self)) outside its designated queue."
+        )
         
         self.context.reset()
     }

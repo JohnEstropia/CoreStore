@@ -42,7 +42,11 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     public func nextVersionFrom(version: String) -> String? {
         
-        return self.versionTree[version]
+        if let nextVersion = self.versionTree[version] where nextVersion != version {
+            
+            return nextVersion
+        }
+        return nil
     }
     
     
@@ -64,6 +68,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.rootVersions = [value]
         self.leafVersions = [value]
     }
+    
     
     // MARK: ExtendedGraphemeClusterLiteralConvertible
     
@@ -126,8 +131,8 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         }
         
         self.versionTree = versionTree
-        self.rootVersions = Set(flatMap([elements.first]) { $0 == nil ? [] : [$0!] })
-        self.leafVersions = Set(flatMap([elements.last]) { $0 == nil ? [] : [$0!] })
+        self.rootVersions = Set([elements.first].flatMap { $0 == nil ? [] : [$0!] })
+        self.leafVersions = Set([elements.last].flatMap { $0 == nil ? [] : [$0!] })
     }
     
     

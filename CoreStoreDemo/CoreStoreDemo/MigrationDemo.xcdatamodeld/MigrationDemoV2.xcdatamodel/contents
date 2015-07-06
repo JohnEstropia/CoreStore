@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14D136" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8118.20" systemVersion="14D136" minimumToolsVersion="Xcode 4.3">
     <entity name="Organism" representedClassName="CoreStoreDemo.OrganismV2" syncable="YES">
         <attribute name="hasHead" attributeType="Boolean" syncable="YES"/>
         <attribute name="hasTail" attributeType="Boolean" syncable="YES"/>

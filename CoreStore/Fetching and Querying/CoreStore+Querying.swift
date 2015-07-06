@@ -34,9 +34,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches the first `NSManagedObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
     */
     public static func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
@@ -46,9 +46,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches the first `NSManagedObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
     */
     public static func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
@@ -58,9 +58,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches all `NSManagedObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
     */
     public static func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
@@ -70,9 +70,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches all `NSManagedObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
     */
     public static func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
@@ -82,9 +82,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public static func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
@@ -94,9 +94,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public static func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
@@ -106,9 +106,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
     */
     public static func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
@@ -118,9 +118,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
     */
     public static func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
@@ -130,9 +130,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public static func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
@@ -142,9 +142,9 @@ public extension CoreStore {
     /**
     Using the `defaultStack`, fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public static func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
@@ -156,10 +156,10 @@ public extension CoreStore {
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
-    :param: from a `From` clause indicating the entity type
-    :param: selectClause a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
-    :param: queryClauses a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
-    :returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
+    - parameter from: a `From` clause indicating the entity type
+    - parameter selectClause: a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
+    - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
     */
     public static func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
@@ -171,10 +171,10 @@ public extension CoreStore {
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
-    :param: from a `From` clause indicating the entity type
-    :param: selectClause a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
-    :param: queryClauses a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
-    :returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
+    - parameter from: a `From` clause indicating the entity type
+    - parameter selectClause: a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
+    - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
     */
     public static func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
@@ -186,10 +186,10 @@ public extension CoreStore {
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
-    :param: from a `From` clause indicating the entity type
-    :param: selectClause a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
-    :param: queryClauses a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
-    :returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
+    - parameter from: a `From` clause indicating the entity type
+    - parameter selectClause: a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
+    - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
     */
     public static func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
@@ -201,10 +201,10 @@ public extension CoreStore {
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
-    :param: from a `From` clause indicating the entity type
-    :param: selectClause a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
-    :param: queryClauses a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
-    :returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
+    - parameter from: a `From` clause indicating the entity type
+    - parameter selectClause: a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
+    - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
     */
     public static func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         

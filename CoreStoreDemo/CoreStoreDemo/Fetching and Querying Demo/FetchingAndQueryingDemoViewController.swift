@@ -25,7 +25,7 @@ private struct Static {
             
             transaction.deleteAll(From(TimeZone))
             
-            for name in NSTimeZone.knownTimeZoneNames() as! [String] {
+            for name in NSTimeZone.knownTimeZoneNames() {
                 
                 let rawTimeZone = NSTimeZone(name: name)!
                 let cachedTimeZone = transaction.create(Into(TimeZone))
@@ -112,7 +112,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell")!
         
         switch self.segmentedControl?.selectedSegmentIndex {
             

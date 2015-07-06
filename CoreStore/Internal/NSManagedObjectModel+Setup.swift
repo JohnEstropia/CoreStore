@@ -33,25 +33,177 @@ internal extension NSManagedObjectModel {
     
     // MARK: Internal
     
+    private var modelFileURL: NSURL? {
+        
+        get {
+            
+            return self.modelVersionFileURL?.URLByDeletingLastPathComponent
+        }
+    }
+    
+    private(set) var currentModelVersion: String? {
+        
+        get {
+            
+            let value: NSString? = getAssociatedObjectForKey(
+                &PropertyKeys.currentModelVersion,
+                inObject: self
+            )
+            return value as? String
+        }
+        set {
+            
+            setAssociatedCopiedObject(
+                newValue == nil ? nil : (newValue! as NSString),
+                forKey: &PropertyKeys.currentModelVersion,
+                inObject: self
+            )
+        }
+    }
+    
+    private(set) var modelVersions: Set<String>? {
+        
+        get {
+            
+            let value: NSSet? = getAssociatedObjectForKey(
+                &PropertyKeys.modelVersions,
+                inObject: self
+            )
+            return value as? Set<String>
+        }
+        set {
+            
+            setAssociatedCopiedObject(
+                newValue == nil ? nil : (newValue! as NSSet),
+                forKey: &PropertyKeys.modelVersions,
+                inObject: self
+            )
+        }
+    }
+    
     func entityNameForClass(entityClass: AnyClass) -> String {
         
         return self.entityNameMapping[NSStringFromClass(entityClass)]!
     }
     
-    func configurationsForClass(entityClass: AnyClass) -> Set<String> {
+    func mergedModels() -> [NSManagedObjectModel] {
         
-        return self.entityConfigurationsMapping[NSStringFromClass(entityClass)]!
+        return self.modelVersions?.map { self[$0] }.flatMap { $0 == nil ? [] : [$0!] } ?? [self]
+    }
+    
+    subscript(modelVersion: String) -> NSManagedObjectModel? {
+        
+        if modelVersion == self.currentModelVersion {
+            
+            return self
+        }
+        
+        guard let modelFileURL = self.modelFileURL,
+            let modelVersions = self.modelVersions
+            where modelVersions.contains(modelVersion) else {
+                
+                return nil
+        }
+        
+        let versionModelFileURL = modelFileURL.URLByAppendingPathComponent("\(modelVersion).mom", isDirectory: false)
+        guard let model = NSManagedObjectModel(contentsOfURL: versionModelFileURL) else {
+            
+            return nil
+        }
+        
+        model.currentModelVersion = modelVersion
+        model.modelVersionFileURL = versionModelFileURL
+        model.modelVersions = modelVersions
+        return model
+    }
+    
+    class func fromBundle(bundle: NSBundle, modelName: String, modelVersion: String? = nil) -> NSManagedObjectModel {
+        
+        guard let modelFilePath = bundle.pathForResource(modelName, ofType: "momd") else {
+            
+            CoreStore.fatalError("Could not find \"\(modelName).momd\" from the bundle. \(bundle)")
+        }
+        
+        let modelFileURL = NSURL(fileURLWithPath: modelFilePath)
+        let versionInfoPlistURL = modelFileURL.URLByAppendingPathComponent("VersionInfo.plist", isDirectory: false)
+        
+        guard let versionInfo = NSDictionary(contentsOfURL: versionInfoPlistURL),
+            let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
+                
+                CoreStore.fatalError("Could not load \(typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\"."
+                )
+        }
+        
+        let modelVersions = Set(versionHashes.keys)
+        let currentModelVersion: String
+        
+        if let modelVersion = modelVersion {
+            
+            precondition(modelVersions.contains(modelVersion))
+            currentModelVersion = modelVersion
+        }
+        else {
+            
+            currentModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String ?? modelVersions.first!
+        }
+        
+        var modelVersionFileURL: NSURL?
+        for modelVersion in modelVersions {
+            
+            let fileURL = modelFileURL.URLByAppendingPathComponent("\(modelVersion).mom", isDirectory: false)
+            
+            if modelVersion == currentModelVersion {
+                
+                modelVersionFileURL = fileURL
+                continue
+            }
+            
+            CoreStore.assert(
+                NSManagedObjectModel(contentsOfURL: fileURL) != nil,
+                "Could not find the \"\(modelVersion).mom\" version file for the model at URL \"\(modelFileURL)\"."
+            )
+        }
+        
+        if let modelVersionFileURL = modelVersionFileURL,
+            let rootModel = NSManagedObjectModel(contentsOfURL: modelVersionFileURL) {
+                
+                rootModel.modelVersionFileURL = modelVersionFileURL
+                rootModel.modelVersions = modelVersions
+                rootModel.currentModelVersion = currentModelVersion
+                return rootModel
+        }
+        
+        CoreStore.fatalError("Could not create an \(typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
     }
     
     
     // MARK: Private
     
-    
-    internal var entityNameMapping: [String: String] {
+    private var modelVersionFileURL: NSURL? {
         
         get {
             
-            if let mapping: NSDictionary? = getAssociatedObjectForKey(&PropertyKeys.entityNameMapping, inObject: self) {
+            let value: NSURL? = getAssociatedObjectForKey(
+                &PropertyKeys.modelVersionFileURL,
+                inObject: self
+            )
+            return value
+        }
+        set {
+            
+            setAssociatedCopiedObject(
+                newValue,
+                forKey: &PropertyKeys.modelVersionFileURL,
+                inObject: self
+            )
+        }
+    }
+    
+    private var entityNameMapping: [String: String] {
+        
+        get {
+            
+            if let mapping: NSDictionary = getAssociatedObjectForKey(&PropertyKeys.entityNameMapping, inObject: self) {
                 
                 return mapping as! [String: String]
             }
@@ -75,25 +227,12 @@ internal extension NSManagedObjectModel {
         }
     }
     
-    private lazy var entityConfigurationsMapping: [String: Set<String>] = {
-        [unowned self] in
-        
-        return self.configurations.reduce([String: Set<String>]()) {
-            (var mapping, configuration) -> [String: Set<String>] in
-            
-            return (self.entitiesForConfiguration(configuration) ?? []).reduce(mapping) {
-                (var mapping, entityDescription) -> [String: Set<String>] in
-                
-                let className = entityDescription.managedObjectClassName
-                mapping[className]?.insert(configuration)
-                return mapping
-            }
-        }
-    }()
-    
     private struct PropertyKeys {
         
         static var entityNameMapping: Void?
-        static var entityConfigurationsMapping: Void?
+        
+        static var modelVersionFileURL: Void?
+        static var modelVersions: Void?
+        static var currentModelVersion: Void?
     }
 }

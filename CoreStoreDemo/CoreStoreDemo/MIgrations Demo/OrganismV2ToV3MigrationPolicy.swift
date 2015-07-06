@@ -10,18 +10,14 @@ import CoreData
 
 class OrganismV2ToV3MigrationPolicy: NSEntityMigrationPolicy {
     
-    override func createDestinationInstancesForSourceInstance(sInstance: NSManagedObject, entityMapping mapping: NSEntityMapping, manager: NSMigrationManager, error: NSErrorPointer) -> Bool {
+    override func createDestinationInstancesForSourceInstance(sInstance: NSManagedObject, entityMapping mapping: NSEntityMapping, manager: NSMigrationManager) throws {
         
-        if !super.createDestinationInstancesForSourceInstance(sInstance, entityMapping: mapping, manager: manager, error: error) {
-            
-            return false
-        }
+        try super.createDestinationInstancesForSourceInstance(sInstance, entityMapping: mapping, manager: manager)
         
         for dInstance in manager.destinationInstancesForEntityMappingNamed(mapping.name, sourceInstances: [sInstance]) {
             
             dInstance.setValue(false, forKey: "hasVertebrae")
             dInstance.setValue(sInstance.valueForKey("numberOfFlippers"), forKey: "numberOfLimbs")
         }
-        return true
     }
 }

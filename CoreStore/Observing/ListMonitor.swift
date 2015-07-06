@@ -74,32 +74,32 @@ public final class ListMonitor<T: NSManagedObject> {
     /**
     Accesses the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `addObserver(_:)`.
     
-    :param: index the index of the object. Using an index above the valid range will throw an exception.
+    - parameter index: the index of the object. Using an index above the valid range will throw an exception.
     */
     public subscript(index: Int) -> T {
         
-        return self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as! T
-    }
-    
-    /**
-    Accesses the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
-    
-    :param: indexPath the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will throw an exception.
-    */
-    public subscript(indexPath: NSIndexPath) -> T {
-        
-        return self.fetchedResultsController.objectAtIndexPath(indexPath) as! T
+        return self[0, index]
     }
     
     /**
     Accesses the object at the given `sectionIndex` and `itemIndex`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
     
-    :param: sectionIndex the section index for the object. Using a `sectionIndex` with an invalid range will throw an exception.
-    :param: itemIndex the index for the object within the section. Using an `itemIndex` with an invalid range will throw an exception.
+    - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will throw an exception.
+    - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will throw an exception.
     */
     public subscript(sectionIndex: Int, itemIndex: Int) -> T {
         
-        return self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forItem: itemIndex, inSection: sectionIndex)) as! T
+        return self[NSIndexPath(forItem: itemIndex, inSection: sectionIndex)]
+    }
+    
+    /**
+    Accesses the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    
+    - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will throw an exception.
+    */
+    public subscript(indexPath: NSIndexPath) -> T {
+        
+        return self.fetchedResultsController.objectAtIndexPath(indexPath) as! T
     }
     
     /**
@@ -113,21 +113,21 @@ public final class ListMonitor<T: NSManagedObject> {
     /**
     Returns the number of objects in the specified section
     
-    :param: section the section index
+    - parameter section: the section index
     */
     public func numberOfObjectsInSection(section: Int) -> Int {
         
-        return (self.fetchedResultsController.sections?[section] as? NSFetchedResultsSectionInfo)?.numberOfObjects ?? 0
+        return self.fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
     /**
     Returns the `NSFetchedResultsSectionInfo` for the specified section
     
-    :param: section the section index
+    - parameter section: the section index
     */
     public func sectionInfoAtIndex(section: Int) -> NSFetchedResultsSectionInfo {
         
-        return self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+        return self.fetchedResultsController.sections![section]
     }
     
     /**
@@ -139,11 +139,14 @@ public final class ListMonitor<T: NSManagedObject> {
     
     Calling `addObserver(_:)` multiple times on the same observer is safe, as `ListMonitor` unregisters previous notifications to the observer before re-registering them.
     
-    :param: observer a `ListObserver` to send change notifications to
+    - parameter observer: a `ListObserver` to send change notifications to
     */
     public func addObserver<U: ListObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         self.removeObserver(observer)
         
@@ -182,11 +185,14 @@ public final class ListMonitor<T: NSManagedObject> {
     
     Calling `addObserver(_:)` multiple times on the same observer is safe, as `ListMonitor` unregisters previous notifications to the observer before re-registering them.
     
-    :param: observer a `ListObjectObserver` to send change notifications to
+    - parameter observer: a `ListObjectObserver` to send change notifications to
     */
     public func addObserver<U: ListObjectObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         self.removeObserver(observer)
         
@@ -291,11 +297,14 @@ public final class ListMonitor<T: NSManagedObject> {
     
     Calling `addObserver(_:)` multiple times on the same observer is safe, as `ListMonitor` unregisters previous notifications to the observer before re-registering them.
     
-    :param: observer a `ListSectionObserver` to send change notifications to
+    - parameter observer: a `ListSectionObserver` to send change notifications to
     */
     public func addObserver<U: ListSectionObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         self.removeObserver(observer)
         
@@ -429,11 +438,14 @@ public final class ListMonitor<T: NSManagedObject> {
     
     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
     
-    :param: observer a `ListObserver` to unregister notifications to
+    - parameter observer: a `ListObserver` to unregister notifications to
     */
     public func removeObserver<U: ListObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to remove an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to remove an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         let nilValue: AnyObject? = nil
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.willChangeList, inObject: observer)
@@ -492,12 +504,16 @@ public final class ListMonitor<T: NSManagedObject> {
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
         
-        var error: NSError?
-        if !fetchedResultsController.performFetch(&error) {
+        do {
+            
+            try fetchedResultsController.performFetch()
+        }
+        catch {
             
             CoreStore.handleError(
-                error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed to perform fetch on <\(NSFetchedResultsController.self)>.")
+                error as NSError,
+                "Failed to perform fetch on \(typeName(NSFetchedResultsController))."
+            )
         }
     }
     
@@ -705,31 +721,31 @@ private protocol FetchedResultsControllerHandler: class {
 
 // MARK: - FetchedResultsControllerDelegate
 
-private final class FetchedResultsControllerDelegate: NSFetchedResultsControllerDelegate {
+private final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: NSFetchedResultsControllerDelegate
     
-    @objc func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    @objc dynamic func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
         self.handler?.controllerWillChangeContent(controller)
     }
     
-    @objc func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    @objc dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
         self.handler?.controllerDidChangeContent(controller)
     }
     
-    @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: NSManagedObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
         self.handler?.controller(controller, didChangeObject: anObject, atIndexPath: indexPath, forChangeType: type, newIndexPath: newIndexPath)
     }
     
-    @objc func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         
         self.handler?.controller(controller, didChangeSection: sectionInfo, atIndex: sectionIndex, forChangeType: type)
     }
     
-    @objc func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+    @objc dynamic func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String) -> String? {
         
         return self.handler?.controller(controller, sectionIndexTitleForSectionName: sectionName)
     }

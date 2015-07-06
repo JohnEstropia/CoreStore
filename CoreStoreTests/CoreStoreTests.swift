@@ -43,7 +43,7 @@ class CoreStoreTests: XCTestCase {
     
     func testExample() {
         
-        let stack = DataStack(sourceBundles: NSBundle.allBundles() as? [NSBundle])
+        let stack = DataStack(modelName: "Model", sourceBundle: NSBundle(forClass: self.dynamicType))
         CoreStore.defaultStack = stack
         XCTAssert(CoreStore.defaultStack === stack, "CoreStore.defaultStack === stack")
         
@@ -187,7 +187,7 @@ class CoreStoreTests: XCTestCase {
                     Select("testString", .Count("testString", As: "count")),
                     GroupBy("testString")
                 )
-                println(counts)
+                print(counts)
                 
                 XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
                 switch result {
@@ -230,6 +230,18 @@ class CoreStoreTests: XCTestCase {
             
             transaction.commit()
         }
+        
+        CoreStore.beginSynchronous({ (transaction) -> Void in
+            
+            if let obj = CoreStore.fetchOne(From(TestEntity2)) {
+                
+                let oldID = obj.testEntityID
+                obj.testEntityID = 0
+                obj.testEntityID = oldID
+            }
+            
+            transaction.commit()
+        })
         
         let objs1 = CoreStore.fetchAll(From(TestEntity1))
         XCTAssertNotNil(objs1, "objs1 != nil")
@@ -325,9 +337,12 @@ class CoreStoreTests: XCTestCase {
     
     private func deleteStores() {
         
-        NSFileManager.defaultManager().removeItemAtURL(
-            NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL,
-            error: nil
-        )
+        do {
+            
+            try NSFileManager.defaultManager().removeItemAtURL(
+                NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first!
+            )
+        }
+        catch _ { }
     }
 }

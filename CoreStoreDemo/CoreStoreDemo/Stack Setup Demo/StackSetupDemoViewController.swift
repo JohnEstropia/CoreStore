@@ -138,7 +138,7 @@ class StackSetupDemoViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell")!
         
         let account = self.accounts[indexPath.section][indexPath.row]
         cell.textLabel?.text = account.name

@@ -55,8 +55,8 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 
     transaction.commit { (result) -> Void in
         switch result {
-            case .Success(let hasChanges): println("success!")
-            case .Failure(let error): println(error)
+            case .Success(let hasChanges): print("success!")
+            case .Failure(let error): print(error)
         }
     }
 }
@@ -145,9 +145,9 @@ let dataStack = DataStack(modelName: "MyModel") // loads from the "MyModel.xcdat
 
 switch dataStack.addInMemoryStore(configuration: "Config1") { // creates an in-memory store with entities from the "Config1" configuration in the .xcdatamodeld file
 case .Success(let persistentStore): // persistentStore is an NSPersistentStore instance
-    println("Successfully created an in-memory store: \(persistentStore)"
+    print("Successfully created an in-memory store: \(persistentStore)"
 case .Failure(let error): // error is an NSError instance
-    println("Failed creating an in-memory store with error: \(error.description)"
+    print("Failed creating an in-memory store with error: \(error.description)"
 }
 
 switch dataStack.addSQLiteStoreAndWait(
@@ -156,9 +156,9 @@ switch dataStack.addSQLiteStoreAndWait(
     automigrating: true, // automatically run lightweight migrations or entity policy migrations when needed
     resetStoreOnMigrationFailure: true) { // delete and recreate the sqlite file when migration conflicts occur (useful when debugging)
 case .Success(let persistentStore): // persistentStore is an NSPersistentStore instance
-    println("Successfully created an sqlite store: \(persistentStore)"
+    print("Successfully created an sqlite store: \(persistentStore)"
 case .Failure(let error): // error is an NSError instance
-    println("Failed creating an sqlite store with error: \(error.description)"
+    print("Failed creating an sqlite store with error: \(error.description)"
 }
 
 CoreStore.defaultStack = dataStack // pass the dataStack to CoreStore for easier access later on
@@ -177,7 +177,7 @@ class MyViewController: UIViewController {
     }
     func methodToBeCalledLaterOn() {
         let objects = self.dataStack.fetchAll(From(MyEntity))
-        println(objects)
+        print(objects)
     }
 }
 ```
@@ -190,7 +190,7 @@ class MyViewController: UIViewController {
     }
     func methodToBeCalledLaterOn() {
         let objects = CoreStore.fetchAll(From(MyEntity))
-        println(objects)
+        print(objects)
     }
 }
 ```

@@ -49,7 +49,7 @@ public struct Tweak: FetchClause, QueryClause, DeleteClause {
     /**
     Initializes a `Tweak` clause with a closure where the `NSFetchRequest` may be configured.
     
-    :param: customization a list of key path strings to group results with
+    - parameter customization: a list of key path strings to group results with
     */
     public init(_ customization: (fetchRequest: NSFetchRequest) -> Void) {
         

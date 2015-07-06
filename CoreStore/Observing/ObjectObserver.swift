@@ -45,25 +45,25 @@ public protocol ObjectObserver: class {
     /**
     Handles processing just before a change to the observed `object` occurs
     
-    :param: monitor the `ObjectMonitor` monitoring the object being observed
-    :param: object the `NSManagedObject` instance being observed
+    - parameter monitor: the `ObjectMonitor` monitoring the object being observed
+    - parameter object: the `NSManagedObject` instance being observed
     */
     func objectMonitor(monitor: ObjectMonitor<EntityType>, willUpdateObject object: EntityType)
     
     /**
     Handles processing right after a change to the observed `object` occurs
     
-    :param: monitor the `ObjectMonitor` monitoring the object being observed
-    :param: object the `NSManagedObject` instance being observed
-    :param: changedPersistentKeys a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
+    - parameter monitor: the `ObjectMonitor` monitoring the object being observed
+    - parameter object: the `NSManagedObject` instance being observed
+    - parameter changedPersistentKeys: a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
     */
     func objectMonitor(monitor: ObjectMonitor<EntityType>, didUpdateObject object: EntityType, changedPersistentKeys: Set<KeyPath>)
     
     /**
     Handles processing right after `object` is deleted
     
-    :param: monitor the `ObjectMonitor` monitoring the object being observed
-    :param: object the `NSManagedObject` instance being observed
+    - parameter monitor: the `ObjectMonitor` monitoring the object being observed
+    - parameter object: the `NSManagedObject` instance being observed
     */
     func objectMonitor(monitor: ObjectMonitor<EntityType>, didDeleteObject object: EntityType)
 }
