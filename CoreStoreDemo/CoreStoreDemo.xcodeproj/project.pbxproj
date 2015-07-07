@@ -11,6 +11,7 @@
 		B503FAE01AFDC71700F90881 /* ObjectObserverDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FADC1AFDC71700F90881 /* ObjectObserverDemoViewController.swift */; };
 		B503FAE11AFDC71700F90881 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FADD1AFDC71700F90881 /* Palette.swift */; };
 		B503FAE21AFDC71700F90881 /* PaletteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FADE1AFDC71700F90881 /* PaletteTableViewCell.swift */; };
+		B50D67911B4BCFED00124277 /* OrganismV3ToV2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = B50D67901B4BCFED00124277 /* OrganismV3ToV2.xcmappingmodel */; };
 		B52977D91B120B80003D50A5 /* ObserversViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52977D81B120B80003D50A5 /* ObserversViewController.swift */; };
 		B52977DD1B120F3B003D50A5 /* TransactionsDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52977DC1B120F3B003D50A5 /* TransactionsDemoViewController.swift */; };
 		B52977DF1B120F83003D50A5 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52977DE1B120F83003D50A5 /* MapKit.framework */; };
@@ -96,6 +97,7 @@
 		B503FADC1AFDC71700F90881 /* ObjectObserverDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectObserverDemoViewController.swift; sourceTree = "<group>"; };
 		B503FADD1AFDC71700F90881 /* Palette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		B503FADE1AFDC71700F90881 /* PaletteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaletteTableViewCell.swift; sourceTree = "<group>"; };
+		B50D67901B4BCFED00124277 /* OrganismV3ToV2.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; name = OrganismV3ToV2.xcmappingmodel; path = "CoreStoreDemo/MIgrations Demo/OrganismV3ToV2.xcmappingmodel"; sourceTree = SOURCE_ROOT; };
 		B52977D81B120B80003D50A5 /* ObserversViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObserversViewController.swift; sourceTree = "<group>"; };
 		B52977DC1B120F3B003D50A5 /* TransactionsDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionsDemoViewController.swift; sourceTree = "<group>"; };
 		B52977DE1B120F83003D50A5 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -265,6 +267,7 @@
 				B5EE258B1B36E40D0000406B /* MigrationsDemoViewController.swift */,
 				B5F45A601B4AE5A700831F2F /* OrganismV2ToV3.xcmappingmodel */,
 				B560070E1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift */,
+				B50D67901B4BCFED00124277 /* OrganismV3ToV2.xcmappingmodel */,
 			);
 			path = "Migrations Demo";
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 				B5F45A611B4AE5A700831F2F /* OrganismV2ToV3.xcmappingmodel in Sources */,
 				B503FAE11AFDC71700F90881 /* Palette.swift in Sources */,
 				B503FAE21AFDC71700F90881 /* PaletteTableViewCell.swift in Sources */,
+				B50D67911B4BCFED00124277 /* OrganismV3ToV2.xcmappingmodel in Sources */,
 				B560070F1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift in Sources */,
 				B503FADF1AFDC71700F90881 /* ListObserverDemoViewController.swift in Sources */,
 				B54AAD4F1AF4D26E00848AE0 /* AppDelegate.swift in Sources */,

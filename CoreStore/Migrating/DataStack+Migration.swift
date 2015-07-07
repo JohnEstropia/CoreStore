@@ -446,6 +446,18 @@ public extension DataStack {
     
     private func startMigrationForSQLiteStore(fileURL fileURL: NSURL, sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel) throws {
         
+        autoreleasepool {
+            
+            let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: sourceModel)
+            let store = try! journalUpdatingCoordinator.addPersistentStoreWithType(
+                NSSQLiteStoreType,
+                configuration: nil,
+                URL: fileURL,
+                options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
+            )
+            try! journalUpdatingCoordinator.removePersistentStore(store)
+        }
+        
         let migrationManager = NSMigrationManager(
             sourceModel: sourceModel,
             destinationModel: destinationModel
@@ -475,21 +487,18 @@ public extension DataStack {
             withIntermediateDirectories: true,
             attributes: nil
         )
+        
+        let temporaryFileURL = temporaryDirectoryURL.URLByAppendingPathComponent(fileURL.lastPathComponent!, isDirectory: false)
         do {
             
             try migrationManager.migrateStoreFromURL(
                 fileURL,
                 type: NSSQLiteStoreType,
-                options: [
-                    NSSQLitePragmasOption: ["WAL": "journal_mode"]
-                ],
+                options: nil,
                 withMappingModel: mappingModel,
-                toDestinationURL: temporaryDirectoryURL.URLByAppendingPathComponent(fileURL.lastPathComponent!, isDirectory: false),
+                toDestinationURL: temporaryFileURL,
                 destinationType: NSSQLiteStoreType,
-                destinationOptions: [
-                    NSSQLitePragmasOption: ["WAL": "journal_mode"],
-                    NSSQLiteManualVacuumOption: true
-                ]
+                destinationOptions: nil
             )
         }
         catch {
@@ -515,20 +524,19 @@ public extension DataStack {
         
         do {
             
-            let originalDirectoryURL = fileURL.URLByDeletingLastPathComponent!
-            for temporaryFileURL in try fileManager.contentsOfDirectoryAtURL(temporaryDirectoryURL, includingPropertiesForKeys: nil, options: .SkipsSubdirectoryDescendants) {
+            try fileManager.replaceItemAtURL(
+                fileURL,
+                withItemAtURL: temporaryFileURL,
+                backupItemName: nil,
+                options: [],
+                resultingItemURL: nil
+            )
+            
+            do {
                 
-                try fileManager.replaceItemAtURL(
-                    originalDirectoryURL.URLByAppendingPathComponent(
-                        temporaryFileURL.lastPathComponent!,
-                        isDirectory: false
-                    ),
-                    withItemAtURL: temporaryFileURL,
-                    backupItemName: nil,
-                    options: [],
-                    resultingItemURL: nil
-                )
+                try fileManager.removeItemAtPath(fileURL.path! + "-shm")
             }
+            catch _ { }
         }
         catch {
             

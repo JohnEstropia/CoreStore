@@ -199,7 +199,7 @@ public final class DataStack {
                     configuration: configuration,
                     URL: fileURL,
                     options: [
-                        NSSQLitePragmasOption: ["WAL": "journal_mode"],
+                        NSSQLitePragmasOption: ["journal_mode": "WAL"],
                         NSInferMappingModelAutomaticallyOption: true,
                         NSMigratePersistentStoresAutomaticallyOption: automigrating
                     ]
@@ -254,7 +254,7 @@ public final class DataStack {
                             configuration: configuration,
                             URL: fileURL,
                             options: [
-                                NSSQLitePragmasOption: ["WAL": "journal_mode"],
+                                NSSQLitePragmasOption: ["journal_mode": "WAL"],
                                 NSInferMappingModelAutomaticallyOption: true,
                                 NSMigratePersistentStoresAutomaticallyOption: automigrating
                             ]
@@ -376,4 +376,16 @@ public final class DataStack {
     private let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.coreStore.persistentStoreBarrierQueue")
     private var configurationStoreMapping = [String: NSPersistentStore]()
     private var entityConfigurationsMapping = [String: Set<String>]()
+    
+    deinit {
+        
+        for store in self.coordinator.persistentStores {
+            
+            do {
+                
+                try self.coordinator.removePersistentStore(store)
+            }
+            catch _ { }
+        }
+    }
 }

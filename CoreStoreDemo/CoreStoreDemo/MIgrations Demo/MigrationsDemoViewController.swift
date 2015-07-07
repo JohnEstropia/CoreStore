@@ -170,7 +170,7 @@ class MigrationsDemoViewController: UITableViewController {
                 let navigationItem = self.navigationItem
                 navigationItem.leftBarButtonItem?.enabled = enabled
                 navigationItem.rightBarButtonItem?.enabled = enabled
-                navigationItem.backBarButtonItem?.enabled = enabled
+                navigationItem.hidesBackButton = !enabled
                 
                 if let tableView = self.tableView {
                     
