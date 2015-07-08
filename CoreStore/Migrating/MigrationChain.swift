@@ -31,25 +31,6 @@ import CoreData
 
 public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, DictionaryLiteralConvertible, ArrayLiteralConvertible {
     
-    // MARK: Public
-    
-    public func contains(version: String) -> Bool {
-        
-        return self.rootVersions.contains(version)
-            || self.leafVersions.contains(version)
-            || self.versionTree[version] != nil
-    }
-    
-    public func nextVersionFrom(version: String) -> String? {
-        
-        if let nextVersion = self.versionTree[version] where nextVersion != version {
-            
-            return nextVersion
-        }
-        return nil
-    }
-    
-    
     // MARK: NilLiteralConvertible
     
     public init(nilLiteral: ()) {
@@ -57,6 +38,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.versionTree = [:]
         self.rootVersions = []
         self.leafVersions = []
+        self.valid = true
     }
     
     
@@ -67,6 +49,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.versionTree = [:]
         self.rootVersions = [value]
         self.leafVersions = [value]
+        self.valid = true
     }
     
     
@@ -77,6 +60,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.versionTree = [:]
         self.rootVersions = [value]
         self.leafVersions = [value]
+        self.valid = true
     }
     
     
@@ -87,6 +71,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.versionTree = [:]
         self.rootVersions = [value]
         self.leafVersions = [value]
+        self.valid = true
     }
     
     
@@ -94,9 +79,13 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     public init(dictionaryLiteral elements: (String, String)...) {
         
+        var valid = true
         let versionTree = elements.reduce([String: String]()) { (var versionTree, tuple: (String, String)) -> [String: String] in
             
-            versionTree[tuple.0] = tuple.1
+            if let _ = versionTree.updateValue(tuple.1, forKey: tuple.0) {
+                
+                valid = false
+            }
             return versionTree
         }
         let leafVersions = Set(
@@ -110,6 +99,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.versionTree = versionTree
         self.rootVersions = Set(versionTree.keys).subtract(versionTree.values)
         self.leafVersions = leafVersions
+        self.valid = valid
     }
     
     
@@ -121,11 +111,15 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         
         var lastVersion: String?
         var versionTree = [String: String]()
+        var valid = true
         for version in elements {
             
             if let lastVersion = lastVersion {
                 
-                versionTree[lastVersion] = version
+                if let _ = versionTree.updateValue(version, forKey: lastVersion) {
+                    
+                    valid = false
+                }
             }
             lastVersion = version
         }
@@ -133,6 +127,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.versionTree = versionTree
         self.rootVersions = Set([elements.first].flatMap { $0 == nil ? [] : [$0!] })
         self.leafVersions = Set([elements.last].flatMap { $0 == nil ? [] : [$0!] })
+        self.valid = valid
     }
     
     
@@ -140,9 +135,54 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     internal let rootVersions: Set<String>
     internal let leafVersions: Set<String>
+    internal let valid: Bool
+    
+    internal func contains(version: String) -> Bool {
+        
+        return self.rootVersions.contains(version)
+            || self.leafVersions.contains(version)
+            || self.versionTree[version] != nil
+    }
+    
+    internal func nextVersionFrom(version: String) -> String? {
+        
+        if let nextVersion = self.versionTree[version] where nextVersion != version {
+            
+            return nextVersion
+        }
+        return nil
+    }
     
     
     // MARK: Private
     
     private let versionTree: [String: String]
+}
+
+
+// MARK: - MigrationChain: CustomDebugStringConvertible
+
+extension MigrationChain: CustomDebugStringConvertible {
+    
+    public var debugDescription: String {
+        
+        guard self.valid else {
+            
+            return "<invalid migration chain>"
+        }
+        
+        var paths = [String]()
+        for var version in self.rootVersions {
+            
+            var steps = [version]
+            while let nextVersion = self.nextVersionFrom(version) {
+                
+                steps.append(nextVersion)
+                version = nextVersion
+            }
+            paths.append(" → ".join(steps))
+        }
+        
+        return "[" + "], [".join(paths) + "]"
+    }
 }

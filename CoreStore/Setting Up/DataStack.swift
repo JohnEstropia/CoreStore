@@ -53,13 +53,16 @@ public final class DataStack {
     */
     public required init(modelName: String = applicationName, bundle: NSBundle = NSBundle.mainBundle(), migrationChain: MigrationChain = nil) {
         
+        CoreStore.assert(
+            migrationChain.valid,
+            "Invalid migration chain passed to the \(typeName(DataStack)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
+        )
+        
         let model = NSManagedObjectModel.fromBundle(
             bundle,
             modelName: modelName,
             modelVersion: migrationChain.leafVersions.first
         )
-        
-        // TODO: assert existence of all model versions in the migrationChain
         
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
         self.rootSavingContext = NSManagedObjectContext.rootSavingContextForCoordinator(self.coordinator)
