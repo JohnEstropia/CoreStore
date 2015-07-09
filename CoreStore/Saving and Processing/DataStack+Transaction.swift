@@ -41,11 +41,6 @@ public extension DataStack {
     */
     public func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
-        CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to begin a transaction from a \(typeName(self)) outside the main thread."
-        )
-        
         AsynchronousDataTransaction(
             mainContext: self.rootSavingContext,
             queue: self.childTransactionQueue,
@@ -60,11 +55,6 @@ public extension DataStack {
     */
     public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
-        CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to begin a transaction from a \(typeName(self)) outside the main thread."
-        )
-        
         return SynchronousDataTransaction(
             mainContext: self.rootSavingContext,
             queue: self.childTransactionQueue,
@@ -77,11 +67,6 @@ public extension DataStack {
     - returns: a `DetachedDataTransaction` instance where creates, updates, and deletes can be made.
     */
     public func beginDetached() -> DetachedDataTransaction {
-        
-        CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to begin a transaction from a \(typeName(self)) outside the main thread."
-        )
         
         return DetachedDataTransaction(
             mainContext: self.rootSavingContext,
