@@ -9,7 +9,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 
 [Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
 
-[Upgrading from 0.2.0 to 1.0.0](#changes0_2_0_to_1_0_0)
+[Upgrading from 0.2.0 to 1.0.0](#changes-from-v020-to-100)
 
 
 ## Another Core Data wrapper?
