@@ -198,5 +198,6 @@ class MigrationsDemoViewController: UITableViewController {
         
         self.titleLabel?.text = organismType
         self.organismLabel?.text = "\n".join(lines)
+        self.tableView.tableHeaderView?.setNeedsLayout()
     }
 }
