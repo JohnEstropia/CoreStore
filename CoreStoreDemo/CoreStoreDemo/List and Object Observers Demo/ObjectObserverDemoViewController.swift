@@ -43,7 +43,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
 
     // MARK: UIViewController
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         
         if let palette = CoreStore.fetchOne(From(Palette), OrderBy(.Ascending("hue"))) {
             

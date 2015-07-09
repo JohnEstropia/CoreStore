@@ -406,10 +406,12 @@ public extension DataStack {
                     destinationModel: destinationModel) {
                         
                         migrationSteps.append(
-                            sourceModel: sourceModel,
-                            destinationModel: destinationModel,
-                            mappingModel: mappingModel,
-                            migrationType: .Heavyweight
+                            (
+                                sourceModel: sourceModel,
+                                destinationModel: destinationModel,
+                                mappingModel: mappingModel,
+                                migrationType: .Heavyweight
+                            )
                         )
                 }
                 else {
@@ -422,10 +424,12 @@ public extension DataStack {
                         )
                         
                         migrationSteps.append(
-                            sourceModel: sourceModel,
-                            destinationModel: destinationModel,
-                            mappingModel: mappingModel,
-                            migrationType: .Lightweight
+                            (
+                                sourceModel: sourceModel,
+                                destinationModel: destinationModel,
+                                mappingModel: mappingModel,
+                                migrationType: .Lightweight
+                            )
                         )
                     }
                     catch {

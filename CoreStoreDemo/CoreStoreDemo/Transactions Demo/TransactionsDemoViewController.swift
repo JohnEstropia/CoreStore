@@ -193,11 +193,11 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
             CLLocation(latitude: place.latitude, longitude: place.longitude),
             completionHandler: { [weak self] (placemarks, error) -> Void in
                 
-                if let placemark = placemarks?.first {
+                if let placemark = placemarks?.first, let addressDictionary = placemark.addressDictionary {
                     
                     let place = transaction.edit(Static.placeController.object)
                     place?.title = placemark.name
-                    place?.subtitle = ABCreateStringWithAddressDictionary(placemark.addressDictionary, true)
+                    place?.subtitle = ABCreateStringWithAddressDictionary(addressDictionary, true)
                     transaction.commit { (_) -> Void in }
                 }
                 
