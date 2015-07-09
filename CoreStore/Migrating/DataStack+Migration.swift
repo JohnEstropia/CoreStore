@@ -40,7 +40,7 @@ public extension DataStack {
     - parameter mappingModelBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
     :return: a `MigrationType` indicating the type of migration required for the store; or `nil` if either inspection of the store failed, or no mapping model was found/inferred. `MigrationType` acts as a `Bool` and evaluates to `false` if no migration is required, and `true` if either a lightweight or custom migration is needed.
     */
-    public func needsMigrationForSQLiteStore(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as [NSBundle]) -> MigrationType? {
+    public func needsMigrationForSQLiteStore(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as [NSBundle]) -> MigrationType? {
         
         return needsMigrationForSQLiteStore(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(
@@ -122,7 +122,7 @@ public extension DataStack {
     - parameter sourceBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.mainBundle()`.
     - parameter sourceBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.mainBundle()`.
     */
-    public func upgradeSQLiteStoreIfNeeded(fileName: String, configuration: String? = nil, sourceBundles: [NSBundle]? = nil, completion: (MigrationResult) -> Void) -> MigrationType? {
+    public func upgradeSQLiteStoreIfNeeded(fileName fileName: String, configuration: String? = nil, sourceBundles: [NSBundle]? = nil, completion: (MigrationResult) -> Void) -> MigrationType? {
      
         return self.upgradeSQLiteStoreIfNeeded(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(
@@ -262,7 +262,7 @@ public extension DataStack {
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result.
     */
-    public func addSQLiteStore(fileName: String, configuration: String? = nil, sourceBundles: [NSBundle]? = nil, completion: (PersistentStoreResult) -> Void) {
+    public func addSQLiteStore(fileName fileName: String, configuration: String? = nil, sourceBundles: [NSBundle]? = nil, completion: (PersistentStoreResult) -> Void) {
         
         self.addSQLiteStore(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(

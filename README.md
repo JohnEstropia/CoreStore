@@ -43,7 +43,7 @@ I wrote this library when Swift was made public, and CoreStore is now a powerhou
 
 Quick-setup:
 ```swift
-CoreStore.addSQLiteStoreAndWait("MyStore.sqlite")
+CoreStore.addSQLiteStoreAndWait(fileName: "MyStore.sqlite")
 ```
 
 Simple transactions:

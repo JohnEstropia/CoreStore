@@ -136,7 +136,7 @@ public final class DataStack {
     - parameter resetStoreOnMigrationFailure: Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
     - returns: a `PersistentStoreResult` indicating success or failure.
     */
-    public func addSQLiteStoreAndWait(fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
+    public func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
         
         return self.addSQLiteStoreAndWait(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(

@@ -30,7 +30,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         
         super.viewDidLoad()
         
-        self.dataStack.addSQLiteStoreAndWait("emptyStore.sqlite")
+        self.dataStack.addSQLiteStoreAndWait(fileName: "emptyStore.sqlite")
         CoreStore.logger = self
     }
     
@@ -109,7 +109,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
             }
             
         case .Some(1):
-            self.dataStack.addSQLiteStoreAndWait("emptyStore.sqlite", configuration: "invalidStore")
+            self.dataStack.addSQLiteStoreAndWait(fileName: "emptyStore.sqlite", configuration: "invalidStore")
             
         case .Some(2):
             self.dataStack.beginAsynchronous { (transaction) -> Void in

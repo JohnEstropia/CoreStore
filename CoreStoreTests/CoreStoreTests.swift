@@ -47,7 +47,7 @@ class CoreStoreTests: XCTestCase {
         CoreStore.defaultStack = stack
         XCTAssert(CoreStore.defaultStack === stack, "CoreStore.defaultStack === stack")
         
-        switch stack.addSQLiteStoreAndWait("ConfigStore1.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true){
+        switch stack.addSQLiteStoreAndWait(fileName: "ConfigStore1.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true){
             
         case .Failure(let error):
             XCTFail(error.description)
@@ -56,7 +56,7 @@ class CoreStoreTests: XCTestCase {
             break
         }
         
-        switch stack.addSQLiteStoreAndWait("ConfigStore2.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true){
+        switch stack.addSQLiteStoreAndWait(fileName: "ConfigStore2.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true){
             
         case .Failure(let error):
             XCTFail(error.description)

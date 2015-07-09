@@ -114,7 +114,7 @@ class MigrationsDemoViewController: UITableViewController {
         
         self.setEnabled(false)
         dataStack.addSQLiteStore(
-            "MigrationDemo.sqlite",
+            fileName: "MigrationDemo.sqlite",
             completion: { [weak self] (result) -> Void in
                 
                 guard let strongSelf = self else {

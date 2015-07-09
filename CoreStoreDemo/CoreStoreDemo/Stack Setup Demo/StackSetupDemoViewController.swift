@@ -19,12 +19,12 @@ private struct Static {
         
         let dataStack = DataStack(modelName: "StackSetupDemo")
         dataStack.addSQLiteStoreAndWait(
-            "AccountsDemo_FB_Male.sqlite",
+            fileName: "AccountsDemo_FB_Male.sqlite",
             configuration: maleConfiguration,
             resetStoreOnMigrationFailure: true
         )
         dataStack.addSQLiteStoreAndWait(
-            "AccountsDemo_FB_Female.sqlite",
+            fileName: "AccountsDemo_FB_Female.sqlite",
             configuration: femaleConfiguration,
             resetStoreOnMigrationFailure: true
         )
@@ -53,12 +53,12 @@ private struct Static {
         
         let dataStack = DataStack(modelName: "StackSetupDemo")
         dataStack.addSQLiteStoreAndWait(
-            "AccountsDemo_TW_Male.sqlite",
+            fileName: "AccountsDemo_TW_Male.sqlite",
             configuration: maleConfiguration,
             resetStoreOnMigrationFailure: true
         )
         dataStack.addSQLiteStoreAndWait(
-            "AccountsDemo_TW_Female.sqlite",
+            fileName: "AccountsDemo_TW_Female.sqlite",
             configuration: femaleConfiguration,
             resetStoreOnMigrationFailure: true
         )
