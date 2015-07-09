@@ -760,7 +760,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 
 ### Install with Carthage
 ```
-github "JohnEstropia/CoreStore" >= 0.2.0
+github "JohnEstropia/CoreStore" >= 0.2.1
 ```
 
 ### Install as Git Submodule
