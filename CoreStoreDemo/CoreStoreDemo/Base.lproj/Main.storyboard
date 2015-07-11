@@ -136,31 +136,54 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Organism" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C06-r4-27K">
-                                    <rect key="frame" x="20" y="20" width="560" height="26.5"/>
+                                    <rect key="frame" x="20" y="90" width="560" height="26.5"/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
                                     <color key="textColor" red="0.92549019610000005" green="0.94117647059999998" blue="0.94509803920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="attributes" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fXh-OL-4Qb">
-                                    <rect key="frame" x="20" y="70" width="560" height="20.5"/>
+                                    <rect key="frame" x="20" y="140" width="560" height="20.5"/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
                                     <color key="textColor" red="0.92549019610000005" green="0.94117647059999998" blue="0.94509803920000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
+                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Hwa-fO-fC5">
+                                    <rect key="frame" x="20" y="20" width="560" height="29"/>
+                                    <segments>
+                                        <segment title="First"/>
+                                        <segment title="Second"/>
+                                        <segment title=""/>
+                                    </segments>
+                                    <color key="tintColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                                    <connections>
+                                        <action selector="segmentedControlValueChanged:" destination="hJK-5I-1TQ" eventType="valueChanged" id="jNH-gx-mOg"/>
+                                    </connections>
+                                </segmentedControl>
+                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="H1P-2g-DHX">
+                                    <rect key="frame" x="20" y="68" width="560" height="2"/>
+                                    <color key="progressTintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="trackTintColor" white="1" alpha="0.20000000000000001" colorSpace="calibratedWhite"/>
+                                </progressView>
                             </subviews>
                             <color key="backgroundColor" red="0.20392156859999999" green="0.28627450980000002" blue="0.36862745099999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
+                                <constraint firstItem="H1P-2g-DHX" firstAttribute="leading" secondItem="5Hd-jr-1nW" secondAttribute="leading" constant="20" id="2Nf-U0-bTq"/>
                                 <constraint firstItem="fXh-OL-4Qb" firstAttribute="top" secondItem="C06-r4-27K" secondAttribute="bottom" constant="23.5" id="6d1-A5-Zc5"/>
-                                <constraint firstAttribute="trailing" secondItem="C06-r4-27K" secondAttribute="trailing" constant="20" id="DC3-u7-f9M"/>
+                                <constraint firstItem="Hwa-fO-fC5" firstAttribute="leading" secondItem="5Hd-jr-1nW" secondAttribute="leading" constant="20" id="CDZ-qV-3eK"/>
+                                <constraint firstItem="H1P-2g-DHX" firstAttribute="top" secondItem="Hwa-fO-fC5" secondAttribute="bottom" constant="20" id="Dcs-Vv-Xfv"/>
                                 <constraint firstItem="fXh-OL-4Qb" firstAttribute="leading" secondItem="C06-r4-27K" secondAttribute="leading" id="SnQ-Ra-KkU"/>
-                                <constraint firstItem="C06-r4-27K" firstAttribute="top" secondItem="5Hd-jr-1nW" secondAttribute="top" constant="20" id="abW-Z0-uln"/>
+                                <constraint firstItem="Hwa-fO-fC5" firstAttribute="top" secondItem="5Hd-jr-1nW" secondAttribute="top" constant="20" id="Zo1-kW-kAw"/>
+                                <constraint firstItem="C06-r4-27K" firstAttribute="top" secondItem="H1P-2g-DHX" secondAttribute="bottom" constant="20" id="bBW-Bn-oeN"/>
                                 <constraint firstAttribute="trailing" secondItem="fXh-OL-4Qb" secondAttribute="trailing" constant="20" id="mhR-0c-i0n"/>
                                 <constraint firstAttribute="trailing" secondItem="C06-r4-27K" secondAttribute="trailing" constant="20" id="s0c-XG-e70"/>
+                                <constraint firstAttribute="trailing" secondItem="H1P-2g-DHX" secondAttribute="trailing" constant="20" id="swp-18-f5e"/>
+                                <constraint firstItem="C06-r4-27K" firstAttribute="top" secondItem="Hwa-fO-fC5" secondAttribute="bottom" constant="20" id="tYt-wb-Lk8"/>
+                                <constraint firstAttribute="trailing" secondItem="Hwa-fO-fC5" secondAttribute="trailing" constant="20" id="ujX-gH-Wlm"/>
                                 <constraint firstItem="C06-r4-27K" firstAttribute="leading" secondItem="5Hd-jr-1nW" secondAttribute="leading" constant="20" id="yiG-c9-BZg"/>
                             </constraints>
                             <variation key="default">
                                 <mask key="constraints">
-                                    <exclude reference="DC3-u7-f9M"/>
+                                    <exclude reference="tYt-wb-Lk8"/>
                                 </mask>
                             </variation>
                         </view>
@@ -206,6 +229,8 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="organismLabel" destination="fXh-OL-4Qb" id="shX-fK-haw"/>
+                        <outlet property="progressView" destination="H1P-2g-DHX" id="Asy-fE-gXI"/>
+                        <outlet property="segmentedControl" destination="Hwa-fO-fC5" id="myL-tO-4ah"/>
                         <outlet property="titleLabel" destination="C06-r4-27K" id="zQr-YC-moe"/>
                     </connections>
                 </tableViewController>

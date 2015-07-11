@@ -33,15 +33,65 @@ internal extension NSManagedObjectModel {
     
     // MARK: Internal
     
-    private var modelFileURL: NSURL? {
+    @nonobjc internal class func fromBundle(bundle: NSBundle, modelName: String, modelVersion: String? = nil) -> NSManagedObjectModel {
         
-        get {
+        guard let modelFilePath = bundle.pathForResource(modelName, ofType: "momd") else {
             
-            return self.modelVersionFileURL?.URLByDeletingLastPathComponent
+            fatalError("Could not find \"\(modelName).momd\" from the bundle. \(bundle)")
         }
+        
+        let modelFileURL = NSURL(fileURLWithPath: modelFilePath)
+        let versionInfoPlistURL = modelFileURL.URLByAppendingPathComponent("VersionInfo.plist", isDirectory: false)
+        
+        guard let versionInfo = NSDictionary(contentsOfURL: versionInfoPlistURL),
+            let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
+                
+                fatalError("Could not load \(typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\"."
+                )
+        }
+        
+        let modelVersions = Set(versionHashes.keys)
+        let currentModelVersion: String
+        
+        if let modelVersion = modelVersion {
+            
+            currentModelVersion = modelVersion
+        }
+        else {
+            
+            currentModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String ?? modelVersions.first!
+        }
+        
+        var modelVersionFileURL: NSURL?
+        for modelVersion in modelVersions {
+            
+            let fileURL = modelFileURL.URLByAppendingPathComponent("\(modelVersion).mom", isDirectory: false)
+            
+            if modelVersion == currentModelVersion {
+                
+                modelVersionFileURL = fileURL
+                continue
+            }
+            
+            precondition(
+                NSManagedObjectModel(contentsOfURL: fileURL) != nil,
+                "Could not find the \"\(modelVersion).mom\" version file for the model at URL \"\(modelFileURL)\"."
+            )
+        }
+        
+        if let modelVersionFileURL = modelVersionFileURL,
+            let rootModel = NSManagedObjectModel(contentsOfURL: modelVersionFileURL) {
+                
+                rootModel.modelVersionFileURL = modelVersionFileURL
+                rootModel.modelVersions = modelVersions
+                rootModel.currentModelVersion = currentModelVersion
+                return rootModel
+        }
+        
+        fatalError("Could not create an \(typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
     }
     
-    private(set) var currentModelVersion: String? {
+    @nonobjc private(set) internal var currentModelVersion: String? {
         
         get {
             
@@ -61,7 +111,7 @@ internal extension NSManagedObjectModel {
         }
     }
     
-    private(set) var modelVersions: Set<String>? {
+    @nonobjc private(set) internal var modelVersions: Set<String>? {
         
         get {
             
@@ -81,17 +131,17 @@ internal extension NSManagedObjectModel {
         }
     }
     
-    func entityNameForClass(entityClass: AnyClass) -> String {
+    @nonobjc internal func entityNameForClass(entityClass: AnyClass) -> String {
         
         return self.entityNameMapping[NSStringFromClass(entityClass)]!
     }
     
-    func mergedModels() -> [NSManagedObjectModel] {
+    @nonobjc internal func mergedModels() -> [NSManagedObjectModel] {
         
         return self.modelVersions?.map { self[$0] }.flatMap { $0 == nil ? [] : [$0!] } ?? [self]
     }
     
-    subscript(modelVersion: String) -> NSManagedObjectModel? {
+    @nonobjc internal subscript(modelVersion: String) -> NSManagedObjectModel? {
         
         if modelVersion == self.currentModelVersion {
             
@@ -117,67 +167,31 @@ internal extension NSManagedObjectModel {
         return model
     }
     
-    class func fromBundle(bundle: NSBundle, modelName: String, modelVersion: String? = nil) -> NSManagedObjectModel {
+    @nonobjc internal subscript(metadata: [String: AnyObject]) -> NSManagedObjectModel? {
         
-        guard let modelFilePath = bundle.pathForResource(modelName, ofType: "momd") else {
+        if let modelHashes = metadata[NSStoreModelVersionHashesKey] as? [String : NSData] {
             
-            CoreStore.fatalError("Could not find \"\(modelName).momd\" from the bundle. \(bundle)")
-        }
-        
-        let modelFileURL = NSURL(fileURLWithPath: modelFilePath)
-        let versionInfoPlistURL = modelFileURL.URLByAppendingPathComponent("VersionInfo.plist", isDirectory: false)
-        
-        guard let versionInfo = NSDictionary(contentsOfURL: versionInfoPlistURL),
-            let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
+            for modelVersion in self.modelVersions ?? [] {
                 
-                CoreStore.fatalError("Could not load \(typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\"."
-                )
-        }
-        
-        let modelVersions = Set(versionHashes.keys)
-        let currentModelVersion: String
-        
-        if let modelVersion = modelVersion {
-            
-            precondition(modelVersions.contains(modelVersion))
-            currentModelVersion = modelVersion
-        }
-        else {
-            
-            currentModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String ?? modelVersions.first!
-        }
-        
-        var modelVersionFileURL: NSURL?
-        for modelVersion in modelVersions {
-            
-            let fileURL = modelFileURL.URLByAppendingPathComponent("\(modelVersion).mom", isDirectory: false)
-            
-            if modelVersion == currentModelVersion {
-                
-                modelVersionFileURL = fileURL
-                continue
+                if let versionModel = self[modelVersion] where modelHashes == versionModel.entityVersionHashesByName {
+                    
+                    return versionModel
+                }
             }
-            
-            CoreStore.assert(
-                NSManagedObjectModel(contentsOfURL: fileURL) != nil,
-                "Could not find the \"\(modelVersion).mom\" version file for the model at URL \"\(modelFileURL)\"."
-            )
         }
-        
-        if let modelVersionFileURL = modelVersionFileURL,
-            let rootModel = NSManagedObjectModel(contentsOfURL: modelVersionFileURL) {
-                
-                rootModel.modelVersionFileURL = modelVersionFileURL
-                rootModel.modelVersions = modelVersions
-                rootModel.currentModelVersion = currentModelVersion
-                return rootModel
-        }
-        
-        CoreStore.fatalError("Could not create an \(typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
+        return nil
     }
     
     
     // MARK: Private
+    
+    private var modelFileURL: NSURL? {
+        
+        get {
+            
+            return self.modelVersionFileURL?.URLByDeletingLastPathComponent
+        }
+    }
     
     private var modelVersionFileURL: NSURL? {
         

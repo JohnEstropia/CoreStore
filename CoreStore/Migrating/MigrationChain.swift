@@ -137,6 +137,11 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     internal let leafVersions: Set<String>
     internal let valid: Bool
     
+    internal var empty: Bool {
+        
+        return self.versionTree.count <= 0
+    }
+    
     internal func contains(version: String) -> Bool {
         
         return self.rootVersions.contains(version)

@@ -38,17 +38,53 @@ public enum MigrationType: BooleanType {
     /**
     Indicates that the persistent store matches the latest model version and no migration is needed
     */
-    case None
+    case None(version: String)
     
     /**
     Indicates that the persistent store does not match the latest model version but Core Data can infer the mapping model, so a lightweight migration is needed
     */
-    case Lightweight
+    case Lightweight(sourceVersion: String, destinationVersion: String)
     
     /**
     Indicates that the persistent store does not match the latest model version and Core Data could not infer a mapping model, so a custom migration is needed
     */
-    case Heavyweight
+    case Heavyweight(sourceVersion: String, destinationVersion: String)
+    
+    /**
+    Returns the source model version for the migration type. If no migration is required, `sourceVersion` will be equal to the `destinationVersion`.
+    */
+    public var sourceVersion: String {
+        
+        switch self {
+            
+        case .None(let version):
+            return version
+            
+        case .Lightweight(let sourceVersion, _):
+            return sourceVersion
+            
+        case .Heavyweight(let sourceVersion, _):
+            return sourceVersion
+        }
+    }
+    
+    /**
+    Returns the destination model version for the migration type. If no migration is required, `destinationVersion` will be equal to the `sourceVersion`.
+    */
+    public var destinationVersion: String {
+        
+        switch self {
+            
+        case .None(let version):
+            return version
+            
+        case .Lightweight(_, let destinationVersion):
+            return destinationVersion
+            
+        case .Heavyweight(_, let destinationVersion):
+            return destinationVersion
+        }
+    }
     
     
     // MARK: BooleanType
@@ -103,7 +139,7 @@ public enum MigrationResult {
     /**
     `MigrationResult.Success` indicates that the `commit()` for the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated value `hasChanges` indicates if there were saved changes or not.
     */
-    case Success(MigrationType)
+    case Success([MigrationType])
     
     /**
     `SaveResult.Failure` indicates that the `commit()` for the transaction failed. The associated object for this value is the related `NSError` instance.
@@ -113,9 +149,9 @@ public enum MigrationResult {
     
     // MARK: Internal
     
-    internal init(_ migrationType: MigrationType) {
+    internal init(_ migrationTypes: [MigrationType]) {
         
-        self = .Success(migrationType)
+        self = .Success(migrationTypes)
     }
     
     internal init(_ error: NSError) {

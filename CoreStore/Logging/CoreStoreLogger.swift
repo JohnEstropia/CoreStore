@@ -79,16 +79,6 @@ public protocol CoreStoreLogger {
     :functionName: the source function name
     */
     func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
-    
-    /**
-    Handles fatal errors made throughout the `CoreStore` framework. Implementations should guarantee that the method does not return, either by calling fatalError() or preconditionFailure(), or by raising an exception.
-    
-    :message: the error message
-    :fileName: the source file name
-    :lineNumber: the source line number
-    :functionName: the source function name
-    */
-    @noreturn func fatalError(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
 }
 
 
@@ -96,17 +86,17 @@ public protocol CoreStoreLogger {
 
 internal func typeName<T>(value: T) -> String {
     
-    return "<\(_stdlib_getDemangledTypeName(value))>"
+    return "'\(_stdlib_getDemangledTypeName(value))'"
 }
 
 internal func typeName<T>(value: T.Type) -> String {
     
-    return "<\(value)>"
+    return "'\(value)'"
 }
 
 internal func typeName(value: AnyClass) -> String {
     
-    return "<\(value)>"
+    return "'\(value)'"
 }
 
 internal func typeName(name: String?) -> String {

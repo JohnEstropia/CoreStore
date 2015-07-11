@@ -19,7 +19,39 @@ class MigrationsDemoViewController: UITableViewController {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        self.selectModelVersion(self.models.first!)
+        
+        let models = self.models
+        if let segmentedControl = self.segmentedControl {
+            
+            for (index, model) in models.enumerate() {
+                
+                segmentedControl.setTitle(
+                    model.label,
+                    forSegmentAtIndex: index
+                )
+            }
+        }
+        
+        let dataStack = DataStack(modelName: "MigrationDemo")
+        do {
+            
+            let migrations = try dataStack.requiredMigrationsForSQLiteStore(
+                fileName: "MigrationDemo.sqlite"
+            )
+            
+            let storeVersion = migrations.first?.sourceVersion ?? dataStack.modelVersion
+            for model in models {
+                
+                if model.version == storeVersion {
+                    
+                    self.selectModelVersion(model, animated: false)
+                    return
+                }
+            }
+        }
+        catch _ { }
+        
+        self.selectModelVersion(self.models.first!, animated: false)
     }
     
 
@@ -47,21 +79,23 @@ class MigrationsDemoViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        self.selectModelVersion(self.models[indexPath.row])
+        self.selectModelVersion(self.models[indexPath.row], animated: true)
     }
     
     
     // MARK: Private
     
-    private typealias ModelMetadata = (version: String, entityType: AnyClass, migrationChain: MigrationChain)
+    private typealias ModelMetadata = (label: String, version: String, entityType: AnyClass, migrationChain: MigrationChain)
     
     private let models: [ModelMetadata] = [
         (
+            label: "Model V1",
             version: "MigrationDemo",
             entityType: OrganismV1.self,
             migrationChain: ["MigrationDemoV3", "MigrationDemoV2", "MigrationDemo"]
         ),
         (
+            label: "Model V2",
             version: "MigrationDemoV2",
             entityType: OrganismV2.self,
             migrationChain: [
@@ -70,6 +104,7 @@ class MigrationsDemoViewController: UITableViewController {
             ]
         ),
         (
+            label: "Model V3",
             version: "MigrationDemoV3",
             entityType: OrganismV3.self,
             migrationChain: ["MigrationDemo", "MigrationDemoV2", "MigrationDemoV3"]
@@ -81,6 +116,8 @@ class MigrationsDemoViewController: UITableViewController {
     
     @IBOutlet private dynamic weak var titleLabel: UILabel?
     @IBOutlet private dynamic weak var organismLabel: UILabel?
+    @IBOutlet private dynamic weak var segmentedControl: UISegmentedControl?
+    @IBOutlet private dynamic weak var progressView: UIProgressView?
     
     @IBAction private dynamic func mutateBarButtonTapped(sender: AnyObject?) {
         
@@ -93,11 +130,21 @@ class MigrationsDemoViewController: UITableViewController {
                 
                 transaction.commit()
             }
-            self.updateDisplay()
+            self.updateDisplayWithCompletion()
         }
     }
     
-    private func selectModelVersion(model: ModelMetadata) {
+    @IBAction private dynamic func segmentedControlValueChanged(sender: AnyObject?) {
+        
+        guard let index = self.segmentedControl?.selectedSegmentIndex else {
+            
+            return
+        }
+        
+        self.selectModelVersion(self.models[index], animated: true)
+    }
+    
+    private func selectModelVersion(model: ModelMetadata, animated: Bool) {
         
         if self.organism?.entity.managedObjectClassName == "\(model.entityType)" {
             
@@ -112,8 +159,8 @@ class MigrationsDemoViewController: UITableViewController {
             migrationChain: model.migrationChain
         )
         
-        self.setEnabled(false)
-        dataStack.addSQLiteStore(
+        self.setEnabled(false, animated: animated)
+        let progress = try! dataStack.addSQLiteStore(
             fileName: "MigrationDemo.sqlite",
             completion: { [weak self] (result) -> Void in
                 
@@ -124,7 +171,7 @@ class MigrationsDemoViewController: UITableViewController {
                 
                 guard case .Success = result else {
                     
-                    strongSelf.setEnabled(true)
+                    strongSelf.setEnabled(true, animated: animated)
                     return
                 }
                 
@@ -137,32 +184,44 @@ class MigrationsDemoViewController: UITableViewController {
                     
                     dataStack.beginSynchronous { (transaction) -> Void in
                         
-                        let organism = transaction.create(Into(model.entityType))
-                        (organism as! OrganismProtocol).mutate()
+                        for _ in 0 ..< 100000 {
+                            
+                            let organism = transaction.create(Into(model.entityType))
+                            (organism as! OrganismProtocol).mutate()
+                        }
                         
                         transaction.commit()
                     }
                     strongSelf.organism = dataStack.fetchOne(From(model.entityType))!
                 }
                 
-                strongSelf.updateDisplay()
+                strongSelf.updateDisplayWithCompletion()
+                
+                let indexOfModel = strongSelf.models.map { $0.version }.indexOf(model.version)!
                 strongSelf.tableView.selectRowAtIndexPath(
-                    NSIndexPath(
-                        forRow: strongSelf.models.map { $0.version }.indexOf(model.version)!,
-                        inSection: 0
-                    ),
+                    NSIndexPath(forRow: indexOfModel, inSection: 0),
                     animated: false,
                     scrollPosition: .None
                 )
-                strongSelf.setEnabled(true)
+                strongSelf.segmentedControl?.selectedSegmentIndex = indexOfModel
+                strongSelf.setEnabled(true, animated: animated)
             }
         )
+        
+        if let progress = progress {
+            
+            self.updateDisplayWithProgress(progress)
+            progress.setProgressHandler { [weak self] (progress) -> Void in
+                
+                self?.updateDisplayWithProgress(progress)
+            }
+        }
     }
     
-    func setEnabled(enabled: Bool) {
+    func setEnabled(enabled: Bool, animated: Bool) {
         
         UIView.animateKeyframesWithDuration(
-            0.2,
+            animated ? 0.2 : 0,
             delay: 0,
             options: .BeginFromCurrentState,
             animations: { () -> Void in
@@ -182,7 +241,14 @@ class MigrationsDemoViewController: UITableViewController {
         )
     }
     
-    func updateDisplay() {
+    func updateDisplayWithProgress(progress: NSProgress) {
+        
+        self.progressView?.setProgress(Float(progress.fractionCompleted), animated: true)
+        self.titleLabel?.text = "Migrating: \(progress.localizedDescription)"
+        self.organismLabel?.text = "Incremental step \(progress.localizedAdditionalDescription)"
+    }
+    
+    func updateDisplayWithCompletion() {
         
         var lines = [String]()
         var organismType = ""
@@ -193,11 +259,12 @@ class MigrationsDemoViewController: UITableViewController {
                 let value: AnyObject = organism.valueForKey(property.name) ?? NSNull()
                 lines.append("\(property.name): \(value)")
             }
-            organismType = "\(objc_getClass(organism.entity.managedObjectClassName))"
+            organismType = organism.entity.managedObjectClassName
         }
         
         self.titleLabel?.text = organismType
         self.organismLabel?.text = "\n".join(lines)
+        self.progressView?.progress = 0
         self.tableView.tableHeaderView?.setNeedsLayout()
     }
 }

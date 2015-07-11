@@ -70,10 +70,10 @@ public /*abstract*/ class BaseDataTransaction {
                 return object
                 
             case (.None, true):
-                CoreStore.fatalError("Attempted to create an entity of type \(typeName(entityClass)) with ambiguous destination persistent store, but the configuration name was not specified.")
+                fatalError("Attempted to create an entity of type \(typeName(entityClass)) with ambiguous destination persistent store, but the configuration name was not specified.")
                 
             default:
-                CoreStore.fatalError("Attempted to create an entity of type \(typeName(entityClass)), but a destination persistent store containing the entity type could not be found.")
+                fatalError("Attempted to create an entity of type \(typeName(entityClass)), but a destination persistent store containing the entity type could not be found.")
             }
         }
         else {
@@ -88,11 +88,11 @@ public /*abstract*/ class BaseDataTransaction {
             default:
                 if let configuration = into.configuration {
                     
-                    CoreStore.fatalError("Attempted to create an entity of type \(typeName(entityClass)) into the configuration \"\(configuration)\", which it doesn't belong to.")
+                    fatalError("Attempted to create an entity of type \(typeName(entityClass)) into the configuration \"\(configuration)\", which it doesn't belong to.")
                 }
                 else {
                     
-                    CoreStore.fatalError("Attempted to create an entity of type \(typeName(entityClass)) into the default configuration, which it doesn't belong to.")
+                    fatalError("Attempted to create an entity of type \(typeName(entityClass)) into the default configuration, which it doesn't belong to.")
                 }
             }
         }

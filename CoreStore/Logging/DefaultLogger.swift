@@ -42,33 +42,41 @@ public final class DefaultLogger: CoreStoreLogger {
     public func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
+            let icon: String
             let levelString: String
             switch level {
-            case .Trace: levelString = "Trace"
-            case .Notice: levelString = "Notice"
-            case .Warning: levelString = "Warning"
-            case .Fatal: levelString = "Fatal"
+                
+            case .Trace:
+                icon = "🔹"
+                levelString = "Trace"
+                
+            case .Notice:
+                icon = "🔸"
+                levelString = "Notice"
+                
+            case .Warning:
+                icon = "⚠️"
+                levelString = "Warning"
+                
+            case .Fatal:
+                icon = "❗"
+                levelString = "Fatal"
             }
-            Swift.print("[CoreStore:\(levelString)] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+            Swift.print("\(icon) [CoreStore: \(levelString)] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         #endif
     }
     
     public func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.print("[CoreStore:Error] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message): \(error)\n")
+            Swift.print("⚠️ [CoreStore: Error] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message): \(error)\n")
         #endif
     }
     
     public func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.assert(condition, message, file: fileName, line: numericCast(lineNumber))
+            Swift.assert(condition, "❗ [CoreStore: Assertion Failure] \(message)", file: fileName, line: numericCast(lineNumber))
         #endif
-    }
-    
-    @noreturn public func fatalError(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        
-        Swift.fatalError("[CoreStore:Abort] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
     }
 }

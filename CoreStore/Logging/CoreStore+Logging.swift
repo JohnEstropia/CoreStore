@@ -46,10 +46,8 @@ public extension CoreStore {
             level: level,
             message: message,
             fileName: fileName,
-            lineNumber:
-            lineNumber,
-            functionName:
-            functionName
+            lineNumber: lineNumber,
+            functionName: functionName
         )
     }
     
@@ -69,16 +67,6 @@ public extension CoreStore {
         self.logger.assert(
             condition,
             message: message,
-            fileName: fileName,
-            lineNumber: lineNumber,
-            functionName: functionName
-        )
-    }
-    
-    @noreturn internal static func fatalError(message: String, fileName: StaticString = __FILE__, lineNumber: Int = __LINE__, functionName: StaticString = __FUNCTION__) {
-        
-        self.logger.fatalError(
-            message,
             fileName: fileName,
             lineNumber: lineNumber,
             functionName: functionName

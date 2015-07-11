@@ -47,7 +47,7 @@ public final class DataStack {
     /**
     Initializes a `DataStack` from an `NSManagedObjectModel`.
     
-    - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name will be used
+    - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name will be used.
     - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
     - parameter migrationChain: the `MigrationChain` that indicates the heirarchy of the model's version names. If not specified, will default to a non-migrating data stack.
     */
@@ -72,6 +72,14 @@ public final class DataStack {
         self.migrationChain = migrationChain
         
         self.rootSavingContext.parentStack = self
+    }
+    
+    /**
+    Returns the `DataStack`'s model version. The version string is the same as the name of the .xcdatamodeld file.
+    */
+    public var modelVersion: String {
+        
+        return self.model.currentModelVersion!
     }
     
     /**
@@ -159,6 +167,11 @@ public final class DataStack {
     - returns: a `PersistentStoreResult` indicating success or failure.
     */
     public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) -> PersistentStoreResult {
+        
+        CoreStore.assert(
+            fileURL.fileURL,
+            "The specified file URL for the SQLite store is invalid: \"\(fileURL)\""
+        )
         
         let coordinator = self.coordinator;
         if let store = coordinator.persistentStoreForURL(fileURL) {
