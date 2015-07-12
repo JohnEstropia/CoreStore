@@ -10,7 +10,8 @@ import Foundation
 import CoreData
 
 class OrganismV2: NSManagedObject, OrganismProtocol {
-
+    
+    @NSManaged var dna: Int64
     @NSManaged var hasHead: Bool
     @NSManaged var hasTail: Bool
     @NSManaged var numberOfFlippers: Int32

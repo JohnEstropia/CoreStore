@@ -14,7 +14,7 @@ private struct Static {
     
     static let palettes: ListMonitor<Palette> = {
         
-        CoreStore.addSQLiteStoreAndWait(
+        try! CoreStore.addSQLiteStoreAndWait(
             fileName: "ColorsDemo.sqlite",
             configuration: "ObservingDemo",
             resetStoreOnMigrationFailure: true

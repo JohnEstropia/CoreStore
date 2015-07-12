@@ -12,7 +12,7 @@ import CoreStore
 
 // MARK: - MigrationsDemoViewController
 
-class MigrationsDemoViewController: UITableViewController {
+class MigrationsDemoViewController: UIViewController {
     
     // MARK: UIViewController
     
@@ -20,10 +20,9 @@ class MigrationsDemoViewController: UITableViewController {
         
         super.viewDidLoad()
         
-        let models = self.models
         if let segmentedControl = self.segmentedControl {
             
-            for (index, model) in models.enumerate() {
+            for (index, model) in self.models.enumerate() {
                 
                 segmentedControl.setTitle(
                     model.label,
@@ -31,55 +30,38 @@ class MigrationsDemoViewController: UITableViewController {
                 )
             }
         }
+        self.setDataStack(nil, model: nil, scrollToSelection: false)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
         
-        let dataStack = DataStack(modelName: "MigrationDemo")
-        do {
+        super.viewDidAppear(animated)
+        
+        let modelMetadata = withExtendedLifetime(DataStack(modelName: "MigrationDemo")) {
+            (dataStack: DataStack) -> ModelMetadata in
             
-            let migrations = try dataStack.requiredMigrationsForSQLiteStore(
-                fileName: "MigrationDemo.sqlite"
-            )
-            
-            let storeVersion = migrations.first?.sourceVersion ?? dataStack.modelVersion
-            for model in models {
+            let models = self.models
+            do {
                 
-                if model.version == storeVersion {
+                let migrations = try dataStack.requiredMigrationsForSQLiteStore(
+                    fileName: "MigrationDemo.sqlite"
+                )
+                
+                let storeVersion = migrations.first?.sourceVersion ?? dataStack.modelVersion
+                for model in models {
                     
-                    self.selectModelVersion(model, animated: false)
-                    return
+                    if model.version == storeVersion {
+                        
+                        return model
+                    }
                 }
             }
+            catch _ { }
+            
+            return models.first!
         }
-        catch _ { }
         
-        self.selectModelVersion(self.models.first!, animated: false)
-    }
-    
-
-    // MARK: UITableViewDataSource
-    
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return self.models.count
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell", forIndexPath: indexPath)
-        cell.textLabel?.text = self.models[indexPath.row].version
-        return cell
-    }
-    
-    
-    // MARK: UITableViewDelegate
-    
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        
-        return "Model Versions"
-    }
-
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        self.selectModelVersion(self.models[indexPath.row], animated: true)
+        self.selectModelVersion(modelMetadata)
     }
     
     
@@ -111,28 +93,36 @@ class MigrationsDemoViewController: UITableViewController {
         )
     ]
     
-    private var dataStack: DataStack?
-    private var organism: NSManagedObject?
+    private var _listMonitor: ListMonitor<NSManagedObject>?
+    private var listMonitor: ListMonitor<NSManagedObject>? {
+        
+        return self._listMonitor
+    }
     
+    private var _dataStack: DataStack?
+    private var dataStack: DataStack? {
+        
+        return self._dataStack
+    }
+    
+    private var _lastSelectedIndexPath: NSIndexPath?
+    private var lastSelectedIndexPath: NSIndexPath? {
+        
+        return self._lastSelectedIndexPath
+    }
+    
+    private func setSelectedIndexPath(indexPath: NSIndexPath, scrollToSelection: Bool) {
+        
+        self._lastSelectedIndexPath = indexPath
+        self.updateDisplay(reloadData: false, scrollToSelection: scrollToSelection, animated: true)
+    }
+    
+    @IBOutlet private dynamic weak var headerContainer: UIView?
     @IBOutlet private dynamic weak var titleLabel: UILabel?
     @IBOutlet private dynamic weak var organismLabel: UILabel?
     @IBOutlet private dynamic weak var segmentedControl: UISegmentedControl?
     @IBOutlet private dynamic weak var progressView: UIProgressView?
-    
-    @IBAction private dynamic func mutateBarButtonTapped(sender: AnyObject?) {
-        
-        if let dataStack = self.dataStack, let organism = self.organism {
-            
-            dataStack.beginSynchronous { (transaction) -> Void in
-                
-                let organism = transaction.edit(organism)
-                (organism as! OrganismProtocol).mutate()
-                
-                transaction.commit()
-            }
-            self.updateDisplayWithCompletion()
-        }
-    }
+    @IBOutlet private dynamic weak var tableView: UITableView?
     
     @IBAction private dynamic func segmentedControlValueChanged(sender: AnyObject?) {
         
@@ -141,25 +131,24 @@ class MigrationsDemoViewController: UITableViewController {
             return
         }
         
-        self.selectModelVersion(self.models[index], animated: true)
+        self.selectModelVersion(self.models[index])
     }
     
-    private func selectModelVersion(model: ModelMetadata, animated: Bool) {
+    private func selectModelVersion(model: ModelMetadata) {
         
-        if self.organism?.entity.managedObjectClassName == "\(model.entityType)" {
+        if self.dataStack?.modelVersion == model.version {
             
             return
         }
         
-        self.organism = nil
-        self.dataStack = nil
+        self.setDataStack(nil, model: nil, scrollToSelection: false) // explicitly trigger NSPersistentStore cleanup by deallocating the stack
         
         let dataStack = DataStack(
             modelName: "MigrationDemo",
             migrationChain: model.migrationChain
         )
         
-        self.setEnabled(false, animated: animated)
+        self.setEnabled(false)
         let progress = try! dataStack.addSQLiteStore(
             fileName: "MigrationDemo.sqlite",
             completion: { [weak self] (result) -> Void in
@@ -171,57 +160,50 @@ class MigrationsDemoViewController: UITableViewController {
                 
                 guard case .Success = result else {
                     
-                    strongSelf.setEnabled(true, animated: animated)
+                    strongSelf.setEnabled(true)
                     return
                 }
                 
-                strongSelf.dataStack = dataStack
-                if let organism = dataStack.fetchOne(From(model.entityType)) {
+                strongSelf.setDataStack(dataStack, model: model, scrollToSelection: true)
+                
+                let count = dataStack.queryValue(From(model.entityType), Select<Int>(.Count("dna")))
+                if count > 0 {
                     
-                    strongSelf.organism = organism
+                    strongSelf.setEnabled(true)
                 }
                 else {
                     
-                    dataStack.beginSynchronous { (transaction) -> Void in
+                    dataStack.beginAsynchronous { (transaction) -> Void in
                         
-                        for _ in 0 ..< 100000 {
+                        for i: Int64 in 1 ..< 10000 {
                             
-                            let organism = transaction.create(Into(model.entityType))
-                            (organism as! OrganismProtocol).mutate()
+                            let organism = transaction.create(Into(model.entityType)) as! OrganismProtocol
+                            organism.dna = i
+                            organism.mutate()
                         }
                         
-                        transaction.commit()
+                        transaction.commit { result -> Void in
+                            
+                            self?.setEnabled(true)
+                        }
                     }
-                    strongSelf.organism = dataStack.fetchOne(From(model.entityType))!
                 }
-                
-                strongSelf.updateDisplayWithCompletion()
-                
-                let indexOfModel = strongSelf.models.map { $0.version }.indexOf(model.version)!
-                strongSelf.tableView.selectRowAtIndexPath(
-                    NSIndexPath(forRow: indexOfModel, inSection: 0),
-                    animated: false,
-                    scrollPosition: .None
-                )
-                strongSelf.segmentedControl?.selectedSegmentIndex = indexOfModel
-                strongSelf.setEnabled(true, animated: animated)
             }
         )
         
         if let progress = progress {
             
-            self.updateDisplayWithProgress(progress)
             progress.setProgressHandler { [weak self] (progress) -> Void in
                 
-                self?.updateDisplayWithProgress(progress)
+                self?.reloadTableHeaderWithProgress(progress)
             }
         }
     }
     
-    func setEnabled(enabled: Bool, animated: Bool) {
+    private func setEnabled(enabled: Bool) {
         
-        UIView.animateKeyframesWithDuration(
-            animated ? 0.2 : 0,
+        UIView.animateWithDuration(
+            0.2,
             delay: 0,
             options: .BeginFromCurrentState,
             animations: { () -> Void in
@@ -230,6 +212,8 @@ class MigrationsDemoViewController: UITableViewController {
                 navigationItem.leftBarButtonItem?.enabled = enabled
                 navigationItem.rightBarButtonItem?.enabled = enabled
                 navigationItem.hidesBackButton = !enabled
+                
+                self.segmentedControl?.enabled = enabled
                 
                 if let tableView = self.tableView {
                     
@@ -241,18 +225,47 @@ class MigrationsDemoViewController: UITableViewController {
         )
     }
     
-    func updateDisplayWithProgress(progress: NSProgress) {
+    private func setDataStack(dataStack: DataStack?, model: ModelMetadata?, scrollToSelection: Bool) {
+        
+        if let dataStack = dataStack, let model = model {
+            
+            self.segmentedControl?.selectedSegmentIndex = self.models.map { $0.version }.indexOf(model.version)!
+            
+            self._dataStack = dataStack
+            let listMonitor = dataStack.monitorList(From(model.entityType), OrderBy(.Descending("dna")))
+            listMonitor.addObserver(self)
+            self._listMonitor = listMonitor
+            
+            if self.lastSelectedIndexPath == nil  {
+                
+                if listMonitor.numberOfObjectsInSection(0) > 0 {
+                    
+                    self.setSelectedIndexPath(NSIndexPath(forRow: 0, inSection: 0), scrollToSelection: true)
+                }
+            }
+        }
+        else {
+           
+            self.segmentedControl?.selectedSegmentIndex = UISegmentedControlNoSegment
+            self._dataStack = nil
+            self._listMonitor = nil
+        }
+        
+        self.updateDisplay(reloadData: true, scrollToSelection: scrollToSelection, animated: false)
+    }
+    
+    private func reloadTableHeaderWithProgress(progress: NSProgress) {
         
         self.progressView?.setProgress(Float(progress.fractionCompleted), animated: true)
         self.titleLabel?.text = "Migrating: \(progress.localizedDescription)"
         self.organismLabel?.text = "Incremental step \(progress.localizedAdditionalDescription)"
     }
     
-    func updateDisplayWithCompletion() {
+    private func updateDisplay(reloadData reloadData: Bool, scrollToSelection: Bool, animated: Bool) {
         
         var lines = [String]()
         var organismType = ""
-        if let organism = self.organism {
+        if let indexPath = self.lastSelectedIndexPath, let organism = self.listMonitor?[indexPath] {
             
             for property in organism.entity.properties {
                 
@@ -265,6 +278,102 @@ class MigrationsDemoViewController: UITableViewController {
         self.titleLabel?.text = organismType
         self.organismLabel?.text = "\n".join(lines)
         self.progressView?.progress = 0
-        self.tableView.tableHeaderView?.setNeedsLayout()
+        
+        self.headerContainer?.setNeedsLayout()
+        
+        guard let tableView = self.tableView else {
+            
+            return
+        }
+        
+        if reloadData {
+            
+            tableView.reloadData()
+        }
+        
+        tableView.layoutIfNeeded()
+        
+        if let indexPath = self.lastSelectedIndexPath where indexPath.row < tableView.numberOfRowsInSection(0) {
+            
+            tableView.selectRowAtIndexPath(indexPath,
+                animated: scrollToSelection && animated,
+                scrollPosition: scrollToSelection ? .Middle : .None
+            )
+        }
+    }
+}
+
+
+// MARK: - MigrationsDemoViewController: ListObserver
+
+extension MigrationsDemoViewController: ListObserver {
+    
+    // MARK: ListObserver
+    
+    func listMonitorWillChange(monitor: ListMonitor<NSManagedObject>) { }
+    
+    func listMonitorDidChange(monitor: ListMonitor<NSManagedObject>) {
+        
+        if self.lastSelectedIndexPath == nil && self.listMonitor?.numberOfObjectsInSection(0) > 0 {
+            
+            self.tableView?.reloadData()
+            self.setSelectedIndexPath(NSIndexPath(forRow: 0, inSection: 0), scrollToSelection: false)
+        }
+        else {
+            
+            self.updateDisplay(reloadData: true, scrollToSelection: true, animated: true)
+        }
+    }
+}
+
+
+// MARK: - MigrationsDemoViewController: UITableViewDataSource, UITableViewDelegate
+
+extension MigrationsDemoViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    // MARK: UITableViewDataSource
+    
+    @objc dynamic func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return self.listMonitor?.numberOfObjectsInSection(0) ?? 0
+    }
+    
+    @objc dynamic func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("OrganismTableViewCell", forIndexPath: indexPath) as! OrganismTableViewCell
+        
+        let dna = (self.listMonitor?[indexPath] as? OrganismProtocol)?.dna.description ?? ""
+        cell.dnaLabel?.text = "DNA: \(dna)"
+        cell.mutateButtonHandler = { [weak self] _ -> Void in
+            
+            guard let strongSelf = self,
+                let dataStack = strongSelf.dataStack,
+                let organism = strongSelf.listMonitor?[indexPath] else {
+                    
+                    return
+            }
+            
+            strongSelf.setSelectedIndexPath(indexPath, scrollToSelection: false)
+            strongSelf.setEnabled(false)
+            dataStack.beginAsynchronous { (transaction) -> Void in
+                
+                let organism = transaction.edit(organism) as! OrganismProtocol
+                organism.mutate()
+                
+                transaction.commit { _ -> Void in
+                    
+                    self?.setEnabled(true)
+                }
+            }
+        }
+        return cell
+    }
+    
+    
+    // MARK: UITableViewDelegate
+    
+    @objc dynamic func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        self.setSelectedIndexPath(indexPath, scrollToSelection: false)
     }
 }

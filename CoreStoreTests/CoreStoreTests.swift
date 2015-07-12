@@ -47,22 +47,22 @@ class CoreStoreTests: XCTestCase {
         CoreStore.defaultStack = stack
         XCTAssert(CoreStore.defaultStack === stack, "CoreStore.defaultStack === stack")
         
-        switch stack.addSQLiteStoreAndWait(fileName: "ConfigStore1.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true){
+        do {
             
-        case .Failure(let error):
+            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore1.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true)
+        }
+        catch let error as NSError {
+            
             XCTFail(error.description)
-            
-        default:
-            break
         }
         
-        switch stack.addSQLiteStoreAndWait(fileName: "ConfigStore2.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true){
+        do {
             
-        case .Failure(let error):
+            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore2.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true)
+        }
+        catch let error as NSError {
+            
             XCTFail(error.description)
-            
-        default:
-            break
         }
         
         let detachedTransaction = CoreStore.beginDetached()

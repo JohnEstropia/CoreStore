@@ -18,12 +18,12 @@ private struct Static {
     static let facebookStack: DataStack = {
         
         let dataStack = DataStack(modelName: "StackSetupDemo")
-        dataStack.addSQLiteStoreAndWait(
+        try! dataStack.addSQLiteStoreAndWait(
             fileName: "AccountsDemo_FB_Male.sqlite",
             configuration: maleConfiguration,
             resetStoreOnMigrationFailure: true
         )
-        dataStack.addSQLiteStoreAndWait(
+        try! dataStack.addSQLiteStoreAndWait(
             fileName: "AccountsDemo_FB_Female.sqlite",
             configuration: femaleConfiguration,
             resetStoreOnMigrationFailure: true
@@ -52,12 +52,12 @@ private struct Static {
     static let twitterStack: DataStack = {
         
         let dataStack = DataStack(modelName: "StackSetupDemo")
-        dataStack.addSQLiteStoreAndWait(
+        try! dataStack.addSQLiteStoreAndWait(
             fileName: "AccountsDemo_TW_Male.sqlite",
             configuration: maleConfiguration,
             resetStoreOnMigrationFailure: true
         )
-        dataStack.addSQLiteStoreAndWait(
+        try! dataStack.addSQLiteStoreAndWait(
             fileName: "AccountsDemo_TW_Female.sqlite",
             configuration: femaleConfiguration,
             resetStoreOnMigrationFailure: true

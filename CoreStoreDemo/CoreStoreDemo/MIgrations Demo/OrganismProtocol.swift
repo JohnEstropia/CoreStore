@@ -8,7 +8,9 @@
 
 import Foundation
 
-protocol OrganismProtocol {
+protocol OrganismProtocol: class {
+    
+    var dna: Int64 { get set }
     
     func mutate()
 }

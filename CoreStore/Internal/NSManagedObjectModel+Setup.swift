@@ -52,7 +52,6 @@ internal extension NSManagedObjectModel {
         
         let modelVersions = Set(versionHashes.keys)
         let currentModelVersion: String
-        
         if let modelVersion = modelVersion {
             
             currentModelVersion = modelVersion

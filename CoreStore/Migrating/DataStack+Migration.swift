@@ -38,7 +38,7 @@ public extension DataStack {
     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
     - parameter mappingModelBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
-    - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result. If an error is thrown, this closure will not be executed.
+    - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
     */
     public func addSQLiteStore(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
@@ -60,7 +60,7 @@ public extension DataStack {
     - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
     - parameter mappingModelBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
-    - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result.
+    - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
     */
     public func addSQLiteStore(fileURL fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = NSBundle.allBundles(), completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
@@ -124,28 +124,38 @@ public extension DataStack {
                         return
                     }
                     
-                    let persistentStoreResult = self.addSQLiteStoreAndWait(
-                        fileURL: fileURL,
-                        configuration: configuration,
-                        automigrating: false,
-                        resetStoreOnMigrationFailure: false
-                    )
-                    
-                    completion(persistentStoreResult)
+                    do {
+                        
+                        let store = try self.addSQLiteStoreAndWait(
+                            fileURL: fileURL,
+                            configuration: configuration,
+                            automigrating: false,
+                            resetStoreOnMigrationFailure: false
+                        )
+                        
+                        completion(PersistentStoreResult(store))
+                    }
+                    catch {
+                        
+                        completion(PersistentStoreResult(error as NSError))
+                    }
                 }
             )
         }
         catch let error as NSError
             where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
                 
-                let persistentStoreResult = self.addSQLiteStoreAndWait(
+                let store = try self.addSQLiteStoreAndWait(
                     fileURL: fileURL,
                     configuration: configuration,
                     automigrating: false,
                     resetStoreOnMigrationFailure: false
                 )
                 
-                completion(persistentStoreResult)
+                GCDQueue.Main.async {
+                    
+                    completion(PersistentStoreResult(store))
+                }
                 return nil
         }
         catch {
@@ -312,12 +322,16 @@ public extension DataStack {
         var operations = [NSOperation]()
         var cancelled = false
         
-        let progress = NSProgress(totalUnitCount: numberOfMigrations)
+        let progress = NSProgress(parent: nil, userInfo: nil)
+        progress.totalUnitCount = numberOfMigrations
         
+        // todo nsprogress crashing sometimes
         for (sourceModel, destinationModel, mappingModel, _) in migrationSteps {
             
             progress.becomeCurrentWithPendingUnitCount(1)
-            let childProgress = NSProgress(totalUnitCount: 100)
+            
+            let childProgress = NSProgress(parent: progress, userInfo: nil)
+            childProgress.totalUnitCount = 100
             
             operations.append(
                 NSBlockOperation { [weak self] in
@@ -338,7 +352,6 @@ public extension DataStack {
                                 mappingModel: mappingModel,
                                 progress: childProgress
                             )
-                            childProgress.setProgressHandler(nil)
                         }
                         catch {
                             
@@ -365,9 +378,8 @@ public extension DataStack {
             
             GCDQueue.Main.async {
                 
+                progress.setProgressHandler(nil)
                 completion(migrationResult ?? MigrationResult(migrationTypes))
-                
-                withExtendedLifetime(progress) { (_: NSProgress) -> Void in }
                 return
             }
         }

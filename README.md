@@ -43,7 +43,12 @@ I wrote this library when Swift was made public, and CoreStore is now a powerhou
 
 Quick-setup:
 ```swift
-CoreStore.addSQLiteStoreAndWait(fileName: "MyStore.sqlite")
+do {
+    try CoreStore.addSQLiteStoreAndWait(fileName: "MyStore.sqlite")
+}
+catch {
+    // ...
+}
 ```
 
 Simple transactions:
@@ -131,7 +136,12 @@ This allows for a butter-smooth main thread, while still taking advantage of saf
 ## Setting up
 The simplest way to initialize CoreStore is to add a default store to the default stack:
 ```swift
-CoreStore.addSQLiteStoreAndWait()
+do {
+    try CoreStore.addSQLiteStoreAndWait()
+}
+catch {
+    // ...
+}
 ```
 This one-liner does the following:
 - Triggers the lazy-initialization of `CoreStore.defaultStack` with a default `DataStack`
@@ -143,21 +153,24 @@ For most cases, this configuration is usable as it is. But for more hardcore set
 ```swift
 let dataStack = DataStack(modelName: "MyModel") // loads from the "MyModel.xcdatamodeld" file
 
-switch dataStack.addInMemoryStore(configuration: "Config1") { // creates an in-memory store with entities from the "Config1" configuration in the .xcdatamodeld file
-case .Success(let persistentStore): // persistentStore is an NSPersistentStore instance
+do {
+    // creates an in-memory store with entities from the "Config1" configuration in the .xcdatamodeld file
+    let persistentStore = try dataStack.addInMemoryStore(configuration: "Config1") // persistentStore is an NSPersistentStore instance
     print("Successfully created an in-memory store: \(persistentStore)"
-case .Failure(let error): // error is an NSError instance
+}
+catch let error as NSError {
     print("Failed creating an in-memory store with error: \(error.description)"
 }
 
-switch dataStack.addSQLiteStoreAndWait(
-    fileURL: sqliteFileURL, // set the target file URL for the sqlite file
-    configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
-    automigrating: true, // automatically run lightweight migrations or entity policy migrations when needed
-    resetStoreOnMigrationFailure: true) { // delete and recreate the sqlite file when migration conflicts occur (useful when debugging)
-case .Success(let persistentStore): // persistentStore is an NSPersistentStore instance
+do {
+    try dataStack.addSQLiteStoreAndWait(
+        fileURL: sqliteFileURL, // set the target file URL for the sqlite file
+        configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
+        automigrating: true, // automatically run lightweight migrations or entity policy migrations when needed
+        resetStoreOnMigrationFailure: true)
     print("Successfully created an sqlite store: \(persistentStore)"
-case .Failure(let error): // error is an NSError instance
+}
+catch let error as NSError {
     print("Failed creating an sqlite store with error: \(error.description)"
 }
 
@@ -173,7 +186,11 @@ class MyViewController: UIViewController {
     let dataStack = DataStack(modelName: "MyModel")
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.dataStack.addSQLiteStoreAndWait()
+        do {
+            try self.dataStack.addSQLiteStoreAndWait()
+        }
+        catch { // ...
+        }
     }
     func methodToBeCalledLaterOn() {
         let objects = self.dataStack.fetchAll(From(MyEntity))
@@ -186,7 +203,11 @@ The difference is when you set the stack as the `CoreStore.defaultStack`, you ca
 class MyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        CoreStore.addSQLiteStoreAndWait()
+        do {
+            try CoreStore.addSQLiteStoreAndWait()
+        }
+        catch { // ...
+        }
     }
     func methodToBeCalledLaterOn() {
         let objects = CoreStore.fetchAll(From(MyEntity))

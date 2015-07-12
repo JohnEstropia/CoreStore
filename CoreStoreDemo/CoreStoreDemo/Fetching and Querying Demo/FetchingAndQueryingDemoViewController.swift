@@ -15,7 +15,7 @@ private struct Static {
     static let timeZonesStack: DataStack = {
         
         let dataStack = DataStack()
-        dataStack.addSQLiteStoreAndWait(
+        try! dataStack.addSQLiteStoreAndWait(
             fileName: "TimeZoneDemo.sqlite",
             configuration: "FetchingAndQueryingDemo",
             resetStoreOnMigrationFailure: true

@@ -50,9 +50,8 @@ public extension NSProgress {
         
         get {
             
-            let object: AnyObject? = getAssociatedObjectForKey(&PropertyKeys.progressObserver, inObject: self)
-                
-            if let observer = object as? ProgressObserver {
+            let object: ProgressObserver? = getAssociatedObjectForKey(&PropertyKeys.progressObserver, inObject: self)
+            if let observer = object {
                 
                 return observer
             }
@@ -72,41 +71,58 @@ public extension NSProgress {
 
 @objc private final class ProgressObserver: NSObject {
     
-    private weak var progress: NSProgress?
-    private var progressHandler: ((progress: NSProgress) -> Void)?
+    private unowned let progress: NSProgress
+    private var progressHandler: ((progress: NSProgress) -> Void)? {
+        
+        didSet {
+            
+            let progressHandler = self.progressHandler
+            if (progressHandler == nil) == (oldValue == nil) {
+                
+                return
+            }
+            
+            if let _ = progressHandler {
+                
+                self.progress.addObserver(
+                    self,
+                    forKeyPath: "fractionCompleted",
+                    options: [.Initial, .New],
+                    context: nil
+                )
+            }
+            else {
+                
+                self.progress.removeObserver(self, forKeyPath: "fractionCompleted")
+            }
+        }
+    }
     
     private init(_ progress: NSProgress) {
         
         self.progress = progress
         super.init()
-        
-        progress.addObserver(
-            self,
-            forKeyPath: "fractionCompleted",
-            options: .New,
-            context: nil
-        )
     }
     
     deinit {
         
-        progress?.removeObserver(self, forKeyPath: "fractionCompleted")
+        if let _ = self.progressHandler {
+            
+            self.progressHandler = nil
+            self.progress.removeObserver(self, forKeyPath: "fractionCompleted")
+        }
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         
-        guard let progress = self.progress where object as? NSProgress == progress && keyPath == "fractionCompleted" else {
+        guard let progress = object as? NSProgress where progress == self.progress && keyPath == "fractionCompleted" else {
             
-            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
             return
         }
         
         GCDQueue.Main.async { [weak self] () -> Void in
             
-            if let strongSelf = self, let progress = strongSelf.progress {
-                
-                strongSelf.progressHandler?(progress: progress)
-            }
+            self?.progressHandler?(progress: progress)
         }
     }
 }

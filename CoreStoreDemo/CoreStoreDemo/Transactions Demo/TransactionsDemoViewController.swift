@@ -18,7 +18,7 @@ private struct Static {
     
     static let placeController: ObjectMonitor<Place> = {
         
-        CoreStore.addSQLiteStoreAndWait(
+        try! CoreStore.addSQLiteStoreAndWait(
             fileName: "PlaceDemo.sqlite",
             configuration: "TransactionsDemo",
             resetStoreOnMigrationFailure: true

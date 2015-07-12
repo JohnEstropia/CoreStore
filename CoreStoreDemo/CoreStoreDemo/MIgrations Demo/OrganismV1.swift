@@ -11,6 +11,7 @@ import CoreData
 
 class OrganismV1: NSManagedObject, OrganismProtocol {
 
+    @NSManaged var dna: Int64
     @NSManaged var hasHead: Bool
     @NSManaged var hasTail: Bool
     
