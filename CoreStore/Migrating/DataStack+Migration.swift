@@ -413,7 +413,7 @@ public extension DataStack {
         
         while let nextVersion = migrationChain.nextVersionFrom(currentVersion),
             let sourceModel = model[currentVersion],
-            let destinationModel = model[nextVersion] {
+            let destinationModel = model[nextVersion] where sourceModel != model {
                 
                 if let mappingModel = NSMappingModel(
                     fromBundles: mappingModelBundles,

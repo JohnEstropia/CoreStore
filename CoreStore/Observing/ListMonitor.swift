@@ -500,21 +500,9 @@ public final class ListMonitor<T: NSManagedObject> {
             self.sectionIndexTransformer = { $0 }
         }
         
-        
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
-        
-        do {
-            
-            try fetchedResultsController.performFetch()
-        }
-        catch {
-            
-            CoreStore.handleError(
-                error as NSError,
-                "Failed to perform fetch on \(typeName(NSFetchedResultsController))."
-            )
-        }
+        try! fetchedResultsController.performFetch()
     }
     
     

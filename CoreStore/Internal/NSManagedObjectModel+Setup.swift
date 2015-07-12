@@ -33,7 +33,7 @@ internal extension NSManagedObjectModel {
     
     // MARK: Internal
     
-    @nonobjc internal class func fromBundle(bundle: NSBundle, modelName: String, modelVersion: String? = nil) -> NSManagedObjectModel {
+    @nonobjc internal class func fromBundle(bundle: NSBundle, modelName: String, modelVersionHints: Set<String> = []) -> NSManagedObjectModel {
         
         guard let modelFilePath = bundle.pathForResource(modelName, ofType: "momd") else {
             
@@ -46,19 +46,34 @@ internal extension NSManagedObjectModel {
         guard let versionInfo = NSDictionary(contentsOfURL: versionInfoPlistURL),
             let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
                 
-                fatalError("Could not load \(typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\"."
-                )
+                fatalError("Could not load \(typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\".")
         }
         
         let modelVersions = Set(versionHashes.keys)
         let currentModelVersion: String
-        if let modelVersion = modelVersion {
+        if let plistModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String where modelVersionHints.isEmpty || modelVersionHints.contains(plistModelVersion) {
             
-            currentModelVersion = modelVersion
+            currentModelVersion = plistModelVersion
+        }
+        else if let resolvedVersion = modelVersions.intersect(modelVersionHints).first {
+            
+            CoreStore.log(
+                .Warning,
+                message: "The MigrationChain leaf versions do not include the model file's current version. Resolving to version \"\(resolvedVersion)\"."
+            )
+            currentModelVersion = resolvedVersion
+        }
+        else if let resolvedVersion = modelVersions.first ?? modelVersionHints.first {
+            
+            CoreStore.log(
+                .Warning,
+                message: "The MigrationChain leaf versions do not include any of the model file's embedded versions. Resolving to version \"\(resolvedVersion)\"."
+            )
+            currentModelVersion = resolvedVersion
         }
         else {
             
-            currentModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String ?? modelVersions.first!
+            fatalError("No model files were found in URL \"\(modelFileURL)\".")
         }
         
         var modelVersionFileURL: NSURL?

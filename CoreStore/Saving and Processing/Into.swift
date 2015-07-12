@@ -44,11 +44,6 @@ public struct Into<T: NSManagedObject> {
     
     // MARK: Public
     
-    internal static var defaultConfigurationName: String {
-        
-        return "PF_DEFAULT_CONFIGURATION_NAME"
-    }
-    
     /**
     Initializes an `Into` clause.
     Sample Usage:
@@ -138,6 +133,11 @@ public struct Into<T: NSManagedObject> {
     
     
     // MARK: Internal
+    
+    internal static var defaultConfigurationName: String {
+        
+        return "PF_DEFAULT_CONFIGURATION_NAME"
+    }
     
     internal let entityClass: AnyClass
     internal let configuration: String?

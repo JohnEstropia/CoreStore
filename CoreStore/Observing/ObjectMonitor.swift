@@ -202,19 +202,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
-        
-        
-        do {
-            
-            try fetchedResultsController.performFetch()
-        }
-        catch {
-            
-            CoreStore.handleError(
-                error as NSError,
-                "Failed to perform fetch for \(typeName(NSFetchedResultsController))."
-            )
-        }
+        try! fetchedResultsController.performFetch()
         
         self.lastCommittedAttributes = (self.object?.committedValuesForKeys(nil) as? [String: NSObject]) ?? [:]
     }
