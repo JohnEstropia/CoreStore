@@ -241,10 +241,10 @@ class MyViewController: UIViewController {
 
 
 ## Migrations
-<README pending>
+(README pending)
 
 ### Incremental migrations
-<README pending>
+(README pending)
 
 
 
