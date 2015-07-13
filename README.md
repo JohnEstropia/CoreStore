@@ -11,9 +11,24 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 
 
 
+## What CoreStore does better:
+
+- Heavily supports multiple persistent stores per data stack, just the way *.xcdatamodeld* files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
+- **New in 1.0.0:** Incremental Migrations! Just tell the data stack the sequence of model versions and CoreStore will automatically use incremental migrations if needed on stores added to that stack.
+- Ability to plug-in your own logging framework
+- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you are free to name them independently.
+- Provides type-safe, easy to configure observers to replace `NSFetchedResultsController` and KVO
+- Exposes API not just for fetching, but also for querying aggregates and property values
+- Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
+- Exposes clean and convenient API designed around Swift’s code elegance and type safety.
+- Documentation! No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.
+
+**CoreStore's goal is not to expose shorter, magical syntax, but to provide an API that focuses on readability, consistency, and safety.**
+
+
+
 ## Contents
 
-- [What CoreStore does better](#what-corestore-does-better)
 - [TL;DR (a.k.a. sample codes)](#tldr-aka-sample-codes)
 - [Architecture](#architecture)
 - CoreStore Tutorials (All of these have demos in the **CoreStoreDemo** app project!)
@@ -45,22 +60,6 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 - [Installation](#installation)
 - [Changesets](#changesets)
     - [Upgrading from v0.2.0 to 1.0.0](#upgrading-from-v020-to-100)
-
-
-
-## What CoreStore does better:
-
-- Heavily supports multiple persistent stores per data stack, just the way *.xcdatamodeld* files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
-- **New in 1.0.0:** Incremental Migrations! Just tell the data stack the sequence of model versions and CoreStore will automatically use incremental migrations if needed on stores added to that stack.
-- Ability to plug-in your own logging framework
-- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you are free to name them independently.
-- Provides type-safe, easy to configure observers to replace `NSFetchedResultsController` and KVO
-- Exposes API not just for fetching, but also for querying aggregates and property values
-- Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
-- Exposes clean and convenient API designed around Swift’s code elegance and type safety.
-- Documentation! No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.
-
-**CoreStore's goal is not to expose shorter, magical syntax, but to provide an API that focuses on readability, consistency, and safety.**
 
 
 
@@ -880,7 +879,7 @@ Add all *.swift* files to your project.
 
 
 # Changesets
-## Upgrading from v0.2.0 to 1.0.0
+### Upgrading from v0.2.0 to 1.0.0
 - Renamed some classes/protocols to shorter, more relevant, easier to remember names:
 - `ManagedObjectController` to `ObjectMonitor`
 - `ManagedObjectObserver` to `ObjectObserver`
