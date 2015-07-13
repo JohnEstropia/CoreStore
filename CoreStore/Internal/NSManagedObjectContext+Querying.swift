@@ -251,6 +251,7 @@ internal extension NSManagedObjectContext {
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.returnsObjectsAsFaults = true
+        fetchRequest.includesPropertyValues = false
         
         for clause in deleteClauses {
             

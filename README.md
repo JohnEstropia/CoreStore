@@ -9,23 +9,46 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 
 [Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
 
-[Upgrading from 0.2.0 to 1.0.0](#changes-from-v020-to-100)
 
 
-## Another Core Data wrapper?
+## Contents
 
-I have used (and abused) Core Data for almost 5 years. While the majority of Core Data wrappers serve their purpose really well (I worked with [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) for a looong time), I have always felt that they "wrap" too much of the Core Data SDK's functionality.
+- [What CoreStore does better](#what-corestore-does-better)
+- [TL;DR (a.k.a. sample codes)](#tldr-aka-sample-codes)
+- [Architecture](#architecture)
+- CoreStore Tutorials (All of these have demos in the **CoreStoreDemo** app project!)
+    - [Setting up](#setting-up)
+    - [Migrations](#migrations)
+        - [Incremental migrations](#incremental-migrations)
+    - [Saving and processing transactions](#saving-and-processing-transactions)
+        - [Transaction types](#transaction-types)
+            - [Asynchronous transactions](#asynchronous-transactions)
+            - [Synchronous transactions](#synchronous-transactions)
+            - [Detached transactions](#detached-transactions)
+        - [Creating objects](#creating-objects)
+        - [Updating objects](#updating-objects)
+        - [Deleting objects](#deleting-objects)
+    - [Fetching and querying](#fetching-and-querying)
+        - [`From` clause](#from-clause)
+        - [Fetching](#fetching)
+            - [`Where` clause](#where-clause)
+            - [`OrderBy` clause](#orderby-clause)
+            - [`Tweak` clause](#tweak-clause)
+        - [Querying](#querying)
+            - [`Select<T>` clause](#selectt-clause)
+            - [`GroupBy` clause](#groupby-clause)
+    - [Logging and error handling](#logging-and-error-handling)
+    - [Observing changes and notifications](#observing-changes-and-notifications)
+        - [Observe a single object](#observe-a-single-object)
+        - [Observe a list of objects](#observe-a-list-of-objects)
+- [Roadmap](#roadmap)
+- [Installation](#installation)
+- [Changesets](#changesets)
+    - [Upgrading from v0.2.0 to 1.0.0](#upgrading-from-v020-to-100)
 
-For example:
-- a lot of iOS devs have never used (or heard of) "Configurations"
-- very few are aware that entities can be saved in separate *sqlite* files to boost performance and reduce data corruption
-- we're forced to name our `NSManagedObject` subclasses exactly the same as our Entities
-- and so on...
-
-I wrote this library when Swift was made public, and CoreStore is now a powerhouse with functionalities rarely implemented in other Core Data libraries.
 
 
-### What CoreStore does better:
+## What CoreStore does better:
 
 - Heavily supports multiple persistent stores per data stack, just the way *.xcdatamodeld* files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
 - Ability to plug-in your own logging framework
@@ -39,19 +62,33 @@ I wrote this library when Swift was made public, and CoreStore is now a powerhou
 **CoreStore's goal is not to expose shorter, magical syntax, but to provide an API that focuses on readability, consistency, and safety.**
 
 
+
 ## TL;DR (a.k.a. sample codes)
 
-Quick-setup:
+Setting-up with incremental migration support:
+```swift
+CoreStore.defaultStack = DataStack(
+    modelName: "MyStore",
+    migrationChain: ["MyStore", "MyStoreV2", "MyStoreV3"]
+)
+```
+
+Adding a store:
 ```swift
 do {
-    try CoreStore.addSQLiteStoreAndWait(fileName: "MyStore.sqlite")
+    try CoreStore.addSQLiteStore(
+        fileName: "MyStore.sqlite",
+        completion: { (result) -> Void in
+            // ...
+        }
+    )
 }
 catch {
     // ...
 }
 ```
 
-Simple transactions:
+Starting transactions:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let person = transaction.create(Into(MyPersonEntity))
@@ -67,7 +104,7 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 }
 ```
 
-Easy fetching:
+Fetching objects:
 ```swift
 let people = CoreStore.fetchAll(From(MyPersonEntity))
 ```
@@ -82,7 +119,7 @@ let people = CoreStore.fetchAll(
 )
 ```
 
-Simple queries:
+Querying values:
 ```swift
 let maxAge = CoreStore.queryValue(
     From(MyPersonEntity),
@@ -94,20 +131,6 @@ But really, there's a reason I wrote this huge README. Read up on the details!
 
 Check out the **CoreStoreDemo** app project for sample codes as well!
 
-
-## Contents
-
-- Tutorials
-  - [Architecture](#architecture)
-  - [Setting up](#setup)
-  - [Saving and processing transactions](#transactions)
-  - [Fetching and querying](#fetch_query)
-  - [Logging and error handling](#logging)
-  - [Observing changes and notifications](#observing)
-- [Roadmap](#roadmap)
-- [Installation](#installation)
-
-(All of these have demos in the **CoreStoreDemo** app project!)
 
 
 ## Architecture
@@ -217,6 +240,13 @@ class MyViewController: UIViewController {
 ```
 
 
+## Migrations
+<README pending>
+
+### Incremental migrations
+<README pending>
+
+
 
 ## Saving and processing transactions
 To ensure deterministic state for objects in the read-only `NSManagedObjectContext`, CoreStore does not expose API's for updating and saving directly from the main context (or any other context for that matter.) Instead, you spawn *transactions* from `DataStack` instances:
@@ -236,7 +266,7 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 ```
 The `commit()` method saves the changes to the persistent store. If `commit()` is not called when the transaction block completes, all changes within the transaction is discarded.
 
-The examples above use `beginAsynchronous(...)`, but there are actually 3 types of transactions at you disposal: *asynchronous*, *synchronous*, and *detached*.
+The examples above use `beginAsynchronous(...)`, but there are actually 3 types of transactions at your disposal: *asynchronous*, *synchronous*, and *detached*.
 
 ### Transaction types
 
@@ -329,7 +359,7 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
     transaction.commit()
 }
 ```
-*(For more about fetching, read [Fetching and querying](#fetch_query))*
+*(For more about fetching, see [Fetching and querying](#fetching-and-querying))*
 
 **Do not update an instance that was not created/fetched from the transaction.** If you have a reference to the object already, use the transaction's `edit(...)` method to get an editable proxy instance for that object:
 ```swift
@@ -810,22 +840,8 @@ let person2 = self.monitor[1, 2]
 // person1 and person2 are the same object
 ```
 
-# Changes from v0.2.0 to 1.0.0
-- Renamed some classes/protocols to shorter, more relevant, easier to remember names:
-    - `ManagedObjectController` to `ObjectMonitor`
-    - `ManagedObjectObserver` to `ObjectObserver`
-    - `ManagedObjectListController` to `ListMonitor`
-    - `ManagedObjectListChangeObserver` to `ListObserver`
-    - `ManagedObjectListObjectObserver` to `ListObjectObserver`
-    - `ManagedObjectListSectionObserver` to `ListSectionObserver`
-    - `SectionedBy` to `SectionBy` (match tense with `OrderBy` and `GroupBy`)
-The protocols above had their methods renamed as well, to retain the natural language semantics.
-- New migration utilities! (README still pending) Check out *DataStack+Migration.swift* and *CoreStore+Migration.swift* for the new methods.
-
 
 # Roadmap
-- Migration utilities (In progress!)
-- Swift 2.0 syntax (In progress!)
 - Data importing utilities for transactions
 - Support iCloud stores
 
@@ -859,6 +875,23 @@ Drag and drop **CoreStore.xcodeproj** to your project.
 
 #### To include directly in your app module:
 Add all *.swift* files to your project.
+
+
+
+# Changesets
+## Upgrading from v0.2.0 to 1.0.0
+- Renamed some classes/protocols to shorter, more relevant, easier to remember names:
+- `ManagedObjectController` to `ObjectMonitor`
+- `ManagedObjectObserver` to `ObjectObserver`
+- `ManagedObjectListController` to `ListMonitor`
+- `ManagedObjectListChangeObserver` to `ListObserver`
+- `ManagedObjectListObjectObserver` to `ListObjectObserver`
+- `ManagedObjectListSectionObserver` to `ListSectionObserver`
+- `SectionedBy` to `SectionBy` (match tense with `OrderBy` and `GroupBy`)
+The protocols above had their methods renamed as well, to retain the natural language semantics.
+- Several methods now `throw` errors insted of returning a result `enum`.
+- New migration utilities! (README still pending) Check out *DataStack+Migration.swift* and *CoreStore+Migration.swift* for the new methods, as well as *DataStack.swift* for its new initializer.
+
 
 # Contributions
 While CoreStore's design is pretty solid and the unit test and demo app work well, CoreStore is pretty much still in its early stage. With more exposure to production code usage and criticisms from the developer community, CoreStore hopes to mature as well.

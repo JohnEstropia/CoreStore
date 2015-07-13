@@ -32,7 +32,7 @@ import CoreData
 /**
 A `MigrationChain` indicates the sequence of model versions to be used as the order for incremental migration. This is typically passed to the `DataStack` initializer and will be applied to all stores added to the `DataStack` with `addSQLiteStore(...)` and its variants.
 
-Initializing with empty values (either `nil`, `[]`, or `[:]`) signifies to use the .xcdatamodel's current version as the final version, and to disable incremental migrations:
+Initializing with empty values (either `nil`, `[]`, or `[:]`) instructs the `DataStack` to use the .xcdatamodel's current version as the final version, and to disable incremental migrations:
 
     let dataStack = DataStack(migrationChain: nil)
 
@@ -151,8 +151,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.versionTree = versionTree
         self.rootVersions = Set(versionTree.keys).subtract(versionTree.values)
         self.leafVersions = leafVersions
-        self.valid = valid
-            && Set(versionTree.keys).union(versionTree.values).filter { isVersionAmbiguous($0) }.count <= 0
+        self.valid = valid && Set(versionTree.keys).union(versionTree.values).filter { isVersionAmbiguous($0) }.count <= 0
     }
     
     

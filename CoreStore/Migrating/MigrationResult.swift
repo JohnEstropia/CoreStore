@@ -137,12 +137,12 @@ public enum MigrationResult {
     // MARK: Public
     
     /**
-    `MigrationResult.Success` indicates that the `commit()` for the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated value `hasChanges` indicates if there were saved changes or not.
+    `MigrationResult.Success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
     */
     case Success([MigrationType])
     
     /**
-    `SaveResult.Failure` indicates that the `commit()` for the transaction failed. The associated object for this value is the related `NSError` instance.
+    `SaveResult.Failure` indicates that the migration failed. The associated object for this value is the related `NSError` instance.
     */
     case Failure(NSError)
     
@@ -166,9 +166,7 @@ public enum MigrationResult {
     
     internal init(_ errorCode: CoreStoreErrorCode, userInfo: [NSObject: AnyObject]?) {
         
-        self.init(NSError(
-            coreStoreErrorCode: errorCode,
-            userInfo: userInfo))
+        self.init(NSError(coreStoreErrorCode: errorCode, userInfo: userInfo))
     }
 }
 
