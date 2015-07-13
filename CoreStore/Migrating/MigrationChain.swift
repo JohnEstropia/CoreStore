@@ -115,6 +115,8 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
             
             if let _ = versionTree.updateValue(tuple.1, forKey: tuple.0) {
                 
+                CoreStore.assert(false, "\(typeName(MigrationChain))'s migration chain could not be created due to ambiguous version paths.")
+                
                 valid = false
             }
             return versionTree
@@ -133,7 +135,9 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
             var version = start
             while let nextVersion = versionTree[version] where nextVersion != version {
                 
-                if checklist.contains(version) {
+                if checklist.contains(nextVersion) {
+                    
+                    CoreStore.assert(false, "\(typeName(MigrationChain))'s migration chain could not be created due to looping version paths.")
                     
                     return true
                 }

@@ -25,6 +25,8 @@
 
 import UIKit
 import XCTest
+
+@testable
 import CoreStore
 
 class CoreStoreTests: XCTestCase {
@@ -39,6 +41,42 @@ class CoreStoreTests: XCTestCase {
         
         self.deleteStores()
         super.tearDown()
+    }
+    
+    func testMigrationChains() {
+        
+        let emptyChain: MigrationChain = nil
+        XCTAssertTrue(emptyChain.valid, "emptyChain.valid")
+        XCTAssertTrue(emptyChain.empty, "emptyChain.empty")
+        
+        let normalChain: MigrationChain = "version1"
+        XCTAssertTrue(normalChain.valid, "normalChain.valid")
+        XCTAssertTrue(normalChain.empty, "normalChain.empty")
+        
+        let linearChain: MigrationChain = ["version1", "version2", "version3", "version4"]
+        XCTAssertTrue(linearChain.valid, "linearChain.valid")
+        XCTAssertFalse(linearChain.empty, "linearChain.empty")
+        
+        let treeChain: MigrationChain = [
+            "version1": "version4",
+            "version2": "version3",
+            "version3": "version4"
+        ]
+        XCTAssertTrue(treeChain.valid, "treeChain.valid")
+        XCTAssertFalse(treeChain.empty, "treeChain.empty")
+
+        // The cases below will trigger assertion failures internally
+        
+//        let linearLoopChain: MigrationChain = ["version1", "version2", "version1", "version3", "version4"]
+//        XCTAssertFalse(linearLoopChain.valid, "linearLoopChain.valid")
+//        
+//        let treeAmbiguousChain: MigrationChain = [
+//            "version1": "version4",
+//            "version2": "version3",
+//            "version1": "version2",
+//            "version3": "version4"
+//        ]
+//        XCTAssertFalse(treeAmbiguousChain.valid, "treeAmbiguousChain.valid")
     }
     
     func testExample() {
