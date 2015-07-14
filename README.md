@@ -5,7 +5,8 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Simple, elegant, and smart Core Data programming with Swift
-(Swift, iOS 8+)
+(Swift 1.2, iOS 8+)
+Check out the [develop branch](https://github.com/JohnEstropia/CoreStore/tree/develop) for Swift 2.0 and Incremental Migrations support!
 
 [Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
 
