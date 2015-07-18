@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
     s.source_files = "CoreStore", "CoreStore/**/*.{swift}"
     s.frameworks = "Foundation", "UIKit", "CoreData"
     s.requires_arc = true
-    s.dependency "GCDKit", "1.0.1"
+    s.dependency "GCDKit", "1.1.0"
 end
