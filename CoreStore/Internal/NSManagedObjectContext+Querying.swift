@@ -52,16 +52,24 @@ internal extension NSManagedObjectContext {
         }
         
         var fetchResults: [T]?
-        var error: NSError?
+        var fetchError: NSError?
         self.performBlockAndWait {
             
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
+            do {
+                
+                fetchResults = try self.executeFetchRequest(fetchRequest) as? [T]
+            }
+            catch {
+                
+                fetchError = error as NSError
+            }
         }
         if fetchResults == nil {
             
             CoreStore.handleError(
-                error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed executing fetch request.")
+                fetchError ?? NSError(coreStoreErrorCode: .UnknownError),
+                "Failed executing fetch request."
+            )
             return nil
         }
         
@@ -87,16 +95,24 @@ internal extension NSManagedObjectContext {
         }
         
         var fetchResults: [T]?
-        var error: NSError?
+        var fetchError: NSError?
         self.performBlockAndWait {
             
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T]
+            do {
+                
+                fetchResults = try self.executeFetchRequest(fetchRequest) as? [T]
+            }
+            catch {
+                
+                fetchError = error as NSError
+            }
         }
         if fetchResults == nil {
             
             CoreStore.handleError(
-                error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed executing fetch request.")
+                fetchError ?? NSError(coreStoreErrorCode: .UnknownError),
+                "Failed executing fetch request."
+            )
             return nil
         }
         
@@ -128,7 +144,8 @@ internal extension NSManagedObjectContext {
             
             CoreStore.handleError(
                 error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed executing fetch request.")
+                "Failed executing fetch request."
+            )
             return nil
         }
         
@@ -154,16 +171,24 @@ internal extension NSManagedObjectContext {
         }
         
         var fetchResults: [NSManagedObjectID]?
-        var error: NSError?
+        var fetchError: NSError?
         self.performBlockAndWait {
             
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [NSManagedObjectID]
+            do {
+                
+                fetchResults = try self.executeFetchRequest(fetchRequest) as? [NSManagedObjectID]
+            }
+            catch {
+                
+                fetchError = error as NSError
+            }
         }
         if fetchResults == nil {
             
             CoreStore.handleError(
-                error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed executing fetch request.")
+                fetchError ?? NSError(coreStoreErrorCode: .UnknownError),
+                "Failed executing fetch request."
+            )
             return nil
         }
         
@@ -189,16 +214,24 @@ internal extension NSManagedObjectContext {
         }
         
         var fetchResults: [NSManagedObjectID]?
-        var error: NSError?
+        var fetchError: NSError?
         self.performBlockAndWait {
             
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [NSManagedObjectID]
+            do {
+                
+                fetchResults = try self.executeFetchRequest(fetchRequest) as? [NSManagedObjectID]
+            }
+            catch {
+                
+                fetchError = error as NSError
+            }
         }
         if fetchResults == nil {
             
             CoreStore.handleError(
-                error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed executing fetch request.")
+                fetchError ?? NSError(coreStoreErrorCode: .UnknownError),
+                "Failed executing fetch request."
+            )
             return nil
         }
         
@@ -218,6 +251,7 @@ internal extension NSManagedObjectContext {
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.returnsObjectsAsFaults = true
+        fetchRequest.includesPropertyValues = false
         
         for clause in deleteClauses {
             
@@ -225,26 +259,32 @@ internal extension NSManagedObjectContext {
         }
         
         var numberOfDeletedObjects: Int?
-        var error: NSError?
+        var fetchError: NSError?
         self.performBlockAndWait {
             
             autoreleasepool {
                 
-                if let fetchResults = self.executeFetchRequest(fetchRequest, error: &error) as? [T] {
+                do {
                     
-                    numberOfDeletedObjects = fetchResults.count
+                    let fetchResults = try self.executeFetchRequest(fetchRequest) as? [T] ?? []
                     for object in fetchResults {
                         
                         self.deleteObject(object)
                     }
+                    numberOfDeletedObjects = fetchResults.count
+                }
+                catch {
+                    
+                    fetchError = error as NSError
                 }
             }
         }
         if numberOfDeletedObjects == nil {
             
             CoreStore.handleError(
-                error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed executing fetch request.")
+                fetchError ?? NSError(coreStoreErrorCode: .UnknownError),
+                "Failed executing fetch request."
+            )
             return nil
         }
         
@@ -271,10 +311,17 @@ internal extension NSManagedObjectContext {
         }
         
         var fetchResults: [AnyObject]?
-        var error: NSError?
+        var fetchError: NSError?
         self.performBlockAndWait {
             
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error)
+            do {
+                
+                fetchResults = try self.executeFetchRequest(fetchRequest)
+            }
+            catch {
+                
+                fetchError = error as NSError
+            }
         }
         if let fetchResults = fetchResults {
             
@@ -287,8 +334,9 @@ internal extension NSManagedObjectContext {
         }
         
         CoreStore.handleError(
-            error ?? NSError(coreStoreErrorCode: .UnknownError),
-            "Failed executing fetch request.")
+            fetchError ?? NSError(coreStoreErrorCode: .UnknownError),
+            "Failed executing fetch request."
+        )
         return nil
     }
     
@@ -312,10 +360,17 @@ internal extension NSManagedObjectContext {
         }
         
         var fetchResults: [AnyObject]?
-        var error: NSError?
+        var fetchError: NSError?
         self.performBlockAndWait {
             
-            fetchResults = self.executeFetchRequest(fetchRequest, error: &error)
+            do {
+                
+                fetchResults = try self.executeFetchRequest(fetchRequest)
+            }
+            catch {
+                
+                fetchError = error as NSError
+            }
         }
         if let fetchResults = fetchResults {
             
@@ -323,8 +378,9 @@ internal extension NSManagedObjectContext {
         }
         
         CoreStore.handleError(
-            error ?? NSError(coreStoreErrorCode: .UnknownError),
-            "Failed executing fetch request.")
+            fetchError ?? NSError(coreStoreErrorCode: .UnknownError),
+            "Failed executing fetch request."
+        )
         return nil
     }
 }

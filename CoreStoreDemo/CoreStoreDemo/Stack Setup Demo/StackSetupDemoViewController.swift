@@ -18,13 +18,13 @@ private struct Static {
     static let facebookStack: DataStack = {
         
         let dataStack = DataStack(modelName: "StackSetupDemo")
-        dataStack.addSQLiteStoreAndWait(
-            "AccountsDemo_FB_Male.sqlite",
+        try! dataStack.addSQLiteStoreAndWait(
+            fileName: "AccountsDemo_FB_Male.sqlite",
             configuration: maleConfiguration,
             resetStoreOnMigrationFailure: true
         )
-        dataStack.addSQLiteStoreAndWait(
-            "AccountsDemo_FB_Female.sqlite",
+        try! dataStack.addSQLiteStoreAndWait(
+            fileName: "AccountsDemo_FB_Female.sqlite",
             configuration: femaleConfiguration,
             resetStoreOnMigrationFailure: true
         )
@@ -52,13 +52,13 @@ private struct Static {
     static let twitterStack: DataStack = {
         
         let dataStack = DataStack(modelName: "StackSetupDemo")
-        dataStack.addSQLiteStoreAndWait(
-            "AccountsDemo_TW_Male.sqlite",
+        try! dataStack.addSQLiteStoreAndWait(
+            fileName: "AccountsDemo_TW_Male.sqlite",
             configuration: maleConfiguration,
             resetStoreOnMigrationFailure: true
         )
-        dataStack.addSQLiteStoreAndWait(
-            "AccountsDemo_TW_Female.sqlite",
+        try! dataStack.addSQLiteStoreAndWait(
+            fileName: "AccountsDemo_TW_Female.sqlite",
             configuration: femaleConfiguration,
             resetStoreOnMigrationFailure: true
         )
@@ -138,7 +138,7 @@ class StackSetupDemoViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell") as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell")!
         
         let account = self.accounts[indexPath.section][indexPath.row]
         cell.textLabel?.text = account.name
@@ -176,11 +176,11 @@ class StackSetupDemoViewController: UITableViewController {
     
     // MARK: Private
     
-    @IBOutlet weak var accountTypeLabel: UILabel?
-    @IBOutlet weak var nameLabel: UILabel?
-    @IBOutlet weak var friendsLabel: UILabel?
+    @IBOutlet private dynamic weak var accountTypeLabel: UILabel?
+    @IBOutlet private dynamic weak var nameLabel: UILabel?
+    @IBOutlet private dynamic weak var friendsLabel: UILabel?
     
-    func updateDetailsWithAccount(account: UserAccount) {
+    private func updateDetailsWithAccount(account: UserAccount) {
         
         self.accountTypeLabel?.text = account.accountType
         self.nameLabel?.text = account.name

@@ -37,13 +37,16 @@ public extension DataStack {
     /**
     Fetches the first `NSManagedObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
     */
     public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchOne(from, fetchClauses)
     }
@@ -51,13 +54,16 @@ public extension DataStack {
     /**
     Fetches the first `NSManagedObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
     */
     public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchOne(from, fetchClauses)
     }
@@ -65,13 +71,16 @@ public extension DataStack {
     /**
     Fetches all `NSManagedObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
     */
     public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchAll(from, fetchClauses)
     }
@@ -79,41 +88,50 @@ public extension DataStack {
     /**
     Fetches all `NSManagedObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
     */
     public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchAll(from, fetchClauses)
     }
     
     /**
-    Fetches the number of `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchCount(from, fetchClauses)
     }
     
     /**
-    Fetches the number of `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the number `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchCount(from, fetchClauses)
     }
@@ -121,13 +139,16 @@ public extension DataStack {
     /**
     Fetches the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
     */
     public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchObjectID(from, fetchClauses)
     }
@@ -135,109 +156,130 @@ public extension DataStack {
     /**
     Fetches the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
     */
     public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchObjectID(from, fetchClauses)
     }
     
     /**
-    Fetches the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
-    Fetches the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    Fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
-    :param: from a `From` clause indicating the entity type
-    :param: fetchClauses a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-    :returns: the `NSManagedObjectID` for all `NSManagedObject`'s that satisfy the specified `FetchClause`s
+    - parameter from: a `From` clause indicating the entity type
+    - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+    - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
     */
     public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to fetch from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
-    Queries aggregate values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
-    :param: from a `From` clause indicating the entity type
-    :param: selectClause a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
-    :param: queryClauses a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
-    :returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
+    - parameter from: a `From` clause indicating the entity type
+    - parameter selectClause: a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
+    - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
     */
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to query from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to query from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.queryValue(from, selectClause, queryClauses)
     }
     
     /**
-    Queries aggregate values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
-    :param: from a `From` clause indicating the entity type
-    :param: selectClause a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
-    :param: queryClauses a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
-    :returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
+    - parameter from: a `From` clause indicating the entity type
+    - parameter selectClause: a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
+    - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
     */
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to query from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to query from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.queryValue(from, selectClause, queryClauses)
     }
     
     /**
-    Queries a dictionary of attribute values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
-    :param: from a `From` clause indicating the entity type
-    :param: selectClause a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
-    :param: queryClauses a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
-    :returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
+    - parameter from: a `From` clause indicating the entity type
+    - parameter selectClause: a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
+    - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
     */
     public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to query from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to query from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }
     
     /**
-    Queries a dictionary of attribute values as specified by the `QueryClause`'s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    Queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
     
     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
     
-    :param: from a `From` clause indicating the entity type
-    :param: selectClause a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
-    :param: queryClauses a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
-    :returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
+    - parameter from: a `From` clause indicating the entity type
+    - parameter selectClause: a `Select<U>` clause indicating the properties to fetch, and with the generic type indicating the return type.
+    - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
+    - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
     */
     public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to query from a \(typeName(self)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to query from a \(typeName(self)) outside the main thread."
+        )
         
         return self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }

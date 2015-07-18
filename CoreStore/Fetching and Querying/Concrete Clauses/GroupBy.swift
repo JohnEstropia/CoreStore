@@ -39,7 +39,7 @@ public struct GroupBy: QueryClause {
     /**
     Initializes a `GroupBy` clause with a list of key path strings
     
-    :param: keyPaths a list of key path strings to group results with
+    - parameter keyPaths: a list of key path strings to group results with
     */
     public init(_ keyPaths: [KeyPath]) {
         
@@ -57,8 +57,8 @@ public struct GroupBy: QueryClause {
     /**
     Initializes a `GroupBy` clause with a list of key path strings
     
-    :param: keyPath a key path string to group results with
-    :param: keyPaths a series of key path strings to group results with
+    - parameter keyPath: a key path string to group results with
+    - parameter keyPaths: a series of key path strings to group results with
     */
     public init(_ keyPath: KeyPath, _ keyPaths: KeyPath...) {
         
@@ -74,7 +74,10 @@ public struct GroupBy: QueryClause {
         
         if fetchRequest.propertiesToGroupBy != nil {
             
-            CoreStore.log(.Warning, message: "An existing \"propertiesToGroupBy\" for the <\(NSFetchRequest.self)> was overwritten by \(typeName(self)) query clause.")
+            CoreStore.log(
+                .Warning,
+                message: "An existing \"propertiesToGroupBy\" for the \(typeName(NSFetchRequest)) was overwritten by \(typeName(self)) query clause."
+            )
         }
         
         fetchRequest.propertiesToGroupBy = self.keyPaths

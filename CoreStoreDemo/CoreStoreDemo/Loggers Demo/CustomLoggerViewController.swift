@@ -30,7 +30,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         
         super.viewDidLoad()
         
-        self.dataStack.addSQLiteStoreAndWait("emptyStore.sqlite")
+        try! self.dataStack.addSQLiteStoreAndWait(fileName: "emptyStore.sqlite")
         CoreStore.logger = self
     }
     
@@ -50,7 +50,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
     
     // MARK: CoreStoreLogger
     
-    func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         GCDQueue.Main.async { [weak self] in
             
@@ -66,7 +66,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         }
     }
     
-    func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         GCDQueue.Main.async { [weak self] in
             
@@ -87,6 +87,11 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         }
     }
     
+    @noreturn func fatalError(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        
+        Swift.fatalError("\(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Abort] \(message)")
+    }
+    
     
     // MARK: Private
     
@@ -100,11 +105,11 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         case .Some(0):
             self.dataStack.beginAsynchronous { (transaction) -> Void in
                 
-                transaction.create(Into(UserAccount))
+                transaction.create(Into(Palette))
             }
             
         case .Some(1):
-            self.dataStack.addSQLiteStoreAndWait("emptyStore.sqlite", configuration: "invalidStore")
+            try! self.dataStack.addSQLiteStoreAndWait(fileName: "emptyStore.sqlite", configuration: "invalidStore")
             
         case .Some(2):
             self.dataStack.beginAsynchronous { (transaction) -> Void in

@@ -25,6 +25,8 @@
 
 import UIKit
 import XCTest
+
+@testable
 import CoreStore
 
 class CoreStoreTests: XCTestCase {
@@ -41,28 +43,64 @@ class CoreStoreTests: XCTestCase {
         super.tearDown()
     }
     
+    func testMigrationChains() {
+        
+        let emptyChain: MigrationChain = nil
+        XCTAssertTrue(emptyChain.valid, "emptyChain.valid")
+        XCTAssertTrue(emptyChain.empty, "emptyChain.empty")
+        
+        let normalChain: MigrationChain = "version1"
+        XCTAssertTrue(normalChain.valid, "normalChain.valid")
+        XCTAssertTrue(normalChain.empty, "normalChain.empty")
+        
+        let linearChain: MigrationChain = ["version1", "version2", "version3", "version4"]
+        XCTAssertTrue(linearChain.valid, "linearChain.valid")
+        XCTAssertFalse(linearChain.empty, "linearChain.empty")
+        
+        let treeChain: MigrationChain = [
+            "version1": "version4",
+            "version2": "version3",
+            "version3": "version4"
+        ]
+        XCTAssertTrue(treeChain.valid, "treeChain.valid")
+        XCTAssertFalse(treeChain.empty, "treeChain.empty")
+
+        // The cases below will trigger assertion failures internally
+        
+//        let linearLoopChain: MigrationChain = ["version1", "version2", "version1", "version3", "version4"]
+//        XCTAssertFalse(linearLoopChain.valid, "linearLoopChain.valid")
+//        
+//        let treeAmbiguousChain: MigrationChain = [
+//            "version1": "version4",
+//            "version2": "version3",
+//            "version1": "version2",
+//            "version3": "version4"
+//        ]
+//        XCTAssertFalse(treeAmbiguousChain.valid, "treeAmbiguousChain.valid")
+    }
+    
     func testExample() {
         
-        let stack = DataStack()
+        let stack = DataStack(modelName: "Model", bundle: NSBundle(forClass: self.dynamicType))
         CoreStore.defaultStack = stack
         XCTAssert(CoreStore.defaultStack === stack, "CoreStore.defaultStack === stack")
         
-        switch stack.addSQLiteStoreAndWait("ConfigStore1.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true){
+        do {
             
-        case .Failure(let error):
+            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore1.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true)
+        }
+        catch let error as NSError {
+            
             XCTFail(error.description)
-            
-        default:
-            break
         }
         
-        switch stack.addSQLiteStoreAndWait("ConfigStore2.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true){
+        do {
             
-        case .Failure(let error):
+            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore2.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true)
+        }
+        catch let error as NSError {
+            
             XCTFail(error.description)
-            
-        default:
-            break
         }
         
         let detachedTransaction = CoreStore.beginDetached()
@@ -187,7 +225,7 @@ class CoreStoreTests: XCTestCase {
                     Select("testString", .Count("testString", As: "count")),
                     GroupBy("testString")
                 )
-                println(counts)
+                print(counts)
                 
                 XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
                 switch result {
@@ -230,6 +268,18 @@ class CoreStoreTests: XCTestCase {
             
             transaction.commit()
         }
+        
+        CoreStore.beginSynchronous({ (transaction) -> Void in
+            
+            if let obj = CoreStore.fetchOne(From(TestEntity2)) {
+                
+                let oldID = obj.testEntityID
+                obj.testEntityID = 0
+                obj.testEntityID = oldID
+            }
+            
+            transaction.commit()
+        })
         
         let objs1 = CoreStore.fetchAll(From(TestEntity1))
         XCTAssertNotNil(objs1, "objs1 != nil")
@@ -325,9 +375,12 @@ class CoreStoreTests: XCTestCase {
     
     private func deleteStores() {
         
-        NSFileManager.defaultManager().removeItemAtURL(
-            NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first as! NSURL,
-            error: nil
-        )
+        do {
+            
+            try NSFileManager.defaultManager().removeItemAtURL(
+                NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first!
+            )
+        }
+        catch _ { }
     }
 }

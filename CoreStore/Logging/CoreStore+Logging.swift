@@ -46,10 +46,8 @@ public extension CoreStore {
             level: level,
             message: message,
             fileName: fileName,
-            lineNumber:
-            lineNumber,
-            functionName:
-            functionName
+            lineNumber: lineNumber,
+            functionName: functionName
         )
     }
     
@@ -60,7 +58,8 @@ public extension CoreStore {
             message: message,
             fileName: fileName,
             lineNumber: lineNumber,
-            functionName: functionName)
+            functionName: functionName
+        )
     }
     
     internal static func assert(@autoclosure condition: () -> Bool, _ message: String, fileName: StaticString = __FILE__, lineNumber: Int = __LINE__, functionName: StaticString = __FUNCTION__) {
@@ -70,6 +69,7 @@ public extension CoreStore {
             message: message,
             fileName: fileName,
             lineNumber: lineNumber,
-            functionName: functionName)
+            functionName: functionName
+        )
     }
 }

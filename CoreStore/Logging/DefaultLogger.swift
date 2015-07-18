@@ -31,39 +31,52 @@ import Foundation
 /**
 The `DefaultLogger` is a basic implementation of the `CoreStoreLogger` protocol.
 
-- The `log(...)` method calls `println(...)` to print the level, source file name, line number, function name, and the log message.
-- The `handleError(...)` method calls `println(...)` to print the source file name, line number, function name, and the error message.
+- The `log(...)` method calls `print(...)` to print the level, source file name, line number, function name, and the log message.
+- The `handleError(...)` method calls `print(...)` to print the source file name, line number, function name, and the error message.
 - The `assert(...)` method calls `assert(...)` on the arguments.
 */
 public final class DefaultLogger: CoreStoreLogger {
     
     public init() { }
    
-    public func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
+            let icon: String
             let levelString: String
             switch level {
-            case .Trace: levelString = "Trace"
-            case .Notice: levelString = "Notice"
-            case .Warning: levelString = "Warning"
-            case .Fatal: levelString = "Fatal"
+                
+            case .Trace:
+                icon = "🔹"
+                levelString = "Trace"
+                
+            case .Notice:
+                icon = "🔸"
+                levelString = "Notice"
+                
+            case .Warning:
+                icon = "⚠️"
+                levelString = "Warning"
+                
+            case .Fatal:
+                icon = "❗"
+                levelString = "Fatal"
             }
-            Swift.println("[CoreStore:\(levelString)] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+            Swift.print("\(icon) [CoreStore: \(levelString)] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         #endif
     }
     
-    public func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.println("[CoreStore:Error] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message): \(error)\n")
+            Swift.print("⚠️ [CoreStore: Error] \(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
         #endif
     }
     
     public func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.assert(condition, message, file: fileName, line: numericCast(lineNumber))
+            Swift.assert(condition, "❗ [CoreStore: Assertion Failure] \(message)", file: fileName, line: numericCast(lineNumber))
         #endif
     }
 }

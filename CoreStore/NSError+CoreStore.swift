@@ -54,11 +54,6 @@ public enum CoreStoreErrorCode: Int {
     An `NSMappingModel` could not be found for a specific source and destination model versions.
     */
     case MappingModelNotFound
-    
-    /**
-    An `NSMigrationManager` prepared to migrate the store.
-    */
-    case MigrationFailed
 }
 
 

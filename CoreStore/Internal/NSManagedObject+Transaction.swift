@@ -33,15 +33,15 @@ internal extension NSManagedObject {
     
     // MARK: Internal
     
-    internal class func createInContext(context: NSManagedObjectContext) -> Self {
+    internal dynamic class func createInContext(context: NSManagedObjectContext) -> Self {
         
-        return self(
-            entity: context.entityDescriptionForEntityClass(self)!,
+        return self.init(
+            entity: context.entityDescriptionForEntityType(self)!,
             insertIntoManagedObjectContext: context
         )
     }
     
-    internal class func inContext(context: NSManagedObjectContext, withObjectID objectID: NSManagedObjectID) -> Self? {
+    internal dynamic class func inContext(context: NSManagedObjectContext, withObjectID objectID: NSManagedObjectID) -> Self? {
         
         return self.typedObjectInContext(context, objectID: objectID)
     }
@@ -61,16 +61,19 @@ internal extension NSManagedObject {
     
     private class func typedObjectInContext<T: NSManagedObject>(context: NSManagedObjectContext, objectID: NSManagedObjectID) -> T? {
         
-        var error: NSError?
-        if let existingObject = context.existingObjectWithID(objectID, error: &error) {
+        do {
             
+            let existingObject = try context.existingObjectWithID(objectID)
             return (existingObject as! T)
         }
-        
-        CoreStore.handleError(
-            error ?? NSError(coreStoreErrorCode: .UnknownError),
-            "Failed to load existing \(typeName(self)) in context.")
-        return nil;
+        catch {
+            
+            CoreStore.handleError(
+                error as NSError,
+                "Failed to load existing \(typeName(self)) in context."
+            )
+            return nil
+        }
     }
     
     private func typedObjectInContext<T: NSManagedObject>(context: NSManagedObjectContext) -> T? {
@@ -78,29 +81,42 @@ internal extension NSManagedObject {
         let objectID = self.objectID
         if objectID.temporaryID {
 
-            var error: NSError?
-            let didSucceed = withExtendedLifetime(self.managedObjectContext) {
+            var objectIDError: NSError?
+            let didSucceed = withExtendedLifetime(self.managedObjectContext) { (context: NSManagedObjectContext?) -> Bool in
                 
-                return $0?.obtainPermanentIDsForObjects([self], error: &error)
+                do {
+                    
+                    try context?.obtainPermanentIDsForObjects([self])
+                    return true
+                }
+                catch {
+                    
+                    objectIDError = error as NSError
+                    return false
+                }
             }
             if didSucceed != true {
                 
                 CoreStore.handleError(
-                    error ?? NSError(coreStoreErrorCode: .UnknownError),
-                    "Failed to obtain permanent ID for object.")
+                    objectIDError ?? NSError(coreStoreErrorCode: .UnknownError),
+                    "Failed to obtain permanent ID for object."
+                )
                 return nil
             }
         }
 
-        var error: NSError?
-        if let existingObject = context.existingObjectWithID(objectID, error: &error) {
+        do {
             
+            let existingObject = try context.existingObjectWithID(objectID)
             return (existingObject as! T)
         }
-        
-        CoreStore.handleError(
-            error ?? NSError(coreStoreErrorCode: .UnknownError),
-            "Failed to load existing \(typeName(self)) in context.")
-        return nil;
+        catch {
+            
+            CoreStore.handleError(
+                error as NSError,
+                "Failed to load existing \(typeName(self)) in context."
+            )
+            return nil
+        }
     }
 }

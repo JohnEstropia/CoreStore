@@ -38,72 +38,110 @@ public struct From<T: NSManagedObject> {
     
     public init(){
         
+        self.entityClass = T.self
         self.findPersistentStores = { _ in nil }
     }
     
     public init(_ entity: T.Type) {
         
+        self.entityClass = entity
+        self.findPersistentStores = { _ in nil }
+    }
+    
+    public init(_ entityClass: AnyClass) {
+        
+        self.entityClass = entityClass
         self.findPersistentStores = { _ in nil }
     }
     
     public init(_ configurations: String?...) {
         
-        self.init(configurations: configurations)
+        self.init(entityClass: T.self, configurations: configurations)
     }
     
     public init(_ configurations: [String?]) {
         
-        self.init(configurations: configurations)
+        self.init(entityClass: T.self, configurations: configurations)
     }
     
     public init(_ entity: T.Type, _ configurations: String?...) {
         
-        self.init(configurations: configurations)
+        self.init(entityClass: entity, configurations: configurations)
     }
     
     public init(_ entity: T.Type, _ configurations: [String?]) {
         
-        self.init(configurations: configurations)
+        self.init(entityClass: entity, configurations: configurations)
+    }
+    
+    public init(_ entityClass: AnyClass, _ configurations: String?...) {
+        
+        self.init(entityClass: entityClass, configurations: configurations)
+    }
+    
+    public init(_ entityClass: AnyClass, _ configurations: [String?]) {
+        
+        self.init(entityClass: entityClass, configurations: configurations)
     }
     
     public init(_ storeURLs: NSURL...) {
         
-        self.init(storeURLs: storeURLs)
+        self.init(entityClass: T.self, storeURLs: storeURLs)
     }
     
     public init(_ storeURLs: [NSURL]) {
         
-        self.init(storeURLs: storeURLs)
+        self.init(entityClass: T.self, storeURLs: storeURLs)
     }
     
     public init(_ entity: T.Type, _ storeURLs: NSURL...) {
         
-        self.init(storeURLs: storeURLs)
+        self.init(entityClass: entity, storeURLs: storeURLs)
     }
     
     public init(_ entity: T.Type, _ storeURLs: [NSURL]) {
         
-        self.init(storeURLs: storeURLs)
+        self.init(entityClass: entity, storeURLs: storeURLs)
+    }
+    
+    public init(_ entityClass: AnyClass, _ storeURLs: NSURL...) {
+        
+        self.init(entityClass: entityClass, storeURLs: storeURLs)
+    }
+    
+    public init(_ entityClass: AnyClass, _ storeURLs: [NSURL]) {
+        
+        self.init(entityClass: entityClass, storeURLs: storeURLs)
     }
     
     public init(_ persistentStores: NSPersistentStore...) {
         
-        self.init(persistentStores: persistentStores)
+        self.init(entityClass: T.self, persistentStores: persistentStores)
     }
     
     public init(_ persistentStores: [NSPersistentStore]) {
         
-        self.init(persistentStores: persistentStores)
+        self.init(entityClass: T.self, persistentStores: persistentStores)
     }
     
     public init(_ entity: T.Type, _ persistentStores: NSPersistentStore...) {
         
-        self.init(persistentStores: persistentStores)
+        self.init(entityClass: entity, persistentStores: persistentStores)
     }
     
     public init(_ entity: T.Type, _ persistentStores: [NSPersistentStore]) {
         
-        self.init(persistentStores: persistentStores)
+        self.init(entityClass: entity, persistentStores: persistentStores)
+    }
+    
+    public init(_ entityClass: AnyClass, _ persistentStores: NSPersistentStore...) {
+        
+        self.init(entityClass: entityClass, persistentStores: persistentStores)
+    }
+    
+    public init(_ entityClass: AnyClass, _ persistentStores: [NSPersistentStore]) {
+        
+        self.init(entityClass: entityClass, persistentStores: persistentStores)
     }
     
     
@@ -111,45 +149,50 @@ public struct From<T: NSManagedObject> {
     
     internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) {
         
-        fetchRequest.entity = context.entityDescriptionForEntityClass(T.self)
+        fetchRequest.entity = context.entityDescriptionForEntityClass(self.entityClass)
         fetchRequest.affectedStores = self.findPersistentStores(context: context)
     }
     
     
     // MARK: Private
     
+    private let entityClass: AnyClass
+    
     private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
     
-    private init(configurations: [String?]) {
+    private init(entityClass: AnyClass, configurations: [String?]) {
         
         let configurationsSet = Set(configurations.map { $0 ?? Into.defaultConfigurationName })
+        self.entityClass = entityClass
         self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
             
-            return context.parentStack?.persistentStoresForEntityClass(T.self)?.filter {
+            return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
                 
                 return configurationsSet.contains($0.configurationName)
             }
         }
     }
     
-    private init(storeURLs: [NSURL]) {
+    private init(entityClass: AnyClass, storeURLs: [NSURL]) {
         
         let storeURLsSet = Set(storeURLs)
+        self.entityClass = entityClass
         self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
             
-            return context.parentStack?.persistentStoresForEntityClass(T.self)?.filter {
+            return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
                 
                 return $0.URL != nil && storeURLsSet.contains($0.URL!)
             }
         }
     }
     
-    private init(persistentStores: [NSPersistentStore]) {
+    private init(entityClass: AnyClass, persistentStores: [NSPersistentStore]) {
         
         let persistentStores = Set(persistentStores)
+        self.entityClass = entityClass
         self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
             
-            return context.parentStack?.persistentStoresForEntityClass(T.self)?.filter {
+            return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
                 
                 return persistentStores.contains($0)
             }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14E46" minimumToolsVersion="Xcode 4.3">
+    <entity name="Organism" representedClassName="CoreStoreDemo.OrganismV3" syncable="YES">
+        <attribute name="dna" optional="YES" attributeType="Integer 64" syncable="YES"/>
+        <attribute name="hasHead" attributeType="Boolean" syncable="YES"/>
+        <attribute name="hasTail" attributeType="Boolean" syncable="YES"/>
+        <attribute name="hasVertebrae" attributeType="Boolean" syncable="YES"/>
+        <attribute name="numberOfLimbs" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Organism" positionX="-36" positionY="9" width="128" height="120"/>
+    </elements>
+</model>

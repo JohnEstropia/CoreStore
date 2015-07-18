@@ -31,6 +31,12 @@ import CoreData
 
 public extension NSManagedObject {
     
+    /**
+    Provides a convenience wrapper for accessing `primitiveValueForKey(...)` with proper calls to `willAccessValueForKey(...)` and `didAccessValueForKey(...)`. This is useful when implementing accessor methods for transient attributes.
+    
+    - parameter KVCKey: the KVC key
+    - returns: the primitive value for the KVC key
+    */
     public func accessValueForKVCKey(KVCKey: KeyPath) -> AnyObject? {
         
         self.willAccessValueForKey(KVCKey)
@@ -40,6 +46,12 @@ public extension NSManagedObject {
         return primitiveValue
     }
     
+    /**
+    Provides a convenience wrapper for setting `setPrimitiveValue(...)` with proper calls to `willChangeValueForKey(...)` and `didChangeValueForKey(...)`. This is useful when implementing mutator methods for transient attributes.
+    
+    - parameter value: the value to set the KVC key with
+    - parameter KVCKey: the KVC key
+    */
     public func setValue(value: AnyObject?, forKVCKey KVCKey: KeyPath) {
         
         self.willChangeValueForKey(KVCKey)

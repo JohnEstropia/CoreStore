@@ -54,7 +54,12 @@ internal extension NSManagedObjectContext {
         }
     }
     
-    internal func entityDescriptionForEntityClass(entity: NSManagedObject.Type) -> NSEntityDescription? {
+    internal func entityDescriptionForEntityType(entity: NSManagedObject.Type) -> NSEntityDescription? {
+        
+        return self.entityDescriptionForEntityClass(entity)
+    }
+    
+    internal func entityDescriptionForEntityClass(entity: AnyClass) -> NSEntityDescription? {
         
         if let entityName = self.parentStack?.entityNameForEntityClass(entity) {
 
@@ -68,10 +73,7 @@ internal extension NSManagedObjectContext {
     
     internal func setupForCoreStoreWithContextName(contextName: String) {
         
-        if self.respondsToSelector("setName:") {
-            
-            self.name = contextName
-        }
+        self.name = contextName
         
         self.observerForWillSaveNotification = NotificationObserver(
             notificationName: NSManagedObjectContextWillSaveNotification,
@@ -86,16 +88,18 @@ internal extension NSManagedObjectContext {
                     return
                 }
                 
-                var error: NSError?
-                if context.obtainPermanentIDsForObjects(Array(insertedObjects), error: &error) {
+                do {
                     
+                    try context.obtainPermanentIDsForObjects(Array(insertedObjects))
                     return
                 }
-                
-                CoreStore.handleError(
-                    error ?? NSError(coreStoreErrorCode: .UnknownError),
-                    "Failed to obtain permanent ID(s) for \(numberOfInsertedObjects) inserted object(s)."
-                )
+                catch {
+                    
+                    CoreStore.handleError(
+                        error as NSError,
+                        "Failed to obtain permanent ID(s) for \(numberOfInsertedObjects) inserted object(s)."
+                    )
+                }
             }
         )
     }

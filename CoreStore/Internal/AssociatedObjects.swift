@@ -42,27 +42,27 @@ internal func getAssociatedObjectForKey<T: AnyObject>(key: UnsafePointer<Void>, 
 
 internal func setAssociatedRetainedObject<T: AnyObject>(associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
     
-    objc_setAssociatedObject(object, key, associatedObject, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+    objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 }
 
 internal func setAssociatedCopiedObject<T: AnyObject>(associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
     
-    objc_setAssociatedObject(object, key, associatedObject, UInt(OBJC_ASSOCIATION_COPY_NONATOMIC))
+    objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_COPY_NONATOMIC)
 }
 
 internal func setAssociatedAssignedObject<T: AnyObject>(associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
     
-    objc_setAssociatedObject(object, key, associatedObject, UInt(OBJC_ASSOCIATION_ASSIGN))
+    objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_ASSIGN)
 }
 
 internal func setAssociatedWeakObject<T: AnyObject>(associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
     
     if let associatedObject = associatedObject {
         
-        objc_setAssociatedObject(object, key, WeakObject(associatedObject), UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        objc_setAssociatedObject(object, key, WeakObject(associatedObject), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
     else {
         
-        objc_setAssociatedObject(object, key, nil, UInt(OBJC_ASSOCIATION_RETAIN_NONATOMIC))
+        objc_setAssociatedObject(object, key, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 }

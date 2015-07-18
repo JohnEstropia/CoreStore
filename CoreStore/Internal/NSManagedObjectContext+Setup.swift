@@ -74,7 +74,8 @@ internal extension NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.parentContext = rootContext
-        context.shouldCascadeSavesToParent = true
+        context.mergePolicy = NSRollbackMergePolicy
+        context.shouldCascadeSavesToParent = false
         context.undoManager = nil
         context.setupForCoreStoreWithContextName("com.corestore.maincontext")
         context.observerForDidSaveNotification = NotificationObserver(

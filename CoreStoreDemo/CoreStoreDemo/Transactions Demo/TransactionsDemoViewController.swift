@@ -16,10 +16,10 @@ import GCDKit
 
 private struct Static {
     
-    static let placeController: ManagedObjectController<Place> = {
+    static let placeController: ObjectMonitor<Place> = {
         
-        CoreStore.addSQLiteStoreAndWait(
-            "PlaceDemo.sqlite",
+        try! CoreStore.addSQLiteStoreAndWait(
+            fileName: "PlaceDemo.sqlite",
             configuration: "TransactionsDemo",
             resetStoreOnMigrationFailure: true
         )
@@ -37,14 +37,14 @@ private struct Static {
             place = CoreStore.fetchOne(From(Place))
         }
         
-        return CoreStore.observeObject(place!)
+        return CoreStore.monitorObject(place!)
     }()
 }
 
 
 // MARK: - TransactionsDemoViewController
 
-class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, ManagedObjectObserver {
+class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, ObjectObserver {
     
     // MARK: NSObject
     
@@ -100,7 +100,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
     
     // MARK: MKMapViewDelegate
     
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         let identifier = "MKAnnotationView"
         var annotationView: MKPinAnnotationView! = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier) as? MKPinAnnotationView
@@ -120,14 +120,14 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
     }
     
     
-    // MARK: ManagedObjectObserver
+    // MARK: ObjectObserver
     
-    func managedObjectWillUpdate(objectController: ManagedObjectController<Place>, object: Place) {
+    func objectMonitor(monitor: ObjectMonitor<Place>, willUpdateObject object: Place) {
         
         // none
     }
     
-    func managedObjectWasUpdated(objectController: ManagedObjectController<Place>, object: Place, changedPersistentKeys: Set<KeyPath>) {
+    func objectMonitor(monitor: ObjectMonitor<Place>, didUpdateObject object: Place, changedPersistentKeys: Set<KeyPath>) {
         
         if let mapView = self.mapView {
             
@@ -143,7 +143,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
         }
     }
     
-    func managedObjectWasDeleted(objectController: ManagedObjectController<Place>, object: Place) {
+    func objectMonitor(monitor: ObjectMonitor<Place>, didDeleteObject object: Place) {
         
         // none
     }
@@ -187,17 +187,17 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Manag
         
         self.geocoder?.cancelGeocode()
         
-        var geocoder = CLGeocoder()
+        let geocoder = CLGeocoder()
         self.geocoder = geocoder
         geocoder.reverseGeocodeLocation(
             CLLocation(latitude: place.latitude, longitude: place.longitude),
             completionHandler: { [weak self] (placemarks, error) -> Void in
                 
-                if let strongSelf = self, let placemark = (placemarks as? [CLPlacemark])?.first {
+                if let placemark = placemarks?.first, let addressDictionary = placemark.addressDictionary {
                     
                     let place = transaction.edit(Static.placeController.object)
                     place?.title = placemark.name
-                    place?.subtitle = ABCreateStringWithAddressDictionary(placemark.addressDictionary, true)
+                    place?.subtitle = ABCreateStringWithAddressDictionary(addressDictionary, true)
                     transaction.commit { (_) -> Void in }
                 }
                 

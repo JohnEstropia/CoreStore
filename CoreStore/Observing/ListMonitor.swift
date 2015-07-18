@@ -1,5 +1,5 @@
 //
-//  ManagedObjectListController.swift
+//  ListMonitor.swift
 //  CoreStore
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -28,123 +28,78 @@ import CoreData
 import GCDKit
 
 
-// MARK: - SectionedBy
+// MARK: - ListMonitor
 
 /**
-The `SectionedBy` clause indicates the key path to use to group the `ManagedObjectListController` objects into sections. An optional closure can also be provided to transform the value into an appropriate section name:
+The `ListMonitor` monitors changes to a list of `NSManagedObject` instances. Observers that implement the `ListObserver` protocol may then register themselves to the `ListMonitor`'s `addObserver(_:)` method:
 
-    let listController = CoreStore.observeSectionedList(
-        From(MyPersonEntity),
-        SectionedBy("age") { "Age \($0)" },
-        OrderBy(.Ascending("lastName"))
-    )
-*/
-public struct SectionedBy {
-    
-    // MARK: Public
-    
-    /**
-    Initializes a `SectionedBy` clause with the key path to use to group `ManagedObjectListController` objects into sections
-    
-    :param: sectionKeyPath the key path to use to group the objects into sections
-    */
-    public init(_ sectionKeyPath: KeyPath) {
-        
-        self.init(sectionKeyPath, { $0 })
-    }
-    
-    /**
-    Initializes a `SectionedBy` clause with the key path to use to group `ManagedObjectListController` objects into sections, and a closure to transform the value for the key path to an appropriate section name
-    
-    :param: sectionKeyPath the key path to use to group the objects into sections
-    :param: sectionIndexTransformer a closure to transform the value for the key path to an appropriate section name
-    */
-    public init(_ sectionKeyPath: KeyPath, _ sectionIndexTransformer: (sectionName: String?) -> String?) {
-        
-        self.sectionKeyPath = sectionKeyPath
-        self.sectionIndexTransformer = sectionIndexTransformer
-    }
-    
-    
-    // MARK: Internal
-    
-    internal let sectionKeyPath: KeyPath
-    internal let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
-}
-
-
-// MARK: - ManagedObjectListController
-
-/**
-The `ManagedObjectListController` monitors changes to a list of `NSManagedObject` instances. Observers that implement the `ManagedObjectListChangeObserver` protocol may then register themselves to the `ManagedObjectListController`'s `addObserver(_:)` method:
-
-    let listController = CoreStore.observeObjectList(
+    let monitor = CoreStore.monitorList(
         From(MyPersonEntity),
         Where("title", isEqualTo: "Engineer"),
         OrderBy(.Ascending("lastName"))
     )
-    listController.addObserver(self)
+    monitor.addObserver(self)
 
-The `ManagedObjectListController` instance needs to be held on (retained) for as long as the list needs to be observed.
-Observers registered via `addObserver(_:)` are not retained. `ManagedObjectListController` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
+The `ListMonitor` instance needs to be held on (retained) for as long as the list needs to be observed.
+Observers registered via `addObserver(_:)` are not retained. `ListMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
 
-Lists created with `observeObjectList(...)` keep a single-section list of objects, where each object can be accessed by index:
+Lists created with `monitorList(...)` keep a single-section list of objects, where each object can be accessed by index:
 
-    let firstPerson: MyPersonEntity = listController[0]
+    let firstPerson: MyPersonEntity = monitor[0]
 
 Accessing the list with an index above the valid range will throw an exception.
 
-Creating a sectioned-list is also possible with the `observeSectionedList(...)` method:
+Creating a sectioned-list is also possible with the `monitorSectionedList(...)` method:
 
-    let listController = CoreStore.observeSectionedList(
+    let monitor = CoreStore.monitorSectionedList(
         From(MyPersonEntity),
-        SectionedBy("age") { "Age \($0)" },
+        SectionBy("age") { "Age \($0)" },
         Where("title", isEqualTo: "Engineer"),
         OrderBy(.Ascending("lastName"))
     )
-    listController.addObserver(self)
+    monitor.addObserver(self)
 
-Objects from `ManagedObjectListController`'s created this way can be accessed either by an `NSIndexPath` or a tuple:
+Objects from `ListMonitor`s created this way can be accessed either by an `NSIndexPath` or a tuple:
 
     let indexPath = NSIndexPath(forItem: 3, inSection: 2)
-    let person1 = listController[indexPath]
-    let person2 = listController[2, 3]
+    let person1 = monitor[indexPath]
+    let person2 = monitor[2, 3]
 
 In the example above, both `person1` and `person2` will contain the object at section=2, index=3.
 */
-public final class ManagedObjectListController<T: NSManagedObject> {
+public final class ListMonitor<T: NSManagedObject> {
     
     // MARK: Public
     
     /**
-    Accesses the object at the given index within the first section. This subscript indexer is typically used for `ManagedObjectListController`'s created with `addObserver(_:)`.
+    Accesses the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `addObserver(_:)`.
     
-    :param: index the index of the object. Using an index above the valid range will throw an exception.
+    - parameter index: the index of the object. Using an index above the valid range will throw an exception.
     */
     public subscript(index: Int) -> T {
         
-        return self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as! T
+        return self[0, index]
     }
     
     /**
-    Accesses the object at the given `NSIndexPath`. This subscript indexer is typically used for `ManagedObjectListController`'s created with `observeSectionedList(_:)`.
+    Accesses the object at the given `sectionIndex` and `itemIndex`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
     
-    :param: indexPath the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will throw an exception.
+    - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will throw an exception.
+    - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will throw an exception.
+    */
+    public subscript(sectionIndex: Int, itemIndex: Int) -> T {
+        
+        return self[NSIndexPath(forItem: itemIndex, inSection: sectionIndex)]
+    }
+    
+    /**
+    Accesses the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    
+    - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will throw an exception.
     */
     public subscript(indexPath: NSIndexPath) -> T {
         
         return self.fetchedResultsController.objectAtIndexPath(indexPath) as! T
-    }
-    
-    /**
-    Accesses the object at the given `sectionIndex` and `itemIndex`. This subscript indexer is typically used for `ManagedObjectListController`'s created with `observeSectionedList(_:)`.
-    
-    :param: sectionIndex the section index for the object. Using a `sectionIndex` with an invalid range will throw an exception.
-    :param: itemIndex the index for the object within the section. Using an `itemIndex` with an invalid range will throw an exception.
-    */
-    public subscript(sectionIndex: Int, itemIndex: Int) -> T {
-        
-        return self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forItem: itemIndex, inSection: sectionIndex)) as! T
     }
     
     /**
@@ -158,118 +113,124 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     /**
     Returns the number of objects in the specified section
     
-    :param: section the section index
+    - parameter section: the section index
     */
     public func numberOfObjectsInSection(section: Int) -> Int {
         
-        return (self.fetchedResultsController.sections?[section] as? NSFetchedResultsSectionInfo)?.numberOfObjects ?? 0
+        return self.fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
     /**
     Returns the `NSFetchedResultsSectionInfo` for the specified section
     
-    :param: section the section index
+    - parameter section: the section index
     */
     public func sectionInfoAtIndex(section: Int) -> NSFetchedResultsSectionInfo {
         
-        return self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+        return self.fetchedResultsController.sections![section]
     }
     
     /**
-    Registers a `ManagedObjectListChangeObserver` to be notified when changes to the receiver's list occur.
+    Registers a `ListObserver` to be notified when changes to the receiver's list occur.
     
-    To prevent retain-cycles, `ManagedObjectListController` only keeps `weak` references to its observers.
+    To prevent retain-cycles, `ListMonitor` only keeps `weak` references to its observers.
     
     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
     
-    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ManagedObjectListController` unregisters previous notifications to the observer before re-registering them.
+    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ListMonitor` unregisters previous notifications to the observer before re-registering them.
     
-    :param: observer a `ManagedObjectListChangeObserver` to send change notifications to
+    - parameter observer: a `ListObserver` to send change notifications to
     */
-    public func addObserver<U: ManagedObjectListChangeObserver where U.EntityType == T>(observer: U) {
+    public func addObserver<U: ListObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         self.removeObserver(observer)
         
         self.registerChangeNotification(
             &NotificationKey.willChangeList,
-            name: ManagedObjectListControllerWillChangeListNotification,
+            name: ListMonitorWillChangeListNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController) -> Void in
+            callback: { [weak observer] (monitor) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectListWillChange(listController)
+                    observer.listMonitorWillChange(monitor)
                 }
             }
         )
         self.registerChangeNotification(
             &NotificationKey.didChangeList,
-            name: ManagedObjectListControllerDidChangeListNotification,
+            name: ListMonitorDidChangeListNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController) -> Void in
+            callback: { [weak observer] (monitor) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectListDidChange(listController)
+                    observer.listMonitorDidChange(monitor)
                 }
             }
         )
     }
     
     /**
-    Registers a `ManagedObjectListObjectObserver` to be notified when changes to the receiver's list occur.
+    Registers a `ListObjectObserver` to be notified when changes to the receiver's list occur.
     
-    To prevent retain-cycles, `ManagedObjectListController` only keeps `weak` references to its observers.
+    To prevent retain-cycles, `ListMonitor` only keeps `weak` references to its observers.
     
     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
     
-    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ManagedObjectListController` unregisters previous notifications to the observer before re-registering them.
+    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ListMonitor` unregisters previous notifications to the observer before re-registering them.
     
-    :param: observer a `ManagedObjectListObjectObserver` to send change notifications to
+    - parameter observer: a `ListObjectObserver` to send change notifications to
     */
-    public func addObserver<U: ManagedObjectListObjectObserver where U.EntityType == T>(observer: U) {
+    public func addObserver<U: ListObjectObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         self.removeObserver(observer)
         
         self.registerChangeNotification(
             &NotificationKey.willChangeList,
-            name: ManagedObjectListControllerWillChangeListNotification,
+            name: ListMonitorWillChangeListNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController) -> Void in
+            callback: { [weak observer] (monitor) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectListWillChange(listController)
+                    observer.listMonitorWillChange(monitor)
                 }
             }
         )
         self.registerChangeNotification(
             &NotificationKey.didChangeList,
-            name: ManagedObjectListControllerDidChangeListNotification,
+            name: ListMonitorDidChangeListNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController) -> Void in
+            callback: { [weak observer] (monitor) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectListDidChange(listController)
+                    observer.listMonitorDidChange(monitor)
                 }
             }
         )
         
         self.registerObjectNotification(
             &NotificationKey.didInsertObject,
-            name: ManagedObjectListControllerDidInsertObjectNotification,
+            name: ListMonitorDidInsertObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, object, indexPath, newIndexPath) -> Void in
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didInsertObject: object,
                         toIndexPath: newIndexPath!
                     )
@@ -278,14 +239,14 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         )
         self.registerObjectNotification(
             &NotificationKey.didDeleteObject,
-            name: ManagedObjectListControllerDidDeleteObjectNotification,
+            name: ListMonitorDidDeleteObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, object, indexPath, newIndexPath) -> Void in
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didDeleteObject: object,
                         fromIndexPath: indexPath!
                     )
@@ -294,14 +255,14 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         )
         self.registerObjectNotification(
             &NotificationKey.didUpdateObject,
-            name: ManagedObjectListControllerDidUpdateObjectNotification,
+            name: ListMonitorDidUpdateObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, object, indexPath, newIndexPath) -> Void in
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didUpdateObject: object,
                         atIndexPath: indexPath!
                     )
@@ -310,14 +271,14 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         )
         self.registerObjectNotification(
             &NotificationKey.didMoveObject,
-            name: ManagedObjectListControllerDidMoveObjectNotification,
+            name: ListMonitorDidMoveObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, object, indexPath, newIndexPath) -> Void in
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didMoveObject: object,
                         fromIndexPath: indexPath!,
                         toIndexPath: newIndexPath!
@@ -328,57 +289,60 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     }
     
     /**
-    Registers a `ManagedObjectListSectionObserver` to be notified when changes to the receiver's list occur.
+    Registers a `ListSectionObserver` to be notified when changes to the receiver's list occur.
     
-    To prevent retain-cycles, `ManagedObjectListController` only keeps `weak` references to its observers.
+    To prevent retain-cycles, `ListMonitor` only keeps `weak` references to its observers.
     
     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
     
-    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ManagedObjectListController` unregisters previous notifications to the observer before re-registering them.
+    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ListMonitor` unregisters previous notifications to the observer before re-registering them.
     
-    :param: observer a `ManagedObjectListSectionObserver` to send change notifications to
+    - parameter observer: a `ListSectionObserver` to send change notifications to
     */
-    public func addObserver<U: ManagedObjectListSectionObserver where U.EntityType == T>(observer: U) {
+    public func addObserver<U: ListSectionObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to add an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         self.removeObserver(observer)
         
         self.registerChangeNotification(
             &NotificationKey.willChangeList,
-            name: ManagedObjectListControllerWillChangeListNotification,
+            name: ListMonitorWillChangeListNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController) -> Void in
+            callback: { [weak observer] (monitor) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectListWillChange(listController)
+                    observer.listMonitorWillChange(monitor)
                 }
             }
         )
         self.registerChangeNotification(
             &NotificationKey.didChangeList,
-            name: ManagedObjectListControllerDidChangeListNotification,
+            name: ListMonitorDidChangeListNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController) -> Void in
+            callback: { [weak observer] (monitor) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectListDidChange(listController)
+                    observer.listMonitorDidChange(monitor)
                 }
             }
         )
         
         self.registerObjectNotification(
             &NotificationKey.didInsertObject,
-            name: ManagedObjectListControllerDidInsertObjectNotification,
+            name: ListMonitorDidInsertObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, object, indexPath, newIndexPath) -> Void in
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didInsertObject: object,
                         toIndexPath: newIndexPath!
                     )
@@ -387,14 +351,14 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         )
         self.registerObjectNotification(
             &NotificationKey.didDeleteObject,
-            name: ManagedObjectListControllerDidDeleteObjectNotification,
+            name: ListMonitorDidDeleteObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, object, indexPath, newIndexPath) -> Void in
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didDeleteObject: object,
                         fromIndexPath: indexPath!
                     )
@@ -403,14 +367,14 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         )
         self.registerObjectNotification(
             &NotificationKey.didUpdateObject,
-            name: ManagedObjectListControllerDidUpdateObjectNotification,
+            name: ListMonitorDidUpdateObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, object, indexPath, newIndexPath) -> Void in
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didUpdateObject: object,
                         atIndexPath: indexPath!
                     )
@@ -419,14 +383,14 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         )
         self.registerObjectNotification(
             &NotificationKey.didMoveObject,
-            name: ManagedObjectListControllerDidMoveObjectNotification,
+            name: ListMonitorDidMoveObjectNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, object, indexPath, newIndexPath) -> Void in
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didMoveObject: object,
                         fromIndexPath: indexPath!,
                         toIndexPath: newIndexPath!
@@ -437,14 +401,14 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         
         self.registerSectionNotification(
             &NotificationKey.didInsertSection,
-            name: ManagedObjectListControllerDidInsertSectionNotification,
+            name: ListMonitorDidInsertSectionNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, sectionInfo, sectionIndex) -> Void in
+            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didInsertSection: sectionInfo,
                         toSectionIndex: sectionIndex
                     )
@@ -453,14 +417,14 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         )
         self.registerSectionNotification(
             &NotificationKey.didDeleteSection,
-            name: ManagedObjectListControllerDidDeleteSectionNotification,
+            name: ListMonitorDidDeleteSectionNotification,
             toObserver: observer,
-            callback: { [weak observer] (listController, sectionInfo, sectionIndex) -> Void in
+            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
                 
                 if let observer = observer {
                     
-                    observer.managedObjectList(
-                        listController,
+                    observer.listMonitor(
+                        monitor,
                         didDeleteSection: sectionInfo,
                         fromSectionIndex: sectionIndex
                     )
@@ -470,15 +434,18 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     }
     
     /**
-    Unregisters a `ManagedObjectListChangeObserver` from receiving notifications for changes to the receiver's list.
+    Unregisters a `ListObserver` from receiving notifications for changes to the receiver's list.
     
     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
     
-    :param: observer a `ManagedObjectListChangeObserver` to unregister notifications to
+    - parameter observer: a `ListObserver` to unregister notifications to
     */
-    public func removeObserver<U: ManagedObjectListChangeObserver where U.EntityType == T>(observer: U) {
+    public func removeObserver<U: ListObserver where U.EntityType == T>(observer: U) {
         
-        CoreStore.assert(NSThread.isMainThread(), "Attempted to remove an observer of type \(typeName(observer)) outside the main thread.")
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to remove an observer of type \(typeName(observer)) outside the main thread."
+        )
         
         let nilValue: AnyObject? = nil
         setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.willChangeList, inObject: observer)
@@ -496,7 +463,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal init(dataStack: DataStack, from: From<T>, sectionedBy: SectionedBy?, fetchClauses: [FetchClause]) {
+    internal init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
         
         let context = dataStack.mainContext
         
@@ -514,7 +481,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         let fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
-            sectionNameKeyPath: sectionedBy?.sectionKeyPath,
+            sectionNameKeyPath: sectionBy?.sectionKeyPath,
             cacheName: nil
         )
         
@@ -524,7 +491,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         self.parentStack = dataStack
         
-        if let sectionIndexTransformer = sectionedBy?.sectionIndexTransformer {
+        if let sectionIndexTransformer = sectionBy?.sectionIndexTransformer {
             
             self.sectionIndexTransformer = sectionIndexTransformer
         }
@@ -533,17 +500,9 @@ public final class ManagedObjectListController<T: NSManagedObject> {
             self.sectionIndexTransformer = { $0 }
         }
         
-        
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
-        
-        var error: NSError?
-        if !fetchedResultsController.performFetch(&error) {
-            
-            CoreStore.handleError(
-                error ?? NSError(coreStoreErrorCode: .UnknownError),
-                "Failed to perform fetch on <\(NSFetchedResultsController.self)>.")
-        }
+        try! fetchedResultsController.performFetch()
     }
     
     
@@ -554,7 +513,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
     private let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
     private weak var parentStack: DataStack?
     
-    private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (listController: ManagedObjectListController<T>) -> Void) {
+    private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>) -> Void) {
         
         setAssociatedRetainedObject(
             NotificationObserver(
@@ -564,7 +523,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
                     
                     if let strongSelf = self {
                         
-                        callback(listController: strongSelf)
+                        callback(monitor: strongSelf)
                     }
                 }
             ),
@@ -573,7 +532,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         )
     }
     
-    private func registerObjectNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (listController: ManagedObjectListController<T>, object: T, indexPath: NSIndexPath?, newIndexPath: NSIndexPath?) -> Void) {
+    private func registerObjectNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>, object: T, indexPath: NSIndexPath?, newIndexPath: NSIndexPath?) -> Void) {
         
         setAssociatedRetainedObject(
             NotificationObserver(
@@ -586,7 +545,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
                         let object = userInfo[UserInfoKeyObject] as? T {
                             
                             callback(
-                                listController: strongSelf,
+                                monitor: strongSelf,
                                 object: object,
                                 indexPath: userInfo[UserInfoKeyIndexPath] as? NSIndexPath,
                                 newIndexPath: userInfo[UserInfoKeyNewIndexPath] as? NSIndexPath
@@ -599,7 +558,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
         )
     }
     
-    private func registerSectionNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (listController: ManagedObjectListController<T>, sectionInfo: NSFetchedResultsSectionInfo, sectionIndex: Int) -> Void) {
+    private func registerSectionNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>, sectionInfo: NSFetchedResultsSectionInfo, sectionIndex: Int) -> Void) {
         
         setAssociatedRetainedObject(
             NotificationObserver(
@@ -613,7 +572,7 @@ public final class ManagedObjectListController<T: NSManagedObject> {
                         let sectionIndex = (userInfo[UserInfoKeySectionIndex] as? NSNumber)?.integerValue {
                             
                             callback(
-                                listController: strongSelf,
+                                monitor: strongSelf,
                                 sectionInfo: sectionInfo,
                                 sectionIndex: sectionIndex
                             )
@@ -627,9 +586,9 @@ public final class ManagedObjectListController<T: NSManagedObject> {
 }
 
 
-// MARK: - ManagedObjectListController: FetchedResultsControllerHandler
+// MARK: - ListMonitor: FetchedResultsControllerHandler
 
-extension ManagedObjectListController: FetchedResultsControllerHandler {
+extension ListMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
     
@@ -639,7 +598,7 @@ extension ManagedObjectListController: FetchedResultsControllerHandler {
             
         case .Insert:
             NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidInsertObjectNotification,
+                ListMonitorDidInsertObjectNotification,
                 object: self,
                 userInfo: [
                     UserInfoKeyObject: anObject,
@@ -649,7 +608,7 @@ extension ManagedObjectListController: FetchedResultsControllerHandler {
             
         case .Delete:
             NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidDeleteObjectNotification,
+                ListMonitorDidDeleteObjectNotification,
                 object: self,
                 userInfo: [
                     UserInfoKeyObject: anObject,
@@ -659,7 +618,7 @@ extension ManagedObjectListController: FetchedResultsControllerHandler {
             
         case .Update:
             NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidUpdateObjectNotification,
+                ListMonitorDidUpdateObjectNotification,
                 object: self,
                 userInfo: [
                     UserInfoKeyObject: anObject,
@@ -669,7 +628,7 @@ extension ManagedObjectListController: FetchedResultsControllerHandler {
             
         case .Move:
             NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidMoveObjectNotification,
+                ListMonitorDidMoveObjectNotification,
                 object: self,
                 userInfo: [
                     UserInfoKeyObject: anObject,
@@ -686,7 +645,7 @@ extension ManagedObjectListController: FetchedResultsControllerHandler {
             
         case .Insert:
             NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidInsertSectionNotification,
+                ListMonitorDidInsertSectionNotification,
                 object: self,
                 userInfo: [
                     UserInfoKeySectionInfo: sectionInfo,
@@ -696,7 +655,7 @@ extension ManagedObjectListController: FetchedResultsControllerHandler {
             
         case .Delete:
             NSNotificationCenter.defaultCenter().postNotificationName(
-                ManagedObjectListControllerDidDeleteSectionNotification,
+                ListMonitorDidDeleteSectionNotification,
                 object: self,
                 userInfo: [
                     UserInfoKeySectionInfo: sectionInfo,
@@ -712,7 +671,7 @@ extension ManagedObjectListController: FetchedResultsControllerHandler {
     private func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
         NSNotificationCenter.defaultCenter().postNotificationName(
-            ManagedObjectListControllerWillChangeListNotification,
+            ListMonitorWillChangeListNotification,
             object: self
         )
     }
@@ -720,7 +679,7 @@ extension ManagedObjectListController: FetchedResultsControllerHandler {
     private func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
         NSNotificationCenter.defaultCenter().postNotificationName(
-            ManagedObjectListControllerDidChangeListNotification,
+            ListMonitorDidChangeListNotification,
             object: self
         )
     }
@@ -750,31 +709,31 @@ private protocol FetchedResultsControllerHandler: class {
 
 // MARK: - FetchedResultsControllerDelegate
 
-private final class FetchedResultsControllerDelegate: NSFetchedResultsControllerDelegate {
+private final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: NSFetchedResultsControllerDelegate
     
-    @objc func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    @objc dynamic func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
         self.handler?.controllerWillChangeContent(controller)
     }
     
-    @objc func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    @objc dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
         self.handler?.controllerDidChangeContent(controller)
     }
     
-    @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: NSManagedObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
         self.handler?.controller(controller, didChangeObject: anObject, atIndexPath: indexPath, forChangeType: type, newIndexPath: newIndexPath)
     }
     
-    @objc func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         
         self.handler?.controller(controller, didChangeSection: sectionInfo, atIndex: sectionIndex, forChangeType: type)
     }
     
-    @objc func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+    @objc dynamic func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String) -> String? {
         
         return self.handler?.controller(controller, sectionIndexTitleForSectionName: sectionName)
     }
@@ -799,16 +758,16 @@ private final class FetchedResultsControllerDelegate: NSFetchedResultsController
 }
 
 
-private let ManagedObjectListControllerWillChangeListNotification = "ManagedObjectListControllerWillChangeListNotification"
-private let ManagedObjectListControllerDidChangeListNotification = "ManagedObjectListControllerDidChangeListNotification"
+private let ListMonitorWillChangeListNotification = "ListMonitorWillChangeListNotification"
+private let ListMonitorDidChangeListNotification = "ListMonitorDidChangeListNotification"
 
-private let ManagedObjectListControllerDidInsertObjectNotification = "ManagedObjectListControllerDidInsertObjectNotification"
-private let ManagedObjectListControllerDidDeleteObjectNotification = "ManagedObjectListControllerDidDeleteObjectNotification"
-private let ManagedObjectListControllerDidUpdateObjectNotification = "ManagedObjectListControllerDidUpdateObjectNotification"
-private let ManagedObjectListControllerDidMoveObjectNotification = "ManagedObjectListControllerDidMoveObjectNotification"
+private let ListMonitorDidInsertObjectNotification = "ListMonitorDidInsertObjectNotification"
+private let ListMonitorDidDeleteObjectNotification = "ListMonitorDidDeleteObjectNotification"
+private let ListMonitorDidUpdateObjectNotification = "ListMonitorDidUpdateObjectNotification"
+private let ListMonitorDidMoveObjectNotification = "ListMonitorDidMoveObjectNotification"
 
-private let ManagedObjectListControllerDidInsertSectionNotification = "ManagedObjectListControllerDidInsertSectionNotification"
-private let ManagedObjectListControllerDidDeleteSectionNotification = "ManagedObjectListControllerDidDeleteSectionNotification"
+private let ListMonitorDidInsertSectionNotification = "ListMonitorDidInsertSectionNotification"
+private let ListMonitorDidDeleteSectionNotification = "ListMonitorDidDeleteSectionNotification"
 
 private let UserInfoKeyObject = "UserInfoKeyObject"
 private let UserInfoKeyIndexPath = "UserInfoKeyIndexPath"
