@@ -109,7 +109,11 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
             }
             
         case .Some(1):
-            try! self.dataStack.addSQLiteStoreAndWait(fileName: "emptyStore.sqlite", configuration: "invalidStore")
+            do {
+                
+                try self.dataStack.addSQLiteStoreAndWait(fileName: "emptyStore.sqlite", configuration: "invalidStore")
+            }
+            catch _ { }
             
         case .Some(2):
             self.dataStack.beginAsynchronous { (transaction) -> Void in
