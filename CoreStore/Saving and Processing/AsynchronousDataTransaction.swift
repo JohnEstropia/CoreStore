@@ -54,14 +54,14 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         )
         
         self.isCommitted = true
-        let semaphore = GCDSemaphore(0)
+//        let semaphore = GCDSemaphore(0)
         self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             
             self.result = result
             completion(result: result)
-            semaphore.signal()
+//            semaphore.signal()
         }
-        semaphore.wait()
+//        semaphore.wait()
     }
     
     /**

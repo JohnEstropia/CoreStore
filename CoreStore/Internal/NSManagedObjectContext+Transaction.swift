@@ -150,12 +150,15 @@ internal extension NSManagedObjectContext {
             
             if let parentContext = self.parentContext where self.shouldCascadeSavesToParent {
                 
-                let result = parentContext.saveSynchronously()
-                if let completion = completion {
+                parentContext.saveAsynchronouslyWithCompletion {
+                    result in
                     
-                    GCDQueue.Main.async {
+                    if let completion = completion {
                         
-                        completion(result: result)
+                        GCDQueue.Main.async {
+                        
+                            completion(result: result)
+                        }
                     }
                 }
             }
