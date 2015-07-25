@@ -38,9 +38,9 @@ public extension CoreStore {
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
     - returns: the `NSPersistentStore` added to the stack.
     */
-    public static func addInMemoryStore(configuration configuration: String? = nil) throws -> NSPersistentStore {
+    public static func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
         
-        return try self.defaultStack.addInMemoryStore(configuration: configuration)
+        return try self.defaultStack.addInMemoryStoreAndWait(configuration: configuration)
     }
     
     /**

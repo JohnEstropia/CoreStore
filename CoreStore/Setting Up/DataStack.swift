@@ -87,7 +87,7 @@ public final class DataStack {
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
     - returns: the `NSPersistentStore` added to the stack.
     */
-    public func addInMemoryStore(configuration configuration: String? = nil) throws -> NSPersistentStore {
+    public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
         
         let coordinator = self.coordinator;
         
@@ -224,31 +224,9 @@ public final class DataStack {
         }
         
         if let error = storeError
-            where (
-                resetStoreOnMigrationFailure
-                    && (error.code == NSPersistentStoreIncompatibleVersionHashError
-                        || error.code == NSMigrationMissingSourceModelError
-                        || error.code == NSMigrationError)
-                    && error.domain == NSCocoaErrorDomain
-            ) {
+            where (resetStoreOnMigrationFailure && error.isCoreDataMigrationError) {
                 
-                do {
-                    
-                    try fileManager.removeItemAtURL(fileURL)
-                }
-                catch _ { }
-                
-                do {
-                    
-                    try fileManager.removeItemAtPath(fileURL.path!.stringByAppendingString("-shm"))
-                }
-                catch _ { }
-                
-                do {
-                    
-                    try fileManager.removeItemAtPath(fileURL.path!.stringByAppendingString("-wal"))
-                }
-                catch _ { }
+                fileManager.removeSQLiteStoreAtURL(fileURL)
                 
                 var store: NSPersistentStore?
                 coordinator.performBlockAndWait {

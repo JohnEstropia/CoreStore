@@ -86,4 +86,13 @@ public extension NSError {
             code: coreStoreErrorCode.rawValue,
             userInfo: userInfo)
     }
+    
+    internal var isCoreDataMigrationError: Bool {
+        
+        let code = self.code
+        return (code == NSPersistentStoreIncompatibleVersionHashError
+            || code == NSMigrationMissingSourceModelError
+            || code == NSMigrationError)
+            && self.domain == NSCocoaErrorDomain
+    }
 }

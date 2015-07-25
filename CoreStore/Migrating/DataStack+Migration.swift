@@ -33,15 +33,57 @@ import GCDKit
 public extension DataStack {
     
     /**
+    Asynchronously adds an in-memory store to the stack.
+    
+    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
+    - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result.
+    */
+    public func addInMemoryStore(configuration configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
+        
+        self.coordinator.performBlock {
+            
+            do {
+                
+                let store = try self.coordinator.addPersistentStoreWithType(
+                    NSInMemoryStoreType,
+                    configuration: configuration,
+                    URL: nil,
+                    options: nil
+                )
+                self.updateMetadataForPersistentStore(store)
+                
+                GCDQueue.Main.async {
+                    
+                    completion(PersistentStoreResult(store))
+                }
+            }
+            catch {
+                
+                let storeError = error as NSError
+                CoreStore.handleError(
+                    storeError,
+                    "Failed to add in-memory \(typeName(NSPersistentStore)) to the stack."
+                )
+                
+                GCDQueue.Main.async {
+                    
+                    completion(PersistentStoreResult(storeError))
+                }
+            }
+        }
+    }
+    
+    /**
     Asynchronously adds to the stack an SQLite store from the given SQLite file name. Note that using `addSQLiteStore(...)` instead of `addSQLiteStoreAndWait(...)` implies that the migrations are allowed and expected (thus the asynchronous `completion`.)
     
     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
     - parameter mappingModelBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
+    - parameter resetStoreOnMigrationFailure: Set to true to delete the store on migration failure; or set to false to report failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
     */
-    public func addSQLiteStore(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
+    public func addSQLiteStore(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, resetStoreOnMigrationFailure: Bool = false, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
         
         return try self.addSQLiteStore(
             fileURL: applicationSupportDirectory.URLByAppendingPathComponent(
@@ -50,6 +92,7 @@ public extension DataStack {
             ),
             configuration: configuration,
             mappingModelBundles: mappingModelBundles,
+            resetStoreOnMigrationFailure: resetStoreOnMigrationFailure,
             completion: completion
         )
     }
@@ -60,10 +103,11 @@ public extension DataStack {
     - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
     - parameter mappingModelBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
+    - parameter resetStoreOnMigrationFailure: Set to true to delete the store on migration failure; or set to false to report failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
     */
-    public func addSQLiteStore(fileURL fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = NSBundle.allBundles(), completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
+    public func addSQLiteStore(fileURL fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = NSBundle.allBundles(), resetStoreOnMigrationFailure: Bool = false, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
         
         CoreStore.assert(
             fileURL.fileURL,
@@ -94,9 +138,10 @@ public extension DataStack {
             throw error
         }
         
+        let fileManager = NSFileManager.defaultManager()
         do {
             
-            try NSFileManager.defaultManager().createDirectoryAtURL(
+            try fileManager.createDirectoryAtURL(
                 fileURL.URLByDeletingLastPathComponent!,
                 withIntermediateDirectories: true,
                 attributes: nil
@@ -119,6 +164,30 @@ public extension DataStack {
                 completion: { (result) -> Void in
                     
                     if case .Failure(let error) = result {
+                        
+                        if resetStoreOnMigrationFailure && error.isCoreDataMigrationError {
+                            
+                            fileManager.removeSQLiteStoreAtURL(fileURL)
+                            do {
+                                
+                                let store = try self.addSQLiteStoreAndWait(
+                                    fileURL: fileURL,
+                                    configuration: configuration,
+                                    automigrating: false,
+                                    resetStoreOnMigrationFailure: false
+                                )
+                                
+                                GCDQueue.Main.async {
+                                    
+                                    completion(PersistentStoreResult(store))
+                                }
+                            }
+                            catch {
+                                
+                                completion(PersistentStoreResult(error as NSError))
+                            }
+                            return
+                        }
                         
                         completion(PersistentStoreResult(error))
                         return

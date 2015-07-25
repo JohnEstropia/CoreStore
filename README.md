@@ -174,27 +174,37 @@ This one-liner does the following:
 
 For most cases, this configuration is usable as it is. But for more hardcore settings, refer to this extensive example:
 ```swift
-let dataStack = DataStack(modelName: "MyModel") // loads from the "MyModel.xcdatamodeld" file
+let dataStack = DataStack(
+    modelName: "MyModel", // loads from the "MyModel.xcdatamodeld" file
+    migrationChain: ["MyStore", "MyStoreV2", "MyStoreV3"] // model versions for incremental migrations
+)
 
 do {
     // creates an in-memory store with entities from the "Config1" configuration in the .xcdatamodeld file
-    let persistentStore = try dataStack.addInMemoryStore(configuration: "Config1") // persistentStore is an NSPersistentStore instance
+    let persistentStore = try dataStack.addInMemoryStoreAndWait(configuration: "Config1") // persistentStore is an NSPersistentStore instance
     print("Successfully created an in-memory store: \(persistentStore)"
 }
-catch let error as NSError {
-    print("Failed creating an in-memory store with error: \(error.description)"
+catch {
+    print("Failed creating an in-memory store with error: \(error as NSError)"
 }
 
 do {
-    try dataStack.addSQLiteStoreAndWait(
+    try dataStack.addSQLiteStore(
         fileURL: sqliteFileURL, // set the target file URL for the sqlite file
         configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
-        automigrating: true, // automatically run lightweight migrations or entity policy migrations when needed
-        resetStoreOnMigrationFailure: true)
-    print("Successfully created an sqlite store: \(persistentStore)"
+        resetStoreOnMigrationFailure: true,
+        completion: { (result) -> Void in
+            switch result {
+            case .Success(let persistentStore):
+                print("Successfully added sqlite store: \(persistentStore)"
+            case .Failure(let error):
+                print("Failed adding sqlite store with error: \(error)"
+            }
+        }
+    )
 }
-catch let error as NSError {
-    print("Failed creating an sqlite store with error: \(error.description)"
+catch {
+    print("Failed adding sqlite store with error: \(error as NSError)"
 }
 
 CoreStore.defaultStack = dataStack // pass the dataStack to CoreStore for easier access later on
@@ -203,7 +213,7 @@ CoreStore.defaultStack = dataStack // pass the dataStack to CoreStore for easier
 (If you have never heard of "Configurations", you'll find them in your *.xcdatamodeld* file)
 <img src="https://cloud.githubusercontent.com/assets/3029684/8333192/e52cfaac-1acc-11e5-9902-08724f9f1324.png" alt="xcode configurations screenshot" height=212 />
 
-In our sample above, note that you don't need to do the `CoreStore.defaultStack = dataStack` line. You can just as well hold a reference to the `DataStack` like below and call all its instance methods directly:
+In our sample code above, note that you don't need to do the `CoreStore.defaultStack = dataStack` line. You can just as well hold a reference to the `DataStack` like below and call all its instance methods directly:
 ```swift
 class MyViewController: UIViewController {
     let dataStack = DataStack(modelName: "MyModel")
@@ -241,7 +251,28 @@ class MyViewController: UIViewController {
 
 
 ## Migrations
-(README pending)
+So far we have only seen `addSQLiteStoreAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests, this method will block, even if a migration occurs. If migrations are expected, the asynchronous variant `addSQLiteStore(... completion:)` method is recommended:
+```swift
+do {
+    let progress: NSProgress = try dataStack.addSQLiteStore(
+        fileName: "MyStore.sqlite",
+        configuration: "Config2",
+        completion: { (result) -> Void in
+            switch result {
+            case .Success(let persistentStore):
+                print("Successfully added sqlite store: \(persistentStore)"
+            case .Failure(let error):
+                print("Failed adding sqlite store with error: \(error)"
+            }
+        }
+    )
+}
+catch {
+    print("Failed adding sqlite store with error: \(error as NSError)"
+}
+```
+The `completion` block is called 
+PersistentStoreResult
 
 ### Incremental migrations
 (README pending)
