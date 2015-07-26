@@ -21,7 +21,7 @@ private struct Static {
         try! CoreStore.addSQLiteStoreAndWait(
             fileName: "PlaceDemo.sqlite",
             configuration: "TransactionsDemo",
-            resetStoreOnMigrationFailure: true
+            resetStoreOnModelMismatch: true
         )
         
         var place = CoreStore.fetchOne(From(Place))

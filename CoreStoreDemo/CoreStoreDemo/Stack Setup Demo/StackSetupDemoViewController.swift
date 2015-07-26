@@ -21,12 +21,12 @@ private struct Static {
         try! dataStack.addSQLiteStoreAndWait(
             fileName: "AccountsDemo_FB_Male.sqlite",
             configuration: maleConfiguration,
-            resetStoreOnMigrationFailure: true
+            resetStoreOnModelMismatch: true
         )
         try! dataStack.addSQLiteStoreAndWait(
             fileName: "AccountsDemo_FB_Female.sqlite",
             configuration: femaleConfiguration,
-            resetStoreOnMigrationFailure: true
+            resetStoreOnModelMismatch: true
         )
         
         dataStack.beginSynchronous { (transaction) -> Void in
@@ -55,12 +55,12 @@ private struct Static {
         try! dataStack.addSQLiteStoreAndWait(
             fileName: "AccountsDemo_TW_Male.sqlite",
             configuration: maleConfiguration,
-            resetStoreOnMigrationFailure: true
+            resetStoreOnModelMismatch: true
         )
         try! dataStack.addSQLiteStoreAndWait(
             fileName: "AccountsDemo_TW_Female.sqlite",
             configuration: femaleConfiguration,
-            resetStoreOnMigrationFailure: true
+            resetStoreOnModelMismatch: true
         )
         
         dataStack.beginSynchronous { (transaction) -> Void in

@@ -48,17 +48,15 @@ public extension CoreStore {
     
     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist.
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
-    - parameter automigrating: Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
-    - parameter resetStoreOnMigrationFailure: Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
+    - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
     - returns: the `NSPersistentStore` added to the stack.
     */
-    public static func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) throws -> NSPersistentStore {
+    public static func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         return try self.defaultStack.addSQLiteStoreAndWait(
             fileName: fileName,
             configuration: configuration,
-            automigrating: automigrating,
-            resetStoreOnMigrationFailure: resetStoreOnMigrationFailure
+            resetStoreOnModelMismatch: resetStoreOnModelMismatch
         )
     }
     
@@ -67,17 +65,15 @@ public extension CoreStore {
     
     - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory.
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
-    - parameter automigrating: Set to true to configure Core Data auto-migration, or false to disable. If not specified, defaults to true.
-    - parameter resetStoreOnMigrationFailure: Set to true to delete the store on migration failure; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
+    - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
     - returns: the `NSPersistentStore` added to the stack.
     */
-    public static func addSQLiteStoreAndWait(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, automigrating: Bool = true, resetStoreOnMigrationFailure: Bool = false) throws -> NSPersistentStore {
+    public static func addSQLiteStoreAndWait(fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         return try self.defaultStack.addSQLiteStoreAndWait(
             fileURL: fileURL,
             configuration: configuration,
-            automigrating: automigrating,
-            resetStoreOnMigrationFailure: resetStoreOnMigrationFailure
+            resetStoreOnModelMismatch: resetStoreOnModelMismatch
         )
     }
 }

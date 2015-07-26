@@ -169,7 +169,7 @@ catch {
 This one-liner does the following:
 - Triggers the lazy-initialization of `CoreStore.defaultStack` with a default `DataStack`
 - Sets up the stack's `NSPersistentStoreCoordinator`, the root saving `NSManagedObjectContext`, and the read-only main `NSManagedObjectContext`
-- Adds an automigrating SQLite store in the *"Application Support"* directory with the file name *"[App bundle name].sqlite"*
+- Adds an SQLite store in the *"Application Support"* directory with the file name *"[App bundle name].sqlite"*
 - Creates and returns the `NSPersistentStore` instance on success, or an `NSError` on failure
 
 For most cases, this configuration is usable as it is. But for more hardcore settings, refer to this extensive example:
@@ -192,7 +192,7 @@ do {
     try dataStack.addSQLiteStore(
         fileURL: sqliteFileURL, // set the target file URL for the sqlite file
         configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
-        resetStoreOnMigrationFailure: true,
+        resetStoreOnModelMismatch: true,
         completion: { (result) -> Void in
             switch result {
             case .Success(let persistentStore):
@@ -271,8 +271,20 @@ catch {
     print("Failed adding sqlite store with error: \(error as NSError)"
 }
 ```
-The `completion` block is called 
-PersistentStoreResult
+The `completion` block reports a `PersistentStoreResult` that indicates success or failure.
+
+`addSQLiteStore(...)` throws an error if the store at the specified URL conflicts with an existing store in the `DataStack`, or if an existing sqlite file could not be read. If an error is thrown, the `completion` block will not be executed.
+
+Notice that this method also returns an optional `NSProgress`. If `nil`, no migrations are needed, thus progress reporting is unnecessary as well. If not `nil`, you can use this to track migration progress by using standard KVO on the "fractionCompleted" key, or by using a closure-based utility exposed in *NSProgress+Convenience.swift*:
+```swift
+progress?.setProgressHandler { [weak self] (progress) -> Void in
+    self?.progressView?.setProgress(Float(progress.fractionCompleted), animated: true)
+    self?.percentLabel?.text = progress.localizedDescription // "50% completed"
+    self?.stepLabel?.text = progress.localizedAdditionalDescription // "0 of 2"
+}
+```
+This closure is executed on the main thread so UIKit calls can be done safely.
+
 
 ### Incremental migrations
 (README pending)

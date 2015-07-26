@@ -18,7 +18,7 @@ private struct Static {
         try! dataStack.addSQLiteStoreAndWait(
             fileName: "TimeZoneDemo.sqlite",
             configuration: "FetchingAndQueryingDemo",
-            resetStoreOnMigrationFailure: true
+            resetStoreOnModelMismatch: true
         )
     
         dataStack.beginSynchronous { (transaction) -> Void in

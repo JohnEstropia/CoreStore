@@ -17,7 +17,7 @@ private struct Static {
         try! CoreStore.addSQLiteStoreAndWait(
             fileName: "ColorsDemo.sqlite",
             configuration: "ObservingDemo",
-            resetStoreOnMigrationFailure: true
+            resetStoreOnModelMismatch: true
         )
         
         return CoreStore.monitorSectionedList(

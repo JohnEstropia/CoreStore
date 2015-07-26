@@ -87,7 +87,7 @@ class CoreStoreTests: XCTestCase {
         
         do {
             
-            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore1.sqlite", configuration: "Config1", resetStoreOnMigrationFailure: true)
+            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore1.sqlite", configuration: "Config1", resetStoreOnModelMismatch: true)
         }
         catch let error as NSError {
             
@@ -96,7 +96,7 @@ class CoreStoreTests: XCTestCase {
         
         do {
             
-            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore2.sqlite", configuration: "Config2", resetStoreOnMigrationFailure: true)
+            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore2.sqlite", configuration: "Config2", resetStoreOnModelMismatch: true)
         }
         catch let error as NSError {
             
