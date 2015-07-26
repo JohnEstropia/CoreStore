@@ -35,6 +35,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
     - [Setting up](#setting-up)
     - [Migrations](#migrations)
         - [Incremental migrations](#incremental-migrations)
+        - [Forecasting migrations](#forecasting-migrations)
     - [Saving and processing transactions](#saving-and-processing-transactions)
         - [Transaction types](#transaction-types)
             - [Asynchronous transactions](#asynchronous-transactions)
@@ -287,7 +288,70 @@ This closure is executed on the main thread so UIKit calls can be done safely.
 
 
 ### Incremental migrations
-(README pending)
+By default, CoreStore uses Core Data's default automatic migration mechanism. In other words, CoreStore will try to migrate the existing persistent store to the *.xcdatamodeld* file's current model version. If no mapping model is found from the store's version to the data model's version, CoreStore gives up and reports an error.
+
+The `DataStack` lets you specify hints on how to break a migration into several sub-migrations using a `MigrationChain`. This is typically passed to the `DataStack` initializer and will be applied to all stores added to the `DataStack` with `addSQLiteStore(...)` and its variants:
+```swift
+let dataStack = DataStack(migrationChain: 
+    ["MyAppModel", "MyAppModelV2", "MyAppModelV3", "MyAppModelV4"])
+```
+The most common usage is to pass in the *.xcdatamodeld* version names in increasing order as above.
+
+For more complex migration paths, you can also pass in a version tree that maps the key-values to the source-destination versions:
+```swift
+let dataStack = DataStack(migrationChain: [
+    "MyAppModel": "MyAppModelV3",
+    "MyAppModelV2": "MyAppModelV4",
+    "MyAppModelV3": "MyAppModelV4"
+])
+```
+This allows for different migration paths depending on the starting version. The example above resolves to the following paths:
+- MyAppModel-MyAppModelV3-MyAppModelV4
+- MyAppModelV2-MyAppModelV4
+- MyAppModelV3-MyAppModelV4
+
+Initializing with empty values (either `nil`, `[]`, or `[:]`) instructs the `DataStack` to disable incremental migrations and revert to the default migration behavior (i.e. use the .xcdatamodel's current version as the final version):
+```swift
+let dataStack = DataStack(migrationChain: nil)
+```
+
+The `MigrationChain` is validated when passed to the `DataStack` and unless it is empty, will raise an assertion if any of the following conditions are met:
+- a version appears twice in an array
+- a version appears twice as a key in a dictionary literal
+- a loop is found in any of the paths
+
+One important thing to remember is that **if a `MigrationChain` is specified, the *.xcdatamodeld*'s "Current Version" will be bypassed** and the `MigrationChain`'s leafmost version will be the `DataStack`'s base model version.
+
+
+### Forecasting migrations
+
+Sometimes migrations are huge and you may want prior information so your app could display a loading screen, or to display a confirmation dialog to the user. For this, CoreStore provides a `requiredMigrationsForSQLiteStore(...)` method you can use to inspect a persistent store before you actually call `addSQLiteStore(...)`:
+```swift
+do {
+    let migrationTypes: [MigrationType] = CoreStore.requiredMigrationsForSQLiteStore(fileName: "MyStore.sqlite")
+    if migrationTypes.count > 1
+        || (migrationTypes.filter { $0.isHeavyweightMigration }.count) > 0 {
+        // ... Show special waiting screen
+    }
+    else if migrationTypes.count > 0 {
+        // ... Show simple activity indicator
+    }
+    else {
+        // ... Do nothing
+    }
+
+    CoreStore.addSQLiteStore(/* ... */)
+}
+catch {
+    // ...
+}
+```
+`requiredMigrationsForSQLiteStore(...)` returns an array of `MigrationType`s, where each item in the array may be either of the following values:
+```swift
+case Lightweight(sourceVersion: String, destinationVersion: String)
+case Heavyweight(sourceVersion: String, destinationVersion: String)
+```
+Each `MigrationType` indicates the migration type for each step in the `MigrationChain`. Use these information as fit for your app.
 
 
 
