@@ -43,16 +43,19 @@ public final class DetachedDataTransaction: BaseDataTransaction {
     */
     public func commit(completion: (result: SaveResult) -> Void) {
         
-        CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to commit a \(typeName(self)) outside its designated queue."
-        )
-        
         self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             
             self.result = result
             completion(result: result)
         }
+    }
+    
+    
+    // MARK: Internal
+    
+    internal override var bypassesQueueing: Bool {
+        
+        return true
     }
 }
 

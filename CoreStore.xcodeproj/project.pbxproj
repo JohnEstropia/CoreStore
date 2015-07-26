@@ -332,11 +332,11 @@
 				B56007101B3F6BD500A9A8F9 /* Into.swift */,
 				B5E84EEB1AFF846E0064E85B /* BaseDataTransaction.swift */,
 				B5E84EEA1AFF846E0064E85B /* AsynchronousDataTransaction.swift */,
-				B5E84EEC1AFF846E0064E85B /* DataStack+Transaction.swift */,
+				B5E84EF31AFF846E0064E85B /* SynchronousDataTransaction.swift */,
 				B5E84EED1AFF846E0064E85B /* DetachedDataTransaction.swift */,
+				B5E84EEC1AFF846E0064E85B /* DataStack+Transaction.swift */,
 				B5E84EEE1AFF846E0064E85B /* CoreStore+Transaction.swift */,
 				B5E84EF21AFF846E0064E85B /* SaveResult.swift */,
-				B5E84EF31AFF846E0064E85B /* SynchronousDataTransaction.swift */,
 			);
 			path = "Saving and Processing";
 			sourceTree = "<group>";

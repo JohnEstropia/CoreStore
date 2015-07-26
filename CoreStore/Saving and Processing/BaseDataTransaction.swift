@@ -54,7 +54,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func create<T: NSManagedObject>(into: Into<T>) -> T {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
             "Attempted to create an entity of type \(typeName(T)) outside its designated queue."
         )
         
@@ -107,7 +107,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func edit<T: NSManagedObject>(object: T?) -> T? {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
             "Attempted to update an entity of type \(typeName(object)) outside its designated queue."
         )
         
@@ -124,7 +124,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func edit<T: NSManagedObject>(into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
             "Attempted to update an entity of type \(typeName(T)) outside its designated queue."
         )
         CoreStore.assert(
@@ -144,7 +144,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func delete(object: NSManagedObject?) {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
             "Attempted to delete an entity outside its designated queue."
         )
         
@@ -171,7 +171,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func delete(objects: [NSManagedObject?]) {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
             "Attempted to delete entities outside their designated queue."
         )
         
@@ -190,7 +190,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func rollback() {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
             "Attempted to rollback a \(typeName(self)) outside its designated queue."
         )
         
@@ -219,5 +219,10 @@ public /*abstract*/ class BaseDataTransaction {
         self.context = context
         
         context.parentTransaction = self
+    }
+    
+    internal var bypassesQueueing: Bool {
+        
+        return false
     }
 }
