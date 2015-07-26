@@ -37,6 +37,18 @@ public final class DetachedDataTransaction: BaseDataTransaction {
     // MARK: Public
     
     /**
+    Returns the `NSManagedObjectContext` for this detached transaction. Use only for cases where external frameworks need an `NSManagedObjectContext` instance to work with.
+    
+    Note that it is the developer's responsibility to ensure the following:
+    - that the `DetachedDataTransaction` that owns this context should be strongly referenced and prevented from being deallocated during the context's lifetime
+    - that all saves will be done either through the `DetachedDataTransaction`'s `commit(...)` method, or by calling `save()` manually on the context, its parent, and all other ancestor contexts if there are any.
+    */
+    public var internalContext: NSManagedObjectContext {
+        
+        return self.context
+    }
+    
+    /**
     Saves the transaction changes asynchronously. For a `DetachedDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
     
     - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
@@ -48,6 +60,19 @@ public final class DetachedDataTransaction: BaseDataTransaction {
             self.result = result
             completion(result: result)
         }
+    }
+    
+    /**
+    Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
+    
+    - returns: a `DetachedDataTransaction` instance where creates, updates, and deletes can be made.
+    */
+    public func beginDetached() -> DetachedDataTransaction {
+        
+        return DetachedDataTransaction(
+            mainContext: self.context,
+            queue: self.transactionQueue
+        )
     }
     
     

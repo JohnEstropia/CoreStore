@@ -62,7 +62,7 @@ public extension DataStack {
     }
     
     /**
-    Begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
+    Begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
     
     - returns: a `DetachedDataTransaction` instance where creates, updates, and deletes can be made.
     */
@@ -70,6 +70,10 @@ public extension DataStack {
         
         return DetachedDataTransaction(
             mainContext: self.rootSavingContext,
-            queue: .Main)
+            queue: .createSerial(
+                "com.coreStore.dataStack.detachedTransactionQueue",
+                targetQueue: .UserInitiated
+            )
+        )
     }
 }
