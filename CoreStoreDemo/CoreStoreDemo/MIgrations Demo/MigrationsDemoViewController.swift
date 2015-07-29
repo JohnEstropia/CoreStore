@@ -37,6 +37,15 @@ class MigrationsDemoViewController: UIViewController {
         
         super.viewDidAppear(animated)
         
+        let alert = UIAlertController(
+            title: "Migrations Demo",
+            message: "This demo shows how to run incremental migrations and how to support multiple model versions in a single project.\n\nThe persistent store contains 10000 organisms, which gain/lose properties when the migration evolves/devolves them.\n\nYou can use the \"mutate\" button to change an organism's properties then migrate to a different model to see how its value gets affected.",
+            preferredStyle: .Alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
+        
+        
         let modelMetadata = withExtendedLifetime(DataStack(modelName: "MigrationDemo")) {
             (dataStack: DataStack) -> ModelMetadata in
             
