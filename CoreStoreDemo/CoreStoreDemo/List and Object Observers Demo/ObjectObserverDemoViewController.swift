@@ -80,11 +80,6 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     // MARK: ObjectObserver
     
-    func objectMonitor(monitor: ObjectMonitor<Palette>, willUpdateObject object: Palette) {
-        
-        // none
-    }
-    
     func objectMonitor(monitor: ObjectMonitor<Palette>, didUpdateObject object: Palette, changedPersistentKeys: Set<KeyPath>) {
         
         self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
