@@ -25,6 +25,40 @@
 
 import Foundation
 
+internal func autoreleasepool<T>(@noescape closure: () -> T?) -> T? {
+    
+    var closureValue: T?
+    ObjectiveC.autoreleasepool {
+        
+        closureValue = closure()
+    }
+    
+    return closureValue
+}
+
+internal func autoreleasepool<T>(@noescape closure: () throws -> T?) throws -> T? {
+    
+    var closureValue: T?
+    var closureError: ErrorType?
+    ObjectiveC.autoreleasepool {
+        
+        do {
+            
+            closureValue = try closure()
+        }
+        catch {
+            
+            closureError = error
+        }
+    }
+    
+    if let closureError = closureError {
+        
+        throw closureError
+    }
+    return closureValue
+}
+
 internal func autoreleasepool(@noescape closure: () throws -> Void) throws {
     
     var closureError: ErrorType?

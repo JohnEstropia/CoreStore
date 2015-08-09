@@ -70,19 +70,17 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            var returnValue: T?
-            try autoreleasepool {
+            return try autoreleasepool {
                 
                 if !T.shouldImportFromSource(source) {
                     
-                    return
+                    return nil
                 }
                 
                 let object = self.create(into)
                 try object.didInsertFromImportSource(source)
-                returnValue = object
+                return object
             }
-            return returnValue
     }
     
     func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
@@ -94,12 +92,11 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            var returnValue: T?
-            try autoreleasepool {
+            return try autoreleasepool {
                 
                 if !T.shouldImportFromSource(source) {
                     
-                    return
+                    return nil
                 }
                 
                 let uniqueIDKeyPath = T.uniqueIDKeyPath
@@ -109,17 +106,16 @@ public extension BaseDataTransaction {
                 if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
                     try object.updateFromImportSource(source)
-                    returnValue = object
+                    return object
                 }
                 else {
                     
                     let object = self.create(into)
                     object.uniqueIDValue = uniqueIDValue
                     try object.didInsertFromImportSource(source)
-                    returnValue = object
+                    return object
                 }
             }
-            return returnValue
     }
     
     func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
