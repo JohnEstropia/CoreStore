@@ -83,6 +83,55 @@ public extension BaseDataTransaction {
             }
     }
     
+    func importObjects<T where T: NSManagedObject, T: ImportableObject>(
+        into: Into<T>,
+        sourceArray: [T.ImportSource]) throws {
+            
+            CoreStore.assert(
+                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
+            )
+            
+            try autoreleasepool {
+                
+                for source in sourceArray {
+                    
+                    try autoreleasepool {
+                        
+                        let object = self.create(into)
+                        try object.didInsertFromImportSource(source)
+                    }
+                }
+            }
+    }
+    
+    func importObjects<T where T: NSManagedObject, T: ImportableObject>(
+        into: Into<T>,
+        sourceArray: [T.ImportSource],
+        postProcess: (sorted: [T]) -> Void) throws {
+            
+            CoreStore.assert(
+                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
+            )
+            
+            try autoreleasepool {
+                
+                var objects = [T]()
+                for source in sourceArray {
+                    
+                    try autoreleasepool {
+                        
+                        let object = self.create(into)
+                        try object.didInsertFromImportSource(source)
+                        
+                        objects.append(object)
+                    }
+                }
+                postProcess(sorted: objects)
+            }
+    }
+    
     func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         source: T.ImportSource) throws -> T?  {
