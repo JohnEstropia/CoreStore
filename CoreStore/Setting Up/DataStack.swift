@@ -82,6 +82,14 @@ public final class DataStack {
     }
     
     /**
+    Returns the entity name-to-class type mapping from the `DataStack`'s model.
+    */
+    public var entitiesByName: [String: NSManagedObject.Type] {
+        
+        return self.model.entityMapping()
+    }
+    
+    /**
     Adds an in-memory store to the stack.
     
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.

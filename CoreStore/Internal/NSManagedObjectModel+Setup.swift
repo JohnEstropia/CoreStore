@@ -150,6 +150,15 @@ internal extension NSManagedObjectModel {
         return self.entityNameMapping[NSStringFromClass(entityClass)]!
     }
     
+    @nonobjc internal func entityMapping() -> [String: NSManagedObject.Type] {
+    
+        return self.entityNameMapping.reduce([:]) { (var mapping, pair) in
+            
+            mapping[pair.0] = (NSClassFromString(pair.1)! as! NSManagedObject.Type)
+            return mapping
+        }
+    }
+    
     @nonobjc internal func mergedModels() -> [NSManagedObjectModel] {
         
         return self.modelVersions?.map { self[$0] }.flatMap { $0 == nil ? [] : [$0!] } ?? [self]
