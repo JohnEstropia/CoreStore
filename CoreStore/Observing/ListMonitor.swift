@@ -72,9 +72,10 @@ public final class ListMonitor<T: NSManagedObject> {
     // MARK: Public
     
     /**
-    Accesses the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `addObserver(_:)`.
+    Accesses the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
     
     - parameter index: the index of the object. Using an index above the valid range will throw an exception.
+    - returns: the `NSManagedObject` at the specified index
     */
     public subscript(index: Int) -> T {
         
@@ -82,10 +83,22 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
+    Returns the object at the given index, or `nil` if out of bounds. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
+    
+    - parameter index: the index for the object. Using an index above the valid range will return `nil`.
+    - returns: the `NSManagedObject` at the specified index, or `nil` if out of bounds
+    */
+    public subscript(safeIndex index: Int) -> T? {
+        
+        return self[safeSectionIndex: 0, safeItemIndex: index]
+    }
+    
+    /**
     Accesses the object at the given `sectionIndex` and `itemIndex`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
     
     - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will throw an exception.
     - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will throw an exception.
+    - returns: the `NSManagedObject` at the specified section and item index
     */
     public subscript(sectionIndex: Int, itemIndex: Int) -> T {
         
@@ -93,13 +106,48 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
+    Returns the object at the given section and item index, or `nil` if out of bounds. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    
+    - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will return `nil`.
+    - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will return `nil`.
+    - returns: the `NSManagedObject` at the specified section and item index, or `nil` if out of bounds
+    */
+    public subscript(safeSectionIndex sectionIndex: Int, safeItemIndex itemIndex: Int) -> T? {
+        
+        guard let sections = self.fetchedResultsController.sections
+            where sectionIndex < sections.count else {
+                
+                return nil
+        }
+        
+        let section = sections[sectionIndex]
+        guard itemIndex < section.numberOfObjects else {
+            
+            return nil
+        }
+        return sections[sectionIndex].objects?[itemIndex] as? T
+    }
+    
+    /**
     Accesses the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
     
     - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will throw an exception.
+    - returns: the `NSManagedObject` at the specified index path
     */
     public subscript(indexPath: NSIndexPath) -> T {
         
         return self.fetchedResultsController.objectAtIndexPath(indexPath) as! T
+    }
+    
+    /**
+    Returns the object at the given `NSIndexPath`, or `nil` if out of bounds. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    
+    - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will return `nil`.
+    - returns: the `NSManagedObject` at the specified index path, or `nil` if out of bounds
+    */
+    public subscript(safeIndexPath indexPath: NSIndexPath) -> T? {
+        
+        return self[safeSectionIndex: indexPath.section, safeItemIndex: indexPath.item]
     }
     
     /**
