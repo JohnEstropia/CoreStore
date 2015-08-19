@@ -32,6 +32,50 @@ public extension CoreStore {
     // MARK: Public
     
     /**
+    Using the `defaultStack`, fetches the `NSManagedObject` instance in the `DataStack`'s context from a reference created from a transaction or from a different managed object context.
+    
+    - parameter object: a reference to the object created/fetched outside the `DataStack`
+    - returns: the `NSManagedObject` instance if the object exists in the `DataStack`, or `nil` if not found.
+    */
+    public static func fetchExisting<T: NSManagedObject>(object: T) -> T? {
+        
+        return self.defaultStack.fetchExisting(object)
+    }
+    
+    /**
+    Using the `defaultStack`, fetches the `NSManagedObject` instance in the `DataStack`'s context from an `NSManagedObjectID`.
+    
+    - parameter objectID: the `NSManagedObjectID` for the object
+    - returns: the `NSManagedObject` instance if the object exists in the `DataStack`, or `nil` if not found.
+    */
+    public static func fetchExisting<T: NSManagedObject>(objectID: NSManagedObjectID) -> T? {
+        
+        return self.defaultStack.fetchExisting(objectID)
+    }
+    
+    /**
+    Using the `defaultStack`, fetches the `NSManagedObject` instances in the `DataStack`'s context from references created from a transaction or from a different managed object context.
+    
+    - parameter objects: an array of `NSManagedObject`s created/fetched outside the `DataStack`
+    - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
+    */
+    public static func fetchExisting<T: NSManagedObject>(objects: [T]) -> [T] {
+        
+        return self.defaultStack.fetchExisting(objects)
+    }
+    
+    /**
+    Using the `defaultStack`, fetches the `NSManagedObject` instances in the `DataStack`'s context from a list of `NSManagedObjectID`.
+    
+    - parameter objectIDs: the `NSManagedObjectID` array for the objects
+    - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
+    */
+    public static func fetchExisting<T: NSManagedObject>(objectIDs: [NSManagedObjectID]) -> [T] {
+        
+        return self.defaultStack.fetchExisting(objectIDs)
+    }
+    
+    /**
     Using the `defaultStack`, fetches the first `NSManagedObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     - parameter from: a `From` clause indicating the entity type
