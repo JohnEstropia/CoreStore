@@ -90,6 +90,14 @@ public final class DataStack {
     }
     
     /**
+    Returns the `NSManagedObjectID` for the specified object URI if it exists in the persistent store.
+    */
+    public func objectIDForURIRepresentation(url: NSURL) -> NSManagedObjectID? {
+        
+        return self.coordinator.managedObjectIDForURIRepresentation(url)
+    }
+    
+    /**
     Adds an in-memory store to the stack.
     
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
