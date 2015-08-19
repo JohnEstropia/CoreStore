@@ -55,7 +55,7 @@ public protocol ImportableUniqueObject: ImportableObject {
     
     var uniqueIDValue: UniqueIDType { get set }
     
-    static func uniqueIDFromImportSource(source: ImportSource) throws -> (key: String, value: UniqueIDType!)
+    static func uniqueIDFromImportSource(source: ImportSource) throws -> UniqueIDType
 }
 
 
@@ -149,8 +149,7 @@ public extension BaseDataTransaction {
                 }
                 
                 let uniqueIDKeyPath = T.uniqueIDKeyPath
-                let uniqueIDFromImportSource = try T.uniqueIDFromImportSource(source)
-                let uniqueIDValue = uniqueIDFromImportSource.value
+                let uniqueIDValue = try T.uniqueIDFromImportSource(source)
                 
                 if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
@@ -189,7 +188,7 @@ public extension BaseDataTransaction {
                             return
                         }
                         
-                        let uniqueIDValue = try T.uniqueIDFromImportSource(source).value
+                        let uniqueIDValue = try T.uniqueIDFromImportSource(source)
                         mapping[uniqueIDValue] = source
                     }
                 }
@@ -247,7 +246,7 @@ public extension BaseDataTransaction {
                             return
                         }
 
-                        let uniqueIDValue = try T.uniqueIDFromImportSource(source).value
+                        let uniqueIDValue = try T.uniqueIDFromImportSource(source)
                         mapping[uniqueIDValue] = source
                         sortedIDs.append(uniqueIDValue)
                     }
