@@ -729,6 +729,16 @@ public final class ListMonitor<T: NSManagedObject> {
 }
 
 
+// MARK: - ListMonitor: Equatable
+
+public func ==<T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+    
+    return lhs === rhs
+}
+
+extension ListMonitor: Equatable { }
+
+
 // MARK: - ListMonitor: FetchedResultsControllerHandler
 
 extension ListMonitor: FetchedResultsControllerHandler {

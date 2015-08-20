@@ -261,6 +261,16 @@ public final class ObjectMonitor<T: NSManagedObject> {
 }
 
 
+// MARK: - ObjectMonitor: Equatable
+
+public func ==<T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
+    
+    return lhs === rhs
+}
+
+extension ObjectMonitor: Equatable { }
+
+
 // MARK: - ObjectMonitor: FetchedResultsControllerHandler
 
 extension ObjectMonitor: FetchedResultsControllerHandler {
