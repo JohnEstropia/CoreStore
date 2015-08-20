@@ -34,6 +34,84 @@ public extension BaseDataTransaction {
     // MARK: Public
     
     /**
+    Fetches the `NSManagedObject` instance in the transaction's context from a reference created from a transaction or from a different managed object context.
+    
+    - parameter object: a reference to the object created/fetched outside the transaction
+    - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
+    */
+    public func fetchExisting<T: NSManagedObject>(object: T) -> T? {
+        
+        do {
+            
+            return (try self.context.existingObjectWithID(object.objectID) as! T)
+        }
+        catch _ {
+            
+            return nil
+        }
+    }
+    
+    /**
+    Fetches the `NSManagedObject` instance in the transaction's context from an `NSManagedObjectID`.
+    
+    - parameter objectID: the `NSManagedObjectID` for the object
+    - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
+    */
+    public func fetchExisting<T: NSManagedObject>(objectID: NSManagedObjectID) -> T? {
+        
+        do {
+            
+            return (try self.context.existingObjectWithID(objectID) as! T)
+        }
+        catch _ {
+            
+            return nil
+        }
+    }
+    
+    /**
+    Fetches the `NSManagedObject` instances in the transaction's context from references created from a transaction or from a different managed object context.
+    
+    - parameter objects: an array of `NSManagedObject`s created/fetched outside the transaction
+    - returns: the `NSManagedObject` array for objects that exists in the transaction
+    */
+    public func fetchExisting<T: NSManagedObject>(objects: [T]) -> [T] {
+        
+        var existingObjects = [T]()
+        for object in objects {
+            
+            do {
+                
+                let existingObject = try self.context.existingObjectWithID(object.objectID) as! T
+                existingObjects.append(existingObject)
+            }
+            catch _ { }
+        }
+        return existingObjects
+    }
+    
+    /**
+    Fetches the `NSManagedObject` instances in the transaction's context from a list of `NSManagedObjectID`.
+    
+    - parameter objectIDs: the `NSManagedObjectID` array for the objects
+    - returns: the `NSManagedObject` array for objects that exists in the transaction
+    */
+    public func fetchExisting<T: NSManagedObject>(objectIDs: [NSManagedObjectID]) -> [T] {
+        
+        var existingObjects = [T]()
+        for objectID in objectIDs {
+            
+            do {
+                
+                let existingObject = try self.context.existingObjectWithID(objectID) as! T
+                existingObjects.append(existingObject)
+            }
+            catch _ { }
+        }
+        return existingObjects
+    }
+    
+    /**
     Fetches the first `NSManagedObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     
     - parameter from: a `From` clause indicating the entity type
