@@ -72,7 +72,7 @@ public final class ListMonitor<T: NSManagedObject> {
     // MARK: Public
     
     /**
-    Accesses the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
+    Returns the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
     
     - parameter index: the index of the object. Using an index above the valid range will throw an exception.
     - returns: the `NSManagedObject` at the specified index
@@ -94,7 +94,7 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
-    Accesses the object at the given `sectionIndex` and `itemIndex`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    Returns the object at the given `sectionIndex` and `itemIndex`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
     
     - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will throw an exception.
     - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will throw an exception.
@@ -129,7 +129,7 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
-    Accesses the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    Returns the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
     
     - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will throw an exception.
     - returns: the `NSManagedObject` at the specified index path
@@ -148,6 +148,27 @@ public final class ListMonitor<T: NSManagedObject> {
     public subscript(safeIndexPath indexPath: NSIndexPath) -> T? {
         
         return self[safeSectionIndex: indexPath.section, safeItemIndex: indexPath.item]
+    }
+    
+    /**
+    Checks if the `ListMonitor` has at least one object in any section.
+    
+    - returns: `true` if at least one object in any section exists, `false` otherwise
+    */
+    public func hasObjects() -> Bool {
+        
+        return self.numberOfObjects() > 0
+    }
+    
+    /**
+    Checks if the `ListMonitor` has at least one object the specified section.
+    
+    - parameter section: the section index. Using an index outside the valid range will return `false`.
+    - returns: `true` if at least one object in the specified section exists, `false` otherwise
+    */
+    public func hasObjectsInSection(section: Int) -> Bool {
+        
+        return self.numberOfObjectsInSection(safeSectionIndex: section) > 0
     }
     
     /**
@@ -172,7 +193,7 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
-    Returns all objects in the specified section
+    Returns all objects in the specified section, or `nil` if out of bounds.
     
     - parameter section: the section index. Using an index outside the valid range will return `nil`.
     - returns: all objects in the specified section
@@ -205,23 +226,51 @@ public final class ListMonitor<T: NSManagedObject> {
     /**
     Returns the number of objects in the specified section
     
-    - parameter section: the section index
+    - parameter section: the section index. Using an index outside the valid range will throw an exception.
     - returns: the number of objects in the specified section
     */
     public func numberOfObjectsInSection(section: Int) -> Int {
         
-        return self.fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        return self.sectionInfoAtIndex(section).numberOfObjects
+    }
+    
+    /**
+    Returns the number of objects in the specified section, or `nil` if out of bounds.
+    
+    - parameter section: the section index. Using an index outside the valid range will return `nil`.
+    - returns: the number of objects in the specified section
+    */
+    public func numberOfObjectsInSection(safeSectionIndex section: Int) -> Int? {
+        
+        return self.sectionInfoAtIndex(safeSectionIndex: section)?.numberOfObjects
     }
     
     /**
     Returns the `NSFetchedResultsSectionInfo` for the specified section
     
-    - parameter section: the section index
+    - parameter section: the section index. Using an index outside the valid range will throw an exception.
     - returns: the `NSFetchedResultsSectionInfo` for the specified section
     */
     public func sectionInfoAtIndex(section: Int) -> NSFetchedResultsSectionInfo {
         
         return self.fetchedResultsController.sections![section]
+    }
+    
+    /**
+    Returns the `NSFetchedResultsSectionInfo` for the specified section, or `nil` if out of bounds.
+    
+    - parameter section: the section index. Using an index outside the valid range will return `nil`.
+    - returns: the `NSFetchedResultsSectionInfo` for the specified section, or `nil` if the section index is out of bounds.
+    */
+    public func sectionInfoAtIndex(safeSectionIndex section: Int) -> NSFetchedResultsSectionInfo? {
+        
+        guard let sections = self.fetchedResultsController.sections
+            where section < sections.count else {
+                
+                return nil
+        }
+        
+        return sections[section]
     }
     
     /**
