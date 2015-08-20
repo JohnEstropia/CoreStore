@@ -72,9 +72,10 @@ public final class ListMonitor<T: NSManagedObject> {
     // MARK: Public
     
     /**
-    Accesses the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `addObserver(_:)`.
+    Returns the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
     
     - parameter index: the index of the object. Using an index above the valid range will throw an exception.
+    - returns: the `NSManagedObject` at the specified index
     */
     public subscript(index: Int) -> T {
         
@@ -82,10 +83,22 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
-    Accesses the object at the given `sectionIndex` and `itemIndex`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    Returns the object at the given index, or `nil` if out of bounds. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
+    
+    - parameter index: the index for the object. Using an index above the valid range will return `nil`.
+    - returns: the `NSManagedObject` at the specified index, or `nil` if out of bounds
+    */
+    public subscript(safeIndex index: Int) -> T? {
+        
+        return self[safeSectionIndex: 0, safeItemIndex: index]
+    }
+    
+    /**
+    Returns the object at the given `sectionIndex` and `itemIndex`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
     
     - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will throw an exception.
     - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will throw an exception.
+    - returns: the `NSManagedObject` at the specified section and item index
     */
     public subscript(sectionIndex: Int, itemIndex: Int) -> T {
         
@@ -93,9 +106,33 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
-    Accesses the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    Returns the object at the given section and item index, or `nil` if out of bounds. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    
+    - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will return `nil`.
+    - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will return `nil`.
+    - returns: the `NSManagedObject` at the specified section and item index, or `nil` if out of bounds
+    */
+    public subscript(safeSectionIndex sectionIndex: Int, safeItemIndex itemIndex: Int) -> T? {
+        
+        guard let sections = self.fetchedResultsController.sections
+            where sectionIndex < sections.count else {
+                
+                return nil
+        }
+        
+        let section = sections[sectionIndex]
+        guard itemIndex < section.numberOfObjects else {
+            
+            return nil
+        }
+        return sections[sectionIndex].objects?[itemIndex] as? T
+    }
+    
+    /**
+    Returns the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
     
     - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will throw an exception.
+    - returns: the `NSManagedObject` at the specified index path
     */
     public subscript(indexPath: NSIndexPath) -> T {
         
@@ -103,7 +140,73 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
+    Returns the object at the given `NSIndexPath`, or `nil` if out of bounds. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+    
+    - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will return `nil`.
+    - returns: the `NSManagedObject` at the specified index path, or `nil` if out of bounds
+    */
+    public subscript(safeIndexPath indexPath: NSIndexPath) -> T? {
+        
+        return self[safeSectionIndex: indexPath.section, safeItemIndex: indexPath.item]
+    }
+    
+    /**
+    Checks if the `ListMonitor` has at least one object in any section.
+    
+    - returns: `true` if at least one object in any section exists, `false` otherwise
+    */
+    public func hasObjects() -> Bool {
+        
+        return self.numberOfObjects() > 0
+    }
+    
+    /**
+    Checks if the `ListMonitor` has at least one object the specified section.
+    
+    - parameter section: the section index. Using an index outside the valid range will return `false`.
+    - returns: `true` if at least one object in the specified section exists, `false` otherwise
+    */
+    public func hasObjectsInSection(section: Int) -> Bool {
+        
+        return self.numberOfObjectsInSection(safeSectionIndex: section) > 0
+    }
+    
+    /**
+    Returns all objects in all sections
+    
+    - returns: all objects in all sections
+    */
+    public func objectsInAllSections() -> [T] {
+        
+        return (self.fetchedResultsController.fetchedObjects as? [T]) ?? []
+    }
+    
+    /**
+    Returns all objects in the specified section
+    
+    - parameter section: the section index. Using an index outside the valid range will throw an exception.
+    - returns: all objects in the specified section
+    */
+    public func objectsInSection(section: Int) -> [T] {
+        
+        return (self.fetchedResultsController.sections?[section].objects as? [T]) ?? []
+    }
+    
+    /**
+    Returns all objects in the specified section, or `nil` if out of bounds.
+    
+    - parameter section: the section index. Using an index outside the valid range will return `nil`.
+    - returns: all objects in the specified section
+    */
+    public func objectsInSection(safeSectionIndex section: Int) -> [T]? {
+        
+        return (self.fetchedResultsController.sections?[section].objects as? [T]) ?? []
+    }
+    
+    /**
     Returns the number of sections
+    
+    - returns: the number of sections
     */
     public func numberOfSections() -> Int {
         
@@ -111,23 +214,63 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
+    Returns the number of objects in all sections
+    
+    - returns: the number of objects in all sections
+    */
+    public func numberOfObjects() -> Int {
+        
+        return self.fetchedResultsController.fetchedObjects?.count ?? 0
+    }
+    
+    /**
     Returns the number of objects in the specified section
     
-    - parameter section: the section index
+    - parameter section: the section index. Using an index outside the valid range will throw an exception.
+    - returns: the number of objects in the specified section
     */
     public func numberOfObjectsInSection(section: Int) -> Int {
         
-        return self.fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        return self.sectionInfoAtIndex(section).numberOfObjects
+    }
+    
+    /**
+    Returns the number of objects in the specified section, or `nil` if out of bounds.
+    
+    - parameter section: the section index. Using an index outside the valid range will return `nil`.
+    - returns: the number of objects in the specified section
+    */
+    public func numberOfObjectsInSection(safeSectionIndex section: Int) -> Int? {
+        
+        return self.sectionInfoAtIndex(safeSectionIndex: section)?.numberOfObjects
     }
     
     /**
     Returns the `NSFetchedResultsSectionInfo` for the specified section
     
-    - parameter section: the section index
+    - parameter section: the section index. Using an index outside the valid range will throw an exception.
+    - returns: the `NSFetchedResultsSectionInfo` for the specified section
     */
     public func sectionInfoAtIndex(section: Int) -> NSFetchedResultsSectionInfo {
         
         return self.fetchedResultsController.sections![section]
+    }
+    
+    /**
+    Returns the `NSFetchedResultsSectionInfo` for the specified section, or `nil` if out of bounds.
+    
+    - parameter section: the section index. Using an index outside the valid range will return `nil`.
+    - returns: the `NSFetchedResultsSectionInfo` for the specified section, or `nil` if the section index is out of bounds.
+    */
+    public func sectionInfoAtIndex(safeSectionIndex section: Int) -> NSFetchedResultsSectionInfo? {
+        
+        guard let sections = self.fetchedResultsController.sections
+            where section < sections.count else {
+                
+                return nil
+        }
+        
+        return sections[section]
     }
     
     /**
@@ -586,6 +729,16 @@ public final class ListMonitor<T: NSManagedObject> {
 }
 
 
+// MARK: - ListMonitor: Equatable
+
+public func ==<T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+    
+    return lhs === rhs
+}
+
+extension ListMonitor: Equatable { }
+
+
 // MARK: - ListMonitor: FetchedResultsControllerHandler
 
 extension ListMonitor: FetchedResultsControllerHandler {
@@ -723,7 +876,7 @@ private final class FetchedResultsControllerDelegate: NSObject, NSFetchedResults
         self.handler?.controllerDidChangeContent(controller)
     }
     
-    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: NSManagedObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
         self.handler?.controller(controller, didChangeObject: anObject, atIndexPath: indexPath, forChangeType: type, newIndexPath: newIndexPath)
     }

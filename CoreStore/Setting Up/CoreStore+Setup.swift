@@ -33,6 +33,22 @@ import GCDKit
 public extension CoreStore {
     
     /**
+    Returns the `defaultStack`'s model version. The version string is the same as the name of the version-specific .xcdatamodeld file.
+    */
+    public static var modelVersion: String {
+        
+        return self.defaultStack.modelVersion
+    }
+    
+    /**
+    Returns the entity name-to-class type mapping from the `defaultStack`'s model.
+    */
+    public static var entitiesByName: [String: NSManagedObject.Type] {
+        
+        return self.defaultStack.entitiesByName
+    }
+    
+    /**
     Adds an in-memory store to the `defaultStack`.
     
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.

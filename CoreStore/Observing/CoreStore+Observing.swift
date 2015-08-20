@@ -51,7 +51,7 @@ public extension CoreStore {
     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     - returns: a `ListMonitor` instance that monitors changes to the list
     */
-    public static func monitorList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: FetchClause...) -> ListMonitor<T> {
+    public static func monitorList<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.defaultStack.monitorList(from, queryClauses)
     }
@@ -63,7 +63,7 @@ public extension CoreStore {
     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     - returns: a `ListMonitor` instance that monitors changes to the list
     */
-    public static func monitorList<T: NSManagedObject>(from: From<T>, _ groupBy: GroupBy? = nil, _ queryClauses: [FetchClause]) -> ListMonitor<T> {
+    public static func monitorList<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> ListMonitor<T> {
         
         return self.defaultStack.monitorList(from, queryClauses)
     }

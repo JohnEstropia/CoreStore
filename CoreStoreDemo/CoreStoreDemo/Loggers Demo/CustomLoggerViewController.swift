@@ -62,7 +62,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
             case .Warning: levelString = "Warning"
             case .Fatal: levelString = "Fatal"
             }
-            self?.textView?.insertText("\(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Log:\(levelString)] \(message)\n\n")
+            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Log:\(levelString)] \(message)\n\n")
         }
     }
     
@@ -70,7 +70,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         
         GCDQueue.Main.async { [weak self] in
             
-            self?.textView?.insertText("\(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Error] \(message): \(error)\n\n")
+            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Error] \(message): \(error)\n\n")
         }
     }
     
@@ -83,13 +83,13 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         
         GCDQueue.Main.async { [weak self] in
             
-            self?.textView?.insertText("\(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(message)\n\n")
+            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(message)\n\n")
         }
     }
     
     @noreturn func fatalError(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        Swift.fatalError("\(fileName.stringValue.lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Abort] \(message)")
+        Swift.fatalError("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Abort] \(message)")
     }
     
     

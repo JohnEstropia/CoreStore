@@ -67,3 +67,22 @@ public protocol ObjectObserver: class {
     */
     func objectMonitor(monitor: ObjectMonitor<EntityType>, didDeleteObject object: EntityType)
 }
+
+
+public extension ObjectObserver {
+    
+    /**
+    The default implementation does nothing.
+    */
+    func objectMonitor(monitor: ObjectMonitor<EntityType>, willUpdateObject object: EntityType) { }
+    
+    /**
+    The default implementation does nothing.
+    */
+    func objectMonitor(monitor: ObjectMonitor<EntityType>, didUpdateObject object: EntityType, changedPersistentKeys: Set<KeyPath>) { }
+    
+    /**
+    The default implementation does nothing.
+    */
+    func objectMonitor(monitor: ObjectMonitor<EntityType>, didDeleteObject object: EntityType) { }
+}

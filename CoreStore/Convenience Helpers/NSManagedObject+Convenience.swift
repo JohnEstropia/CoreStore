@@ -58,4 +58,20 @@ public extension NSManagedObject {
         self.setPrimitiveValue(value, forKey: KVCKey)
         self.didChangeValueForKey(KVCKey)
     }
+    
+    /**
+    Re-faults the object to use the latest values from the persistent store
+    */
+    public func refreshAsFault() {
+        
+        self.managedObjectContext?.refreshObject(self, mergeChanges: false)
+    }
+    
+    /**
+    Re-faults the object to use the latest values from the persistent store and merges previously pending changes back
+    */
+    public func refreshAndMerge() {
+        
+        self.managedObjectContext?.refreshObject(self, mergeChanges: true)
+    }
 }

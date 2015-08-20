@@ -60,6 +60,19 @@ public protocol ListObserver: class {
     func listMonitorDidChange(monitor: ListMonitor<EntityType>)
 }
 
+public extension ListObserver {
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitorWillChange(monitor: ListMonitor<EntityType>) { }
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitorDidChange(monitor: ListMonitor<EntityType>) { }
+}
+
 
 // MARK: - ListObjectObserver
 
@@ -112,6 +125,29 @@ public protocol ListObjectObserver: ListObserver {
     func listMonitor(monitor: ListMonitor<EntityType>, didMoveObject object: EntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
 }
 
+public extension ListObjectObserver {
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitor(monitor: ListMonitor<EntityType>, didInsertObject object: EntityType, toIndexPath indexPath: NSIndexPath) { }
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitor(monitor: ListMonitor<EntityType>, didDeleteObject object: EntityType, fromIndexPath indexPath: NSIndexPath) { }
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitor(monitor: ListMonitor<EntityType>, didUpdateObject object: EntityType, atIndexPath indexPath: NSIndexPath) { }
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitor(monitor: ListMonitor<EntityType>, didMoveObject object: EntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) { }
+}
+
 
 // MARK: - ListSectionObserver
 
@@ -144,4 +180,17 @@ public protocol ListSectionObserver: ListObjectObserver {
     - parameter sectionIndex: the previous section index for the deleted section
     */
     func listMonitor(monitor: ListMonitor<EntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
+}
+
+public extension ListSectionObserver {
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitor(monitor: ListMonitor<EntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) { }
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitor(monitor: ListMonitor<EntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) { }
 }
