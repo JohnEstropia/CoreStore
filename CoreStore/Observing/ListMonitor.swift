@@ -151,7 +151,41 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
+    Returns all objects in all sections
+    
+    - returns: all objects in all sections
+    */
+    public func objectsInAllSections() -> [T] {
+        
+        return (self.fetchedResultsController.fetchedObjects as? [T]) ?? []
+    }
+    
+    /**
+    Returns all objects in the specified section
+    
+    - parameter section: the section index. Using an index outside the valid range will throw an exception.
+    - returns: all objects in the specified section
+    */
+    public func objectsInSection(section: Int) -> [T] {
+        
+        return (self.fetchedResultsController.sections?[section].objects as? [T]) ?? []
+    }
+    
+    /**
+    Returns all objects in the specified section
+    
+    - parameter section: the section index. Using an index outside the valid range will return `nil`.
+    - returns: all objects in the specified section
+    */
+    public func objectsInSection(safeSectionIndex section: Int) -> [T]? {
+        
+        return (self.fetchedResultsController.sections?[section].objects as? [T]) ?? []
+    }
+    
+    /**
     Returns the number of sections
+    
+    - returns: the number of sections
     */
     public func numberOfSections() -> Int {
         
@@ -159,9 +193,20 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
+    Returns the number of objects in all sections
+    
+    - returns: the number of objects in all sections
+    */
+    public func numberOfObjects() -> Int {
+        
+        return self.fetchedResultsController.fetchedObjects?.count ?? 0
+    }
+    
+    /**
     Returns the number of objects in the specified section
     
     - parameter section: the section index
+    - returns: the number of objects in the specified section
     */
     public func numberOfObjectsInSection(section: Int) -> Int {
         
@@ -172,6 +217,7 @@ public final class ListMonitor<T: NSManagedObject> {
     Returns the `NSFetchedResultsSectionInfo` for the specified section
     
     - parameter section: the section index
+    - returns: the `NSFetchedResultsSectionInfo` for the specified section
     */
     public func sectionInfoAtIndex(section: Int) -> NSFetchedResultsSectionInfo {
         
