@@ -44,6 +44,11 @@ public extension ImportableObject {
         
         return true
     }
+    
+    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+
+        try self.updateFromImportSource(source, inTransaction: transaction)
+    }
 }
 
 
