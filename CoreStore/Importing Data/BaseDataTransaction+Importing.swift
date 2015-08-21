@@ -174,7 +174,7 @@ public extension BaseDataTransaction {
     func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
-        preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil) throws {
+        preProcess: ((inout mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil) throws {
             
             CoreStore.assert(
                 self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
@@ -202,7 +202,7 @@ public extension BaseDataTransaction {
                     
                     try autoreleasepool {
                         
-                        try preProcess(mapping: mapping)
+                        try preProcess(mapping: &mapping)
                     }
                 }
                 
@@ -230,7 +230,7 @@ public extension BaseDataTransaction {
     func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
-        preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil,
+        preProcess: ((inout mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil,
         postProcess: (sorted: [T]) -> Void) throws {
             
             CoreStore.assert(
@@ -261,7 +261,7 @@ public extension BaseDataTransaction {
                     
                     try autoreleasepool {
                         
-                        try preProcess(mapping: mapping)
+                        try preProcess(mapping: &mapping)
                     }
                 }
                 
