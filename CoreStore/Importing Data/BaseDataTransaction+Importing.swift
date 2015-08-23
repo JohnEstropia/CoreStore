@@ -63,6 +63,11 @@ public protocol ImportableUniqueObject: ImportableObject {
 
 public extension ImportableUniqueObject {
     
+    static func shouldUpdateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+        
+        return true
+    }
+    
     func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.updateFromImportSource(source, inTransaction: transaction)
