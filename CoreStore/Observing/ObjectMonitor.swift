@@ -179,7 +179,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = object.entity
         
-        fetchRequest.fetchLimit = 1
+        fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.sortDescriptors = []
         
@@ -288,7 +288,7 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
                 userInfo: [UserInfoKeyObject: anObject]
             )
             
-        case .Update:
+        case .Update, .Move where indexPath == newIndexPath:
             NSNotificationCenter.defaultCenter().postNotificationName(
                 ObjectMonitorDidUpdateObjectNotification,
                 object: self,
