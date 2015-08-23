@@ -129,13 +129,13 @@ public final class ObjectMonitor<T: NSManagedObject> {
                     let previousCommitedAttributes = strongSelf.lastCommittedAttributes
                     let currentCommitedAttributes = object.committedValuesForKeys(nil) as! [String: NSObject]
                     
-                    let changedKeys = currentCommitedAttributes.keys.reduce(Set<String>()) { (var changedKeys, key) -> Set<String> in
+                    var changedKeys = Set<String>()
+                    for key in currentCommitedAttributes.keys {
                         
                         if previousCommitedAttributes[key] != currentCommitedAttributes[key] {
                             
                             changedKeys.insert(key)
                         }
-                        return changedKeys
                     }
                     
                     strongSelf.lastCommittedAttributes = currentCommitedAttributes
