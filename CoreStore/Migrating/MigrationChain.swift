@@ -237,9 +237,9 @@ extension MigrationChain: CustomDebugStringConvertible {
                 steps.append(nextVersion)
                 version = nextVersion
             }
-            paths.append(" → ".join(steps))
+            paths.append(steps.joinWithSeparator(" → "))
         }
         
-        return "[" + "], [".join(paths) + "]"
+        return "[" + paths.joinWithSeparator("], [") + "]"
     }
 }

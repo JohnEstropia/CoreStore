@@ -377,8 +377,9 @@ class CoreStoreTests: XCTestCase {
         
         do {
             
-            try NSFileManager.defaultManager().removeItemAtURL(
-                NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first!
+            let fileManager = NSFileManager.defaultManager()
+            try fileManager.removeItemAtURL(
+                fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first!
             )
         }
         catch _ { }

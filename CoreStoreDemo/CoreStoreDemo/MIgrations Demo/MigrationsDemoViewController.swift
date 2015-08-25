@@ -285,7 +285,7 @@ class MigrationsDemoViewController: UIViewController {
         }
         
         self.titleLabel?.text = organismType
-        self.organismLabel?.text = "\n".join(lines)
+        self.organismLabel?.text = lines.joinWithSeparator("\n")
         self.progressView?.progress = 0
         
         self.headerContainer?.setNeedsLayout()

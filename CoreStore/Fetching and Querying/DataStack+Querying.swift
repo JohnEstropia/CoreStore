@@ -81,12 +81,10 @@ public extension DataStack {
         var existingObjects = [T]()
         for object in objects {
             
-            do {
+            if let existingObject = (try? self.mainContext.existingObjectWithID(object.objectID)) as? T {
                 
-                let existingObject = try self.mainContext.existingObjectWithID(object.objectID) as! T
                 existingObjects.append(existingObject)
             }
-            catch _ { }
         }
         return existingObjects
     }
@@ -102,12 +100,10 @@ public extension DataStack {
         var existingObjects = [T]()
         for objectID in objectIDs {
             
-            do {
+            if let existingObject = (try? self.mainContext.existingObjectWithID(objectID)) as? T {
                 
-                let existingObject = try self.mainContext.existingObjectWithID(objectID) as! T
                 existingObjects.append(existingObject)
             }
-            catch _ { }
         }
         return existingObjects
     }

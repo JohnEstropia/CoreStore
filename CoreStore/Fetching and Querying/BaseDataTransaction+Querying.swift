@@ -80,12 +80,10 @@ public extension BaseDataTransaction {
         var existingObjects = [T]()
         for object in objects {
             
-            do {
+            if let existingObject = (try? self.context.existingObjectWithID(object.objectID)) as? T {
                 
-                let existingObject = try self.context.existingObjectWithID(object.objectID) as! T
                 existingObjects.append(existingObject)
             }
-            catch _ { }
         }
         return existingObjects
     }
@@ -101,12 +99,10 @@ public extension BaseDataTransaction {
         var existingObjects = [T]()
         for objectID in objectIDs {
             
-            do {
+            if let existingObject = (try? self.context.existingObjectWithID(objectID)) as? T {
                 
-                let existingObject = try self.context.existingObjectWithID(objectID) as! T
                 existingObjects.append(existingObject)
             }
-            catch _ { }
         }
         return existingObjects
     }
