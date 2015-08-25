@@ -801,7 +801,7 @@ extension ListMonitor: FetchedResultsControllerHandler {
                 ]
             )
             
-        case .Move where indexPath != newIndexPath:
+        case .Move /* where indexPath != newIndexPath*/:
             NSNotificationCenter.defaultCenter().postNotificationName(
                 ListMonitorDidMoveObjectNotification,
                 object: self,
