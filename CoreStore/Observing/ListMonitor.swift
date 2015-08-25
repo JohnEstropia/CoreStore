@@ -274,6 +274,28 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
+    Returns the index of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
+    
+    - parameter object: the `NSManagedObject` to search the index of
+    - returns: the index of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
+    */
+    public func indexOf(object: T) -> Int? {
+        
+        return (self.fetchedResultsController.fetchedObjects as? [T] ?? []).indexOf(object)
+    }
+    
+    /**
+    Returns the `NSIndexPath` of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
+    
+    - parameter object: the `NSManagedObject` to search the index of
+    - returns: the `NSIndexPath` of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
+    */
+    public func indexPathOf(object: T) -> NSIndexPath? {
+        
+        return self.fetchedResultsController.indexPathForObject(object)
+    }
+    
+    /**
     Registers a `ListObserver` to be notified when changes to the receiver's list occur.
     
     To prevent retain-cycles, `ListMonitor` only keeps `weak` references to its observers.
@@ -779,7 +801,7 @@ extension ListMonitor: FetchedResultsControllerHandler {
                 ]
             )
             
-        case .Move:
+        case .Move where indexPath != newIndexPath:
             NSNotificationCenter.defaultCenter().postNotificationName(
                 ListMonitorDidMoveObjectNotification,
                 object: self,
@@ -789,6 +811,9 @@ extension ListMonitor: FetchedResultsControllerHandler {
                     UserInfoKeyNewIndexPath: newIndexPath!
                 ]
             )
+            
+        default:
+            break
         }
     }
     

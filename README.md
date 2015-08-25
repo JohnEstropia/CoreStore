@@ -956,7 +956,7 @@ let person2 = self.monitor[1, 2]
 # Installation
 - Requires:
     - iOS 8 SDK and above
-    - Swift 2.0
+    - Swift 2.0 (XCode 7 beta 5)
 - Dependencies:
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
 

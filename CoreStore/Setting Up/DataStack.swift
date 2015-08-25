@@ -84,9 +84,20 @@ public final class DataStack {
     /**
     Returns the entity name-to-class type mapping from the `DataStack`'s model.
     */
-    public var entitiesByName: [String: NSManagedObject.Type] {
+    public var entityTypesByName: [String: NSManagedObject.Type] {
         
-        return self.model.entityMapping()
+        return self.model.entityTypesMapping()
+    }
+    
+    /**
+    Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass.
+    */
+    public func entityDescriptionForType(type: NSManagedObject.Type) -> NSEntityDescription? {
+    
+        return NSEntityDescription.entityForName(
+            self.model.entityNameForClass(type),
+            inManagedObjectContext: self.mainContext
+        )
     }
     
     /**

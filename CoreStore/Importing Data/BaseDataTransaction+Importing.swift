@@ -31,16 +31,14 @@ public protocol ImportableObject: class {
     
     typealias ImportSource
     
-    static func shouldImportFromSource(source: ImportSource) -> Bool
+    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
     
-    func didInsertFromImportSource(source: ImportSource) throws
-    
-    func updateFromImportSource(source: ImportSource) throws
+    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
 }
 
 public extension ImportableObject {
     
-    static func shouldImportFromSource(source: ImportSource) -> Bool {
+    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return true
     }
@@ -55,7 +53,25 @@ public protocol ImportableUniqueObject: ImportableObject {
     
     var uniqueIDValue: UniqueIDType { get set }
     
-    static func uniqueIDFromImportSource(source: ImportSource) throws -> UniqueIDType
+    static func uniqueIDFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType?
+    
+    static func shouldUpdateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
+    
+    func updateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+}
+
+
+public extension ImportableUniqueObject {
+    
+    static func shouldUpdateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+        
+        return true
+    }
+    
+    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+        
+        try self.updateFromImportSource(source, inTransaction: transaction)
+    }
 }
 
 
@@ -72,13 +88,13 @@ public extension BaseDataTransaction {
             
             return try autoreleasepool {
                 
-                if !T.shouldImportFromSource(source) {
+                guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
                     
                     return nil
                 }
                 
                 let object = self.create(into)
-                try object.didInsertFromImportSource(source)
+                try object.didInsertFromImportSource(source, inTransaction: self)
                 return object
             }
     }
@@ -96,10 +112,15 @@ public extension BaseDataTransaction {
                 
                 for source in sourceArray {
                     
+                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                        
+                        continue
+                    }
+                    
                     try autoreleasepool {
                         
                         let object = self.create(into)
-                        try object.didInsertFromImportSource(source)
+                        try object.didInsertFromImportSource(source, inTransaction: self)
                     }
                 }
             }
@@ -120,10 +141,15 @@ public extension BaseDataTransaction {
                 var objects = [T]()
                 for source in sourceArray {
                     
+                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                        
+                        continue
+                    }
+                    
                     try autoreleasepool {
                         
                         let object = self.create(into)
-                        try object.didInsertFromImportSource(source)
+                        try object.didInsertFromImportSource(source, inTransaction: self)
                         
                         objects.append(object)
                     }
@@ -143,24 +169,27 @@ public extension BaseDataTransaction {
             
             return try autoreleasepool {
                 
-                if !T.shouldImportFromSource(source) {
+                let uniqueIDKeyPath = T.uniqueIDKeyPath
+                guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
                     
                     return nil
                 }
                 
-                let uniqueIDKeyPath = T.uniqueIDKeyPath
-                let uniqueIDValue = try T.uniqueIDFromImportSource(source)
-                
                 if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
-                    try object.updateFromImportSource(source)
+                    try object.updateFromImportSource(source, inTransaction: self)
                     return object
                 }
                 else {
                     
+                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                        
+                        return nil
+                    }
+                    
                     let object = self.create(into)
                     object.uniqueIDValue = uniqueIDValue
-                    try object.didInsertFromImportSource(source)
+                    try object.didInsertFromImportSource(source, inTransaction: self)
                     return object
                 }
             }
@@ -169,7 +198,7 @@ public extension BaseDataTransaction {
     func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
-        preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil) throws {
+        preProcess: ((inout mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil) throws {
             
             CoreStore.assert(
                 self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
@@ -183,12 +212,11 @@ public extension BaseDataTransaction {
                     
                     try autoreleasepool {
                         
-                        if !T.shouldImportFromSource(source) {
+                        guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
                             
                             return
                         }
                         
-                        let uniqueIDValue = try T.uniqueIDFromImportSource(source)
                         mapping[uniqueIDValue] = source
                     }
                 }
@@ -197,7 +225,7 @@ public extension BaseDataTransaction {
                     
                     try autoreleasepool {
                         
-                        try preProcess(mapping: mapping)
+                        try preProcess(mapping: &mapping)
                     }
                 }
                 
@@ -206,7 +234,14 @@ public extension BaseDataTransaction {
                     try autoreleasepool {
                         
                         let uniqueIDValue = object.uniqueIDValue
-                        try object.updateFromImportSource(mapping.removeValueForKey(uniqueIDValue)!)
+                        
+                        guard let source = mapping.removeValueForKey(uniqueIDValue)
+                            where T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                                
+                                return
+                        }
+                        
+                        try object.updateFromImportSource(source, inTransaction: self)
                     }
                 }
                 
@@ -214,9 +249,14 @@ public extension BaseDataTransaction {
                     
                     try autoreleasepool {
                         
+                        guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                            
+                            return
+                        }
+                        
                         let object = self.create(into)
                         object.uniqueIDValue = uniqueIDValue
-                        try object.didInsertFromImportSource(source)
+                        try object.didInsertFromImportSource(source, inTransaction: self)
                     }
                 }
             }
@@ -225,7 +265,7 @@ public extension BaseDataTransaction {
     func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
-        preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil,
+        preProcess: ((inout mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil,
         postProcess: (sorted: [T]) -> Void) throws {
             
             CoreStore.assert(
@@ -241,12 +281,11 @@ public extension BaseDataTransaction {
                     
                     try autoreleasepool {
                         
-                        if !T.shouldImportFromSource(source) {
+                        guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
                             
                             return
                         }
-
-                        let uniqueIDValue = try T.uniqueIDFromImportSource(source)
+                        
                         mapping[uniqueIDValue] = source
                         sortedIDs.append(uniqueIDValue)
                     }
@@ -256,7 +295,7 @@ public extension BaseDataTransaction {
                     
                     try autoreleasepool {
                         
-                        try preProcess(mapping: mapping)
+                        try preProcess(mapping: &mapping)
                     }
                 }
                 
@@ -266,7 +305,14 @@ public extension BaseDataTransaction {
                     try autoreleasepool {
                         
                         let uniqueIDValue = object.uniqueIDValue
-                        try object.updateFromImportSource(mapping.removeValueForKey(uniqueIDValue)!)
+                        
+                        guard let source = mapping.removeValueForKey(uniqueIDValue)
+                            where T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                                
+                                return
+                        }
+                        
+                        try object.updateFromImportSource(source, inTransaction: self)
                         objects[uniqueIDValue] = object
                     }
                 }
@@ -275,9 +321,14 @@ public extension BaseDataTransaction {
                     
                     try autoreleasepool {
                         
+                        guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                            
+                            return
+                        }
+                        
                         let object = self.create(into)
                         object.uniqueIDValue = uniqueIDValue
-                        try object.didInsertFromImportSource(source)
+                        try object.didInsertFromImportSource(source, inTransaction: self)
                         
                         objects[uniqueIDValue] = object
                     }

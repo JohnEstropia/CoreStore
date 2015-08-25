@@ -129,13 +129,13 @@ public final class ObjectMonitor<T: NSManagedObject> {
                     let previousCommitedAttributes = strongSelf.lastCommittedAttributes
                     let currentCommitedAttributes = object.committedValuesForKeys(nil) as! [String: NSObject]
                     
-                    let changedKeys = currentCommitedAttributes.keys.reduce(Set<String>()) { (var changedKeys, key) -> Set<String> in
+                    var changedKeys = Set<String>()
+                    for key in currentCommitedAttributes.keys {
                         
                         if previousCommitedAttributes[key] != currentCommitedAttributes[key] {
                             
                             changedKeys.insert(key)
                         }
-                        return changedKeys
                     }
                     
                     strongSelf.lastCommittedAttributes = currentCommitedAttributes
@@ -179,7 +179,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = object.entity
         
-        fetchRequest.fetchLimit = 1
+        fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.sortDescriptors = []
         
@@ -288,7 +288,7 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
                 userInfo: [UserInfoKeyObject: anObject]
             )
             
-        case .Update:
+        case .Update, .Move where indexPath == newIndexPath:
             NSNotificationCenter.defaultCenter().postNotificationName(
                 ObjectMonitorDidUpdateObjectNotification,
                 object: self,
