@@ -801,7 +801,7 @@ extension ListMonitor: FetchedResultsControllerHandler {
                 ]
             )
             
-        case .Move /* where indexPath != newIndexPath*/:
+        case .Move:
             NSNotificationCenter.defaultCenter().postNotificationName(
                 ListMonitorDidMoveObjectNotification,
                 object: self,
@@ -811,9 +811,6 @@ extension ListMonitor: FetchedResultsControllerHandler {
                     UserInfoKeyNewIndexPath: newIndexPath!
                 ]
             )
-            
-        default:
-            break
         }
     }
     
