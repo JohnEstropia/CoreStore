@@ -195,7 +195,6 @@ public final class ObjectMonitor<T: NSManagedObject> {
         
         let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
         
-        self.originalObjectID = originalObjectID
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         self.parentStack = dataStack
@@ -210,7 +209,6 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     // MARK: Private
     
-    private let originalObjectID: NSManagedObjectID
     private let fetchedResultsController: NSFetchedResultsController
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private var lastCommittedAttributes = [String: NSObject]()

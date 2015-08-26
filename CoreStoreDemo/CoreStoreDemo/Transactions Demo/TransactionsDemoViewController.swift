@@ -159,13 +159,14 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         
         if let mapView = self.mapView, let gesture = sender as? UILongPressGestureRecognizer where gesture.state == .Began {
             
+            let coordinate = mapView.convertPoint(
+                gesture.locationInView(mapView),
+                toCoordinateFromView: mapView
+            )
             CoreStore.beginAsynchronous { (transaction) -> Void in
                 
                 let place = transaction.edit(Static.placeController.object)
-                place?.coordinate = mapView.convertPoint(
-                    gesture.locationInView(mapView),
-                    toCoordinateFromView: mapView
-                )
+                place?.coordinate = coordinate
                 transaction.commit { (_) -> Void in }
             }
         }

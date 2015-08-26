@@ -956,7 +956,7 @@ let person2 = self.monitor[1, 2]
 # Installation
 - Requires:
     - iOS 8 SDK and above
-    - Swift 2.0 (XCode 7 beta 5)
+    - Swift 2.0 (XCode 7 beta 6)
 - Dependencies:
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
 
@@ -968,7 +968,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 
 ### Install with Carthage
 ```
-github "JohnEstropia/CoreStore" >= 0.2.0
+github "JohnEstropia/CoreStore" >= 1.3.0
 ```
 
 ### Install as Git Submodule

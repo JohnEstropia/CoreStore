@@ -31,7 +31,51 @@ import CoreData
 
 internal extension NSManagedObjectContext {
     
-    // MARK: Public
+    // MARK: Internal
+    
+    internal func fetchExisting<T: NSManagedObject>(object: T) -> T? {
+        
+        if object.objectID.temporaryID {
+            
+            var objectIDError: NSError?
+            let didSucceed = withExtendedLifetime(self) { (context: NSManagedObjectContext) -> Bool in
+                
+                do {
+                    
+                    try context.obtainPermanentIDsForObjects([object])
+                    return true
+                }
+                catch {
+                    
+                    objectIDError = error as NSError
+                    return false
+                }
+            }
+            if didSucceed != true {
+                
+                CoreStore.handleError(
+                    objectIDError ?? NSError(coreStoreErrorCode: .UnknownError),
+                    "Failed to obtain permanent ID for object."
+                )
+                return nil
+            }
+        }
+        
+        do {
+            
+            let existingObject = try self.existingObjectWithID(object.objectID)
+            return (existingObject as! T)
+        }
+        catch {
+            
+            CoreStore.handleError(
+                error as NSError,
+                "Failed to load existing \(typeName(object)) in context."
+            )
+            return nil
+        }
+    }
+
     
     internal func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
