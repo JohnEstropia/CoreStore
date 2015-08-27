@@ -46,7 +46,7 @@ internal extension NSManagedObjectContext {
         }
         set {
             
-            if self.parentContext != nil {
+            guard self.parentContext == nil else {
                 
                 return
             }

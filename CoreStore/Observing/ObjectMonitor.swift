@@ -28,20 +28,6 @@ import CoreData
 import GCDKit
 
 
-private let ObjectMonitorWillChangeObjectNotification = "ObjectMonitorWillChangeObjectNotification"
-private let ObjectMonitorDidDeleteObjectNotification = "ObjectMonitorDidDeleteObjectNotification"
-private let ObjectMonitorDidUpdateObjectNotification = "ObjectMonitorDidUpdateObjectNotification"
-
-private let UserInfoKeyObject = "UserInfoKeyObject"
-
-private struct NotificationKey {
-    
-    static var willChangeObject: Void?
-    static var didDeleteObject: Void?
-    static var didUpdateObject: Void?
-}
-
-
 // MARK: - ObjectMonitor
 
 /**
@@ -100,10 +86,11 @@ public final class ObjectMonitor<T: NSManagedObject> {
             toObserver: observer,
             callback: { [weak observer] (monitor) -> Void in
                 
-                if let object = monitor.object, let observer = observer {
+                guard let object = monitor.object, let observer = observer else {
                     
-                    observer.objectMonitor(monitor, willUpdateObject: object)
+                    return
                 }
+                observer.objectMonitor(monitor, willUpdateObject: object)
             }
         )
         self.registerObjectNotification(
@@ -112,10 +99,11 @@ public final class ObjectMonitor<T: NSManagedObject> {
             toObserver: observer,
             callback: { [weak observer] (monitor, object) -> Void in
                 
-                if let observer = observer {
+                guard let observer = observer else {
                     
-                    observer.objectMonitor(monitor, didDeleteObject: object)
+                    return
                 }
+                observer.objectMonitor(monitor, didDeleteObject: object)
             }
         )
         self.registerObjectNotification(
@@ -124,27 +112,29 @@ public final class ObjectMonitor<T: NSManagedObject> {
             toObserver: observer,
             callback: { [weak self, weak observer] (monitor, object) -> Void in
                 
-                if let strongSelf = self, let observer = observer {
+                guard let strongSelf = self, let observer = observer else {
                     
-                    let previousCommitedAttributes = strongSelf.lastCommittedAttributes
-                    let currentCommitedAttributes = object.committedValuesForKeys(nil) as! [String: NSObject]
-                    
-                    var changedKeys = Set<String>()
-                    for key in currentCommitedAttributes.keys {
-                        
-                        if previousCommitedAttributes[key] != currentCommitedAttributes[key] {
-                            
-                            changedKeys.insert(key)
-                        }
-                    }
-                    
-                    strongSelf.lastCommittedAttributes = currentCommitedAttributes
-                    observer.objectMonitor(
-                        monitor,
-                        didUpdateObject: object,
-                        changedPersistentKeys: changedKeys
-                    )
+                    return
                 }
+                
+                let previousCommitedAttributes = strongSelf.lastCommittedAttributes
+                let currentCommitedAttributes = object.committedValuesForKeys(nil) as! [String: NSObject]
+                
+                var changedKeys = Set<String>()
+                for key in currentCommitedAttributes.keys {
+                    
+                    if previousCommitedAttributes[key] != currentCommitedAttributes[key] {
+                        
+                        changedKeys.insert(key)
+                    }
+                }
+                
+                strongSelf.lastCommittedAttributes = currentCommitedAttributes
+                observer.objectMonitor(
+                    monitor,
+                    didUpdateObject: object,
+                    changedPersistentKeys: changedKeys
+                )
             }
         )
     }
@@ -222,10 +212,11 @@ public final class ObjectMonitor<T: NSManagedObject> {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    if let strongSelf = self {
+                    guard let strongSelf = self else {
                         
-                        callback(monitor: strongSelf)
+                        return
                     }
+                    callback(monitor: strongSelf)
                 }
             ),
             forKey: notificationKey,
@@ -241,15 +232,13 @@ public final class ObjectMonitor<T: NSManagedObject> {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    if let strongSelf = self,
+                    guard let strongSelf = self,
                         let userInfo = note.userInfo,
-                        let object = userInfo[UserInfoKeyObject] as? T {
+                        let object = userInfo[UserInfoKeyObject] as? T else {
                             
-                            callback(
-                                monitor: strongSelf,
-                                object: object
-                            )
+                            return
                     }
+                    callback(monitor: strongSelf, object: object)
                 }
             ),
             forKey: notificationKey,
@@ -351,4 +340,18 @@ private final class FetchedResultsControllerDelegate: NSObject, NSFetchedResults
         
         self.fetchedResultsController?.delegate = nil
     }
+}
+
+
+private let ObjectMonitorWillChangeObjectNotification = "ObjectMonitorWillChangeObjectNotification"
+private let ObjectMonitorDidDeleteObjectNotification = "ObjectMonitorDidDeleteObjectNotification"
+private let ObjectMonitorDidUpdateObjectNotification = "ObjectMonitorDidUpdateObjectNotification"
+
+private let UserInfoKeyObject = "UserInfoKeyObject"
+
+private struct NotificationKey {
+    
+    static var willChangeObject: Void?
+    static var didDeleteObject: Void?
+    static var didUpdateObject: Void?
 }

@@ -192,14 +192,15 @@ internal extension NSManagedObjectModel {
     
     @nonobjc internal subscript(metadata: [String: AnyObject]) -> NSManagedObjectModel? {
         
-        if let modelHashes = metadata[NSStoreModelVersionHashesKey] as? [String : NSData] {
+        guard let modelHashes = metadata[NSStoreModelVersionHashesKey] as? [String : NSData] else {
             
-            for modelVersion in self.modelVersions ?? [] {
+            return nil
+        }
+        for modelVersion in self.modelVersions ?? [] {
+            
+            if let versionModel = self[modelVersion] where modelHashes == versionModel.entityVersionHashesByName {
                 
-                if let versionModel = self[modelVersion] where modelHashes == versionModel.entityVersionHashesByName {
-                    
-                    return versionModel
-                }
+                return versionModel
             }
         }
         return nil

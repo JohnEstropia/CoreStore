@@ -189,31 +189,27 @@ public final class DataStack {
         let coordinator = self.coordinator;
         if let store = coordinator.persistentStoreForURL(fileURL) {
             
-            if store.type == NSSQLiteStoreType
-                && store.configurationName == (configuration ?? Into.defaultConfigurationName) {
+            guard store.type == NSSQLiteStoreType
+                && store.configurationName == (configuration ?? Into.defaultConfigurationName) else {
                     
-                    return store
+                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
+                    CoreStore.handleError(
+                        error,
+                        "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                    )
+                    
+                    throw error
             }
             
-            let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
-            CoreStore.handleError(
-                error,
-                "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
-            )
-            
-            throw error
+            return store
         }
         
         let fileManager = NSFileManager.defaultManager()
-        do {
-            
-            try fileManager.createDirectoryAtURL(
-                fileURL.URLByDeletingLastPathComponent!,
-                withIntermediateDirectories: true,
-                attributes: nil
-            )
-        }
-        catch _ { }
+        _ = try? fileManager.createDirectoryAtURL(
+            fileURL.URLByDeletingLastPathComponent!,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
         
         var store: NSPersistentStore?
         var storeError: NSError?
@@ -377,11 +373,7 @@ public final class DataStack {
         
         for store in self.coordinator.persistentStores {
             
-            do {
-                
-                try self.coordinator.removePersistentStore(store)
-            }
-            catch _ { }
+            _ = try? self.coordinator.removePersistentStore(store)
         }
     }
 }

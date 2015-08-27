@@ -166,12 +166,10 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         var valid = true
         for version in elements {
             
-            if let lastVersion = lastVersion {
-                
-                if let _ = versionTree.updateValue(version, forKey: lastVersion) {
+            if let lastVersion = lastVersion,
+                let _ = versionTree.updateValue(version, forKey: lastVersion) {
                     
                     valid = false
-                }
             }
             lastVersion = version
         }
@@ -203,11 +201,11 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     internal func nextVersionFrom(version: String) -> String? {
         
-        if let nextVersion = self.versionTree[version] where nextVersion != version {
+        guard let nextVersion = self.versionTree[version] where nextVersion != version else {
             
-            return nextVersion
+            return nil
         }
-        return nil
+        return nextVersion
     }
     
     

@@ -37,11 +37,12 @@ internal final class MigrationManager: NSMigrationManager, NSProgressReporting {
         
         super.didChangeValueForKey(key)
         
-        if key == "migrationProgress" {
+        guard key == "migrationProgress" else {
             
-            let progress = self.progress
-            progress.completedUnitCount = Int64(Float(progress.totalUnitCount) * self.migrationProgress)
+            return
         }
+        let progress = self.progress
+        progress.completedUnitCount = Int64(Float(progress.totalUnitCount) * self.migrationProgress)
     }
     
     

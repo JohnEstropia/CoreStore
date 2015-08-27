@@ -37,24 +37,17 @@ internal extension NSManagedObjectContext {
         
         if object.objectID.temporaryID {
             
-            var objectIDError: NSError?
-            let didSucceed = withExtendedLifetime(self) { (context: NSManagedObjectContext) -> Bool in
+            do {
                 
-                do {
+                try withExtendedLifetime(self) { (context: NSManagedObjectContext) -> Void in
                     
                     try context.obtainPermanentIDsForObjects([object])
-                    return true
-                }
-                catch {
-                    
-                    objectIDError = error as NSError
-                    return false
                 }
             }
-            if didSucceed != true {
+            catch {
                 
                 CoreStore.handleError(
-                    objectIDError ?? NSError(coreStoreErrorCode: .UnknownError),
+                    error as NSError,
                     "Failed to obtain permanent ID for object."
                 )
                 return nil
@@ -75,7 +68,6 @@ internal extension NSManagedObjectContext {
             return nil
         }
     }
-
     
     internal func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         

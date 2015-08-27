@@ -406,11 +406,11 @@ extension Int8: SelectValueResultType {
     
     public static func fromResultObject(result: AnyObject) -> Int8? {
         
-        if let value = (result as? NSNumber)?.longLongValue {
+        guard let value = (result as? NSNumber)?.longLongValue else {
             
-            return numericCast(value) as Int8
+            return nil
         }
-        return nil
+        return numericCast(value) as Int8
     }
 }
 
@@ -426,11 +426,11 @@ extension Int16: SelectValueResultType {
     
     public static func fromResultObject(result: AnyObject) -> Int16? {
         
-        if let value = (result as? NSNumber)?.longLongValue {
+        guard let value = (result as? NSNumber)?.longLongValue else {
             
-            return numericCast(value) as Int16
+            return nil
         }
-        return nil
+        return numericCast(value) as Int16
     }
 }
 
@@ -446,11 +446,11 @@ extension Int32: SelectValueResultType {
     
     public static func fromResultObject(result: AnyObject) -> Int32? {
         
-        if let value = (result as? NSNumber)?.longLongValue {
+        guard let value = (result as? NSNumber)?.longLongValue else {
             
-            return numericCast(value) as Int32
+            return nil
         }
-        return nil
+        return numericCast(value) as Int32
     }
 }
 
@@ -482,11 +482,11 @@ extension Int: SelectValueResultType {
     
     public static func fromResultObject(result: AnyObject) -> Int? {
         
-        if let value = (result as? NSNumber)?.longLongValue {
+        guard let value = (result as? NSNumber)?.longLongValue else {
             
-            return numericCast(value) as Int
+            return nil
         }
-        return nil
+        return numericCast(value) as Int
     }
 }
 

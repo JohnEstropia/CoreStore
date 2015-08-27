@@ -61,14 +61,14 @@ internal extension NSManagedObjectContext {
     
     internal func entityDescriptionForEntityClass(entity: AnyClass) -> NSEntityDescription? {
         
-        if let entityName = self.parentStack?.entityNameForEntityClass(entity) {
-
-            return NSEntityDescription.entityForName(
-                entityName,
-                inManagedObjectContext: self
-            )
+        guard let entityName = self.parentStack?.entityNameForEntityClass(entity) else {
+            
+            return nil
         }
-        return nil
+        return NSEntityDescription.entityForName(
+            entityName,
+            inManagedObjectContext: self
+        )
     }
     
     internal func setupForCoreStoreWithContextName(contextName: String) {
@@ -83,7 +83,7 @@ internal extension NSManagedObjectContext {
                 let context = note.object as! NSManagedObjectContext
                 let insertedObjects = context.insertedObjects
                 let numberOfInsertedObjects = insertedObjects.count
-                if numberOfInsertedObjects <= 0 {
+                guard numberOfInsertedObjects > 0 else {
                     
                     return
                 }
@@ -91,7 +91,6 @@ internal extension NSManagedObjectContext {
                 do {
                     
                     try context.obtainPermanentIDsForObjects(Array(insertedObjects))
-                    return
                 }
                 catch {
                     

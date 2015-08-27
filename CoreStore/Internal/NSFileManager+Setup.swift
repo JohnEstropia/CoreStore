@@ -17,22 +17,10 @@ internal extension NSFileManager {
     
     internal func removeSQLiteStoreAtURL(fileURL: NSURL) {
         
-        do {
-            
-            try self.removeItemAtURL(fileURL)
-        }
-        catch _ { }
+        _ = try? self.removeItemAtURL(fileURL)
         
-        do {
-            
-            try self.removeItemAtPath(fileURL.path!.stringByAppendingString("-shm"))
-        }
-        catch _ { }
-        
-        do {
-            
-            try self.removeItemAtPath(fileURL.path!.stringByAppendingString("-wal"))
-        }
-        catch _ { }
+        let filePath = fileURL.path!
+        _ = try? self.removeItemAtPath(filePath.stringByAppendingString("-shm"))
+        _ = try? self.removeItemAtPath(filePath.stringByAppendingString("-wal"))
     }
 }

@@ -117,34 +117,30 @@ public extension DataStack {
         let coordinator = self.coordinator;
         if let store = coordinator.persistentStoreForURL(fileURL) {
             
-            if store.type == NSSQLiteStoreType
-                && store.configurationName == (configuration ?? Into.defaultConfigurationName) {
+            guard store.type == NSSQLiteStoreType
+                && store.configurationName == (configuration ?? Into.defaultConfigurationName) else {
                     
-                    GCDQueue.Main.async {
-                        
-                        completion(PersistentStoreResult(store))
-                    }
-                    return nil
+                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
+                    CoreStore.handleError(
+                        error,
+                        "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                    )
+                    throw error
             }
             
-            let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
-            CoreStore.handleError(
-                error,
-                "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
-            )
-            throw error
+            GCDQueue.Main.async {
+                
+                completion(PersistentStoreResult(store))
+            }
+            return nil
         }
         
         let fileManager = NSFileManager.defaultManager()
-        do {
-            
-            try fileManager.createDirectoryAtURL(
-                fileURL.URLByDeletingLastPathComponent!,
-                withIntermediateDirectories: true,
-                attributes: nil
-            )
-        }
-        catch _ { }
+        _ = try? fileManager.createDirectoryAtURL(
+            fileURL.URLByDeletingLastPathComponent!,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
         
         do {
             
