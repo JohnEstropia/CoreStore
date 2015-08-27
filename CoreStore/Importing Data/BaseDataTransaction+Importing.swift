@@ -86,14 +86,17 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+            return try autoreleasepool {
                 
-                return nil
+                guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                    
+                    return nil
+                }
+                
+                let object = self.create(into)
+                try object.didInsertFromImportSource(source, inTransaction: self)
+                return object
             }
-            
-            let object = self.create(into)
-            try object.didInsertFromImportSource(source, inTransaction: self)
-            return object
     }
     
     func importObjects<T where T: NSManagedObject, T: ImportableObject>(
@@ -105,17 +108,20 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            for source in sourceArray {
+            try autoreleasepool {
                 
-                guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                for source in sourceArray {
                     
-                    continue
-                }
-                
-                try autoreleasepool {
+                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                        
+                        continue
+                    }
                     
-                    let object = self.create(into)
-                    try object.didInsertFromImportSource(source, inTransaction: self)
+                    try autoreleasepool {
+                        
+                        let object = self.create(into)
+                        try object.didInsertFromImportSource(source, inTransaction: self)
+                    }
                 }
             }
     }
@@ -130,23 +136,26 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            var objects = [T]()
-            for source in sourceArray {
+            try autoreleasepool {
                 
-                guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                var objects = [T]()
+                for source in sourceArray {
                     
-                    continue
+                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                        
+                        continue
+                    }
+                    
+                    try autoreleasepool {
+                        
+                        let object = self.create(into)
+                        try object.didInsertFromImportSource(source, inTransaction: self)
+                        
+                        objects.append(object)
+                    }
                 }
-                
-                try autoreleasepool {
-                    
-                    let object = self.create(into)
-                    try object.didInsertFromImportSource(source, inTransaction: self)
-                    
-                    objects.append(object)
-                }
+                postProcess(sorted: objects)
             }
-            postProcess(sorted: objects)
     }
     
     func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
@@ -158,94 +167,97 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            let uniqueIDKeyPath = T.uniqueIDKeyPath
-            guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
+            return try autoreleasepool {
                 
-                return nil
-            }
-            
-            if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
-                
-                try object.updateFromImportSource(source, inTransaction: self)
-                return object
-            }
-            else {
-                
-                guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                let uniqueIDKeyPath = T.uniqueIDKeyPath
+                guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
                     
                     return nil
                 }
                 
-                let object = self.create(into)
-                object.uniqueIDValue = uniqueIDValue
-                try object.didInsertFromImportSource(source, inTransaction: self)
-                return object
+                if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
+                    
+                    try object.updateFromImportSource(source, inTransaction: self)
+                    return object
+                }
+                else {
+                    
+                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                        
+                        return nil
+                    }
+                    
+                    let object = self.create(into)
+                    object.uniqueIDValue = uniqueIDValue
+                    try object.didInsertFromImportSource(source, inTransaction: self)
+                    return object
+                }
             }
     }
     
     func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
-        preProcess: ((inout mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil) throws {
+        preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource])? = nil) throws {
             
             CoreStore.assert(
                 self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            var mapping = Dictionary<T.UniqueIDType, T.ImportSource>()
-            for source in sourceArray {
+            try autoreleasepool {
                 
-                try autoreleasepool {
+                var mapping = Dictionary<T.UniqueIDType, T.ImportSource>()
+                for source in sourceArray {
                     
-                    guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
+                    try autoreleasepool {
                         
-                        return
-                    }
-                    
-                    mapping[uniqueIDValue] = source
-                }
-            }
-            
-            var mappingCopy = mapping // bugfix: prevent deallocation of exhausted items when accessed lazily with .keys and .values
-            if let preProcess = preProcess {
-                
-                try autoreleasepool {
-                    
-                    try preProcess(mapping: &mappingCopy)
-                }
-            }
-            mapping = mappingCopy
-            
-            var mappingCopyForKeys = mapping
-            for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: mappingCopyForKeys.keys)) ?? [] {
-                
-                try autoreleasepool {
-                    
-                    let uniqueIDValue = object.uniqueIDValue
-                    
-                    guard let source = mapping.removeValueForKey(uniqueIDValue)
-                        where T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                        guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
                             
                             return
-                    }
-                    
-                    try object.updateFromImportSource(source, inTransaction: self)
-                }
-            }
-            
-            for (uniqueIDValue, source) in mapping {
-                
-                try autoreleasepool {
-                    
-                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                        }
                         
-                        return
+                        mapping[uniqueIDValue] = source
                     }
+                }
+                
+                if let preProcess = preProcess {
                     
-                    let object = self.create(into)
-                    object.uniqueIDValue = uniqueIDValue
-                    try object.didInsertFromImportSource(source, inTransaction: self)
+                    try autoreleasepool {
+                        
+                        mapping = try preProcess(mapping: mapping)
+                    }
+                }
+                
+                for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: mapping.keys)) ?? [] {
+                    
+                    try autoreleasepool {
+                        
+                        let uniqueIDValue = object.uniqueIDValue
+                        
+                        guard let source = mapping.removeValueForKey(uniqueIDValue)
+                            where T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                                
+                                return
+                        }
+                        
+                        try object.updateFromImportSource(source, inTransaction: self)
+                    }
+                }
+                
+                for (uniqueIDValue, source) in mapping {
+                    
+                    try autoreleasepool {
+                        
+                        guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                            
+                            return
+                        }
+                        
+                        let object = self.create(into)
+                        object.uniqueIDValue = uniqueIDValue
+                        try object.didInsertFromImportSource(source, inTransaction: self)
+                    }
                 }
             }
     }
@@ -253,7 +265,7 @@ public extension BaseDataTransaction {
     func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
-        preProcess: ((inout mapping: [T.UniqueIDType: T.ImportSource]) throws -> Void)? = nil,
+        preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource])? = nil,
         postProcess: (sorted: [T]) -> Void) throws {
             
             CoreStore.assert(
@@ -261,68 +273,68 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            var sortedIDs = Array<T.UniqueIDType>()
-            var mapping = Dictionary<T.UniqueIDType, T.ImportSource>()
-            for source in sourceArray {
+            try autoreleasepool {
                 
-                try autoreleasepool {
+                var sortedIDs = Array<T.UniqueIDType>()
+                var mapping = Dictionary<T.UniqueIDType, T.ImportSource>()
+                for source in sourceArray {
                     
-                    guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
+                    try autoreleasepool {
                         
-                        return
-                    }
-                    
-                    mapping[uniqueIDValue] = source
-                    sortedIDs.append(uniqueIDValue)
-                }
-            }
-            
-            var mappingCopy = mapping // bugfix: prevent deallocation of exhausted items when accessed lazily with .keys and .values
-            if let preProcess = preProcess {
-                
-                try autoreleasepool {
-                    
-                    try preProcess(mapping: &mappingCopy)
-                }
-            }
-            mapping = mappingCopy
-            
-            var mappingCopyForKeys = mapping
-            var objects = Dictionary<T.UniqueIDType, T>()
-            for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: mappingCopyForKeys.keys)) ?? [] {
-                
-                try autoreleasepool {
-                    
-                    let uniqueIDValue = object.uniqueIDValue
-                    
-                    guard let source = mapping.removeValueForKey(uniqueIDValue)
-                        where T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                        guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
                             
                             return
-                    }
-                    
-                    try object.updateFromImportSource(source, inTransaction: self)
-                    objects[uniqueIDValue] = object
-                }
-            }
-            
-            for (uniqueIDValue, source) in mapping {
-                
-                try autoreleasepool {
-                    
-                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                        }
                         
-                        return
+                        mapping[uniqueIDValue] = source
+                        sortedIDs.append(uniqueIDValue)
                     }
-                    
-                    let object = self.create(into)
-                    object.uniqueIDValue = uniqueIDValue
-                    try object.didInsertFromImportSource(source, inTransaction: self)
-                    
-                    objects[uniqueIDValue] = object
                 }
+                
+                if let preProcess = preProcess {
+                    
+                    try autoreleasepool {
+                        
+                        mapping = try preProcess(mapping: mapping)
+                    }
+                }
+                
+                var objects = Dictionary<T.UniqueIDType, T>()
+                for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: mapping.keys)) ?? [] {
+                    
+                    try autoreleasepool {
+                        
+                        let uniqueIDValue = object.uniqueIDValue
+                        
+                        guard let source = mapping.removeValueForKey(uniqueIDValue)
+                            where T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                                
+                                return
+                        }
+                        
+                        try object.updateFromImportSource(source, inTransaction: self)
+                        objects[uniqueIDValue] = object
+                    }
+                }
+                
+                for (uniqueIDValue, source) in mapping {
+                    
+                    try autoreleasepool {
+                        
+                        guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                            
+                            return
+                        }
+                        
+                        let object = self.create(into)
+                        object.uniqueIDValue = uniqueIDValue
+                        try object.didInsertFromImportSource(source, inTransaction: self)
+                        
+                        objects[uniqueIDValue] = object
+                    }
+                }
+                
+                postProcess(sorted: sortedIDs.flatMap { objects[$0] })
             }
-            
-            postProcess(sorted: sortedIDs.flatMap { objects[$0] })
     }
 }
