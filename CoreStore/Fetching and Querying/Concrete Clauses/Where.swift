@@ -102,16 +102,38 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
     }
     
     /**
-    Initializes a `Where` clause with a predicate using the specified string format and arguments
+    Initializes a `Where` clause that compares equality
     
-    - parameter format: the format string for the predicate
-    - parameter argumentArray: the arguments for `format`
+    - parameter keyPath: the keyPath to compare with
+    - parameter value: the arguments for the `==` operator
     */
     public init(_ keyPath: KeyPath, isEqualTo value: NSObject?) {
         
         self.init(value == nil
             ? NSPredicate(format: "\(keyPath) == nil")
-            : NSPredicate(format: "\(keyPath) == %@", value!))
+            : NSPredicate(format: "\(keyPath) == %@", argumentArray: [value!]))
+    }
+    
+    /**
+    Initializes a `Where` clause that compares membership
+    
+    - parameter keyPath: the keyPath to compare with
+    - parameter list: the array to check membership of
+    */
+    public init(_ keyPath: KeyPath, isMemberOf list: NSArray) {
+        
+        self.init(NSPredicate(format: "\(keyPath) IN %@", list))
+    }
+    
+    /**
+    Initializes a `Where` clause that compares membership
+    
+    - parameter keyPath: the keyPath to compare with
+    - parameter list: the sequence to check membership of
+    */
+    public init<S: SequenceType where S.Generator.Element: NSObject>(_ keyPath: KeyPath, isMemberOf list: S) {
+        
+        self.init(NSPredicate(format: "\(keyPath) IN %@", Array(list) as NSArray))
     }
     
     public let predicate: NSPredicate

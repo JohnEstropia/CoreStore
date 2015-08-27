@@ -221,15 +221,18 @@ public extension BaseDataTransaction {
                     }
                 }
                 
+                var mappingCopy = mapping // bugfix: prevent deallocation of exhausted items when accessed lazily with .keys and .values
                 if let preProcess = preProcess {
                     
                     try autoreleasepool {
                         
-                        try preProcess(mapping: &mapping)
+                        try preProcess(mapping: &mappingCopy)
                     }
                 }
+                mapping = mappingCopy
                 
-                for object in self.fetchAll(From(T), Where("%K IN %@", T.uniqueIDKeyPath, Array(mapping.keys))) ?? [] {
+                var mappingCopyForKeys = mapping
+                for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: mappingCopyForKeys.keys)) ?? [] {
                     
                     try autoreleasepool {
                         
@@ -291,16 +294,19 @@ public extension BaseDataTransaction {
                     }
                 }
                 
+                var mappingCopy = mapping // bugfix: prevent deallocation of exhausted items when accessed lazily with .keys and .values
                 if let preProcess = preProcess {
                     
                     try autoreleasepool {
                         
-                        try preProcess(mapping: &mapping)
+                        try preProcess(mapping: &mappingCopy)
                     }
                 }
+                mapping = mappingCopy
                 
+                var mappingCopyForKeys = mapping
                 var objects = Dictionary<T.UniqueIDType, T>()
-                for object in self.fetchAll(From(T), Where("%K IN %@", T.uniqueIDKeyPath, Array(mapping.keys))) ?? [] {
+                for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: mappingCopyForKeys.keys)) ?? [] {
                     
                     try autoreleasepool {
                         
