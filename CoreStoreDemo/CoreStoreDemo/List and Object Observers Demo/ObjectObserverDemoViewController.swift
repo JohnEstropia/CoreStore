@@ -22,6 +22,11 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         }
         set {
             
+            guard self.monitor?.object != newValue else {
+                
+                return
+            }
+            
             if let palette = newValue {
                 
                 self.monitor = CoreStore.monitorObject(palette)

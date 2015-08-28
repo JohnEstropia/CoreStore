@@ -81,7 +81,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
         self.removeObserver(observer)
         
         self.registerChangeNotification(
-            &NotificationKey.willChangeObject,
+            &self.willChangeObjectKey,
             name: ObjectMonitorWillChangeObjectNotification,
             toObserver: observer,
             callback: { [weak observer] (monitor) -> Void in
@@ -94,7 +94,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
             }
         )
         self.registerObjectNotification(
-            &NotificationKey.didDeleteObject,
+            &self.didDeleteObjectKey,
             name: ObjectMonitorDidDeleteObjectNotification,
             toObserver: observer,
             callback: { [weak observer] (monitor, object) -> Void in
@@ -107,7 +107,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
             }
         )
         self.registerObjectNotification(
-            &NotificationKey.didUpdateObject,
+            &self.didUpdateObjectKey,
             name: ObjectMonitorDidUpdateObjectNotification,
             toObserver: observer,
             callback: { [weak self, weak observer] (monitor, object) -> Void in
@@ -154,9 +154,9 @@ public final class ObjectMonitor<T: NSManagedObject> {
         )
         
         let nilValue: AnyObject? = nil
-        setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.willChangeObject, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.didDeleteObject, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &NotificationKey.didUpdateObject, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.willChangeObjectKey, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteObjectKey, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.didUpdateObjectKey, inObject: observer)
     }
     
     
@@ -203,6 +203,10 @@ public final class ObjectMonitor<T: NSManagedObject> {
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private var lastCommittedAttributes = [String: NSObject]()
     private weak var parentStack: DataStack?
+    
+    private var willChangeObjectKey: Void?
+    private var didDeleteObjectKey: Void?
+    private var didUpdateObjectKey: Void?
     
     private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<T>) -> Void) {
         
@@ -349,9 +353,3 @@ private let ObjectMonitorDidUpdateObjectNotification = "ObjectMonitorDidUpdateOb
 
 private let UserInfoKeyObject = "UserInfoKeyObject"
 
-private struct NotificationKey {
-    
-    static var willChangeObject: Void?
-    static var didDeleteObject: Void?
-    static var didUpdateObject: Void?
-}
