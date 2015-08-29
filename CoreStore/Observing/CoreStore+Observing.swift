@@ -39,6 +39,7 @@ public extension CoreStore {
     - parameter object: the `NSManagedObject` to observe changes from
     - returns: a `ObjectMonitor` that monitors changes to `object`
     */
+    @warn_unused_result
     public static func monitorObject<T: NSManagedObject>(object: T) -> ObjectMonitor<T> {
         
         return self.defaultStack.monitorObject(object)
@@ -51,6 +52,7 @@ public extension CoreStore {
     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     - returns: a `ListMonitor` instance that monitors changes to the list
     */
+    @warn_unused_result
     public static func monitorList<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.defaultStack.monitorList(from, queryClauses)
@@ -63,6 +65,7 @@ public extension CoreStore {
     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     - returns: a `ListMonitor` instance that monitors changes to the list
     */
+    @warn_unused_result
     public static func monitorList<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> ListMonitor<T> {
         
         return self.defaultStack.monitorList(from, queryClauses)
@@ -76,6 +79,7 @@ public extension CoreStore {
     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     - returns: a `ListMonitor` instance that monitors changes to the list
     */
+    @warn_unused_result
     public static func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)
@@ -89,6 +93,7 @@ public extension CoreStore {
     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     - returns: a `ListMonitor` instance that monitors changes to the list
     */
+    @warn_unused_result
     public static func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         return self.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)

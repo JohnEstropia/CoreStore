@@ -55,6 +55,7 @@ public final class DetachedDataTransaction: BaseDataTransaction {
     
     - returns: a `DetachedDataTransaction` instance where creates, updates, and deletes can be made.
     */
+    @warn_unused_result
     public func beginDetached() -> DetachedDataTransaction {
         
         return DetachedDataTransaction(

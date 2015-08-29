@@ -58,6 +58,7 @@ public extension CoreStore {
     
     - returns: a `DetachedDataTransaction` instance where creates, updates, and deletes can be made.
     */
+    @warn_unused_result
     public static func beginDetached() -> DetachedDataTransaction {
         
         return self.defaultStack.beginDetached()
