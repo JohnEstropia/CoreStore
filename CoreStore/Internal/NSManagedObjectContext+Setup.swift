@@ -84,7 +84,7 @@ internal extension NSManagedObjectContext {
                 
                 context?.performBlock { () -> Void in
                     
-                    let updatedObjects = (note.userInfo?[NSUpdatedObjectsKey] as? [NSManagedObject]) ?? []
+                    let updatedObjects = (note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>) ?? []
                     for object in updatedObjects {
                         
                         context?.objectWithID(object.objectID).willAccessValueForKey(nil)
