@@ -43,21 +43,21 @@ public protocol ListObserver: class {
     /**
     The `NSManagedObject` type for the observed list
     */
-    typealias EntityType: NSManagedObject
+    typealias ListEntityType: NSManagedObject
     
     /**
     Handles processing just before a change to the observed list occurs
     
     - parameter monitor: the `ListMonitor` monitoring the list being observed
     */
-    func listMonitorWillChange(monitor: ListMonitor<EntityType>)
+    func listMonitorWillChange(monitor: ListMonitor<ListEntityType>)
     
     /**
     Handles processing right after a change to the observed list occurs
     
     - parameter monitor: the `ListMonitor` monitoring the object being observed
     */
-    func listMonitorDidChange(monitor: ListMonitor<EntityType>)
+    func listMonitorDidChange(monitor: ListMonitor<ListEntityType>)
 }
 
 public extension ListObserver {
@@ -65,12 +65,12 @@ public extension ListObserver {
     /**
     The default implementation does nothing.
     */
-    func listMonitorWillChange(monitor: ListMonitor<EntityType>) { }
+    func listMonitorWillChange(monitor: ListMonitor<ListEntityType>) { }
     
     /**
     The default implementation does nothing.
     */
-    func listMonitorDidChange(monitor: ListMonitor<EntityType>) { }
+    func listMonitorDidChange(monitor: ListMonitor<ListEntityType>) { }
 }
 
 
@@ -94,7 +94,7 @@ public protocol ListObjectObserver: ListObserver {
     - parameter object: the entity type for the inserted object
     - parameter indexPath: the new `NSIndexPath` for the inserted object
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didInsertObject object: EntityType, toIndexPath indexPath: NSIndexPath)
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: NSIndexPath)
     
     /**
     Notifies that an object was deleted from the specified `NSIndexPath` in the list
@@ -103,7 +103,7 @@ public protocol ListObjectObserver: ListObserver {
     - parameter object: the entity type for the deleted object
     - parameter indexPath: the `NSIndexPath` for the deleted object
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didDeleteObject object: EntityType, fromIndexPath indexPath: NSIndexPath)
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didDeleteObject object: ListEntityType, fromIndexPath indexPath: NSIndexPath)
     
     /**
     Notifies that an object at the specified `NSIndexPath` was updated
@@ -112,7 +112,7 @@ public protocol ListObjectObserver: ListObserver {
     - parameter object: the entity type for the updated object
     - parameter indexPath: the `NSIndexPath` for the updated object
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didUpdateObject object: EntityType, atIndexPath indexPath: NSIndexPath)
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didUpdateObject object: ListEntityType, atIndexPath indexPath: NSIndexPath)
     
     /**
     Notifies that an object's index changed
@@ -122,7 +122,7 @@ public protocol ListObjectObserver: ListObserver {
     - parameter fromIndexPath: the previous `NSIndexPath` for the moved object
     - parameter toIndexPath: the new `NSIndexPath` for the moved object
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didMoveObject object: EntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didMoveObject object: ListEntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
 }
 
 public extension ListObjectObserver {
@@ -130,22 +130,22 @@ public extension ListObjectObserver {
     /**
     The default implementation does nothing.
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didInsertObject object: EntityType, toIndexPath indexPath: NSIndexPath) { }
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: NSIndexPath) { }
     
     /**
     The default implementation does nothing.
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didDeleteObject object: EntityType, fromIndexPath indexPath: NSIndexPath) { }
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didDeleteObject object: ListEntityType, fromIndexPath indexPath: NSIndexPath) { }
     
     /**
     The default implementation does nothing.
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didUpdateObject object: EntityType, atIndexPath indexPath: NSIndexPath) { }
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didUpdateObject object: ListEntityType, atIndexPath indexPath: NSIndexPath) { }
     
     /**
     The default implementation does nothing.
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didMoveObject object: EntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) { }
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didMoveObject object: ListEntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) { }
 }
 
 
@@ -170,7 +170,7 @@ public protocol ListSectionObserver: ListObjectObserver {
     - parameter sectionInfo: the `NSFetchedResultsSectionInfo` for the inserted section
     - parameter sectionIndex: the new section index for the new section
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
     
     /**
     Notifies that a section was inserted at the specified index
@@ -179,7 +179,7 @@ public protocol ListSectionObserver: ListObjectObserver {
     - parameter sectionInfo: the `NSFetchedResultsSectionInfo` for the deleted section
     - parameter sectionIndex: the previous section index for the deleted section
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 }
 
 public extension ListSectionObserver {
@@ -187,10 +187,10 @@ public extension ListSectionObserver {
     /**
     The default implementation does nothing.
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) { }
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) { }
     
     /**
     The default implementation does nothing.
     */
-    func listMonitor(monitor: ListMonitor<EntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) { }
+    func listMonitor(monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) { }
 }

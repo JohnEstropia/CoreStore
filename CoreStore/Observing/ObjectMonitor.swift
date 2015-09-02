@@ -71,7 +71,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     - parameter observer: an `ObjectObserver` to send change notifications to
     */
-    public func addObserver<U: ObjectObserver where U.EntityType == T>(observer: U) {
+    public func addObserver<U: ObjectObserver where U.ObjectEntityType == T>(observer: U) {
         
         CoreStore.assert(
             NSThread.isMainThread(),
@@ -146,7 +146,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     - parameter observer: an `ObjectObserver` to unregister notifications to
     */
-    public func removeObserver<U: ObjectObserver where U.EntityType == T>(observer: U) {
+    public func removeObserver<U: ObjectObserver where U.ObjectEntityType == T>(observer: U) {
         
         CoreStore.assert(
             NSThread.isMainThread(),
