@@ -12,6 +12,41 @@ import CoreStore
 
 private struct Static {
     
+    enum Filter: String {
+        
+        case All = "All Colors"
+        case Light = "Light Colors"
+        case Dark = "Dark Colors"
+        
+        func next() -> Filter {
+            
+            switch self {
+                
+            case All: return .Light
+            case Light: return .Dark
+            case Dark: return .All
+            }
+        }
+        
+        func whereClause() -> Where {
+            
+            switch self {
+                
+            case .All: return Where(true)
+            case .Light: return Where("brightness >= 0.9")
+            case .Dark: return Where("brightness <= 0.4")
+            }
+        }
+    }
+    
+    static var filter = Filter.All {
+        
+        didSet {
+            
+            self.palettes.refetch(self.filter.whereClause())
+        }
+    }
+    
     static let palettes: ListMonitor<Palette> = {
         
         try! CoreStore.addSQLiteStoreAndWait(
@@ -47,7 +82,8 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         
         super.viewDidLoad()
         
-        self.navigationItem.leftBarButtonItems = [
+        let navigationItem = self.navigationItem
+        navigationItem.leftBarButtonItems = [
             self.editButtonItem(),
             UIBarButtonItem(
                 barButtonSystemItem: .Trash,
@@ -55,11 +91,22 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
                 action: "resetBarButtonItemTouched:"
             )
         ]
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .Add,
+        
+        let filterBarButton = UIBarButtonItem(
+            title: Static.filter.rawValue,
+            style: .Plain,
             target: self,
-            action: "addBarButtonItemTouched:"
+            action: "filterBarButtonItemTouched:"
         )
+        navigationItem.rightBarButtonItems = [
+            UIBarButtonItem(
+                barButtonSystemItem: .Add,
+                target: self,
+                action: "addBarButtonItemTouched:"
+            ),
+            filterBarButton
+        ]
+        self.filterBarButton = filterBarButton
         
         Static.palettes.addObserver(self)
     }
@@ -150,6 +197,18 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         self.tableView.endUpdates()
     }
     
+    func listMonitorWillRefetch(monitor: ListMonitor<Palette>) {
+        
+        self.setTableEnabled(false)
+    }
+    
+    func listMonitorDidRefetch(monitor: ListMonitor<Palette>) {
+        
+        self.filterBarButton?.title = Static.filter.rawValue
+        self.tableView.reloadData()
+        self.setTableEnabled(true)
+    }
+    
     
     // MARK: ListObjectObserver
     
@@ -195,6 +254,8 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     // MARK: Private
     
+    private var filterBarButton: UIBarButtonItem?
+    
     @IBAction private dynamic func resetBarButtonItemTouched(sender: AnyObject?) {
         
         CoreStore.beginAsynchronous { (transaction) -> Void in
@@ -202,6 +263,11 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
             transaction.deleteAll(From(Palette))
             transaction.commit()
         }
+    }
+    
+    @IBAction private dynamic func filterBarButtonItemTouched(sender: AnyObject?) {
+        
+        Static.filter = Static.filter.next()
     }
     
     @IBAction private dynamic func addBarButtonItemTouched(sender: AnyObject?) {
@@ -213,6 +279,24 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
             
             transaction.commit()
         }
+    }
+    
+    private func setTableEnabled(enabled: Bool) {
+        
+        UIView.animateWithDuration(
+            0.2,
+            delay: 0,
+            options: .BeginFromCurrentState,
+            animations: { () -> Void in
+                
+                if let tableView = self.tableView {
+                    
+                    tableView.alpha = enabled ? 1.0 : 0.5
+                    tableView.userInteractionEnabled = enabled
+                }
+            },
+            completion: nil
+        )
     }
 }
 

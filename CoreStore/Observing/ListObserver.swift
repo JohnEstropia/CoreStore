@@ -58,6 +58,20 @@ public protocol ListObserver: class {
     - parameter monitor: the `ListMonitor` monitoring the object being observed
     */
     func listMonitorDidChange(monitor: ListMonitor<ListEntityType>)
+    
+    /**
+    This method is broadcast from within the `ListMonitor`'s `refetch(...)` method to let observers prepare for the internal `NSFetchedResultsController`'s pending change to its predicate, sort descriptors, etc. Note that the actual refetch will happen after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes.
+    
+    - parameter monitor: the `ListMonitor` monitoring the object being observed
+    */
+    func listMonitorWillRefetch(monitor: ListMonitor<ListEntityType>)
+    
+    /**
+    After the `ListMonitor`'s `refetch(...)` method is called, this method is broadcast after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes.
+    
+    - parameter monitor: the `ListMonitor` monitoring the object being observed
+    */
+    func listMonitorDidRefetch(monitor: ListMonitor<ListEntityType>)
 }
 
 public extension ListObserver {
@@ -71,6 +85,16 @@ public extension ListObserver {
     The default implementation does nothing.
     */
     func listMonitorDidChange(monitor: ListMonitor<ListEntityType>) { }
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitorWillRefetch(monitor: ListMonitor<ListEntityType>) { }
+    
+    /**
+    The default implementation does nothing.
+    */
+    func listMonitorDidRefetch(monitor: ListMonitor<ListEntityType>) { }
 }
 
 
