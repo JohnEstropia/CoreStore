@@ -109,6 +109,8 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         self.filterBarButton = filterBarButton
         
         Static.palettes.addObserver(self)
+        
+        self.setTableEnabled(!Static.palettes.isPendingRefetch)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

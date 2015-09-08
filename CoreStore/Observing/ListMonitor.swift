@@ -69,7 +69,7 @@ In the example above, both `person1` and `person2` will contain the object at se
 */
 public final class ListMonitor<T: NSManagedObject> {
     
-    // MARK: Public
+    // MARK: Public (Accessors)
     
     /**
     Returns the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
@@ -307,6 +307,9 @@ public final class ListMonitor<T: NSManagedObject> {
         
         return self.fetchedResultsController.indexPathForObject(object)
     }
+    
+    
+    // MARK: Public (Observers)
     
     /**
     Registers a `ListObserver` to be notified when changes to the receiver's list occur.
@@ -734,6 +737,14 @@ public final class ListMonitor<T: NSManagedObject> {
         setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteSectionKey, inObject: observer)
     }
     
+    
+    // MARK: Public (Refetching)
+    
+    /**
+    Returns `true` if a call to `refetch(...)` was made to the `ListMonitor` and is currently waiting for the fetching to complete. Returns `false` otherwise.
+    */
+    private(set) public var isPendingRefetch = false
+    
     /**
     Asks the `ListMonitor` to refetch its objects using the specified series of `FetchClause`s. Note that this method does not execute the fetch immediately; the actual fetching will happen after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes.
     
@@ -755,6 +766,8 @@ public final class ListMonitor<T: NSManagedObject> {
     */
     public func refetch(fetchClauses: [FetchClause]) {
         
+        self.isPendingRefetch = true
+        
         NSNotificationCenter.defaultCenter().postNotificationName(
             ListMonitorWillRefetchListNotification,
             object: self
@@ -774,6 +787,7 @@ public final class ListMonitor<T: NSManagedObject> {
             }
             
             try! strongSelf.fetchedResultsController.performFetch()
+            strongSelf.isPendingRefetch = false
             
             NSNotificationCenter.defaultCenter().postNotificationName(
                 ListMonitorDidRefetchListNotification,
