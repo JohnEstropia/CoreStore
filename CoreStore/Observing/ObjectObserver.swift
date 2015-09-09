@@ -69,6 +69,8 @@ public protocol ObjectObserver: class {
 }
 
 
+// MARK: - ObjectObserver (Default Implementations)
+
 public extension ObjectObserver {
     
     /**

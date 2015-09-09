@@ -27,57 +27,20 @@ import Foundation
 import CoreData
 
 
-public protocol ImportableObject: class {
-    
-    typealias ImportSource
-    
-    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    
-    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
-}
-
-public extension ImportableObject {
-    
-    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
-        
-        return true
-    }
-}
-
-
-public protocol ImportableUniqueObject: ImportableObject {
-    
-    typealias UniqueIDType: NSObject
-    
-    static var uniqueIDKeyPath: String { get }
-    
-    var uniqueIDValue: UniqueIDType { get set }
-    
-    static func uniqueIDFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType?
-    
-    static func shouldUpdateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    
-    func updateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
-}
-
-
-public extension ImportableUniqueObject {
-    
-    static func shouldUpdateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
-        
-        return true
-    }
-    
-    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
-        
-        try self.updateFromImportSource(source, inTransaction: transaction)
-    }
-}
-
+// MARK: - BaseDataTransaction
 
 public extension BaseDataTransaction {
     
-    func importObject<T where T: NSManagedObject, T: ImportableObject>(
+    // MARK: Public
+    
+    /**
+    Creates an `ImportableObject` by importing from the specified import source.
+    
+    - parameter into: an `Into` clause specifying the entity type
+    - parameter source: the object to import values from
+    - returns: the created `ImportableObject` instance
+    */
+    public func importObject<T where T: NSManagedObject, T: ImportableObject>(
         into: Into<T>,
         source: T.ImportSource) throws -> T? {
             
@@ -99,7 +62,13 @@ public extension BaseDataTransaction {
             }
     }
     
-    func importObjects<T where T: NSManagedObject, T: ImportableObject>(
+    /**
+    Creates multiple `ImportableObject`s by importing from the specified array of import sources.
+    
+    - parameter into: an `Into` clause specifying the entity type
+    - parameter sourceArray: the array of objects to import values from
+    */
+    public func importObjects<T where T: NSManagedObject, T: ImportableObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource]) throws {
             
@@ -126,10 +95,17 @@ public extension BaseDataTransaction {
             }
     }
     
-    func importObjects<T where T: NSManagedObject, T: ImportableObject>(
+    /**
+    Creates multiple `ImportableObject`s by importing from the specified array of import sources.
+    
+    - parameter into: an `Into` clause specifying the entity type
+    - parameter sourceArray: the array of objects to import values from
+    - parameter postProcess: a closure that exposes the array of created objects
+    */
+    public func importObjects<T where T: NSManagedObject, T: ImportableObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
-        postProcess: (sorted: [T]) -> Void) throws {
+        @noescape postProcess: (sorted: [T]) -> Void) throws {
             
             CoreStore.assert(
                 self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
@@ -158,7 +134,7 @@ public extension BaseDataTransaction {
             }
     }
     
-    func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
+    public func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         source: T.ImportSource) throws -> T?  {
             
@@ -195,7 +171,7 @@ public extension BaseDataTransaction {
             }
     }
     
-    func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
+    public func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
         preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource])? = nil) throws {
@@ -262,11 +238,11 @@ public extension BaseDataTransaction {
             }
     }
     
-    func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
+    public func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
         preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource])? = nil,
-        postProcess: (sorted: [T]) -> Void) throws {
+        @noescape postProcess: (sorted: [T]) -> Void) throws {
             
             CoreStore.assert(
                 self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),

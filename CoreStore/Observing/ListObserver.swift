@@ -74,6 +74,9 @@ public protocol ListObserver: class {
     func listMonitorDidRefetch(monitor: ListMonitor<ListEntityType>)
 }
 
+
+// MARK: - ListObserver (Default Implementations)
+
 public extension ListObserver {
     
     /**
@@ -149,6 +152,9 @@ public protocol ListObjectObserver: ListObserver {
     func listMonitor(monitor: ListMonitor<ListEntityType>, didMoveObject object: ListEntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
 }
 
+
+// MARK: - ListObjectObserver (Default Implementations)
+
 public extension ListObjectObserver {
     
     /**
@@ -205,6 +211,9 @@ public protocol ListSectionObserver: ListObjectObserver {
     */
     func listMonitor(monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 }
+
+
+// MARK: - ListSectionObserver (Default Implementations)
 
 public extension ListSectionObserver {
     

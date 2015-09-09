@@ -990,6 +990,7 @@ extension ListMonitor: FetchedResultsControllerHandler {
             )
             
         case .Move:
+            CoreStore.log(.Notice, message: "\(indexPath!) - \(newIndexPath!)")
             NSNotificationCenter.defaultCenter().postNotificationName(
                 ListMonitorDidMoveObjectNotification,
                 object: self,

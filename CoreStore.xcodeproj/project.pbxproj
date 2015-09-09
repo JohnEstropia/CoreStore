@@ -66,6 +66,8 @@
 		B5E84F381AFF85470064E85B /* NSManagedObject+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F341AFF85470064E85B /* NSManagedObject+Transaction.swift */; };
 		B5E84F391AFF85470064E85B /* NSManagedObjectContext+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */; };
 		B5E84F411AFF8CCD0064E85B /* ClauseTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */; };
+		B5F1DA8D1B9AA97D007C5CBB /* ImportableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1DA8C1B9AA97D007C5CBB /* ImportableObject.swift */; settings = {ASSET_TAGS = (); }; };
+		B5F1DA901B9AA991007C5CBB /* ImportableUniqueObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1DA8F1B9AA991007C5CBB /* ImportableUniqueObject.swift */; settings = {ASSET_TAGS = (); }; };
 		B5FAD6A91B50A4B400714891 /* NSProgress+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FAD6A81B50A4B300714891 /* NSProgress+Convenience.swift */; };
 		B5FAD6AC1B51285300714891 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FAD6AB1B51285300714891 /* MigrationManager.swift */; };
 		B5FAD6AE1B518DCB00714891 /* CoreStore+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FAD6AD1B518DCB00714891 /* CoreStore+Migration.swift */; };
@@ -169,6 +171,8 @@
 		B5E84F341AFF85470064E85B /* NSManagedObject+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Transaction.swift"; sourceTree = "<group>"; };
 		B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Querying.swift"; sourceTree = "<group>"; };
 		B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClauseTypes.swift; sourceTree = "<group>"; };
+		B5F1DA8C1B9AA97D007C5CBB /* ImportableObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportableObject.swift; sourceTree = "<group>"; };
+		B5F1DA8F1B9AA991007C5CBB /* ImportableUniqueObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportableUniqueObject.swift; sourceTree = "<group>"; };
 		B5FAD6A81B50A4B300714891 /* NSProgress+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSProgress+Convenience.swift"; sourceTree = "<group>"; };
 		B5FAD6AB1B51285300714891 /* MigrationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		B5FAD6AD1B518DCB00714891 /* CoreStore+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+Migration.swift"; sourceTree = "<group>"; };
@@ -317,6 +321,8 @@
 		B5E834B61B7630BD001D3D50 /* Importing Data */ = {
 			isa = PBXGroup;
 			children = (
+				B5F1DA8C1B9AA97D007C5CBB /* ImportableObject.swift */,
+				B5F1DA8F1B9AA991007C5CBB /* ImportableUniqueObject.swift */,
 				B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */,
 			);
 			path = "Importing Data";
@@ -566,6 +572,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */,
+				B5F1DA901B9AA991007C5CBB /* ImportableUniqueObject.swift in Sources */,
 				B504D0D61B02362500B2BBB1 /* CoreStore+Setup.swift in Sources */,
 				B5D1E22C19FA9FBC003B2874 /* NSError+CoreStore.swift in Sources */,
 				B5E84F131AFF847B0064E85B /* Where.swift in Sources */,
@@ -584,6 +591,7 @@
 				B5E84EE11AFF84500064E85B /* PersistentStoreResult.swift in Sources */,
 				B5E84F251AFF84860064E85B /* ObjectObserver.swift in Sources */,
 				B5E84F2F1AFF849C0064E85B /* NotificationObserver.swift in Sources */,
+				B5F1DA8D1B9AA97D007C5CBB /* ImportableObject.swift in Sources */,
 				B5E84F381AFF85470064E85B /* NSManagedObject+Transaction.swift in Sources */,
 				B56965241B356B820075EE4A /* MigrationResult.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */,

@@ -36,7 +36,7 @@ let person = transaction.create(Into(MyPersonEntity))
 
 For cases where multiple `NSPersistentStore`s contain the same entity, the destination configuration's name needs to be specified as well:
 
-let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
+    let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
 
 This helps the `NSManagedObjectContext` to determine which
 */
@@ -48,7 +48,7 @@ public struct Into<T: NSManagedObject> {
     Initializes an `Into` clause.
     Sample Usage:
     
-    let person = transaction.create(Into<MyPersonEntity>())
+        let person = transaction.create(Into<MyPersonEntity>())
     */
     public init(){
         
