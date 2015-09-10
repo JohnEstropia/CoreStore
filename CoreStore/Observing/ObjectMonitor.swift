@@ -268,7 +268,17 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
     
-    private func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    internal func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(
+            ObjectMonitorWillChangeObjectNotification,
+            object: self
+        )
+    }
+    
+    internal func controllerDidChangeContent(controller: NSFetchedResultsController) { }
+    
+    internal func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
         switch type {
             
@@ -279,7 +289,7 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
                 userInfo: [UserInfoKeyObject: anObject]
             )
             
-        case .Update, .Move where indexPath == newIndexPath:
+        case .Update:
             NSNotificationCenter.defaultCenter().postNotificationName(
                 ObjectMonitorDidUpdateObjectNotification,
                 object: self,
@@ -291,58 +301,11 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
         }
     }
     
-    private func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    internal func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) { }
+    
+    internal func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            ObjectMonitorWillChangeObjectNotification,
-            object: self
-        )
-    }
-}
-
-
-// MARK: - FetchedResultsControllerHandler
-
-private protocol FetchedResultsControllerHandler: class {
-    
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?)
-    
-    func controllerWillChangeContent(controller: NSFetchedResultsController)
-}
-
-
-// MARK: - FetchedResultsControllerDelegate
-
-private final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
-    
-    // MARK: NSFetchedResultsControllerDelegate
-    
-    @objc dynamic func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        
-        self.handler?.controllerWillChangeContent(controller)
-    }
-    
-    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        
-        self.handler?.controller(controller, didChangeObject: anObject, atIndexPath: indexPath, forChangeType: type, newIndexPath: newIndexPath)
-    }
-    
-    
-    // MARK: Private
-    
-    weak var handler: FetchedResultsControllerHandler?
-    weak var fetchedResultsController: NSFetchedResultsController? {
-        
-        didSet {
-            
-            oldValue?.delegate = nil
-            self.fetchedResultsController?.delegate = self
-        }
-    }
-    
-    deinit {
-        
-        self.fetchedResultsController?.delegate = nil
+        return sectionName
     }
 }
 
