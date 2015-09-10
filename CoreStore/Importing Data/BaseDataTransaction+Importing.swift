@@ -38,7 +38,7 @@ public extension BaseDataTransaction {
     
     - parameter into: an `Into` clause specifying the entity type
     - parameter source: the object to import values from
-    - returns: the created `ImportableObject` instance
+    - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
     */
     public func importObject<T where T: NSManagedObject, T: ImportableObject>(
         into: Into<T>,
@@ -134,6 +134,13 @@ public extension BaseDataTransaction {
             }
     }
     
+    /**
+    Updates an existing `ImportableUniqueObject` or creates a new instance by importing from the specified import source.
+    
+    - parameter into: an `Into` clause specifying the entity type
+    - parameter source: the object to import values from
+    - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
+    */
     public func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         source: T.ImportSource) throws -> T?  {
@@ -171,6 +178,13 @@ public extension BaseDataTransaction {
             }
     }
     
+    /**
+    Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources.
+    
+    - parameter into: an `Into` clause specifying the entity type
+    - parameter sourceArray: the array of objects to import values from
+    - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
+    */
     public func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
@@ -238,6 +252,14 @@ public extension BaseDataTransaction {
             }
     }
     
+    /**
+    Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources.
+    
+    - parameter into: an `Into` clause specifying the entity type
+    - parameter sourceArray: the array of objects to import values from
+    - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
+    - parameter postProcess: a closure that exposes the array of created/updated objects
+    */
     public func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         sourceArray: [T.ImportSource],
