@@ -172,6 +172,8 @@ public final class ObjectMonitor<T: NSManagedObject> {
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.sortDescriptors = []
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.shouldRefreshRefetchedObjects = true
         
         let originalObjectID = object.objectID
         Where("SELF", isEqualTo: originalObjectID).applyToFetchRequest(fetchRequest)
