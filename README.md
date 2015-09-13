@@ -5,7 +5,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Unleashing the real power of Core Data with the elegance and safety of Swift
-(Swift 2.0, iOS 8+)
+* Swift 2.0 (XCode 7), iOS 8+ (or try out the [iOS 7 branch (alpha stage)](https://github.com/JohnEstropia/CoreStore/tree/ios7_support_alpha))
 
 [Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
 
@@ -14,7 +14,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 ## What CoreStore does better:
 
 - Heavily supports multiple persistent stores per data stack, just the way *.xcdatamodeld* files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
-- **New in 1.0.0:** Incremental Migrations! Just tell the data stack the sequence of model versions and CoreStore will automatically use incremental migrations if needed on stores added to that stack.
+- Incremental Migrations! Just tell the data stack the sequence of model versions and CoreStore will automatically use incremental migrations if needed on stores added to that stack.
 - Ability to plug-in your own logging framework
 - Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you are free to name them independently.
 - Provides type-safe, easy to configure observers to replace `NSFetchedResultsController` and KVO
@@ -22,6 +22,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 - Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
 - Exposes clean and convenient API designed around Swift’s code elegance and type safety.
 - Documentation! No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.
+- **New in 1.3.0:** Efficient importing utilities!
 
 **CoreStore's goal is not to expose shorter, magical syntax, but to provide an API that focuses on readability, consistency, and safety.**
 
@@ -44,6 +45,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
         - [Creating objects](#creating-objects)
         - [Updating objects](#updating-objects)
         - [Deleting objects](#deleting-objects)
+    - [Importing data](#importing-data)
     - [Fetching and querying](#fetching-and-querying)
         - [`From` clause](#from-clause)
         - [Fetching](#fetching)
@@ -527,6 +529,81 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
     transaction.commit()
 }
 ```
+
+## Importing data
+As with all other data updates, importing data is done through `BaseDataTransaction` subclasses:
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let json: [String: AnyObject] = // ...
+    transaction.importObject(
+        Into(MyPersonEntity),
+        source: json
+    )
+    transaction.commit()
+}
+```
+To support data import for an entity, implement either `ImportableObject` or `ImportableUniqueObject` on the `NSManagedObject` subclass:
+- `ImportableObject`: Use this protocol if the object have no inherent uniqueness and new objects should always be added when calling `importObject(...)`.
+- `ImportableUniqueObject`: Use this protocol to specify a unique ID for an object that will be used to distinguish whether a new object should be created or if an existing object should be updated when calling `importUniqueObject(...)`.
+
+Both protocols require implementers to specify an `ImportSource` which can be set to any type that the object can extract data from:
+```swift
+typealias ImportSource = NSDictionary
+```
+```swift
+typealias ImportSource = [String: AnyObject]
+```
+```swift
+typealias ImportSource = NSData
+```
+You can even use external types from popular 3rd-party JSON libraries, or just simple tuples or primitives.
+
+#### `ImportableObject`
+`ImportableObject` is a very simple protocol:
+```swift
+public protocol ImportableObject: class {
+    typealias ImportSource
+    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
+    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+}
+```
+First, set `ImportSource` to the expected type of the data source:
+```swift
+typealias ImportSource = [String: AnyObject]
+``
+This lets us call `importObject(_:source:)` with any `[String: AnyObject]` type as the argument to `source`:
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let json: [String: AnyObject] = // ...
+    transaction.importObject(
+        Into(MyPersonEntity),
+        source: json
+    )
+    // ...
+}
+```
+The actual extraction and assignment of values happen in the `didInsertFromImportSource(...)` method of the `ImportableObject` protocol:
+```swift
+func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+    self.name = source["name"] as? String
+    self.age = source["age"] as? NSNumber
+}
+```
+Transactions also let you import multiple objects at once using the `importObjects(_:sourceArray:)` method:
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let jsonArray: [[String: AnyObject]] = // ...
+    transaction.importObjects(
+        Into(MyPersonEntity),
+        sourceArray: jsonArray
+    )
+    // ...
+}
+```
+Doing so tells the transaction to iterate through the array of import sources and calls `shouldInsertFromImportSource(...)` on the `ImportableObject` to determine which instances should be created.
+
+
+#### `ImportableUniqueObject`
 
 ## Fetching and Querying
 Before we dive in, be aware that CoreStore distinguishes between *fetching* and *querying*:
