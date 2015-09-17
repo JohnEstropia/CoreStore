@@ -531,11 +531,18 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 ```
 
 ## Importing data
-As with all other data updates, importing data is done through `BaseDataTransaction` subclasses:
+Some times, if not most of the time, the data that we save to Core Data comes from external sources such as web servers or external files. Say you have a JSON dictionary, you may be extracting values as such:
+```swift
+let json: [String: AnyObject] = // ...
+person.name = json["name"] as? NSString
+person.age = json["age"] as? NSNumber
+// ...
+```
+If you have many attributes, you don't want to keep repeating this mapping everytime you want to import data. CoreStore lets you write the data mapping code just once, and all you have to do is call `importObject(...)` or `importUniqueObject(...)` through `BaseDataTransaction` subclasses:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let json: [String: AnyObject] = // ...
-    transaction.importObject(
+    try! transaction.importObject(
         Into(MyPersonEntity),
         source: json
     )
@@ -556,7 +563,7 @@ typealias ImportSource = [String: AnyObject]
 ```swift
 typealias ImportSource = NSData
 ```
-You can even use external types from popular 3rd-party JSON libraries, or just simple tuples or primitives.
+You can even use external types from popular 3rd-party JSON libraries ([SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)'s `JSON` type is a personal favorite), or just simple tuples or primitives.
 
 #### `ImportableObject`
 `ImportableObject` is a very simple protocol:
@@ -575,35 +582,68 @@ This lets us call `importObject(_:source:)` with any `[String: AnyObject]` type 
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let json: [String: AnyObject] = // ...
-    transaction.importObject(
+    try! transaction.importObject(
         Into(MyPersonEntity),
         source: json
     )
     // ...
 }
 ```
-The actual extraction and assignment of values happen in the `didInsertFromImportSource(...)` method of the `ImportableObject` protocol:
+The actual extraction and assignment of values should be implemented in the `didInsertFromImportSource(...)` method of the `ImportableObject` protocol:
 ```swift
 func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
-    self.name = source["name"] as? String
+    self.name = source["name"] as? NSString
     self.age = source["age"] as? NSNumber
+    // ...
 }
 ```
 Transactions also let you import multiple objects at once using the `importObjects(_:sourceArray:)` method:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let jsonArray: [[String: AnyObject]] = // ...
-    transaction.importObjects(
+    try! transaction.importObjects(
         Into(MyPersonEntity),
         sourceArray: jsonArray
     )
     // ...
 }
 ```
-Doing so tells the transaction to iterate through the array of import sources and calls `shouldInsertFromImportSource(...)` on the `ImportableObject` to determine which instances should be created.
+Doing so tells the transaction to iterate through the array of import sources and calls `shouldInsertFromImportSource(...)` on the `ImportableObject` to determine which instances should be created. You can do validations and return `false` from `shouldInsertFromImportSource(...)` if you want to skip importing from a source and continue on with the other sources in the array.
 
+If on the other hand, your validation in one of the sources failed in such a manner that all other sources should also be cancelled, you can `throw` from within `didInsertFromImportSource(...)`:
+```swift
+func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+    self.name = source["name"] as? NSString
+    self.age = source["age"] as? NSNumber
+    // ...
+    if self.name == nil {
+        throw Errors.InvalidNameError
+    }
+}
+```
+Doing so can let you abandon an invalid transaction immediately:
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let jsonArray: [[String: AnyObject]] = // ...
+    do {
+        try transaction.importObjects(
+            Into(MyPersonEntity),
+            sourceArray: jsonArray
+        )
+    }
+    catch {
+        return // Woops, don't save
+    }
+    transaction.commit {
+        // ...
+    }
+}
+```
 
 #### `ImportableUniqueObject`
+
+
+
 
 ## Fetching and Querying
 Before we dive in, be aware that CoreStore distinguishes between *fetching* and *querying*:
