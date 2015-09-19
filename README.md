@@ -45,6 +45,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
         - [Creating objects](#creating-objects)
         - [Updating objects](#updating-objects)
         - [Deleting objects](#deleting-objects)
+        - [Passing objects safely](#passing-objects-safely)
     - [Importing data](#importing-data)
     - [Fetching and querying](#fetching-and-querying)
         - [`From` clause](#from-clause)
@@ -477,7 +478,7 @@ let jane: MyPersonEntity = // ...
 CoreStore.beginAsynchronous { (transaction) -> Void in
     // WRONG: jane.age = jane.age + 1
     // RIGHT:
-    let jane = transaction.edit(jane) // using the same variable name protects us from misusing the non-transaction instance
+    let jane = transaction.edit(jane)! // using the same variable name protects us from misusing the non-transaction instance
     jane.age = jane.age + 1
     transaction.commit()
 }
@@ -490,9 +491,9 @@ let john: MyPersonEntity = // ...
 CoreStore.beginAsynchronous { (transaction) -> Void in
     // WRONG: jane.friends = [john]
     // RIGHT:
-    let jane = transaction.edit(jane)
-    let john = transaction.edit(john)
-    jane.friends = [john]
+    let jane = transaction.edit(jane)!
+    let john = transaction.edit(john)!
+    jane.friends = NSSet(array: [john])
     transaction.commit()
 }
 ```
@@ -529,6 +530,46 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
     transaction.commit()
 }
 ```
+
+### Passing objects safely
+
+Always remember that the `DataStack` and individual transactions manage different `NSManagedObjectContext`s so you cannot just use objects between them. That's why transactions have an `edit(...)` method:
+```swift
+let jane: MyPersonEntity = // ...
+
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let jane = transaction.edit(jane)!
+    jane.age = jane.age + 1
+    transaction.commit()
+}
+```
+But `CoreStore`, `DataStack` and `BaseDataTransaction` have a very flexible `fetchExisting(...)` method that you can pass instances back and forth with:
+```swift
+let jane: MyPersonEntity = // ...
+
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let jane = transaction.fetchExisting(jane)! // instance for transaction
+    jane.age = jane.age + 1
+    transaction.commit {
+        let jane = CoreStore.fetchExisting(jane)! // instance for DataStack
+        print(jane.age)
+    }
+}
+```
+`fetchExisting(...)` also works with multiple `NSManagedObject`s or with `NSManagedObjectID`s:
+```swift
+var peopleIDs: [NSManagedObjectID] = // ...
+
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let jane = transaction.fetchOne(
+        From(MyPersonEntity),
+        Where("name", isEqualTo: "Jane Smith")
+    )
+    jane.friends = NSSet(array: transactin.fetchExisting(peopleIDs)!)
+    // ...
+}
+```
+
 
 ## Importing data
 Some times, if not most of the time, the data that we save to Core Data comes from external sources such as web servers or external files. Say you have a JSON dictionary, you may be extracting values as such:
@@ -641,8 +682,62 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 ```
 
 #### `ImportableUniqueObject`
+Typically, we don't just keep creating objects every time we import data. Usually we also need to update already existing objects. Implementing the `ImportableUniqueObject` protocol lets you specify a "unique ID" that transactions can use to search existing objects before creating new ones:
+```swift
+public protocol ImportableUniqueObject: ImportableObject {
+    typealias ImportSource
+    typealias UniqueIDType: NSObject
 
+    static var uniqueIDKeyPath: String { get }
+    var uniqueIDValue: UniqueIDType { get set }
 
+    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
+    static func shouldUpdateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
+    static func uniqueIDFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType?
+    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+    func updateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+}
+```
+Notice that it has the same insert methods as `ImportableObject`, with additional methods for updates and for specifying the unique ID:
+```swift
+class var uniqueIDKeyPath: String {
+    return "personID" 
+}
+var uniqueIDValue: NSNumber { 
+    get { return self.personID }
+    set { self.personID = newValue }
+}
+class func uniqueIDFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> NSNumber? {
+    return source["id"] as? NSNumber
+}
+```
+For `ImportableUniqueObject`, the extraction and assignment of values should be implemented from the `updateFromImportSource(...)` method. The `didInsertFromImportSource(...)` by default calls `updateFromImportSource(...)`, but you can separate the implementation for inserts and updates if needed.
+
+You can then call create/update an object by calling a transaction's `importUniqueObject(...)` method:
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let json: [String: AnyObject] = // ...
+    try! transaction.importUniqueObject(
+        Into(MyPersonEntity),
+        source: json
+    )
+    // ...
+}
+```
+or multiple objects at once with the `importUniqueObjects(...)` method:
+
+```swift
+CoreStore.beginAsynchronous { (transaction) -> Void in
+    let jsonArray: [[String: AnyObject]] = // ...
+    try! transaction.importObjects(
+        Into(MyPersonEntity),
+        sourceArray: jsonArray
+    )
+    // ...
+}
+```
+As with `ImportableObject`, you can control wether to skip importing an object by implementing 
+`shouldInsertFromImportSource(...)` and `shouldUpdateFromImportSource(...)`, or to cancel all objects by `throw`ing an error from the `uniqueIDFromImportSource(...)`, `didInsertFromImportSource(...)` or `updateFromImportSource(...)` methods.
 
 
 ## Fetching and Querying
