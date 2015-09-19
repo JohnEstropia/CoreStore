@@ -102,9 +102,9 @@ public extension BaseDataTransaction {
     - parameter sourceArray: the array of objects to import values from
     - parameter postProcess: a closure that exposes the array of created objects
     */
-    public func importObjects<T where T: NSManagedObject, T: ImportableObject>(
+    public func importObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableObject, S.Generator.Element == T.ImportSource>(
         into: Into<T>,
-        sourceArray: [T.ImportSource],
+        sourceArray: S,
         @noescape postProcess: (sorted: [T]) -> Void) throws {
             
             CoreStore.assert(
@@ -185,10 +185,10 @@ public extension BaseDataTransaction {
     - parameter sourceArray: the array of objects to import values from
     - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
     */
-    public func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
+    public func importUniqueObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableUniqueObject, S.Generator.Element == T.ImportSource>(
         into: Into<T>,
-        sourceArray: [T.ImportSource],
-        preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource])? = nil) throws {
+        sourceArray: S,
+        @noescape preProcess: (mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws {
             
             CoreStore.assert(
                 self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
@@ -211,13 +211,7 @@ public extension BaseDataTransaction {
                     }
                 }
                 
-                if let preProcess = preProcess {
-                    
-                    try autoreleasepool {
-                        
-                        mapping = try preProcess(mapping: mapping)
-                    }
-                }
+                mapping = try autoreleasepool { try preProcess(mapping: mapping) }
                 
                 for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: mapping.keys)) ?? [] {
                     
@@ -260,10 +254,10 @@ public extension BaseDataTransaction {
     - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
     - parameter postProcess: a closure that exposes the array of created/updated objects
     */
-    public func importUniqueObjects<T where T: NSManagedObject, T: ImportableUniqueObject>(
+    public func importUniqueObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableUniqueObject, S.Generator.Element == T.ImportSource>(
         into: Into<T>,
-        sourceArray: [T.ImportSource],
-        preProcess: ((mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource])? = nil,
+        sourceArray: S,
+        @noescape preProcess: (mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 },
         @noescape postProcess: (sorted: [T]) -> Void) throws {
             
             CoreStore.assert(
@@ -289,13 +283,7 @@ public extension BaseDataTransaction {
                     }
                 }
                 
-                if let preProcess = preProcess {
-                    
-                    try autoreleasepool {
-                        
-                        mapping = try preProcess(mapping: mapping)
-                    }
-                }
+                mapping = try autoreleasepool { try preProcess(mapping: mapping) }
                 
                 var objects = Dictionary<T.UniqueIDType, T>()
                 for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: mapping.keys)) ?? [] {

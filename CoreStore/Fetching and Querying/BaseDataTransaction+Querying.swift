@@ -78,17 +78,9 @@ public extension BaseDataTransaction {
     - returns: the `NSManagedObject` array for objects that exists in the transaction
     */
     @warn_unused_result
-    public func fetchExisting<T: NSManagedObject>(objects: [T]) -> [T] {
+    public func fetchExisting<T: NSManagedObject, S: SequenceType where S.Generator.Element == T>(objects: S) -> [T] {
         
-        var existingObjects = [T]()
-        for object in objects {
-            
-            if let existingObject = (try? self.context.existingObjectWithID(object.objectID)) as? T {
-                
-                existingObjects.append(existingObject)
-            }
-        }
-        return existingObjects
+        return objects.flatMap { (try? self.context.existingObjectWithID($0.objectID)) as? T }
     }
     
     /**
@@ -98,17 +90,9 @@ public extension BaseDataTransaction {
     - returns: the `NSManagedObject` array for objects that exists in the transaction
     */
     @warn_unused_result
-    public func fetchExisting<T: NSManagedObject>(objectIDs: [NSManagedObjectID]) -> [T] {
+    public func fetchExisting<T: NSManagedObject, S: SequenceType where S.Generator.Element == NSManagedObjectID>(objectIDs: S) -> [T] {
         
-        var existingObjects = [T]()
-        for objectID in objectIDs {
-            
-            if let existingObject = (try? self.context.existingObjectWithID(objectID)) as? T {
-                
-                existingObjects.append(existingObject)
-            }
-        }
-        return existingObjects
+        return objectIDs.flatMap { (try? self.context.existingObjectWithID($0)) as? T }
     }
     
     /**

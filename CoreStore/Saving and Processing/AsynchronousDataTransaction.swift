@@ -171,7 +171,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
             "Attempted to delete an entities from an already committed \(typeName(self))."
         )
         
-        super.delete([object1, object2] + objects)
+        super.delete(([object1, object2] + objects).flatMap { $0 })
     }
     
     /**
@@ -179,7 +179,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     
     - parameter objects: the `NSManagedObject`s type to be deleted
     */
-    public override func delete(objects: [NSManagedObject?]) {
+    public override func delete<S: SequenceType where S.Generator.Element == NSManagedObject>(objects: S) {
         
         CoreStore.assert(
             !self.isCommitted,
