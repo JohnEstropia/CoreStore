@@ -103,7 +103,7 @@ class CoreStoreTests: XCTestCase {
             XCTFail(error.description)
         }
         
-        let detachedTransaction = CoreStore.beginDetached()
+        let unsafeTransaction = CoreStore.beginUnsafe()
         
         let createExpectation = self.expectationWithDescription("Entity creation")
         CoreStore.beginAsynchronous { (transaction) -> Void in
@@ -182,7 +182,7 @@ class CoreStoreTests: XCTestCase {
                 )
                 XCTAssertNil(objs4test, "objs4test == nil")
                 
-                let objs5test = detachedTransaction.fetchCount(From(TestEntity2))
+                let objs5test = unsafeTransaction.fetchCount(From(TestEntity2))
                 XCTAssertTrue(objs5test == 3, "objs5test == 3")
                 
                 XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
@@ -289,15 +289,15 @@ class CoreStoreTests: XCTestCase {
         XCTAssertNotNil(objs2, "objs2 != nil")
         XCTAssertTrue(objs2?.count == 1, "objs2?.count == 1")
         
-        let detachedExpectation = self.expectationWithDescription("Query creation")
+        let unsafeExpectation = self.expectationWithDescription("Query creation")
         
-        let obj5 = detachedTransaction.create(Into<TestEntity1>("Config1"))
+        let obj5 = unsafeTransaction.create(Into<TestEntity1>("Config1"))
         obj5.testEntityID = 5
         obj5.testString = "hihihi"
         obj5.testNumber = 70
         obj5.testDate = NSDate()
         
-        detachedTransaction.commit { (result) -> Void in
+        unsafeTransaction.commit { (result) -> Void in
             
             XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
             switch result {
@@ -322,13 +322,13 @@ class CoreStoreTests: XCTestCase {
                 )
                 XCTAssertTrue(count == 1, "count == 1 (actual: \(count))")
                 
-                let obj6 = detachedTransaction.create(Into<TestEntity1>())
+                let obj6 = unsafeTransaction.create(Into<TestEntity1>())
                 obj6.testEntityID = 6
                 obj6.testString = "huehuehue"
                 obj6.testNumber = 130
                 obj6.testDate = NSDate()
                 
-                detachedTransaction.commit { (result) -> Void in
+                unsafeTransaction.commit { (result) -> Void in
                     
                     XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
                     switch result {
@@ -358,7 +358,7 @@ class CoreStoreTests: XCTestCase {
                         )
                         XCTAssertTrue(count2 == 0, "count == 0 (actual: \(count2))")
                         
-                        detachedExpectation.fulfill()
+                        unsafeExpectation.fulfill()
                         
                     case .Failure(let error):
                         XCTFail(error.description)

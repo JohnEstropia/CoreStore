@@ -78,7 +78,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         
         let alert = UIAlertController(
             title: "Transactions Demo",
-            message: "This demo shows how to use the 3 types of transactions to save updates: synchronous, asynchronous, and detached.\n\nTap and hold on the map to change the pin location.",
+            message: "This demo shows how to use the 3 types of transactions to save updates: synchronous, asynchronous, and unsafe.\n\nTap and hold on the map to change the pin location.",
             preferredStyle: .Alert
         )
         alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
@@ -184,7 +184,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
     
     func geocodePlace(place: Place) {
         
-        let transaction = CoreStore.beginDetached()
+        let transaction = CoreStore.beginUnsafe()
         
         self.geocoder?.cancelGeocode()
         
