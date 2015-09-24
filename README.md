@@ -618,7 +618,7 @@ public protocol ImportableObject: class {
 First, set `ImportSource` to the expected type of the data source:
 ```swift
 typealias ImportSource = [String: AnyObject]
-``
+```
 This lets us call `importObject(_:source:)` with any `[String: AnyObject]` type as the argument to `source`:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
