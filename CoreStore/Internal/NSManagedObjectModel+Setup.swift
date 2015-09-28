@@ -154,7 +154,7 @@ internal extension NSManagedObjectModel {
     
         return self.entityNameMapping.reduce([:]) { (var mapping, pair) in
             
-            mapping[pair.0] = (NSClassFromString(pair.1)! as! NSManagedObject.Type)
+            mapping[pair.1] = (NSClassFromString(pair.0)! as! NSManagedObject.Type)
             return mapping
         }
     }

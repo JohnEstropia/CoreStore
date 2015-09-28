@@ -62,7 +62,7 @@ public extension CoreStore {
     - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
     */
     @warn_unused_result
-    public static func fetchExisting<T: NSManagedObject>(objects: [T]) -> [T] {
+    public static func fetchExisting<T: NSManagedObject, S: SequenceType where S.Generator.Element == T>(objects: S) -> [T] {
         
         return self.defaultStack.fetchExisting(objects)
     }
@@ -74,7 +74,7 @@ public extension CoreStore {
     - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
     */
     @warn_unused_result
-    public static func fetchExisting<T: NSManagedObject>(objectIDs: [NSManagedObjectID]) -> [T] {
+    public static func fetchExisting<T: NSManagedObject, S: SequenceType where S.Generator.Element == NSManagedObjectID>(objectIDs: S) -> [T] {
         
         return self.defaultStack.fetchExisting(objectIDs)
     }

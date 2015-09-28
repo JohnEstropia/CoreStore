@@ -1,5 +1,5 @@
 //
-//  DetachedDataTransaction.swift
+//  UnsafeDataTransaction.swift
 //  CoreStore
 //
 //  Copyright (c) 2015 John Rommel Estropia
@@ -27,17 +27,21 @@ import Foundation
 import GCDKit
 
 
-// MARK: - DetachedDataTransaction
+@available(*, deprecated=1.3.1, renamed="UnsafeDataTransaction")
+public typealias DetachedDataTransaction = UnsafeDataTransaction
+
+
+// MARK: - UnsafeDataTransaction
 
 /**
-The `DetachedDataTransaction` provides an interface for non-contiguous `NSManagedObject` creates, updates, and deletes. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
+The `UnsafeDataTransaction` provides an interface for non-contiguous `NSManagedObject` creates, updates, and deletes. This is useful for making temporary changes, such as partially filled forms. An unsafe transaction object should typically be only used from the main queue.
 */
-public final class DetachedDataTransaction: BaseDataTransaction {
+public final class UnsafeDataTransaction: BaseDataTransaction {
     
     // MARK: Public
     
     /**
-    Saves the transaction changes asynchronously. For a `DetachedDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
+    Saves the transaction changes asynchronously. For a `UnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
     
     - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
     */
@@ -53,27 +57,34 @@ public final class DetachedDataTransaction: BaseDataTransaction {
     /**
     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
     
-    - returns: a `DetachedDataTransaction` instance where creates, updates, and deletes can be made.
+    - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
     */
     @warn_unused_result
-    public func beginDetached() -> DetachedDataTransaction {
+    public func beginUnsafe() -> UnsafeDataTransaction {
         
-        return DetachedDataTransaction(
+        return UnsafeDataTransaction(
             mainContext: self.context,
             queue: self.transactionQueue
         )
     }
     
     /**
-    Returns the `NSManagedObjectContext` for this detached transaction. Use only for cases where external frameworks need an `NSManagedObjectContext` instance to work with.
+    Returns the `NSManagedObjectContext` for this unsafe transaction. Use only for cases where external frameworks need an `NSManagedObjectContext` instance to work with.
     
     Note that it is the developer's responsibility to ensure the following:
-    - that the `DetachedDataTransaction` that owns this context should be strongly referenced and prevented from being deallocated during the context's lifetime
-    - that all saves will be done either through the `DetachedDataTransaction`'s `commit(...)` method, or by calling `save()` manually on the context, its parent, and all other ancestor contexts if there are any.
+    - that the `UnsafeDataTransaction` that owns this context should be strongly referenced and prevented from being deallocated during the context's lifetime
+    - that all saves will be done either through the `UnsafeDataTransaction`'s `commit(...)` method, or by calling `save()` manually on the context, its parent, and all other ancestor contexts if there are any.
     */
     public var internalContext: NSManagedObjectContext {
         
         return self.context
+    }
+    
+    @available(*, deprecated=1.3.1, renamed="beginUnsafe")
+    @warn_unused_result
+    public func beginDetached() -> UnsafeDataTransaction {
+        
+        return self.beginUnsafe()
     }
     
     

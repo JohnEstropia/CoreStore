@@ -64,17 +64,24 @@ public extension DataStack {
     /**
     Begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
     
-    - returns: a `DetachedDataTransaction` instance where creates, updates, and deletes can be made.
+    - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
     */
     @warn_unused_result
-    public func beginDetached() -> DetachedDataTransaction {
+    public func beginUnsafe() -> UnsafeDataTransaction {
         
-        return DetachedDataTransaction(
+        return UnsafeDataTransaction(
             mainContext: self.rootSavingContext,
             queue: .createSerial(
-                "com.coreStore.dataStack.detachedTransactionQueue",
+                "com.coreStore.dataStack.unsafeTransactionQueue",
                 targetQueue: .UserInitiated
             )
         )
+    }
+    
+    @available(*, deprecated=1.3.1, renamed="beginUnsafe")
+    @warn_unused_result
+    public func beginDetached() -> UnsafeDataTransaction {
+        
+        return self.beginUnsafe()
     }
 }

@@ -167,7 +167,7 @@ public /*abstract*/ class BaseDataTransaction {
     */
     public func delete(object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
         
-        self.delete([object1, object2] + objects)
+        self.delete(([object1, object2] + objects).flatMap { $0 })
     }
     
     /**
@@ -175,7 +175,7 @@ public /*abstract*/ class BaseDataTransaction {
     
     - parameter objects: the `NSManagedObject`s to be deleted
     */
-    public func delete(objects: [NSManagedObject?]) {
+    public func delete<S: SequenceType where S.Generator.Element == NSManagedObject>(objects: S) {
         
         CoreStore.assert(
             self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
@@ -183,10 +183,7 @@ public /*abstract*/ class BaseDataTransaction {
         )
         
         let context = self.context
-        for case let object? in objects {
-            
-            context.fetchExisting(object)?.deleteFromContext()
-        }
+        objects.forEach { context.fetchExisting($0)?.deleteFromContext() }
     }
     
     // MARK: Saving changes

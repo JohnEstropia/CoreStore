@@ -54,13 +54,20 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms. A detached transaction object should typically be only used from the main queue.
+    Using the `defaultStack`, begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms. An unsafe transaction object should typically be only used from the main queue.
     
-    - returns: a `DetachedDataTransaction` instance where creates, updates, and deletes can be made.
+    - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
     */
     @warn_unused_result
-    public static func beginDetached() -> DetachedDataTransaction {
+    public static func beginUnsafe() -> UnsafeDataTransaction {
         
-        return self.defaultStack.beginDetached()
+        return self.defaultStack.beginUnsafe()
+    }
+    
+    @available(*, deprecated=1.3.1, renamed="beginUnsafe")
+    @warn_unused_result
+    public static func beginDetached() -> UnsafeDataTransaction {
+        
+        return self.beginUnsafe()
     }
 }

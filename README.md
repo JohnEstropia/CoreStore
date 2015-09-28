@@ -41,7 +41,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
         - [Transaction types](#transaction-types)
             - [Asynchronous transactions](#asynchronous-transactions)
             - [Synchronous transactions](#synchronous-transactions)
-            - [Detached transactions](#detached-transactions)
+            - [Unsafe transactions](#unsafe-transactions)
         - [Creating objects](#creating-objects)
         - [Updating objects](#updating-objects)
         - [Deleting objects](#deleting-objects)
@@ -146,7 +146,7 @@ If you are already familiar with the inner workings of CoreData, here is a mappi
 | --- | --- |
 | `NSManagedObjectModel` / `NSPersistentStoreCoordinator`<br />(.xcdatamodeld file) | `DataStack` |
 | `NSPersistentStore`<br />("Configuration"s in the .xcdatamodeld file) | `DataStack` configuration<br />(multiple sqlite / in-memory stores per stack) |
-| `NSManagedObjectContext` | `BaseDataTransaction` subclasses<br />(`SynchronousDataTransaction`, `AsynchronousDataTransaction`, `DetachedDataTransaction`) |
+| `NSManagedObjectContext` | `BaseDataTransaction` subclasses<br />(`SynchronousDataTransaction`, `AsynchronousDataTransaction`, `UnsafeDataTransaction`) |
 
 Popular libraries [RestKit](https://github.com/RestKit/RestKit) and [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) set up their `NSManagedObjectContext`s this way:
 
@@ -376,7 +376,7 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 ```
 The `commit()` method saves the changes to the persistent store. If `commit()` is not called when the transaction block completes, all changes within the transaction is discarded.
 
-The examples above use `beginAsynchronous(...)`, but there are actually 3 types of transactions at your disposal: *asynchronous*, *synchronous*, and *detached*.
+The examples above use `beginAsynchronous(...)`, but there are actually 3 types of transactions at your disposal: *asynchronous*, *synchronous*, and *unsafe*.
 
 ### Transaction types
 
@@ -402,10 +402,10 @@ CoreStore.beginSynchronous { (transaction) -> Void in
 
 Since `beginSynchronous(...)` technically blocks two queues (the caller's queue and the transaction's background queue), it is considered less safe as it's more prone to deadlock. Take special care that the closure does not block on any other external queues.
 
-#### Detached transactions
+#### Unsafe transactions
 are special in that they do not enclose updates within a closure:
 ```swift
-let transaction = CoreStore.beginDetached()
+let transaction = CoreStore.beginUnsafe()
 // make changes
 downloadJSONWithCompletion({ (json) -> Void in
 
@@ -420,7 +420,7 @@ downloadAnotherJSONWithCompletion({ (json) -> Void in
 ```
 This allows for non-contiguous updates. Do note that this flexibility comes with a price: you are now responsible for managing concurrency for the transaction. As uncle Ben said, "with great power comes great race conditions."
 
-As the above example also shows, only detached transactions are allowed to call `commit()` multiple times; doing so with synchronous and asynchronous transactions will trigger an assert. 
+As the above example also shows, only unsafe transactions are allowed to call `commit()` multiple times; doing so with synchronous and asynchronous transactions will trigger an assert. 
 
 
 You've seen how to create transactions, but we have yet to see how to make *creates*, *updates*, and *deletes*. The 3 types of transactions above are all subclasses of `BaseDataTransaction`, which implements the methods shown below.
