@@ -82,22 +82,37 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     
     @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
-        if #available(iOS 9, *) {
-            
-            self.handler?.controller(
-                controller,
-                didChangeObject: anObject,
-                atIndexPath: indexPath,
-                forChangeType: type,
-                newIndexPath: newIndexPath
-            )
-            return
-        }
-        
-        // Workaround a nasty bug introduced in XCode 7 targeted at iOS 8 devices
+        // This whole dance is a workaround for a nasty bug introduced in XCode 7 targeted at iOS 8 devices
         // http://stackoverflow.com/questions/31383760/ios-9-attempt-to-delete-and-reload-the-same-index-path/31384014#31384014
         // https://forums.developer.apple.com/message/9998#9998
         // https://forums.developer.apple.com/message/31849#31849
+        
+        if #available(iOS 9, *) {
+            
+            // Aaand XCode 7.0.1 now also bugs iOS 9 devices.. ughh
+            if case .Move = type where indexPath == newIndexPath {
+                
+                self.handler?.controller(
+                    controller,
+                    didChangeObject: anObject,
+                    atIndexPath: indexPath,
+                    forChangeType: .Update,
+                    newIndexPath: nil
+                )
+            }
+            else {
+                
+                self.handler?.controller(
+                    controller,
+                    didChangeObject: anObject,
+                    atIndexPath: indexPath,
+                    forChangeType: type,
+                    newIndexPath: newIndexPath
+                )
+            }
+            return
+        }
+        
         switch type {
             
         case .Move:
@@ -105,17 +120,20 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
                 
                 return
             }
-            if indexPath == newIndexPath
-                && self.deletedSections.contains(indexPath.section) {
-                    
-                    self.handler?.controller(
-                        controller,
-                        didChangeObject: anObject,
-                        atIndexPath: nil,
-                        forChangeType: .Insert,
-                        newIndexPath: indexPath
-                    )
-                    return
+            guard indexPath == newIndexPath else {
+                
+                break
+            }
+            if self.deletedSections.contains(indexPath.section) {
+                
+                self.handler?.controller(
+                    controller,
+                    didChangeObject: anObject,
+                    atIndexPath: nil,
+                    forChangeType: .Insert,
+                    newIndexPath: indexPath
+                )
+                return
             }
             
         case .Update:
