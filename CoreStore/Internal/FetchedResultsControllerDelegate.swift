@@ -82,6 +82,13 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     
     @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
+        // This fix is for a bug where Apple passes 0 for NSFetchedResultsChangeType, but this is not a valid enum case.
+        // Swift will then always execute the first case of the switch causing strange behaviour.
+        // https://forums.developer.apple.com/thread/12184#31850
+        if type.rawValue == 0 {
+            return
+        }
+        
         // This whole dance is a workaround for a nasty bug introduced in XCode 7 targeted at iOS 8 devices
         // http://stackoverflow.com/questions/31383760/ios-9-attempt-to-delete-and-reload-the-same-index-path/31384014#31384014
         // https://forums.developer.apple.com/message/9998#9998
