@@ -82,10 +82,11 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     
     @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
-        // This fix is for a bug where Apple passes 0 for NSFetchedResultsChangeType, but this is not a valid enum case.
-        // Swift will then always execute the first case of the switch causing strange behaviour.
-        // https://forums.developer.apple.com/thread/12184#31850
-        if type.rawValue == 0 {
+        guard type.rawValue > 0 else {
+            
+            // This fix is for a bug where Apple passes 0 for NSFetchedResultsChangeType, but this is not a valid enum case.
+            // Swift will then always execute the first case of the switch causing strange behaviour.
+            // https://forums.developer.apple.com/thread/12184#31850
             return
         }
         
