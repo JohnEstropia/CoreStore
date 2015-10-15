@@ -49,6 +49,8 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     
     // MARK: Internal
     
+    internal var enabled = true
+    
     internal weak var handler: FetchedResultsControllerHandler?
     internal weak var fetchedResultsController: NSFetchedResultsController? {
         
@@ -69,6 +71,11 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     
     @objc dynamic func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
+        guard self.enabled else {
+            
+            return
+        }
+        
         self.deletedSections = []
         self.insertedSections = []
         
@@ -77,10 +84,20 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     
     @objc dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
+        guard self.enabled else {
+            
+            return
+        }
+        
         self.handler?.controllerDidChangeContent(controller)
     }
     
     @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        
+        guard self.enabled else {
+            
+            return
+        }
         
         guard type.rawValue > 0 else {
             
@@ -169,6 +186,11 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     }
     
     @objc dynamic func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        
+        guard self.enabled else {
+            
+            return
+        }
         
         switch type {
             
