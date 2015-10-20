@@ -196,7 +196,7 @@
 		2F03A53019C5C6DA005002A5 /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F03A53419C5C6DA005002A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F03A53519C5C6DA005002A5 /* CoreStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreStore.h; sourceTree = "<group>"; };
-		2F03A53B19C5C6DA005002A5 /* CoreStoreTests iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CoreStoreTests iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F03A53B19C5C6DA005002A5 /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F03A53E19C5C6DA005002A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F03A53F19C5C6DA005002A5 /* CoreStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CoreStoreTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		2F03A54C19C5C872005002A5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -317,7 +317,7 @@
 			isa = PBXGroup;
 			children = (
 				2F03A53019C5C6DA005002A5 /* CoreStore.framework */,
-				2F03A53B19C5C6DA005002A5 /* CoreStoreTests iOS.xctest */,
+				2F03A53B19C5C6DA005002A5 /* CoreStoreTests.xctest */,
 				B563216F1BD65082006C9394 /* CoreStore.framework */,
 			);
 			name = Products;
@@ -604,7 +604,7 @@
 			);
 			name = "CoreStoreTests iOS";
 			productName = CoreStoreTests;
-			productReference = 2F03A53B19C5C6DA005002A5 /* CoreStoreTests iOS.xctest */;
+			productReference = 2F03A53B19C5C6DA005002A5 /* CoreStoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		B563216E1BD65082006C9394 /* CoreStore watchOS */ = {
@@ -1026,10 +1026,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1037,7 +1033,7 @@
 				INFOPLIST_FILE = CoreStoreTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = CoreStoreTests;
 			};
 			name = Debug;
 		};
@@ -1045,14 +1041,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
 				INFOPLIST_FILE = CoreStoreTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = CoreStoreTests;
 			};
 			name = Release;
 		};
