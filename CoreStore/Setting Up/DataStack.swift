@@ -213,6 +213,7 @@ public final class DataStack {
         
         var store: NSPersistentStore?
         var storeError: NSError?
+        let options = self.optionsForSQLiteStore()
         coordinator.performBlockAndWait {
             
             do {
@@ -221,7 +222,7 @@ public final class DataStack {
                     NSSQLiteStoreType,
                     configuration: configuration,
                     URL: fileURL,
-                    options: [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+                    options: options
                 )
             }
             catch {
@@ -292,6 +293,11 @@ public final class DataStack {
         migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
         return migrationQueue
     }()
+    
+    internal func optionsForSQLiteStore() -> [String: AnyObject] {
+        
+        return [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+    }
     
     internal func entityNameForEntityClass(entityClass: AnyClass) -> String? {
         
