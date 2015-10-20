@@ -102,7 +102,7 @@ public final class ListMonitor<T: NSManagedObject> {
     */
     public subscript(sectionIndex: Int, itemIndex: Int) -> T {
         
-        return self[NSIndexPath(forItem: itemIndex, inSection: sectionIndex)]
+        return self[NSIndexPath(indexes: [sectionIndex, itemIndex], length: 2)]
     }
     
     /**
@@ -157,7 +157,10 @@ public final class ListMonitor<T: NSManagedObject> {
     */
     public subscript(safeIndexPath indexPath: NSIndexPath) -> T? {
         
-        return self[safeSectionIndex: indexPath.section, safeItemIndex: indexPath.item]
+        return self[
+            safeSectionIndex: indexPath.indexAtPosition(0),
+            safeItemIndex: indexPath.indexAtPosition(1)
+        ]
     }
     
     /**

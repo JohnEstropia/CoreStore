@@ -24,6 +24,8 @@
 //
 
 import Foundation
+import CoreData
+
 
 // MARK: - CoreStore
 

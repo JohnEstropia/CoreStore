@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2F03A52F19C5C6DA005002A5"
                BuildableName = "CoreStore.framework"
-               BlueprintName = "CoreStore"
+               BlueprintName = "CoreStore iOS"
                ReferencedContainer = "container:CoreStore.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2F03A53A19C5C6DA005002A5"
-               BuildableName = "CoreStoreTests.xctest"
-               BlueprintName = "CoreStoreTests"
+               BuildableName = "CoreStoreTests iOS.xctest"
+               BlueprintName = "CoreStoreTests iOS"
                ReferencedContainer = "container:CoreStore.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,8 +47,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2F03A53A19C5C6DA005002A5"
-               BuildableName = "CoreStoreTests.xctest"
-               BlueprintName = "CoreStoreTests"
+               BuildableName = "CoreStoreTests iOS.xctest"
+               BlueprintName = "CoreStoreTests iOS"
                ReferencedContainer = "container:CoreStore.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -58,7 +58,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2F03A52F19C5C6DA005002A5"
             BuildableName = "CoreStore.framework"
-            BlueprintName = "CoreStore"
+            BlueprintName = "CoreStore iOS"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -80,7 +80,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2F03A52F19C5C6DA005002A5"
             BuildableName = "CoreStore.framework"
-            BlueprintName = "CoreStore"
+            BlueprintName = "CoreStore iOS"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -98,7 +98,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2F03A52F19C5C6DA005002A5"
             BuildableName = "CoreStore.framework"
-            BlueprintName = "CoreStore"
+            BlueprintName = "CoreStore iOS"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

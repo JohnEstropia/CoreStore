@@ -48,6 +48,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B56321C51BD65965006C9394 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B563216F1BD65082006C9394;
+			remoteInfo = "CoreStore watchOS";
+		};
 		B583A91A1AF5F4F4001F76AF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
@@ -279,7 +286,8 @@
 			isa = PBXGroup;
 			children = (
 				B583A91B1AF5F4F4001F76AF /* CoreStore.framework */,
-				B583A91D1AF5F4F4001F76AF /* CoreStoreTests.xctest */,
+				B583A91D1AF5F4F4001F76AF /* CoreStoreTests iOS.xctest */,
+				B56321C61BD65965006C9394 /* CoreStore.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -347,6 +355,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		B56321C61BD65965006C9394 /* CoreStore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CoreStore.framework;
+			remoteRef = B56321C51BD65965006C9394 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		B583A91B1AF5F4F4001F76AF /* CoreStore.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -354,10 +369,10 @@
 			remoteRef = B583A91A1AF5F4F4001F76AF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B583A91D1AF5F4F4001F76AF /* CoreStoreTests.xctest */ = {
+		B583A91D1AF5F4F4001F76AF /* CoreStoreTests iOS.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = CoreStoreTests.xctest;
+			path = "CoreStoreTests iOS.xctest";
 			remoteRef = B583A91C1AF5F4F4001F76AF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

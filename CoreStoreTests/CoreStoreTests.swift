@@ -23,7 +23,6 @@
 //  SOFTWARE.
 //
 
-import UIKit
 import XCTest
 
 @testable

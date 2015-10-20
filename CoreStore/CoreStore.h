@@ -23,7 +23,7 @@
 //  SOFTWARE.
 //
 
-#import <CoreData/CoreData.h>
+#import <Foundation/Foundation.h>
 
 FOUNDATION_EXPORT double CoreStoreVersionNumber;
 FOUNDATION_EXPORT const unsigned char CoreStoreVersionString[];

@@ -149,7 +149,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
                 
                 break
             }
-            if self.deletedSections.contains(indexPath.section) {
+            if self.deletedSections.contains(indexPath.indexAtPosition(0)) {
                 
                 self.handler?.controller(
                     controller,
@@ -162,7 +162,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
             }
             
         case .Update:
-            guard let section = indexPath?.section else {
+            guard let section = indexPath?.indexAtPosition(0) else {
                 
                 return
             }

@@ -24,6 +24,7 @@
 //
 
 import Foundation
+import CoreData
 
 /**
 The `NSError` error domain for `CoreStore`.

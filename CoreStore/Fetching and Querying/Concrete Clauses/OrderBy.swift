@@ -24,6 +24,7 @@
 //
 
 import Foundation
+import CoreData
 
 
 public func +(left: OrderBy, right: OrderBy) -> OrderBy {

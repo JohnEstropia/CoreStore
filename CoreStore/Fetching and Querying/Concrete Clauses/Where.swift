@@ -24,6 +24,7 @@
 //
 
 import Foundation
+import CoreData
 
 
 public func &&(left: Where, right: Where) -> Where {
