@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
     s.watchos.deployment_target = "2.0"
 
     s.source_files = "CoreStore", "CoreStore/**/*.{swift}"
-    s.frameworks = "Foundation", "UIKit", "CoreData"
+    s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
-    s.dependency "GCDKit", "1.1.2"
+    s.dependency "GCDKit", "1.1.3"
 end
