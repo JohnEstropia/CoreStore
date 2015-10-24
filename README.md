@@ -5,7 +5,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Unleashing the real power of Core Data with the elegance and safety of Swift
-* Swift 2.0 (XCode 7), iOS 8+ (or try out the [iOS 7 branch (alpha stage)](https://github.com/JohnEstropia/CoreStore/tree/ios7_support_alpha))
+* Swift 2.1 (XCode 7.1), iOS 8+ (or try out the [iOS 7 branch (alpha stage)](https://github.com/JohnEstropia/CoreStore/tree/ios7_support_alpha))
 
 [Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
 
