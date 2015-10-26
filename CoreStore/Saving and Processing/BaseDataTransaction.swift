@@ -175,7 +175,7 @@ public /*abstract*/ class BaseDataTransaction {
     
     - parameter objects: the `NSManagedObject`s to be deleted
     */
-    public func delete<S: SequenceType where S.Generator.Element == NSManagedObject>(objects: S) {
+    public func delete<S: SequenceType where S.Generator.Element: NSManagedObject>(objects: S) {
         
         CoreStore.assert(
             self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
