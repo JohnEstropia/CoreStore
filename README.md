@@ -5,7 +5,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Unleashing the real power of Core Data with the elegance and safety of Swift
-* Swift 2.1 (XCode 7.1), iOS 8+ (or try out the [iOS 7 branch (alpha stage)](https://github.com/JohnEstropia/CoreStore/tree/ios7_support_alpha))
+* Swift 2.1 (XCode 7.1), iOS 8+/OSX 10.10+ (or try out the [iOS 7 branch](https://github.com/JohnEstropia/CoreStore/tree/ios7_support_alpha))
 
 [Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
 
@@ -57,7 +57,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
             - [`Select<T>` clause](#selectt-clause)
             - [`GroupBy` clause](#groupby-clause)
     - [Logging and error handling](#logging-and-error-handling)
-    - [Observing changes and notifications](#observing-changes-and-notifications)
+    - [Observing changes and notifications](#observing-changes-and-notifications) (unavailable on OSX)
         - [Observe a single object](#observe-a-single-object)
         - [Observe a list of objects](#observe-a-list-of-objects)
 - [Roadmap](#roadmap)
@@ -1024,7 +1024,7 @@ Doing so channels all logging calls to your logger.
 
 Note that to keep the call stack information intact, all calls to these methods are **NOT** thread-managed. Therefore you have to make sure that your logger is thread-safe or you may otherwise have to dispatch your logging implementation to a serial queue.
 
-## Observing changes and notifications
+## Observing changes and notifications (unavailable on OSX)
 CoreStore provides type-safe wrappers for observing managed objects:
 
 - `ObjectMonitor`: use to monitor changes to a single `NSManagedObject` instance (instead of Key-Value Observing)
