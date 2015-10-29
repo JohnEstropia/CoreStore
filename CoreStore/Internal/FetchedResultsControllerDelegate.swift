@@ -29,6 +29,7 @@ import CoreData
 
 // MARK: - FetchedResultsControllerHandler
 
+@available(OSX, unavailable)
 internal protocol FetchedResultsControllerHandler: class {
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?)
@@ -45,6 +46,7 @@ internal protocol FetchedResultsControllerHandler: class {
 
 // MARK: - FetchedResultsControllerDelegate
 
+@available(OSX, unavailable)
 internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Internal

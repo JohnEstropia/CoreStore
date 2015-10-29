@@ -40,6 +40,7 @@ The created `ObjectMonitor` instance needs to be held on (retained) for as long 
 
 Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
 */
+@available(OSX, unavailable)
 public final class ObjectMonitor<T: NSManagedObject> {
     
     // MARK: Public
@@ -261,16 +262,19 @@ public final class ObjectMonitor<T: NSManagedObject> {
 
 // MARK: - ObjectMonitor: Equatable
 
+@available(OSX, unavailable)
 public func ==<T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
     
     return lhs === rhs
 }
 
+@available(OSX, unavailable)
 extension ObjectMonitor: Equatable { }
 
 
 // MARK: - ObjectMonitor: FetchedResultsControllerHandler
 
+@available(OSX, unavailable)
 extension ObjectMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler

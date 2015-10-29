@@ -29,6 +29,7 @@ import CoreData
 
 // MARK: - CoreStore
 
+@available(OSX, unavailable)
 public extension CoreStore {
     
     // MARK: Public
@@ -51,7 +52,7 @@ public extension CoreStore {
     - parameter from: a `From` clause indicating the entity type
     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
     - returns: a `ListMonitor` instance that monitors changes to the list
-    */
+     */
     @warn_unused_result
     public static func monitorList<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> ListMonitor<T> {
         

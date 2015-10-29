@@ -35,6 +35,7 @@ Implement the `ObjectObserver` protocol to observe changes to a single `NSManage
     let monitor = CoreStore.monitorObject(object)
     monitor.addObserver(self)
 */
+@available(OSX, unavailable)
 public protocol ObjectObserver: class {
     
     /**
@@ -71,6 +72,7 @@ public protocol ObjectObserver: class {
 
 // MARK: - ObjectObserver (Default Implementations)
 
+@available(OSX, unavailable)
 public extension ObjectObserver {
     
     /**

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14D136" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15B42" minimumToolsVersion="Xcode 4.3">
     <entity name="TestEntity1AAA" representedClassName="CoreStoreTests.TestEntity1" syncable="YES">
         <attribute name="testDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="testEntityID" attributeType="Integer 64" syncable="YES"/>

@@ -38,6 +38,7 @@ Implement the `ListObserver` protocol to observe changes to a list of `NSManaged
     )
     monitor.addObserver(self)
 */
+@available(OSX, unavailable)
 public protocol ListObserver: class {
     
     /**
@@ -77,6 +78,7 @@ public protocol ListObserver: class {
 
 // MARK: - ListObserver (Default Implementations)
 
+@available(OSX, unavailable)
 public extension ListObserver {
     
     /**
@@ -112,6 +114,7 @@ Implement the `ListObjectObserver` protocol to observe detailed changes to a lis
     )
     monitor.addObserver(self)
 */
+@available(OSX, unavailable)
 public protocol ListObjectObserver: ListObserver {
     
     /**
@@ -155,6 +158,7 @@ public protocol ListObjectObserver: ListObserver {
 
 // MARK: - ListObjectObserver (Default Implementations)
 
+@available(OSX, unavailable)
 public extension ListObjectObserver {
     
     /**
@@ -191,6 +195,7 @@ Implement the `ListSectionObserver` protocol to observe changes to a list's sect
     )
     monitor.addObserver(self)
 */
+@available(OSX, unavailable)
 public protocol ListSectionObserver: ListObjectObserver {
     
     /**
@@ -199,7 +204,8 @@ public protocol ListSectionObserver: ListObjectObserver {
     - parameter monitor: the `ListMonitor` monitoring the list being observed
     - parameter sectionInfo: the `NSFetchedResultsSectionInfo` for the inserted section
     - parameter sectionIndex: the new section index for the new section
-    */
+     */
+    @available(iOS 8.0, *)
     func listMonitor(monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
     
     /**
@@ -208,13 +214,15 @@ public protocol ListSectionObserver: ListObjectObserver {
     - parameter monitor: the `ListMonitor` monitoring the list being observed
     - parameter sectionInfo: the `NSFetchedResultsSectionInfo` for the deleted section
     - parameter sectionIndex: the previous section index for the deleted section
-    */
+     */
+    @available(iOS 8.0, *)
     func listMonitor(monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 }
 
 
 // MARK: - ListSectionObserver (Default Implementations)
 
+@available(OSX, unavailable)
 public extension ListSectionObserver {
     
     /**

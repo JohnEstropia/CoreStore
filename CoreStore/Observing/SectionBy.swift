@@ -38,6 +38,7 @@ The `SectionBy` clause indicates the key path to use to group the `ListMonitor` 
         OrderBy(.Ascending("lastName"))
     )
 */
+@available(OSX, unavailable)
 public struct SectionBy {
     
     // MARK: Public

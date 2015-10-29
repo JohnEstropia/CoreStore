@@ -67,6 +67,7 @@ Objects from `ListMonitor`s created this way can be accessed either by an `NSInd
 
 In the example above, both `person1` and `person2` will contain the object at section=2, index=3.
 */
+@available(OSX, unavailable)
 public final class ListMonitor<T: NSManagedObject> {
     
     // MARK: Public (Accessors)
@@ -1032,16 +1033,19 @@ public final class ListMonitor<T: NSManagedObject> {
 
 // MARK: - ListMonitor: Equatable
 
+@available(OSX, unavailable)
 public func ==<T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
     
     return lhs === rhs
 }
 
+@available(OSX, unavailable)
 extension ListMonitor: Equatable { }
 
 
 // MARK: - ListMonitor: FetchedResultsControllerHandler
 
+@available(OSX, unavailable)
 extension ListMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
