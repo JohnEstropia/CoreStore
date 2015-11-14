@@ -56,6 +56,30 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     }
     
     /**
+     Rolls back the transaction.
+     */
+    public func rollback() {
+        
+        self.context.rollback()
+    }
+    
+    /**
+     Undo's the last change made to the transaction.
+     */
+    public func undo() {
+        
+        self.context.undo()
+    }
+    
+    /**
+     Redo's the last undone change to the transaction.
+     */
+    public func redo() {
+        
+        self.context.redo()
+    }
+    
+    /**
     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
     
     - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.

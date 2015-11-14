@@ -186,21 +186,6 @@ public /*abstract*/ class BaseDataTransaction {
         objects.forEach { context.fetchExisting($0)?.deleteFromContext() }
     }
     
-    // MARK: Saving changes
-    
-    /**
-    Rolls back the transaction by resetting the `NSManagedObjectContext`. After calling this method, all `NSManagedObjects` fetched within the transaction will become invalid.
-    */
-    public func rollback() {
-        
-        CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to rollback a \(typeName(self)) outside its designated queue."
-        )
-        
-        self.context.reset()
-    }
-    
     
     // MARK: Internal
     

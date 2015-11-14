@@ -181,15 +181,20 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     /**
     Rolls back the transaction by resetting the `NSManagedObjectContext`. After calling this method, all `NSManagedObjects` fetched within the transaction will become invalid. This method should not be used after the `commit()` method was already called once.
-    */
-    public override func rollback() {
+     */
+    @available(*, deprecated=1.3.4, message="Resetting the context is inherently unsafe. This method will be removed in the near future. Use `beginUnsafe()` to create transactions with `undo` support.")
+    public func rollback() {
         
         CoreStore.assert(
             !self.isCommitted,
             "Attempted to rollback an already committed \(typeName(self))."
         )
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to rollback a \(typeName(self)) outside its designated queue."
+        )
         
-        super.rollback()
+        self.context.reset()
     }
     
     
@@ -217,6 +222,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         self.closure = closure
         
         super.init(mainContext: mainContext, queue: queue)
+        self.context.undoManager = nil
     }
     
     
