@@ -885,7 +885,39 @@ public final class ListMonitor<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+     
+        self.init(
+            dataStack: dataStack,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            prepareFetch: { _, performFetch in performFetch() }
+        )
+    }
+    
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
+        
+        self.init(
+            dataStack: dataStack,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            prepareFetch: { listMonitor, performFetch in
+                
+                dataStack.childTransactionQueue.async {
+                    
+                    performFetch()
+                    GCDQueue.Main.async {
+                        
+                        createAsynchronously(listMonitor)
+                    }
+                }
+            }
+        )
+    }
+    
+    private init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], prepareFetch: (ListMonitor<T>, () -> Void) -> Void) {
         
         let context = dataStack.mainContext
         
@@ -927,7 +959,8 @@ public final class ListMonitor<T: NSManagedObject> {
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
-        try! fetchedResultsController.performFetch()
+        
+        prepareFetch(self, { try! fetchedResultsController.performFetch() })
     }
     
     deinit {
