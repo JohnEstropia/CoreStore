@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
     s.requires_arc = true
     s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-D USE_FRAMEWORKS' }
     
-    s.dependency "GCDKit", "1.1.3"
+    s.dependency "GCDKit", "1.1.4"
 end
