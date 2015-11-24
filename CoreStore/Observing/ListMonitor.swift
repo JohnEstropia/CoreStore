@@ -919,27 +919,19 @@ public final class ListMonitor<T: NSManagedObject> {
     
     private init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], prepareFetch: (ListMonitor<T>, () -> Void) -> Void) {
         
-        let context = dataStack.mainContext
-        
         let fetchRequest = NSFetchRequest()
-        from.applyToFetchRequest(fetchRequest, context: context)
-        
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.fetchBatchSize = 20
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        for clause in fetchClauses {
-            
-            clause.applyToFetchRequest(fetchRequest)
-        }
-        
         let fetchedResultsController = NSFetchedResultsController(
+            dataStack: dataStack,
             fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: sectionBy?.sectionKeyPath,
-            cacheName: nil
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
         )
         
         let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()

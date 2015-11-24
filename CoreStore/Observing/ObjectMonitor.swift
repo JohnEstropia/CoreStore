@@ -167,25 +167,18 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     internal init(dataStack: DataStack, object: T) {
         
-        let context = dataStack.mainContext
-        
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = object.entity
-        
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.sortDescriptors = []
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        let originalObjectID = object.objectID
-        Where("SELF", isEqualTo: originalObjectID).applyToFetchRequest(fetchRequest)
-        
         let fetchedResultsController = NSFetchedResultsController(
+            dataStack: dataStack,
             fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: nil
+            fetchClauses: [Where("SELF", isEqualTo: object.objectID)]
         )
         
         let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
