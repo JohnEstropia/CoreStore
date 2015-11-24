@@ -24,7 +24,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 - Documentation! No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.
 - **New in 1.3.0:** Efficient importing utilities!
 
-**CoreStore's goal is not to expose shorter, magical syntax, but to provide an API that focuses on readability, consistency, and safety.**
+**[Or vote for the next feature!](http://goo.gl/RIiHMP)**
 
 
 
