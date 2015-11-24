@@ -295,7 +295,7 @@
 		B5D39A0119FD00C9000E91BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity2.swift; sourceTree = "<group>"; };
 		B5D806C51A34715700A44484 /* GCDKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GCDKit.xcodeproj; sourceTree = "<group>"; };
-		B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = CoreStore.podspec; sourceTree = SOURCE_ROOT; };
+		B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = CoreStore.podspec; sourceTree = SOURCE_ROOT; };
 		B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+Importing.swift"; sourceTree = "<group>"; };
 		B5E834BA1B7691F3001D3D50 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		B5E84ED81AFF82360064E85B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
@@ -1169,6 +1169,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-D USE_FRAMEWORKS";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1208,6 +1209,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_SWIFT_FLAGS = "-D USE_FRAMEWORKS";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";

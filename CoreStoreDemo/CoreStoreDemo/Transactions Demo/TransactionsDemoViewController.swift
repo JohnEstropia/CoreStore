@@ -11,7 +11,9 @@ import CoreLocation
 import MapKit
 import AddressBookUI
 import CoreStore
-import GCDKit
+#if USE_FRAMEWORKS
+    import GCDKit
+#endif
 
 
 private struct Static {
