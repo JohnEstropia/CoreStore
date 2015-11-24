@@ -8,9 +8,7 @@
 
 import UIKit
 import CoreStore
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
+import GCDKit
 
 
 // MARK: - CustomLoggerViewController
