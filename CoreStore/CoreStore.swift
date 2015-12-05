@@ -24,7 +24,9 @@
 //
 
 import CoreData
-import GCDKit
+#if USE_FRAMEWORKS
+    import GCDKit
+#endif
 
 
 // MARK: - CoreStore

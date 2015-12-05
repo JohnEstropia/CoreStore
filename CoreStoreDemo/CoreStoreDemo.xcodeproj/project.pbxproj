@@ -48,6 +48,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B5202CF11C044CC800DED140 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B52DD1741BE1F8CC00949AFE;
+			remoteInfo = "CoreStore OSX";
+		};
+		B5202CF31C044CC800DED140 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B52DD17D1BE1F8CC00949AFE;
+			remoteInfo = "CoreStoreTests OSX";
+		};
 		B56321C51BD65965006C9394 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
@@ -286,8 +300,10 @@
 			isa = PBXGroup;
 			children = (
 				B583A91B1AF5F4F4001F76AF /* CoreStore.framework */,
-				B583A91D1AF5F4F4001F76AF /* CoreStoreTests iOS.xctest */,
+				B583A91D1AF5F4F4001F76AF /* CoreStoreTests.xctest */,
 				B56321C61BD65965006C9394 /* CoreStore.framework */,
+				B5202CF21C044CC800DED140 /* CoreStore.framework */,
+				B5202CF41C044CC800DED140 /* CoreStoreTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -355,6 +371,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		B5202CF21C044CC800DED140 /* CoreStore.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CoreStore.framework;
+			remoteRef = B5202CF11C044CC800DED140 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B5202CF41C044CC800DED140 /* CoreStoreTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CoreStoreTests.xctest;
+			remoteRef = B5202CF31C044CC800DED140 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		B56321C61BD65965006C9394 /* CoreStore.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -369,10 +399,10 @@
 			remoteRef = B583A91A1AF5F4F4001F76AF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B583A91D1AF5F4F4001F76AF /* CoreStoreTests iOS.xctest */ = {
+		B583A91D1AF5F4F4001F76AF /* CoreStoreTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "CoreStoreTests iOS.xctest";
+			path = CoreStoreTests.xctest;
 			remoteRef = B583A91C1AF5F4F4001F76AF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

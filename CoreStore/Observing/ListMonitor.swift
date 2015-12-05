@@ -25,7 +25,9 @@
 
 import Foundation
 import CoreData
-import GCDKit
+#if USE_FRAMEWORKS
+    import GCDKit
+#endif
 
 
 // MARK: - ListMonitor
@@ -883,29 +885,53 @@ public final class ListMonitor<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+     
+        self.init(
+            dataStack: dataStack,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            prepareFetch: { _, performFetch in performFetch() }
+        )
+    }
+    
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
         
-        let context = dataStack.mainContext
+        self.init(
+            dataStack: dataStack,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            prepareFetch: { listMonitor, performFetch in
+                
+                dataStack.childTransactionQueue.async {
+                    
+                    performFetch()
+                    GCDQueue.Main.async {
+                        
+                        createAsynchronously(listMonitor)
+                    }
+                }
+            }
+        )
+    }
+    
+    private init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], prepareFetch: (ListMonitor<T>, () -> Void) -> Void) {
         
         let fetchRequest = NSFetchRequest()
-        from.applyToFetchRequest(fetchRequest, context: context)
-        
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.fetchBatchSize = 20
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        for clause in fetchClauses {
-            
-            clause.applyToFetchRequest(fetchRequest)
-        }
-        
         let fetchedResultsController = NSFetchedResultsController(
+            dataStack: dataStack,
             fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: sectionBy?.sectionKeyPath,
-            cacheName: nil
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
         )
         
         let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
@@ -925,7 +951,8 @@ public final class ListMonitor<T: NSManagedObject> {
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
-        try! fetchedResultsController.performFetch()
+        
+        prepareFetch(self, { try! fetchedResultsController.performFetch() })
     }
     
     deinit {

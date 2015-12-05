@@ -24,7 +24,9 @@
 //
 
 import Foundation
-import GCDKit
+#if USE_FRAMEWORKS
+    import GCDKit
+#endif
 
 
 // MARK: - NSProgress

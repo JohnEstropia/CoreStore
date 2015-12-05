@@ -25,7 +25,9 @@
 
 import Foundation
 import CoreData
-import GCDKit
+#if USE_FRAMEWORKS
+    import GCDKit
+#endif
 
 
 @available(*, deprecated=1.3.1, renamed="UnsafeDataTransaction")

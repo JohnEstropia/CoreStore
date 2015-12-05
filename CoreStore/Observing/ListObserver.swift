@@ -205,7 +205,6 @@ public protocol ListSectionObserver: ListObjectObserver {
     - parameter sectionInfo: the `NSFetchedResultsSectionInfo` for the inserted section
     - parameter sectionIndex: the new section index for the new section
      */
-    @available(iOS 8.0, *)
     func listMonitor(monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
     
     /**
@@ -215,7 +214,6 @@ public protocol ListSectionObserver: ListObjectObserver {
     - parameter sectionInfo: the `NSFetchedResultsSectionInfo` for the deleted section
     - parameter sectionIndex: the previous section index for the deleted section
      */
-    @available(iOS 8.0, *)
     func listMonitor(monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 }
 

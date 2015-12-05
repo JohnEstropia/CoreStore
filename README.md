@@ -24,7 +24,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 - Documentation! No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.
 - **New in 1.3.0:** Efficient importing utilities!
 
-**CoreStore's goal is not to expose shorter, magical syntax, but to provide an API that focuses on readability, consistency, and safety.**
+**[Or vote for the next feature!](http://goo.gl/RIiHMP)**
 
 
 
@@ -255,7 +255,7 @@ class MyViewController: UIViewController {
 
 
 ## Migrations
-So far we have only seen `addSQLiteStoreAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests, this method will block, even if a migration occurs. If migrations are expected, the asynchronous variant `addSQLiteStore(... completion:)` method is recommended:
+So far we have only seen `addSQLiteStoreAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests, this method blocks so it should not do long tasks such as store migrations (in fact CoreStore won't even attempt to, and any model mismatch will be reported as an error). If migrations are expected, the asynchronous variant `addSQLiteStore(... completion:)` method should be used instead:
 ```swift
 do {
     let progress: NSProgress = try dataStack.addSQLiteStore(

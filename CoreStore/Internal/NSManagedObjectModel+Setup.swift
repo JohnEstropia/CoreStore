@@ -65,10 +65,13 @@ internal extension NSManagedObjectModel {
         }
         else if let resolvedVersion = modelVersions.first ?? modelVersionHints.first {
             
-            CoreStore.log(
-                .Warning,
-                message: "The MigrationChain leaf versions do not include any of the model file's embedded versions. Resolving to version \"\(resolvedVersion)\"."
-            )
+            if !modelVersionHints.isEmpty {
+                
+                CoreStore.log(
+                    .Warning,
+                    message: "The MigrationChain leaf versions do not include any of the model file's embedded versions. Resolving to version \"\(resolvedVersion)\"."
+                )
+            }
             currentModelVersion = resolvedVersion
         }
         else {
