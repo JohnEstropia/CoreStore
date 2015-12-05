@@ -1,3 +1,3 @@
 [submodule "Libraries/GCDKit"]
 	path = Libraries/GCDKit
-	url = git@github.com:JohnEstropia/GCDKit.git
+	url = https://github.com/JohnEstropia/GCDKit.git
