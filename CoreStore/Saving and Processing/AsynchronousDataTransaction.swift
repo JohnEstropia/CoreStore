@@ -216,8 +216,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         self.closure = closure
         
-        super.init(mainContext: mainContext, queue: queue)
-        self.context.undoManager = nil
+        super.init(mainContext: mainContext, queue: queue, supportsUndo: false, bypassesQueueing: false)
     }
     
     internal func perform() {

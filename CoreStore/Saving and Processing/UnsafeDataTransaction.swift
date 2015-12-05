@@ -62,6 +62,10 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      */
     public func rollback() {
         
+        CoreStore.assert(
+            self.supportsUndo,
+            "Attempted to rollback a \(typeName(self)) with Undo support disabled."
+        )
         self.context.rollback()
     }
     
@@ -70,6 +74,10 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      */
     public func undo() {
         
+        CoreStore.assert(
+            self.supportsUndo,
+            "Attempted to undo a \(typeName(self)) with Undo support disabled."
+        )
         self.context.undo()
     }
     
@@ -78,30 +86,36 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      */
     public func redo() {
         
+        CoreStore.assert(
+            self.supportsUndo,
+            "Attempted to redo a \(typeName(self)) with Undo support disabled."
+        )
         self.context.redo()
     }
     
     /**
-    Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
-    
-    - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
-    */
+     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
+     
+     - prameter supportsUndo: `undo()`, `redo()`, and `rollback()` methods are only available when this parameter is `true`, otherwise those method will raise an exception. Defaults to `false`. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
+     - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
+     */
     @warn_unused_result
-    public func beginUnsafe() -> UnsafeDataTransaction {
+    public func beginUnsafe(supportsUndo supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
         return UnsafeDataTransaction(
             mainContext: self.context,
-            queue: self.transactionQueue
+            queue: self.transactionQueue,
+            supportsUndo: supportsUndo
         )
     }
     
     /**
-    Returns the `NSManagedObjectContext` for this unsafe transaction. Use only for cases where external frameworks need an `NSManagedObjectContext` instance to work with.
-    
-    Note that it is the developer's responsibility to ensure the following:
-    - that the `UnsafeDataTransaction` that owns this context should be strongly referenced and prevented from being deallocated during the context's lifetime
-    - that all saves will be done either through the `UnsafeDataTransaction`'s `commit(...)` method, or by calling `save()` manually on the context, its parent, and all other ancestor contexts if there are any.
-    */
+     Returns the `NSManagedObjectContext` for this unsafe transaction. Use only for cases where external frameworks need an `NSManagedObjectContext` instance to work with.
+     
+     Note that it is the developer's responsibility to ensure the following:
+     - that the `UnsafeDataTransaction` that owns this context should be strongly referenced and prevented from being deallocated during the context's lifetime
+     - that all saves will be done either through the `UnsafeDataTransaction`'s `commit(...)` method, or by calling `save()` manually on the context, its parent, and all other ancestor contexts if there are any.
+     */
     public var internalContext: NSManagedObjectContext {
         
         return self.context
@@ -117,9 +131,8 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal override var bypassesQueueing: Bool {
+    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, supportsUndo: Bool) {
         
-        return true
+        super.init(mainContext: mainContext, queue: queue, supportsUndo: supportsUndo, bypassesQueueing: true)
     }
 }
-

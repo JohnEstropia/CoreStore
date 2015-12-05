@@ -43,25 +43,26 @@ public extension CoreStore {
     }
     
     /**
-    Using the `defaultStack`, begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
-    
-    - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-    - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
-    */
+     Using the `defaultStack`, begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
+     */
     public static func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         return self.defaultStack.beginSynchronous(closure)
     }
     
     /**
-    Using the `defaultStack`, begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms. An unsafe transaction object should typically be only used from the main queue.
-    
-    - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
-    */
+     Using the `defaultStack`, begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms. An unsafe transaction object should typically be only used from the main queue.
+     
+     - prameter supportsUndo: `undo()`, `redo()`, and `rollback()` methods are only available when this parameter is `true`, otherwise those method will raise an exception. Defaults to `false`. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
+     - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
+     */
     @warn_unused_result
-    public static func beginUnsafe() -> UnsafeDataTransaction {
+    public static func beginUnsafe(supportsUndo supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
-        return self.defaultStack.beginUnsafe()
+        return self.defaultStack.beginUnsafe(supportsUndo: supportsUndo)
     }
     
     @available(*, deprecated=1.3.1, renamed="beginUnsafe")

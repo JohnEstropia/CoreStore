@@ -194,26 +194,33 @@ public /*abstract*/ class BaseDataTransaction {
     internal let context: NSManagedObjectContext
     internal let transactionQueue: GCDQueue
     internal let childTransactionQueue: GCDQueue = .createSerial("com.corestore.datastack.childtransactionqueue")
+    internal let supportsUndo: Bool
+    internal let bypassesQueueing: Bool
+    
     
     internal var isCommitted = false
     internal var result: SaveResult?
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue) {
-        
-        self.transactionQueue = queue
+    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, supportsUndo: Bool, bypassesQueueing: Bool) {
         
         let context = mainContext.temporaryContextInTransactionWithConcurrencyType(
             queue == .Main
                 ? .MainQueueConcurrencyType
                 : .PrivateQueueConcurrencyType
         )
+        self.transactionQueue = queue
         self.context = context
+        self.supportsUndo = supportsUndo
+        self.bypassesQueueing = bypassesQueueing
         
         context.parentTransaction = self
-    }
-    
-    internal var bypassesQueueing: Bool {
-        
-        return false
+        if !supportsUndo {
+            
+            context.undoManager = nil
+        }
+        else if context.undoManager == nil {
+            
+            context.undoManager = NSUndoManager()
+        }
     }
 }

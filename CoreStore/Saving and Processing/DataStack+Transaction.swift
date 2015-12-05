@@ -50,11 +50,11 @@ public extension DataStack {
     }
     
     /**
-    Begins a transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made.
-    
-    - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-    - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
-    */
+     Begins a transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
+     */
     public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         return SynchronousDataTransaction(
@@ -64,19 +64,21 @@ public extension DataStack {
     }
     
     /**
-    Begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
-    
-    - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
-    */
+     Begins a non-contiguous transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
+     
+     - prameter supportsUndo: `undo()`, `redo()`, and `rollback()` methods are only available when this parameter is `true`, otherwise those method will raise an exception. Defaults to `false`. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
+     - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
+     */
     @warn_unused_result
-    public func beginUnsafe() -> UnsafeDataTransaction {
+    public func beginUnsafe(supportsUndo supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
         return UnsafeDataTransaction(
             mainContext: self.rootSavingContext,
             queue: .createSerial(
                 "com.coreStore.dataStack.unsafeTransactionQueue",
                 targetQueue: .UserInitiated
-            )
+            ),
+            supportsUndo: supportsUndo
         )
     }
     

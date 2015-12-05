@@ -202,6 +202,13 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
+    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: SynchronousDataTransaction) -> Void) {
+        
+        self.closure = closure
+        
+        super.init(mainContext: mainContext, queue: queue, supportsUndo: false, bypassesQueueing: false)
+    }
+    
     internal func performAndWait() -> SaveResult? {
         
         self.transactionQueue.sync {
@@ -217,14 +224,6 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
             }
         }
         return self.result
-    }
-    
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: SynchronousDataTransaction) -> Void) {
-        
-        self.closure = closure
-        
-        super.init(mainContext: mainContext, queue: queue)
-        self.context.undoManager = nil
     }
     
     
