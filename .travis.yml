@@ -1,6 +1,10 @@
 language: objective-c
 osx_image: xcode7.1
 sudo: false
+git:
+  submodules: false
+notifications:
+  email: false
 env:
   global:
   - LC_CTYPE=en_US.UTF-8
@@ -20,7 +24,7 @@ before_install:
   - brew update
   - brew install carthage
 before_script:
-  - carthage update --use-submodules    
+  - carthage update --use-submodules
 script:
   - set -o pipefail
   - xcodebuild -version
