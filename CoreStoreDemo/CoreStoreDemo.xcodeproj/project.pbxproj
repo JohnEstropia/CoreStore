@@ -35,10 +35,10 @@
 		B569651A1B30888A0075EE4A /* FetchingResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965191B30888A0075EE4A /* FetchingResultsViewController.swift */; };
 		B569651C1B30889A0075EE4A /* QueryingResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569651B1B30889A0075EE4A /* QueryingResultsViewController.swift */; };
 		B56965291B3582D30075EE4A /* MigrationDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B56965271B3582D30075EE4A /* MigrationDemo.xcdatamodeld */; };
-		B583A9201AF5F542001F76AF /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B583A91B1AF5F4F4001F76AF /* CoreStore.framework */; };
-		B583A9211AF5F542001F76AF /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B583A91B1AF5F4F4001F76AF /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B5D9C9191B20AB1900E64F0E /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D9C9181B20AB1900E64F0E /* GCDKit.framework */; };
-		B5D9C91A1B20AB1900E64F0E /* GCDKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5D9C9181B20AB1900E64F0E /* GCDKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B5BDC9221C202429008147CD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; };
+		B5BDC9231C202429008147CD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B5BDC9251C202429008147CD /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9241C202429008147CD /* GCDKit.framework */; };
+		B5BDC9261C202429008147CD /* GCDKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9241C202429008147CD /* GCDKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5E599321B5240F50084BD5F /* OrganismTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */; };
 		B5EE25851B36E23C0000406B /* OrganismV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE25841B36E23C0000406B /* OrganismV1.swift */; };
 		B5EE25871B36E2520000406B /* OrganismV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE25861B36E2520000406B /* OrganismV2.swift */; };
@@ -47,58 +47,6 @@
 		B5EE259E1B3EC1B20000406B /* OrganismProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE259D1B3EC1B20000406B /* OrganismProtocol.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		B5202CF11C044CC800DED140 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B52DD1741BE1F8CC00949AFE;
-			remoteInfo = "CoreStore OSX";
-		};
-		B5202CF31C044CC800DED140 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B52DD17D1BE1F8CC00949AFE;
-			remoteInfo = "CoreStoreTests OSX";
-		};
-		B56321C51BD65965006C9394 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B563216F1BD65082006C9394;
-			remoteInfo = "CoreStore watchOS";
-		};
-		B583A91A1AF5F4F4001F76AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2F03A53019C5C6DA005002A5;
-			remoteInfo = CoreStore;
-		};
-		B583A91C1AF5F4F4001F76AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2F03A53B19C5C6DA005002A5;
-			remoteInfo = CoreStoreTests;
-		};
-		B583A91E1AF5F512001F76AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2F03A52F19C5C6DA005002A5;
-			remoteInfo = CoreStore;
-		};
-		B583A9221AF5F542001F76AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2F03A52F19C5C6DA005002A5;
-			remoteInfo = CoreStore;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		B583A9241AF5F542001F76AF /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -106,8 +54,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B5D9C91A1B20AB1900E64F0E /* GCDKit.framework in Embed Frameworks */,
-				B583A9211AF5F542001F76AF /* CoreStore.framework in Embed Frameworks */,
+				B5BDC9261C202429008147CD /* GCDKit.framework in Embed Frameworks */,
+				B5BDC9231C202429008147CD /* CoreStore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -145,8 +93,8 @@
 		B56965191B30888A0075EE4A /* FetchingResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchingResultsViewController.swift; sourceTree = "<group>"; };
 		B569651B1B30889A0075EE4A /* QueryingResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryingResultsViewController.swift; sourceTree = "<group>"; };
 		B56965281B3582D30075EE4A /* MigrationDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemo.xcdatamodel; sourceTree = "<group>"; };
-		B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CoreStore.xcodeproj; path = ../CoreStore.xcodeproj; sourceTree = "<group>"; };
-		B5D9C9181B20AB1900E64F0E /* GCDKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GCDKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5BDC9211C202429008147CD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = CoreStore.framework; path = "/Users/JohnEstropia/Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/CoreStore.framework"; sourceTree = "<absolute>"; };
+		B5BDC9241C202429008147CD /* GCDKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = GCDKit.framework; path = "/Users/JohnEstropia/Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/GCDKit.framework"; sourceTree = "<absolute>"; };
 		B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganismTableViewCell.swift; path = "CoreStoreDemo/MIgrations Demo/OrganismTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		B5EE25801B36E1B00000406B /* MigrationDemoV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemoV2.xcdatamodel; sourceTree = "<group>"; };
 		B5EE25841B36E23C0000406B /* OrganismV1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganismV1.swift; sourceTree = "<group>"; };
@@ -163,9 +111,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B52977E11B120F8A003D50A5 /* CoreLocation.framework in Frameworks */,
+				B5BDC9221C202429008147CD /* CoreStore.framework in Frameworks */,
+				B5BDC9251C202429008147CD /* GCDKit.framework in Frameworks */,
 				B52977DF1B120F83003D50A5 /* MapKit.framework in Frameworks */,
-				B5D9C9191B20AB1900E64F0E /* GCDKit.framework in Frameworks */,
-				B583A9201AF5F542001F76AF /* CoreStore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,9 +144,9 @@
 		B52977E21B120F90003D50A5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */,
-				B5D9C9181B20AB1900E64F0E /* GCDKit.framework */,
 				B52977E01B120F8A003D50A5 /* CoreLocation.framework */,
+				B5BDC9211C202429008147CD /* CoreStore.framework */,
+				B5BDC9241C202429008147CD /* GCDKit.framework */,
 				B52977DE1B120F83003D50A5 /* MapKit.framework */,
 			);
 			name = Frameworks;
@@ -296,18 +244,6 @@
 			path = "Migrations Demo";
 			sourceTree = "<group>";
 		};
-		B583A9151AF5F4F3001F76AF /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B583A91B1AF5F4F4001F76AF /* CoreStore.framework */,
-				B583A91D1AF5F4F4001F76AF /* CoreStoreTests.xctest */,
-				B56321C61BD65965006C9394 /* CoreStore.framework */,
-				B5202CF21C044CC800DED140 /* CoreStore.framework */,
-				B5202CF41C044CC800DED140 /* CoreStoreTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -323,8 +259,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B583A91F1AF5F512001F76AF /* PBXTargetDependency */,
-				B583A9231AF5F542001F76AF /* PBXTargetDependency */,
 			);
 			name = CoreStoreDemo;
 			productName = CoreStoreDemo;
@@ -357,56 +291,12 @@
 			mainGroup = B54AAD401AF4D26E00848AE0;
 			productRefGroup = B54AAD4A1AF4D26E00848AE0 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = B583A9151AF5F4F3001F76AF /* Products */;
-					ProjectRef = B583A9141AF5F4F3001F76AF /* CoreStore.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				B54AAD481AF4D26E00848AE0 /* CoreStoreDemo */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		B5202CF21C044CC800DED140 /* CoreStore.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CoreStore.framework;
-			remoteRef = B5202CF11C044CC800DED140 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B5202CF41C044CC800DED140 /* CoreStoreTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = CoreStoreTests.xctest;
-			remoteRef = B5202CF31C044CC800DED140 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B56321C61BD65965006C9394 /* CoreStore.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CoreStore.framework;
-			remoteRef = B56321C51BD65965006C9394 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B583A91B1AF5F4F4001F76AF /* CoreStore.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = CoreStore.framework;
-			remoteRef = B583A91A1AF5F4F4001F76AF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B583A91D1AF5F4F4001F76AF /* CoreStoreTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = CoreStoreTests.xctest;
-			remoteRef = B583A91C1AF5F4F4001F76AF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B54AAD471AF4D26E00848AE0 /* Resources */ = {
@@ -459,19 +349,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		B583A91F1AF5F512001F76AF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CoreStore;
-			targetProxy = B583A91E1AF5F512001F76AF /* PBXContainerItemProxy */;
-		};
-		B583A9231AF5F542001F76AF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CoreStore;
-			targetProxy = B583A9221AF5F542001F76AF /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		B54AAD571AF4D26E00848AE0 /* Main.storyboard */ = {

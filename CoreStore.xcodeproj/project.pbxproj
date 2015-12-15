@@ -16,7 +16,6 @@
 		B5202CFA1C04688100DED140 /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
 		B5202CFD1C046E8400DED140 /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
 		B52DD17E1BE1F8CD00949AFE /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52DD1741BE1F8CC00949AFE /* CoreStore.framework */; };
-		B52DD1901BE1F8E600949AFE /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D808021A34715700A44484 /* GCDKit.framework */; };
 		B52DD1911BE1F8EB00949AFE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5548CD51BD65AE00077652A /* Foundation.framework */; };
 		B52DD1921BE1F8F000949AFE /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5548CD71BD65AE50077652A /* CoreData.framework */; };
 		B52DD1931BE1F8FD00949AFE /* CoreStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A53519C5C6DA005002A5 /* CoreStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -78,7 +77,6 @@
 		B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007151B4018AB00A9A8F9 /* MigrationChain.swift */; };
 		B563217A1BD650DE006C9394 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56321791BD650DE006C9394 /* CoreData.framework */; };
 		B563217C1BD650E3006C9394 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B563217B1BD650E3006C9394 /* Foundation.framework */; };
-		B563217D1BD650FA006C9394 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56321691BD64F99006C9394 /* GCDKit.framework */; };
 		B563217E1BD65110006C9394 /* CoreStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A53519C5C6DA005002A5 /* CoreStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B563217F1BD65216006C9394 /* CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F291E2619C6D3CF007AF63F /* CoreStore.swift */; };
 		B56321801BD65216006C9394 /* NSError+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */; };
@@ -140,12 +138,13 @@
 		B56965241B356B820075EE4A /* MigrationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965231B356B820075EE4A /* MigrationResult.swift */; };
 		B59D5C221B5BA34B00453479 /* NSFileManager+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */; };
 		B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A261201B64BFDB006EB6D3 /* MigrationType.swift */; };
+		B5BDC91D1C2023CF008147CD /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC91C1C2023CF008147CD /* GCDKit.framework */; };
+		B5BDC91E1C2023E8008147CD /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC91C1C2023CF008147CD /* GCDKit.framework */; };
 		B5D1E22C19FA9FBC003B2874 /* NSError+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */; };
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		B5D372861A39CDDB00F583D9 /* TestEntity1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D372851A39CDDB00F583D9 /* TestEntity1.swift */; };
 		B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D39A0119FD00C9000E91BB /* Foundation.framework */; };
 		B5D5E0CF1A4D6AAB006468AF /* TestEntity2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */; };
-		B5D8080E1A3471A500A44484 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D808021A34715700A44484 /* GCDKit.framework */; };
 		B5E834B91B76311F001D3D50 /* BaseDataTransaction+Importing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */; };
 		B5E834BB1B7691F3001D3D50 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E834BA1B7691F3001D3D50 /* Functions.swift */; };
 		B5E84EDF1AFF84500064E85B /* DataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EDB1AFF84500064E85B /* DataStack.swift */; };
@@ -200,68 +199,12 @@
 			remoteGlobalIDString = B52DD1731BE1F8CC00949AFE;
 			remoteInfo = "CoreStore OSX";
 		};
-		B52DD18E1BE1F8DC00949AFE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B563212A1BD6359A006C9394;
-			remoteInfo = "GCDKit OSX";
-		};
-		B56321641BD64F99006C9394 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B563212B1BD6359A006C9394;
-			remoteInfo = "GCDKit OSX";
-		};
-		B56321661BD64F99006C9394 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B56321401BD63D14006C9394;
-			remoteInfo = "GCDKitTests OSX";
-		};
-		B56321681BD64F99006C9394 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B56321501BD6408F006C9394;
-			remoteInfo = "GCDKit watchOS";
-		};
-		B56321771BD650A3006C9394 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B563214F1BD6408F006C9394;
-			remoteInfo = "GCDKit watchOS";
-		};
 		B5D372871A39CF4D00F583D9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2F03A52719C5C6DA005002A5 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2F03A52F19C5C6DA005002A5;
 			remoteInfo = CoreStore;
-		};
-		B5D808011A34715700A44484 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2FBBCACB19A9FE610070E4AB;
-			remoteInfo = GCDKit;
-		};
-		B5D808031A34715700A44484 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 2FBBCAD619A9FE610070E4AB;
-			remoteInfo = GCDKitTests;
-		};
-		B5D9C9081B20A87D00E64F0E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 2FBBCACA19A9FE610070E4AB;
-			remoteInfo = GCDKit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -277,7 +220,6 @@
 		B504D0D51B02362500B2BBB1 /* CoreStore+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+Setup.swift"; sourceTree = "<group>"; };
 		B51BE0691B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectModel+Setup.swift"; sourceTree = "<group>"; };
 		B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFetchedResultsController+Convenience.swift"; sourceTree = "<group>"; };
-		B527A17D1C16D98F007C0C35 /* CartFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CartFile; sourceTree = "<group>"; };
 		B52DD1741BE1F8CC00949AFE /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B54A6A541BA15F2A007870FD /* FetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
@@ -293,12 +235,14 @@
 		B56965231B356B820075EE4A /* MigrationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationResult.swift; sourceTree = "<group>"; };
 		B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Setup.swift"; sourceTree = "<group>"; };
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
+		B5BDC91A1C202269008147CD /* CartFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CartFile; sourceTree = "<group>"; };
+		B5BDC91C1C2023CF008147CD /* GCDKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GCDKit.framework; path = "../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/GCDKit.framework"; sourceTree = "<group>"; };
+		B5BDC9271C2024F2008147CD /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = SOURCE_ROOT; };
 		B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+CoreStore.swift"; sourceTree = "<group>"; };
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		B5D372851A39CDDB00F583D9 /* TestEntity1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity1.swift; sourceTree = "<group>"; };
 		B5D39A0119FD00C9000E91BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity2.swift; sourceTree = "<group>"; };
-		B5D806C51A34715700A44484 /* GCDKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GCDKit.xcodeproj; sourceTree = "<group>"; };
 		B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = CoreStore.podspec; sourceTree = SOURCE_ROOT; };
 		B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+Importing.swift"; sourceTree = "<group>"; };
 		B5E834BA1B7691F3001D3D50 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
@@ -353,7 +297,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5D8080E1A3471A500A44484 /* GCDKit.framework in Frameworks */,
+				B5BDC91D1C2023CF008147CD /* GCDKit.framework in Frameworks */,
 				B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */,
 				2F03A54D19C5C872005002A5 /* CoreData.framework in Frameworks */,
 			);
@@ -370,9 +314,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5BDC91E1C2023E8008147CD /* GCDKit.framework in Frameworks */,
 				B52DD1921BE1F8F000949AFE /* CoreData.framework in Frameworks */,
 				B52DD1911BE1F8EB00949AFE /* Foundation.framework in Frameworks */,
-				B52DD1901BE1F8E600949AFE /* GCDKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,7 +332,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B563217D1BD650FA006C9394 /* GCDKit.framework in Frameworks */,
 				B563217C1BD650E3006C9394 /* Foundation.framework in Frameworks */,
 				B563217A1BD650DE006C9394 /* CoreData.framework in Frameworks */,
 			);
@@ -400,7 +343,6 @@
 		2F03A52619C5C6DA005002A5 = {
 			isa = PBXGroup;
 			children = (
-				B5D806BB1A34715700A44484 /* Libraries */,
 				2F291E3119C6D4D3007AF63F /* Frameworks */,
 				2F03A53219C5C6DA005002A5 /* CoreStore */,
 				2F03A53C19C5C6DA005002A5 /* CoreStoreTests */,
@@ -447,7 +389,8 @@
 				B5E84ED81AFF82360064E85B /* README.md */,
 				B5E84ED91AFF82360064E85B /* LICENSE */,
 				B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */,
-				B527A17D1C16D98F007C0C35 /* CartFile */,
+				B5BDC91A1C202269008147CD /* CartFile */,
+				B5BDC9271C2024F2008147CD /* .travis.yml */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -475,6 +418,7 @@
 		2F291E3119C6D4D3007AF63F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B5BDC91C1C2023CF008147CD /* GCDKit.framework */,
 				B5548CD71BD65AE50077652A /* CoreData.framework */,
 				B56321791BD650DE006C9394 /* CoreData.framework */,
 				2F03A54C19C5C872005002A5 /* CoreData.framework */,
@@ -495,34 +439,6 @@
 				B56965231B356B820075EE4A /* MigrationResult.swift */,
 			);
 			path = Migrating;
-			sourceTree = "<group>";
-		};
-		B5D806BB1A34715700A44484 /* Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				B5D806BC1A34715700A44484 /* GCDKit */,
-			);
-			path = Libraries;
-			sourceTree = "<group>";
-		};
-		B5D806BC1A34715700A44484 /* GCDKit */ = {
-			isa = PBXGroup;
-			children = (
-				B5D806C51A34715700A44484 /* GCDKit.xcodeproj */,
-			);
-			path = GCDKit;
-			sourceTree = "<group>";
-		};
-		B5D806C61A34715700A44484 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				B5D808021A34715700A44484 /* GCDKit.framework */,
-				B5D808041A34715700A44484 /* GCDKitTests iOS.xctest */,
-				B56321651BD64F99006C9394 /* GCDKit.framework */,
-				B56321671BD64F99006C9394 /* GCDKitTests OSX.xctest */,
-				B56321691BD64F99006C9394 /* GCDKit.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		B5E834B61B7630BD001D3D50 /* Importing Data */ = {
@@ -689,7 +605,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B5D9C9091B20A87D00E64F0E /* PBXTargetDependency */,
 			);
 			name = "CoreStore iOS";
 			productName = CoreStore;
@@ -726,7 +641,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B52DD18F1BE1F8DC00949AFE /* PBXTargetDependency */,
 			);
 			name = "CoreStore OSX";
 			productName = "CoreStore OSX";
@@ -763,7 +677,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B56321781BD650A3006C9394 /* PBXTargetDependency */,
 			);
 			name = "CoreStore watchOS";
 			productName = "CoreStore watchOS";
@@ -808,12 +721,6 @@
 			mainGroup = 2F03A52619C5C6DA005002A5;
 			productRefGroup = 2F03A53119C5C6DA005002A5 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = B5D806C61A34715700A44484 /* Products */;
-					ProjectRef = B5D806C51A34715700A44484 /* GCDKit.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				2F03A52F19C5C6DA005002A5 /* CoreStore iOS */,
@@ -824,44 +731,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		B56321651BD64F99006C9394 /* GCDKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = GCDKit.framework;
-			remoteRef = B56321641BD64F99006C9394 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B56321671BD64F99006C9394 /* GCDKitTests OSX.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "GCDKitTests OSX.xctest";
-			remoteRef = B56321661BD64F99006C9394 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B56321691BD64F99006C9394 /* GCDKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = GCDKit.framework;
-			remoteRef = B56321681BD64F99006C9394 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B5D808021A34715700A44484 /* GCDKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = GCDKit.framework;
-			remoteRef = B5D808011A34715700A44484 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		B5D808041A34715700A44484 /* GCDKitTests iOS.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "GCDKitTests iOS.xctest";
-			remoteRef = B5D808031A34715700A44484 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		2F03A52E19C5C6DA005002A5 /* Resources */ = {
@@ -1115,25 +984,10 @@
 			target = B52DD1731BE1F8CC00949AFE /* CoreStore OSX */;
 			targetProxy = B52DD17F1BE1F8CD00949AFE /* PBXContainerItemProxy */;
 		};
-		B52DD18F1BE1F8DC00949AFE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "GCDKit OSX";
-			targetProxy = B52DD18E1BE1F8DC00949AFE /* PBXContainerItemProxy */;
-		};
-		B56321781BD650A3006C9394 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "GCDKit watchOS";
-			targetProxy = B56321771BD650A3006C9394 /* PBXContainerItemProxy */;
-		};
 		B5D372881A39CF4D00F583D9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2F03A52F19C5C6DA005002A5 /* CoreStore iOS */;
 			targetProxy = B5D372871A39CF4D00F583D9 /* PBXContainerItemProxy */;
-		};
-		B5D9C9091B20A87D00E64F0E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = GCDKit;
-			targetProxy = B5D9C9081B20A87D00E64F0E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
