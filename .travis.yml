@@ -5,10 +5,14 @@ git:
   submodules: false
 notifications:
   email: false
+branches:
+  only:
+    - master
+    - develop
 env:
   global:
-  - LC_CTYPE=en_US.UTF-8
-  - LANG=en_US.UTF-8
+    - LC_CTYPE=en_US.UTF-8
+    - LANG=en_US.UTF-8
   matrix:
     - DESTINATION="OS=9.1,name=iPhone 6s" SCHEME="CoreStore iOS" SDK=iphonesimulator9.1 RUN_TESTS="YES" POD_LINT="NO"
     - DESTINATION="OS=9.0,name=iPhone 6 Plus" SCHEME="CoreStore iOS" SDK=iphonesimulator9.1 RUN_TESTS="YES" POD_LINT="NO"	

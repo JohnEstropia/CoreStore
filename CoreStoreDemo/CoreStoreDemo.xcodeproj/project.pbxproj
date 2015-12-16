@@ -35,6 +35,7 @@
 		B569651A1B30888A0075EE4A /* FetchingResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965191B30888A0075EE4A /* FetchingResultsViewController.swift */; };
 		B569651C1B30889A0075EE4A /* QueryingResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569651B1B30889A0075EE4A /* QueryingResultsViewController.swift */; };
 		B56965291B3582D30075EE4A /* MigrationDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B56965271B3582D30075EE4A /* MigrationDemo.xcdatamodeld */; };
+		B5A93A141C214E5900E47273 /* SpotlightDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A93A131C214E5900E47273 /* SpotlightDemoViewController.swift */; };
 		B5BDC9221C202429008147CD /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; };
 		B5BDC9231C202429008147CD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5BDC9251C202429008147CD /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9241C202429008147CD /* GCDKit.framework */; };
@@ -93,6 +94,7 @@
 		B56965191B30888A0075EE4A /* FetchingResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchingResultsViewController.swift; sourceTree = "<group>"; };
 		B569651B1B30889A0075EE4A /* QueryingResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryingResultsViewController.swift; sourceTree = "<group>"; };
 		B56965281B3582D30075EE4A /* MigrationDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemo.xcdatamodel; sourceTree = "<group>"; };
+		B5A93A131C214E5900E47273 /* SpotlightDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotlightDemoViewController.swift; sourceTree = "<group>"; };
 		B5BDC9211C202429008147CD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = CoreStore.framework; path = "/Users/JohnEstropia/Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/CoreStore.framework"; sourceTree = "<absolute>"; };
 		B5BDC9241C202429008147CD /* GCDKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = GCDKit.framework; path = "/Users/JohnEstropia/Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/GCDKit.framework"; sourceTree = "<absolute>"; };
 		B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganismTableViewCell.swift; path = "CoreStoreDemo/MIgrations Demo/OrganismTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
@@ -173,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				B54AAD4E1AF4D26E00848AE0 /* AppDelegate.swift */,
+				B5A93A121C214D9D00E47273 /* Spotlight Demo */,
 				B566E3271B117AE700F4F0C6 /* Stack Setup Demo */,
 				B503FADA1AFDC71700F90881 /* List and Object Observers Demo */,
 				B52977DB1B120F2C003D50A5 /* Transactions Demo */,
@@ -242,6 +245,14 @@
 				B5125C131B521BA7003A42C7 /* OrganismV3ToV2.xcmappingmodel */,
 			);
 			path = "Migrations Demo";
+			sourceTree = "<group>";
+		};
+		B5A93A121C214D9D00E47273 /* Spotlight Demo */ = {
+			isa = PBXGroup;
+			children = (
+				B5A93A131C214E5900E47273 /* SpotlightDemoViewController.swift */,
+			);
+			path = "Spotlight Demo";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -342,6 +353,7 @@
 				B56964D71B231AE90075EE4A /* StackSetupDemo.xcdatamodeld in Sources */,
 				B56964DC1B231BCB0075EE4A /* FemaleAccount.swift in Sources */,
 				B5EE259E1B3EC1B20000406B /* OrganismProtocol.swift in Sources */,
+				B5A93A141C214E5900E47273 /* SpotlightDemoViewController.swift in Sources */,
 				B5EE258C1B36E40D0000406B /* MigrationsDemoViewController.swift in Sources */,
 				B569651C1B30889A0075EE4A /* QueryingResultsViewController.swift in Sources */,
 				B5125C121B521B78003A42C7 /* OrganismV2ToV3.xcmappingmodel in Sources */,

@@ -138,6 +138,8 @@
 		B56965241B356B820075EE4A /* MigrationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965231B356B820075EE4A /* MigrationResult.swift */; };
 		B59D5C221B5BA34B00453479 /* NSFileManager+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */; };
 		B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A261201B64BFDB006EB6D3 /* MigrationType.swift */; };
+		B5A93A111C212CB800E47273 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A93A101C212CB800E47273 /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		B5A93A161C21679A00E47273 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A93A151C21679A00E47273 /* MobileCoreServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B5BDC91D1C2023CF008147CD /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC91C1C2023CF008147CD /* GCDKit.framework */; };
 		B5BDC91E1C2023E8008147CD /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC91C1C2023CF008147CD /* GCDKit.framework */; };
 		B5D1E22C19FA9FBC003B2874 /* NSError+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */; };
@@ -235,6 +237,8 @@
 		B56965231B356B820075EE4A /* MigrationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationResult.swift; sourceTree = "<group>"; };
 		B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Setup.swift"; sourceTree = "<group>"; };
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
+		B5A93A101C212CB800E47273 /* CoreSpotlight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreSpotlight.framework; path = System/Library/Frameworks/CoreSpotlight.framework; sourceTree = SDKROOT; };
+		B5A93A151C21679A00E47273 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		B5BDC91A1C202269008147CD /* CartFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CartFile; sourceTree = "<group>"; };
 		B5BDC91C1C2023CF008147CD /* GCDKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GCDKit.framework; path = "../../../Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/GCDKit.framework"; sourceTree = "<group>"; };
 		B5BDC9271C2024F2008147CD /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = SOURCE_ROOT; };
@@ -297,9 +301,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5BDC91D1C2023CF008147CD /* GCDKit.framework in Frameworks */,
+				B5A93A111C212CB800E47273 /* CoreSpotlight.framework in Frameworks */,
+				B5A93A161C21679A00E47273 /* MobileCoreServices.framework in Frameworks */,
 				B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */,
 				2F03A54D19C5C872005002A5 /* CoreData.framework in Frameworks */,
+				B5BDC91D1C2023CF008147CD /* GCDKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +424,8 @@
 		2F291E3119C6D4D3007AF63F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B5A93A151C21679A00E47273 /* MobileCoreServices.framework */,
+				B5A93A101C212CB800E47273 /* CoreSpotlight.framework */,
 				B5BDC91C1C2023CF008147CD /* GCDKit.framework */,
 				B5548CD71BD65AE50077652A /* CoreData.framework */,
 				B56321791BD650DE006C9394 /* CoreData.framework */,
