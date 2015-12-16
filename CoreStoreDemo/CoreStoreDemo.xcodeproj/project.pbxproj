@@ -40,6 +40,8 @@
 		B5BDC9231C202429008147CD /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5BDC9251C202429008147CD /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9241C202429008147CD /* GCDKit.framework */; };
 		B5BDC9261C202429008147CD /* GCDKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9241C202429008147CD /* GCDKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B5C12CE71C21B2F70098E05F /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5C12CE61C21B2F70098E05F /* CoreSpotlight.framework */; };
+		B5C12CE91C21B2FD0098E05F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5C12CE81C21B2FD0098E05F /* MobileCoreServices.framework */; };
 		B5E599321B5240F50084BD5F /* OrganismTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */; };
 		B5EE25851B36E23C0000406B /* OrganismV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE25841B36E23C0000406B /* OrganismV1.swift */; };
 		B5EE25871B36E2520000406B /* OrganismV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE25861B36E2520000406B /* OrganismV2.swift */; };
@@ -97,6 +99,8 @@
 		B5A93A131C214E5900E47273 /* SpotlightDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotlightDemoViewController.swift; sourceTree = "<group>"; };
 		B5BDC9211C202429008147CD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = CoreStore.framework; path = "/Users/JohnEstropia/Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/CoreStore.framework"; sourceTree = "<absolute>"; };
 		B5BDC9241C202429008147CD /* GCDKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = GCDKit.framework; path = "/Users/JohnEstropia/Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/GCDKit.framework"; sourceTree = "<absolute>"; };
+		B5C12CE61C21B2F70098E05F /* CoreSpotlight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreSpotlight.framework; path = System/Library/Frameworks/CoreSpotlight.framework; sourceTree = SDKROOT; };
+		B5C12CE81C21B2FD0098E05F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganismTableViewCell.swift; path = "CoreStoreDemo/MIgrations Demo/OrganismTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		B5EE25801B36E1B00000406B /* MigrationDemoV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemoV2.xcdatamodel; sourceTree = "<group>"; };
 		B5EE25841B36E23C0000406B /* OrganismV1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganismV1.swift; sourceTree = "<group>"; };
@@ -112,6 +116,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5C12CE91C21B2FD0098E05F /* MobileCoreServices.framework in Frameworks */,
+				B5C12CE71C21B2F70098E05F /* CoreSpotlight.framework in Frameworks */,
 				B52977E11B120F8A003D50A5 /* CoreLocation.framework in Frameworks */,
 				B5BDC9221C202429008147CD /* CoreStore.framework in Frameworks */,
 				B5BDC9251C202429008147CD /* GCDKit.framework in Frameworks */,
@@ -146,6 +152,8 @@
 		B52977E21B120F90003D50A5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B5C12CE81C21B2FD0098E05F /* MobileCoreServices.framework */,
+				B5C12CE61C21B2F70098E05F /* CoreSpotlight.framework */,
 				B52977E01B120F8A003D50A5 /* CoreLocation.framework */,
 				B5BDC9211C202429008147CD /* CoreStore.framework */,
 				B5BDC9241C202429008147CD /* GCDKit.framework */,

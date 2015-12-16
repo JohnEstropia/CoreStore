@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreSpotlight
 
 
 // MARK: - AppDelegate
@@ -21,6 +22,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         application.statusBarStyle = .LightContent
+        return true
+    }
+    
+    func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
+        
+        guard #available(iOS 9.0, *) else {
+            
+            return false
+        }
+        
+        guard userActivity.activityType == CSSearchableItemActionType,
+            let identifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String else {
+            
+            return false
+        }
+        
+        let alert = UIAlertController(title: identifier, message: "You have tapped \(identifier)", preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        self.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
+        
         return true
     }
 }

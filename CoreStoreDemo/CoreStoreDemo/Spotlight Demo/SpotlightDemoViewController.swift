@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreSpotlight
+import MobileCoreServices
 
 
 // MARK: - SpotlightDemoViewController
@@ -41,23 +42,64 @@ class SpotlightDemoViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
-        if case .Delete = editingStyle {
+        guard case .Delete = editingStyle else {
             
-            tableView.beginUpdates()
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-            self.dataSource.removeAtIndex(indexPath.row)
-            tableView.endUpdates()
+            return
         }
+        
+        let identifier = self.dataSource[indexPath.row].0
+        if #available(iOS 9.0, *) {
+            
+            CSSearchableIndex.defaultSearchableIndex().deleteSearchableItemsWithIdentifiers(
+                [identifier],
+                completionHandler: { error in
+                
+                    // ...
+                }
+            )
+        }
+        
+        tableView.beginUpdates()
+        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        self.dataSource.removeAtIndex(indexPath.row)
+        tableView.endUpdates()
     }
     
     // MARK: Private
     
     @IBAction private dynamic func addBarButtonTapped(sender: UIBarButtonItem) {
         
-        let items = [("John", "iOS team"), ("Bob", "Android team"), ("Joe", "Infra team"), ("Ryan", "Director"), ("Jake", "Design team"), ("Mark", "Testing team")]
+        let items = [
+            ("John", "iOS team"),
+            ("Bob", "Android team"),
+            ("Joe", "Infra team"),
+            ("Ryan", "Director"),
+            ("Jake", "Design team"),
+            ("Mark", "Testing team")
+        ]
         guard let nextItem = items.filter({ !self.dataSource.map({ $0.0 }).contains($0.0) }).first else {
             
             return
+        }
+        
+        if #available(iOS 9.0, *) {
+            
+            let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeJSON as String)
+            attributeSet.title = nextItem.0
+            attributeSet.contentDescription = nextItem.1
+            
+            let item = CSSearchableItem(
+                uniqueIdentifier: nextItem.0,
+                domainIdentifier: "jp.eureka.sample",
+                attributeSet: attributeSet
+            )
+            CSSearchableIndex.defaultSearchableIndex().indexSearchableItems(
+                [item],
+                completionHandler: { (error) -> Void in
+                    
+                    //...
+                }
+            )
         }
         
         let tableView = self.tableView
