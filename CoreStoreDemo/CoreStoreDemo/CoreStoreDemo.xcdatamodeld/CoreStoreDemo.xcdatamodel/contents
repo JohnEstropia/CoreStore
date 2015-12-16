@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14D136" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Automatic">
     <entity name="Palette" representedClassName="CoreStoreDemo.Palette">
         <attribute name="brightness" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="colorName" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
@@ -24,6 +24,9 @@
         <memberEntity name="TimeZone"/>
     </configuration>
     <configuration name="ObservingDemo">
+        <memberEntity name="Palette"/>
+    </configuration>
+    <configuration name="SpotlightDemo">
         <memberEntity name="Palette"/>
     </configuration>
     <configuration name="TransactionsDemo">
