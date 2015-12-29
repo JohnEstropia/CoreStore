@@ -123,6 +123,11 @@ public extension BaseDataTransaction {
                 
                 if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
+                    guard T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                    
+                        return nil
+                    }
+                    
                     try object.updateFromImportSource(source, inTransaction: self)
                     return object
                 }
