@@ -1,5 +1,5 @@
 # CoreStore
-[![Build Status](https://travis-ci.org/JohnEstropia/CoreStore.svg)](https://travis-ci.org/JohnEstropia/CoreStore)
+[![Build Status](https://img.shields.io/travis/JohnEstropia/CoreStore/develop.svg)](https://travis-ci.org/JohnEstropia/CoreStore)
 [![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![License](https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat)](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE)
