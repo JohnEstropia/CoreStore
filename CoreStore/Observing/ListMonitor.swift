@@ -336,6 +336,56 @@ public final class ListMonitor<T: NSManagedObject> {
     }
     
     /**
+     Returns the `NSFetchedResultsSectionInfo`s for all sections
+     
+     - returns: the `NSFetchedResultsSectionInfo`s for all sections
+     */
+    @warn_unused_result
+    public func sections() -> [NSFetchedResultsSectionInfo] {
+        
+        CoreStore.assert(
+            !self.isPendingRefetch || NSThread.isMainThread(),
+            "Attempted to access a \(typeName(self)) outside the main thread while a refetch is in progress."
+        )
+        
+        return self.fetchedResultsController.sections ?? []
+    }
+    
+    /**
+     Returns the target section for a specified "Section Index" title and index.
+     
+     - parameter title: the title of the Section Index
+     - parameter index: the index of the Section Index
+     - returns: the target section for the specified "Section Index" title and index.
+     */
+    @warn_unused_result
+    public func targetSectionForSectionIndex(title title: String, index: Int) -> Int {
+        
+        CoreStore.assert(
+            !self.isPendingRefetch || NSThread.isMainThread(),
+            "Attempted to access a \(typeName(self)) outside the main thread while a refetch is in progress."
+        )
+        
+        return self.fetchedResultsController.sectionForSectionIndexTitle(title, atIndex: index)
+    }
+    
+    /**
+     Returns the section index titles for all sections
+     
+     - returns: the section index titles for all sections
+     */
+    @warn_unused_result
+    public func sectionIndexTitles() -> [String] {
+        
+        CoreStore.assert(
+            !self.isPendingRefetch || NSThread.isMainThread(),
+            "Attempted to access a \(typeName(self)) outside the main thread while a refetch is in progress."
+        )
+        
+        return self.fetchedResultsController.sectionIndexTitles
+    }
+    
+    /**
     Returns the index of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
     
     - parameter object: the `NSManagedObject` to search the index of
