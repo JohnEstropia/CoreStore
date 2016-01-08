@@ -45,7 +45,7 @@ public extension BaseDataTransaction {
         source: T.ImportSource) throws -> T? {
             
             CoreStore.assert(
-                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
@@ -74,7 +74,7 @@ public extension BaseDataTransaction {
         sourceArray: S) throws -> [T] {
             
             CoreStore.assert(
-                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
@@ -109,7 +109,7 @@ public extension BaseDataTransaction {
         source: T.ImportSource) throws -> T?  {
             
             CoreStore.assert(
-                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
@@ -160,7 +160,7 @@ public extension BaseDataTransaction {
         @noescape preProcess: (mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] {
             
             CoreStore.assert(
-                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
