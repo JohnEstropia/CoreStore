@@ -70,6 +70,9 @@
 		B52DD1CC1BE1F94D00949AFE /* CoreStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F03A53F19C5C6DA005002A5 /* CoreStoreTests.swift */; };
 		B52DD1CD1BE1F94D00949AFE /* TestEntity1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D372851A39CDDB00F583D9 /* TestEntity1.swift */; };
 		B52DD1CE1BE1F94D00949AFE /* TestEntity2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */; };
+		B531CC4D1C22529300AD5104 /* CoreSpotlightSearchableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531CC4C1C22529300AD5104 /* CoreSpotlightSearchableObject.swift */; };
+		B531CC4E1C22529300AD5104 /* CoreSpotlightSearchableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531CC4C1C22529300AD5104 /* CoreSpotlightSearchableObject.swift */; };
+		B531CC4F1C22529300AD5104 /* CoreSpotlightSearchableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B531CC4C1C22529300AD5104 /* CoreSpotlightSearchableObject.swift */; };
 		B54A6A551BA15F2A007870FD /* FetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54A6A541BA15F2A007870FD /* FetchedResultsControllerDelegate.swift */; };
 		B5598BCC1BE2093D0092EFCE /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007101B3F6BD500A9A8F9 /* Into.swift */; };
@@ -224,6 +227,7 @@
 		B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFetchedResultsController+Convenience.swift"; sourceTree = "<group>"; };
 		B52DD1741BE1F8CC00949AFE /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B531CC4C1C22529300AD5104 /* CoreSpotlightSearchableObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreSpotlightSearchableObject.swift; sourceTree = "<group>"; };
 		B54A6A541BA15F2A007870FD /* FetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
 		B5548CD51BD65AE00077652A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B5548CD71BD65AE50077652A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
@@ -374,6 +378,7 @@
 				2F03A53519C5C6DA005002A5 /* CoreStore.h */,
 				2F291E2619C6D3CF007AF63F /* CoreStore.swift */,
 				B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */,
+				B531CC4B1C22524600AD5104 /* CoreSpotlight Indexing */,
 				B5E84EDA1AFF84500064E85B /* Setting Up */,
 				B5E84EE21AFF84610064E85B /* Logging */,
 				B5E84EE91AFF846E0064E85B /* Saving and Processing */,
@@ -435,6 +440,14 @@
 				B5D39A0119FD00C9000E91BB /* Foundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B531CC4B1C22524600AD5104 /* CoreSpotlight Indexing */ = {
+			isa = PBXGroup;
+			children = (
+				B531CC4C1C22529300AD5104 /* CoreSpotlightSearchableObject.swift */,
+			);
+			path = "CoreSpotlight Indexing";
 			sourceTree = "<group>";
 		};
 		B56964D11B22FF700075EE4A /* Migrating */ = {
@@ -829,6 +842,7 @@
 				B5E84F391AFF85470064E85B /* NSManagedObjectContext+Querying.swift in Sources */,
 				B5E84EE81AFF84610064E85B /* CoreStoreLogger.swift in Sources */,
 				B5E84F311AFF849C0064E85B /* WeakObject.swift in Sources */,
+				B531CC4D1C22529300AD5104 /* CoreSpotlightSearchableObject.swift in Sources */,
 				B5E84F101AFF847B0064E85B /* GroupBy.swift in Sources */,
 				B5E84F201AFF84860064E85B /* DataStack+Observing.swift in Sources */,
 				B5E84EF81AFF846E0064E85B /* CoreStore+Transaction.swift in Sources */,
@@ -860,6 +874,7 @@
 			files = (
 				B52DD1BE1BE1F94300949AFE /* NSProgress+Convenience.swift in Sources */,
 				B52DD1951BE1F92500949AFE /* NSError+CoreStore.swift in Sources */,
+				B531CC4F1C22529300AD5104 /* CoreSpotlightSearchableObject.swift in Sources */,
 				B52DD1C21BE1F94600949AFE /* MigrationManager.swift in Sources */,
 				B52DD1AB1BE1F93900949AFE /* From.swift in Sources */,
 				B52DD1BF1BE1F94600949AFE /* AssociatedObjects.swift in Sources */,
@@ -970,6 +985,7 @@
 				B56321B61BD6521C006C9394 /* WeakObject.swift in Sources */,
 				B56321AC1BD6521C006C9394 /* Functions.swift in Sources */,
 				B56321851BD65216006C9394 /* CoreStore+Logging.swift in Sources */,
+				B531CC4E1C22529300AD5104 /* CoreSpotlightSearchableObject.swift in Sources */,
 				B56321921BD65216006C9394 /* BaseDataTransaction+Querying.swift in Sources */,
 				B56321B11BD6521C006C9394 /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				B563218D1BD65216006C9394 /* CoreStore+Transaction.swift in Sources */,
