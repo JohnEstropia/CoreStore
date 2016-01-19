@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "82BA18881C4BBCBA00A0916E"
-               BuildableName = "CoreStore tvOS.framework"
+               BuildableName = "CoreStore.framework"
                BlueprintName = "CoreStore tvOS"
                ReferencedContainer = "container:CoreStore.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "82BA18911C4BBCBA00A0916E"
-               BuildableName = "CoreStoreTests tvOS.xctest"
+               BuildableName = "CoreStoreTests.xctest"
                BlueprintName = "CoreStoreTests tvOS"
                ReferencedContainer = "container:CoreStore.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "82BA18881C4BBCBA00A0916E"
-            BuildableName = "CoreStore tvOS.framework"
+            BuildableName = "CoreStore.framework"
             BlueprintName = "CoreStore tvOS"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>
@@ -65,7 +65,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "82BA18881C4BBCBA00A0916E"
-            BuildableName = "CoreStore tvOS.framework"
+            BuildableName = "CoreStore.framework"
             BlueprintName = "CoreStore tvOS"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>
@@ -83,7 +83,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "82BA18881C4BBCBA00A0916E"
-            BuildableName = "CoreStore tvOS.framework"
+            BuildableName = "CoreStore.framework"
             BlueprintName = "CoreStore tvOS"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>

@@ -174,7 +174,7 @@ catch {
 This one-liner does the following:
 - Triggers the lazy-initialization of `CoreStore.defaultStack` with a default `DataStack`
 - Sets up the stack's `NSPersistentStoreCoordinator`, the root saving `NSManagedObjectContext`, and the read-only main `NSManagedObjectContext`
-- Adds an SQLite store in the *"Application Support"* directory with the file name *"[App bundle name].sqlite"*
+- Adds an SQLite store in the *"Application Support"* directory (or the *"Caches"* directory on tvOS) with the file name *"[App bundle name].sqlite"*
 - Creates and returns the `NSPersistentStore` instance on success, or an `NSError` on failure
 
 For most cases, this configuration is usable as it is. But for more hardcore settings, refer to this extensive example:

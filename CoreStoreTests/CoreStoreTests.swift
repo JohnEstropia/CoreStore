@@ -381,7 +381,7 @@ class CoreStoreTests: XCTestCase {
             
             let fileManager = NSFileManager.defaultManager()
             try fileManager.removeItemAtURL(
-                fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first!
+                fileManager.URLsForDirectory(deviceDirectorySearchPath, inDomains: .UserDomainMask).first!
             )
         }
         catch _ { }
