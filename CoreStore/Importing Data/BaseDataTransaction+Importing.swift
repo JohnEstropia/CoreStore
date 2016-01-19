@@ -45,7 +45,7 @@ public extension BaseDataTransaction {
         source: T.ImportSource) throws -> T? {
             
             CoreStore.assert(
-                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
@@ -74,7 +74,7 @@ public extension BaseDataTransaction {
         sourceArray: S) throws -> [T] {
             
             CoreStore.assert(
-                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
@@ -109,7 +109,7 @@ public extension BaseDataTransaction {
         source: T.ImportSource) throws -> T?  {
             
             CoreStore.assert(
-                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
@@ -122,6 +122,11 @@ public extension BaseDataTransaction {
                 }
                 
                 if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
+                    
+                    guard T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                    
+                        return nil
+                    }
                     
                     try object.updateFromImportSource(source, inTransaction: self)
                     return object
@@ -155,7 +160,7 @@ public extension BaseDataTransaction {
         @noescape preProcess: (mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] {
             
             CoreStore.assert(
-                self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+                self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(typeName(into.entityClass)) outside the transaction's designated queue."
             )
             

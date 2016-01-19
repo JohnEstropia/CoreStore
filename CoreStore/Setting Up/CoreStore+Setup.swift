@@ -72,7 +72,7 @@ public extension CoreStore {
     /**
     Adds to the `defaultStack` an SQLite store from the given SQLite file name.
     
-    - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory. A new SQLite file will be created if it does not exist.
+    - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory (or the "Caches" directory on tvOS). A new SQLite file will be created if it does not exist.
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
     - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
     - returns: the `NSPersistentStore` added to the stack.
@@ -89,7 +89,7 @@ public extension CoreStore {
     /**
     Adds to the `defaultStack` an SQLite store from the given SQLite file URL.
     
-    - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory.
+    - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory (or the "Caches" directory on tvOS).
     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
     - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
     - returns: the `NSPersistentStore` added to the stack.

@@ -2,7 +2,7 @@
 //  NSManagedObject+Transaction.swift
 //  CoreStore
 //
-//  Copyright (c) 2014 John Rommel Estropia
+//  Copyright (c) 2016 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +26,24 @@
 import Foundation
 import CoreData
 
-
 // MARK: - NSManagedObject
 
-internal extension NSManagedObject {
+public extension NSManagedObject {
+    
+    // MARK: Public
+    
+    /**
+     Returns this object's parent `UnsafeDataTransaction` instance if it was created from one. Returns `nil` if the parent transaction is either an `AsynchronousDataTransaction` or a `SynchronousDataTransaction`, or if the object is not managed by CoreStore.
+     
+     When using an `UnsafeDataTransaction` and passing around a temporary object, you can use this property to execute fetches and updates to the transaction without having to pass around both the object and the transaction instances.
+     
+     Note that the internal reference to the transaction is `weak`, and it is still the developer's responsibility to retain a strong reference to the `UnsafeDataTransaction`.
+     */
+    public var unsafeDataTransaction: UnsafeDataTransaction? {
+        
+        return self.managedObjectContext?.parentTransaction as? UnsafeDataTransaction
+    }
+    
     
     // MARK: Internal
     

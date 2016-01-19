@@ -56,7 +56,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func create<T: NSManagedObject>(into: Into<T>) -> T {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to create an entity of type \(typeName(T)) outside its designated queue."
         )
         
@@ -110,7 +110,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func edit<T: NSManagedObject>(object: T?) -> T? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to update an entity of type \(typeName(object)) outside its designated queue."
         )
         guard let object = object else {
@@ -131,7 +131,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func edit<T: NSManagedObject>(into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to update an entity of type \(typeName(T)) outside its designated queue."
         )
         CoreStore.assert(
@@ -150,7 +150,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func delete(object: NSManagedObject?) {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to delete an entity outside its designated queue."
         )
         guard let object = object else {
@@ -180,7 +180,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func delete<S: SequenceType where S.Generator.Element: NSManagedObject>(objects: S) {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to delete entities outside their designated queue."
         )
         
@@ -222,5 +222,10 @@ public /*abstract*/ class BaseDataTransaction {
             
             context.undoManager = NSUndoManager()
         }
+    }
+    
+    internal func isRunningInAllowedQueue() -> Bool {
+        
+        return self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext()
     }
 }

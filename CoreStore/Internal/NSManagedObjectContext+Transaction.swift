@@ -55,6 +55,15 @@ internal extension NSManagedObjectContext {
         }
     }
     
+    internal func isRunningInAllowedQueue() -> Bool {
+        
+        guard let parentTransaction = self.parentTransaction else {
+            
+            return false
+        }
+        return parentTransaction.isRunningInAllowedQueue()
+    }
+    
     internal func temporaryContextInTransactionWithConcurrencyType(concurrencyType: NSManagedObjectContextConcurrencyType) -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: concurrencyType)

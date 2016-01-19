@@ -106,7 +106,7 @@ public extension BaseDataTransaction {
     public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -124,7 +124,7 @@ public extension BaseDataTransaction {
     public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -142,7 +142,7 @@ public extension BaseDataTransaction {
     public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -160,7 +160,7 @@ public extension BaseDataTransaction {
     public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -178,7 +178,7 @@ public extension BaseDataTransaction {
     public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -196,7 +196,7 @@ public extension BaseDataTransaction {
     public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -214,7 +214,7 @@ public extension BaseDataTransaction {
     public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -232,7 +232,7 @@ public extension BaseDataTransaction {
     public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -250,7 +250,7 @@ public extension BaseDataTransaction {
     public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -268,7 +268,7 @@ public extension BaseDataTransaction {
     public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
         
@@ -285,7 +285,7 @@ public extension BaseDataTransaction {
     public func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to delete from a \(typeName(self)) outside its designated queue."
         )
         
@@ -302,7 +302,7 @@ public extension BaseDataTransaction {
     public func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to delete from a \(typeName(self)) outside its designated queue."
         )
         
@@ -323,7 +323,7 @@ public extension BaseDataTransaction {
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to query from a \(typeName(self)) outside its designated queue."
         )
         
@@ -344,7 +344,7 @@ public extension BaseDataTransaction {
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to query from a \(typeName(self)) outside its designated queue."
         )
         
@@ -365,7 +365,7 @@ public extension BaseDataTransaction {
     public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to query from a \(typeName(self)) outside its designated queue."
         )
         
@@ -386,7 +386,7 @@ public extension BaseDataTransaction {
     public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(
-            self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to query from a \(typeName(self)) outside its designated queue."
         )
         

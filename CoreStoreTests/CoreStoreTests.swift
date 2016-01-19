@@ -295,6 +295,7 @@ class CoreStoreTests: XCTestCase {
         obj5.testString = "hihihi"
         obj5.testNumber = 70
         obj5.testDate = NSDate()
+        XCTAssert(unsafeTransaction === obj5.unsafeDataTransaction, "unsafeTransaction === obj5.unsafeDataTransaction")
         
         unsafeTransaction.commit { (result) -> Void in
             
@@ -309,6 +310,7 @@ class CoreStoreTests: XCTestCase {
                     let obj5Copy1 = transaction.edit(obj5)
                     XCTAssertTrue(obj5.objectID == obj5Copy1?.objectID, "obj5.objectID == obj5Copy1?.objectID")
                     XCTAssertFalse(obj5 == obj5Copy1, "obj5 == obj5Copy1")
+                    XCTAssertNil(obj5Copy1?.unsafeDataTransaction)
                     
                     let obj5Copy2 = transaction.edit(Into(TestEntity1), obj5.objectID)
                     XCTAssertTrue(obj5.objectID == obj5Copy2?.objectID, "obj5.objectID == obj5Copy2?.objectID")
@@ -326,6 +328,7 @@ class CoreStoreTests: XCTestCase {
                 obj6.testString = "huehuehue"
                 obj6.testNumber = 130
                 obj6.testDate = NSDate()
+                XCTAssert(unsafeTransaction === obj6.unsafeDataTransaction, "unsafeTransaction === obj6.unsafeDataTransaction")
                 
                 unsafeTransaction.commit { (result) -> Void in
                     
@@ -378,7 +381,7 @@ class CoreStoreTests: XCTestCase {
             
             let fileManager = NSFileManager.defaultManager()
             try fileManager.removeItemAtURL(
-                fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).first!
+                fileManager.URLsForDirectory(deviceDirectorySearchPath, inDomains: .UserDomainMask).first!
             )
         }
         catch _ { }
