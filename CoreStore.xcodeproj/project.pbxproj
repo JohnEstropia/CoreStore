@@ -149,6 +149,10 @@
 		B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007101B3F6BD500A9A8F9 /* Into.swift */; };
 		B56007141B3F6C2800A9A8F9 /* SectionBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007131B3F6C2800A9A8F9 /* SectionBy.swift */; };
 		B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007151B4018AB00A9A8F9 /* MigrationChain.swift */; };
+		B560D3FD1C4E13A700285533 /* NSManagedObjectContext+CoreSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = B560D3FC1C4E13A700285533 /* NSManagedObjectContext+CoreSpotlight.swift */; };
+		B560D3FE1C4E15BA00285533 /* NSManagedObjectContext+CoreSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = B560D3FC1C4E13A700285533 /* NSManagedObjectContext+CoreSpotlight.swift */; };
+		B560D3FF1C4E15BB00285533 /* NSManagedObjectContext+CoreSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = B560D3FC1C4E13A700285533 /* NSManagedObjectContext+CoreSpotlight.swift */; };
+		B560D4001C4E15BB00285533 /* NSManagedObjectContext+CoreSpotlight.swift in Sources */ = {isa = PBXBuildFile; fileRef = B560D3FC1C4E13A700285533 /* NSManagedObjectContext+CoreSpotlight.swift */; };
 		B563217A1BD650DE006C9394 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56321791BD650DE006C9394 /* CoreData.framework */; };
 		B563217C1BD650E3006C9394 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B563217B1BD650E3006C9394 /* Foundation.framework */; };
 		B563217E1BD65110006C9394 /* CoreStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A53519C5C6DA005002A5 /* CoreStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -314,6 +318,7 @@
 		B56007101B3F6BD500A9A8F9 /* Into.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Into.swift; sourceTree = "<group>"; };
 		B56007131B3F6C2800A9A8F9 /* SectionBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionBy.swift; sourceTree = "<group>"; };
 		B56007151B4018AB00A9A8F9 /* MigrationChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationChain.swift; sourceTree = "<group>"; };
+		B560D3FC1C4E13A700285533 /* NSManagedObjectContext+CoreSpotlight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+CoreSpotlight.swift"; sourceTree = "<group>"; };
 		B563216F1BD65082006C9394 /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56321791BD650DE006C9394 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
 		B563217B1BD650E3006C9394 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -675,6 +680,7 @@
 				B5FAD6AB1B51285300714891 /* MigrationManager.swift */,
 				B5E84F2B1AFF849C0064E85B /* NotificationObserver.swift */,
 				B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */,
+				B560D3FC1C4E13A700285533 /* NSManagedObjectContext+CoreSpotlight.swift */,
 				B5E84F2C1AFF849C0064E85B /* NSManagedObjectContext+CoreStore.swift */,
 				B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */,
 				B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */,
@@ -985,6 +991,7 @@
 				B5202CFA1C04688100DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5E84EE11AFF84500064E85B /* PersistentStoreResult.swift in Sources */,
 				B5E84F251AFF84860064E85B /* ObjectObserver.swift in Sources */,
+				B560D3FD1C4E13A700285533 /* NSManagedObjectContext+CoreSpotlight.swift in Sources */,
 				B5E84F2F1AFF849C0064E85B /* NotificationObserver.swift in Sources */,
 				B5F1DA8D1B9AA97D007C5CBB /* ImportableObject.swift in Sources */,
 				B56965241B356B820075EE4A /* MigrationResult.swift in Sources */,
@@ -1090,6 +1097,7 @@
 				82BA18AD1C4BBD3100A0916E /* UnsafeDataTransaction.swift in Sources */,
 				82BA18A81C4BBD2900A0916E /* CoreStoreLogger.swift in Sources */,
 				82BA18B81C4BBD4200A0916E /* ClauseTypes.swift in Sources */,
+				B560D3FE1C4E15BA00285533 /* NSManagedObjectContext+CoreSpotlight.swift in Sources */,
 				82BA18D61C4BBD7100A0916E /* NSManagedObjectContext+Transaction.swift in Sources */,
 				82BA18B91C4BBD4A00A0916E /* From.swift in Sources */,
 				82BA18BE1C4BBD4A00A0916E /* Tweak.swift in Sources */,
@@ -1121,6 +1129,7 @@
 				B52DD1AB1BE1F93900949AFE /* From.swift in Sources */,
 				B52DD1BF1BE1F94600949AFE /* AssociatedObjects.swift in Sources */,
 				B52DD1A11BE1F92C00949AFE /* DataStack+Transaction.swift in Sources */,
+				B560D4001C4E15BB00285533 /* NSManagedObjectContext+CoreSpotlight.swift in Sources */,
 				B52DD19E1BE1F92C00949AFE /* AsynchronousDataTransaction.swift in Sources */,
 				B52DD1981BE1F92500949AFE /* CoreStore+Setup.swift in Sources */,
 				B52DD1941BE1F92500949AFE /* CoreStore.swift in Sources */,
@@ -1203,6 +1212,7 @@
 				B56321971BD65216006C9394 /* Select.swift in Sources */,
 				B56321AB1BD6521C006C9394 /* FetchedResultsControllerDelegate.swift in Sources */,
 				B56321821BD65216006C9394 /* PersistentStoreResult.swift in Sources */,
+				B560D3FF1C4E15BB00285533 /* NSManagedObjectContext+CoreSpotlight.swift in Sources */,
 				B563219C1BD65216006C9394 /* SectionBy.swift in Sources */,
 				B56321B21BD6521C006C9394 /* NSManagedObjectContext+Querying.swift in Sources */,
 				B56321B31BD6521C006C9394 /* NSManagedObjectContext+Setup.swift in Sources */,

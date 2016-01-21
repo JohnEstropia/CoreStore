@@ -59,47 +59,22 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         self.isCommitted = true
         
+        let commitCompletionForSearchableItems = self.context.commitCompletionForSearchableItems()
+        
         let group = GCDGroup()
         group.enter()
         self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             
             self.result = result
+            if result {
+                
+                commitCompletionForSearchableItems()
+            }
+            
             completion(result: result)
             group.leave()
         }
         group.wait()
-        
-        guard #available(iOS 9.0, *) else {
-            
-            return
-        }
-        
-        let attributeSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeJSON as String)
-        attributeSet.title = nextItem.0
-        attributeSet.contentDescription = nextItem.1
-        
-        let item = CSSearchableItem(
-            uniqueIdentifier: nextItem.0,
-            domainIdentifier: "jp.eureka.sample",
-            attributeSet: attributeSet
-        )
-        CSSearchableIndex.defaultSearchableIndex().indexSearchableItems(
-            [item],
-            completionHandler: { (error) -> Void in
-                
-                //...
-            }
-        )
-        
-        for case (let object as CoreSpotlightSearchableObject) in self.context.insertedObjects {
-            
-            object.coreSpotlightIndexValue
-        }
-        
-        //        public var insertedObjects: Set<NSManagedObject> { get }
-        //        public var updatedObjects: Set<NSManagedObject> { get }
-        //        public var deletedObjects: Set<NSManagedObject> { get }
-        //        public var registeredObjects: Set<NSManagedObject> { get }
     }
     
     /**
