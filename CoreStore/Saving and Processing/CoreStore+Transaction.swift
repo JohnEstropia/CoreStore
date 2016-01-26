@@ -65,6 +65,14 @@ public extension CoreStore {
         return self.defaultStack.beginUnsafe(supportsUndo: supportsUndo)
     }
     
+    /**
+     Refreshes all registered objects `NSManagedObject`s in the `DataStack`.
+     */
+    public static func refreshAllObjectsAsFaults() {
+        
+        self.defaultStack.refreshAllObjectsAsFaults()
+    }
+    
     @available(*, deprecated=1.3.1, renamed="beginUnsafe")
     @warn_unused_result
     public static func beginDetached() -> UnsafeDataTransaction {
