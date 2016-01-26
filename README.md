@@ -14,18 +14,18 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 
 ## What CoreStore does better:
 
-- Heavily supports multiple persistent stores per data stack, just the way *.xcdatamodeld* files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
-- Incremental Migrations! Just tell the data stack the sequence of model versions and CoreStore will automatically use incremental migrations if needed on stores added to that stack.
-- Ability to plug-in your own logging framework
-- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you are free to name them independently.
-- Provides type-safe, easy to configure observers to replace `NSFetchedResultsController` and KVO
-- Exposes API not just for fetching, but also for querying aggregates and property values
-- Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into safer, higher-level abstractions without sacrificing flexibility and customizability.
-- Exposes clean and convenient API designed around Swift’s code elegance and type safety.
-- Documentation! No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.
-- **New in 1.3.0:** Efficient importing utilities!
+- **Heavily supports multiple persistent stores per data stack**, just the way *.xcdatamodeld* files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
+- **Incremental Migrations!** Just tell the data stack the sequence of model versions and CoreStore will automatically use incremental migrations if needed on stores added to that stack.
+- Ability to **plug-in your own logging framework**
+- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you are **free to name entities and their class names independently**.
+- Provides type-safe, easy to configure **observers to replace `NSFetchedResultsController` and KVO**
+- Exposes **API not just for fetching, but also for querying aggregates and property values**
+- Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into **safer, higher-level abstractions** without sacrificing flexibility and customizability.
+- Exposes clean and convenient API designed around **Swift’s code elegance and type safety**.
+- **Documentation!** No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.
+- **Efficient importing utilities!**
 
-**[Or vote for the next feature!](http://goo.gl/RIiHMP)**
+**[Vote for the next feature!](http://goo.gl/RIiHMP)**
 
 
 
@@ -1162,8 +1162,8 @@ let person2 = self.monitor[1, 2]
 
 
 # Roadmap
-- Data importing utilities for transactions
 - Support iCloud stores
+- CoreSpotlight auto-indexing (experimental)
 
 
 # Installation
@@ -1180,9 +1180,14 @@ pod 'CoreStore'
 This installs CoreStore as a framework. Declare `import CoreStore` in your swift file to use the library.
 
 ### Install with Carthage
+In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 1.3.0
-github "JohnEstropia/GCDKit" >= 1.1.5
+github "JohnEstropia/CoreStore" >= 1.4.4
+github "JohnEstropia/GCDKit" >= 1.1.7
+```
+and run 
+```
+carthage update
 ```
 
 ### Install as Git Submodule
