@@ -82,6 +82,19 @@ public extension DataStack {
         )
     }
     
+    /**
+     Refreshes all registered objects `NSManagedObject`s in the `DataStack`.
+     */
+    public func refreshAllObjectsAsFaults() {
+        
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to refresh entities outside their designated queue."
+        )
+        
+        self.mainContext.refreshAllObjectsAsFaults()
+    }
+    
     @available(*, deprecated=1.3.1, renamed="beginUnsafe")
     @warn_unused_result
     public func beginDetached() -> UnsafeDataTransaction {

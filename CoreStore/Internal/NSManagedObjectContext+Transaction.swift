@@ -167,6 +167,18 @@ internal extension NSManagedObjectContext {
         }
     }
     
+    internal func refreshAllObjectsAsFaults() {
+        
+        if #available(iOS 8.3, *) {
+            
+            self.refreshAllObjects()
+        }
+        else {
+            
+            self.registeredObjects.forEach { self.refreshObject($0, mergeChanges: false) }
+        }
+    }
+    
     
     // MARK: Private
     

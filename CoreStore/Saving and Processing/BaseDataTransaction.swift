@@ -188,6 +188,19 @@ public /*abstract*/ class BaseDataTransaction {
         objects.forEach { context.fetchExisting($0)?.deleteFromContext() }
     }
     
+    /**
+     Refreshes all registered objects `NSManagedObject`s in the transaction.
+     */
+    public func refreshAllObjectsAsFaults() {
+        
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to refresh entities outside their designated queue."
+        )
+        
+        self.context.refreshAllObjectsAsFaults()
+    }
+    
     
     // MARK: Internal
     
