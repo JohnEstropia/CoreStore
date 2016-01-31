@@ -169,7 +169,7 @@ internal extension NSManagedObjectContext {
     
     internal func refreshAllObjectsAsFaults() {
         
-        if #available(iOS 8.3, *) {
+        if #available(iOS 8.3, OSX 10.11, *) {
             
             self.refreshAllObjects()
         }
