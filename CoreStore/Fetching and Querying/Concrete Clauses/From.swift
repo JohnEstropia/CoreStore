@@ -54,9 +54,9 @@ public struct From<T: NSManagedObject> {
         self.findPersistentStores = { _ in nil }
     }
     
-    public init(_ configurations: String?...) {
+    public init(_ configuration: String?, otherConfigurations: String?...) {
         
-        self.init(entityClass: T.self, configurations: configurations)
+        self.init(entityClass: T.self, configurations: [configuration] + otherConfigurations)
     }
     
     public init(_ configurations: [String?]) {
@@ -64,9 +64,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: T.self, configurations: configurations)
     }
     
-    public init(_ entity: T.Type, _ configurations: String?...) {
+    public init(_ entity: T.Type, _ configuration: String?, _ otherConfigurations: String?...) {
         
-        self.init(entityClass: entity, configurations: configurations)
+        self.init(entityClass: entity, configurations: [configuration] + otherConfigurations)
     }
     
     public init(_ entity: T.Type, _ configurations: [String?]) {
@@ -74,9 +74,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entity, configurations: configurations)
     }
     
-    public init(_ entityClass: AnyClass, _ configurations: String?...) {
+    public init(_ entityClass: AnyClass, _ configuration: String?, _ otherConfigurations: String?...) {
         
-        self.init(entityClass: entityClass, configurations: configurations)
+        self.init(entityClass: entityClass, configurations: [configuration] + otherConfigurations)
     }
     
     public init(_ entityClass: AnyClass, _ configurations: [String?]) {
@@ -84,9 +84,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entityClass, configurations: configurations)
     }
     
-    public init(_ storeURLs: NSURL...) {
+    public init(_ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
-        self.init(entityClass: T.self, storeURLs: storeURLs)
+        self.init(entityClass: T.self, storeURLs: [storeURL] + otherStoreURLs)
     }
     
     public init(_ storeURLs: [NSURL]) {
@@ -94,9 +94,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: T.self, storeURLs: storeURLs)
     }
     
-    public init(_ entity: T.Type, _ storeURLs: NSURL...) {
+    public init(_ entity: T.Type, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
-        self.init(entityClass: entity, storeURLs: storeURLs)
+        self.init(entityClass: entity, storeURLs: [storeURL] + otherStoreURLs)
     }
     
     public init(_ entity: T.Type, _ storeURLs: [NSURL]) {
@@ -104,9 +104,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entity, storeURLs: storeURLs)
     }
     
-    public init(_ entityClass: AnyClass, _ storeURLs: NSURL...) {
+    public init(_ entityClass: AnyClass, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
-        self.init(entityClass: entityClass, storeURLs: storeURLs)
+        self.init(entityClass: entityClass, storeURLs: [storeURL] + otherStoreURLs)
     }
     
     public init(_ entityClass: AnyClass, _ storeURLs: [NSURL]) {
@@ -114,9 +114,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entityClass, storeURLs: storeURLs)
     }
     
-    public init(_ persistentStores: NSPersistentStore...) {
+    public init(_ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
-        self.init(entityClass: T.self, persistentStores: persistentStores)
+        self.init(entityClass: T.self, persistentStores: [persistentStore] + otherPersistentStores)
     }
     
     public init(_ persistentStores: [NSPersistentStore]) {
@@ -124,9 +124,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: T.self, persistentStores: persistentStores)
     }
     
-    public init(_ entity: T.Type, _ persistentStores: NSPersistentStore...) {
+    public init(_ entity: T.Type, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
-        self.init(entityClass: entity, persistentStores: persistentStores)
+        self.init(entityClass: entity, persistentStores: [persistentStore] + otherPersistentStores)
     }
     
     public init(_ entity: T.Type, _ persistentStores: [NSPersistentStore]) {
@@ -134,9 +134,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entity, persistentStores: persistentStores)
     }
     
-    public init(_ entityClass: AnyClass, _ persistentStores: NSPersistentStore...) {
+    public init(_ entityClass: AnyClass, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
-        self.init(entityClass: entityClass, persistentStores: persistentStores)
+        self.init(entityClass: entityClass, persistentStores: [persistentStore] + otherPersistentStores)
     }
     
     public init(_ entityClass: AnyClass, _ persistentStores: [NSPersistentStore]) {

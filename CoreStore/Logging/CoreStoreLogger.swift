@@ -86,7 +86,7 @@ public protocol CoreStoreLogger {
 
 internal func typeName<T>(value: T) -> String {
     
-    return "'\(_stdlib_getDemangledTypeName(value))'"
+    return "'\(String(reflecting: value.dynamicType))'"
 }
 
 internal func typeName<T>(value: T.Type) -> String {
