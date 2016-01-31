@@ -85,6 +85,10 @@
 		B519E45A1C4CD2DA00E7B469 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B519E4571C4CD2CA00E7B469 /* GCDKit.framework */; };
 		B519E45B1C4CD2ED00E7B469 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B519E4571C4CD2CA00E7B469 /* GCDKit.framework */; };
 		B51BE06A1B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51BE0691B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift */; };
+		B51F259A1C5747DD0083A5DD /* DataStack+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */; };
+		B51F259B1C57875E0083A5DD /* DataStack+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */; };
+		B51F259C1C57875F0083A5DD /* DataStack+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */; };
+		B51F259D1C5787600083A5DD /* DataStack+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */; };
 		B5202CFA1C04688100DED140 /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
 		B5202CFD1C046E8400DED140 /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
 		B52DD17E1BE1F8CD00949AFE /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52DD1741BE1F8CC00949AFE /* CoreStore.framework */; };
@@ -306,6 +310,7 @@
 		B504D0D51B02362500B2BBB1 /* CoreStore+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+Setup.swift"; sourceTree = "<group>"; };
 		B519E4571C4CD2CA00E7B469 /* GCDKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GCDKit.framework; path = "../../Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/GCDKit.framework"; sourceTree = "<group>"; };
 		B51BE0691B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectModel+Setup.swift"; sourceTree = "<group>"; };
+		B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+iCloud.swift"; sourceTree = "<group>"; };
 		B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFetchedResultsController+Convenience.swift"; sourceTree = "<group>"; };
 		B52DD1741BE1F8CC00949AFE /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -478,6 +483,7 @@
 				2F291E2619C6D3CF007AF63F /* CoreStore.swift */,
 				B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */,
 				B5E84EDA1AFF84500064E85B /* Setting Up */,
+				B51F25981C5747790083A5DD /* iCloud */,
 				B5E84EE21AFF84610064E85B /* Logging */,
 				B5E84EE91AFF846E0064E85B /* Saving and Processing */,
 				B5E834B61B7630BD001D3D50 /* Importing Data */,
@@ -538,6 +544,14 @@
 				B5D39A0119FD00C9000E91BB /* Foundation.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B51F25981C5747790083A5DD /* iCloud */ = {
+			isa = PBXGroup;
+			children = (
+				B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */,
+			);
+			path = iCloud;
 			sourceTree = "<group>";
 		};
 		B56964D11B22FF700075EE4A /* Migrating */ = {
@@ -987,6 +1001,7 @@
 				B5E84F0D1AFF847B0064E85B /* BaseDataTransaction+Querying.swift in Sources */,
 				B5FAD6AC1B51285300714891 /* MigrationManager.swift in Sources */,
 				B5E84EF61AFF846E0064E85B /* DataStack+Transaction.swift in Sources */,
+				B51F259A1C5747DD0083A5DD /* DataStack+iCloud.swift in Sources */,
 				B5E84EDF1AFF84500064E85B /* DataStack.swift in Sources */,
 				B59AFF411C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B5E834BB1B7691F3001D3D50 /* Functions.swift in Sources */,
@@ -1065,6 +1080,7 @@
 				82BA18CD1C4BBD7100A0916E /* AssociatedObjects.swift in Sources */,
 				82BA18B71C4BBD3F00A0916E /* CoreStore+Querying.swift in Sources */,
 				82BA18A41C4BBD2200A0916E /* PersistentStoreResult.swift in Sources */,
+				B51F259B1C57875E0083A5DD /* DataStack+iCloud.swift in Sources */,
 				82BA18AA1C4BBD3100A0916E /* BaseDataTransaction.swift in Sources */,
 				82BA18A91C4BBD3100A0916E /* Into.swift in Sources */,
 				82BA18D11C4BBD7100A0916E /* NotificationObserver.swift in Sources */,
@@ -1117,6 +1133,7 @@
 				B52DD1BF1BE1F94600949AFE /* AssociatedObjects.swift in Sources */,
 				B52DD1A11BE1F92C00949AFE /* DataStack+Transaction.swift in Sources */,
 				B52DD19E1BE1F92C00949AFE /* AsynchronousDataTransaction.swift in Sources */,
+				B51F259D1C5787600083A5DD /* DataStack+iCloud.swift in Sources */,
 				B52DD1981BE1F92500949AFE /* CoreStore+Setup.swift in Sources */,
 				B52DD1941BE1F92500949AFE /* CoreStore.swift in Sources */,
 				B52DD1A61BE1F92F00949AFE /* BaseDataTransaction+Importing.swift in Sources */,
@@ -1208,6 +1225,7 @@
 				B56321A71BD65216006C9394 /* MigrationResult.swift in Sources */,
 				B56321A11BD65216006C9394 /* ListMonitor.swift in Sources */,
 				B56321881BD65216006C9394 /* BaseDataTransaction.swift in Sources */,
+				B51F259C1C57875F0083A5DD /* DataStack+iCloud.swift in Sources */,
 				B56321A31BD65216006C9394 /* DataStack+Migration.swift in Sources */,
 				B56321901BD65216006C9394 /* ImportableUniqueObject.swift in Sources */,
 				B56321871BD65216006C9394 /* Into.swift in Sources */,
