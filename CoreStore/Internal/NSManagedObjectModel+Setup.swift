@@ -108,7 +108,7 @@ internal extension NSManagedObjectModel {
         fatalError("Could not create an \(typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
     }
     
-    @nonobjc private(set) internal var currentModelVersion: String? {
+    @nonobjc internal private(set) var currentModelVersion: String? {
         
         get {
             
@@ -128,7 +128,7 @@ internal extension NSManagedObjectModel {
         }
     }
     
-    @nonobjc private(set) internal var modelVersions: Set<String>? {
+    @nonobjc internal private(set) var modelVersions: Set<String>? {
         
         get {
             

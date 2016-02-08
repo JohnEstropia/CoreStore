@@ -1,8 +1,8 @@
 //
-//  WeakObject.swift
+//  NSPersistentStoreCoordinator+Setup.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2016 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,41 @@
 //
 
 import Foundation
+import CoreData
 
 
-// MARK: - WeakObject
+// MARK: - NSPersistentStoreCoordinator
 
-internal final class WeakObject {
+internal extension NSPersistentStoreCoordinator {
     
     // MARK: Internal
     
-    internal init(_ object: AnyObject) {
+    internal func addPersistentStoreSynchronously(storeType: String, configuration: String?, URL storeURL: NSURL?, options: [NSObject : AnyObject]?) throws -> NSPersistentStore {
         
-        self.object = object
+        var store: NSPersistentStore?
+        var storeError: NSError?
+        self.performBlockAndWait {
+            
+            do {
+                
+                store = try self.addPersistentStoreWithType(
+                    storeType,
+                    configuration: configuration,
+                    URL: storeURL,
+                    options: options
+                )
+            }
+            catch {
+                
+                storeError = error as NSError
+            }
+        }
+        
+        if let store = store {
+            
+            return store
+        }
+        
+        throw storeError ?? NSError(coreStoreErrorCode: .UnknownError)
     }
-    
-    internal private(set) weak var object: AnyObject?
 }
