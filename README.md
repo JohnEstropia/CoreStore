@@ -259,7 +259,7 @@ class MyViewController: UIViewController {
 So far we have only seen `addSQLiteStoreAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests, this method blocks so it should not do long tasks such as store migrations (in fact CoreStore won't even attempt to, and any model mismatch will be reported as an error). If migrations are expected, the asynchronous variant `addSQLiteStore(... completion:)` method should be used instead:
 ```swift
 do {
-    let progress: NSProgress = try dataStack.addSQLiteStore(
+    let progress: NSProgress? = try dataStack.addSQLiteStore(
         fileName: "MyStore.sqlite",
         configuration: "Config2",
         completion: { (result) -> Void in
@@ -566,7 +566,7 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
         From(MyPersonEntity),
         Where("name", isEqualTo: "Jane Smith")
     )
-    jane.friends = NSSet(array: transactin.fetchExisting(peopleIDs)!)
+    jane.friends = NSSet(array: transaction.fetchExisting(peopleIDs)!)
     // ...
 }
 ```
