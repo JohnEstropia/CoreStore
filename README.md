@@ -1173,7 +1173,7 @@ let person2 = self.monitor[1, 2]
 - Dependencies:
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
 
-### Install with Cocoapods
+### Install with CocoaPods
 ```
 pod 'CoreStore'
 ```
