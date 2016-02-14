@@ -882,12 +882,15 @@ public final class ListMonitor<T: NSManagedObject> {
             "Attempted to refetch a \(typeName(self)) outside the main thread."
         )
         
-        self.isPendingRefetch = true
-        
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            ListMonitorWillRefetchListNotification,
-            object: self
-        )
+        if !self.isPendingRefetch {
+            
+            self.isPendingRefetch = true
+            
+            NSNotificationCenter.defaultCenter().postNotificationName(
+                ListMonitorWillRefetchListNotification,
+                object: self
+            )
+        }
         
         self.taskGroup.notify(.Main) { [weak self] () -> Void in
             
@@ -904,14 +907,14 @@ public final class ListMonitor<T: NSManagedObject> {
                 clause.applyToFetchRequest(fetchRequest)
             }
             
-            strongSelf.parentStack?.childTransactionQueue.async {
+            strongSelf.transactionQueue.async {
                 
                 guard let strongSelf = self else {
                     
                     return
                 }
                 
-                try! strongSelf.fetchedResultsController.performFetch()
+                try! strongSelf.fetchedResultsController.performFetchFromSpecifiedStores()
                 
                 GCDQueue.Main.async { () -> Void in
                     
@@ -938,36 +941,54 @@ public final class ListMonitor<T: NSManagedObject> {
     internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
      
         self.init(
-            dataStack: dataStack,
+            context: dataStack.mainContext,
+            transactionQueue: dataStack.childTransactionQueue,
             from: from,
             sectionBy: sectionBy,
             fetchClauses: fetchClauses,
-            prepareFetch: { _, performFetch in performFetch() }
+            createAsynchronously: nil
         )
     }
     
     internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
         
+        let queue = dataStack.childTransactionQueue
         self.init(
-            dataStack: dataStack,
+            context: dataStack.mainContext,
+            transactionQueue: queue,
             from: from,
             sectionBy: sectionBy,
             fetchClauses: fetchClauses,
-            prepareFetch: { listMonitor, performFetch in
-                
-                dataStack.childTransactionQueue.async {
-                    
-                    performFetch()
-                    GCDQueue.Main.async {
-                        
-                        createAsynchronously(listMonitor)
-                    }
-                }
-            }
+            createAsynchronously: createAsynchronously
         )
     }
     
-    private init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], prepareFetch: (ListMonitor<T>, () -> Void) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+        
+        self.init(
+            context: unsafeTransaction.context,
+            transactionQueue: unsafeTransaction.transactionQueue,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            createAsynchronously: nil
+        )
+    }
+    
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
+        
+        let queue = unsafeTransaction.transactionQueue
+        self.init(
+            context: unsafeTransaction.context,
+            transactionQueue: queue,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            createAsynchronously: createAsynchronously
+        )
+    }
+    
+    private init(context: NSManagedObjectContext, transactionQueue: GCDQueue, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: ((ListMonitor<T>) -> Void)?) {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.fetchLimit = 0
@@ -976,8 +997,8 @@ public final class ListMonitor<T: NSManagedObject> {
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        let fetchedResultsController = NSFetchedResultsController(
-            dataStack: dataStack,
+        let fetchedResultsController = CoreStoreFetchedResultsController<T>(
+            context: context,
             fetchRequest: fetchRequest,
             from: from,
             sectionBy: sectionBy,
@@ -988,7 +1009,6 @@ public final class ListMonitor<T: NSManagedObject> {
         
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
-        self.parentStack = dataStack
         
         if let sectionIndexTransformer = sectionBy?.sectionIndexTransformer {
             
@@ -998,26 +1018,118 @@ public final class ListMonitor<T: NSManagedObject> {
             
             self.sectionIndexTransformer = { $0 }
         }
+        self.transactionQueue = transactionQueue
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
         
-        prepareFetch(self, { try! fetchedResultsController.performFetch() })
+        guard let coordinator = context.parentStack?.coordinator else {
+            
+            return
+        }
+        
+        self.observerForWillChangePersistentStore = NotificationObserver(
+            notificationName: NSPersistentStoreCoordinatorStoresWillChangeNotification,
+            object: coordinator,
+            closure: { [weak self] (note) -> Void in
+                
+                guard let `self` = self else {
+                        
+                    return
+                }
+                
+                self.isPersistentStoreChanging = true
+                
+                guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init)
+                    where !Set(self.fetchedResultsController.fetchRequest.affectedStores ?? []).intersect(removedStores).isEmpty else {
+                        
+                        return
+                }
+                self.refetch(fetchClauses)
+            }
+        )
+        
+        self.observerForDidChangePersistentStore = NotificationObserver(
+            notificationName: NSPersistentStoreCoordinatorStoresDidChangeNotification,
+            object: coordinator,
+            closure: { [weak self] (note) -> Void in
+                
+                guard let `self` = self else {
+                    
+                    return
+                }
+                
+                if !self.isPendingRefetch {
+                    
+                    let previousStores = Set(self.fetchedResultsController.fetchRequest.affectedStores ?? [])
+                    let currentStores = previousStores
+                        .subtract(note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore] ?? [])
+                        .union(note.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore] ?? [])
+                    
+                    if previousStores != currentStores {
+                        
+                        self.refetch(fetchClauses)
+                    }
+                }
+                
+                self.isPersistentStoreChanging = false
+            }
+        )
+        
+        if let createAsynchronously = createAsynchronously {
+            
+            transactionQueue.async {
+                
+                try! fetchedResultsController.performFetchFromSpecifiedStores()
+                self.taskGroup.notify(.Main) {
+                    
+                    createAsynchronously(self)
+                }
+            }
+        }
+        else {
+            
+            try! fetchedResultsController.performFetchFromSpecifiedStores()
+        }
     }
     
     deinit {
         
         self.fetchedResultsControllerDelegate.fetchedResultsController = nil
+        self.isPersistentStoreChanging = false
+    }
+    
+    private var isPersistentStoreChanging: Bool = false {
+        
+        didSet {
+            
+            let newValue = self.isPersistentStoreChanging
+            guard newValue != oldValue else {
+                
+                return
+            }
+            
+            if newValue {
+                
+                self.taskGroup.enter()
+            }
+            else {
+                
+                self.taskGroup.leave()
+            }
+        }
     }
     
     
     // MARK: Private
     
-    private let fetchedResultsController: NSFetchedResultsController
+    private let fetchedResultsController: CoreStoreFetchedResultsController<T>
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
+    private var observerForWillChangePersistentStore: NotificationObserver!
+    private var observerForDidChangePersistentStore: NotificationObserver!
     private let taskGroup = GCDGroup()
-    private weak var parentStack: DataStack?
+    private let transactionQueue: GCDQueue
     
     private var willChangeListKey: Void?
     private var didChangeListKey: Void?

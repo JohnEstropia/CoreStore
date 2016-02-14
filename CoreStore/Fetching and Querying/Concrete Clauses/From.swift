@@ -36,22 +36,25 @@ public struct From<T: NSManagedObject> {
     
     // MARK: Public
     
+    /**
+    Initializes a `From` clause with the specified entity type and configuration.
+    Sample Usage:
+    
+        let person = transaction.fetchOne(From<MyPersonEntity>())
+    */
     public init(){
         
-        self.entityClass = T.self
-        self.findPersistentStores = { _ in nil }
+        self.init(entityClass: T.self)
     }
     
     public init(_ entity: T.Type) {
         
-        self.entityClass = entity
-        self.findPersistentStores = { _ in nil }
+        self.init(entityClass: entity)
     }
     
     public init(_ entityClass: AnyClass) {
         
-        self.entityClass = entityClass
-        self.findPersistentStores = { _ in nil }
+        self.init(entityClass: entityClass)
     }
     
     public init(_ configuration: String?, otherConfigurations: String?...) {
@@ -147,10 +150,20 @@ public struct From<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) {
+    internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext, applyAffectedStores: Bool = true) {
         
         fetchRequest.entity = context.entityDescriptionForEntityClass(self.entityClass)
-        fetchRequest.affectedStores = self.findPersistentStores(context: context)
+        if applyAffectedStores {
+            
+            self.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
+        }
+    }
+    
+    internal func applyAffectedStoresForFetchedRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Bool {
+        
+        let stores = self.findPersistentStores(context: context)
+        fetchRequest.affectedStores = stores
+        return stores?.isEmpty == false
     }
     
     
@@ -159,6 +172,15 @@ public struct From<T: NSManagedObject> {
     private let entityClass: AnyClass
     
     private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
+    
+    private init(entityClass: AnyClass) {
+        
+        self.entityClass = entityClass
+        self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
+            
+            return context.parentStack?.persistentStoresForEntityClass(entityClass)
+        }
+    }
     
     private init(entityClass: AnyClass, configurations: [String?]) {
         

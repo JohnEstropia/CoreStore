@@ -367,11 +367,12 @@ public final class DataStack {
             self.configurationStoreMapping[configurationName] = persistentStore
             for entityDescription in (self.coordinator.managedObjectModel.entitiesForConfiguration(configurationName) ?? []) {
                 
-                if self.entityConfigurationsMapping[entityDescription.managedObjectClassName] == nil {
+                let managedObjectClassName = entityDescription.managedObjectClassName
+                if self.entityConfigurationsMapping[managedObjectClassName] == nil {
                     
-                    self.entityConfigurationsMapping[entityDescription.managedObjectClassName] = []
+                    self.entityConfigurationsMapping[managedObjectClassName] = []
                 }
-                self.entityConfigurationsMapping[entityDescription.managedObjectClassName]?.insert(configurationName)
+                self.entityConfigurationsMapping[managedObjectClassName]?.insert(configurationName)
             }
         }
     }

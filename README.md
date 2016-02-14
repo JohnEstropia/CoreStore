@@ -714,7 +714,7 @@ class func uniqueIDFromImportSource(source: ImportSource, inTransaction transact
 ```
 For `ImportableUniqueObject`, the extraction and assignment of values should be implemented from the `updateFromImportSource(...)` method. The `didInsertFromImportSource(...)` by default calls `updateFromImportSource(...)`, but you can separate the implementation for inserts and updates if needed.
 
-You can then call create/update an object by calling a transaction's `importUniqueObject(...)` method:
+You can then create/update an object by calling a transaction's `importUniqueObject(...)` method:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let json: [String: AnyObject] = // ...

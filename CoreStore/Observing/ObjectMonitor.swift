@@ -165,7 +165,17 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal init(dataStack: DataStack, object: T) {
+    internal convenience init(dataStack: DataStack, object: T) {
+        
+        self.init(context: dataStack.mainContext, object: object)
+    }
+    
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, object: T) {
+        
+        self.init(context: unsafeTransaction.context, object: object)
+    }
+    
+    private init(context: NSManagedObjectContext, object: T) {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = object.entity
@@ -175,8 +185,8 @@ public final class ObjectMonitor<T: NSManagedObject> {
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        let fetchedResultsController = NSFetchedResultsController(
-            dataStack: dataStack,
+        let fetchedResultsController = CoreStoreFetchedResultsController<T>(
+            context: context,
             fetchRequest: fetchRequest,
             fetchClauses: [Where("SELF", isEqualTo: object.objectID)]
         )
@@ -185,11 +195,10 @@ public final class ObjectMonitor<T: NSManagedObject> {
         
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
-        self.parentStack = dataStack
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
-        try! fetchedResultsController.performFetch()
+        try! fetchedResultsController.performFetchFromSpecifiedStores()
         
         self.lastCommittedAttributes = (self.object?.committedValuesForKeys(nil) as? [String: NSObject]) ?? [:]
     }
@@ -202,10 +211,9 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     // MARK: Private
     
-    private let fetchedResultsController: NSFetchedResultsController
+    private let fetchedResultsController: CoreStoreFetchedResultsController<T>
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private var lastCommittedAttributes = [String: NSObject]()
-    private weak var parentStack: DataStack?
     
     private var willChangeObjectKey: Void?
     private var didDeleteObjectKey: Void?

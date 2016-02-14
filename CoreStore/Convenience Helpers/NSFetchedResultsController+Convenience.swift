@@ -31,20 +31,31 @@ import CoreData
 
 public extension NSFetchedResultsController {
     
-    public convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
+    
+    // MARK: Public
+    
+    public func createForStack<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
         
-        let context = dataStack.mainContext
-        from?.applyToFetchRequest(fetchRequest, context: context)
-        for clause in fetchClauses {
-            
-            clause.applyToFetchRequest(fetchRequest)
-        }
-        
-        self.init(
+        return CoreStoreFetchedResultsController<T>(
+            context: dataStack.mainContext,
             fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: sectionBy?.sectionKeyPath,
-            cacheName: nil
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    
+    // MARK: Internal
+    
+    internal func createFromContext<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: context,
+            fetchRequest: fetchRequest,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
         )
     }
 }
