@@ -368,6 +368,11 @@ public final class DataStack {
             for entityDescription in (self.coordinator.managedObjectModel.entitiesForConfiguration(configurationName) ?? []) {
                 
                 let managedObjectClassName = entityDescription.managedObjectClassName
+                CoreStore.assert(
+                    NSClassFromString(managedObjectClassName) != nil,
+                    "The class \(typeName(managedObjectClassName)) for the entity \(typeName(entityDescription.name)) does not exist. Check if the subclass type and module name are properly configured."
+                )
+                
                 if self.entityConfigurationsMapping[managedObjectClassName] == nil {
                     
                     self.entityConfigurationsMapping[managedObjectClassName] = []
