@@ -2,7 +2,7 @@
 //  NSError+CoreStore.swift
 //  CoreStore
 //
-//  Copyright (c) 2014 John Rommel Estropia
+//  Copyright © 2014 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,45 +26,48 @@
 import Foundation
 import CoreData
 
+
+// MARK: - CoreStoreError
+
 /**
-The `NSError` error domain for `CoreStore`.
-*/
+ The `NSError` error domain for `CoreStore`.
+ */
 public let CoreStoreErrorDomain = "com.corestore.error"
 
 /**
-The `NSError` error codes for `CoreStoreErrorDomain`.
-*/
+ The `NSError` error codes for `CoreStoreErrorDomain`.
+ */
 public enum CoreStoreErrorCode: Int {
     
     /**
-    A failure occured because of an unknown error.
-    */
+     A failure occured because of an unknown error.
+     */
     case UnknownError
     
     /**
-    The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
-    */
+     The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
+     */
     case DifferentPersistentStoreExistsAtURL
     
     /**
-    The `NSPersistentStore` specified could not be found.
-    */
+     The `NSPersistentStore` specified could not be found.
+     */
     case PersistentStoreNotFound
     
     /**
-    An `NSMappingModel` could not be found for a specific source and destination model versions.
-    */
+     An `NSMappingModel` could not be found for a specific source and destination model versions.
+     */
     case MappingModelNotFound
 }
 
 
-// MARK: - NSError+CoreStore
+// MARK: - NSError
 
 public extension NSError {
-   
+    
     /**
-    If the error's domain is equal to `CoreStoreErrorDomain`, returns the associated `CoreStoreErrorCode`. For other domains, returns `nil`.
-    */
+     If the error's domain is equal to `CoreStoreErrorDomain`, returns the associated `CoreStoreErrorCode`. For other domains, returns `nil`.
+     */
     public var coreStoreErrorCode: CoreStoreErrorCode? {
         
         return (self.domain == CoreStoreErrorDomain

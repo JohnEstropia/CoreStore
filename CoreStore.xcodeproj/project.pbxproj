@@ -208,6 +208,12 @@
 		B56965241B356B820075EE4A /* MigrationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965231B356B820075EE4A /* MigrationResult.swift */; };
 		B59D5C221B5BA34B00453479 /* NSFileManager+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */; };
 		B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A261201B64BFDB006EB6D3 /* MigrationType.swift */; };
+		B5C976E31C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */; };
+		B5C976E41C6C9F9A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */; };
+		B5C976E51C6C9F9B00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */; };
+		B5C976E71C6E3A5A00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */; };
+		B5C976E81C6E3A5D00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */; };
+		B5C976E91C6E3A5E00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */; };
 		B5D1E22C19FA9FBC003B2874 /* NSError+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */; };
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		B5D372861A39CDDB00F583D9 /* TestEntity1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D372851A39CDDB00F583D9 /* TestEntity1.swift */; };
@@ -317,6 +323,8 @@
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
 		B5BDC91A1C202269008147CD /* CartFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CartFile; sourceTree = "<group>"; };
 		B5BDC9271C2024F2008147CD /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = SOURCE_ROOT; };
+		B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UnsafeDataTransaction+Observing.swift"; sourceTree = "<group>"; };
+		B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreFetchedResultsController.swift; sourceTree = "<group>"; };
 		B5D1E22B19FA9FBC003B2874 /* NSError+CoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+CoreStore.swift"; sourceTree = "<group>"; };
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		B5D372851A39CDDB00F583D9 /* TestEntity1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity1.swift; sourceTree = "<group>"; };
@@ -627,6 +635,7 @@
 				B56007131B3F6C2800A9A8F9 /* SectionBy.swift */,
 				B5E84F1A1AFF84860064E85B /* DataStack+Observing.swift */,
 				B5E84F1B1AFF84860064E85B /* CoreStore+Observing.swift */,
+				B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */,
 				B5E84F1C1AFF84860064E85B /* ObjectMonitor.swift */,
 				B5E84F1F1AFF84860064E85B /* ObjectObserver.swift */,
 				B5E84F1D1AFF84860064E85B /* ListMonitor.swift */,
@@ -654,6 +663,7 @@
 				B5FAD6AB1B51285300714891 /* MigrationManager.swift */,
 				B5E84F2B1AFF849C0064E85B /* NotificationObserver.swift */,
 				B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */,
+				B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */,
 				B5E84F2C1AFF849C0064E85B /* NSManagedObjectContext+CoreStore.swift */,
 				B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */,
 				B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */,
@@ -943,6 +953,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */,
+				B5C976E71C6E3A5A00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */,
 				B5F1DA901B9AA991007C5CBB /* ImportableUniqueObject.swift in Sources */,
 				B504D0D61B02362500B2BBB1 /* CoreStore+Setup.swift in Sources */,
 				B5D1E22C19FA9FBC003B2874 /* NSError+CoreStore.swift in Sources */,
@@ -952,6 +963,7 @@
 				B5E84F141AFF847B0064E85B /* DataStack+Querying.swift in Sources */,
 				B56007141B3F6C2800A9A8F9 /* SectionBy.swift in Sources */,
 				B5E84F371AFF85470064E85B /* NSManagedObjectContext+Transaction.swift in Sources */,
+				B5C976E31C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */,
 				B5E84F0E1AFF847B0064E85B /* Tweak.swift in Sources */,
 				B5E84F121AFF847B0064E85B /* OrderBy.swift in Sources */,
@@ -1018,6 +1030,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				82BA18B61C4BBD3F00A0916E /* DataStack+Querying.swift in Sources */,
+				B5C976E81C6E3A5D00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */,
 				82BA18A21C4BBD1D00A0916E /* NSError+CoreStore.swift in Sources */,
 				82BA18B21C4BBD3900A0916E /* ImportableObject.swift in Sources */,
 				82BA18AE1C4BBD3100A0916E /* DataStack+Transaction.swift in Sources */,
@@ -1027,6 +1040,7 @@
 				82BA18C21C4BBD5300A0916E /* ObjectMonitor.swift in Sources */,
 				82BA18A51C4BBD2200A0916E /* CoreStore+Setup.swift in Sources */,
 				82BA18BD1C4BBD4A00A0916E /* GroupBy.swift in Sources */,
+				B5C976E41C6C9F9A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
 				82BA18B31C4BBD3900A0916E /* ImportableUniqueObject.swift in Sources */,
 				82BA18A11C4BBD1D00A0916E /* CoreStore.swift in Sources */,
 				82BA18CF1C4BBD7100A0916E /* Functions.swift in Sources */,
@@ -1159,6 +1173,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B56321A91BD65219006C9394 /* NSProgress+Convenience.swift in Sources */,
+				B5C976E91C6E3A5E00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */,
 				B56321801BD65216006C9394 /* NSError+CoreStore.swift in Sources */,
 				B56321AD1BD6521C006C9394 /* MigrationManager.swift in Sources */,
 				B563219D1BD65216006C9394 /* DataStack+Observing.swift in Sources */,
@@ -1168,6 +1183,7 @@
 				B563219E1BD65216006C9394 /* CoreStore+Observing.swift in Sources */,
 				B56321891BD65216006C9394 /* AsynchronousDataTransaction.swift in Sources */,
 				B56321831BD65216006C9394 /* CoreStore+Setup.swift in Sources */,
+				B5C976E51C6C9F9B00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B563217F1BD65216006C9394 /* CoreStore.swift in Sources */,
 				B56321911BD65216006C9394 /* BaseDataTransaction+Importing.swift in Sources */,
 				B56321941BD65216006C9394 /* CoreStore+Querying.swift in Sources */,

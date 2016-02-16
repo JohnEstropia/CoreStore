@@ -2,7 +2,7 @@
 //  DataStack+Transaction.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -34,13 +34,11 @@ import CoreData
 
 public extension DataStack {
     
-    // MARK: Public
-    
     /**
-    Begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
-    
-    - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-    */
+     Begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     */
     public func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
         AsynchronousDataTransaction(
@@ -80,6 +78,19 @@ public extension DataStack {
             ),
             supportsUndo: supportsUndo
         )
+    }
+    
+    /**
+     Refreshes all registered objects `NSManagedObject`s in the `DataStack`.
+     */
+    public func refreshAllObjectsAsFaults() {
+        
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to refresh entities outside their designated queue."
+        )
+        
+        self.mainContext.refreshAllObjectsAsFaults()
     }
     
     @available(*, deprecated=1.3.1, renamed="beginUnsafe")

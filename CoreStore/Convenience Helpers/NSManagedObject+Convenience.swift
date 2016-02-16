@@ -2,7 +2,7 @@
 //  NSManagedObject+Convenience.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -32,11 +32,11 @@ import CoreData
 public extension NSManagedObject {
     
     /**
-    Provides a convenience wrapper for accessing `primitiveValueForKey(...)` with proper calls to `willAccessValueForKey(...)` and `didAccessValueForKey(...)`. This is useful when implementing accessor methods for transient attributes.
-    
-    - parameter KVCKey: the KVC key
-    - returns: the primitive value for the KVC key
-    */
+     Provides a convenience wrapper for accessing `primitiveValueForKey(...)` with proper calls to `willAccessValueForKey(...)` and `didAccessValueForKey(...)`. This is useful when implementing accessor methods for transient attributes.
+     
+     - parameter KVCKey: the KVC key
+     - returns: the primitive value for the KVC key
+     */
     @warn_unused_result
     public func accessValueForKVCKey(KVCKey: KeyPath) -> AnyObject? {
         
@@ -48,11 +48,11 @@ public extension NSManagedObject {
     }
     
     /**
-    Provides a convenience wrapper for setting `setPrimitiveValue(...)` with proper calls to `willChangeValueForKey(...)` and `didChangeValueForKey(...)`. This is useful when implementing mutator methods for transient attributes.
-    
-    - parameter value: the value to set the KVC key with
-    - parameter KVCKey: the KVC key
-    */
+     Provides a convenience wrapper for setting `setPrimitiveValue(...)` with proper calls to `willChangeValueForKey(...)` and `didChangeValueForKey(...)`. This is useful when implementing mutator methods for transient attributes.
+     
+     - parameter value: the value to set the KVC key with
+     - parameter KVCKey: the KVC key
+     */
     public func setValue(value: AnyObject?, forKVCKey KVCKey: KeyPath) {
         
         self.willChangeValueForKey(KVCKey)
@@ -61,16 +61,16 @@ public extension NSManagedObject {
     }
     
     /**
-    Re-faults the object to use the latest values from the persistent store
-    */
+     Re-faults the object to use the latest values from the persistent store
+     */
     public func refreshAsFault() {
         
         self.managedObjectContext?.refreshObject(self, mergeChanges: false)
     }
     
     /**
-    Re-faults the object to use the latest values from the persistent store and merges previously pending changes back
-    */
+     Re-faults the object to use the latest values from the persistent store and merges previously pending changes back
+     */
     public func refreshAndMerge() {
         
         self.managedObjectContext?.refreshObject(self, mergeChanges: true)

@@ -2,7 +2,7 @@
 //  NSManagedObject+Convenience.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,20 +31,31 @@ import CoreData
 
 public extension NSFetchedResultsController {
     
-    public convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
+    /**
+     Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful to partially support Objective-C classes by passing an `NSFetchedResultsController` instance instead of a `ListMonitor`.
+     */
+    public func createForStack<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
         
-        let context = dataStack.mainContext
-        from?.applyToFetchRequest(fetchRequest, context: context)
-        for clause in fetchClauses {
-            
-            clause.applyToFetchRequest(fetchRequest)
-        }
-        
-        self.init(
+        return CoreStoreFetchedResultsController<T>(
+            context: dataStack.mainContext,
             fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: sectionBy?.sectionKeyPath,
-            cacheName: nil
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    
+    // MARK: Internal
+    
+    internal func createFromContext<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: context,
+            fetchRequest: fetchRequest,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
         )
     }
 }

@@ -2,7 +2,7 @@
 //  OrderBy.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -46,18 +46,18 @@ public typealias KeyPath = String
 // MARK: - SortKey
 
 /**
-The `SortKey` is passed to the `OrderBy` clause to indicate the sort keys and their sort direction.
-*/
+ The `SortKey` is passed to the `OrderBy` clause to indicate the sort keys and their sort direction.
+ */
 public enum SortKey {
     
     /**
-    Indicates that the `KeyPath` should be sorted in ascending order
-    */
+     Indicates that the `KeyPath` should be sorted in ascending order
+     */
     case Ascending(KeyPath)
     
     /**
-    Indicates that the `KeyPath` should be sorted in descending order
-    */
+     Indicates that the `KeyPath` should be sorted in descending order
+     */
     case Descending(KeyPath)
 }
 
@@ -65,45 +65,43 @@ public enum SortKey {
 // MARK: - OrderBy
 
 /**
-The `OrderBy` clause specifies the sort order for results for a fetch or a query.
-*/
+ The `OrderBy` clause specifies the sort order for results for a fetch or a query.
+ */
 public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     
-    // MARK: Public
-    
     /**
-    Initializes a `OrderBy` clause with a list of sort descriptors
-    
-    - parameter sortDescriptors: a series of `NSSortDescriptor`s
-    */
+     Initializes a `OrderBy` clause with a list of sort descriptors
+     
+     - parameter sortDescriptors: a series of `NSSortDescriptor`s
+     */
     public init(_ sortDescriptors: [NSSortDescriptor]) {
         
         self.sortDescriptors = sortDescriptors
     }
     
     /**
-    Initializes a `OrderBy` clause with an empty list of sort descriptors
-    */
+     Initializes a `OrderBy` clause with an empty list of sort descriptors
+     */
     public init() {
         
         self.init([NSSortDescriptor]())
     }
     
     /**
-    Initializes a `OrderBy` clause with a single sort descriptor
-    
-    - parameter sortDescriptor: a `NSSortDescriptor`
-    */
+     Initializes a `OrderBy` clause with a single sort descriptor
+     
+     - parameter sortDescriptor: a `NSSortDescriptor`
+     */
     public init(_ sortDescriptor: NSSortDescriptor) {
         
         self.init([sortDescriptor])
     }
     
     /**
-    Initializes a `OrderBy` clause with a series of `SortKey`s
-    
-    - parameter sortKey: a series of `SortKey`s
-    */
+     Initializes a `OrderBy` clause with a series of `SortKey`s
+     
+     - parameter sortKey: a series of `SortKey`s
+     */
     public init(_ sortKey: [SortKey]) {
         
         self.init(
@@ -122,11 +120,11 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     }
     
     /**
-    Initializes a `OrderBy` clause with a series of `SortKey`s
-    
-    - parameter sortKey: a single `SortKey`
-    - parameter sortKeys: a series of `SortKey`s
-    */
+     Initializes a `OrderBy` clause with a series of `SortKey`s
+     
+     - parameter sortKey: a single `SortKey`
+     - parameter sortKeys: a series of `SortKey`s
+     */
     public init(_ sortKey: SortKey, _ sortKeys: SortKey...) {
         
         self.init([sortKey] + sortKeys)
@@ -139,7 +137,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
     
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        if fetchRequest.sortDescriptors != nil {
+        if let sortDescriptors = fetchRequest.sortDescriptors where sortDescriptors != self.sortDescriptors {
             
             CoreStore.log(
                 .Warning,

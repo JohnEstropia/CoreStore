@@ -2,7 +2,7 @@
 //  DefaultLogger.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,12 +29,12 @@ import Foundation
 // MARK: - DefaultLogger
 
 /**
-The `DefaultLogger` is a basic implementation of the `CoreStoreLogger` protocol.
-
-- The `log(...)` method calls `print(...)` to print the level, source file name, line number, function name, and the log message.
-- The `handleError(...)` method calls `print(...)` to print the source file name, line number, function name, and the error message.
-- The `assert(...)` method calls `assert(...)` on the arguments.
-*/
+ The `DefaultLogger` is a basic implementation of the `CoreStoreLogger` protocol.
+ 
+ - The `log(...)` method calls `print(...)` to print the level, source file name, line number, function name, and the log message.
+ - The `handleError(...)` method calls `print(...)` to print the source file name, line number, function name, and the error message.
+ - The `assert(...)` method calls `assert(...)` on the arguments.
+ */
 public final class DefaultLogger: CoreStoreLogger {
     
     public init() { }

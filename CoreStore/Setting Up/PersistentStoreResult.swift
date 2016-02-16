@@ -2,7 +2,7 @@
 //  PersistentStoreResult.swift
 //  CoreStore
 //
-//  Copyright (c) 2014 John Rommel Estropia
+//  Copyright © 2014 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,42 +30,40 @@ import CoreData
 // MARK: - PersistentStoreResult
 
 /**
-The `PersistentStoreResult` indicates the result of an asynchronous initialization of a persistent store.
-The `PersistentStoreResult` can be treated as a boolean:
-
-    try! CoreStore.addSQLiteStore(completion: { (result: PersistentStoreResult) -> Void in
-        if result {
-            // succeeded
-        }
-        else {
-            // failed
-        }
-    })
-
-or as an `enum`, where the resulting associated object can also be inspected:
-
-    try! CoreStore.addSQLiteStore(completion: { (result: PersistentStoreResult) -> Void in
-        switch result {
-        case .Success(let persistentStore):
-            // persistentStore is the related NSPersistentStore instance
-        case .Failure(let error):
-            // error is the NSError instance for the failure
-        }
-    })
-```
-*/
+ The `PersistentStoreResult` indicates the result of an asynchronous initialization of a persistent store.
+ The `PersistentStoreResult` can be treated as a boolean:
+ ```
+ try! CoreStore.addSQLiteStore(completion: { (result: PersistentStoreResult) -> Void in
+     if result {
+        // succeeded
+     }
+     else {
+        // failed
+     }
+ })
+ ```
+ or as an `enum`, where the resulting associated object can also be inspected:
+ ```
+ try! CoreStore.addSQLiteStore(completion: { (result: PersistentStoreResult) -> Void in
+     switch result {
+     case .Success(let persistentStore):
+        // persistentStore is the related NSPersistentStore instance
+     case .Failure(let error):
+        // error is the NSError instance for the failure
+     }
+ })
+ ```
+ */
 public enum PersistentStoreResult {
     
-    // MARK: Public
-    
     /**
-    `PersistentStoreResult.Success` indicates that the persistent store process succeeded. The associated object for this `enum` value is the related `NSPersistentStore` instance.
-    */
+     `PersistentStoreResult.Success` indicates that the persistent store process succeeded. The associated object for this `enum` value is the related `NSPersistentStore` instance.
+     */
     case Success(NSPersistentStore)
     
     /**
-    `PersistentStoreResult.Failure` indicates that the persistent store process failed. The associated object for this value is the related `NSError` instance.
-    */
+     `PersistentStoreResult.Failure` indicates that the persistent store process failed. The associated object for this value is the related `NSError` instance.
+     */
     case Failure(NSError)
     
     
@@ -88,9 +86,7 @@ public enum PersistentStoreResult {
     
     internal init(_ errorCode: CoreStoreErrorCode, userInfo: [NSObject: AnyObject]?) {
         
-        self.init(NSError(
-            coreStoreErrorCode: errorCode,
-            userInfo: userInfo))
+        self.init(NSError(coreStoreErrorCode: errorCode, userInfo: userInfo))
     }
 }
 
@@ -98,8 +94,6 @@ public enum PersistentStoreResult {
 // MARK: - PersistentStoreResult: BooleanType
 
 extension PersistentStoreResult: BooleanType {
-    
-    // MARK: Public
     
     public var boolValue: Bool {
         

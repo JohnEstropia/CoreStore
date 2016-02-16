@@ -2,7 +2,7 @@
 //  SectionBy.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,35 +30,34 @@ import CoreData
 // MARK: - SectionBy
 
 /**
-The `SectionBy` clause indicates the key path to use to group the `ListMonitor` objects into sections. An optional closure can also be provided to transform the value into an appropriate section name:
-
-    let monitor = CoreStore.monitorSectionedList(
-        From(MyPersonEntity),
-        SectionBy("age") { "Age \($0)" },
-        OrderBy(.Ascending("lastName"))
-    )
-*/
+ The `SectionBy` clause indicates the key path to use to group the `ListMonitor` objects into sections. An optional closure can also be provided to transform the value into an appropriate section name:
+ ```
+ let monitor = CoreStore.monitorSectionedList(
+     From(MyPersonEntity),
+     SectionBy("age") { "Age \($0)" },
+     OrderBy(.Ascending("lastName"))
+ )
+ ```
+ */
 @available(OSX, unavailable)
 public struct SectionBy {
     
-    // MARK: Public
-    
     /**
-    Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
-    
-    - parameter sectionKeyPath: the key path to use to group the objects into sections
-    */
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
+     
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     */
     public init(_ sectionKeyPath: KeyPath) {
         
         self.init(sectionKeyPath, { $0 })
     }
     
     /**
-    Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
-    
-    - parameter sectionKeyPath: the key path to use to group the objects into sections
-    - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
-    */
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     */
     public init(_ sectionKeyPath: KeyPath, _ sectionIndexTransformer: (sectionName: String?) -> String?) {
         
         self.sectionKeyPath = sectionKeyPath

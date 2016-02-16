@@ -2,7 +2,7 @@
 //  Select.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,16 +30,16 @@ import CoreData
 // MARK: - SelectResultType
 
 /**
-The `SelectResultType` protocol is implemented by return types supported by the `Select` clause.
-*/
+ The `SelectResultType` protocol is implemented by return types supported by the `Select` clause.
+ */
 public protocol SelectResultType { }
 
 
 // MARK: - SelectValueResultType
 
 /**
-The `SelectValueResultType` protocol is implemented by return types supported by the `queryValue(...)` methods.
-*/
+ The `SelectValueResultType` protocol is implemented by return types supported by the `queryValue(...)` methods.
+ */
 public protocol SelectValueResultType: SelectResultType {
     
     static func fromResultObject(result: AnyObject) -> Self?
@@ -49,8 +49,8 @@ public protocol SelectValueResultType: SelectResultType {
 // MARK: - SelectAttributesResultType
 
 /**
-The `SelectValueResultType` protocol is implemented by return types supported by the `queryAttributes(...)` methods.
-*/
+ The `SelectValueResultType` protocol is implemented by return types supported by the `queryAttributes(...)` methods.
+ */
 public protocol SelectAttributesResultType: SelectResultType {
     
     static func fromResultObjects(result: [AnyObject]) -> [[NSString: AnyObject]]
@@ -60,49 +60,47 @@ public protocol SelectAttributesResultType: SelectResultType {
 // MARK: - SelectTerm
 
 /**
-The `SelectTerm` is passed to the `Select` clause to indicate the attributes/aggregate keys to be queried.
-*/
+ The `SelectTerm` is passed to the `Select` clause to indicate the attributes/aggregate keys to be queried.
+ */
 public enum SelectTerm: StringLiteralConvertible {
     
-    // MARK: Public
-    
     /**
-    Provides a `SelectTerm` to a `Select` clause for querying an entity attribute. A shorter way to do the same is to assign from the string keypath directly:
-    
-        let fullName = CoreStore.queryValue(
-            From(MyPersonEntity),
-            Select<String>(.Attribute("fullName")),
-            Where("employeeID", isEqualTo: 1111)
-        )
-    
-    is equivalent to:
-    
-        let fullName = CoreStore.queryValue(
-            From(MyPersonEntity),
-            Select<String>("fullName"),
-            Where("employeeID", isEqualTo: 1111)
-        )
-    
-    - parameter keyPath: the attribute name
-    - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
-    */
+     Provides a `SelectTerm` to a `Select` clause for querying an entity attribute. A shorter way to do the same is to assign from the string keypath directly:
+     ```
+     let fullName = CoreStore.queryValue(
+         From(MyPersonEntity),
+         Select<String>(.Attribute("fullName")),
+         Where("employeeID", isEqualTo: 1111)
+     )
+     ```
+     is equivalent to:
+     ```
+     let fullName = CoreStore.queryValue(
+         From(MyPersonEntity),
+         Select<String>("fullName"),
+         Where("employeeID", isEqualTo: 1111)
+     )
+     ```
+     - parameter keyPath: the attribute name
+     - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
+     */
     public static func Attribute(keyPath: KeyPath) -> SelectTerm {
         
         return ._Attribute(keyPath)
     }
     
     /**
-    Provides a `SelectTerm` to a `Select` clause for querying the average value of an attribute.
-
-        let averageAge = CoreStore.queryValue(
-            From(MyPersonEntity),
-            Select<Int>(.Average("age"))
-        )
-    
-    - parameter keyPath: the attribute name
-    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
-    - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
-    */
+     Provides a `SelectTerm` to a `Select` clause for querying the average value of an attribute.
+     ```
+     let averageAge = CoreStore.queryValue(
+         From(MyPersonEntity),
+         Select<Int>(.Average("age"))
+     )
+     ```
+     - parameter keyPath: the attribute name
+     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
+     - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
+     */
     public static func Average(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
         return ._Aggregate(
@@ -114,17 +112,17 @@ public enum SelectTerm: StringLiteralConvertible {
     }
     
     /**
-    Provides a `SelectTerm` to a `Select` clause for a count query.
-    
-        let numberOfEmployees = CoreStore.queryValue(
-            From(MyPersonEntity),
-            Select<Int>(.Count("employeeID"))
-        )
-    
-    - parameter keyPath: the attribute name
-    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
-    - returns: a `SelectTerm` to a `Select` clause for a count query
-    */
+     Provides a `SelectTerm` to a `Select` clause for a count query.
+     ```
+     let numberOfEmployees = CoreStore.queryValue(
+         From(MyPersonEntity),
+         Select<Int>(.Count("employeeID"))
+     )
+     ```
+     - parameter keyPath: the attribute name
+     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
+     - returns: a `SelectTerm` to a `Select` clause for a count query
+     */
     public static func Count(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
         return ._Aggregate(
@@ -136,17 +134,17 @@ public enum SelectTerm: StringLiteralConvertible {
     }
     
     /**
-    Provides a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute.
-    
-        let maximumAge = CoreStore.queryValue(
-            From(MyPersonEntity),
-            Select<Int>(.Maximum("age"))
-        )
-    
-    - parameter keyPath: the attribute name
-    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
-    - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
-    */
+     Provides a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute.
+     ```
+     let maximumAge = CoreStore.queryValue(
+         From(MyPersonEntity),
+         Select<Int>(.Maximum("age"))
+     )
+     ```
+     - parameter keyPath: the attribute name
+     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
+     - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
+     */
     public static func Maximum(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
         return ._Aggregate(
@@ -158,17 +156,17 @@ public enum SelectTerm: StringLiteralConvertible {
     }
     
     /**
-    Provides a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute.
-    
-        let minimumAge = CoreStore.queryValue(
-            From(MyPersonEntity),
-            Select<Int>(.Minimum("age"))
-        )
-    
-    - parameter keyPath: the attribute name
-    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
-    - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
-    */
+     Provides a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute.
+     ```
+     let minimumAge = CoreStore.queryValue(
+         From(MyPersonEntity),
+         Select<Int>(.Minimum("age"))
+     )
+     ```
+     - parameter keyPath: the attribute name
+     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
+     - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
+     */
     public static func Minimum(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
         return ._Aggregate(
@@ -180,17 +178,17 @@ public enum SelectTerm: StringLiteralConvertible {
     }
     
     /**
-    Provides a `SelectTerm` to a `Select` clause for querying the sum value for an attribute.
-    
-        let totalAge = CoreStore.queryValue(
-            From(MyPersonEntity),
-            Select<Int>(.Sum("age"))
-        )
-    
-    - parameter keyPath: the attribute name
-    - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
-    - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
-    */
+     Provides a `SelectTerm` to a `Select` clause for querying the sum value for an attribute.
+     ```
+     let totalAge = CoreStore.queryValue(
+         From(MyPersonEntity),
+         Select<Int>(.Sum("age"))
+     )
+     ```
+     - parameter keyPath: the attribute name
+     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
+     - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
+     */
     public static func Sum(keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
         
         return ._Aggregate(
@@ -230,68 +228,66 @@ public enum SelectTerm: StringLiteralConvertible {
 // MARK: - Select
 
 /**
-The `Select` clause indicates the attribute / aggregate value to be queried. The generic type is a `SelectResultType`, and will be used as the return type for the query. 
-
-You can bind the return type by specializing the initializer:
-
-    let maximumAge = CoreStore.queryValue(
-        From(MyPersonEntity),
-        Select<Int>(.Maximum("age"))
-    )
-
-or by casting the type of the return value:
-
-    let maximumAge: Int = CoreStore.queryValue(
-        From(MyPersonEntity),
-        Select(.Maximum("age"))
-    )
-
-Valid return types depend on the query:
-
-- for `queryValue(...)` methods:
-    - `Bool`
-    - `Int8`
-    - `Int16`
-    - `Int32`
-    - `Int64`
-    - `Double`
-    - `Float`
-    - `String`
-    - `NSNumber`
-    - `NSString`
-    - `NSDecimalNumber`
-    - `NSDate`
-    - `NSData`
-    - `NSManagedObjectID`
-    - `NSString`
-- for `queryAttributes(...)` methods:
-    - `NSDictionary`
-
-- parameter sortDescriptors: a series of `NSSortDescriptor`s
-*/
+ The `Select` clause indicates the attribute / aggregate value to be queried. The generic type is a `SelectResultType`, and will be used as the return type for the query.
+ 
+ You can bind the return type by specializing the initializer:
+ ```
+ let maximumAge = CoreStore.queryValue(
+     From(MyPersonEntity),
+     Select<Int>(.Maximum("age"))
+ )
+ ```
+ or by casting the type of the return value:
+ ```
+ let maximumAge: Int = CoreStore.queryValue(
+     From(MyPersonEntity),
+     Select(.Maximum("age"))
+ )
+ ```
+ Valid return types depend on the query:
+ 
+ - for `queryValue(...)` methods:
+     - `Bool`
+     - `Int8`
+     - `Int16`
+     - `Int32`
+     - `Int64`
+     - `Double`
+     - `Float`
+     - `String`
+     - `NSNumber`
+     - `NSString`
+     - `NSDecimalNumber`
+     - `NSDate`
+     - `NSData`
+     - `NSManagedObjectID`
+     - `NSString`
+ - for `queryAttributes(...)` methods:
+     - `NSDictionary`
+ 
+ - parameter sortDescriptors: a series of `NSSortDescriptor`s
+ */
 public struct Select<T: SelectResultType> {
     
-    // MARK: Public
-    
     /**
-    The `SelectResultType` type for the query's return value
-    */
+     The `SelectResultType` type for the query's return value
+     */
     public typealias ReturnType = T
     
     /**
-    Initializes a `Select` clause with a list of `SelectTerm`s
-    
-    - parameter selectTerm: a `SelectTerm`
-    - parameter selectTerms: a series of `SelectTerm`s
-    */
+     Initializes a `Select` clause with a list of `SelectTerm`s
+     
+     - parameter selectTerm: a `SelectTerm`
+     - parameter selectTerms: a series of `SelectTerm`s
+     */
     public init(_ selectTerm: SelectTerm, _ selectTerms: SelectTerm...) {
         
         self.selectTerms = [selectTerm] + selectTerms
     }
-
-
+    
+    
     // MARK: Internal
-
+    
     internal func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
         if fetchRequest.propertiesToFetch != nil {

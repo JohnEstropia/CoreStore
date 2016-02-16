@@ -2,7 +2,7 @@
 //  GroupBy.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,36 +30,34 @@ import CoreData
 // MARK: - GroupBy
 
 /**
-The `GroupBy` clause specifies that the result of a query be grouped accoording to the specified key path.
-*/
+ The `GroupBy` clause specifies that the result of a query be grouped accoording to the specified key path.
+ */
 public struct GroupBy: QueryClause {
     
-    // MARK: Public
-    
     /**
-    Initializes a `GroupBy` clause with a list of key path strings
-    
-    - parameter keyPaths: a list of key path strings to group results with
-    */
+     Initializes a `GroupBy` clause with a list of key path strings
+     
+     - parameter keyPaths: a list of key path strings to group results with
+     */
     public init(_ keyPaths: [KeyPath]) {
         
         self.keyPaths = keyPaths
     }
     
     /**
-    Initializes a `GroupBy` clause with an empty list of key path strings
-    */
+     Initializes a `GroupBy` clause with an empty list of key path strings
+     */
     public init() {
         
         self.init([])
     }
     
     /**
-    Initializes a `GroupBy` clause with a list of key path strings
-    
-    - parameter keyPath: a key path string to group results with
-    - parameter keyPaths: a series of key path strings to group results with
-    */
+     Initializes a `GroupBy` clause with a list of key path strings
+     
+     - parameter keyPath: a key path string to group results with
+     - parameter keyPaths: a series of key path strings to group results with
+     */
     public init(_ keyPath: KeyPath, _ keyPaths: KeyPath...) {
         
         self.init([keyPath] + keyPaths)
@@ -72,7 +70,7 @@ public struct GroupBy: QueryClause {
     
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        if fetchRequest.propertiesToGroupBy != nil {
+        if let keyPaths = fetchRequest.propertiesToGroupBy as? [String] where keyPaths != self.keyPaths {
             
             CoreStore.log(
                 .Warning,

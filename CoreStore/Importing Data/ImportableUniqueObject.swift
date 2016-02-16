@@ -2,7 +2,7 @@
 //  ImportableUniqueObject.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,87 +30,88 @@ import CoreData
 // MARK: - ImportableUniqueObject
 
 /**
-`NSManagedObject` subclasses that conform to the `ImportableUniqueObject` protocol can be imported from a specified `ImportSource`. This allows transactions to either update existing objects or create new instances this way:
-
-    class MyPersonEntity: NSManagedObject, ImportableUniqueObject {
-        typealias ImportSource = NSDictionary
-        typealias UniqueIDType = NSString
-        // ...
-    }
-
-    CoreStore.beginAsynchronous { (transaction) -> Void in
-        let json: NSDictionary = // ...
-        let person = try! transaction.importUniqueObject(
-            Into(MyPersonEntity),
-            source: json
-        )
-        // ...
-        transaction.commit()
-    }
-*/
+ `NSManagedObject` subclasses that conform to the `ImportableUniqueObject` protocol can be imported from a specified `ImportSource`. This allows transactions to either update existing objects or create new instances this way:
+ ```
+ class MyPersonEntity: NSManagedObject, ImportableUniqueObject {
+     typealias ImportSource = NSDictionary
+     typealias UniqueIDType = NSString
+     // ...
+ }
+ 
+ CoreStore.beginAsynchronous { (transaction) -> Void in
+     let json: NSDictionary = // ...
+     let person = try! transaction.importUniqueObject(
+         Into(MyPersonEntity),
+         source: json
+     )
+     // ...
+     transaction.commit()
+ }
+ ```
+ */
 public protocol ImportableUniqueObject: ImportableObject {
     
     /**
-    The data type for the import source. This is most commonly an `NSDictionary` or another external source such as an `NSUserDefaults`.
-    */
+     The data type for the import source. This is most commonly an `NSDictionary` or another external source such as an `NSUserDefaults`.
+     */
     typealias ImportSource
     
     /**
-    The data type for the entity's unique ID attribute
-    */
+     The data type for the entity's unique ID attribute
+     */
     typealias UniqueIDType: NSObject
     
     /**
-    The keyPath to the entity's unique ID attribute
-    */
+     The keyPath to the entity's unique ID attribute
+     */
     static var uniqueIDKeyPath: String { get }
     
     /**
-    The object's unique ID value
-    */
+     The object's unique ID value
+     */
     var uniqueIDValue: UniqueIDType { get set }
     
     /**
-    Return `true` if an object should be created from `source`. Return `false` to ignore and skip `source`. The default implementation returns the value returned by the `shouldUpdateFromImportSource(:inTransaction:)` implementation.
-    
-    - parameter source: the object to import from
-    - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
-    - returns: `true` if an object should be created from `source`. Return `false` to ignore.
-    */
+     Return `true` if an object should be created from `source`. Return `false` to ignore and skip `source`. The default implementation returns the value returned by the `shouldUpdateFromImportSource(:inTransaction:)` implementation.
+     
+     - parameter source: the object to import from
+     - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
+     - returns: `true` if an object should be created from `source`. Return `false` to ignore.
+     */
     static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
     
     /**
-    Return `true` if an object should be updated from `source`. Return `false` to ignore and skip `source`. The default implementation returns `true`.
-    
-    - parameter source: the object to import from
-    - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
-    - returns: `true` if an object should be updated from `source`. Return `false` to ignore.
-    */
+     Return `true` if an object should be updated from `source`. Return `false` to ignore and skip `source`. The default implementation returns `true`.
+     
+     - parameter source: the object to import from
+     - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
+     - returns: `true` if an object should be updated from `source`. Return `false` to ignore.
+     */
     static func shouldUpdateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
     
     /**
-    Return the unique ID as extracted from `source`. This method is called before `shouldInsertFromImportSource(...)` or `shouldUpdateFromImportSource(...)`. Return `nil` to skip importing from `source`. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
-    
-    - parameter source: the object to import from
-    - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
-    - returns: the unique ID as extracted from `source`, or `nil` to skip importing from `source`.
-    */
+     Return the unique ID as extracted from `source`. This method is called before `shouldInsertFromImportSource(...)` or `shouldUpdateFromImportSource(...)`. Return `nil` to skip importing from `source`. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
+     
+     - parameter source: the object to import from
+     - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
+     - returns: the unique ID as extracted from `source`, or `nil` to skip importing from `source`.
+     */
     static func uniqueIDFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType?
     
     /**
-    Implements the actual importing of data from `source`. This method is called just after the object is created and assigned its unique ID as returned from `uniqueIDFromImportSource(...)`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled. The default implementation simply calls `updateFromImportSource(...)`.
-    
-    - parameter source: the object to import from
-    - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
-    */
+     Implements the actual importing of data from `source`. This method is called just after the object is created and assigned its unique ID as returned from `uniqueIDFromImportSource(...)`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled. The default implementation simply calls `updateFromImportSource(...)`.
+     
+     - parameter source: the object to import from
+     - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
+     */
     func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
     
     /**
-    Implements the actual importing of data from `source`. This method is called just after the existing object is fetched using its unique ID. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
-    
-    - parameter source: the object to import from
-    - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
-    */
+     Implements the actual importing of data from `source`. This method is called just after the existing object is fetched using its unique ID. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
+     
+     - parameter source: the object to import from
+     - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
+     */
     func updateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
 }
 

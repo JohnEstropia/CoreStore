@@ -2,7 +2,7 @@
 //  MigrationType.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,30 +29,28 @@ import Foundation
 // MARK: - MigrationType
 
 /**
-The `MigrationType` specifies the type of migration required for a store.
-*/
+ The `MigrationType` specifies the type of migration required for a store.
+ */
 public enum MigrationType: BooleanType {
     
-    // MARK: Public
-    
     /**
-    Indicates that the persistent store matches the latest model version and no migration is needed
-    */
+     Indicates that the persistent store matches the latest model version and no migration is needed
+     */
     case None(version: String)
     
     /**
-    Indicates that the persistent store does not match the latest model version but Core Data can infer the mapping model, so a lightweight migration is needed
-    */
+     Indicates that the persistent store does not match the latest model version but Core Data can infer the mapping model, so a lightweight migration is needed
+     */
     case Lightweight(sourceVersion: String, destinationVersion: String)
     
     /**
-    Indicates that the persistent store does not match the latest model version and Core Data could not infer a mapping model, so a custom migration is needed
-    */
+     Indicates that the persistent store does not match the latest model version and Core Data could not infer a mapping model, so a custom migration is needed
+     */
     case Heavyweight(sourceVersion: String, destinationVersion: String)
     
     /**
-    Returns the source model version for the migration type. If no migration is required, `sourceVersion` will be equal to the `destinationVersion`.
-    */
+     Returns the source model version for the migration type. If no migration is required, `sourceVersion` will be equal to the `destinationVersion`.
+     */
     public var sourceVersion: String {
         
         switch self {
@@ -69,8 +67,8 @@ public enum MigrationType: BooleanType {
     }
     
     /**
-    Returns the destination model version for the migration type. If no migration is required, `destinationVersion` will be equal to the `sourceVersion`.
-    */
+     Returns the destination model version for the migration type. If no migration is required, `destinationVersion` will be equal to the `sourceVersion`.
+     */
     public var destinationVersion: String {
         
         switch self {
@@ -87,8 +85,8 @@ public enum MigrationType: BooleanType {
     }
     
     /**
-    Returns `true` if the `MigrationType` is a lightweight migration. Used as syntactic sugar.
-    */
+     Returns `true` if the `MigrationType` is a lightweight migration. Used as syntactic sugar.
+     */
     public var isLightweightMigration: Bool {
         
         if case .Lightweight = self {
@@ -99,8 +97,8 @@ public enum MigrationType: BooleanType {
     }
     
     /**
-    Returns `true` if the `MigrationType` is a heavyweight migration. Used as syntactic sugar.
-    */
+     Returns `true` if the `MigrationType` is a heavyweight migration. Used as syntactic sugar.
+     */
     public var isHeavyweightMigration: Bool {
         
         if case .Heavyweight = self {

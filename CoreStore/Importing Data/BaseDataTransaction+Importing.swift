@@ -2,7 +2,7 @@
 //  BaseDataTransaction+Importing.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -31,15 +31,13 @@ import CoreData
 
 public extension BaseDataTransaction {
     
-    // MARK: Public
-    
     /**
-    Creates an `ImportableObject` by importing from the specified import source.
-    
-    - parameter into: an `Into` clause specifying the entity type
-    - parameter source: the object to import values from
-    - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
-    */
+     Creates an `ImportableObject` by importing from the specified import source.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter source: the object to import values from
+     - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
+     */
     public func importObject<T where T: NSManagedObject, T: ImportableObject>(
         into: Into<T>,
         source: T.ImportSource) throws -> T? {
@@ -63,12 +61,12 @@ public extension BaseDataTransaction {
     }
     
     /**
-    Creates multiple `ImportableObject`s by importing from the specified array of import sources.
-    
-    - parameter into: an `Into` clause specifying the entity type
-    - parameter sourceArray: the array of objects to import values from
-    - returns: the array of created `ImportableObject` instances
-    */
+     Creates multiple `ImportableObject`s by importing from the specified array of import sources.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter sourceArray: the array of objects to import values from
+     - returns: the array of created `ImportableObject` instances
+     */
     public func importObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableObject, S.Generator.Element == T.ImportSource>(
         into: Into<T>,
         sourceArray: S) throws -> [T] {
@@ -98,12 +96,12 @@ public extension BaseDataTransaction {
     }
     
     /**
-    Updates an existing `ImportableUniqueObject` or creates a new instance by importing from the specified import source.
-    
-    - parameter into: an `Into` clause specifying the entity type
-    - parameter source: the object to import values from
-    - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
-    */
+     Updates an existing `ImportableUniqueObject` or creates a new instance by importing from the specified import source.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter source: the object to import values from
+     - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
+     */
     public func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
         into: Into<T>,
         source: T.ImportSource) throws -> T?  {
@@ -124,7 +122,7 @@ public extension BaseDataTransaction {
                 if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
                     guard T.shouldUpdateFromImportSource(source, inTransaction: self) else {
-                    
+                        
                         return nil
                     }
                     
@@ -147,13 +145,13 @@ public extension BaseDataTransaction {
     }
     
     /**
-    Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources.
-    
-    - parameter into: an `Into` clause specifying the entity type
-    - parameter sourceArray: the array of objects to import values from
-    - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
-    - returns: the array of created/updated `ImportableUniqueObject` instances
-    */
+     Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter sourceArray: the array of objects to import values from
+     - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
+     - returns: the array of created/updated `ImportableUniqueObject` instances
+     */
     public func importUniqueObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableUniqueObject, S.Generator.Element == T.ImportSource>(
         into: Into<T>,
         sourceArray: S,

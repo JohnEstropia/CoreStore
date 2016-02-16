@@ -2,7 +2,7 @@
 //  Where.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -46,68 +46,66 @@ public prefix func !(clause: Where) -> Where {
 // MARK: - Where
 
 /**
-The `Where` clause specifies the conditions for a fetch or a query.
-*/
+ The `Where` clause specifies the conditions for a fetch or a query.
+ */
 public struct Where: FetchClause, QueryClause, DeleteClause {
     
-    // MARK: Public
-    
     /**
-    Initializes a `Where` clause with an `NSPredicate`
-    
-    - parameter predicate: the `NSPredicate` for the fetch or query
-    */
+     Initializes a `Where` clause with an `NSPredicate`
+     
+     - parameter predicate: the `NSPredicate` for the fetch or query
+     */
     public init(_ predicate: NSPredicate) {
         
         self.predicate = predicate
     }
     
     /**
-    Initializes a `Where` clause with a predicate that always evaluates to `true`
-    */
+     Initializes a `Where` clause with a predicate that always evaluates to `true`
+     */
     public init() {
         
         self.init(true)
     }
     
     /**
-    Initializes a `Where` clause with a predicate that always evaluates to the specified boolean value
-    
-    - parameter value: the boolean value for the predicate
-    */
+     Initializes a `Where` clause with a predicate that always evaluates to the specified boolean value
+     
+     - parameter value: the boolean value for the predicate
+     */
     public init(_ value: Bool) {
         
         self.init(NSPredicate(value: value))
     }
     
     /**
-    Initializes a `Where` clause with a predicate using the specified string format and arguments
-    
-    - parameter format: the format string for the predicate
-    - parameter args: the arguments for `format`
-    */
+     Initializes a `Where` clause with a predicate using the specified string format and arguments
+     
+     - parameter format: the format string for the predicate
+     - parameter args: the arguments for `format`
+     */
     public init(_ format: String, _ args: NSObject...) {
         
         self.init(NSPredicate(format: format, argumentArray: args))
     }
     
     /**
-    Initializes a `Where` clause with a predicate using the specified string format and arguments
-    
-    - parameter format: the format string for the predicate
-    - parameter argumentArray: the arguments for `format`
-    */
+     Initializes a `Where` clause with a predicate using the specified string format and arguments
+     
+     - parameter format: the format string for the predicate
+     - parameter argumentArray: the arguments for `format`
+     */
     public init(_ format: String, argumentArray: [NSObject]?) {
         
         self.init(NSPredicate(format: format, argumentArray: argumentArray))
     }
     
     /**
-    Initializes a `Where` clause that compares equality
-    
-    - parameter keyPath: the keyPath to compare with
-    - parameter value: the arguments for the `==` operator
-    */
+     Initializes a `Where` clause that compares equality
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
     public init(_ keyPath: KeyPath, isEqualTo value: NSObject?) {
         
         self.init(value == nil
@@ -116,22 +114,22 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
     }
     
     /**
-    Initializes a `Where` clause that compares membership
-    
-    - parameter keyPath: the keyPath to compare with
-    - parameter list: the array to check membership of
-    */
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the array to check membership of
+     */
     public init(_ keyPath: KeyPath, isMemberOf list: NSArray) {
         
         self.init(NSPredicate(format: "\(keyPath) IN %@", list))
     }
     
     /**
-    Initializes a `Where` clause that compares membership
-    
-    - parameter keyPath: the keyPath to compare with
-    - parameter list: the sequence to check membership of
-    */
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
     public init<S: SequenceType where S.Generator.Element: NSObject>(_ keyPath: KeyPath, isMemberOf list: S) {
         
         self.init(NSPredicate(format: "\(keyPath) IN %@", Array(list) as NSArray))
@@ -144,7 +142,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
     
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        if fetchRequest.predicate != nil {
+        if let predicate = fetchRequest.predicate where predicate != self.predicate {
             
             CoreStore.log(
                 .Warning,

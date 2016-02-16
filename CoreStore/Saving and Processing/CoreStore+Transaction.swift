@@ -2,7 +2,7 @@
 //  CoreStore+Transaction.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,13 +30,11 @@ import Foundation
 
 public extension CoreStore {
     
-    // MARK: Public
-    
     /**
-    Using the `defaultStack`, begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
-    
-    - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-    */
+     Using the `defaultStack`, begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     */
     public static func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
         self.defaultStack.beginAsynchronous(closure)
@@ -63,6 +61,14 @@ public extension CoreStore {
     public static func beginUnsafe(supportsUndo supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
         return self.defaultStack.beginUnsafe(supportsUndo: supportsUndo)
+    }
+    
+    /**
+     Refreshes all registered objects `NSManagedObject`s in the `DataStack`.
+     */
+    public static func refreshAllObjectsAsFaults() {
+        
+        self.defaultStack.refreshAllObjectsAsFaults()
     }
     
     @available(*, deprecated=1.3.1, renamed="beginUnsafe")

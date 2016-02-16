@@ -2,7 +2,7 @@
 //  From.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,43 +30,85 @@ import CoreData
 // MARK: - From
 
 /**
-A `Form` clause binds the `NSManagedObject` entity type to the generics type system.
-*/
+ A `From` clause specifies the source entity and source persistent store for fetch and query methods. A common usage is to just indicate the entity:
+ ```
+ let person = transaction.fetchOne(From(MyPersonEntity))
+ ```
+ For cases where multiple `NSPersistentStore`s contain the same entity, the source configuration's name needs to be specified as well:
+ ```
+ let person = transaction.fetchOne(From<MyPersonEntity>("Configuration1"))
+ ```
+ */
 public struct From<T: NSManagedObject> {
     
-    // MARK: Public
-    
+    /**
+     Initializes a `From` clause.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>())
+     ```
+     */
     public init(){
         
-        self.entityClass = T.self
-        self.findPersistentStores = { _ in nil }
+        self.init(entityClass: T.self)
     }
     
+    /**
+     Initializes a `From` clause with the specified entity type.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>())
+     ```
+     - parameter entity: the `NSManagedObject` type to be created
+     */
     public init(_ entity: T.Type) {
         
-        self.entityClass = entity
-        self.findPersistentStores = { _ in nil }
+        self.init(entityClass: entity)
     }
     
+    /**
+     Initializes a `From` clause with the specified entity class.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>())
+     ```
+     - parameter entityClass: the `NSManagedObject` class type to be created
+     */
     public init(_ entityClass: AnyClass) {
         
-        self.entityClass = entityClass
-        self.findPersistentStores = { _ in nil }
+        self.init(entityClass: entityClass)
     }
     
-    public init(_ configurations: String?...) {
+    /**
+     Initializes a `From` clause with the specified configurations.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>(nil, "Configuration1"))
+     ```
+     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
+     */
+    public init(_ configuration: String?, otherConfigurations: String?...) {
         
-        self.init(entityClass: T.self, configurations: configurations)
+        self.init(entityClass: T.self, configurations: [configuration] + otherConfigurations)
     }
     
+    /**
+     Initializes a `From` clause with the specified configurations.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>(["Configuration1", "Configuration2"]))
+     ```
+     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     */
     public init(_ configurations: [String?]) {
         
         self.init(entityClass: T.self, configurations: configurations)
     }
     
-    public init(_ entity: T.Type, _ configurations: String?...) {
+    public init(_ entity: T.Type, _ configuration: String?, _ otherConfigurations: String?...) {
         
-        self.init(entityClass: entity, configurations: configurations)
+        self.init(entityClass: entity, configurations: [configuration] + otherConfigurations)
     }
     
     public init(_ entity: T.Type, _ configurations: [String?]) {
@@ -74,9 +116,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entity, configurations: configurations)
     }
     
-    public init(_ entityClass: AnyClass, _ configurations: String?...) {
+    public init(_ entityClass: AnyClass, _ configuration: String?, _ otherConfigurations: String?...) {
         
-        self.init(entityClass: entityClass, configurations: configurations)
+        self.init(entityClass: entityClass, configurations: [configuration] + otherConfigurations)
     }
     
     public init(_ entityClass: AnyClass, _ configurations: [String?]) {
@@ -84,9 +126,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entityClass, configurations: configurations)
     }
     
-    public init(_ storeURLs: NSURL...) {
+    public init(_ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
-        self.init(entityClass: T.self, storeURLs: storeURLs)
+        self.init(entityClass: T.self, storeURLs: [storeURL] + otherStoreURLs)
     }
     
     public init(_ storeURLs: [NSURL]) {
@@ -94,9 +136,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: T.self, storeURLs: storeURLs)
     }
     
-    public init(_ entity: T.Type, _ storeURLs: NSURL...) {
+    public init(_ entity: T.Type, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
-        self.init(entityClass: entity, storeURLs: storeURLs)
+        self.init(entityClass: entity, storeURLs: [storeURL] + otherStoreURLs)
     }
     
     public init(_ entity: T.Type, _ storeURLs: [NSURL]) {
@@ -104,9 +146,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entity, storeURLs: storeURLs)
     }
     
-    public init(_ entityClass: AnyClass, _ storeURLs: NSURL...) {
+    public init(_ entityClass: AnyClass, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
-        self.init(entityClass: entityClass, storeURLs: storeURLs)
+        self.init(entityClass: entityClass, storeURLs: [storeURL] + otherStoreURLs)
     }
     
     public init(_ entityClass: AnyClass, _ storeURLs: [NSURL]) {
@@ -114,9 +156,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entityClass, storeURLs: storeURLs)
     }
     
-    public init(_ persistentStores: NSPersistentStore...) {
+    public init(_ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
-        self.init(entityClass: T.self, persistentStores: persistentStores)
+        self.init(entityClass: T.self, persistentStores: [persistentStore] + otherPersistentStores)
     }
     
     public init(_ persistentStores: [NSPersistentStore]) {
@@ -124,9 +166,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: T.self, persistentStores: persistentStores)
     }
     
-    public init(_ entity: T.Type, _ persistentStores: NSPersistentStore...) {
+    public init(_ entity: T.Type, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
-        self.init(entityClass: entity, persistentStores: persistentStores)
+        self.init(entityClass: entity, persistentStores: [persistentStore] + otherPersistentStores)
     }
     
     public init(_ entity: T.Type, _ persistentStores: [NSPersistentStore]) {
@@ -134,9 +176,9 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: entity, persistentStores: persistentStores)
     }
     
-    public init(_ entityClass: AnyClass, _ persistentStores: NSPersistentStore...) {
+    public init(_ entityClass: AnyClass, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
-        self.init(entityClass: entityClass, persistentStores: persistentStores)
+        self.init(entityClass: entityClass, persistentStores: [persistentStore] + otherPersistentStores)
     }
     
     public init(_ entityClass: AnyClass, _ persistentStores: [NSPersistentStore]) {
@@ -147,10 +189,20 @@ public struct From<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) {
+    internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext, applyAffectedStores: Bool = true) {
         
         fetchRequest.entity = context.entityDescriptionForEntityClass(self.entityClass)
-        fetchRequest.affectedStores = self.findPersistentStores(context: context)
+        if applyAffectedStores {
+            
+            self.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
+        }
+    }
+    
+    internal func applyAffectedStoresForFetchedRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Bool {
+        
+        let stores = self.findPersistentStores(context: context)
+        fetchRequest.affectedStores = stores
+        return stores?.isEmpty == false
     }
     
     
@@ -159,6 +211,15 @@ public struct From<T: NSManagedObject> {
     private let entityClass: AnyClass
     
     private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
+    
+    private init(entityClass: AnyClass) {
+        
+        self.entityClass = entityClass
+        self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
+            
+            return context.parentStack?.persistentStoresForEntityClass(entityClass)
+        }
+    }
     
     private init(entityClass: AnyClass, configurations: [String?]) {
         

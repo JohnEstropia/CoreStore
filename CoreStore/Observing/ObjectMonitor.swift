@@ -2,7 +2,7 @@
 //  ObjectMonitor.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -33,47 +33,45 @@ import CoreData
 // MARK: - ObjectMonitor
 
 /**
-The `ObjectMonitor` monitors changes to a single `NSManagedObject` instance. Observers that implement the `ObjectObserver` protocol may then register themselves to the `ObjectMonitor`'s `addObserver(_:)` method:
-
-    let monitor = CoreStore.monitorObject(object)
-    monitor.addObserver(self)
-
-The created `ObjectMonitor` instance needs to be held on (retained) for as long as the object needs to be observed.
-
-Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
-*/
+ The `ObjectMonitor` monitors changes to a single `NSManagedObject` instance. Observers that implement the `ObjectObserver` protocol may then register themselves to the `ObjectMonitor`'s `addObserver(_:)` method:
+ ```
+ let monitor = CoreStore.monitorObject(object)
+ monitor.addObserver(self)
+ ```
+ The created `ObjectMonitor` instance needs to be held on (retained) for as long as the object needs to be observed.
+ 
+ Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
+ */
 @available(OSX, unavailable)
 public final class ObjectMonitor<T: NSManagedObject> {
     
-    // MARK: Public
-    
     /**
-    Returns the `NSManagedObject` instance being observed, or `nil` if the object was already deleted.
-    */
+     Returns the `NSManagedObject` instance being observed, or `nil` if the object was already deleted.
+     */
     public var object: T? {
         
         return self.fetchedResultsController.fetchedObjects?.first as? T
     }
     
     /**
-    Returns `true` if the `NSManagedObject` instance being observed still exists, or `false` if the object was already deleted.
-    */
+     Returns `true` if the `NSManagedObject` instance being observed still exists, or `false` if the object was already deleted.
+     */
     public var isObjectDeleted: Bool {
         
         return self.object?.managedObjectContext == nil
     }
     
     /**
-    Registers an `ObjectObserver` to be notified when changes to the receiver's `object` are made.
-    
-    To prevent retain-cycles, `ObjectMonitor` only keeps `weak` references to its observers.
-    
-    For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
-    
-    Calling `addObserver(_:)` multiple times on the same observer is safe, as `ObjectMonitor` unregisters previous notifications to the observer before re-registering them.
-    
-    - parameter observer: an `ObjectObserver` to send change notifications to
-    */
+     Registers an `ObjectObserver` to be notified when changes to the receiver's `object` are made.
+     
+     To prevent retain-cycles, `ObjectMonitor` only keeps `weak` references to its observers.
+     
+     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
+     
+     Calling `addObserver(_:)` multiple times on the same observer is safe, as `ObjectMonitor` unregisters previous notifications to the observer before re-registering them.
+     
+     - parameter observer: an `ObjectObserver` to send change notifications to
+     */
     public func addObserver<U: ObjectObserver where U.ObjectEntityType == T>(observer: U) {
         
         CoreStore.assert(
@@ -143,12 +141,12 @@ public final class ObjectMonitor<T: NSManagedObject> {
     }
     
     /**
-    Unregisters an `ObjectObserver` from receiving notifications for changes to the receiver's `object`.
-    
-    For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
-    
-    - parameter observer: an `ObjectObserver` to unregister notifications to
-    */
+     Unregisters an `ObjectObserver` from receiving notifications for changes to the receiver's `object`.
+     
+     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
+     
+     - parameter observer: an `ObjectObserver` to unregister notifications to
+     */
     public func removeObserver<U: ObjectObserver where U.ObjectEntityType == T>(observer: U) {
         
         CoreStore.assert(
@@ -165,7 +163,17 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal init(dataStack: DataStack, object: T) {
+    internal convenience init(dataStack: DataStack, object: T) {
+        
+        self.init(context: dataStack.mainContext, object: object)
+    }
+    
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, object: T) {
+        
+        self.init(context: unsafeTransaction.context, object: object)
+    }
+    
+    private init(context: NSManagedObjectContext, object: T) {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.entity = object.entity
@@ -175,8 +183,8 @@ public final class ObjectMonitor<T: NSManagedObject> {
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        let fetchedResultsController = NSFetchedResultsController(
-            dataStack: dataStack,
+        let fetchedResultsController = CoreStoreFetchedResultsController<T>(
+            context: context,
             fetchRequest: fetchRequest,
             fetchClauses: [Where("SELF", isEqualTo: object.objectID)]
         )
@@ -185,11 +193,10 @@ public final class ObjectMonitor<T: NSManagedObject> {
         
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
-        self.parentStack = dataStack
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
-        try! fetchedResultsController.performFetch()
+        try! fetchedResultsController.performFetchFromSpecifiedStores()
         
         self.lastCommittedAttributes = (self.object?.committedValuesForKeys(nil) as? [String: NSObject]) ?? [:]
     }
@@ -202,10 +209,9 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     // MARK: Private
     
-    private let fetchedResultsController: NSFetchedResultsController
+    private let fetchedResultsController: CoreStoreFetchedResultsController<T>
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private var lastCommittedAttributes = [String: NSObject]()
-    private weak var parentStack: DataStack?
     
     private var willChangeObjectKey: Void?
     private var didDeleteObjectKey: Void?

@@ -2,7 +2,7 @@
 //  MigrationResult.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,46 +29,44 @@ import Foundation
 // MARK: - MigrationResult
 
 /**
-The `MigrationResult` indicates the result of a migration.
-The `MigrationResult` can be treated as a boolean:
-
-    CoreStore.upgradeSQLiteStoreIfNeeded { transaction in
-        // ...
-        let result = transaction.commit()
-        if result {
-            // succeeded
-        }
-        else {
-            // failed
-        }
-    }
-
-or as an `enum`, where the resulting associated object can also be inspected:
-
-    CoreStore.beginAsynchronous { transaction in
-        // ...
-        let result = transaction.commit()
-        switch result {
-        case .Success(let hasChanges):
-            // hasChanges indicates if there were changes or not
-        case .Failure(let error):
-            // error is the NSError instance for the failure
-        }
-    }
-```
-*/
+ The `MigrationResult` indicates the result of a migration.
+ The `MigrationResult` can be treated as a boolean:
+ ```
+ CoreStore.upgradeSQLiteStoreIfNeeded { transaction in
+     // ...
+     let result = transaction.commit()
+     if result {
+         // succeeded
+     }
+     else {
+         // failed
+     }
+ }
+ ```
+ or as an `enum`, where the resulting associated object can also be inspected:
+ ```
+ CoreStore.beginAsynchronous { transaction in
+     // ...
+     let result = transaction.commit()
+     switch result {
+     case .Success(let hasChanges):
+         // hasChanges indicates if there were changes or not
+     case .Failure(let error):
+         // error is the NSError instance for the failure
+     }
+ }
+ ```
+ */
 public enum MigrationResult {
     
-    // MARK: Public
-    
     /**
-    `MigrationResult.Success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
-    */
+     `MigrationResult.Success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
+     */
     case Success([MigrationType])
     
     /**
-    `SaveResult.Failure` indicates that the migration failed. The associated object for this value is the related `NSError` instance.
-    */
+     `SaveResult.Failure` indicates that the migration failed. The associated object for this value is the related `NSError` instance.
+     */
     case Failure(NSError)
     
     
@@ -103,6 +101,7 @@ extension MigrationResult: BooleanType {
     public var boolValue: Bool {
         
         switch self {
+            
         case .Success: return true
         case .Failure: return false
         }

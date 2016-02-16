@@ -2,7 +2,7 @@
 //  AsynchronousDataTransaction.swift
 //  CoreStore
 //
-//  Copyright (c) 2015 John Rommel Estropia
+//  Copyright © 2015 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -33,17 +33,15 @@ import CoreData
 // MARK: - AsynchronousDataTransaction
 
 /**
-The `AsynchronousDataTransaction` provides an interface for `NSManagedObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginAsynchronous(_:)`, or from `CoreStore.beginAsynchronous(_:)`.
-*/
+ The `AsynchronousDataTransaction` provides an interface for `NSManagedObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginAsynchronous(_:)`, or from `CoreStore.beginAsynchronous(_:)`.
+ */
 public final class AsynchronousDataTransaction: BaseDataTransaction {
     
-    // MARK: Public
-    
     /**
-    Saves the transaction changes. This method should not be used after the `commit()` method was already called once.
-    
-    - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
-    */
+     Saves the transaction changes. This method should not be used after the `commit()` method was already called once.
+     
+     - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
+     */
     public func commit(completion: (result: SaveResult) -> Void = { _ in }) {
         
         CoreStore.assert(
@@ -68,11 +66,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
-    
-    - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-    - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
-    */
+     Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
+     */
     public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         CoreStore.assert(
@@ -94,11 +92,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     // MARK: BaseDataTransaction
     
     /**
-    Creates a new `NSManagedObject` with the specified entity type.
-    
-    - parameter into: the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
-    - returns: a new `NSManagedObject` instance of the specified entity type.
-    */
+     Creates a new `NSManagedObject` with the specified entity type.
+     
+     - parameter into: the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
+     - returns: a new `NSManagedObject` instance of the specified entity type.
+     */
     public override func create<T: NSManagedObject>(into: Into<T>) -> T {
         
         CoreStore.assert(
@@ -110,11 +108,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Returns an editable proxy of a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
-    
-    - parameter object: the `NSManagedObject` type to be edited
-    - returns: an editable proxy for the specified `NSManagedObject`.
-    */
+     Returns an editable proxy of a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
+     
+     - parameter object: the `NSManagedObject` type to be edited
+     - returns: an editable proxy for the specified `NSManagedObject`.
+     */
     @warn_unused_result
     public override func edit<T: NSManagedObject>(object: T?) -> T? {
         
@@ -127,12 +125,12 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Returns an editable proxy of the object with the specified `NSManagedObjectID`. This method should not be used after the `commit()` method was already called once.
-    
-    - parameter into: an `Into` clause specifying the entity type
-    - parameter objectID: the `NSManagedObjectID` for the object to be edited
-    - returns: an editable proxy for the specified `NSManagedObject`.
-    */
+     Returns an editable proxy of the object with the specified `NSManagedObjectID`. This method should not be used after the `commit()` method was already called once.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter objectID: the `NSManagedObjectID` for the object to be edited
+     - returns: an editable proxy for the specified `NSManagedObject`.
+     */
     @warn_unused_result
     public override func edit<T: NSManagedObject>(into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
@@ -145,10 +143,10 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Deletes a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
-    
-    - parameter object: the `NSManagedObject` type to be deleted
-    */
+     Deletes a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
+     
+     - parameter object: the `NSManagedObject` type to be deleted
+     */
     public override func delete(object: NSManagedObject?) {
         
         CoreStore.assert(
@@ -160,12 +158,12 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Deletes the specified `NSManagedObject`s.
-    
-    - parameter object1: the `NSManagedObject` type to be deleted
-    - parameter object2: another `NSManagedObject` type to be deleted
-    - parameter objects: other `NSManagedObject`s type to be deleted
-    */
+     Deletes the specified `NSManagedObject`s.
+     
+     - parameter object1: the `NSManagedObject` type to be deleted
+     - parameter object2: another `NSManagedObject` type to be deleted
+     - parameter objects: other `NSManagedObject`s type to be deleted
+     */
     public override func delete(object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
         
         CoreStore.assert(
@@ -177,10 +175,10 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-    Deletes the specified `NSManagedObject`s.
-    
-    - parameter objects: the `NSManagedObject`s type to be deleted
-    */
+     Deletes the specified `NSManagedObject`s.
+     
+     - parameter objects: the `NSManagedObject`s type to be deleted
+     */
     public override func delete<S: SequenceType where S.Generator.Element: NSManagedObject>(objects: S) {
         
         CoreStore.assert(

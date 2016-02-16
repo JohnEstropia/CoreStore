@@ -2,7 +2,7 @@
 //  Into.swift
 //  CoreStore
 //
-//  Copyright (c) 2014 John Rommel Estropia
+//  Copyright © 2014 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,26 +30,24 @@ import CoreData
 // MARK: - Into
 
 /**
-A `Into` clause contains the destination entity and destination persistent store for a `create(...)` method. A common usage is to just indicate the entity:
-
-let person = transaction.create(Into(MyPersonEntity))
-
-For cases where multiple `NSPersistentStore`s contain the same entity, the destination configuration's name needs to be specified as well:
-
-    let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
-
-This helps the `NSManagedObjectContext` to determine which
-*/
+ An `Into` clause contains the destination entity and destination persistent store for a `create(...)` method. A common usage is to just indicate the entity:
+ ```
+ let person = transaction.create(Into(MyPersonEntity))
+ ```
+ For cases where multiple `NSPersistentStore`s contain the same entity, the destination configuration's name needs to be specified as well:
+ ```
+ let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
+ ```
+ */
 public struct Into<T: NSManagedObject> {
     
-    // MARK: Public
-    
     /**
-    Initializes an `Into` clause.
-    Sample Usage:
-    
-        let person = transaction.create(Into<MyPersonEntity>())
-    */
+     Initializes an `Into` clause.
+     Sample Usage:
+     ```
+     let person = transaction.create(Into<MyPersonEntity>())
+     ```
+     */
     public init(){
         
         self.configuration = nil
@@ -58,13 +56,13 @@ public struct Into<T: NSManagedObject> {
     }
     
     /**
-    Initializes an `Into` clause with the specified entity type.
-    Sample Usage:
-    
-    let person = transaction.create(Into(MyPersonEntity))
-    
-    - parameter entity: the `NSManagedObject` type to be created
-    */
+     Initializes an `Into` clause with the specified entity type.
+     Sample Usage:
+     ```
+     let person = transaction.create(Into(MyPersonEntity))
+     ```
+     - parameter entity: the `NSManagedObject` type to be created
+     */
     public init(_ entity: T.Type) {
         
         self.configuration = nil
@@ -73,10 +71,13 @@ public struct Into<T: NSManagedObject> {
     }
     
     /**
-    Initializes an `Into` clause with the specified entity class.
-    
-    - parameter entityClass: the `NSManagedObject` class type to be created
-    */
+     Initializes an `Into` clause with the specified entity class.
+     Sample Usage:
+     ```
+     let person = transaction.create(Into(MyPersonEntity))
+     ```
+     - parameter entityClass: the `NSManagedObject` class type to be created
+     */
     public init(_ entityClass: AnyClass) {
         
         self.configuration = nil
@@ -85,13 +86,13 @@ public struct Into<T: NSManagedObject> {
     }
     
     /**
-    Initializes an `Into` clause with the specified configuration.
-    Sample Usage:
-    
-    let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
-    
-    - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
-    */
+     Initializes an `Into` clause with the specified configuration.
+     Sample Usage:
+     ```
+     let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
+     ```
+     - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     */
     public init(_ configuration: String?) {
         
         self.configuration = configuration
@@ -100,14 +101,14 @@ public struct Into<T: NSManagedObject> {
     }
     
     /**
-    Initializes an `Into` clause with the specified entity type and configuration.
-    Sample Usage:
-    
-    let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
-    
-    - parameter entity: the `NSManagedObject` type to be created
-    - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
-    */
+     Initializes an `Into` clause with the specified entity type and configuration.
+     Sample Usage:
+     ```
+     let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
+     ```
+     - parameter entity: the `NSManagedObject` type to be created
+     - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     */
     public init(_ entity: T.Type, _ configuration: String?) {
         
         self.configuration = configuration
@@ -116,14 +117,14 @@ public struct Into<T: NSManagedObject> {
     }
     
     /**
-    Initializes an `Into` clause with the specified entity class and configuration.
-    Sample Usage:
-    
-    let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
-    
-    - parameter entityClass: the `NSManagedObject` class type to be created
-    - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
-    */
+     Initializes an `Into` clause with the specified entity class and configuration.
+     Sample Usage:
+     ```
+     let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
+     ```
+     - parameter entityClass: the `NSManagedObject` class type to be created
+     - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     */
     public init(_ entityClass: AnyClass, _ configuration: String?) {
         
         self.configuration = configuration

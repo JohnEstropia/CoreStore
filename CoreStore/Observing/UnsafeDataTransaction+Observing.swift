@@ -1,8 +1,8 @@
 //
-//  DataStack+Observing.swift
+//  UnsafeDataTransaction+Observing.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2016 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,10 @@ import CoreData
 #endif
 
 
-// MARK: - DataStack
+// MARK: - UnsafeDataTransaction
 
 @available(OSX, unavailable)
-public extension DataStack {
+public extension UnsafeDataTransaction {
     
     /**
      Creates a `ObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
@@ -44,13 +44,8 @@ public extension DataStack {
     @warn_unused_result
     public func monitorObject<T: NSManagedObject>(object: T) -> ObjectMonitor<T> {
         
-        CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
-        )
-        
         return ObjectMonitor(
-            dataStack: self,
+            unsafeTransaction: self,
             object: object
         )
     }
@@ -79,16 +74,12 @@ public extension DataStack {
     public func monitorList<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
-        )
-        CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
         return ListMonitor(
-            dataStack: self,
+            unsafeTransaction: self,
             from: from,
             sectionBy: nil,
             fetchClauses: fetchClauses
@@ -117,16 +108,12 @@ public extension DataStack {
     public func monitorList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
-        )
-        CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
         _ = ListMonitor(
-            dataStack: self,
+            unsafeTransaction: self,
             from: from,
             sectionBy: nil,
             fetchClauses: fetchClauses,
@@ -160,16 +147,12 @@ public extension DataStack {
     public func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
-        )
-        CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
         return ListMonitor(
-            dataStack: self,
+            unsafeTransaction: self,
             from: from,
             sectionBy: sectionBy,
             fetchClauses: fetchClauses
@@ -200,16 +183,12 @@ public extension DataStack {
     public func monitorSectionedList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
-        )
-        CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
         _ = ListMonitor(
-            dataStack: self,
+            unsafeTransaction: self,
             from: from,
             sectionBy: sectionBy,
             fetchClauses: fetchClauses,
