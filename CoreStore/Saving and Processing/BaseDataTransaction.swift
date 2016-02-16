@@ -202,6 +202,244 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     
+    // MARK: Inspecting Pending Objects
+    
+    /**
+     Returns all pending `NSManagedObject`s that were inserted to the transaction. This method should not be called after the `commit()` method was called.
+     
+     - returns: a `Set` of pending `NSManagedObject`s that were inserted to the transaction.
+     */
+    public func insertedObjects() -> Set<NSManagedObject> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access inserted objects from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access inserted objects from an already committed \(typeName(self))."
+        )
+        
+        return self.context.insertedObjects
+    }
+    
+    /**
+     Returns all pending `NSManagedObject`s of the specified type that were inserted to the transaction. This method should not be called after the `commit()` method was called.
+     
+     - parameter entity: the `NSManagedObject` subclass to filter
+     - returns: a `Set` of pending `NSManagedObject`s of the specified type that were inserted to the transaction.
+     */
+    public func insertedObjects<T: NSManagedObject>(entity: T.Type) -> Set<T> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access inserted objects from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access inserted objects from an already committed \(typeName(self))."
+        )
+        
+        return Set(self.context.insertedObjects.flatMap { $0 as? T })
+    }
+    
+    /**
+     Returns all pending `NSManagedObjectID`s that were inserted to the transaction. This method should not be called after the `commit()` method was called.
+     
+     - returns: a `Set` of pending `NSManagedObjectID`s that were inserted to the transaction.
+     */
+    public func insertedObjectIDs() -> Set<NSManagedObjectID> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access inserted object IDs from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access inserted objects IDs from an already committed \(typeName(self))."
+        )
+        
+        return Set(self.context.insertedObjects.map { $0.objectID })
+    }
+    
+    /**
+     Returns all pending `NSManagedObjectID`s of the specified type that were inserted to the transaction. This method should not be called after the `commit()` method was called.
+     
+     - parameter entity: the `NSManagedObject` subclass to filter
+     - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were inserted to the transaction.
+     */
+    public func insertedObjectIDs<T: NSManagedObject>(entity: T.Type) -> Set<NSManagedObjectID> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access inserted object IDs from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access inserted objects IDs from an already committed \(typeName(self))."
+        )
+        
+        return Set(self.context.insertedObjects.flatMap { $0 as? T }.map { $0.objectID })
+    }
+    
+    /**
+     Returns all pending `NSManagedObject`s that were updated in the transaction. This method should not be called after the `commit()` method was called.
+     
+     - returns: a `Set` of pending `NSManagedObject`s that were updated to the transaction.
+     */
+    public func updatedObjects() -> Set<NSManagedObject> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access updated objects from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access updated objects from an already committed \(typeName(self))."
+        )
+        
+        return self.context.updatedObjects
+    }
+    
+    /**
+     Returns all pending `NSManagedObject`s of the specified type that were updated in the transaction. This method should not be called after the `commit()` method was called.
+     
+     - parameter entity: the `NSManagedObject` subclass to filter
+     - returns: a `Set` of pending `NSManagedObject`s of the specified type that were updated in the transaction.
+     */
+    public func updatedObjects<T: NSManagedObject>(entity: T.Type) -> Set<T> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access updated objects from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access updated objects from an already committed \(typeName(self))."
+        )
+        
+        return Set(self.context.updatedObjects.flatMap { $0 as? T })
+    }
+    
+    /**
+     Returns all pending `NSManagedObjectID`s that were updated in the transaction. This method should not be called after the `commit()` method was called.
+     
+     - returns: a `Set` of pending `NSManagedObjectID`s that were updated in the transaction.
+     */
+    public func updatedObjectIDs() -> Set<NSManagedObjectID> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access updated object IDs from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access updated object IDs from an already committed \(typeName(self))."
+        )
+        
+        return Set(self.context.updatedObjects.map { $0.objectID })
+    }
+    
+    /**
+     Returns all pending `NSManagedObjectID`s of the specified type that were updated in the transaction. This method should not be called after the `commit()` method was called.
+     
+     - parameter entity: the `NSManagedObject` subclass to filter
+     - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were updated in the transaction.
+     */
+    public func updatedObjectIDs<T: NSManagedObject>(entity: T.Type) -> Set<NSManagedObjectID> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access updated object IDs from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access updated object IDs from an already committed \(typeName(self))."
+        )
+        
+        return Set(self.context.updatedObjects.flatMap { $0 as? T }.map { $0.objectID })
+    }
+    
+    /**
+     Returns all pending `NSManagedObject`s that were deleted from the transaction. This method should not be called after the `commit()` method was called.
+     
+     - returns: a `Set` of pending `NSManagedObject`s that were deleted from the transaction.
+     */
+    public func deletedObjects() -> Set<NSManagedObject> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access deleted objects from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access deleted objects from an already committed \(typeName(self))."
+        )
+        
+        return self.context.deletedObjects
+    }
+    
+    /**
+     Returns all pending `NSManagedObject`s of the specified type that were deleted from the transaction. This method should not be called after the `commit()` method was called.
+     
+     - parameter entity: the `NSManagedObject` subclass to filter
+     - returns: a `Set` of pending `NSManagedObject`s of the specified type that were deleted from the transaction.
+     */
+    public func deletedObjects<T: NSManagedObject>(entity: T.Type) -> Set<T> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access deleted objects from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access deleted objects from an already committed \(typeName(self))."
+        )
+        
+        return Set(self.context.deletedObjects.flatMap { $0 as? T })
+    }
+    
+    /**
+     Returns all pending `NSManagedObjectID`s of the specified type that were deleted from the transaction. This method should not be called after the `commit()` method was called.
+     
+     - parameter entity: the `NSManagedObject` subclass to filter
+     - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
+     */
+    public func deletedObjectIDs() -> Set<NSManagedObjectID> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access deleted object IDs from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access deleted object IDs from an already committed \(typeName(self))."
+        )
+        
+        return Set(self.context.deletedObjects.map { $0.objectID })
+    }
+    
+    /**
+     Returns all pending `NSManagedObjectID`s of the specified type that were deleted from the transaction. This method should not be called after the `commit()` method was called.
+     
+     - parameter entity: the `NSManagedObject` subclass to filter
+     - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
+     */
+    public func deletedObjectIDs<T: NSManagedObject>(entity: T.Type) -> Set<NSManagedObjectID> {
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to access deleted object IDs from a \(typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access deleted object IDs from an already committed \(typeName(self))."
+        )
+        
+        return Set(self.context.deletedObjects.flatMap { $0 as? T }.map { $0.objectID })
+    }
+    
+    
     // MARK: Internal
     
     internal let context: NSManagedObjectContext
