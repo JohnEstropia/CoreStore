@@ -46,19 +46,17 @@ internal let defaultSQLiteStoreURL = defaultDirectory.URLByAppendingPathComponen
 // MARK: - DataStack
 
 /**
-The `DataStack` encapsulates the data model for the Core Data stack. Each `DataStack` can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own `NSPersistentStoreCoordinator`, a root `NSManagedObjectContext` for disk saves, and a shared `NSManagedObjectContext` designed as a read-only model interface for `NSManagedObjects`.
-*/
+ The `DataStack` encapsulates the data model for the Core Data stack. Each `DataStack` can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own `NSPersistentStoreCoordinator`, a root `NSManagedObjectContext` for disk saves, and a shared `NSManagedObjectContext` designed as a read-only model interface for `NSManagedObjects`.
+ */
 public final class DataStack {
     
-    // MARK: Public
-    
     /**
-    Initializes a `DataStack` from an `NSManagedObjectModel`.
-    
-    - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name will be used.
-    - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
-    - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for incremental migration. If not specified, will default to a non-migrating data stack.
-    */
+     Initializes a `DataStack` from an `NSManagedObjectModel`.
+     
+     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name will be used.
+     - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
+     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for incremental migration. If not specified, will default to a non-migrating data stack.
+     */
     public required init(modelName: String = applicationName, bundle: NSBundle = NSBundle.mainBundle(), migrationChain: MigrationChain = nil) {
         
         CoreStore.assert(
@@ -82,26 +80,26 @@ public final class DataStack {
     }
     
     /**
-    Returns the `DataStack`'s model version. The version string is the same as the name of the version-specific .xcdatamodeld file.
-    */
+     Returns the `DataStack`'s model version. The version string is the same as the name of the version-specific .xcdatamodeld file.
+     */
     public var modelVersion: String {
         
         return self.model.currentModelVersion!
     }
     
     /**
-    Returns the entity name-to-class type mapping from the `DataStack`'s model.
-    */
+     Returns the entity name-to-class type mapping from the `DataStack`'s model.
+     */
     public var entityTypesByName: [String: NSManagedObject.Type] {
         
         return self.model.entityTypesMapping()
     }
     
     /**
-    Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass.
-    */
+     Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass.
+     */
     public func entityDescriptionForType(type: NSManagedObject.Type) -> NSEntityDescription? {
-    
+        
         return NSEntityDescription.entityForName(
             self.model.entityNameForClass(type),
             inManagedObjectContext: self.mainContext
@@ -109,19 +107,19 @@ public final class DataStack {
     }
     
     /**
-    Returns the `NSManagedObjectID` for the specified object URI if it exists in the persistent store.
-    */
+     Returns the `NSManagedObjectID` for the specified object URI if it exists in the persistent store.
+     */
     public func objectIDForURIRepresentation(url: NSURL) -> NSManagedObjectID? {
         
         return self.coordinator.managedObjectIDForURIRepresentation(url)
     }
     
     /**
-    Adds an in-memory store to the stack.
-    
-    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
-    - returns: the `NSPersistentStore` added to the stack.
-    */
+     Adds an in-memory store to the stack.
+     
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
+     - returns: the `NSPersistentStore` added to the stack.
+     */
     public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
         
         let coordinator = self.coordinator;
@@ -160,13 +158,13 @@ public final class DataStack {
     }
     
     /**
-    Adds to the stack an SQLite store from the given SQLite file name.
-    
-    - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory (or the "Caches" directory on tvOS). A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-    - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
-    - returns: the `NSPersistentStore` added to the stack.
-    */
+     Adds to the stack an SQLite store from the given SQLite file name.
+     
+     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory (or the "Caches" directory on tvOS). A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
+     - returns: the `NSPersistentStore` added to the stack.
+     */
     public func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         return try self.addSQLiteStoreAndWait(
@@ -180,13 +178,13 @@ public final class DataStack {
     }
     
     /**
-    Adds to the stack an SQLite store from the given SQLite file URL.
-    
-    - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory (or the "Caches" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-    - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-    - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
-    - returns: the `NSPersistentStore` added to the stack.
-    */
+     Adds to the stack an SQLite store from the given SQLite file URL.
+     
+     - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory (or the "Caches" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
+     - returns: the `NSPersistentStore` added to the stack.
+     */
     public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         CoreStore.assert(

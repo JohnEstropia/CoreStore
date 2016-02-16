@@ -34,13 +34,11 @@ import CoreData
 
 public extension DataStack {
     
-    // MARK: Public
-    
     /**
-    Begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
-    
-    - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-    */
+     Begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     */
     public func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
         AsynchronousDataTransaction(

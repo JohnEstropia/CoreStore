@@ -30,8 +30,6 @@ import Foundation
 
 public extension CoreStore {
     
-    // MARK: Public
-    
     /**
     The `CoreStoreLogger` instance to be used. The default logger is an instance of a `DefaultLogger`.
     */

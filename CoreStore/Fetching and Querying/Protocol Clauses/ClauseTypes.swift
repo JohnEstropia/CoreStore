@@ -29,6 +29,9 @@ import CoreData
 
 // MARK: - FetchClause
 
+/**
+ The `FetchClause` implement clauses used to configure `NSFetchRequest`s.
+ */
 public protocol FetchClause {
     
     func applyToFetchRequest(fetchRequest: NSFetchRequest)
@@ -37,6 +40,9 @@ public protocol FetchClause {
 
 // MARK: - QueryClause
 
+/**
+ The `QueryClause` implement clauses used to configure `NSFetchRequest`s.
+ */
 public protocol QueryClause {
     
     func applyToFetchRequest(fetchRequest: NSFetchRequest)
@@ -45,6 +51,9 @@ public protocol QueryClause {
 
 // MARK: - DeleteClause
 
+/**
+ The `DeleteClause` implement clauses used to configure `NSFetchRequest`s.
+ */
 public protocol DeleteClause {
     
     func applyToFetchRequest(fetchRequest: NSFetchRequest)

@@ -33,26 +33,26 @@ import CoreData
 // MARK: - BaseDataTransaction
 
 /**
-The `BaseDataTransaction` is an abstract interface for `NSManagedObject` creates, updates, and deletes. All `BaseDataTransaction` subclasses manage a private `NSManagedObjectContext` which are direct children of the `NSPersistentStoreCoordinator`'s root `NSManagedObjectContext`. This means that all updates are saved first to the persistent store, and then propagated up to the read-only `NSManagedObjectContext`.
-*/
+ The `BaseDataTransaction` is an abstract interface for `NSManagedObject` creates, updates, and deletes. All `BaseDataTransaction` subclasses manage a private `NSManagedObjectContext` which are direct children of the `NSPersistentStoreCoordinator`'s root `NSManagedObjectContext`. This means that all updates are saved first to the persistent store, and then propagated up to the read-only `NSManagedObjectContext`.
+ */
 public /*abstract*/ class BaseDataTransaction {
     
     // MARK: Object management
     
     /**
-    Indicates if the transaction has pending changes
-    */
+     Indicates if the transaction has pending changes
+     */
     public var hasChanges: Bool {
         
         return self.context.hasChanges
     }
     
     /**
-    Creates a new `NSManagedObject` with the specified entity type.
-    
-    - parameter into: the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
-    - returns: a new `NSManagedObject` instance of the specified entity type.
-    */
+     Creates a new `NSManagedObject` with the specified entity type.
+     
+     - parameter into: the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
+     - returns: a new `NSManagedObject` instance of the specified entity type.
+     */
     public func create<T: NSManagedObject>(into: Into<T>) -> T {
         
         CoreStore.assert(
@@ -101,11 +101,11 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-    Returns an editable proxy of a specified `NSManagedObject`.
-    
-    - parameter object: the `NSManagedObject` type to be edited
-    - returns: an editable proxy for the specified `NSManagedObject`.
-    */
+     Returns an editable proxy of a specified `NSManagedObject`.
+     
+     - parameter object: the `NSManagedObject` type to be edited
+     - returns: an editable proxy for the specified `NSManagedObject`.
+     */
     @warn_unused_result
     public func edit<T: NSManagedObject>(object: T?) -> T? {
         
@@ -121,12 +121,12 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-    Returns an editable proxy of the object with the specified `NSManagedObjectID`. 
-    
-    - parameter into: an `Into` clause specifying the entity type
-    - parameter objectID: the `NSManagedObjectID` for the object to be edited
-    - returns: an editable proxy for the specified `NSManagedObject`.
-    */
+     Returns an editable proxy of the object with the specified `NSManagedObjectID`.
+     
+     - parameter into: an `Into` clause specifying the entity type
+     - parameter objectID: the `NSManagedObjectID` for the object to be edited
+     - returns: an editable proxy for the specified `NSManagedObject`.
+     */
     @warn_unused_result
     public func edit<T: NSManagedObject>(into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
@@ -143,10 +143,10 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-    Deletes a specified `NSManagedObject`.
-    
-    - parameter object: the `NSManagedObject` to be deleted
-    */
+     Deletes a specified `NSManagedObject`.
+     
+     - parameter object: the `NSManagedObject` to be deleted
+     */
     public func delete(object: NSManagedObject?) {
         
         CoreStore.assert(
@@ -161,22 +161,22 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-    Deletes the specified `NSManagedObject`s.
-    
-    - parameter object1: the `NSManagedObject` to be deleted
-    - parameter object2: another `NSManagedObject` to be deleted
-    - parameter objects: other `NSManagedObject`s to be deleted
-    */
+     Deletes the specified `NSManagedObject`s.
+     
+     - parameter object1: the `NSManagedObject` to be deleted
+     - parameter object2: another `NSManagedObject` to be deleted
+     - parameter objects: other `NSManagedObject`s to be deleted
+     */
     public func delete(object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
         
         self.delete(([object1, object2] + objects).flatMap { $0 })
     }
     
     /**
-    Deletes the specified `NSManagedObject`s.
-    
-    - parameter objects: the `NSManagedObject`s to be deleted
-    */
+     Deletes the specified `NSManagedObject`s.
+     
+     - parameter objects: the `NSManagedObject`s to be deleted
+     */
     public func delete<S: SequenceType where S.Generator.Element: NSManagedObject>(objects: S) {
         
         CoreStore.assert(
@@ -205,10 +205,10 @@ public /*abstract*/ class BaseDataTransaction {
     // MARK: Inspecting Pending Objects
     
     /**
-     Returns all pending `NSManagedObject`s that were inserted to the transaction. This method should not be called after the `commit()` method was called.
-     
-     - returns: a `Set` of pending `NSManagedObject`s that were inserted to the transaction.
-     */
+    Returns all pending `NSManagedObject`s that were inserted to the transaction. This method should not be called after the `commit()` method was called.
+    
+    - returns: a `Set` of pending `NSManagedObject`s that were inserted to the transaction.
+    */
     public func insertedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(

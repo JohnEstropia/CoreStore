@@ -30,38 +30,77 @@ import CoreData
 // MARK: - From
 
 /**
-A `Form` clause binds the `NSManagedObject` entity type to the generics type system.
-*/
+ A `From` clause specifies the source entity and source persistent store for fetch and query methods. A common usage is to just indicate the entity:
+ ```
+ let person = transaction.fetchOne(From(MyPersonEntity))
+ ```
+ For cases where multiple `NSPersistentStore`s contain the same entity, the source configuration's name needs to be specified as well:
+ ```
+ let person = transaction.fetchOne(From<MyPersonEntity>("Configuration1"))
+ ```
+ */
 public struct From<T: NSManagedObject> {
     
-    // MARK: Public
-    
     /**
-    Initializes a `From` clause with the specified entity type and configuration.
-    Sample Usage:
-    
-        let person = transaction.fetchOne(From<MyPersonEntity>())
-    */
+     Initializes a `From` clause.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>())
+     ```
+     */
     public init(){
         
         self.init(entityClass: T.self)
     }
     
+    /**
+     Initializes a `From` clause with the specified entity type.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>())
+     ```
+     - parameter entity: the `NSManagedObject` type to be created
+     */
     public init(_ entity: T.Type) {
         
         self.init(entityClass: entity)
     }
     
+    /**
+     Initializes a `From` clause with the specified entity class.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>())
+     ```
+     - parameter entityClass: the `NSManagedObject` class type to be created
+     */
     public init(_ entityClass: AnyClass) {
         
         self.init(entityClass: entityClass)
     }
     
+    /**
+     Initializes a `From` clause with the specified configurations.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>(nil, "Configuration1"))
+     ```
+     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
+     */
     public init(_ configuration: String?, otherConfigurations: String?...) {
         
         self.init(entityClass: T.self, configurations: [configuration] + otherConfigurations)
     }
     
+    /**
+     Initializes a `From` clause with the specified configurations.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From<MyPersonEntity>(["Configuration1", "Configuration2"]))
+     ```
+     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     */
     public init(_ configurations: [String?]) {
         
         self.init(entityClass: T.self, configurations: configurations)

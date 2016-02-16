@@ -29,8 +29,8 @@ import Foundation
 // MARK: - LogLevel
 
 /**
-The `LogLevel` indicates the severity of a log message.
-*/
+ The `LogLevel` indicates the severity of a log message.
+ */
 public enum LogLevel {
     
     case Trace
@@ -43,41 +43,41 @@ public enum LogLevel {
 // MARK: - CoreStoreLogger
 
 /**
-Custom loggers should implement the `CoreStoreLogger` protocol and pass its instance to `CoreStore.logger`. Calls to `log(...)`, `handleError(...)`, and `assert(...)` are not tied to a specific queue/thread, so it is the implementer's job to handle thread-safety.
-*/
+ Custom loggers should implement the `CoreStoreLogger` protocol and pass its instance to `CoreStore.logger`. Calls to `log(...)`, `handleError(...)`, and `assert(...)` are not tied to a specific queue/thread, so it is the implementer's job to handle thread-safety.
+ */
 public protocol CoreStoreLogger {
     
     /**
-    Handles log messages sent by the `CoreStore` framework.
-    
-    :level: the severity of the log message
-    :message: the log message
-    :fileName: the source file name
-    :lineNumber: the source line number
-    :functionName: the source function name
-    */
+     Handles log messages sent by the `CoreStore` framework.
+     
+     :level: the severity of the log message
+     :message: the log message
+     :fileName: the source file name
+     :lineNumber: the source line number
+     :functionName: the source function name
+     */
     func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
-    Handles errors sent by the `CoreStore` framework.
-    
-    :error: the error
-    :message: the error message
-    :fileName: the source file name
-    :lineNumber: the source line number
-    :functionName: the source function name
-    */
+     Handles errors sent by the `CoreStore` framework.
+     
+     :error: the error
+     :message: the error message
+     :fileName: the source file name
+     :lineNumber: the source line number
+     :functionName: the source function name
+     */
     func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
-    Handles assertions made throughout the `CoreStore` framework.
-    
-    :condition: the assertion condition
-    :message: the assertion message
-    :fileName: the source file name
-    :lineNumber: the source line number
-    :functionName: the source function name
-    */
+     Handles assertions made throughout the `CoreStore` framework.
+     
+     :condition: the assertion condition
+     :message: the assertion message
+     :fileName: the source file name
+     :lineNumber: the source line number
+     :functionName: the source function name
+     */
     func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
 }
 
@@ -101,6 +101,5 @@ internal func typeName(value: AnyClass) -> String {
 
 internal func typeName(name: String?) -> String {
     
-    let typeName = name ?? "unknown"
-    return "<\(typeName)>"
+    return "<\(name ?? "unknown")>"
 }

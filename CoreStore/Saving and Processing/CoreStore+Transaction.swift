@@ -30,13 +30,11 @@ import Foundation
 
 public extension CoreStore {
     
-    // MARK: Public
-    
     /**
-    Using the `defaultStack`, begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
-    
-    - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-    */
+     Using the `defaultStack`, begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     */
     public static func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
         self.defaultStack.beginAsynchronous(closure)

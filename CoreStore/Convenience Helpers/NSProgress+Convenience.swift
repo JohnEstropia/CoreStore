@@ -33,12 +33,10 @@ import Foundation
 
 public extension NSProgress {
     
-    // MARK: Public
-    
     /**
-    Sets a closure that the `NSProgress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
-    - parameter closure: the closure to execute on progress change
-    */
+     Sets a closure that the `NSProgress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
+     - parameter closure: the closure to execute on progress change
+     */
     public func setProgressHandler(closure: ((progress: NSProgress) -> Void)?) {
         
         self.progressObserver.progressHandler = closure

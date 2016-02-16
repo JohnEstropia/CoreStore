@@ -30,42 +30,43 @@ import CoreData
 // MARK: - ObjectObserver
 
 /**
-Implement the `ObjectObserver` protocol to observe changes to a single `NSManagedObject` instance. `ObjectObserver`s may register themselves to a `ObjectMonitor`'s `addObserver(_:)` method:
-
-    let monitor = CoreStore.monitorObject(object)
-    monitor.addObserver(self)
-*/
+ Implement the `ObjectObserver` protocol to observe changes to a single `NSManagedObject` instance. `ObjectObserver`s may register themselves to a `ObjectMonitor`'s `addObserver(_:)` method:
+ ```
+ let monitor = CoreStore.monitorObject(object)
+ monitor.addObserver(self)
+ ```
+ */
 @available(OSX, unavailable)
 public protocol ObjectObserver: class {
     
     /**
-    The `NSManagedObject` type for the observed object
-    */
+     The `NSManagedObject` type for the observed object
+     */
     typealias ObjectEntityType: NSManagedObject
     
     /**
-    Handles processing just before a change to the observed `object` occurs
-    
-    - parameter monitor: the `ObjectMonitor` monitoring the object being observed
-    - parameter object: the `NSManagedObject` instance being observed
-    */
+     Handles processing just before a change to the observed `object` occurs
+     
+     - parameter monitor: the `ObjectMonitor` monitoring the object being observed
+     - parameter object: the `NSManagedObject` instance being observed
+     */
     func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType)
     
     /**
-    Handles processing right after a change to the observed `object` occurs
-    
-    - parameter monitor: the `ObjectMonitor` monitoring the object being observed
-    - parameter object: the `NSManagedObject` instance being observed
-    - parameter changedPersistentKeys: a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
-    */
+     Handles processing right after a change to the observed `object` occurs
+     
+     - parameter monitor: the `ObjectMonitor` monitoring the object being observed
+     - parameter object: the `NSManagedObject` instance being observed
+     - parameter changedPersistentKeys: a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
+     */
     func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>)
     
     /**
-    Handles processing right after `object` is deleted
-    
-    - parameter monitor: the `ObjectMonitor` monitoring the object being observed
-    - parameter object: the `NSManagedObject` instance being observed
-    */
+     Handles processing right after `object` is deleted
+     
+     - parameter monitor: the `ObjectMonitor` monitoring the object being observed
+     - parameter object: the `NSManagedObject` instance being observed
+     */
     func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType)
 }
 
@@ -76,17 +77,17 @@ public protocol ObjectObserver: class {
 public extension ObjectObserver {
     
     /**
-    The default implementation does nothing.
-    */
+     The default implementation does nothing.
+     */
     func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) { }
     
     /**
-    The default implementation does nothing.
-    */
+     The default implementation does nothing.
+     */
     func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>) { }
     
     /**
-    The default implementation does nothing.
-    */
+     The default implementation does nothing.
+     */
     func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType) { }
 }

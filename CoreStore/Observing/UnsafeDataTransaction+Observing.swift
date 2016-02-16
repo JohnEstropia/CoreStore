@@ -35,15 +35,12 @@ import CoreData
 @available(OSX, unavailable)
 public extension UnsafeDataTransaction {
     
-    
-    // MARK: Public
-    
     /**
-    Creates a `ObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
-    
-    - parameter object: the `NSManagedObject` to observe changes from
-    - returns: a `ObjectMonitor` that monitors changes to `object`
-    */
+     Creates a `ObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
+     
+     - parameter object: the `NSManagedObject` to observe changes from
+     - returns: a `ObjectMonitor` that monitors changes to `object`
+     */
     @warn_unused_result
     public func monitorObject<T: NSManagedObject>(object: T) -> ObjectMonitor<T> {
         

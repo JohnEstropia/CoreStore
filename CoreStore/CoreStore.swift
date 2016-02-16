@@ -32,17 +32,15 @@ import CoreData
 // MARK: - CoreStore
 
 /**
-`CoreStore` is the main entry point for all other APIs.
-*/
+ `CoreStore` is the main entry point for all other APIs.
+ */
 public enum CoreStore {
     
-    // MARK: Public
-    
     /**
-    The default `DataStack` instance to be used. If `defaultStack` is not set before the first time accessed, a default-configured `DataStack` will be created.
-    
-    Changing the `defaultStack` is thread safe, but it is recommended to setup `DataStacks` on a common queue (e.g. the main queue).
-    */
+     The default `DataStack` instance to be used. If `defaultStack` is not set before the first time accessed, a default-configured `DataStack` will be created.
+     
+     Changing the `defaultStack` is thread safe, but it is recommended to setup `DataStacks` on a common queue (e.g. the main queue).
+     */
     public static var defaultStack: DataStack {
         
         get {

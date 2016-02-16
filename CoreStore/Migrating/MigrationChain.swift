@@ -30,36 +30,36 @@ import CoreData
 // MARK: - MigrationChain
 
 /**
-A `MigrationChain` indicates the sequence of model versions to be used as the order for incremental migration. This is typically passed to the `DataStack` initializer and will be applied to all stores added to the `DataStack` with `addSQLiteStore(...)` and its variants.
-
-Initializing with empty values (either `nil`, `[]`, or `[:]`) instructs the `DataStack` to use the .xcdatamodel's current version as the final version, and to disable incremental migrations:
-
-    let dataStack = DataStack(migrationChain: nil)
-
-This means that the mapping model will be computed from the store's version straight to the `DataStack`'s model version.
-To support incremental migrations, specify the linear order of versions:
-
-    let dataStack = DataStack(migrationChain: 
-        ["MyAppModel", "MyAppModelV2", "MyAppModelV3", "MyAppModelV4"])
-
-or for more complex migration paths, a version tree that maps the key-values to the source-destination versions:
-
-    let dataStack = DataStack(migrationChain: [
-        "MyAppModel": "MyAppModelV3",
-        "MyAppModelV2": "MyAppModelV4",
-        "MyAppModelV3": "MyAppModelV4"
-    ])
-
-This allows for different migration paths depending on the starting version. The example above resolves to the following paths:
-- MyAppModel-MyAppModelV3-MyAppModelV4
-- MyAppModelV2-MyAppModelV4
-- MyAppModelV3-MyAppModelV4
-
-The `MigrationChain` is validated when passed to the `DataStack` and unless it is empty, will raise an assertion if any of the following conditions are met:
-- a version appears twice in an array
-- a version appears twice as a key in a dictionary literal
-- a loop is found in any of the paths
-*/
+ A `MigrationChain` indicates the sequence of model versions to be used as the order for incremental migration. This is typically passed to the `DataStack` initializer and will be applied to all stores added to the `DataStack` with `addSQLiteStore(...)` and its variants.
+ 
+ Initializing with empty values (either `nil`, `[]`, or `[:]`) instructs the `DataStack` to use the .xcdatamodel's current version as the final version, and to disable incremental migrations:
+ ```
+ let dataStack = DataStack(migrationChain: nil)
+ ```
+ This means that the mapping model will be computed from the store's version straight to the `DataStack`'s model version.
+ To support incremental migrations, specify the linear order of versions:
+ ```
+ let dataStack = DataStack(migrationChain:
+    ["MyAppModel", "MyAppModelV2", "MyAppModelV3", "MyAppModelV4"])
+ ```
+ or for more complex migration paths, a version tree that maps the key-values to the source-destination versions:
+ ```
+ let dataStack = DataStack(migrationChain: [
+     "MyAppModel": "MyAppModelV3",
+     "MyAppModelV2": "MyAppModelV4",
+     "MyAppModelV3": "MyAppModelV4"
+ ])
+ ```
+ This allows for different migration paths depending on the starting version. The example above resolves to the following paths:
+ - MyAppModel-MyAppModelV3-MyAppModelV4
+ - MyAppModelV2-MyAppModelV4
+ - MyAppModelV3-MyAppModelV4
+ 
+ The `MigrationChain` is validated when passed to the `DataStack` and unless it is empty, will raise an assertion if any of the following conditions are met:
+ - a version appears twice in an array
+ - a version appears twice as a key in a dictionary literal
+ - a loop is found in any of the paths
+ */
 public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, DictionaryLiteralConvertible, ArrayLiteralConvertible {
     
     // MARK: NilLiteralConvertible
