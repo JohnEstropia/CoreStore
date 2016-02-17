@@ -39,7 +39,7 @@ class MigrationsDemoViewController: UIViewController {
         
         let alert = UIAlertController(
             title: "Migrations Demo",
-            message: "This demo shows how to run incremental migrations and how to support multiple model versions in a single project.\n\nThe persistent store contains 10000 organisms, which gain/lose properties when the migration evolves/devolves them.\n\nYou can use the \"mutate\" button to change an organism's properties then migrate to a different model to see how its value gets affected.",
+            message: "This demo shows how to run progressive migrations and how to support multiple model versions in a single project.\n\nThe persistent store contains 10000 organisms, which gain/lose properties when the migration evolves/devolves them.\n\nYou can use the \"mutate\" button to change an organism's properties then migrate to a different model to see how its value gets affected.",
             preferredStyle: .Alert
         )
         alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
@@ -267,7 +267,7 @@ class MigrationsDemoViewController: UIViewController {
         
         self.progressView?.setProgress(Float(progress.fractionCompleted), animated: true)
         self.titleLabel?.text = "Migrating: \(progress.localizedDescription)"
-        self.organismLabel?.text = "Incremental step \(progress.localizedAdditionalDescription)"
+        self.organismLabel?.text = "Progressive step \(progress.localizedAdditionalDescription)"
     }
     
     private func updateDisplay(reloadData reloadData: Bool, scrollToSelection: Bool, animated: Bool) {
