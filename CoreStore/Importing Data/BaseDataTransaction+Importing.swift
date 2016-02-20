@@ -61,6 +61,32 @@ public extension BaseDataTransaction {
     }
     
     /**
+     Updates an existing `ImportableObject` by importing values from the specified import source.
+     
+     - parameter object: the `NSManagedObject` to update
+     - parameter source: the object to import values from
+     */
+    public func importObject<T where T: NSManagedObject, T: ImportableObject>(
+        object: T,
+        source: T.ImportSource) throws {
+            
+            CoreStore.assert(
+                self.isRunningInAllowedQueue(),
+                "Attempted to import an object of type \(typeName(object)) outside the transaction's designated queue."
+            )
+            
+            try autoreleasepool {
+                
+                guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                    
+                    return
+                }
+                
+                try object.didInsertFromImportSource(source, inTransaction: self)
+            }
+    }
+    
+    /**
      Creates multiple `ImportableObject`s by importing from the specified array of import sources.
      
      - parameter into: an `Into` clause specifying the entity type
