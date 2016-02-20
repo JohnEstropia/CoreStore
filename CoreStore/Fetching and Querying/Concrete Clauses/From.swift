@@ -106,81 +106,193 @@ public struct From<T: NSManagedObject> {
         self.init(entityClass: T.self, configurations: configurations)
     }
     
+    /**
+     Initializes a `From` clause with the specified configurations.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From(MyPersonEntity.self, nil, "Configuration1"))
+     ```
+     - parameter entity: the associated `NSManagedObject` type
+     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
+     */
     public init(_ entity: T.Type, _ configuration: String?, _ otherConfigurations: String?...) {
         
         self.init(entityClass: entity, configurations: [configuration] + otherConfigurations)
     }
     
+    /**
+     Initializes a `From` clause with the specified configurations.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From(MyPersonEntity.self, ["Configuration1", "Configuration1"]))
+     ```
+     - parameter entity: the associated `NSManagedObject` type
+     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     */
     public init(_ entity: T.Type, _ configurations: [String?]) {
         
         self.init(entityClass: entity, configurations: configurations)
     }
     
+    /**
+     Initializes a `From` clause with the specified configurations.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From(MyPersonEntity.self, nil, "Configuration1"))
+     ```
+     - parameter entity: the associated `NSManagedObject` entity class
+     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
+     */
     public init(_ entityClass: AnyClass, _ configuration: String?, _ otherConfigurations: String?...) {
         
         self.init(entityClass: entityClass, configurations: [configuration] + otherConfigurations)
     }
     
+    /**
+     Initializes a `From` clause with the specified configurations.
+     Sample Usage:
+     ```
+     let people = transaction.fetchAll(From(MyPersonEntity.self, ["Configuration1", "Configuration1"]))
+     ```
+     - parameter entity: the associated `NSManagedObject` entity class
+     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     */
     public init(_ entityClass: AnyClass, _ configurations: [String?]) {
         
         self.init(entityClass: entityClass, configurations: configurations)
     }
     
+    /**
+     Initializes a `From` clause with the specified store URLs.
+     
+     - parameter storeURL: the persistent store URL to associate objects from.
+     - parameter otherStoreURLs: an optional list of other persistent store URLs to associate objects from (see `storeURL` parameter)
+     */
     public init(_ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
         self.init(entityClass: T.self, storeURLs: [storeURL] + otherStoreURLs)
     }
     
+    /**
+     Initializes a `From` clause with the specified store URLs.
+     
+     - parameter storeURLs: the persistent store URLs to associate objects from.
+     */
     public init(_ storeURLs: [NSURL]) {
         
         self.init(entityClass: T.self, storeURLs: storeURLs)
     }
     
+    /**
+     Initializes a `From` clause with the specified store URLs.
+     
+     - parameter entity: the associated `NSManagedObject` type
+     - parameter storeURL: the persistent store URL to associate objects from.
+     - parameter otherStoreURLs: an optional list of other persistent store URLs to associate objects from (see `storeURL` parameter)
+     */
     public init(_ entity: T.Type, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
         self.init(entityClass: entity, storeURLs: [storeURL] + otherStoreURLs)
     }
     
+    /**
+     Initializes a `From` clause with the specified store URLs.
+     
+     - parameter entity: the associated `NSManagedObject` type
+     - parameter storeURLs: the persistent store URLs to associate objects from.
+     */
     public init(_ entity: T.Type, _ storeURLs: [NSURL]) {
         
         self.init(entityClass: entity, storeURLs: storeURLs)
     }
     
+    /**
+     Initializes a `From` clause with the specified store URLs.
+     
+     - parameter entity: the associated `NSManagedObject` entity class
+     - parameter storeURL: the persistent store URL to associate objects from.
+     - parameter otherStoreURLs: an optional list of other persistent store URLs to associate objects from (see `storeURL` parameter)
+     */
     public init(_ entityClass: AnyClass, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
         self.init(entityClass: entityClass, storeURLs: [storeURL] + otherStoreURLs)
     }
     
+    /**
+     Initializes a `From` clause with the specified store URLs.
+     
+     - parameter entity: the associated `NSManagedObject` entity class
+     - parameter storeURLs: the persistent store URLs to associate objects from.
+     */
     public init(_ entityClass: AnyClass, _ storeURLs: [NSURL]) {
         
         self.init(entityClass: entityClass, storeURLs: storeURLs)
     }
     
+    /**
+     Initializes a `From` clause with the specified `NSPersistentStore`s.
+     
+     - parameter persistentStore: the `NSPersistentStore` to associate objects from.
+     - parameter otherPersistentStores: an optional list of other `NSPersistentStore`s to associate objects from (see `persistentStore` parameter)
+     */
     public init(_ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
         self.init(entityClass: T.self, persistentStores: [persistentStore] + otherPersistentStores)
     }
     
+    /**
+     Initializes a `From` clause with the specified `NSPersistentStore`s.
+     
+     - parameter persistentStores: the `NSPersistentStore`s to associate objects from.
+     */
     public init(_ persistentStores: [NSPersistentStore]) {
         
         self.init(entityClass: T.self, persistentStores: persistentStores)
     }
     
+    /**
+     Initializes a `From` clause with the specified `NSPersistentStore`s.
+     
+     - parameter entity: the associated `NSManagedObject` type
+     - parameter persistentStore: the `NSPersistentStore` to associate objects from.
+     - parameter otherPersistentStores: an optional list of other `NSPersistentStore`s to associate objects from (see `persistentStore` parameter)
+     */
     public init(_ entity: T.Type, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
         self.init(entityClass: entity, persistentStores: [persistentStore] + otherPersistentStores)
     }
     
+    /**
+     Initializes a `From` clause with the specified `NSPersistentStore`s.
+     
+     - parameter entity: the associated `NSManagedObject` type
+     - parameter persistentStores: the `NSPersistentStore`s to associate objects from.
+     */
     public init(_ entity: T.Type, _ persistentStores: [NSPersistentStore]) {
         
         self.init(entityClass: entity, persistentStores: persistentStores)
     }
     
+    /**
+     Initializes a `From` clause with the specified `NSPersistentStore`s.
+     
+     - parameter entity: the associated `NSManagedObject` entity class
+     - parameter persistentStore: the `NSPersistentStore` to associate objects from.
+     - parameter otherPersistentStores: an optional list of other `NSPersistentStore`s to associate objects from (see `persistentStore` parameter)
+     */
     public init(_ entityClass: AnyClass, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
         self.init(entityClass: entityClass, persistentStores: [persistentStore] + otherPersistentStores)
     }
     
+    /**
+     Initializes a `From` clause with the specified `NSPersistentStore`s.
+     
+     - parameter entity: the associated `NSManagedObject` entity class
+     - parameter persistentStores: the `NSPersistentStore`s to associate objects from.
+     */
     public init(_ entityClass: AnyClass, _ persistentStores: [NSPersistentStore]) {
         
         self.init(entityClass: entityClass, persistentStores: persistentStores)

@@ -80,17 +80,12 @@ CoreStore.defaultStack = DataStack(
 
 Adding a store:
 ```swift
-do {
-    try CoreStore.addSQLiteStore(
-        fileName: "MyStore.sqlite",
-        completion: { (result) -> Void in
-            // ...
-        }
-    )
-}
-catch {
-    // ...
-}
+try CoreStore.addSQLiteStore(
+    fileName: "MyStore.sqlite",
+    completion: { (result) -> Void in
+        // ...
+    }
+)
 ```
 
 Starting transactions:
@@ -1169,7 +1164,7 @@ let person2 = self.monitor[1, 2]
 # Installation
 - Requires:
     - iOS 8 SDK and above
-    - Swift 2.0 (Xcode 7 beta 6)
+    - Swift 2.1 (Xcode 7.2)
 - Dependencies:
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
 
