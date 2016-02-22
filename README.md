@@ -260,9 +260,9 @@ do {
         completion: { (result) -> Void in
             switch result {
             case .Success(let persistentStore):
-                print("Successfully added sqlite store: \(persistentStore)"
+                print("Successfully added sqlite store: \(persistentStore)")
             case .Failure(let error):
-                print("Failed adding sqlite store with error: \(error)"
+                print("Failed adding sqlite store with error: \(error)")
             }
         }
     )
