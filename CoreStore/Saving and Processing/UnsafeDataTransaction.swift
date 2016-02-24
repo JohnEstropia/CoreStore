@@ -30,7 +30,7 @@ import CoreData
 #endif
 
 
-@available(*, deprecated=1.3.1, renamed="UnsafeDataTransaction")
+@available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="UnsafeDataTransaction")
 public typealias DetachedDataTransaction = UnsafeDataTransaction
 
 
@@ -119,7 +119,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         return self.context
     }
     
-    @available(*, deprecated=1.3.1, renamed="beginUnsafe")
+    @available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="beginUnsafe")
     @warn_unused_result
     public func beginDetached() -> UnsafeDataTransaction {
         

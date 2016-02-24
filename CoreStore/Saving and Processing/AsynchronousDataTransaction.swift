@@ -192,7 +192,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     /**
      Rolls back the transaction by resetting the `NSManagedObjectContext`. After calling this method, all `NSManagedObjects` fetched within the transaction will become invalid. This method should not be used after the `commit()` method was already called once.
      */
-    @available(*, deprecated=1.3.4, message="Resetting the context is inherently unsafe. This method will be removed in the near future. Use `beginUnsafe()` to create transactions with `undo` support.")
+    @available(*, deprecated=1.3.4, obsoleted=2.0.0, message="Resetting the context is inherently unsafe. This method will be removed in the near future. Use `beginUnsafe()` to create transactions with `undo` support.")
     public func rollback() {
         
         CoreStore.assert(

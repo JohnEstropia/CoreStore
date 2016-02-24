@@ -129,41 +129,28 @@ public final class DataStack {
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
      - returns: the `NSPersistentStore` added to the stack.
      */
+    @available(*, deprecated=2.0.0, renamed="beginUnsafe")
     public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
         
-        let coordinator = self.coordinator;
-        
-        var store: NSPersistentStore?
-        var storeError: NSError?
-        coordinator.performBlockAndWait {
+        do {
             
-            do {
-                
-                store = try coordinator.addPersistentStoreWithType(
-                    NSInMemoryStoreType,
-                    configuration: configuration,
-                    URL: nil,
-                    options: nil
-                )
-            }
-            catch {
-                
-                storeError = error as NSError
-            }
-        }
-        
-        if let store = store {
-            
+            let store = try self.coordinator.addPersistentStoreSynchronously(
+                NSInMemoryStoreType,
+                configuration: configuration,
+                URL: nil,
+                options: nil
+            )
             self.updateMetadataForPersistentStore(store)
             return store
         }
-        
-        let error = storeError ?? NSError(coreStoreErrorCode: .UnknownError)
-        CoreStore.handleError(
-            error,
-            "Failed to add in-memory \(typeName(NSPersistentStore)) to the stack."
-        )
-        throw error
+        catch {
+            
+            CoreStore.handleError(
+                error as NSError,
+                "Failed to add in-memory \(typeName(NSPersistentStore)) to the stack."
+            )
+            throw error
+        }
     }
     
     /**
@@ -227,68 +214,50 @@ public final class DataStack {
             attributes: nil
         )
         
-        var store: NSPersistentStore?
-        var storeError: NSError?
         let options = self.optionsForSQLiteStore()
-        coordinator.performBlockAndWait {
+        do {
+            
+            let store = try coordinator.addPersistentStoreSynchronously(
+                NSSQLiteStoreType,
+                configuration: configuration,
+                URL: fileURL,
+                options: options
+            )
+            self.updateMetadataForPersistentStore(store)
+            return store
+        }
+        catch let error as NSError where resetStoreOnModelMismatch && error.isCoreDataMigrationError {
+            
+            fileManager.removeSQLiteStoreAtURL(fileURL)
             
             do {
                 
-                store = try coordinator.addPersistentStoreWithType(
+                let store = try coordinator.addPersistentStoreSynchronously(
                     NSSQLiteStoreType,
                     configuration: configuration,
                     URL: fileURL,
                     options: options
                 )
+                self.updateMetadataForPersistentStore(store)
+                return store
             }
             catch {
                 
-                storeError = error as NSError
+                CoreStore.handleError(
+                    error as NSError,
+                    "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\"."
+                )
+                throw error
             }
         }
-        
-        if let store = store {
+        catch {
             
-            self.updateMetadataForPersistentStore(store)
-            return store
+            CoreStore.handleError(
+                error as NSError,
+                "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\"."
+            )
+            throw error
         }
-        
-        if let error = storeError
-            where (resetStoreOnModelMismatch && error.isCoreDataMigrationError) {
-                
-                fileManager.removeSQLiteStoreAtURL(fileURL)
-                
-                var store: NSPersistentStore?
-                coordinator.performBlockAndWait {
-                    
-                    do {
-                        
-                        store = try coordinator.addPersistentStoreWithType(
-                            NSSQLiteStoreType,
-                            configuration: configuration,
-                            URL: fileURL,
-                            options: [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
-                        )
-                    }
-                    catch {
-                        
-                        storeError = error as NSError
-                    }
-                }
-                
-                if let store = store {
-                    
-                    self.updateMetadataForPersistentStore(store)
-                    return store
-                }
-        }
-        
-        let error = storeError ?? NSError(coreStoreErrorCode: .UnknownError)
-        CoreStore.handleError(
-            error,
-            "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\"."
-        )
-        throw error
     }
     
     
@@ -399,9 +368,7 @@ public final class DataStack {
     
     deinit {
         
-        for store in self.coordinator.persistentStores {
-            
-            _ = try? self.coordinator.removePersistentStore(store)
-        }
+        let coordinator = self.coordinator
+        coordinator.persistentStores.forEach { _ = try? coordinator.removePersistentStore($0) }
     }
 }

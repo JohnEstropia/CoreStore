@@ -71,7 +71,7 @@ public extension CoreStore {
         self.defaultStack.refreshAllObjectsAsFaults()
     }
     
-    @available(*, deprecated=1.3.1, renamed="beginUnsafe")
+    @available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="beginUnsafe")
     @warn_unused_result
     public static func beginDetached() -> UnsafeDataTransaction {
         
