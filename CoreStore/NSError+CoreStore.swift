@@ -58,11 +58,6 @@ public enum CoreStoreErrorCode: Int {
      An `NSMappingModel` could not be found for a specific source and destination model versions.
      */
     case MappingModelNotFound
-    
-    /**
-     The container could not be located or if iCloud storage is unavailable for the current user or device.
-     */
-    case ICloudContainerNotFound
 }
 
 

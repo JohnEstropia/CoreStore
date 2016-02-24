@@ -85,10 +85,6 @@
 		B519E45A1C4CD2DA00E7B469 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B519E4571C4CD2CA00E7B469 /* GCDKit.framework */; };
 		B519E45B1C4CD2ED00E7B469 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B519E4571C4CD2CA00E7B469 /* GCDKit.framework */; };
 		B51BE06A1B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51BE0691B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift */; };
-		B51F259A1C5747DD0083A5DD /* DataStack+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */; };
-		B51F259B1C57875E0083A5DD /* DataStack+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */; };
-		B51F259C1C57875F0083A5DD /* DataStack+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */; };
-		B51F259D1C5787600083A5DD /* DataStack+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */; };
 		B5202CFA1C04688100DED140 /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
 		B5202CFD1C046E8400DED140 /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
 		B52DD17E1BE1F8CD00949AFE /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52DD1741BE1F8CC00949AFE /* CoreStore.framework */; };
