@@ -45,7 +45,7 @@ public protocol ListObserver: class {
     /**
      The `NSManagedObject` type for the observed list
      */
-    typealias ListEntityType: NSManagedObject
+    associatedtype ListEntityType: NSManagedObject
     
     /**
      Handles processing just before a change to the observed list occurs
