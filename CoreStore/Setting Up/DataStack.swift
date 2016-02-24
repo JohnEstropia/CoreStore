@@ -30,17 +30,26 @@ import CoreData
 #endif
 
 
+// TODO: move these to PersistentStore wrapper
+
 #if os(tvOS)
-    internal let deviceDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
+    internal let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
 #else
-    internal let deviceDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
+    internal let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
 #endif
 
-internal let defaultDirectory = NSFileManager.defaultManager().URLsForDirectory(deviceDirectorySearchPath, inDomains: .UserDomainMask).first!
-
+internal let defaultSystemDirectory = NSFileManager.defaultManager().URLsForDirectory(
+    systemDirectorySearchPath,
+    inDomains: .UserDomainMask
+).first!
+internal let defaultRootDirectory = defaultSystemDirectory.URLByAppendingPathComponent(
+    NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack",
+    isDirectory: true
+)
 internal let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
-
-internal let defaultSQLiteStoreURL = defaultDirectory.URLByAppendingPathComponent(applicationName, isDirectory: false).URLByAppendingPathExtension("sqlite")
+internal let defaultSQLiteStoreFileURL = defaultRootDirectory
+    .URLByAppendingPathComponent(applicationName, isDirectory: false)
+    .URLByAppendingPathExtension("sqlite")
 
 
 // MARK: - DataStack
@@ -160,7 +169,7 @@ public final class DataStack {
     /**
      Adds to the stack an SQLite store from the given SQLite file name.
      
-     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support" directory (or the "Caches" directory on tvOS). A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
      - returns: the `NSPersistentStore` added to the stack.
@@ -168,9 +177,10 @@ public final class DataStack {
     public func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         return try self.addSQLiteStoreAndWait(
-            fileURL: defaultDirectory.URLByAppendingPathComponent(
-                fileName,
-                isDirectory: false
+            fileURL: defaultRootDirectory
+                .URLByAppendingPathComponent(
+                    fileName,
+                    isDirectory: false
             ),
             configuration: configuration,
             resetStoreOnModelMismatch: resetStoreOnModelMismatch
@@ -180,12 +190,12 @@ public final class DataStack {
     /**
      Adds to the stack an SQLite store from the given SQLite file URL.
      
-     - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support" directory (or the "Caches" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
      - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
      - returns: the `NSPersistentStore` added to the stack.
      */
-    public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = defaultSQLiteStoreURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
+    public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = defaultSQLiteStoreFileURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         CoreStore.assert(
             fileURL.fileURL,

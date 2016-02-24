@@ -169,7 +169,7 @@ catch {
 This one-liner does the following:
 - Triggers the lazy-initialization of `CoreStore.defaultStack` with a default `DataStack`
 - Sets up the stack's `NSPersistentStoreCoordinator`, the root saving `NSManagedObjectContext`, and the read-only main `NSManagedObjectContext`
-- Adds an SQLite store in the *"Application Support"* directory (or the *"Caches"* directory on tvOS) with the file name *"[App bundle name].sqlite"*
+- Adds an SQLite store in the *"Application Support/<bundle id>"* directory (or the *"Caches/<bundle id>"* directory on tvOS) with the file name *"[App bundle name].sqlite"*
 - Creates and returns the `NSPersistentStore` instance on success, or an `NSError` on failure
 
 For most cases, this configuration is usable as it is. But for more hardcore settings, refer to this extensive example:
@@ -1212,6 +1212,7 @@ Add all *.swift* files to your project.
 The protocols above had their methods renamed as well, to retain the natural language semantics.
 - Several methods now `throw` errors insted of returning a result `enum`.
 - New migration utilities! (README still pending) Check out *DataStack+Migration.swift* and *CoreStore+Migration.swift* for the new methods, as well as *DataStack.swift* for its new initializer.
+
 
 
 # Contributions
