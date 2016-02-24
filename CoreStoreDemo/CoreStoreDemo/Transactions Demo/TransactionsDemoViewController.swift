@@ -60,7 +60,10 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         
         super.viewDidLoad()
         
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: "longPressGestureRecognized:")
+        let longPressGesture = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(self.longPressGestureRecognized(_:))
+        )
         self.mapView?.addGestureRecognizer(longPressGesture)
         
         Static.placeController.addObserver(self)
@@ -68,7 +71,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .Refresh,
             target: self,
-            action: "refreshButtonTapped:"
+            action: #selector(self.refreshButtonTapped(_:))
         )
     }
     

@@ -129,7 +129,6 @@ public final class DataStack {
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
      - returns: the `NSPersistentStore` added to the stack.
      */
-    @available(*, deprecated=2.0.0, renamed="beginUnsafe")
     public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
         
         do {
