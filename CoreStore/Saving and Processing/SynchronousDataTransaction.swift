@@ -39,8 +39,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     /**
      Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` method was already called once.
+     
+     - returns: a `SaveResult` containing the success or failure information
      */
-    public func commit() {
+    public func commitAndWait() -> SaveResult {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
@@ -52,7 +54,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         )
         
         self.isCommitted = true
-        self.result = self.context.saveSynchronously()
+        
+        let result = self.context.saveSynchronously()
+        self.result = result
+        return result
     }
     
     /**
@@ -195,6 +200,12 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         )
         
         self.context.reset()
+    }
+    
+    @available(*, deprecated=1.5.2, renamed="commitAndWait")
+    public func commit() {
+        
+        self.commitAndWait()
     }
     
     
