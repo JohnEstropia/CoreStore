@@ -56,6 +56,17 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     }
     
     /**
+     Saves the transaction changes and waits for completion synchronously. For a `UnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
+     
+     - returns: a `SaveResult` containing the success or failure information
+     */
+    public func commitAndWait() -> SaveResult {
+        
+        self.result = self.context.saveSynchronously()
+        return self.result
+    }
+    
+    /**
      Rolls back the transaction.
      */
     public func rollback() {
