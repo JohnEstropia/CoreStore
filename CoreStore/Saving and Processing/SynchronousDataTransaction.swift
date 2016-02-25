@@ -54,8 +54,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         )
         
         self.isCommitted = true
-        self.result = self.context.saveSynchronously()
-        return self.result
+        
+        let result = self.context.saveSynchronously()
+        self.result = result
+        return result
     }
     
     /**

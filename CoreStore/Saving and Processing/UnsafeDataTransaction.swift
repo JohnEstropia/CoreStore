@@ -62,8 +62,9 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      */
     public func commitAndWait() -> SaveResult {
         
-        self.result = self.context.saveSynchronously()
-        return self.result
+        let result = self.context.saveSynchronously()
+        self.result = result
+        return result
     }
     
     /**
