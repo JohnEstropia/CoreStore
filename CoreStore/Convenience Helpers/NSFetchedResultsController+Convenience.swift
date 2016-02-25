@@ -34,7 +34,7 @@ public extension NSFetchedResultsController {
     /**
      Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful to partially support Objective-C classes by passing an `NSFetchedResultsController` instance instead of a `ListMonitor`.
      */
-    public func createForStack<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+    public static func createForStack<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
         
         return CoreStoreFetchedResultsController<T>(
             context: dataStack.mainContext,
@@ -45,10 +45,41 @@ public extension NSFetchedResultsController {
         )
     }
     
+    @available(*, deprecated=1.5.2, message="Use NSFetchedResultsController.createForStack(_:fetchRequest:from:sectionBy:fetchClauses:) to create NSFetchedResultsControllers directly")
+    public convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
+        
+        let context = dataStack.mainContext
+        from?.applyToFetchRequest(fetchRequest, context: context, applyAffectedStores: false)
+        for clause in fetchClauses {
+            
+            clause.applyToFetchRequest(fetchRequest)
+        }
+        
+        if let from = from {
+            
+            from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
+        }
+        else {
+            
+            guard let from = (fetchRequest.entity.flatMap { $0.managedObjectClassName }).flatMap(NSClassFromString).flatMap(From.init) else {
+                
+                fatalError("Attempted to create an \(typeName(NSFetchedResultsController)) without a  From clause or an NSEntityDescription.")
+            }
+            from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
+        }
+        
+        self.init(
+            fetchRequest: fetchRequest,
+            managedObjectContext: context,
+            sectionNameKeyPath: sectionBy?.sectionKeyPath,
+            cacheName: nil
+        )
+    }
+    
     
     // MARK: Internal
     
-    internal func createFromContext<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+    internal static func createFromContext<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
         
         return CoreStoreFetchedResultsController<T>(
             context: context,
