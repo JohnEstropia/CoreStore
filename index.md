@@ -2,7 +2,7 @@
 layout: default
 ---
 
-![corestore](https://cloud.githubusercontent.com/assets/3029684/13368133/305f37d0-dd2b-11e5-8ae6-26e48050b8f6.png)
+![CoreStore](https://cloud.githubusercontent.com/assets/3029684/13373932/84daee2a-ddb8-11e5-99db-fdf415620102.png){:height="170px"}
 
 [![Build Status](https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg)](https://travis-ci.org/JohnEstropia/CoreStore)
 [![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
