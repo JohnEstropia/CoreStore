@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Corestore by JohnEstropia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Corestore</h1>
+      <h2 class="project-tagline">Unleashing the real power of Core Data with the elegance and safety of Swift</h2>
+      <a href="https://github.com/JohnEstropia/CoreStore" class="btn">View on GitHub</a>
+      <a href="https://github.com/JohnEstropia/CoreStore/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/JohnEstropia/CoreStore/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p><img src="https://cloud.githubusercontent.com/assets/3029684/13368133/305f37d0-dd2b-11e5-8ae6-26e48050b8f6.png" alt="corestore"></p>
+
+<p><a href="https://travis-ci.org/JohnEstropia/CoreStore"><img src="https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg" alt="Build Status"></a>
+<a href="http://cocoadocs.org/docsets/CoreStore"><img src="https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat" alt="Version"></a>
+<a href="http://cocoadocs.org/docsets/CoreStore"><img src="https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat" alt="Platform"></a>
+<a href="https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE"><img src="https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat" alt="License"></a>
+<a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible"></a></p>
+
+<p>Unleashing the real power of Core Data with the elegance and safety of Swift</p>
+
+<ul>
+<li>Swift 2.2 (Xcode 7.3)</li>
+<li>iOS 8+ / OSX 10.10+ / watchOS 2.0+ / tvOS 9.0+</li>
+</ul>
+
+
+
+<h2>
+<a id="what-corestore-does-better" class="anchor" href="#what-corestore-does-better" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What CoreStore does better:</h2>
+
+<ul>
+<li>
+<strong>Heavily supports multiple persistent stores per data stack</strong>, just the way <em>.xcdatamodeld</em> files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.</li>
+<li>
+<strong>Progressive Migrations!</strong> Just tell the data stack the sequence of model versions and CoreStore will automatically use progressive migrations if needed on stores added to that stack.</li>
+<li>Ability to <strong>plug-in your own logging framework</strong>
+</li>
+<li>Gets around a limitation with other Core Data wrappers where the entity name should be the same as the <code>NSManagedObject</code> subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you are <strong>free to name entities and their class names independently</strong>.</li>
+<li>Provides type-safe, easy to configure <strong>observers to replace <code>NSFetchedResultsController</code> and KVO</strong>
+</li>
+<li>Exposes <strong>API not just for fetching, but also for querying aggregates and property values</strong>
+</li>
+<li>Makes it hard to fall into common concurrency mistakes. All <code>NSManagedObjectContext</code> tasks are encapsulated into <strong>safer, higher-level abstractions</strong> without sacrificing flexibility and customizability.</li>
+<li>Exposes clean and convenient API designed around <strong>Swift’s code elegance and type safety</strong>.</li>
+<li>
+<strong>Documentation!</strong> No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.</li>
+<li><strong>Efficient importing utilities!</strong></li>
+</ul>
+
+<p><strong><a href="http://goo.gl/RIiHMP">Vote for the next feature!</a></strong></p>
+
+<h2>
+<a id="contents" class="anchor" href="#contents" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contents</h2>
+
+<ul>
+<li><a href="#tldr-aka-sample-codes">TL;DR (a.k.a. sample codes)</a></li>
+<li><a href="#architecture">Architecture</a></li>
+<li>CoreStore Tutorials (All of these have demos in the <strong>CoreStoreDemo</strong> app project!)
+
+<ul>
+<li><a href="#setting-up">Setting up</a></li>
+<li>
+<a href="#migrations">Migrations</a>
+
+<ul>
+<li><a href="#progressive-migrations">Progressive migrations</a></li>
+<li><a href="#forecasting-migrations">Forecasting migrations</a></li>
+</ul>
+</li>
+<li>
+<a href="#saving-and-processing-transactions">Saving and processing transactions</a>
+
+<ul>
+<li>
+<a href="#transaction-types">Transaction types</a>
+
+<ul>
+<li><a href="#asynchronous-transactions">Asynchronous transactions</a></li>
+<li><a href="#synchronous-transactions">Synchronous transactions</a></li>
+<li><a href="#unsafe-transactions">Unsafe transactions</a></li>
+</ul>
+</li>
+<li><a href="#creating-objects">Creating objects</a></li>
+<li><a href="#updating-objects">Updating objects</a></li>
+<li><a href="#deleting-objects">Deleting objects</a></li>
+<li><a href="#passing-objects-safely">Passing objects safely</a></li>
+</ul>
+</li>
+<li><a href="#importing-data">Importing data</a></li>
+<li>
+<a href="#fetching-and-querying">Fetching and querying</a>
+
+<ul>
+<li><a href="#from-clause"><code>From</code> clause</a></li>
+<li>
+<a href="#fetching">Fetching</a>
+
+<ul>
+<li><a href="#where-clause"><code>Where</code> clause</a></li>
+<li><a href="#orderby-clause"><code>OrderBy</code> clause</a></li>
+<li><a href="#tweak-clause"><code>Tweak</code> clause</a></li>
+</ul>
+</li>
+<li>
+<a href="#querying">Querying</a>
+
+<ul>
+<li><a href="#selectt-clause"><code>Select&lt;T&gt;</code> clause</a></li>
+<li><a href="#groupby-clause"><code>GroupBy</code> clause</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#logging-and-error-handling">Logging and error handling</a></li>
+<li>
+<a href="#observing-changes-and-notifications">Observing changes and notifications</a> (unavailable on OSX)
+
+<ul>
+<li><a href="#observe-a-single-object">Observe a single object</a></li>
+<li><a href="#observe-a-list-of-objects">Observe a list of objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#roadmap">Roadmap</a></li>
+<li><a href="#installation">Installation</a></li>
+<li>
+<a href="#changesets">Changesets</a>
+
+<ul>
+<li><a href="#upgrading-from-v020-to-100">Upgrading from v0.2.0 to 1.0.0</a></li>
+</ul>
+</li>
+</ul>
+
+<h2>
+<a id="tldr-aka-sample-codes" class="anchor" href="#tldr-aka-sample-codes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TL;DR (a.k.a. sample codes)</h2>
+
+<p>Setting-up with progressive migration support:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>defaultStack <span class="pl-k">=</span> DataStack(
+    modelName: <span class="pl-s"><span class="pl-pds">"</span>MyStore<span class="pl-pds">"</span></span>,
+    migrationChain: [<span class="pl-s"><span class="pl-pds">"</span>MyStore<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>MyStoreV2<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>MyStoreV3<span class="pl-pds">"</span></span>]
+)</pre></div>
+
+<p>Adding a store:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">try</span> CoreStore<span class="pl-k">.</span>addSQLiteStore(
+    fileName: <span class="pl-s"><span class="pl-pds">"</span>MyStore.sqlite<span class="pl-pds">"</span></span>,
+    completion: { (result) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+        <span class="pl-c">// ...</span>
+    }
+)</pre></div>
+
+<p>Starting transactions:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> person <span class="pl-k">=</span> transaction<span class="pl-k">.</span>create(Into(MyPersonEntity))
+    person<span class="pl-k">.</span>name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>John Smith<span class="pl-pds">"</span></span>
+    person<span class="pl-k">.</span>age <span class="pl-k">=</span> <span class="pl-c1">42</span>
+
+    transaction<span class="pl-k">.</span>commit { (result) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+        <span class="pl-k">switch</span> result {
+            <span class="pl-k">case</span> <span class="pl-k">.</span>Success(<span class="pl-k">let</span> hasChanges): <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>success!<span class="pl-pds">"</span></span>)
+            <span class="pl-k">case</span> <span class="pl-k">.</span>Failure(<span class="pl-k">let</span> error): <span class="pl-c1">print</span>(error)
+        }
+    }
+}</pre></div>
+
+<p>Fetching objects:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> people <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(From(MyPersonEntity))</pre></div>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> people <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(
+    From(MyPersonEntity),
+    Where(<span class="pl-s"><span class="pl-pds">"</span>age &gt; 30<span class="pl-pds">"</span></span>),
+    OrderBy(<span class="pl-k">.</span>Ascending(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>), <span class="pl-k">.</span>Descending(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>)),
+    Tweak { (fetchRequest) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+        fetchRequest<span class="pl-k">.</span>includesPendingChanges <span class="pl-k">=</span> <span class="pl-c1">false</span>
+    }
+)</pre></div>
+
+<p>Querying values:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> maxAge <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>queryValue(
+    From(MyPersonEntity),
+    Select<span class="pl-k">&lt;</span><span class="pl-c1">Int</span><span class="pl-k">&gt;</span>(<span class="pl-k">.</span>Maximum(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>))
+)</pre></div>
+
+<p>But really, there's a reason I wrote this huge README. Read up on the details!</p>
+
+<p>Check out the <strong>CoreStoreDemo</strong> app project for sample codes as well!</p>
+
+<h2>
+<a id="architecture" class="anchor" href="#architecture" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Architecture</h2>
+
+<p>For maximum safety and performance, CoreStore will enforce coding patterns and practices it was designed for. (Don't worry, it's not as scary as it sounds.) But it is advisable to understand the "magic" of CoreStore before you use it in your apps.</p>
+
+<p>If you are already familiar with the inner workings of CoreData, here is a mapping of <code>CoreStore</code> abstractions:</p>
+
+<table>
+<thead>
+<tr>
+<th><em>Core Data</em></th>
+<th><em>CoreStore</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>NSManagedObjectModel</code> / <code>NSPersistentStoreCoordinator</code><br>(.xcdatamodeld file)</td>
+<td><code>DataStack</code></td>
+</tr>
+<tr>
+<td>
+<code>NSPersistentStore</code><br>("Configuration"s in the .xcdatamodeld file)</td>
+<td>
+<code>DataStack</code> configuration<br>(multiple sqlite / in-memory stores per stack)</td>
+</tr>
+<tr>
+<td><code>NSManagedObjectContext</code></td>
+<td>
+<code>BaseDataTransaction</code> subclasses<br>(<code>SynchronousDataTransaction</code>, <code>AsynchronousDataTransaction</code>, <code>UnsafeDataTransaction</code>)</td>
+</tr>
+</tbody>
+</table>
+
+<p>Popular libraries <a href="https://github.com/RestKit/RestKit">RestKit</a> and <a href="https://github.com/magicalpanda/MagicalRecord">MagicalRecord</a> set up their <code>NSManagedObjectContext</code>s this way:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/3029684/6734049/40579660-ce99-11e4-9d38-829877386afb.png" alt="nested contexts" height="271"></p>
+
+<p>Nesting context saves from child context to the root context ensures maximum data integrity between contexts without blocking the main queue. But as <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">Florian Kugler's investigation</a> found out, merging contexts is still by far faster than saving nested contexts. CoreStore's <code>DataStack</code> takes the best of both worlds by treating the main <code>NSManagedObjectContext</code> as a read-only context, and only allows changes to be made within <em>transactions</em> on the child context:</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/3029684/6734050/4078b642-ce99-11e4-95ea-c0c1d24fbe80.png" alt="nested contexts and merge hybrid" height="212"></p>
+
+<p>This allows for a butter-smooth main thread, while still taking advantage of safe nested contexts.</p>
+
+<h2>
+<a id="setting-up" class="anchor" href="#setting-up" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setting up</h2>
+
+<p>The simplest way to initialize CoreStore is to add a default store to the default stack:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">do</span> {
+    <span class="pl-k">try</span> CoreStore<span class="pl-k">.</span>addSQLiteStoreAndWait()
+}
+<span class="pl-k">catch</span> {
+    <span class="pl-c">// ...</span>
+}</pre></div>
+
+<p>This one-liner does the following:</p>
+
+<ul>
+<li>Triggers the lazy-initialization of <code>CoreStore.defaultStack</code> with a default <code>DataStack</code>
+</li>
+<li>Sets up the stack's <code>NSPersistentStoreCoordinator</code>, the root saving <code>NSManagedObjectContext</code>, and the read-only main <code>NSManagedObjectContext</code>
+</li>
+<li>Adds an SQLite store in the <em>"Application Support/"</em> directory (or the <em>"Caches/"</em> directory on tvOS) with the file name <em>"[App bundle name].sqlite"</em>
+</li>
+<li>Creates and returns the <code>NSPersistentStore</code> instance on success, or an <code>NSError</code> on failure</li>
+</ul>
+
+<p>For most cases, this configuration is usable as it is. But for more hardcore settings, refer to this extensive example:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> dataStack <span class="pl-k">=</span> DataStack(
+    modelName: <span class="pl-s"><span class="pl-pds">"</span>MyModel<span class="pl-pds">"</span></span>, <span class="pl-c">// loads from the "MyModel.xcdatamodeld" file</span>
+    migrationChain: [<span class="pl-s"><span class="pl-pds">"</span>MyStore<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>MyStoreV2<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>MyStoreV3<span class="pl-pds">"</span></span>] <span class="pl-c">// model versions for progressive migrations</span>
+)
+
+<span class="pl-k">do</span> {
+    <span class="pl-c">// creates an in-memory store with entities from the "Config1" configuration in the .xcdatamodeld file</span>
+    <span class="pl-k">let</span> persistentStore <span class="pl-k">=</span> <span class="pl-k">try</span> dataStack<span class="pl-k">.</span>addInMemoryStoreAndWait(configuration: <span class="pl-s"><span class="pl-pds">"</span>Config1<span class="pl-pds">"</span></span>) <span class="pl-c">// persistentStore is an NSPersistentStore instance</span>
+    <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>Successfully created an in-memory store: <span class="pl-pse">\(</span><span class="pl-s1">persistentStore</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>
+}
+<span class="pl-k">catch</span> {
+    <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>Failed creating an in-memory store with error: <span class="pl-pse">\(</span><span class="pl-s1">error <span class="pl-k">as</span> NSError</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>
+}
+
+<span class="pl-k">do</span> {
+    <span class="pl-k">try</span> dataStack<span class="pl-k">.</span>addSQLiteStore(
+        fileURL: sqliteFileURL, <span class="pl-c">// set the target file URL for the sqlite file</span>
+        configuration: <span class="pl-s"><span class="pl-pds">"</span>Config2<span class="pl-pds">"</span></span>, <span class="pl-c">// use entities from the "Config2" configuration in the .xcdatamodeld file</span>
+        resetStoreOnModelMismatch: <span class="pl-c1">true</span>,
+        completion: { (result) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+            <span class="pl-k">switch</span> result {
+            <span class="pl-k">case</span> <span class="pl-k">.</span>Success(<span class="pl-k">let</span> persistentStore):
+                <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>Successfully added sqlite store: <span class="pl-pse">\(</span><span class="pl-s1">persistentStore</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>
+            <span class="pl-k">case</span> <span class="pl-k">.</span>Failure(<span class="pl-k">let</span> error):
+                <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>Failed adding sqlite store with error: <span class="pl-pse">\(</span><span class="pl-s1">error</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>
+            }
+        }
+    )
+}
+<span class="pl-k">catch</span> {
+    <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>Failed adding sqlite store with error: <span class="pl-pse">\(</span><span class="pl-s1">error <span class="pl-k">as</span> NSError</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>
+}
+
+CoreStore<span class="pl-k">.</span>defaultStack <span class="pl-k">=</span> dataStack <span class="pl-c">// pass the dataStack to CoreStore for easier access later on</span></pre></div>
+
+<p>(If you have never heard of "Configurations", you'll find them in your <em>.xcdatamodeld</em> file)
+<img src="https://cloud.githubusercontent.com/assets/3029684/8333192/e52cfaac-1acc-11e5-9902-08724f9f1324.png" alt="xcode configurations screenshot" height="212"></p>
+
+<p>In our sample code above, note that you don't need to do the <code>CoreStore.defaultStack = dataStack</code> line. You can just as well hold a reference to the <code>DataStack</code> like below and call all its instance methods directly:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">class</span> MyViewController: UIViewController {
+    <span class="pl-k">let</span> dataStack <span class="pl-k">=</span> DataStack(modelName: <span class="pl-s"><span class="pl-pds">"</span>MyModel<span class="pl-pds">"</span></span>)
+    <span class="pl-k">override</span> <span class="pl-k">func</span> <span class="pl-en">viewDidLoad</span>() {
+        <span class="pl-k">super</span><span class="pl-k">.</span>viewDidLoad()
+        <span class="pl-k">do</span> {
+            <span class="pl-k">try</span> <span class="pl-k">self</span><span class="pl-k">.</span>dataStack<span class="pl-k">.</span>addSQLiteStoreAndWait()
+        }
+        <span class="pl-k">catch</span> { <span class="pl-c">// ...</span>
+        }
+    }
+    <span class="pl-k">func</span> <span class="pl-en">methodToBeCalledLaterOn</span>() {
+        <span class="pl-k">let</span> objects <span class="pl-k">=</span> <span class="pl-k">self</span><span class="pl-k">.</span>dataStack<span class="pl-k">.</span>fetchAll(From(MyEntity))
+        <span class="pl-c1">print</span>(objects)
+    }
+}</pre></div>
+
+<p>The difference is when you set the stack as the <code>CoreStore.defaultStack</code>, you can call the stack's methods directly from <code>CoreStore</code> itself:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">class</span> MyViewController: UIViewController {
+    <span class="pl-k">override</span> <span class="pl-k">func</span> <span class="pl-en">viewDidLoad</span>() {
+        <span class="pl-k">super</span><span class="pl-k">.</span>viewDidLoad()
+        <span class="pl-k">do</span> {
+            <span class="pl-k">try</span> CoreStore<span class="pl-k">.</span>addSQLiteStoreAndWait()
+        }
+        <span class="pl-k">catch</span> { <span class="pl-c">// ...</span>
+        }
+    }
+    <span class="pl-k">func</span> <span class="pl-en">methodToBeCalledLaterOn</span>() {
+        <span class="pl-k">let</span> objects <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(From(MyEntity))
+        <span class="pl-c1">print</span>(objects)
+    }
+}</pre></div>
+
+<h2>
+<a id="migrations" class="anchor" href="#migrations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Migrations</h2>
+
+<p>So far we have only seen <code>addSQLiteStoreAndWait(...)</code> used to initialize our persistent store. As the method name's "AndWait" suffix suggests, this method blocks so it should not do long tasks such as store migrations (in fact CoreStore won't even attempt to, and any model mismatch will be reported as an error). If migrations are expected, the asynchronous variant <code>addSQLiteStore(... completion:)</code> method should be used instead:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">do</span> {
+    <span class="pl-k">let</span> progress: NSProgress? <span class="pl-k">=</span> <span class="pl-k">try</span> dataStack<span class="pl-k">.</span>addSQLiteStore(
+        fileName: <span class="pl-s"><span class="pl-pds">"</span>MyStore.sqlite<span class="pl-pds">"</span></span>,
+        configuration: <span class="pl-s"><span class="pl-pds">"</span>Config2<span class="pl-pds">"</span></span>,
+        completion: { (result) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+            <span class="pl-k">switch</span> result {
+            <span class="pl-k">case</span> <span class="pl-k">.</span>Success(<span class="pl-k">let</span> persistentStore):
+                <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>Successfully added sqlite store: <span class="pl-pse">\(</span><span class="pl-s1">persistentStore</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>)
+            <span class="pl-k">case</span> <span class="pl-k">.</span>Failure(<span class="pl-k">let</span> error):
+                <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>Failed adding sqlite store with error: <span class="pl-pse">\(</span><span class="pl-s1">error</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>)
+            }
+        }
+    )
+}
+<span class="pl-k">catch</span> {
+    <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">"</span>Failed adding sqlite store with error: <span class="pl-pse">\(</span><span class="pl-s1">error <span class="pl-k">as</span> NSError</span><span class="pl-pse">)</span><span class="pl-pds">"</span></span>
+}</pre></div>
+
+<p>The <code>completion</code> block reports a <code>PersistentStoreResult</code> that indicates success or failure.</p>
+
+<p><code>addSQLiteStore(...)</code> throws an error if the store at the specified URL conflicts with an existing store in the <code>DataStack</code>, or if an existing sqlite file could not be read. If an error is thrown, the <code>completion</code> block will not be executed.</p>
+
+<p>Notice that this method also returns an optional <code>NSProgress</code>. If <code>nil</code>, no migrations are needed, thus progress reporting is unnecessary as well. If not <code>nil</code>, you can use this to track migration progress by using standard KVO on the "fractionCompleted" key, or by using a closure-based utility exposed in <em>NSProgress+Convenience.swift</em>:</p>
+
+<div class="highlight highlight-source-swift"><pre>progress?<span class="pl-k">.</span>setProgressHandler { [<span class="pl-k">weak</span> <span class="pl-k">self</span>] (progress) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">self</span>?<span class="pl-k">.</span>progressView?<span class="pl-k">.</span>setProgress(<span class="pl-c1">Float</span>(progress<span class="pl-k">.</span>fractionCompleted), animated: <span class="pl-c1">true</span>)
+    <span class="pl-k">self</span>?<span class="pl-k">.</span>percentLabel?<span class="pl-k">.</span>text <span class="pl-k">=</span> progress<span class="pl-k">.</span>localizedDescription <span class="pl-c">// "50% completed"</span>
+    <span class="pl-k">self</span>?<span class="pl-k">.</span>stepLabel?<span class="pl-k">.</span>text <span class="pl-k">=</span> progress<span class="pl-k">.</span>localizedAdditionalDescription <span class="pl-c">// "0 of 2"</span>
+}</pre></div>
+
+<p>This closure is executed on the main thread so UIKit calls can be done safely.</p>
+
+<h3>
+<a id="progressive-migrations" class="anchor" href="#progressive-migrations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Progressive migrations</h3>
+
+<p>By default, CoreStore uses Core Data's default automatic migration mechanism. In other words, CoreStore will try to migrate the existing persistent store to the <em>.xcdatamodeld</em> file's current model version. If no mapping model is found from the store's version to the data model's version, CoreStore gives up and reports an error.</p>
+
+<p>The <code>DataStack</code> lets you specify hints on how to break a migration into several sub-migrations using a <code>MigrationChain</code>. This is typically passed to the <code>DataStack</code> initializer and will be applied to all stores added to the <code>DataStack</code> with <code>addSQLiteStore(...)</code> and its variants:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> dataStack <span class="pl-k">=</span> DataStack(migrationChain: 
+    [<span class="pl-s"><span class="pl-pds">"</span>MyAppModel<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>MyAppModelV2<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>MyAppModelV3<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>MyAppModelV4<span class="pl-pds">"</span></span>])</pre></div>
+
+<p>The most common usage is to pass in the <em>.xcdatamodeld</em> version names in increasing order as above.</p>
+
+<p>For more complex migration paths, you can also pass in a version tree that maps the key-values to the source-destination versions:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> dataStack <span class="pl-k">=</span> DataStack(migrationChain: [
+    <span class="pl-s"><span class="pl-pds">"</span>MyAppModel<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>MyAppModelV3<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>MyAppModelV2<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>MyAppModelV4<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>MyAppModelV3<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>MyAppModelV4<span class="pl-pds">"</span></span>
+])</pre></div>
+
+<p>This allows for different migration paths depending on the starting version. The example above resolves to the following paths:</p>
+
+<ul>
+<li>MyAppModel-MyAppModelV3-MyAppModelV4</li>
+<li>MyAppModelV2-MyAppModelV4</li>
+<li>MyAppModelV3-MyAppModelV4</li>
+</ul>
+
+<p>Initializing with empty values (either <code>nil</code>, <code>[]</code>, or <code>[:]</code>) instructs the <code>DataStack</code> to disable progressive migrations and revert to the default migration behavior (i.e. use the .xcdatamodel's current version as the final version):</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> dataStack <span class="pl-k">=</span> DataStack(migrationChain: <span class="pl-c1">nil</span>)</pre></div>
+
+<p>The <code>MigrationChain</code> is validated when passed to the <code>DataStack</code> and unless it is empty, will raise an assertion if any of the following conditions are met:</p>
+
+<ul>
+<li>a version appears twice in an array</li>
+<li>a version appears twice as a key in a dictionary literal</li>
+<li>a loop is found in any of the paths</li>
+</ul>
+
+<p>One important thing to remember is that <strong>if a <code>MigrationChain</code> is specified, the <em>.xcdatamodeld</em>'s "Current Version" will be bypassed</strong> and the <code>MigrationChain</code>'s leafmost version will be the <code>DataStack</code>'s base model version.</p>
+
+<h3>
+<a id="forecasting-migrations" class="anchor" href="#forecasting-migrations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Forecasting migrations</h3>
+
+<p>Sometimes migrations are huge and you may want prior information so your app could display a loading screen, or to display a confirmation dialog to the user. For this, CoreStore provides a <code>requiredMigrationsForSQLiteStore(...)</code> method you can use to inspect a persistent store before you actually call <code>addSQLiteStore(...)</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">do</span> {
+    <span class="pl-k">let</span> migrationTypes: [MigrationType] <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>requiredMigrationsForSQLiteStore(fileName: <span class="pl-s"><span class="pl-pds">"</span>MyStore.sqlite<span class="pl-pds">"</span></span>)
+    <span class="pl-k">if</span> migrationTypes<span class="pl-k">.</span><span class="pl-c1">count</span> <span class="pl-k">&gt;</span> <span class="pl-c1">1</span>
+        <span class="pl-k">||</span> (migrationTypes<span class="pl-k">.</span><span class="pl-c1">filter</span> { $<span class="pl-c1">0</span><span class="pl-k">.</span>isHeavyweightMigration }<span class="pl-k">.</span><span class="pl-c1">count</span>) <span class="pl-k">&gt;</span> <span class="pl-c1">0</span> {
+        <span class="pl-c">// ... Show special waiting screen</span>
+    }
+    <span class="pl-k">else</span> <span class="pl-k">if</span> migrationTypes<span class="pl-k">.</span><span class="pl-c1">count</span> <span class="pl-k">&gt;</span> <span class="pl-c1">0</span> {
+        <span class="pl-c">// ... Show simple activity indicator</span>
+    }
+    <span class="pl-k">else</span> {
+        <span class="pl-c">// ... Do nothing</span>
+    }
+
+    CoreStore<span class="pl-k">.</span>addSQLiteStore(<span class="pl-c">/* ... */</span>)
+}
+<span class="pl-k">catch</span> {
+    <span class="pl-c">// ...</span>
+}</pre></div>
+
+<p><code>requiredMigrationsForSQLiteStore(...)</code> returns an array of <code>MigrationType</code>s, where each item in the array may be either of the following values:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">case</span> Lightweight(sourceVersion: <span class="pl-c1">String</span>, destinationVersion: <span class="pl-c1">String</span>)
+<span class="pl-k">case</span> Heavyweight(sourceVersion: <span class="pl-c1">String</span>, destinationVersion: <span class="pl-c1">String</span>)</pre></div>
+
+<p>Each <code>MigrationType</code> indicates the migration type for each step in the <code>MigrationChain</code>. Use these information as fit for your app.</p>
+
+<h2>
+<a id="saving-and-processing-transactions" class="anchor" href="#saving-and-processing-transactions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Saving and processing transactions</h2>
+
+<p>To ensure deterministic state for objects in the read-only <code>NSManagedObjectContext</code>, CoreStore does not expose API's for updating and saving directly from the main context (or any other context for that matter.) Instead, you spawn <em>transactions</em> from <code>DataStack</code> instances:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> dataStack <span class="pl-k">=</span> <span class="pl-k">self</span><span class="pl-k">.</span>dataStack
+dataStack<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-c">// make changes</span>
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p>or for the default stack, directly from <code>CoreStore</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-c">// make changes</span>
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p>The <code>commit()</code> method saves the changes to the persistent store. If <code>commit()</code> is not called when the transaction block completes, all changes within the transaction is discarded.</p>
+
+<p>The examples above use <code>beginAsynchronous(...)</code>, but there are actually 3 types of transactions at your disposal: <em>asynchronous</em>, <em>synchronous</em>, and <em>unsafe</em>.</p>
+
+<h3>
+<a id="transaction-types" class="anchor" href="#transaction-types" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Transaction types</h3>
+
+<h4>
+<a id="asynchronous-transactions" class="anchor" href="#asynchronous-transactions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Asynchronous transactions</h4>
+
+<p>are spawned from <code>beginAsynchronous(...)</code>. This method returns immediately and executes its closure from a background serial queue:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-c">// make changes</span>
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p>Transactions created from <code>beginAsynchronous(...)</code> are instances of <code>AsynchronousDataTransaction</code>.</p>
+
+<h4>
+<a id="synchronous-transactions" class="anchor" href="#synchronous-transactions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Synchronous transactions</h4>
+
+<p>are created from <code>beginSynchronous(...)</code>. While the syntax is similar to its asynchronous counterpart, <code>beginSynchronous(...)</code> waits for its transaction block to complete before returning:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginSynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-c">// make changes</span>
+    transaction<span class="pl-k">.</span>commit()
+} </pre></div>
+
+<p><code>transaction</code> above is a <code>SynchronousDataTransaction</code> instance.</p>
+
+<p>Since <code>beginSynchronous(...)</code> technically blocks two queues (the caller's queue and the transaction's background queue), it is considered less safe as it's more prone to deadlock. Take special care that the closure does not block on any other external queues.</p>
+
+<h4>
+<a id="unsafe-transactions" class="anchor" href="#unsafe-transactions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Unsafe transactions</h4>
+
+<p>are special in that they do not enclose updates within a closure:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> transaction <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>beginUnsafe()
+<span class="pl-c">// make changes</span>
+downloadJSONWithCompletion({ (json) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+
+    <span class="pl-c">// make other changes</span>
+    transaction<span class="pl-k">.</span>commit()
+})
+downloadAnotherJSONWithCompletion({ (json) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+
+    <span class="pl-c">// make some other changes</span>
+    transaction<span class="pl-k">.</span>commit()
+})</pre></div>
+
+<p>This allows for non-contiguous updates. Do note that this flexibility comes with a price: you are now responsible for managing concurrency for the transaction. As uncle Ben said, "with great power comes great race conditions."</p>
+
+<p>As the above example also shows, only unsafe transactions are allowed to call <code>commit()</code> multiple times; doing so with synchronous and asynchronous transactions will trigger an assert. </p>
+
+<p>You've seen how to create transactions, but we have yet to see how to make <em>creates</em>, <em>updates</em>, and <em>deletes</em>. The 3 types of transactions above are all subclasses of <code>BaseDataTransaction</code>, which implements the methods shown below.</p>
+
+<h3>
+<a id="creating-objects" class="anchor" href="#creating-objects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating objects</h3>
+
+<p>The <code>create(...)</code> method accepts an <code>Into</code> clause which specifies the entity for the object you want to create:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> person <span class="pl-k">=</span> transaction<span class="pl-k">.</span>create(Into(MyPersonEntity))</pre></div>
+
+<p>While the syntax is straightforward, CoreStore does not just naively insert a new object. This single line does the following:</p>
+
+<ul>
+<li>Checks that the entity type exists in any of the transaction's parent persistent store</li>
+<li>If the entity belongs to only one persistent store, a new object is inserted into that store and returned from <code>create(...)</code>
+</li>
+<li>If the entity does not belong to any store, an assert will be triggered. <strong>This is a programmer error and should never occur in production code.</strong>
+</li>
+<li>If the entity belongs to multiple stores, an assert will be triggered. <strong>This is also a programmer error and should never occur in production code.</strong> Normally, with Core Data you can insert an object in this state but saving the <code>NSManagedObjectContext</code> will always fail. CoreStore checks this for you at creation time when it makes sense (not during save).</li>
+</ul>
+
+<p>If the entity exists in multiple configurations, you need to provide the configuration name for the destination persistent store:</p>
+
+<pre><code>let person = transaction.create(Into&lt;MyPersonEntity&gt;("Config1"))
+</code></pre>
+
+<p>or if the persistent store is the auto-generated "Default" configuration, specify <code>nil</code>:</p>
+
+<pre><code>let person = transaction.create(Into&lt;MyPersonEntity&gt;(nil))
+</code></pre>
+
+<p>Note that if you do explicitly specify the configuration name, CoreStore will only try to insert the created object to that particular store and will fail if that store is not found; it will not fall back to any other configuration that the entity belongs to. </p>
+
+<h3>
+<a id="updating-objects" class="anchor" href="#updating-objects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Updating objects</h3>
+
+<p>After creating an object from the transaction, you can simply update its properties as normal:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> person <span class="pl-k">=</span> transaction<span class="pl-k">.</span>create(Into(MyPersonEntity))
+    person<span class="pl-k">.</span>name <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>John Smith<span class="pl-pds">"</span></span>
+    person<span class="pl-k">.</span>age <span class="pl-k">=</span> <span class="pl-c1">30</span>
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p>To update an existing object, fetch the object's instance from the transaction:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> person <span class="pl-k">=</span> transaction<span class="pl-k">.</span>fetchOne(
+        From(MyPersonEntity),
+        Where(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>, isEqualTo: <span class="pl-s"><span class="pl-pds">"</span>Jane Smith<span class="pl-pds">"</span></span>)
+    )
+    person<span class="pl-k">.</span>age <span class="pl-k">=</span> person<span class="pl-k">.</span>age <span class="pl-k">+</span> <span class="pl-c1">1</span>
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p><em>(For more about fetching, see <a href="#fetching-and-querying">Fetching and querying</a>)</em></p>
+
+<p><strong>Do not update an instance that was not created/fetched from the transaction.</strong> If you have a reference to the object already, use the transaction's <code>edit(...)</code> method to get an editable proxy instance for that object:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> jane: MyPersonEntity <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+
+CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-c">// WRONG: jane.age = jane.age + 1</span>
+    <span class="pl-c">// RIGHT:</span>
+    <span class="pl-k">let</span> jane <span class="pl-k">=</span> transaction<span class="pl-k">.</span>edit(jane)<span class="pl-k">!</span> <span class="pl-c">// using the same variable name protects us from misusing the non-transaction instance</span>
+    jane<span class="pl-k">.</span>age <span class="pl-k">=</span> jane<span class="pl-k">.</span>age <span class="pl-k">+</span> <span class="pl-c1">1</span>
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p>This is also true when updating an object's relationships. Make sure that the object assigned to the relationship is also created/fetched from the transaction:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> jane: MyPersonEntity <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+<span class="pl-k">let</span> john: MyPersonEntity <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+
+CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-c">// WRONG: jane.friends = [john]</span>
+    <span class="pl-c">// RIGHT:</span>
+    <span class="pl-k">let</span> jane <span class="pl-k">=</span> transaction<span class="pl-k">.</span>edit(jane)<span class="pl-k">!</span>
+    <span class="pl-k">let</span> john <span class="pl-k">=</span> transaction<span class="pl-k">.</span>edit(john)<span class="pl-k">!</span>
+    jane<span class="pl-k">.</span>friends <span class="pl-k">=</span> NSSet(array: [john])
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<h3>
+<a id="deleting-objects" class="anchor" href="#deleting-objects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Deleting objects</h3>
+
+<p>Deleting an object is simpler because you can tell a transaction to delete an object directly without fetching an editable proxy (CoreStore does that for you):</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> john: MyPersonEntity <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+
+CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    transaction<span class="pl-k">.</span>delete(john)
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p>or several objects at once:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> john: MyPersonEntity <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+<span class="pl-k">let</span> jane: MyPersonEntity <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+
+CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    transaction<span class="pl-k">.</span>delete(john, jane)
+    <span class="pl-c">// transaction.delete([john, jane]) is also allowed</span>
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p>If you do not have references yet to the objects to be deleted, transactions have a <code>deleteAll(...)</code> method you can pass a query to:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    transaction<span class="pl-k">.</span>deleteAll(
+        From(MyPersonEntity)
+        Where(<span class="pl-s"><span class="pl-pds">"</span>age &gt; 30<span class="pl-pds">"</span></span>)
+    )
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<h3>
+<a id="passing-objects-safely" class="anchor" href="#passing-objects-safely" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Passing objects safely</h3>
+
+<p>Always remember that the <code>DataStack</code> and individual transactions manage different <code>NSManagedObjectContext</code>s so you cannot just use objects between them. That's why transactions have an <code>edit(...)</code> method:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> jane: MyPersonEntity <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+
+CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> jane <span class="pl-k">=</span> transaction<span class="pl-k">.</span>edit(jane)<span class="pl-k">!</span>
+    jane<span class="pl-k">.</span>age <span class="pl-k">=</span> jane<span class="pl-k">.</span>age <span class="pl-k">+</span> <span class="pl-c1">1</span>
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p>But <code>CoreStore</code>, <code>DataStack</code> and <code>BaseDataTransaction</code> have a very flexible <code>fetchExisting(...)</code> method that you can pass instances back and forth with:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> jane: MyPersonEntity <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+
+CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> jane <span class="pl-k">=</span> transaction<span class="pl-k">.</span>fetchExisting(jane)<span class="pl-k">!</span> <span class="pl-c">// instance for transaction</span>
+    jane<span class="pl-k">.</span>age <span class="pl-k">=</span> jane<span class="pl-k">.</span>age <span class="pl-k">+</span> <span class="pl-c1">1</span>
+    transaction<span class="pl-k">.</span>commit {
+        <span class="pl-k">let</span> jane <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchExisting(jane)<span class="pl-k">!</span> <span class="pl-c">// instance for DataStack</span>
+        <span class="pl-c1">print</span>(jane<span class="pl-k">.</span>age)
+    }
+}</pre></div>
+
+<p><code>fetchExisting(...)</code> also works with multiple <code>NSManagedObject</code>s or with <code>NSManagedObjectID</code>s:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">var</span> peopleIDs: [NSManagedObjectID] <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+
+CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> jane <span class="pl-k">=</span> transaction<span class="pl-k">.</span>fetchOne(
+        From(MyPersonEntity),
+        Where(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>, isEqualTo: <span class="pl-s"><span class="pl-pds">"</span>Jane Smith<span class="pl-pds">"</span></span>)
+    )
+    jane<span class="pl-k">.</span>friends <span class="pl-k">=</span> NSSet(array: transaction<span class="pl-k">.</span>fetchExisting(peopleIDs)<span class="pl-k">!</span>)
+    <span class="pl-c">// ...</span>
+}</pre></div>
+
+<h2>
+<a id="importing-data" class="anchor" href="#importing-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Importing data</h2>
+
+<p>Some times, if not most of the time, the data that we save to Core Data comes from external sources such as web servers or external files. Say you have a JSON dictionary, you may be extracting values as such:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> json: [<span class="pl-c1">String</span>: <span class="pl-c1">AnyObject</span>] <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+person<span class="pl-k">.</span>name <span class="pl-k">=</span> json[<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>] <span class="pl-k">as?</span> NSString
+person<span class="pl-k">.</span>age <span class="pl-k">=</span> json[<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>] <span class="pl-k">as?</span> NSNumber
+<span class="pl-c">// ...</span></pre></div>
+
+<p>If you have many attributes, you don't want to keep repeating this mapping everytime you want to import data. CoreStore lets you write the data mapping code just once, and all you have to do is call <code>importObject(...)</code> or <code>importUniqueObject(...)</code> through <code>BaseDataTransaction</code> subclasses:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> json: [<span class="pl-c1">String</span>: <span class="pl-c1">AnyObject</span>] <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+    <span class="pl-k">try</span><span class="pl-k">!</span> transaction<span class="pl-k">.</span>importObject(
+        Into(MyPersonEntity),
+        source: json
+    )
+    transaction<span class="pl-k">.</span>commit()
+}</pre></div>
+
+<p>To support data import for an entity, implement either <code>ImportableObject</code> or <code>ImportableUniqueObject</code> on the <code>NSManagedObject</code> subclass:</p>
+
+<ul>
+<li>
+<code>ImportableObject</code>: Use this protocol if the object have no inherent uniqueness and new objects should always be added when calling <code>importObject(...)</code>.</li>
+<li>
+<code>ImportableUniqueObject</code>: Use this protocol to specify a unique ID for an object that will be used to distinguish whether a new object should be created or if an existing object should be updated when calling <code>importUniqueObject(...)</code>.</li>
+</ul>
+
+<p>Both protocols require implementers to specify an <code>ImportSource</code> which can be set to any type that the object can extract data from:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">typealias</span> ImportSource <span class="pl-k">=</span> NSDictionary</pre></div>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">typealias</span> ImportSource <span class="pl-k">=</span> [<span class="pl-c1">String</span>: <span class="pl-c1">AnyObject</span>]</pre></div>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">typealias</span> ImportSource <span class="pl-k">=</span> NSData</pre></div>
+
+<p>You can even use external types from popular 3rd-party JSON libraries (<a href="https://github.com/SwiftyJSON/SwiftyJSON">SwiftyJSON</a>'s <code>JSON</code> type is a personal favorite), or just simple tuples or primitives.</p>
+
+<h4>
+<a id="importableobject" class="anchor" href="#importableobject" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>ImportableObject</code>
+</h4>
+
+<p><code>ImportableObject</code> is a very simple protocol:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">public</span> <span class="pl-k">protocol</span> ImportableObject: <span class="pl-k">class</span> {
+    <span class="pl-k">typealias</span> ImportSource
+    <span class="pl-k">static</span> <span class="pl-k">func</span> <span class="pl-en">shouldInsertFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Bool</span>
+    <span class="pl-k">func</span> <span class="pl-en">didInsertFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) throws
+}</pre></div>
+
+<p>First, set <code>ImportSource</code> to the expected type of the data source:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">typealias</span> ImportSource <span class="pl-k">=</span> [<span class="pl-c1">String</span>: <span class="pl-c1">AnyObject</span>]</pre></div>
+
+<p>This lets us call <code>importObject(_:source:)</code> with any <code>[String: AnyObject]</code> type as the argument to <code>source</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> json: [<span class="pl-c1">String</span>: <span class="pl-c1">AnyObject</span>] <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+    <span class="pl-k">try</span><span class="pl-k">!</span> transaction<span class="pl-k">.</span>importObject(
+        Into(MyPersonEntity),
+        source: json
+    )
+    <span class="pl-c">// ...</span>
+}</pre></div>
+
+<p>The actual extraction and assignment of values should be implemented in the <code>didInsertFromImportSource(...)</code> method of the <code>ImportableObject</code> protocol:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">func</span> <span class="pl-en">didInsertFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) throws {
+    <span class="pl-k">self</span><span class="pl-k">.</span>name <span class="pl-k">=</span> source[<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>] <span class="pl-k">as?</span> NSString
+    <span class="pl-k">self</span><span class="pl-k">.</span>age <span class="pl-k">=</span> source[<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>] <span class="pl-k">as?</span> NSNumber
+    <span class="pl-c">// ...</span>
+}</pre></div>
+
+<p>Transactions also let you import multiple objects at once using the <code>importObjects(_:sourceArray:)</code> method:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> jsonArray: [[<span class="pl-c1">String</span>: <span class="pl-c1">AnyObject</span>]] <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+    <span class="pl-k">try</span><span class="pl-k">!</span> transaction<span class="pl-k">.</span>importObjects(
+        Into(MyPersonEntity),
+        sourceArray: jsonArray
+    )
+    <span class="pl-c">// ...</span>
+}</pre></div>
+
+<p>Doing so tells the transaction to iterate through the array of import sources and calls <code>shouldInsertFromImportSource(...)</code> on the <code>ImportableObject</code> to determine which instances should be created. You can do validations and return <code>false</code> from <code>shouldInsertFromImportSource(...)</code> if you want to skip importing from a source and continue on with the other sources in the array.</p>
+
+<p>If on the other hand, your validation in one of the sources failed in such a manner that all other sources should also be cancelled, you can <code>throw</code> from within <code>didInsertFromImportSource(...)</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">func</span> <span class="pl-en">didInsertFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) throws {
+    <span class="pl-k">self</span><span class="pl-k">.</span>name <span class="pl-k">=</span> source[<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>] <span class="pl-k">as?</span> NSString
+    <span class="pl-k">self</span><span class="pl-k">.</span>age <span class="pl-k">=</span> source[<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>] <span class="pl-k">as?</span> NSNumber
+    <span class="pl-c">// ...</span>
+    <span class="pl-k">if</span> <span class="pl-k">self</span><span class="pl-k">.</span>name <span class="pl-k">==</span> <span class="pl-c1">nil</span> {
+        <span class="pl-k">throw</span> Errors<span class="pl-k">.</span>InvalidNameError
+    }
+}</pre></div>
+
+<p>Doing so can let you abandon an invalid transaction immediately:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> jsonArray: [[<span class="pl-c1">String</span>: <span class="pl-c1">AnyObject</span>]] <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+    <span class="pl-k">do</span> {
+        <span class="pl-k">try</span> transaction<span class="pl-k">.</span>importObjects(
+            Into(MyPersonEntity),
+            sourceArray: jsonArray
+        )
+    }
+    <span class="pl-k">catch</span> {
+        <span class="pl-k">return</span> <span class="pl-c">// Woops, don't save</span>
+    }
+    transaction<span class="pl-k">.</span>commit {
+        <span class="pl-c">// ...</span>
+    }
+}</pre></div>
+
+<h4>
+<a id="importableuniqueobject" class="anchor" href="#importableuniqueobject" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>ImportableUniqueObject</code>
+</h4>
+
+<p>Typically, we don't just keep creating objects every time we import data. Usually we also need to update already existing objects. Implementing the <code>ImportableUniqueObject</code> protocol lets you specify a "unique ID" that transactions can use to search existing objects before creating new ones:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">public</span> <span class="pl-k">protocol</span> ImportableUniqueObject: ImportableObject {
+    <span class="pl-k">typealias</span> ImportSource
+    <span class="pl-k">typealias</span> UniqueIDType: NSObject
+
+    <span class="pl-k">static</span> <span class="pl-k">var</span> uniqueIDKeyPath: <span class="pl-c1">String</span> { <span class="pl-k">get</span> }
+    <span class="pl-k">var</span> uniqueIDValue: UniqueIDType { <span class="pl-k">get</span> <span class="pl-k">set</span> }
+
+    <span class="pl-k">static</span> <span class="pl-k">func</span> <span class="pl-en">shouldInsertFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Bool</span>
+    <span class="pl-k">static</span> <span class="pl-k">func</span> <span class="pl-en">shouldUpdateFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Bool</span>
+    <span class="pl-k">static</span> <span class="pl-k">func</span> <span class="pl-en">uniqueIDFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) throws <span class="pl-k">-&gt;</span> UniqueIDType?
+    <span class="pl-k">func</span> <span class="pl-en">didInsertFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) throws
+    <span class="pl-k">func</span> <span class="pl-en">updateFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) throws
+}</pre></div>
+
+<p>Notice that it has the same insert methods as <code>ImportableObject</code>, with additional methods for updates and for specifying the unique ID:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">class</span> <span class="pl-k">var</span> uniqueIDKeyPath: <span class="pl-c1">String</span> {
+    <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>personID<span class="pl-pds">"</span></span> 
+}
+<span class="pl-k">var</span> uniqueIDValue: NSNumber { 
+    <span class="pl-k">get</span> { <span class="pl-k">return</span> <span class="pl-k">self</span><span class="pl-k">.</span>personID }
+    <span class="pl-k">set</span> { <span class="pl-k">self</span><span class="pl-k">.</span>personID <span class="pl-k">=</span> newValue }
+}
+<span class="pl-k">class</span> <span class="pl-k">func</span> <span class="pl-en">uniqueIDFromImportSource</span>(source: ImportSource, <span class="pl-en">inTransaction</span> <span class="pl-smi">transaction</span>: BaseDataTransaction) throws <span class="pl-k">-&gt;</span> NSNumber? {
+    <span class="pl-k">return</span> source[<span class="pl-s"><span class="pl-pds">"</span>id<span class="pl-pds">"</span></span>] <span class="pl-k">as?</span> NSNumber
+}</pre></div>
+
+<p>For <code>ImportableUniqueObject</code>, the extraction and assignment of values should be implemented from the <code>updateFromImportSource(...)</code> method. The <code>didInsertFromImportSource(...)</code> by default calls <code>updateFromImportSource(...)</code>, but you can separate the implementation for inserts and updates if needed.</p>
+
+<p>You can then create/update an object by calling a transaction's <code>importUniqueObject(...)</code> method:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> json: [<span class="pl-c1">String</span>: <span class="pl-c1">AnyObject</span>] <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+    <span class="pl-k">try</span><span class="pl-k">!</span> transaction<span class="pl-k">.</span>importUniqueObject(
+        Into(MyPersonEntity),
+        source: json
+    )
+    <span class="pl-c">// ...</span>
+}</pre></div>
+
+<p>or multiple objects at once with the <code>importUniqueObjects(...)</code> method:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>beginAsynchronous { (transaction) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+    <span class="pl-k">let</span> jsonArray: [[<span class="pl-c1">String</span>: <span class="pl-c1">AnyObject</span>]] <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+    <span class="pl-k">try</span><span class="pl-k">!</span> transaction<span class="pl-k">.</span>importObjects(
+        Into(MyPersonEntity),
+        sourceArray: jsonArray
+    )
+    <span class="pl-c">// ...</span>
+}</pre></div>
+
+<p>As with <code>ImportableObject</code>, you can control wether to skip importing an object by implementing 
+<code>shouldInsertFromImportSource(...)</code> and <code>shouldUpdateFromImportSource(...)</code>, or to cancel all objects by <code>throw</code>ing an error from the <code>uniqueIDFromImportSource(...)</code>, <code>didInsertFromImportSource(...)</code> or <code>updateFromImportSource(...)</code> methods.</p>
+
+<h2>
+<a id="fetching-and-querying" class="anchor" href="#fetching-and-querying" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fetching and Querying</h2>
+
+<p>Before we dive in, be aware that CoreStore distinguishes between <em>fetching</em> and <em>querying</em>:</p>
+
+<ul>
+<li>A <em>fetch</em> executes searches from a specific <em>transaction</em> or <em>data stack</em>. This means fetches can include pending objects (i.e. before a transaction calls on <code>commit()</code>.) Use fetches when:
+
+<ul>
+<li>results need to be <code>NSManagedObject</code> instances</li>
+<li>unsaved objects should be included in the search (though fetches can be configured to exclude unsaved ones)</li>
+</ul>
+</li>
+<li>A <em>query</em> pulls data straight from the persistent store. This means faster searches when computing aggregates such as <em>count</em>, <em>min</em>, <em>max</em>, etc. Use queries when:
+
+<ul>
+<li>you need to compute aggregate functions (see below for a list of supported functions)</li>
+<li>results can be raw values like <code>NSString</code>s, <code>NSNumber</code>s, <code>Int</code>s, <code>NSDate</code>s, an <code>NSDictionary</code> of key-values, etc.</li>
+<li>only values for specified attribute keys need to be included in the results</li>
+<li>unsaved objects should be ignored</li>
+</ul>
+</li>
+</ul>
+
+<h4>
+<a id="from-clause" class="anchor" href="#from-clause" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>From</code> clause</h4>
+
+<p>The search conditions for fetches and queries are specified using <em>clauses</em>. All fetches and queries require a <code>From</code> clause that indicates the target entity type:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> people <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(From(MyPersonEntity))
+<span class="pl-c">// CoreStore.fetchAll(From&lt;MyPersonEntity&gt;()) works as well</span></pre></div>
+
+<p><code>people</code> in the example above will be of type <code>[MyPersonEntity]</code>. The <code>From(MyPersonEntity)</code> clause indicates a fetch to all persistent stores that <code>MyPersonEntity</code> belong to.</p>
+
+<p>If the entity exists in multiple configurations and you need to only search from a particular configuration, indicate in the <code>From</code> clause the configuration name for the destination persistent store:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> people <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(From<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>(<span class="pl-s"><span class="pl-pds">"</span>Config1<span class="pl-pds">"</span></span>)) <span class="pl-c">// ignore objects in persistent stores other than the "Config1" configuration</span></pre></div>
+
+<p>or if the persistent store is the auto-generated "Default" configuration, specify <code>nil</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> person <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(From<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>(<span class="pl-c1">nil</span>))</pre></div>
+
+<p>Now we know how to use a <code>From</code> clause, let's move on to fetching and querying.</p>
+
+<h3>
+<a id="fetching" class="anchor" href="#fetching" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fetching</h3>
+
+<p>There are currently 5 fetch methods you can call from <code>CoreStore</code>, from a <code>DataStack</code> instance, or from a <code>BaseDataTransaction</code> instance. All of the methods below accept the same parameters: a required <code>From</code> clause, and an optional series of <code>Where</code>, <code>OrderBy</code>, and/or <code>Tweak</code> clauses.</p>
+
+<ul>
+<li>
+<code>fetchAll(...)</code> - returns an array of all objects that match the criteria.</li>
+<li>
+<code>fetchOne(...)</code> - returns the first object that match the criteria.</li>
+<li>
+<code>fetchCount(...)</code> - returns the number of objects that match the criteria.</li>
+<li>
+<code>fetchObjectIDs(...)</code> - returns an array of <code>NSManagedObjectID</code>s for all objects that match the criteria.</li>
+<li>
+<code>fetchObjectID(...)</code> - returns the <code>NSManagedObjectID</code>s for the first objects that match the criteria.</li>
+</ul>
+
+<p>Each method's purpose is straightforward, but we need to understand how to set the clauses for the fetch.</p>
+
+<h4>
+<a id="where-clause" class="anchor" href="#where-clause" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>Where</code> clause</h4>
+
+<p>The <code>Where</code> clause is CoreStore's <code>NSPredicate</code> wrapper. It specifies the search filter to use when fetching (or querying). It implements all initializers that <code>NSPredicate</code> does (except for <code>-predicateWithBlock:</code>, which Core Data does not support):</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">var</span> people <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(
+    From(MyPersonEntity),
+    Where(<span class="pl-s"><span class="pl-pds">"</span>%K &gt; %d<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>, <span class="pl-c1">30</span>) <span class="pl-c">// string format initializer</span>
+)
+people <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(
+    From(MyPersonEntity),
+    Where(<span class="pl-c1">true</span>) <span class="pl-c">// boolean initializer</span>
+)</pre></div>
+
+<p>If you do have an existing <code>NSPredicate</code> instance already, you can pass that to <code>Where</code> as well:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> predicate <span class="pl-k">=</span> NSPredicate(<span class="pl-k">...</span>)
+<span class="pl-k">var</span> people <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(
+    From(MyPersonEntity),
+    Where(predicate) <span class="pl-c">// predicate initializer</span>
+)</pre></div>
+
+<p><code>Where</code> clauses also implement the <code>&amp;&amp;</code>, <code>||</code>, and <code>!</code> logic operators, so you can provide logical conditions without writing too much <code>AND</code>, <code>OR</code>, and <code>NOT</code> strings:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">var</span> people <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(
+    From(MyPersonEntity),
+    Where(<span class="pl-s"><span class="pl-pds">"</span>age &gt; %d<span class="pl-pds">"</span></span>, <span class="pl-c1">30</span>) <span class="pl-k">&amp;&amp;</span> Where(<span class="pl-s"><span class="pl-pds">"</span>gender == %@<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>M<span class="pl-pds">"</span></span>)
+)</pre></div>
+
+<p>If you do not provide a <code>Where</code> clause, all objects that belong to the specified <code>From</code> will be returned.</p>
+
+<h4>
+<a id="orderby-clause" class="anchor" href="#orderby-clause" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>OrderBy</code> clause</h4>
+
+<p>The <code>OrderBy</code> clause is CoreStore's <code>NSSortDescriptor</code> wrapper. Use it to specify attribute keys in which to sort the fetch (or query) results with.</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">var</span> mostValuablePeople <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(
+    From(MyPersonEntity),
+    OrderBy(<span class="pl-k">.</span>Descending(<span class="pl-s"><span class="pl-pds">"</span>rating<span class="pl-pds">"</span></span>), <span class="pl-k">.</span>Ascending(<span class="pl-s"><span class="pl-pds">"</span>surname<span class="pl-pds">"</span></span>))
+)</pre></div>
+
+<p>As seen above, <code>OrderBy</code> accepts a list of <code>SortKey</code> enumeration values, which can be either <code>.Ascending</code> or <code>.Descending</code>.</p>
+
+<p>You can use the <code>+</code> and <code>+=</code> operator to append <code>OrderBy</code>s together. This is useful when sorting conditionally:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">var</span> orderBy <span class="pl-k">=</span> OrderBy(<span class="pl-k">.</span>Descending(<span class="pl-s"><span class="pl-pds">"</span>rating<span class="pl-pds">"</span></span>))
+<span class="pl-k">if</span> sortFromYoungest {
+    orderBy <span class="pl-k">+=</span> OrderBy(<span class="pl-k">.</span>Ascending(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>))
+}
+<span class="pl-k">var</span> mostValuablePeople <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(
+    From(MyPersonEntity),
+    orderBy
+)</pre></div>
+
+<h4>
+<a id="tweak-clause" class="anchor" href="#tweak-clause" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>Tweak</code> clause</h4>
+
+<p>The <code>Tweak</code> clause lets you, uh, <em>tweak</em> the fetch (or query). <code>Tweak</code> exposes the <code>NSFetchRequest</code> in a closure where you can make changes to its properties:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">var</span> people <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>fetchAll(
+    From(MyPersonEntity),
+    Where(<span class="pl-s"><span class="pl-pds">"</span>age &gt; %d<span class="pl-pds">"</span></span>, <span class="pl-c1">30</span>),
+    OrderBy(<span class="pl-k">.</span>Ascending(<span class="pl-s"><span class="pl-pds">"</span>surname<span class="pl-pds">"</span></span>)),
+    Tweak { (fetchRequest) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+        fetchRequest<span class="pl-k">.</span>includesPendingChanges <span class="pl-k">=</span> <span class="pl-c1">false</span>
+        fetchRequest<span class="pl-k">.</span>returnsObjectsAsFaults <span class="pl-k">=</span> <span class="pl-c1">false</span>
+        fetchRequest<span class="pl-k">.</span>includesSubentities <span class="pl-k">=</span> <span class="pl-c1">false</span>
+    }
+)</pre></div>
+
+<p>The clauses are evaluated the order they appear in the fetch/query, so you typically need to set <code>Tweak</code> as the last clause.
+<code>Tweak</code>'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions.</p>
+
+<p>While <code>Tweak</code> lets you micro-configure the <code>NSFetchRequest</code>, note that CoreStore already preconfigured that <code>NSFetchRequest</code> to suitable defaults. Only use <code>Tweak</code> when you know what you are doing!</p>
+
+<h3>
+<a id="querying" class="anchor" href="#querying" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Querying</h3>
+
+<p>One of the functionalities overlooked by other Core Data wrapper libraries is raw properties fetching. If you are familiar with <code>NSDictionaryResultType</code> and <code>-[NSFetchedRequest propertiesToFetch]</code>, you probably know how painful it is to setup a query for raw values and aggregate values. CoreStore makes this easy by exposing the 2 methods below:</p>
+
+<ul>
+<li>
+<code>queryValue(...)</code> - returns a single raw value for an attribute or for an aggregate value. If there are multiple results, <code>queryValue(...)</code> only returns the first item.</li>
+<li>
+<code>queryAttributes(...)</code> - returns an array of dictionaries containing attribute keys with their corresponding values.</li>
+</ul>
+
+<p>Both methods above accept the same parameters: a required <code>From</code> clause, a required <code>Select&lt;T&gt;</code> clause, and an optional series of <code>Where</code>, <code>OrderBy</code>, <code>GroupBy</code>, and/or <code>Tweak</code> clauses.</p>
+
+<p>Setting up the <code>From</code>, <code>Where</code>, <code>OrderBy</code>, and <code>Tweak</code> clauses is similar to how you would when fetching. For querying, you also need to know how to use the <code>Select&lt;T&gt;</code> and <code>GroupBy</code> clauses.</p>
+
+<h4>
+<a id="selectt-clause" class="anchor" href="#selectt-clause" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>Select&lt;T&gt;</code> clause</h4>
+
+<p>The <code>Select&lt;T&gt;</code> clause specifies the target attribute/aggregate key, as well as the expected return type: </p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> johnsAge <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>queryValue(
+    From(MyPersonEntity),
+    Select<span class="pl-k">&lt;</span><span class="pl-c1">Int</span><span class="pl-k">&gt;</span>(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>),
+    Where(<span class="pl-s"><span class="pl-pds">"</span>name == %@<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>John Smith<span class="pl-pds">"</span></span>)
+)</pre></div>
+
+<p>The example above queries the "age" property for the first object that matches the <code>Where</code> condition. <code>johnsAge</code> will be bound to type <code>Int?</code>, as indicated by the <code>Select&lt;Int&gt;</code> generic type. For <code>queryValue(...)</code>, the following are allowed as the return type (and therefore as the generic type for <code>Select&lt;T&gt;</code>):</p>
+
+<ul>
+<li><code>Bool</code></li>
+<li><code>Int8</code></li>
+<li><code>Int16</code></li>
+<li><code>Int32</code></li>
+<li><code>Int64</code></li>
+<li><code>Double</code></li>
+<li><code>Float</code></li>
+<li><code>String</code></li>
+<li><code>NSNumber</code></li>
+<li><code>NSString</code></li>
+<li><code>NSDecimalNumber</code></li>
+<li><code>NSDate</code></li>
+<li><code>NSData</code></li>
+<li><code>NSManagedObjectID</code></li>
+<li><code>NSString</code></li>
+</ul>
+
+<p>For <code>queryAttributes(...)</code>, only <code>NSDictionary</code> is valid for <code>Select</code>, thus you are allowed to omit the generic type:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> allAges <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>queryAttributes(
+    From(MyPersonEntity),
+    Select(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>)
+)</pre></div>
+
+<p>If you only need a value for a particular attribute, you can just specify the key name (like we did with <code>Select&lt;Int&gt;("age")</code>), but several aggregate functions can also be used as parameter to <code>Select</code>:</p>
+
+<ul>
+<li><code>.Average(...)</code></li>
+<li><code>.Count(...)</code></li>
+<li><code>.Maximum(...)</code></li>
+<li><code>.Minimum(...)</code></li>
+<li><code>.Sum(...)</code></li>
+</ul>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> oldestAge <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>queryValue(
+    From(MyPersonEntity),
+    Select<span class="pl-k">&lt;</span><span class="pl-c1">Int</span><span class="pl-k">&gt;</span>(<span class="pl-k">.</span>Maximum(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>))
+)</pre></div>
+
+<p>For <code>queryAttributes(...)</code> which returns an array of dictionaries, you can specify multiple attributes/aggregates to <code>Select</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> personJSON <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>queryAttributes(
+    From(MyPersonEntity),
+    Select(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>)
+)</pre></div>
+
+<p><code>personJSON</code> will then have the value:</p>
+
+<div class="highlight highlight-source-swift"><pre>[
+    [
+        <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>John Smith<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>: <span class="pl-c1">30</span>
+    ],
+    [
+        <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Jane Doe<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>: <span class="pl-c1">22</span>
+    ]
+]</pre></div>
+
+<p>You can also include an aggregate as well:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> personJSON <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>queryAttributes(
+    From(MyPersonEntity),
+    Select(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>, <span class="pl-k">.</span>Count(<span class="pl-s"><span class="pl-pds">"</span>friends<span class="pl-pds">"</span></span>))
+)</pre></div>
+
+<p>which returns:</p>
+
+<div class="highlight highlight-source-swift"><pre>[
+    [
+        <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>John Smith<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>count(friends)<span class="pl-pds">"</span></span>: <span class="pl-c1">42</span>
+    ],
+    [
+        <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Jane Doe<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>count(friends)<span class="pl-pds">"</span></span>: <span class="pl-c1">231</span>
+    ]
+]</pre></div>
+
+<p>The <code>"count(friends)"</code> key name was automatically used by CoreStore, but you can specify your own key alias if you need:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> personJSON <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>queryAttributes(
+    From(MyPersonEntity),
+    Select(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>, <span class="pl-k">.</span>Count(<span class="pl-s"><span class="pl-pds">"</span>friends<span class="pl-pds">"</span></span>, As: <span class="pl-s"><span class="pl-pds">"</span>friendsCount<span class="pl-pds">"</span></span>))
+)</pre></div>
+
+<p>which now returns:</p>
+
+<div class="highlight highlight-source-swift"><pre>[
+    [
+        <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>John Smith<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>friendsCount<span class="pl-pds">"</span></span>: <span class="pl-c1">42</span>
+    ],
+    [
+        <span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Jane Doe<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>friendsCount<span class="pl-pds">"</span></span>: <span class="pl-c1">231</span>
+    ]
+]</pre></div>
+
+<h4>
+<a id="groupby-clause" class="anchor" href="#groupby-clause" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>GroupBy</code> clause</h4>
+
+<p>The <code>GroupBy</code> clause lets you group results by a specified attribute/aggregate. This is useful only for <code>queryAttributes(...)</code> since <code>queryValue(...)</code> just returns the first value.</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> personJSON <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>queryAttributes(
+    From(MyPersonEntity),
+    Select(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>, <span class="pl-k">.</span>Count(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>, As: <span class="pl-s"><span class="pl-pds">"</span>count<span class="pl-pds">"</span></span>)),
+    GroupBy(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>)
+)</pre></div>
+
+<p>this returns dictionaries that shows the count for each <code>"age"</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre>[
+    [
+        <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>: <span class="pl-c1">42</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>count<span class="pl-pds">"</span></span>: <span class="pl-c1">1</span>
+    ],
+    [
+        <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>: <span class="pl-c1">22</span>,
+        <span class="pl-s"><span class="pl-pds">"</span>count<span class="pl-pds">"</span></span>: <span class="pl-c1">1</span>
+    ]
+]</pre></div>
+
+<h2>
+<a id="logging-and-error-handling" class="anchor" href="#logging-and-error-handling" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Logging and error handling</h2>
+
+<p>One unfortunate thing when using some third-party libraries is that they usually pollute the console with their own logging mechanisms. CoreStore provides its own default logging class, but you can plug-in your own favorite logger by implementing the <code>CoreStoreLogger</code> protocol.</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">final</span> <span class="pl-k">class</span> MyLogger: CoreStoreLogger {
+    <span class="pl-k">func</span> <span class="pl-en">log</span>(#level: LogLevel, message: <span class="pl-c1">String</span>, fileName: <span class="pl-c1">StaticString</span>, lineNumber: <span class="pl-c1">Int</span>, functionName: <span class="pl-c1">StaticString</span>) {
+        <span class="pl-c">// pass to your logger</span>
+    }
+
+    <span class="pl-k">func</span> <span class="pl-en">handleError</span>(#error: NSError, message: <span class="pl-c1">String</span>, fileName: <span class="pl-c1">StaticString</span>, lineNumber: <span class="pl-c1">Int</span>, functionName: <span class="pl-c1">StaticString</span>) {
+        <span class="pl-c">// pass to your logger</span>
+    }
+
+    <span class="pl-k">func</span> <span class="pl-en">assert</span>(<span class="pl-k">@autoclosure</span> condition: () <span class="pl-k">-&gt;</span> <span class="pl-c1">Bool</span>, message: <span class="pl-c1">String</span>, fileName: <span class="pl-c1">StaticString</span>, lineNumber: <span class="pl-c1">Int</span>, functionName: <span class="pl-c1">StaticString</span>) {
+        <span class="pl-c">// pass to your logger</span>
+    }
+}</pre></div>
+
+<p>Then pass an instance of this class to <code>CoreStore</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre>CoreStore<span class="pl-k">.</span>logger <span class="pl-k">=</span> MyLogger()</pre></div>
+
+<p>Doing so channels all logging calls to your logger.</p>
+
+<p>Note that to keep the call stack information intact, all calls to these methods are <strong>NOT</strong> thread-managed. Therefore you have to make sure that your logger is thread-safe or you may otherwise have to dispatch your logging implementation to a serial queue.</p>
+
+<h2>
+<a id="observing-changes-and-notifications-unavailable-on-osx" class="anchor" href="#observing-changes-and-notifications-unavailable-on-osx" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Observing changes and notifications (unavailable on OSX)</h2>
+
+<p>CoreStore provides type-safe wrappers for observing managed objects:</p>
+
+<ul>
+<li>
+<code>ObjectMonitor</code>: use to monitor changes to a single <code>NSManagedObject</code> instance (instead of Key-Value Observing)</li>
+<li>
+<code>ListMonitor</code>: use to monitor changes to a list of <code>NSManagedObject</code> instances (instead of <code>NSFetchedResultsController</code>)</li>
+</ul>
+
+<h3>
+<a id="observe-a-single-object" class="anchor" href="#observe-a-single-object" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Observe a single object</h3>
+
+<p>To observe an object, implement the <code>ObjectObserver</code> protocol and specify the <code>EntityType</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">class</span> MyViewController: UIViewController, ObjectObserver {
+    <span class="pl-k">func</span> <span class="pl-en">objectMonitor</span>(monitor: ObjectMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>, <span class="pl-en">willUpdateObject</span> <span class="pl-smi">object</span>: MyPersonEntity) {
+        <span class="pl-c">// ...</span>
+    }
+
+    <span class="pl-k">func</span> <span class="pl-en">objectMonitor</span>(monitor: ObjectMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>, <span class="pl-en">didUpdateObject</span> <span class="pl-smi">object</span>: MyPersonEntity, changedPersistentKeys: <span class="pl-c1">Set</span><span class="pl-k">&lt;</span>KeyPath<span class="pl-k">&gt;</span>) {
+        <span class="pl-c">// ...</span>
+    }
+
+    <span class="pl-k">func</span> <span class="pl-en">objectMonitor</span>(monitor: ObjectMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>, <span class="pl-en">didDeleteObject</span> <span class="pl-smi">object</span>: MyPersonEntity) {
+        <span class="pl-c">// ...</span>
+    }
+}</pre></div>
+
+<p>We then need to keep a <code>ObjectMonitor</code> instance and register our <code>ObjectObserver</code> as an observer:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> person: MyPersonEntity <span class="pl-k">=</span> <span class="pl-c">// ...</span>
+<span class="pl-k">self</span><span class="pl-k">.</span>monitor <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>monitorObject(person)
+<span class="pl-k">self</span><span class="pl-k">.</span>monitor<span class="pl-k">.</span>addObserver(<span class="pl-k">self</span>)</pre></div>
+
+<p>The controller will then notify our observer whenever the object's attributes change. You can add multiple <code>ObjectObserver</code>s to a single <code>ObjectMonitor</code> without any problem. This means you can just share around the <code>ObjectMonitor</code> instance to different screens without problem.</p>
+
+<p>You can get <code>ObjectMonitor</code>'s object through its <code>object</code> property. If the object is deleted, the <code>object</code> property will become <code>nil</code> to prevent further access. </p>
+
+<p>While <code>ObjectMonitor</code> exposes <code>removeObserver(...)</code> as well, it only stores <code>weak</code> references of the observers and will safely unregister deallocated observers. </p>
+
+<h3>
+<a id="observe-a-list-of-objects" class="anchor" href="#observe-a-list-of-objects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Observe a list of objects</h3>
+
+<p>To observe a list of objects, implement one of the <code>ListObserver</code> protocols and specify the <code>EntityType</code>:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">class</span> MyViewController: UIViewController, ListObserver {
+    <span class="pl-k">func</span> <span class="pl-en">listMonitorWillChange</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>) {
+        <span class="pl-c">// ...</span>
+    }
+
+    <span class="pl-k">func</span> <span class="pl-en">listMonitorDidChange</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>) {
+        <span class="pl-c">// ...</span>
+    }
+}</pre></div>
+
+<p>Including <code>ListObserver</code>, there are 3 observer protocols you can implement depending on how detailed you need to handle a change notification:</p>
+
+<ul>
+<li>
+<code>ListObserver</code>: lets you handle these callback methods:</li>
+</ul>
+
+<div class="highlight highlight-source-swift"><pre>    <span class="pl-k">func</span> <span class="pl-en">listMonitorWillChange</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>)
+
+    <span class="pl-k">func</span> <span class="pl-en">listMonitorDidChange</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>)</pre></div>
+
+<ul>
+<li>
+<code>ListObjectObserver</code>: in addition to <code>ListObserver</code> methods, also lets you handle object inserts, updates, and deletes:</li>
+</ul>
+
+<div class="highlight highlight-source-swift"><pre>    <span class="pl-k">func</span> <span class="pl-en">listMonitor</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>, <span class="pl-en">didInsertObject</span> <span class="pl-smi">object</span>: MyPersonEntity, <span class="pl-en">toIndexPath</span> <span class="pl-smi">indexPath</span>: NSIndexPath)
+
+    <span class="pl-k">func</span> <span class="pl-en">listMonitor</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>, <span class="pl-en">didDeleteObject</span> <span class="pl-smi">object</span>: MyPersonEntity, <span class="pl-en">fromIndexPath</span> <span class="pl-smi">indexPath</span>: NSIndexPath)
+
+    <span class="pl-k">func</span> <span class="pl-en">listMonitor</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>, <span class="pl-en">didUpdateObject</span> <span class="pl-smi">object</span>: MyPersonEntity, <span class="pl-en">atIndexPath</span> <span class="pl-smi">indexPath</span>: NSIndexPath)
+
+    <span class="pl-k">func</span> <span class="pl-en">listMonitor</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>, <span class="pl-en">didMoveObject</span> <span class="pl-smi">object</span>: MyPersonEntity, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)</pre></div>
+
+<ul>
+<li>
+<code>ListSectionObserver</code>: in addition to <code>ListObjectObserver</code> methods, also lets you handle section inserts and deletes:</li>
+</ul>
+
+<div class="highlight highlight-source-swift"><pre>    <span class="pl-k">func</span> <span class="pl-en">listMonitor</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>, <span class="pl-en">didInsertSection</span> <span class="pl-smi">sectionInfo</span>: NSFetchedResultsSectionInfo, <span class="pl-en">toSectionIndex</span> <span class="pl-smi">sectionIndex</span>: <span class="pl-c1">Int</span>)
+
+    <span class="pl-k">func</span> <span class="pl-en">listMonitor</span>(monitor: ListMonitor<span class="pl-k">&lt;</span>MyPersonEntity<span class="pl-k">&gt;</span>, <span class="pl-en">didDeleteSection</span> <span class="pl-smi">sectionInfo</span>: NSFetchedResultsSectionInfo, <span class="pl-en">fromSectionIndex</span> <span class="pl-smi">sectionIndex</span>: <span class="pl-c1">Int</span>)</pre></div>
+
+<p>We then need to create a <code>ListMonitor</code> instance and register our <code>ListObserver</code> as an observer:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">self</span><span class="pl-k">.</span>monitor <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>monitorList(
+    From(MyPersonEntity),
+    Where(<span class="pl-s"><span class="pl-pds">"</span>age &gt; 30<span class="pl-pds">"</span></span>),
+    OrderBy(<span class="pl-k">.</span>Ascending(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>)),
+    Tweak { (fetchRequest) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+        fetchRequest<span class="pl-k">.</span>fetchBatchSize <span class="pl-k">=</span> <span class="pl-c1">20</span>
+    }
+)
+<span class="pl-k">self</span><span class="pl-k">.</span>monitor<span class="pl-k">.</span>addObserver(<span class="pl-k">self</span>)</pre></div>
+
+<p>Similar to <code>ObjectMonitor</code>, a <code>ListMonitor</code> can also have multiple <code>ListObserver</code>s registered to a single <code>ListMonitor</code>.</p>
+
+<p>If you have noticed, the <code>monitorList(...)</code> method accepts <code>Where</code>, <code>OrderBy</code>, and <code>Tweak</code> clauses exactly like a fetch. As the list maintained by <code>ListMonitor</code> needs to have a deterministic order, at least the <code>From</code> and <code>OrderBy</code> clauses are required.</p>
+
+<p>A <code>ListMonitor</code> created from <code>monitorList(...)</code> will maintain a single-section list. You can therefore access its contents with just an index:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> firstPerson <span class="pl-k">=</span> <span class="pl-k">self</span><span class="pl-k">.</span>monitor[<span class="pl-c1">0</span>]</pre></div>
+
+<p>If the list needs to be grouped into sections, create the <code>ListMonitor</code> instance with the <code>monitorSectionedList(...)</code> method and a <code>SectionBy</code> clause:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">self</span><span class="pl-k">.</span>monitor <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>monitorSectionedList(
+    From(MyPersonEntity),
+    SectionBy(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>),
+    Where(<span class="pl-s"><span class="pl-pds">"</span>gender<span class="pl-pds">"</span></span>, isEqualTo: <span class="pl-s"><span class="pl-pds">"</span>M<span class="pl-pds">"</span></span>),
+    OrderBy(<span class="pl-k">.</span>Ascending(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>), <span class="pl-k">.</span>Ascending(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>)),
+    Tweak { (fetchRequest) <span class="pl-k">-&gt;</span> <span class="pl-c1">Void</span> <span class="pl-k">in</span>
+        fetchRequest<span class="pl-k">.</span>fetchBatchSize <span class="pl-k">=</span> <span class="pl-c1">20</span>
+    }
+)</pre></div>
+
+<p>A list controller created this way will group the objects by the attribute key indicated by the <code>SectionBy</code> clause. One more thing to remember is that the <code>OrderBy</code> clause should sort the list in such a way that the <code>SectionBy</code> attribute would be sorted together (a requirement shared by <code>NSFetchedResultsController</code>.)</p>
+
+<p>The <code>SectionBy</code> clause can also be passed a closure to transform the section name into a displayable string:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">self</span><span class="pl-k">.</span>monitor <span class="pl-k">=</span> CoreStore<span class="pl-k">.</span>monitorSectionedList(
+    From(MyPersonEntity),
+    SectionBy(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>) { (sectionName) <span class="pl-k">-&gt;</span> <span class="pl-c1">String</span>? <span class="pl-k">in</span>
+        <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pse">\(</span><span class="pl-s1">sectionName</span><span class="pl-pse">)</span> years old<span class="pl-pds">"</span></span>
+    },
+    OrderBy(<span class="pl-k">.</span>Ascending(<span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>), <span class="pl-k">.</span>Ascending(<span class="pl-s"><span class="pl-pds">"</span>name<span class="pl-pds">"</span></span>))
+)</pre></div>
+
+<p>This is useful when implementing a <code>UITableViewDelegate</code>'s section header:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">func</span> <span class="pl-en">tableView</span>(tableView: UITableView, <span class="pl-en">titleForHeaderInSection</span> <span class="pl-smi">section</span>: <span class="pl-c1">Int</span>) <span class="pl-k">-&gt;</span> <span class="pl-c1">String</span>? {
+    <span class="pl-k">let</span> sectionInfo <span class="pl-k">=</span> <span class="pl-k">self</span><span class="pl-k">.</span>monitor<span class="pl-k">.</span>sectionInfoAtIndex(section)
+    <span class="pl-c">// sectionInfo is an NSFetchedResultsSectionInfo instance</span>
+    <span class="pl-k">return</span> sectionInfo<span class="pl-k">.</span>name
+}</pre></div>
+
+<p>To access the objects of a sectioned list, use an <code>NSIndexPath</code> or a tuple:</p>
+
+<div class="highlight highlight-source-swift"><pre><span class="pl-k">let</span> indexPath <span class="pl-k">=</span> NSIndexPath(forRow: <span class="pl-c1">2</span>, inSection: <span class="pl-c1">1</span>)
+<span class="pl-k">let</span> person1 <span class="pl-k">=</span> <span class="pl-k">self</span><span class="pl-k">.</span>monitor[indexPath]
+<span class="pl-k">let</span> person2 <span class="pl-k">=</span> <span class="pl-k">self</span><span class="pl-k">.</span>monitor[<span class="pl-c1">1</span>, <span class="pl-c1">2</span>]
+<span class="pl-c">// person1 and person2 are the same object</span></pre></div>
+
+<h1>
+<a id="roadmap" class="anchor" href="#roadmap" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Roadmap</h1>
+
+<ul>
+<li>Support iCloud stores</li>
+<li>CoreSpotlight auto-indexing (experimental)</li>
+</ul>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h1>
+
+<ul>
+<li>Requires:
+
+<ul>
+<li>iOS 8 SDK and above</li>
+<li>Swift 2.1 (Xcode 7.2)</li>
+</ul>
+</li>
+<li>Dependencies:
+
+<ul>
+<li><a href="https://github.com/JohnEstropia/GCDKit">GCDKit</a></li>
+</ul>
+</li>
+</ul>
+
+<h3>
+<a id="install-with-cocoapods" class="anchor" href="#install-with-cocoapods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install with CocoaPods</h3>
+
+<pre><code>pod 'CoreStore'
+</code></pre>
+
+<p>This installs CoreStore as a framework. Declare <code>import CoreStore</code> in your swift file to use the library.</p>
+
+<h3>
+<a id="install-with-carthage" class="anchor" href="#install-with-carthage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install with Carthage</h3>
+
+<p>In your <code>Cartfile</code>, add</p>
+
+<pre><code>github "JohnEstropia/CoreStore" &gt;= 1.4.4
+github "JohnEstropia/GCDKit" &gt;= 1.1.7
+</code></pre>
+
+<p>and run </p>
+
+<pre><code>carthage update
+</code></pre>
+
+<h3>
+<a id="install-as-git-submodule" class="anchor" href="#install-as-git-submodule" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install as Git Submodule</h3>
+
+<pre><code>git submodule add https://github.com/JohnEstropia/CoreStore.git &lt;destination directory&gt;
+</code></pre>
+
+<p>Drag and drop <strong>CoreStore.xcodeproj</strong> to your project.</p>
+
+<h4>
+<a id="to-install-as-a-framework" class="anchor" href="#to-install-as-a-framework" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To install as a framework:</h4>
+
+<p>Drag and drop <strong>CoreStore.xcodeproj</strong> to your project.</p>
+
+<h4>
+<a id="to-include-directly-in-your-app-module" class="anchor" href="#to-include-directly-in-your-app-module" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To include directly in your app module:</h4>
+
+<p>Add all <em>.swift</em> files to your project.</p>
+
+<h1>
+<a id="changesets" class="anchor" href="#changesets" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changesets</h1>
+
+<h3>
+<a id="upgrading-from-v020-to-100" class="anchor" href="#upgrading-from-v020-to-100" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Upgrading from v0.2.0 to 1.0.0</h3>
+
+<ul>
+<li>Renamed some classes/protocols to shorter, more relevant, easier to remember names:</li>
+<li>
+<code>ManagedObjectController</code> to <code>ObjectMonitor</code>
+</li>
+<li>
+<code>ManagedObjectObserver</code> to <code>ObjectObserver</code>
+</li>
+<li>
+<code>ManagedObjectListController</code> to <code>ListMonitor</code>
+</li>
+<li>
+<code>ManagedObjectListChangeObserver</code> to <code>ListObserver</code>
+</li>
+<li>
+<code>ManagedObjectListObjectObserver</code> to <code>ListObjectObserver</code>
+</li>
+<li>
+<code>ManagedObjectListSectionObserver</code> to <code>ListSectionObserver</code>
+</li>
+<li>
+<code>SectionedBy</code> to <code>SectionBy</code> (match tense with <code>OrderBy</code> and <code>GroupBy</code>)
+The protocols above had their methods renamed as well, to retain the natural language semantics.</li>
+<li>Several methods now <code>throw</code> errors insted of returning a result <code>enum</code>.</li>
+<li>New migration utilities! (README still pending) Check out <em>DataStack+Migration.swift</em> and <em>CoreStore+Migration.swift</em> for the new methods, as well as <em>DataStack.swift</em> for its new initializer.</li>
+</ul>
+
+<h1>
+<a id="contributions" class="anchor" href="#contributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributions</h1>
+
+<p>While CoreStore's design is pretty solid and the unit test and demo app work well, CoreStore is pretty much still in its early stage. With more exposure to production code usage and criticisms from the developer community, CoreStore hopes to mature as well.
+Please feel free to report any issues, suggestions, or criticisms!
+日本語で連絡していただいても構いません！</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>CoreStore is released under an MIT license. See the LICENSE file for more information</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/JohnEstropia/CoreStore">Corestore</a> is maintained by <a href="https://github.com/JohnEstropia">JohnEstropia</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
