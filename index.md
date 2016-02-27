@@ -1,4 +1,5 @@
 ---
+layout: default
 ---
 
 ![corestore](https://cloud.githubusercontent.com/assets/3029684/13368133/305f37d0-dd2b-11e5-8ae6-26e48050b8f6.png)
@@ -1223,4 +1224,5 @@ Please feel free to report any issues, suggestions, or criticisms!
 
 ## License
 CoreStore is released under an MIT license. See the LICENSE file for more information
+
 
