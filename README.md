@@ -1,4 +1,5 @@
-# CoreStore
+![corestore](https://cloud.githubusercontent.com/assets/3029684/13368133/305f37d0-dd2b-11e5-8ae6-26e48050b8f6.png)
+
 [![Build Status](https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg)](https://travis-ci.org/JohnEstropia/CoreStore)
 [![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
 [![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
@@ -6,7 +7,9 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Unleashing the real power of Core Data with the elegance and safety of Swift
-* Swift 2.1 (Xcode 7.1), iOS 8+/OSX 10.10+ (or try out the [iOS 7 branch](https://github.com/JohnEstropia/CoreStore/tree/ios7_support_alpha))
+
+* Swift 2.2 (Xcode 7.3)
+* iOS 8+ / OSX 10.10+ / watchOS 2.0+ / tvOS 9.0+
 
 [Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
 
@@ -159,12 +162,7 @@ This allows for a butter-smooth main thread, while still taking advantage of saf
 ## Setting up
 The simplest way to initialize CoreStore is to add a default store to the default stack:
 ```swift
-do {
-    try CoreStore.addSQLiteStoreAndWait()
-}
-catch {
-    // ...
-}
+try CoreStore.addSQLiteStoreAndWait()
 ```
 This one-liner does the following:
 - Triggers the lazy-initialization of `CoreStore.defaultStack` with a default `DataStack`
