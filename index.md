@@ -1171,24 +1171,24 @@ let person2 = self.monitor[1, 2]
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
 
 ### Install with CocoaPods
-{% endhighlight %}
+{% highlight ruby %}
 pod 'CoreStore'
 {% endhighlight %}
 This installs CoreStore as a framework. Declare `import CoreStore` in your swift file to use the library.
 
 ### Install with Carthage
 In your `Cartfile`, add
-{% endhighlight %}
+{% highlight ruby %}
 github "JohnEstropia/CoreStore" >= 1.4.4
 github "JohnEstropia/GCDKit" >= 1.1.7
 {% endhighlight %}
 and run 
-{% endhighlight %}
+{% highlight ruby %}
 carthage update
 {% endhighlight %}
 
 ### Install as Git Submodule
-{% endhighlight %}
+{% highlight ruby %}
 git submodule add https://github.com/JohnEstropia/CoreStore.git <destination directory>
 {% endhighlight %}
 Drag and drop **CoreStore.xcodeproj** to your project.
