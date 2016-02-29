@@ -32,7 +32,7 @@ private struct Static {
                 let place = transaction.create(Into(Place))
                 place.setInitialValues()
                 
-                transaction.commit()
+                transaction.commitAndWait()
             }
             place = CoreStore.fetchOne(From(Place))
         }
@@ -181,7 +181,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
             
             let place = transaction.edit(Static.placeController.object)
             place?.setInitialValues()
-            transaction.commit()
+            transaction.commitAndWait()
         }
     }
     

@@ -11,8 +11,6 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 * Swift 2.2 (Xcode 7.3)
 * iOS 8+ / OSX 10.10+ / watchOS 2.0+ / tvOS 9.0+
 
-[Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
-
 
 
 ## What CoreStore does better:

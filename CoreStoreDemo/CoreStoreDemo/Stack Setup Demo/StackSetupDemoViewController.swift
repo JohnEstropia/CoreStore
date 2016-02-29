@@ -43,7 +43,7 @@ private struct Static {
             account2.name = "Jane Doe HCD"
             account2.friends = 314
             
-            transaction.commit()
+            transaction.commitAndWait()
         }
         
         return dataStack
@@ -77,7 +77,7 @@ private struct Static {
             account2.name = "#janedoe_hcd"
             account2.friends = 100
             
-            transaction.commit()
+            transaction.commitAndWait()
         }
         
         return dataStack
