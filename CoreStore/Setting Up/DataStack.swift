@@ -123,30 +123,42 @@ public final class DataStack {
         return self.coordinator.managedObjectIDForURIRepresentation(url)
     }
     
+    @available(*, deprecated=2.0.0, message="Use addStoreAndWait(_:configuration:) by passing an InMemoryStore instance")
+    public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
+        
+        return try self.addStoreAndWait(InMemoryStore()).internalStore!
+    }
+    
     /**
      Adds an in-memory store to the stack.
      
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
-     - returns: the `NSPersistentStore` added to the stack.
+     - parameter store: the `AtomicStore`.
+     - returns: the `AtomicStore` added to the stack.
      */
-    public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
+    public func addStoreAndWait<T: AtomicStore>(store: T) throws -> T {
+        
+        CoreStore.assert(
+            store.internalStore == nil,
+            "The specified store was already added to the data stack:\n\(store)"
+        )
         
         do {
             
-            let store = try self.coordinator.addPersistentStoreSynchronously(
-                NSInMemoryStoreType,
-                configuration: configuration,
-                URL: nil,
+            let persistentStore = try self.coordinator.addPersistentStoreSynchronously(
+                T.storeType,
+                configuration: store.configuration,
+                URL: store.storeURL,
                 options: nil
             )
-            self.updateMetadataForPersistentStore(store)
+            self.updateMetadataForPersistentStore(persistentStore)
+            store.internalStore = persistentStore
             return store
         }
         catch {
             
             CoreStore.handleError(
                 error as NSError,
-                "Failed to add in-memory \(typeName(NSPersistentStore)) to the stack."
+                "Failed to add \(typeName(T)) to the stack."
             )
             throw error
         }
