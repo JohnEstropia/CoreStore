@@ -271,6 +271,10 @@
 		B5FE4DA81C84FB4400FA6A91 /* InMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */; };
 		B5FE4DA91C84FB4400FA6A91 /* InMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */; };
 		B5FE4DAA1C84FB4400FA6A91 /* InMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */; };
+		B5FE4DAC1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */; };
+		B5FE4DAD1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */; };
+		B5FE4DAE1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */; };
+		B5FE4DAF1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -389,6 +393,7 @@
 		B5FAD6AD1B518DCB00714891 /* CoreStore+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+Migration.swift"; sourceTree = "<group>"; };
 		B5FE4DA11C8481E100FA6A91 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryStore.swift; sourceTree = "<group>"; };
+		B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -703,6 +708,7 @@
 			children = (
 				B5FE4DA11C8481E100FA6A91 /* Storage.swift */,
 				B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */,
+				B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */,
 			);
 			path = PersistentStores;
 			sourceTree = "<group>";
@@ -1013,6 +1019,7 @@
 				B5E84F2F1AFF849C0064E85B /* NotificationObserver.swift in Sources */,
 				B5F1DA8D1B9AA97D007C5CBB /* ImportableObject.swift in Sources */,
 				B56965241B356B820075EE4A /* MigrationResult.swift in Sources */,
+				B5FE4DAC1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */,
 				B5E84F411AFF8CCD0064E85B /* ClauseTypes.swift in Sources */,
 				B5E84F0D1AFF847B0064E85B /* BaseDataTransaction+Querying.swift in Sources */,
@@ -1072,6 +1079,7 @@
 				82BA18AE1C4BBD3100A0916E /* DataStack+Transaction.swift in Sources */,
 				82BA18AB1C4BBD3100A0916E /* AsynchronousDataTransaction.swift in Sources */,
 				82BA18CE1C4BBD7100A0916E /* FetchedResultsControllerDelegate.swift in Sources */,
+				B5FE4DAD1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
 				82BA18C51C4BBD5300A0916E /* ListObserver.swift in Sources */,
 				82BA18C21C4BBD5300A0916E /* ObjectMonitor.swift in Sources */,
 				82BA18A51C4BBD2200A0916E /* CoreStore+Setup.swift in Sources */,
@@ -1160,6 +1168,7 @@
 				B52DD1AD1BE1F93900949AFE /* Where.swift in Sources */,
 				B52DD1C41BE1F94600949AFE /* NSFileManager+Setup.swift in Sources */,
 				B52DD1AC1BE1F93900949AFE /* Select.swift in Sources */,
+				B5FE4DAF1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
 				B52DD1971BE1F92500949AFE /* PersistentStoreResult.swift in Sources */,
 				B52DD1C71BE1F94600949AFE /* NSManagedObjectContext+Querying.swift in Sources */,
 				B52DD1C81BE1F94600949AFE /* NSManagedObjectContext+Setup.swift in Sources */,
@@ -1219,6 +1228,7 @@
 				B563219D1BD65216006C9394 /* DataStack+Observing.swift in Sources */,
 				B56321961BD65216006C9394 /* From.swift in Sources */,
 				B56321AA1BD6521C006C9394 /* AssociatedObjects.swift in Sources */,
+				B5FE4DAE1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
 				B563218C1BD65216006C9394 /* DataStack+Transaction.swift in Sources */,
 				B563219E1BD65216006C9394 /* CoreStore+Observing.swift in Sources */,
 				B56321891BD65216006C9394 /* AsynchronousDataTransaction.swift in Sources */,

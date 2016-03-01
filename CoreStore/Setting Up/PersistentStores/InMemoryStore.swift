@@ -28,21 +28,31 @@ import CoreData
 
 // MARK: - InMemoryStore
 
-public class InMemoryStore: AtomicStore {
+public class InMemoryStore: Storage, DefaultInitializableStore {
     
-    public required init(configuration: String? = nil) {
+    public required init(configuration: String?) {
     
         self.configuration = configuration
     }
     
     
-    // MARK: PersistentStore
+    // MARK: DefaultInitializableStore
+    
+    public required init() {
+        
+        self.configuration = nil
+    }
+    
+    
+    // MARK: Storage
 
     public static let storeType = NSInMemoryStoreType
     
     public let storeURL: NSURL? = nil
     
     public let configuration: String?
+    
+    public let storeOptions: [String: AnyObject]? = nil
     
     public var internalStore: NSPersistentStore?
 }

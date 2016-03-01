@@ -93,6 +93,9 @@ public extension DataStack {
         self.mainContext.refreshAllObjectsAsFaults()
     }
     
+    
+    // MARK: Deprecated
+    
     @available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="beginUnsafe")
     @warn_unused_result
     public func beginDetached() -> UnsafeDataTransaction {

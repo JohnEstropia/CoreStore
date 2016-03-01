@@ -59,14 +59,25 @@ public extension CoreStore {
     }
     
     /**
-     Adds an in-memory store to the `defaultStack`.
+     Creates a `Storage` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
      
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`.
-     - returns: the `NSPersistentStore` added to the stack.
+     - parameter storeType: the `Storage` type
+     - returns: the `Storage` added to the `defaultStack`
      */
-    public static func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
+    public static func addStoreAndWait<T: Storage where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
         
-        return try self.defaultStack.addInMemoryStoreAndWait(configuration: configuration)
+        return try self.defaultStack.addStoreAndWait(storeType.init())
+    }
+    
+    /**
+     Adds a `Storage` to the `defaultStack` and blocks until completion.
+     
+     - parameter store: the `Storage`
+     - returns: the `Storage` added to the `defaultStack`
+     */
+    public static func addStoreAndWait<T: Storage>(store: T) throws -> T {
+        
+        return try self.defaultStack.addStoreAndWait(store)
     }
     
     /**
@@ -101,5 +112,14 @@ public extension CoreStore {
             configuration: configuration,
             resetStoreOnModelMismatch: resetStoreOnModelMismatch
         )
+    }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated=2.0.0, message="Use addStoreAndWait(_:configuration:) by passing an InMemoryStore instance")
+    public static func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
+        
+        return try self.defaultStack.addInMemoryStoreAndWait(configuration: configuration)
     }
 }

@@ -45,6 +45,23 @@ public extension NSFetchedResultsController {
         )
     }
     
+    
+    // MARK: Internal
+    
+    internal static func createFromContext<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: context,
+            fetchRequest: fetchRequest,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    
+    // MARK: Deprecated
+    
     @available(*, deprecated=1.5.2, message="Use NSFetchedResultsController.createForStack(_:fetchRequest:from:sectionBy:fetchClauses:) to create NSFetchedResultsControllers directly")
     public convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
         
@@ -73,20 +90,6 @@ public extension NSFetchedResultsController {
             managedObjectContext: context,
             sectionNameKeyPath: sectionBy?.sectionKeyPath,
             cacheName: nil
-        )
-    }
-    
-    
-    // MARK: Internal
-    
-    internal static func createFromContext<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
-        
-        return CoreStoreFetchedResultsController<T>(
-            context: context,
-            fetchRequest: fetchRequest,
-            from: from,
-            sectionBy: sectionBy,
-            fetchClauses: fetchClauses
         )
     }
 }

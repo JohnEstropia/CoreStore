@@ -30,10 +30,6 @@ import CoreData
 #endif
 
 
-@available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="UnsafeDataTransaction")
-public typealias DetachedDataTransaction = UnsafeDataTransaction
-
-
 // MARK: - UnsafeDataTransaction
 
 /**
@@ -131,13 +127,6 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         return self.context
     }
     
-    @available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="beginUnsafe")
-    @warn_unused_result
-    public func beginDetached() -> UnsafeDataTransaction {
-        
-        return self.beginUnsafe()
-    }
-    
     
     // MARK: Internal
     
@@ -145,4 +134,20 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         
         super.init(mainContext: mainContext, queue: queue, supportsUndo: supportsUndo, bypassesQueueing: true)
     }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="beginUnsafe")
+    @warn_unused_result
+    public func beginDetached() -> UnsafeDataTransaction {
+        
+        return self.beginUnsafe()
+    }
 }
+
+
+// MARK: Deprecated
+
+@available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="UnsafeDataTransaction")
+public typealias DetachedDataTransaction = UnsafeDataTransaction

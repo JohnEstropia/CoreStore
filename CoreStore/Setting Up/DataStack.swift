@@ -123,33 +123,33 @@ public final class DataStack {
         return self.coordinator.managedObjectIDForURIRepresentation(url)
     }
     
-    @available(*, deprecated=2.0.0, message="Use addStoreAndWait(_:configuration:) by passing an InMemoryStore instance")
-    public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
+    /**
+     Creates a `Storage` of the specified store type with default values and adds it to the stack. This method blocks until completion.
+     
+     - parameter storeType: the `Storage` type
+     - returns: the `Storage` added to the stack
+     */
+    public func addStoreAndWait<T: Storage where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
         
-        return try self.addStoreAndWait(InMemoryStore()).internalStore!
+        return try self.addStoreAndWait(storeType.init())
     }
     
     /**
-     Adds an in-memory store to the stack.
+     Adds a `Storage` to the stack and blocks until completion.
      
-     - parameter store: the `AtomicStore`.
-     - returns: the `AtomicStore` added to the stack.
+     - parameter store: the `Storage`
+     - returns: the `Storage` added to the stack
      */
-    public func addStoreAndWait<T: AtomicStore>(store: T) throws -> T {
+    public func addStoreAndWait<T: Storage>(store: T) throws -> T {
         
         CoreStore.assert(
             store.internalStore == nil,
-            "The specified store was already added to the data stack:\n\(store)"
+            "The specified store was already added to the data stack: \(store)"
         )
         
         do {
             
-            let persistentStore = try self.coordinator.addPersistentStoreSynchronously(
-                T.storeType,
-                configuration: store.configuration,
-                URL: store.storeURL,
-                options: nil
-            )
+            let persistentStore = try store.addToPersistentStoreCoordinatorSynchronously(self.coordinator)
             self.updateMetadataForPersistentStore(persistentStore)
             store.internalStore = persistentStore
             return store
@@ -381,5 +381,14 @@ public final class DataStack {
         
         let coordinator = self.coordinator
         coordinator.persistentStores.forEach { _ = try? coordinator.removePersistentStore($0) }
+    }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated=2.0.0, message="Use addStoreAndWait(_:configuration:) by passing an InMemoryStore instance")
+    public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
+        
+        return try self.addStoreAndWait(InMemoryStore).internalStore!
     }
 }
