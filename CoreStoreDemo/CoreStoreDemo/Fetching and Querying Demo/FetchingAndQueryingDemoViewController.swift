@@ -15,10 +15,12 @@ private struct Static {
     static let timeZonesStack: DataStack = {
         
         let dataStack = DataStack()
-        try! dataStack.addSQLiteStoreAndWait(
-            fileName: "TimeZoneDemo.sqlite",
-            configuration: "FetchingAndQueryingDemo",
-            resetStoreOnModelMismatch: true
+        try! dataStack.addStorageAndWait(
+            SQLiteStore(
+                fileName: "TimeZoneDemo.sqlite",
+                configuration: "FetchingAndQueryingDemo",
+                resetStoreOnModelMismatch: true
+            )
         )
     
         dataStack.beginSynchronous { (transaction) -> Void in

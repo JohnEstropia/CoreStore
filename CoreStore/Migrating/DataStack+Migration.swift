@@ -88,7 +88,7 @@ public extension DataStack {
     public func addSQLiteStore(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, resetStoreOnModelMismatch: Bool = false, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
         
         return try self.addSQLiteStore(
-            fileURL: defaultRootDirectory.URLByAppendingPathComponent(
+            fileURL: DataStack.DeprecatedDefaults.defaultDirectory.URLByAppendingPathComponent(
                 fileName,
                 isDirectory: false
             ),
@@ -109,7 +109,7 @@ public extension DataStack {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
-    public func addSQLiteStore(fileURL fileURL: NSURL = defaultSQLiteStoreFileURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
+    public func addSQLiteStore(fileURL fileURL: NSURL = DataStack.DeprecatedDefaults.defaultSQLiteStoreURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
         
         CoreStore.assert(
             fileURL.fileURL,
@@ -242,7 +242,7 @@ public extension DataStack {
     public func upgradeSQLiteStoreIfNeeded(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, completion: (MigrationResult) -> Void) throws -> NSProgress? {
         
         return try self.upgradeSQLiteStoreIfNeeded(
-            fileURL: defaultRootDirectory.URLByAppendingPathComponent(
+            fileURL: DataStack.DeprecatedDefaults.defaultDirectory.URLByAppendingPathComponent(
                 fileName,
                 isDirectory: false
             ),
@@ -261,7 +261,7 @@ public extension DataStack {
      - parameter sourceBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.mainBundle()`.
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
-    public func upgradeSQLiteStoreIfNeeded(fileURL fileURL: NSURL = defaultSQLiteStoreFileURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, completion: (MigrationResult) -> Void) throws -> NSProgress? {
+    public func upgradeSQLiteStoreIfNeeded(fileURL fileURL: NSURL = DataStack.DeprecatedDefaults.defaultSQLiteStoreURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, completion: (MigrationResult) -> Void) throws -> NSProgress? {
         
         let metadata: [String: AnyObject]
         do {
@@ -302,7 +302,7 @@ public extension DataStack {
     public func requiredMigrationsForSQLiteStore(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as [NSBundle]) throws -> [MigrationType] {
         
         return try requiredMigrationsForSQLiteStore(
-            fileURL: defaultRootDirectory.URLByAppendingPathComponent(
+            fileURL: DataStack.DeprecatedDefaults.defaultDirectory.URLByAppendingPathComponent(
                 fileName,
                 isDirectory: false
             ),
@@ -320,7 +320,7 @@ public extension DataStack {
      :return: a `MigrationType` indicating the type of migration required for the store; or `nil` if either inspection of the store failed, or no mapping model was found/inferred. `MigrationType` acts as a `Bool` and evaluates to `false` if no migration is required, and `true` if either a lightweight or custom migration is needed.
      */
     @warn_unused_result
-    public func requiredMigrationsForSQLiteStore(fileURL fileURL: NSURL = defaultSQLiteStoreFileURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as [NSBundle]) throws -> [MigrationType] {
+    public func requiredMigrationsForSQLiteStore(fileURL fileURL: NSURL = DataStack.DeprecatedDefaults.defaultSQLiteStoreURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as [NSBundle]) throws -> [MigrationType] {
         
         let metadata: [String : AnyObject]
         do {

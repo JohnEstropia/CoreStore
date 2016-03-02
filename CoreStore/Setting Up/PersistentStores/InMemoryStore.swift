@@ -28,7 +28,7 @@ import CoreData
 
 // MARK: - InMemoryStore
 
-public class InMemoryStore: Storage, DefaultInitializableStore {
+public class InMemoryStore: StorageInterface, DefaultInitializableStore {
     
     public required init(configuration: String?) {
     
@@ -44,7 +44,7 @@ public class InMemoryStore: Storage, DefaultInitializableStore {
     }
     
     
-    // MARK: Storage
+    // MARK: StorageInterface
 
     public static let storeType = NSInMemoryStoreType
     

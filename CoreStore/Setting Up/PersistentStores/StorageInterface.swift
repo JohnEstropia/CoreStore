@@ -1,5 +1,5 @@
 //
-//  Storage.swift
+//  StorageInterface.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia
@@ -26,9 +26,9 @@
 import CoreData
 
 
-// MARK: - Storage
+// MARK: - StorageInterface
 
-public protocol Storage: class {
+public protocol StorageInterface: class {
 
     static var storeType: String { get }
     
@@ -45,7 +45,7 @@ public protocol Storage: class {
     func addToPersistentStoreCoordinatorAsynchronously(coordinator: NSPersistentStoreCoordinator, completion: (NSPersistentStore) -> Void, failure: (NSError) -> Void) throws
 }
 
-public extension Storage {
+public extension StorageInterface {
     
     public func addToPersistentStoreCoordinatorSynchronously(coordinator: NSPersistentStoreCoordinator) throws -> NSPersistentStore {
         
@@ -82,7 +82,7 @@ public extension Storage {
 
 // MARK: - DefaultInitializableStore
 
-public protocol DefaultInitializableStore: Storage {
+public protocol DefaultInitializableStore: StorageInterface {
     
     init()
 }

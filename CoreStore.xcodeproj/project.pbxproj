@@ -263,10 +263,10 @@
 		B5FAD6A91B50A4B400714891 /* NSProgress+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FAD6A81B50A4B300714891 /* NSProgress+Convenience.swift */; };
 		B5FAD6AC1B51285300714891 /* MigrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FAD6AB1B51285300714891 /* MigrationManager.swift */; };
 		B5FAD6AE1B518DCB00714891 /* CoreStore+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FAD6AD1B518DCB00714891 /* CoreStore+Migration.swift */; };
-		B5FE4DA21C8481E100FA6A91 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA11C8481E100FA6A91 /* Storage.swift */; };
-		B5FE4DA31C8481E100FA6A91 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA11C8481E100FA6A91 /* Storage.swift */; };
-		B5FE4DA41C8481E100FA6A91 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA11C8481E100FA6A91 /* Storage.swift */; };
-		B5FE4DA51C8481E100FA6A91 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA11C8481E100FA6A91 /* Storage.swift */; };
+		B5FE4DA21C8481E100FA6A91 /* StorageInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA11C8481E100FA6A91 /* StorageInterface.swift */; };
+		B5FE4DA31C8481E100FA6A91 /* StorageInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA11C8481E100FA6A91 /* StorageInterface.swift */; };
+		B5FE4DA41C8481E100FA6A91 /* StorageInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA11C8481E100FA6A91 /* StorageInterface.swift */; };
+		B5FE4DA51C8481E100FA6A91 /* StorageInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA11C8481E100FA6A91 /* StorageInterface.swift */; };
 		B5FE4DA71C84FB4400FA6A91 /* InMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */; };
 		B5FE4DA81C84FB4400FA6A91 /* InMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */; };
 		B5FE4DA91C84FB4400FA6A91 /* InMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */; };
@@ -391,7 +391,7 @@
 		B5FAD6A81B50A4B300714891 /* NSProgress+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSProgress+Convenience.swift"; sourceTree = "<group>"; };
 		B5FAD6AB1B51285300714891 /* MigrationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationManager.swift; sourceTree = "<group>"; };
 		B5FAD6AD1B518DCB00714891 /* CoreStore+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+Migration.swift"; sourceTree = "<group>"; };
-		B5FE4DA11C8481E100FA6A91 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
+		B5FE4DA11C8481E100FA6A91 /* StorageInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageInterface.swift; sourceTree = "<group>"; };
 		B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryStore.swift; sourceTree = "<group>"; };
 		B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -706,7 +706,7 @@
 		B5FE4DA01C84818B00FA6A91 /* PersistentStores */ = {
 			isa = PBXGroup;
 			children = (
-				B5FE4DA11C8481E100FA6A91 /* Storage.swift */,
+				B5FE4DA11C8481E100FA6A91 /* StorageInterface.swift */,
 				B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */,
 				B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */,
 			);
@@ -1011,7 +1011,7 @@
 				B5E84EE71AFF84610064E85B /* CoreStore+Logging.swift in Sources */,
 				B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */,
 				B5E84F111AFF847B0064E85B /* Select.swift in Sources */,
-				B5FE4DA21C8481E100FA6A91 /* Storage.swift in Sources */,
+				B5FE4DA21C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B50392F91C478FF3009900CA /* NSManagedObject+Transaction.swift in Sources */,
 				B5202CFA1C04688100DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5E84EE11AFF84500064E85B /* PersistentStoreResult.swift in Sources */,
@@ -1100,7 +1100,7 @@
 				82BA18B01C4BBD3100A0916E /* NSManagedObject+Transaction.swift in Sources */,
 				82BA18D41C4BBD7100A0916E /* NSManagedObjectContext+Querying.swift in Sources */,
 				82BA18D51C4BBD7100A0916E /* NSManagedObjectContext+Setup.swift in Sources */,
-				B5FE4DA31C8481E100FA6A91 /* Storage.swift in Sources */,
+				B5FE4DA31C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				82BA18C91C4BBD5900A0916E /* MigrationType.swift in Sources */,
 				82BA18D01C4BBD7100A0916E /* MigrationManager.swift in Sources */,
 				82BA18C61C4BBD5900A0916E /* DataStack+Migration.swift in Sources */,
@@ -1179,7 +1179,7 @@
 				B52DD1B81BE1F94000949AFE /* DataStack+Migration.swift in Sources */,
 				B52DD1A51BE1F92F00949AFE /* ImportableUniqueObject.swift in Sources */,
 				B52DD19C1BE1F92C00949AFE /* Into.swift in Sources */,
-				B5FE4DA51C8481E100FA6A91 /* Storage.swift in Sources */,
+				B5FE4DA51C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B5FE4DAA1C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B52DD1AF1BE1F93900949AFE /* GroupBy.swift in Sources */,
 				B52DD1B01BE1F93900949AFE /* Tweak.swift in Sources */,
@@ -1249,7 +1249,7 @@
 				B56321821BD65216006C9394 /* PersistentStoreResult.swift in Sources */,
 				B563219C1BD65216006C9394 /* SectionBy.swift in Sources */,
 				B56321B21BD6521C006C9394 /* NSManagedObjectContext+Querying.swift in Sources */,
-				B5FE4DA41C8481E100FA6A91 /* Storage.swift in Sources */,
+				B5FE4DA41C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B56321B31BD6521C006C9394 /* NSManagedObjectContext+Setup.swift in Sources */,
 				B56321AE1BD6521C006C9394 /* NotificationObserver.swift in Sources */,
 				B56321931BD65216006C9394 /* DataStack+Querying.swift in Sources */,

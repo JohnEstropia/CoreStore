@@ -59,35 +59,37 @@ public extension CoreStore {
     }
     
     /**
-     Creates a `Storage` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
+     Creates a `StorageInterface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
      
-     - parameter storeType: the `Storage` type
-     - returns: the `Storage` added to the `defaultStack`
+     - parameter storeType: the `StorageInterface` type
+     - returns: the `StorageInterface` added to the `defaultStack`
      */
-    public static func addStoreAndWait<T: Storage where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
+    public static func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
         
-        return try self.defaultStack.addStoreAndWait(storeType.init())
+        return try self.defaultStack.addStorageAndWait(storeType.init())
     }
     
     /**
-     Adds a `Storage` to the `defaultStack` and blocks until completion.
+     Adds a `StorageInterface` to the `defaultStack` and blocks until completion.
      
-     - parameter store: the `Storage`
-     - returns: the `Storage` added to the `defaultStack`
+     - parameter store: the `StorageInterface`
+     - returns: the `StorageInterface` added to the `defaultStack`
      */
-    public static func addStoreAndWait<T: Storage>(store: T) throws -> T {
+    public static func addStorageAndWait<T: StorageInterface>(store: T) throws -> T {
         
-        return try self.defaultStack.addStoreAndWait(store)
+        return try self.defaultStack.addStorageAndWait(store)
     }
     
-    /**
-     Adds to the `defaultStack` an SQLite store from the given SQLite file name.
-     
-     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). A new SQLite file will be created if it does not exist.
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
-     - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
-     - returns: the `NSPersistentStore` added to the stack.
-     */
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated=2.0.0, obsoleted=2.0.0, message="Use addStorageAndWait(_:) by passing an InMemoryStore instance.")
+    public static func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
+        
+        return try self.defaultStack.addInMemoryStoreAndWait(configuration: configuration)
+    }
+    
+    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an SQLiteStore instance. Note that the previous default directory for the SQLite file was in the \"Application Support\" directory (or the \"Caches\" directory on tvOS), but the new addStorageAndWait(_:configuration:) method's default directory is now in the \"Application Support/<bundle id>\" directory (or the \"Caches/<bundle id>\" directory on tvOS)")
     public static func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         return try self.defaultStack.addSQLiteStoreAndWait(
@@ -97,29 +99,13 @@ public extension CoreStore {
         )
     }
     
-    /**
-     Adds to the `defaultStack` an SQLite store from the given SQLite file URL.
-     
-     - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS).
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to nil.
-     - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
-     - returns: the `NSPersistentStore` added to the stack.
-     */
-    public static func addSQLiteStoreAndWait(fileURL: NSURL = defaultSQLiteStoreFileURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
+    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an SQLiteStore instance. Note that the previous default URL for the SQLite file was in the \"Application Support/<bundle name>.sqlite\" directory (or the \"Caches/<bundle name>.sqlite\" directory on tvOS), but the new addStorageAndWait(_:configuration:) method's default directory is now in the \"Application Support/<bundle id>/<bundle name>.sqlite\" directory (or the \"Caches/<bundle id>/<bundle name>.sqlite\" directory on tvOS)")
+    public static func addSQLiteStoreAndWait(fileURL fileURL: NSURL = DataStack.DeprecatedDefaults.defaultSQLiteStoreURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
-        return try self.defaultStack.addSQLiteStoreAndWait(
+        return try self.addSQLiteStoreAndWait(
             fileURL: fileURL,
             configuration: configuration,
             resetStoreOnModelMismatch: resetStoreOnModelMismatch
         )
-    }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated=2.0.0, message="Use addStoreAndWait(_:configuration:) by passing an InMemoryStore instance")
-    public static func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
-        
-        return try self.defaultStack.addInMemoryStoreAndWait(configuration: configuration)
     }
 }

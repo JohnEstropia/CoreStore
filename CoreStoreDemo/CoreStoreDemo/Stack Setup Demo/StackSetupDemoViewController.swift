@@ -18,15 +18,19 @@ private struct Static {
     static let facebookStack: DataStack = {
         
         let dataStack = DataStack(modelName: "StackSetupDemo")
-        try! dataStack.addSQLiteStoreAndWait(
-            fileName: "AccountsDemo_FB_Male.sqlite",
-            configuration: maleConfiguration,
-            resetStoreOnModelMismatch: true
+        try! dataStack.addStorageAndWait(
+            SQLiteStore(
+                fileName: "AccountsDemo_FB_Male.sqlite",
+                configuration: maleConfiguration,
+                resetStoreOnModelMismatch: true
+            )
         )
-        try! dataStack.addSQLiteStoreAndWait(
-            fileName: "AccountsDemo_FB_Female.sqlite",
-            configuration: femaleConfiguration,
-            resetStoreOnModelMismatch: true
+        try! dataStack.addStorageAndWait(
+            SQLiteStore(
+                fileName: "AccountsDemo_FB_Female.sqlite",
+                configuration: femaleConfiguration,
+                resetStoreOnModelMismatch: true
+            )
         )
         
         dataStack.beginSynchronous { (transaction) -> Void in
@@ -52,15 +56,19 @@ private struct Static {
     static let twitterStack: DataStack = {
         
         let dataStack = DataStack(modelName: "StackSetupDemo")
-        try! dataStack.addSQLiteStoreAndWait(
-            fileName: "AccountsDemo_TW_Male.sqlite",
-            configuration: maleConfiguration,
-            resetStoreOnModelMismatch: true
+        try! dataStack.addStorageAndWait(
+            SQLiteStore(
+                fileName: "AccountsDemo_TW_Male.sqlite",
+                configuration: maleConfiguration,
+                resetStoreOnModelMismatch: true
+            )
         )
-        try! dataStack.addSQLiteStoreAndWait(
-            fileName: "AccountsDemo_TW_Female.sqlite",
-            configuration: femaleConfiguration,
-            resetStoreOnModelMismatch: true
+        try! dataStack.addStorageAndWait(
+            SQLiteStore(
+                fileName: "AccountsDemo_TW_Female.sqlite",
+                configuration: femaleConfiguration,
+                resetStoreOnModelMismatch: true
+            )
         )
         
         dataStack.beginSynchronous { (transaction) -> Void in

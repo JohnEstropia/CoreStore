@@ -86,7 +86,13 @@ class CoreStoreTests: XCTestCase {
         
         do {
             
-            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore1.sqlite", configuration: "Config1", resetStoreOnModelMismatch: true)
+            try stack.addStorageAndWait(
+                SQLiteStore(
+                    fileName: "ConfigStore1.sqlite",
+                    configuration: "Config1",
+                    resetStoreOnModelMismatch: true
+                )
+            )
         }
         catch let error as NSError {
             
@@ -95,7 +101,13 @@ class CoreStoreTests: XCTestCase {
         
         do {
             
-            try stack.addSQLiteStoreAndWait(fileName: "ConfigStore2.sqlite", configuration: "Config2", resetStoreOnModelMismatch: true)
+            try stack.addStorageAndWait(
+                SQLiteStore(
+                    fileName: "ConfigStore2.sqlite",
+                    configuration: "Config2",
+                    resetStoreOnModelMismatch: true
+                )
+            )
         }
         catch let error as NSError {
             
@@ -265,7 +277,7 @@ class CoreStoreTests: XCTestCase {
             )
             XCTAssertTrue(numberOfDeletedObjects2 == 2, "numberOfDeletedObjects2 == 2 (actual: \(numberOfDeletedObjects2))")
             
-            transaction.commit()
+            transaction.commitAndWait()
         }
         
         CoreStore.beginSynchronous({ (transaction) -> Void in
@@ -277,7 +289,7 @@ class CoreStoreTests: XCTestCase {
                 obj.testEntityID = oldID
             }
             
-            transaction.commit()
+            transaction.commitAndWait()
         })
         
         let objs1 = CoreStore.fetchAll(From(TestEntity1))
@@ -351,7 +363,7 @@ class CoreStoreTests: XCTestCase {
                             let obj5 = transaction.edit(obj5)
                             transaction.delete(obj5, obj6)
                             
-                            transaction.commit()
+                            transaction.commitAndWait()
                         }
                         
                         let count2 = CoreStore.queryValue(
@@ -379,8 +391,12 @@ class CoreStoreTests: XCTestCase {
         
         do {
             
+            let defaultDirectory = NSFileManager.defaultManager().URLsForDirectory(
+                .ApplicationSupportDirectory,
+                inDomains: .UserDomainMask
+                ).first!
             let fileManager = NSFileManager.defaultManager()
-            try fileManager.removeItemAtURL(defaultRootDirectory)
+            try fileManager.removeItemAtURL(defaultDirectory)
         }
         catch _ { }
     }

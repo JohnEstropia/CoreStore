@@ -28,7 +28,7 @@ import CoreData
 
 // MARK: - SQLiteStore
 
-public class SQLiteStore: Storage, DefaultInitializableStore {
+public class SQLiteStore: StorageInterface, DefaultInitializableStore {
     
     public static let defaultRootDirectory: NSURL = {
         
@@ -57,6 +57,13 @@ public class SQLiteStore: Storage, DefaultInitializableStore {
             .URLByAppendingPathExtension("sqlite")
     }()
     
+    /**
+     Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
+     
+     - parameter fileURL: the local file URL for the target SQLite persistent store. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a true value tells the `DataStack` to delete the store on model mismatch; a false value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
+     */
     public required init(fileURL: NSURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) {
         
         self.fileURL = fileURL
@@ -64,6 +71,13 @@ public class SQLiteStore: Storage, DefaultInitializableStore {
         self.resetStoreOnModelMismatch = resetStoreOnModelMismatch
     }
     
+    /**
+     Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
+     
+     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a true value tells the `DataStack` to delete the store on model mismatch; a false value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
+     */
     public required init(fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) {
         
         self.fileURL = SQLiteStore.defaultRootDirectory
@@ -83,7 +97,7 @@ public class SQLiteStore: Storage, DefaultInitializableStore {
     }
     
     
-    // MARK: Storage
+    // MARK: StorageInterface
     
     public static let storeType = NSSQLiteStoreType
     

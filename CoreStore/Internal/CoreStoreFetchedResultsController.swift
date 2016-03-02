@@ -32,7 +32,6 @@ import CoreData
 @available(OSX, unavailable)
 internal final class CoreStoreFetchedResultsController<T: NSManagedObject>: NSFetchedResultsController {
     
-    
     // MARK: Internal
     
     internal convenience init<T>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {

@@ -30,28 +30,6 @@ import CoreData
 #endif
 
 
-// TODO: move these to PersistentStore wrapper
-
-#if os(tvOS)
-    internal let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
-#else
-    internal let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
-#endif
-
-internal let defaultSystemDirectory = NSFileManager.defaultManager().URLsForDirectory(
-    systemDirectorySearchPath,
-    inDomains: .UserDomainMask
-).first!
-internal let defaultRootDirectory = defaultSystemDirectory.URLByAppendingPathComponent(
-    NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack",
-    isDirectory: true
-)
-internal let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
-internal let defaultSQLiteStoreFileURL = defaultRootDirectory
-    .URLByAppendingPathComponent(applicationName, isDirectory: false)
-    .URLByAppendingPathExtension("sqlite")
-
-
 // MARK: - DataStack
 
 /**
@@ -62,11 +40,11 @@ public final class DataStack {
     /**
      Initializes a `DataStack` from an `NSManagedObjectModel`.
      
-     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name will be used.
+     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
      - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    public required init(modelName: String = applicationName, bundle: NSBundle = NSBundle.mainBundle(), migrationChain: MigrationChain = nil) {
+    public required init(modelName: String = DataStack.applicationName, bundle: NSBundle = NSBundle.mainBundle(), migrationChain: MigrationChain = nil) {
         
         CoreStore.assert(
             migrationChain.valid,
@@ -124,23 +102,23 @@ public final class DataStack {
     }
     
     /**
-     Creates a `Storage` of the specified store type with default values and adds it to the stack. This method blocks until completion.
+     Creates a `StorageInterface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
      
-     - parameter storeType: the `Storage` type
-     - returns: the `Storage` added to the stack
+     - parameter storeType: the `StorageInterface` type
+     - returns: the `StorageInterface` added to the stack
      */
-    public func addStoreAndWait<T: Storage where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
+    public func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
         
-        return try self.addStoreAndWait(storeType.init())
+        return try self.addStorageAndWait(storeType.init())
     }
     
     /**
-     Adds a `Storage` to the stack and blocks until completion.
+     Adds a `StorageInterface` to the stack and blocks until completion.
      
-     - parameter store: the `Storage`
-     - returns: the `Storage` added to the stack
+     - parameter store: the `StorageInterface`
+     - returns: the `StorageInterface` added to the stack
      */
-    public func addStoreAndWait<T: Storage>(store: T) throws -> T {
+    public func addStorageAndWait<T: StorageInterface>(store: T) throws -> T {
         
         CoreStore.assert(
             store.internalStore == nil,
@@ -164,113 +142,6 @@ public final class DataStack {
         }
     }
     
-    /**
-     Adds to the stack an SQLite store from the given SQLite file name.
-     
-     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). A new SQLite file will be created if it does not exist. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-     - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false
-     - returns: the `NSPersistentStore` added to the stack.
-     */
-    public func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
-        
-        return try self.addSQLiteStoreAndWait(
-            fileURL: defaultRootDirectory
-                .URLByAppendingPathComponent(
-                    fileName,
-                    isDirectory: false
-            ),
-            configuration: configuration,
-            resetStoreOnModelMismatch: resetStoreOnModelMismatch
-        )
-    }
-    
-    /**
-     Adds to the stack an SQLite store from the given SQLite file URL.
-     
-     - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-     - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to throw exceptions on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
-     - returns: the `NSPersistentStore` added to the stack.
-     */
-    public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = defaultSQLiteStoreFileURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
-        
-        CoreStore.assert(
-            fileURL.fileURL,
-            "The specified file URL for the SQLite store is invalid: \"\(fileURL)\""
-        )
-        
-        let coordinator = self.coordinator;
-        if let store = coordinator.persistentStoreForURL(fileURL) {
-            
-            guard store.type == NSSQLiteStoreType
-                && store.configurationName == (configuration ?? Into.defaultConfigurationName) else {
-                    
-                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
-                    CoreStore.handleError(
-                        error,
-                        "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
-                    )
-                    
-                    throw error
-            }
-            
-            return store
-        }
-        
-        let fileManager = NSFileManager.defaultManager()
-        _ = try? fileManager.createDirectoryAtURL(
-            fileURL.URLByDeletingLastPathComponent!,
-            withIntermediateDirectories: true,
-            attributes: nil
-        )
-        
-        let options = self.optionsForSQLiteStore()
-        do {
-            
-            let store = try coordinator.addPersistentStoreSynchronously(
-                NSSQLiteStoreType,
-                configuration: configuration,
-                URL: fileURL,
-                options: options
-            )
-            self.updateMetadataForPersistentStore(store)
-            return store
-        }
-        catch let error as NSError where resetStoreOnModelMismatch && error.isCoreDataMigrationError {
-            
-            fileManager.removeSQLiteStoreAtURL(fileURL)
-            
-            do {
-                
-                let store = try coordinator.addPersistentStoreSynchronously(
-                    NSSQLiteStoreType,
-                    configuration: configuration,
-                    URL: fileURL,
-                    options: options
-                )
-                self.updateMetadataForPersistentStore(store)
-                return store
-            }
-            catch {
-                
-                CoreStore.handleError(
-                    error as NSError,
-                    "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\"."
-                )
-                throw error
-            }
-        }
-        catch {
-            
-            CoreStore.handleError(
-                error as NSError,
-                "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\"."
-            )
-            throw error
-        }
-    }
-    
     
     // MARK: Internal
     
@@ -280,6 +151,7 @@ public final class DataStack {
     internal let model: NSManagedObjectModel
     internal let migrationChain: MigrationChain
     internal let childTransactionQueue: GCDQueue = .createSerial("com.coreStore.dataStack.childTransactionQueue")
+    internal let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.coreStore.persistentStoreBarrierQueue")
     internal let migrationQueue: NSOperationQueue = {
         
         let migrationQueue = NSOperationQueue()
@@ -371,9 +243,10 @@ public final class DataStack {
     }
     
     
-    // MARK: Private
+    // MARK: Private]
     
-    private let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.coreStore.persistentStoreBarrierQueue")
+    private static let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
+    
     private var configurationStoreMapping = [String: NSPersistentStore]()
     private var entityConfigurationsMapping = [String: Set<String>]()
     
@@ -386,9 +259,57 @@ public final class DataStack {
     
     // MARK: Deprecated
     
-    @available(*, deprecated=2.0.0, message="Use addStoreAndWait(_:configuration:) by passing an InMemoryStore instance")
+    internal enum DeprecatedDefaults {
+        
+        #if os(tvOS)
+        internal static let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
+        #else
+        internal static let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
+        #endif
+        
+        internal static let defaultDirectory = NSFileManager.defaultManager().URLsForDirectory(
+            DeprecatedDefaults.systemDirectorySearchPath,
+            inDomains: .UserDomainMask
+        ).first!
+
+        internal static let defaultSQLiteStoreURL = DeprecatedDefaults.defaultDirectory
+            .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
+            .URLByAppendingPathExtension("sqlite")
+    }
+    
+    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an InMemoryStore instance.")
     public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
         
-        return try self.addStoreAndWait(InMemoryStore).internalStore!
+        let storage = try self.addStorageAndWait(InMemoryStore(configuration: configuration))
+        return storage.internalStore!
+    }
+    
+    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an SQLiteStore instance. Note that the previous default directory for the SQLite file was in the \"Application Support\" directory (or the \"Caches\" directory on tvOS), but the new addStorageAndWait(_:configuration:) method's default directory is now in the \"Application Support/<bundle id>\" directory (or the \"Caches/<bundle id>\" directory on tvOS)")
+    public func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
+        
+        let storage = try self.addStorageAndWait(
+            SQLiteStore(
+                fileURL: DeprecatedDefaults.defaultDirectory.URLByAppendingPathComponent(
+                    fileName,
+                    isDirectory: false
+                ),
+                configuration: configuration,
+                resetStoreOnModelMismatch: resetStoreOnModelMismatch
+            )
+        )
+        return storage.internalStore!
+    }
+    
+    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an SQLiteStore instance. Note that the previous default URL for the SQLite file was in the \"Application Support/<bundle name>.sqlite\" directory (or the \"Caches/<bundle name>.sqlite\" directory on tvOS), but the new addStorageAndWait(_:configuration:) method's default directory is now in the \"Application Support/<bundle id>/<bundle name>.sqlite\" directory (or the \"Caches/<bundle id>/<bundle name>.sqlite\" directory on tvOS)")
+    public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = DeprecatedDefaults.defaultSQLiteStoreURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
+        
+        let storage = try self.addStorageAndWait(
+            SQLiteStore(
+                fileURL: DeprecatedDefaults.defaultSQLiteStoreURL,
+                configuration: configuration,
+                resetStoreOnModelMismatch: resetStoreOnModelMismatch
+            )
+        )
+        return storage.internalStore!
     }
 }

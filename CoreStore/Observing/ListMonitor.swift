@@ -1033,19 +1033,19 @@ public final class ListMonitor<T: NSManagedObject> {
             object: coordinator,
             closure: { [weak self] (note) -> Void in
                 
-                guard let `self` = self else {
+                guard let strongSelf = self else {
                     
                     return
                 }
                 
-                self.isPersistentStoreChanging = true
+                strongSelf.isPersistentStoreChanging = true
                 
                 guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init)
-                    where !Set(self.fetchedResultsController.fetchRequest.affectedStores ?? []).intersect(removedStores).isEmpty else {
+                    where !Set(strongSelf.fetchedResultsController.fetchRequest.affectedStores ?? []).intersect(removedStores).isEmpty else {
                         
                         return
                 }
-                self.refetch(fetchClauses)
+                strongSelf.refetch(fetchClauses)
             }
         )
         
@@ -1054,25 +1054,25 @@ public final class ListMonitor<T: NSManagedObject> {
             object: coordinator,
             closure: { [weak self] (note) -> Void in
                 
-                guard let `self` = self else {
+                guard let strongSelf = self else {
                     
                     return
                 }
                 
-                if !self.isPendingRefetch {
+                if !strongSelf.isPendingRefetch {
                     
-                    let previousStores = Set(self.fetchedResultsController.fetchRequest.affectedStores ?? [])
+                    let previousStores = Set(strongSelf.fetchedResultsController.fetchRequest.affectedStores ?? [])
                     let currentStores = previousStores
                         .subtract(note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore] ?? [])
                         .union(note.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore] ?? [])
                     
                     if previousStores != currentStores {
                         
-                        self.refetch(fetchClauses)
+                        strongSelf.refetch(fetchClauses)
                     }
                 }
                 
-                self.isPersistentStoreChanging = false
+                strongSelf.isPersistentStoreChanging = false
             }
         )
         
