@@ -402,7 +402,7 @@ public extension DataStack {
             operations.append(
                 NSBlockOperation { [weak self] in
                     
-                    guard let strongSelf = self where !cancelled else {
+                    guard let `self` = self where !cancelled else {
                         
                         return
                     }
@@ -411,7 +411,7 @@ public extension DataStack {
                         
                         do {
                             
-                            try strongSelf.startMigrationForSQLiteStore(
+                            try self.startMigrationForSQLiteStore(
                                 fileURL: fileURL,
                                 sourceModel: sourceModel,
                                 destinationModel: destinationModel,
@@ -428,8 +428,7 @@ public extension DataStack {
                     
                     GCDQueue.Main.async {
                         
-                        withExtendedLifetime(childProgress) { (_: NSProgress) -> Void in }
-                        return
+                        _ = withExtendedLifetime(childProgress) { (_: NSProgress) -> Void in }
                     }
                 }
             )

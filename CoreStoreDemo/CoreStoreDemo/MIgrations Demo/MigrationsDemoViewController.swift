@@ -162,27 +162,27 @@ class MigrationsDemoViewController: UIViewController {
             fileName: "MigrationDemo.sqlite",
             completion: { [weak self] (result) -> Void in
                 
-                guard let strongSelf = self else {
+                guard let `self` = self else {
                     
                     return
                 }
                 
                 guard case .Success = result else {
                     
-                    strongSelf.setEnabled(true)
+                    self.setEnabled(true)
                     return
                 }
                 
-                strongSelf.setDataStack(dataStack, model: model, scrollToSelection: true)
+                self.setDataStack(dataStack, model: model, scrollToSelection: true)
                 
                 let count = dataStack.queryValue(From(model.entityType), Select<Int>(.Count("dna")))
                 if count > 0 {
                     
-                    strongSelf.setEnabled(true)
+                    self.setEnabled(true)
                 }
                 else {
                     
-                    dataStack.beginAsynchronous { (transaction) -> Void in
+                    dataStack.beginAsynchronous { [weak self] (transaction) -> Void in
                         
                         for i: Int64 in 1 ..< 10000 {
                             
@@ -355,16 +355,16 @@ extension MigrationsDemoViewController: UITableViewDataSource, UITableViewDelega
         cell.dnaLabel?.text = "DNA: \(dna)"
         cell.mutateButtonHandler = { [weak self] _ -> Void in
             
-            guard let strongSelf = self,
-                let dataStack = strongSelf.dataStack,
-                let organism = strongSelf.listMonitor?[indexPath] else {
+            guard let `self` = self,
+                let dataStack = self.dataStack,
+                let organism = self.listMonitor?[indexPath] else {
                     
                     return
             }
             
-            strongSelf.setSelectedIndexPath(indexPath, scrollToSelection: false)
-            strongSelf.setEnabled(false)
-            dataStack.beginAsynchronous { (transaction) -> Void in
+            self.setSelectedIndexPath(indexPath, scrollToSelection: false)
+            self.setEnabled(false)
+            dataStack.beginAsynchronous { [weak self] (transaction) -> Void in
                 
                 let organism = transaction.edit(organism) as! OrganismProtocol
                 organism.mutate()

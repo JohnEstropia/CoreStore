@@ -894,41 +894,41 @@ public final class ListMonitor<T: NSManagedObject> {
         
         self.taskGroup.notify(.Main) { [weak self] () -> Void in
             
-            guard let strongSelf = self else {
+            guard let `self` = self else {
                 
                 return
             }
             
-            strongSelf.fetchedResultsControllerDelegate.enabled = false
+            self.fetchedResultsControllerDelegate.enabled = false
             
-            let fetchRequest = strongSelf.fetchedResultsController.fetchRequest
+            let fetchRequest = self.fetchedResultsController.fetchRequest
             for clause in fetchClauses {
                 
                 clause.applyToFetchRequest(fetchRequest)
             }
             
-            strongSelf.transactionQueue.async {
+            self.transactionQueue.async { [weak self] in
                 
-                guard let strongSelf = self else {
+                guard let `self` = self else {
                     
                     return
                 }
                 
-                try! strongSelf.fetchedResultsController.performFetchFromSpecifiedStores()
+                try! self.fetchedResultsController.performFetchFromSpecifiedStores()
                 
-                GCDQueue.Main.async { () -> Void in
+                GCDQueue.Main.async { [weak self] () -> Void in
                     
-                    guard let strongSelf = self else {
+                    guard let `self` = self else {
                         
                         return
                     }
                     
-                    strongSelf.fetchedResultsControllerDelegate.enabled = true
-                    strongSelf.isPendingRefetch = false
+                    self.fetchedResultsControllerDelegate.enabled = true
+                    self.isPendingRefetch = false
                     
                     NSNotificationCenter.defaultCenter().postNotificationName(
                         ListMonitorDidRefetchListNotification,
-                        object: strongSelf
+                        object: self
                     )
                 }
             }
@@ -1033,19 +1033,19 @@ public final class ListMonitor<T: NSManagedObject> {
             object: coordinator,
             closure: { [weak self] (note) -> Void in
                 
-                guard let strongSelf = self else {
+                guard let `self` = self else {
                     
                     return
                 }
                 
-                strongSelf.isPersistentStoreChanging = true
+                self.isPersistentStoreChanging = true
                 
                 guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init)
-                    where !Set(strongSelf.fetchedResultsController.fetchRequest.affectedStores ?? []).intersect(removedStores).isEmpty else {
+                    where !Set(self.fetchedResultsController.fetchRequest.affectedStores ?? []).intersect(removedStores).isEmpty else {
                         
                         return
                 }
-                strongSelf.refetch(fetchClauses)
+                self.refetch(fetchClauses)
             }
         )
         
@@ -1054,25 +1054,25 @@ public final class ListMonitor<T: NSManagedObject> {
             object: coordinator,
             closure: { [weak self] (note) -> Void in
                 
-                guard let strongSelf = self else {
+                guard let `self` = self else {
                     
                     return
                 }
                 
-                if !strongSelf.isPendingRefetch {
+                if !self.isPendingRefetch {
                     
-                    let previousStores = Set(strongSelf.fetchedResultsController.fetchRequest.affectedStores ?? [])
+                    let previousStores = Set(self.fetchedResultsController.fetchRequest.affectedStores ?? [])
                     let currentStores = previousStores
                         .subtract(note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore] ?? [])
                         .union(note.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore] ?? [])
                     
                     if previousStores != currentStores {
                         
-                        strongSelf.refetch(fetchClauses)
+                        self.refetch(fetchClauses)
                     }
                 }
                 
-                strongSelf.isPersistentStoreChanging = false
+                self.isPersistentStoreChanging = false
             }
         )
         
@@ -1152,11 +1152,11 @@ public final class ListMonitor<T: NSManagedObject> {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    guard let strongSelf = self else {
+                    guard let `self` = self else {
                         
                         return
                     }
-                    callback(monitor: strongSelf)
+                    callback(monitor: self)
                 }
             ),
             forKey: notificationKey,
@@ -1172,14 +1172,14 @@ public final class ListMonitor<T: NSManagedObject> {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    guard let strongSelf = self,
+                    guard let `self` = self,
                         let userInfo = note.userInfo,
                         let object = userInfo[UserInfoKeyObject] as? T else {
                             
                             return
                     }
                     callback(
-                        monitor: strongSelf,
+                        monitor: self,
                         object: object,
                         indexPath: userInfo[UserInfoKeyIndexPath] as? NSIndexPath,
                         newIndexPath: userInfo[UserInfoKeyNewIndexPath] as? NSIndexPath
@@ -1199,7 +1199,7 @@ public final class ListMonitor<T: NSManagedObject> {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    guard let strongSelf = self,
+                    guard let `self` = self,
                         let userInfo = note.userInfo,
                         let sectionInfo = userInfo[UserInfoKeySectionInfo] as? NSFetchedResultsSectionInfo,
                         let sectionIndex = (userInfo[UserInfoKeySectionIndex] as? NSNumber)?.integerValue else {
@@ -1207,7 +1207,7 @@ public final class ListMonitor<T: NSManagedObject> {
                             return
                     }
                     callback(
-                        monitor: strongSelf,
+                        monitor: self,
                         sectionInfo: sectionInfo,
                         sectionIndex: sectionIndex
                     )

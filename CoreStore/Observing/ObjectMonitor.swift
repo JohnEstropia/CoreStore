@@ -113,12 +113,12 @@ public final class ObjectMonitor<T: NSManagedObject> {
             toObserver: observer,
             callback: { [weak self, weak observer] (monitor, object) -> Void in
                 
-                guard let strongSelf = self, let observer = observer else {
+                guard let `self` = self, let observer = observer else {
                     
                     return
                 }
                 
-                let previousCommitedAttributes = strongSelf.lastCommittedAttributes
+                let previousCommitedAttributes = self.lastCommittedAttributes
                 let currentCommitedAttributes = object.committedValuesForKeys(nil) as! [String: NSObject]
                 
                 var changedKeys = Set<String>()
@@ -130,7 +130,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
                     }
                 }
                 
-                strongSelf.lastCommittedAttributes = currentCommitedAttributes
+                self.lastCommittedAttributes = currentCommitedAttributes
                 observer.objectMonitor(
                     monitor,
                     didUpdateObject: object,
@@ -225,11 +225,11 @@ public final class ObjectMonitor<T: NSManagedObject> {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    guard let strongSelf = self else {
+                    guard let `self` = self else {
                         
                         return
                     }
-                    callback(monitor: strongSelf)
+                    callback(monitor: self)
                 }
             ),
             forKey: notificationKey,
@@ -245,13 +245,13 @@ public final class ObjectMonitor<T: NSManagedObject> {
                 object: self,
                 closure: { [weak self] (note) -> Void in
                     
-                    guard let strongSelf = self,
+                    guard let `self` = self,
                         let userInfo = note.userInfo,
                         let object = userInfo[UserInfoKeyObject] as? T else {
                             
                             return
                     }
-                    callback(monitor: strongSelf, object: object)
+                    callback(monitor: self, object: object)
                 }
             ),
             forKey: notificationKey,
