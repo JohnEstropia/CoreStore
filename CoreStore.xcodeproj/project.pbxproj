@@ -219,6 +219,10 @@
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		B5D372861A39CDDB00F583D9 /* TestEntity1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D372851A39CDDB00F583D9 /* TestEntity1.swift */; };
 		B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D39A0119FD00C9000E91BB /* Foundation.framework */; };
+		B5D3F6451C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */; };
+		B5D3F6461C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */; };
+		B5D3F6471C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */; };
+		B5D3F6481C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */; };
 		B5D5E0CF1A4D6AAB006468AF /* TestEntity2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */; };
 		B5E834B91B76311F001D3D50 /* BaseDataTransaction+Importing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */; };
 		B5E834BB1B7691F3001D3D50 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E834BA1B7691F3001D3D50 /* Functions.swift */; };
@@ -344,6 +348,7 @@
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		B5D372851A39CDDB00F583D9 /* TestEntity1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity1.swift; sourceTree = "<group>"; };
 		B5D39A0119FD00C9000E91BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacySQLiteStore.swift; sourceTree = "<group>"; };
 		B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity2.swift; sourceTree = "<group>"; };
 		B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = CoreStore.podspec; sourceTree = SOURCE_ROOT; };
 		B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+Importing.swift"; sourceTree = "<group>"; };
@@ -709,6 +714,7 @@
 				B5FE4DA11C8481E100FA6A91 /* StorageInterface.swift */,
 				B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */,
 				B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */,
+				B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */,
 			);
 			path = PersistentStores;
 			sourceTree = "<group>";
@@ -997,6 +1003,7 @@
 				B504D0D61B02362500B2BBB1 /* CoreStore+Setup.swift in Sources */,
 				B5D1E22C19FA9FBC003B2874 /* NSError+CoreStore.swift in Sources */,
 				B5E84F131AFF847B0064E85B /* Where.swift in Sources */,
+				B5D3F6451C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				B54A6A551BA15F2A007870FD /* FetchedResultsControllerDelegate.swift in Sources */,
 				B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */,
 				B5E84F141AFF847B0064E85B /* DataStack+Querying.swift in Sources */,
@@ -1085,6 +1092,7 @@
 				82BA18A51C4BBD2200A0916E /* CoreStore+Setup.swift in Sources */,
 				82BA18BD1C4BBD4A00A0916E /* GroupBy.swift in Sources */,
 				B5C976E41C6C9F9A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
+				B5D3F6461C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				82BA18B31C4BBD3900A0916E /* ImportableUniqueObject.swift in Sources */,
 				82BA18A11C4BBD1D00A0916E /* CoreStore.swift in Sources */,
 				82BA18CF1C4BBD7100A0916E /* Functions.swift in Sources */,
@@ -1158,6 +1166,7 @@
 				B52DD1AB1BE1F93900949AFE /* From.swift in Sources */,
 				B52DD1BF1BE1F94600949AFE /* AssociatedObjects.swift in Sources */,
 				B52DD1A11BE1F92C00949AFE /* DataStack+Transaction.swift in Sources */,
+				B5D3F6481C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				B52DD19E1BE1F92C00949AFE /* AsynchronousDataTransaction.swift in Sources */,
 				B52DD1981BE1F92500949AFE /* CoreStore+Setup.swift in Sources */,
 				B52DD1941BE1F92500949AFE /* CoreStore.swift in Sources */,
@@ -1234,6 +1243,7 @@
 				B56321891BD65216006C9394 /* AsynchronousDataTransaction.swift in Sources */,
 				B56321831BD65216006C9394 /* CoreStore+Setup.swift in Sources */,
 				B5C976E51C6C9F9B00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
+				B5D3F6471C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				B563217F1BD65216006C9394 /* CoreStore.swift in Sources */,
 				B56321911BD65216006C9394 /* BaseDataTransaction+Importing.swift in Sources */,
 				B56321941BD65216006C9394 /* CoreStore+Querying.swift in Sources */,

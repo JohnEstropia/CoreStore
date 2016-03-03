@@ -30,33 +30,6 @@ import CoreData
 
 public class SQLiteStore: StorageInterface, DefaultInitializableStore {
     
-    public static let defaultRootDirectory: NSURL = {
-        
-        #if os(tvOS)
-            let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
-        #else
-            let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
-        #endif
-        
-        let defaultSystemDirectory = NSFileManager
-            .defaultManager()
-            .URLsForDirectory(systemDirectorySearchPath, inDomains: .UserDomainMask).first!
-        
-        return defaultSystemDirectory.URLByAppendingPathComponent(
-            NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack",
-            isDirectory: true
-        )
-    }()
-    
-    public static let defaultFileURL: NSURL = {
-        
-        let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
-        
-        return SQLiteStore.defaultRootDirectory
-            .URLByAppendingPathComponent(applicationName, isDirectory: false)
-            .URLByAppendingPathExtension("sqlite")
-    }()
-    
     /**
      Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
      
@@ -101,13 +74,17 @@ public class SQLiteStore: StorageInterface, DefaultInitializableStore {
     
     public static let storeType = NSSQLiteStoreType
     
+    public static func validateStoreURL(storeURL: NSURL?) -> Bool {
+        
+        return storeURL?.fileURL == true
+    }
+    
     public var storeURL: NSURL? {
         
         return self.fileURL
     }
-    
+
     public let configuration: String?
-    
     public let storeOptions: [String: AnyObject]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
     
     public var internalStore: NSPersistentStore?
@@ -144,8 +121,132 @@ public class SQLiteStore: StorageInterface, DefaultInitializableStore {
         }
     }
     
+    public func addToPersistentStoreCoordinatorAsynchronously(coordinator: NSPersistentStoreCoordinator, mappingModelBundles: [NSBundle]?, completion: (NSPersistentStore) -> Void, failure: (NSError) -> Void) throws {
+        
+        let fileManager = NSFileManager.defaultManager()
+        
+        do {
+            
+            let fileURL = self.fileURL
+            try fileManager.createDirectoryAtURL(
+                fileURL.URLByDeletingLastPathComponent!,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+            
+            let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
+                self.dynamicType.storeType,
+                URL: fileURL,
+                options: self.storeOptions
+            )
+            
+            return self.upgradeSQLiteStoreIfNeeded(
+                fileURL: fileURL,
+                metadata: metadata,
+                configuration: configuration,
+                mappingModelBundles: mappingModelBundles,
+                completion: { (result) -> Void in
+                    
+                    if case .Failure(let error) = result {
+                        
+                        if resetStoreOnModelMismatch && error.isCoreDataMigrationError {
+                            
+                            fileManager.removeSQLiteStoreAtURL(fileURL)
+                            do {
+                                
+                                let store = try self.addSQLiteStoreAndWait(
+                                    fileURL: fileURL,
+                                    configuration: configuration,
+                                    resetStoreOnModelMismatch: false
+                                )
+                                
+                                GCDQueue.Main.async {
+                                    
+                                    completion(PersistentStoreResult(store))
+                                }
+                            }
+                            catch {
+                                
+                                completion(PersistentStoreResult(error as NSError))
+                            }
+                            return
+                        }
+                        
+                        completion(PersistentStoreResult(error))
+                        return
+                    }
+                    
+                    do {
+                        
+                        let store = try self.addSQLiteStoreAndWait(
+                            fileURL: fileURL,
+                            configuration: configuration,
+                            resetStoreOnModelMismatch: false
+                        )
+                        
+                        completion(PersistentStoreResult(store))
+                    }
+                    catch {
+                        
+                        completion(PersistentStoreResult(error as NSError))
+                    }
+                }
+            )
+        }
+        catch let error as NSError
+            where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
+                
+                let store = try self.addSQLiteStoreAndWait(
+                    fileURL: fileURL,
+                    configuration: configuration,
+                    resetStoreOnModelMismatch: false
+                )
+                
+                GCDQueue.Main.async {
+                    
+                    completion(PersistentStoreResult(store))
+                }
+                return nil
+        }
+        catch {
+            
+            CoreStore.handleError(
+                error as NSError,
+                "Failed to load SQLite \(typeName(NSPersistentStore)) metadata."
+            )
+            throw error
+        }
+    }
+    
     
     // MARK: Internal
+    
+    internal static let defaultRootDirectory: NSURL = {
+        
+        #if os(tvOS)
+            let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
+        #else
+            let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
+        #endif
+        
+        let defaultSystemDirectory = NSFileManager
+            .defaultManager()
+            .URLsForDirectory(systemDirectorySearchPath, inDomains: .UserDomainMask).first!
+        
+        return defaultSystemDirectory.URLByAppendingPathComponent(
+            NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack",
+            isDirectory: true
+        )
+    }()
+    
+    internal static let defaultFileURL: NSURL = {
+        
+        let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
+        
+        return SQLiteStore.defaultRootDirectory
+            .URLByAppendingPathComponent(applicationName, isDirectory: false)
+            .URLByAppendingPathExtension("sqlite")
+    }()
     
     internal let fileURL: NSURL
     

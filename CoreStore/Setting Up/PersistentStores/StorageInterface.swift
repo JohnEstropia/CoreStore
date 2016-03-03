@@ -31,52 +31,17 @@ import CoreData
 public protocol StorageInterface: class {
 
     static var storeType: String { get }
+    static func validateStoreURL(storeURL: NSURL?) -> Bool
     
     var storeURL: NSURL? { get }
-    
     var configuration: String? { get }
-    
     var storeOptions: [String: AnyObject]? { get }
     
     var internalStore: NSPersistentStore? { get set }
     
     func addToPersistentStoreCoordinatorSynchronously(coordinator: NSPersistentStoreCoordinator) throws -> NSPersistentStore
     
-    func addToPersistentStoreCoordinatorAsynchronously(coordinator: NSPersistentStoreCoordinator, completion: (NSPersistentStore) -> Void, failure: (NSError) -> Void) throws
-}
-
-public extension StorageInterface {
-    
-    public func addToPersistentStoreCoordinatorSynchronously(coordinator: NSPersistentStoreCoordinator) throws -> NSPersistentStore {
-        
-        return try coordinator.addPersistentStoreSynchronously(
-            self.dynamicType.storeType,
-            configuration: self.configuration,
-            URL: self.storeURL,
-            options: self.storeOptions
-        )
-    }
-    
-    public func addToPersistentStoreCoordinatorAsynchronously(coordinator: NSPersistentStoreCoordinator, completion: (NSPersistentStore) -> Void, failure: (NSError) -> Void) throws {
-        
-        coordinator.performBlock {
-            
-            do {
-                
-                let persistentStore = try coordinator.addPersistentStoreWithType(
-                    self.dynamicType.storeType,
-                    configuration: self.configuration,
-                    URL: self.storeURL,
-                    options: self.storeOptions
-                )
-                completion(persistentStore)
-            }
-            catch {
-                
-                failure(error as NSError)
-            }
-        }
-    }
+    func addToPersistentStoreCoordinatorAsynchronously(coordinator: NSPersistentStoreCoordinator, mappingModelBundles: [NSBundle]?, completion: (NSPersistentStore) -> Void, failure: (NSError) -> Void) throws
 }
 
 

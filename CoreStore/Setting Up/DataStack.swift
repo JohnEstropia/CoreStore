@@ -122,8 +122,33 @@ public final class DataStack {
         
         CoreStore.assert(
             store.internalStore == nil,
-            "The specified store was already added to the data stack: \(store)"
+            "The specified \"\(typeName(store))\" was already added to the data stack: \(store)"
         )
+        CoreStore.assert(
+            T.validateStoreURL(store.storeURL),
+            "The specified store URL for the \"\(typeName(store))\" is invalid: \"\(store.storeURL)\""
+        )
+        
+// TODO: check
+//        if let store = coordinator.persistentStoreForURL(fileURL) {
+//            
+//            guard store.type == NSSQLiteStoreType
+//                && store.configurationName == (configuration ?? Into.defaultConfigurationName) else {
+//                    
+//                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
+//                    CoreStore.handleError(
+//                        error,
+//                        "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+//                    )
+//                    throw error
+//            }
+//            
+//            GCDQueue.Main.async {
+//                
+//                completion(PersistentStoreResult(store))
+//            }
+//            return nil
+//        }
         
         do {
             
@@ -144,6 +169,8 @@ public final class DataStack {
     
     
     // MARK: Internal
+    
+    internal static let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
     
     internal let coordinator: NSPersistentStoreCoordinator
     internal let rootSavingContext: NSManagedObjectContext
@@ -243,9 +270,7 @@ public final class DataStack {
     }
     
     
-    // MARK: Private]
-    
-    private static let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
+    // MARK: Private
     
     private var configurationStoreMapping = [String: NSPersistentStore]()
     private var entityConfigurationsMapping = [String: Set<String>]()
@@ -259,24 +284,9 @@ public final class DataStack {
     
     // MARK: Deprecated
     
-    internal enum DeprecatedDefaults {
-        
-        #if os(tvOS)
-        internal static let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
-        #else
-        internal static let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
-        #endif
-        
-        internal static let defaultDirectory = NSFileManager.defaultManager().URLsForDirectory(
-            DeprecatedDefaults.systemDirectorySearchPath,
-            inDomains: .UserDomainMask
-        ).first!
-
-        internal static let defaultSQLiteStoreURL = DeprecatedDefaults.defaultDirectory
-            .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
-            .URLByAppendingPathExtension("sqlite")
-    }
-    
+    /**
+     Deprecated. Use `addStorageAndWait(_:)` by passing a `InMemoryStore` instance.
+     */
     @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an InMemoryStore instance.")
     public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
         
@@ -284,15 +294,17 @@ public final class DataStack {
         return storage.internalStore!
     }
     
-    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an SQLiteStore instance. Note that the previous default directory for the SQLite file was in the \"Application Support\" directory (or the \"Caches\" directory on tvOS), but the new addStorageAndWait(_:configuration:) method's default directory is now in the \"Application Support/<bundle id>\" directory (or the \"Caches/<bundle id>\" directory on tvOS)")
+    /**
+     Deprecated. Use `addStorageAndWait(_:)` by passing a `LegacySQLiteStore` instance.
+     
+     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
+     */
+    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
     public func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         let storage = try self.addStorageAndWait(
-            SQLiteStore(
-                fileURL: DeprecatedDefaults.defaultDirectory.URLByAppendingPathComponent(
-                    fileName,
-                    isDirectory: false
-                ),
+            LegacySQLiteStore(
+                fileName: fileName,
                 configuration: configuration,
                 resetStoreOnModelMismatch: resetStoreOnModelMismatch
             )
@@ -301,16 +313,16 @@ public final class DataStack {
     }
     
     /**
-     Deprecated. Use `addStorageAndWait(_:)` by passing an `SQLiteStore` instance.
+     Deprecated. Use `addStorageAndWait(_:)` by passing a `LegacySQLiteStore` instance.
      
-     - Warning: The previous default URL for the SQLite file was "Application Support/\<bundle name\>.sqlite" ("Caches/\<bundle name\>.sqlite" directory on tvOS), but the new `addStorageAndWait(_:)` method's default URL is now  "Application Support/\<bundle id\>/\<bundle name\>.sqlite" ("Caches/\<bundle id\>/\<bundle name\>.sqlite" on tvOS) to better comply with per Apple's guidelines.
+     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
      */
-    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an SQLiteStore instance. Warning: the previous default URL for the SQLite file was \"Application Support/<bundle name>.sqlite\" (\"Caches/<bundle name>.sqlite\" directory on tvOS), but the new addStorageAndWait(_:configuration:) method's default URL is now \"Application Support/<bundle id>/<bundle name>.sqlite\" (\"Caches/<bundle id>/<bundle name>.sqlite\" on tvOS) to better comply with per Apple's guidelines,")
-    public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = DeprecatedDefaults.defaultSQLiteStoreURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
+    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
+    public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = LegacySQLiteStore.legacyDefaultFileURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         let storage = try self.addStorageAndWait(
-            SQLiteStore(
-                fileURL: DeprecatedDefaults.defaultSQLiteStoreURL,
+            LegacySQLiteStore(
+                fileURL: fileURL,
                 configuration: configuration,
                 resetStoreOnModelMismatch: resetStoreOnModelMismatch
             )
