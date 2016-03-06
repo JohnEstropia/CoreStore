@@ -31,17 +31,11 @@ import CoreData
 public protocol StorageInterface: class {
 
     static var storeType: String { get }
-    static func validateStoreURL(storeURL: NSURL?) -> Bool
     
-    var storeURL: NSURL? { get }
     var configuration: String? { get }
     var storeOptions: [String: AnyObject]? { get }
     
     var internalStore: NSPersistentStore? { get set }
-    
-    func addToPersistentStoreCoordinatorSynchronously(coordinator: NSPersistentStoreCoordinator) throws -> NSPersistentStore
-    
-    func addToPersistentStoreCoordinatorAsynchronously(coordinator: NSPersistentStoreCoordinator, mappingModelBundles: [NSBundle]?, completion: (NSPersistentStore) -> Void, failure: (NSError) -> Void) throws
 }
 
 
@@ -52,3 +46,14 @@ public protocol DefaultInitializableStore: StorageInterface {
     init()
 }
 
+
+// MARK: - LocalStorage
+
+public protocol LocalStorage: StorageInterface {
+    
+    var fileURL: NSURL { get }
+    var mappingModelBundles: [NSBundle] { get }
+    var resetStoreOnModelMismatch: Bool { get }
+    
+    func eraseStorageAndWait() throws
+}

@@ -52,8 +52,8 @@ class MigrationsDemoViewController: UIViewController {
             let models = self.models
             do {
                 
-                let migrations = try dataStack.requiredMigrationsForSQLiteStore(
-                    fileName: "MigrationDemo.sqlite"
+                let migrations = try dataStack.requiredMigrationsForStorage(
+                    SQLiteStore(fileName: "MigrationDemo.sqlite")
                 )
                 
                 let storeVersion = migrations.first?.sourceVersion ?? dataStack.modelVersion
@@ -158,8 +158,8 @@ class MigrationsDemoViewController: UIViewController {
         )
         
         self.setEnabled(false)
-        let progress = try! dataStack.addSQLiteStore(
-            fileName: "MigrationDemo.sqlite",
+        let progress = try! dataStack.addStorage(
+            SQLiteStore(fileName: "MigrationDemo.sqlite"),
             completion: { [weak self] (result) -> Void in
                 
                 guard let `self` = self else {

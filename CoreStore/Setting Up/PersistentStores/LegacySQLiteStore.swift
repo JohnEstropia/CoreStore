@@ -30,11 +30,12 @@ import Foundation
 
 public final class LegacySQLiteStore: SQLiteStore {
     
-    public required init(fileURL: NSURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) {
+    public required init(fileURL: NSURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false) {
         
         super.init(
             fileURL: fileURL,
             configuration: configuration,
+            mappingModelBundles: mappingModelBundles,
             resetStoreOnModelMismatch: resetStoreOnModelMismatch
         )
     }
@@ -46,7 +47,7 @@ public final class LegacySQLiteStore: SQLiteStore {
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a true value tells the `DataStack` to delete the store on model mismatch; a false value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
      */
-    public required init(fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) {
+    public required init(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false) {
         
         super.init(
             fileURL: LegacySQLiteStore.legacyDefaultRootDirectory.URLByAppendingPathComponent(
@@ -54,6 +55,7 @@ public final class LegacySQLiteStore: SQLiteStore {
                 isDirectory: false
             ),
             configuration: configuration,
+            mappingModelBundles: mappingModelBundles,
             resetStoreOnModelMismatch: resetStoreOnModelMismatch
         )
     }
@@ -63,11 +65,7 @@ public final class LegacySQLiteStore: SQLiteStore {
     
     public required init() {
         
-        super.init(
-            fileURL: LegacySQLiteStore.legacyDefaultFileURL,
-            configuration: nil,
-            resetStoreOnModelMismatch: false
-        )
+        super.init(fileURL: LegacySQLiteStore.legacyDefaultFileURL)
     }
     
     

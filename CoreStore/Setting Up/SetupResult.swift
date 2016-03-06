@@ -27,6 +27,50 @@ import Foundation
 import CoreData
 
 
+// MARK: - SetupResult
+
+public enum SetupResult<T: StorageInterface>: BooleanType {
+    
+    case Success(T)
+    case Failure(NSError)
+    
+    
+    // MARK: BooleanType
+    
+    public var boolValue: Bool {
+        
+        switch self {
+            
+        case .Success: return true
+        case .Failure: return false
+        }
+    }
+    
+    
+    // MARK: Internal
+    
+    internal init(_ storage: T) {
+        
+        self = .Success(storage)
+    }
+    
+    internal init(_ error: NSError) {
+        
+        self = .Failure(error)
+    }
+    
+    internal init(_ errorCode: CoreStoreErrorCode) {
+        
+        self.init(errorCode, userInfo: nil)
+    }
+    
+    internal init(_ errorCode: CoreStoreErrorCode, userInfo: [NSObject: AnyObject]?) {
+        
+        self.init(NSError(coreStoreErrorCode: errorCode, userInfo: userInfo))
+    }
+}
+
+
 // MARK: - PersistentStoreResult
 
 /**

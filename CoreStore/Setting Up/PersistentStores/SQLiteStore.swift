@@ -28,7 +28,7 @@ import CoreData
 
 // MARK: - SQLiteStore
 
-public class SQLiteStore: StorageInterface, DefaultInitializableStore {
+public class SQLiteStore: LocalStorage, DefaultInitializableStore {
     
     /**
      Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
@@ -37,10 +37,11 @@ public class SQLiteStore: StorageInterface, DefaultInitializableStore {
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
      - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a true value tells the `DataStack` to delete the store on model mismatch; a false value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
      */
-    public required init(fileURL: NSURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) {
+    public required init(fileURL: NSURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false) {
         
         self.fileURL = fileURL
         self.configuration = configuration
+        self.mappingModelBundles = mappingModelBundles
         self.resetStoreOnModelMismatch = resetStoreOnModelMismatch
     }
     
@@ -51,11 +52,12 @@ public class SQLiteStore: StorageInterface, DefaultInitializableStore {
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a true value tells the `DataStack` to delete the store on model mismatch; a false value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
      */
-    public required init(fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) {
+    public required init(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false) {
         
         self.fileURL = SQLiteStore.defaultRootDirectory
             .URLByAppendingPathComponent(fileName, isDirectory: false)
         self.configuration = configuration
+        self.mappingModelBundles = mappingModelBundles
         self.resetStoreOnModelMismatch = resetStoreOnModelMismatch
     }
     
@@ -66,8 +68,16 @@ public class SQLiteStore: StorageInterface, DefaultInitializableStore {
         
         self.fileURL = SQLiteStore.defaultFileURL
         self.configuration = nil
+        self.mappingModelBundles = NSBundle.allBundles()
         self.resetStoreOnModelMismatch = false
     }
+    
+    
+    // MAKR: LocalStorage
+    
+    public let fileURL: NSURL
+    
+    public let resetStoreOnModelMismatch: Bool
     
     
     // MARK: StorageInterface
@@ -78,143 +88,29 @@ public class SQLiteStore: StorageInterface, DefaultInitializableStore {
         
         return storeURL?.fileURL == true
     }
-    
-    public var storeURL: NSURL? {
-        
-        return self.fileURL
-    }
 
     public let configuration: String?
     public let storeOptions: [String: AnyObject]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+    public let mappingModelBundles: [NSBundle]
     
     public var internalStore: NSPersistentStore?
     
-    public func addToPersistentStoreCoordinatorSynchronously(coordinator: NSPersistentStoreCoordinator) throws -> NSPersistentStore {
+    public func eraseStorageAndWait() throws {
         
-        let fileManager = NSFileManager.defaultManager()
+        // TODO: check if attached to persistent store 
         
-        do {
+        let fileURL = self.fileURL
+        try autoreleasepool {
             
-            let fileURL = self.fileURL
-            try fileManager.createDirectoryAtURL(
-                fileURL.URLByDeletingLastPathComponent!,
-                withIntermediateDirectories: true,
-                attributes: nil
-            )
-            return try coordinator.addPersistentStoreSynchronously(
+            let journalUpdatingCoordinator = NSPersistentStoreCoordinator()
+            let store = try journalUpdatingCoordinator.addPersistentStoreWithType(
                 self.dynamicType.storeType,
                 configuration: self.configuration,
                 URL: fileURL,
-                options: self.storeOptions
+                options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
             )
-        }
-        catch let error as NSError where resetStoreOnModelMismatch && error.isCoreDataMigrationError {
-            
-            fileManager.removeSQLiteStoreAtURL(fileURL)
-            
-            return try coordinator.addPersistentStoreSynchronously(
-                self.dynamicType.storeType,
-                configuration: self.configuration,
-                URL: fileURL,
-                options: self.storeOptions
-            )
-        }
-    }
-    
-    public func addToPersistentStoreCoordinatorAsynchronously(coordinator: NSPersistentStoreCoordinator, mappingModelBundles: [NSBundle]?, completion: (NSPersistentStore) -> Void, failure: (NSError) -> Void) throws {
-        
-        let fileManager = NSFileManager.defaultManager()
-        
-        do {
-            
-            let fileURL = self.fileURL
-            try fileManager.createDirectoryAtURL(
-                fileURL.URLByDeletingLastPathComponent!,
-                withIntermediateDirectories: true,
-                attributes: nil
-            )
-            
-            let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
-                self.dynamicType.storeType,
-                URL: fileURL,
-                options: self.storeOptions
-            )
-            
-            return self.upgradeSQLiteStoreIfNeeded(
-                fileURL: fileURL,
-                metadata: metadata,
-                configuration: configuration,
-                mappingModelBundles: mappingModelBundles,
-                completion: { (result) -> Void in
-                    
-                    if case .Failure(let error) = result {
-                        
-                        if resetStoreOnModelMismatch && error.isCoreDataMigrationError {
-                            
-                            fileManager.removeSQLiteStoreAtURL(fileURL)
-                            do {
-                                
-                                let store = try self.addSQLiteStoreAndWait(
-                                    fileURL: fileURL,
-                                    configuration: configuration,
-                                    resetStoreOnModelMismatch: false
-                                )
-                                
-                                GCDQueue.Main.async {
-                                    
-                                    completion(PersistentStoreResult(store))
-                                }
-                            }
-                            catch {
-                                
-                                completion(PersistentStoreResult(error as NSError))
-                            }
-                            return
-                        }
-                        
-                        completion(PersistentStoreResult(error))
-                        return
-                    }
-                    
-                    do {
-                        
-                        let store = try self.addSQLiteStoreAndWait(
-                            fileURL: fileURL,
-                            configuration: configuration,
-                            resetStoreOnModelMismatch: false
-                        )
-                        
-                        completion(PersistentStoreResult(store))
-                    }
-                    catch {
-                        
-                        completion(PersistentStoreResult(error as NSError))
-                    }
-                }
-            )
-        }
-        catch let error as NSError
-            where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
-                
-                let store = try self.addSQLiteStoreAndWait(
-                    fileURL: fileURL,
-                    configuration: configuration,
-                    resetStoreOnModelMismatch: false
-                )
-                
-                GCDQueue.Main.async {
-                    
-                    completion(PersistentStoreResult(store))
-                }
-                return nil
-        }
-        catch {
-            
-            CoreStore.handleError(
-                error as NSError,
-                "Failed to load SQLite \(typeName(NSPersistentStore)) metadata."
-            )
-            throw error
+            try journalUpdatingCoordinator.removePersistentStore(store)
+            try NSFileManager.defaultManager().removeItemAtURL(fileURL)
         }
     }
     
@@ -247,8 +143,4 @@ public class SQLiteStore: StorageInterface, DefaultInitializableStore {
             .URLByAppendingPathComponent(applicationName, isDirectory: false)
             .URLByAppendingPathExtension("sqlite")
     }()
-    
-    internal let fileURL: NSURL
-    
-    internal let resetStoreOnModelMismatch: Bool
 }

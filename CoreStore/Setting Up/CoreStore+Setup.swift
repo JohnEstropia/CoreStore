@@ -72,12 +72,34 @@ public extension CoreStore {
     /**
      Adds a `StorageInterface` to the `defaultStack` and blocks until completion.
      
-     - parameter store: the `StorageInterface`
+     - parameter storage: the `StorageInterface`
      - returns: the `StorageInterface` added to the `defaultStack`
      */
-    public static func addStorageAndWait<T: StorageInterface>(store: T) throws -> T {
+    public static func addStorageAndWait<T: StorageInterface>(storage: T) throws -> T {
         
-        return try self.defaultStack.addStorageAndWait(store)
+        return try self.defaultStack.addStorageAndWait(storage)
+    }
+    
+    /**
+     Creates a `LocalStorageface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
+     
+     - parameter storeType: the `LocalStorageface` type
+     - returns: the local storage added to the stack
+     */
+    public static func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(storageType: T.Type) throws -> T {
+        
+        return try self.defaultStack.addStorageAndWait(storageType.init())
+    }
+    
+    /**
+     Adds a `LocalStorage` to the stack and blocks until completion.
+     
+     - parameter storage: the local storage
+     - returns: the local storage added to the stack
+     */
+    public static func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {
+        
+        return try self.defaultStack.addStorageAndWait(storage)
     }
     
     

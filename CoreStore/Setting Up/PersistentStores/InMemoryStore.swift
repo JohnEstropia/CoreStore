@@ -53,40 +53,8 @@ public class InMemoryStore: StorageInterface, DefaultInitializableStore {
         return storeURL == nil
     }
     
-    public let storeURL: NSURL? = nil
     public let configuration: String?
     public let storeOptions: [String: AnyObject]? = nil
     
     public var internalStore: NSPersistentStore?
-    
-    public func addToPersistentStoreCoordinatorSynchronously(coordinator: NSPersistentStoreCoordinator) throws -> NSPersistentStore {
-        
-        return try coordinator.addPersistentStoreSynchronously(
-            self.dynamicType.storeType,
-            configuration: self.configuration,
-            URL: self.storeURL,
-            options: self.storeOptions
-        )
-    }
-    
-    public func addToPersistentStoreCoordinatorAsynchronously(coordinator: NSPersistentStoreCoordinator, mappingModelBundles: [NSBundle]?, completion: (NSPersistentStore) -> Void, failure: (NSError) -> Void) throws {
-        
-        coordinator.performBlock {
-            
-            do {
-                
-                let persistentStore = try coordinator.addPersistentStoreWithType(
-                    self.dynamicType.storeType,
-                    configuration: self.configuration,
-                    URL: self.storeURL,
-                    options: self.storeOptions
-                )
-                completion(persistentStore)
-            }
-            catch {
-                
-                failure(error as NSError)
-            }
-        }
-    }
 }

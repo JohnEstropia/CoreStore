@@ -115,24 +115,20 @@ public final class DataStack {
     /**
      Adds a `StorageInterface` to the stack and blocks until completion.
      
-     - parameter store: the `StorageInterface`
+     - parameter storage: the `StorageInterface`
      - returns: the `StorageInterface` added to the stack
      */
-    public func addStorageAndWait<T: StorageInterface>(store: T) throws -> T {
+    public func addStorageAndWait<T: StorageInterface>(storage: T) throws -> T {
         
         CoreStore.assert(
-            store.internalStore == nil,
-            "The specified \"\(typeName(store))\" was already added to the data stack: \(store)"
-        )
-        CoreStore.assert(
-            T.validateStoreURL(store.storeURL),
-            "The specified store URL for the \"\(typeName(store))\" is invalid: \"\(store.storeURL)\""
+            storage.internalStore == nil,
+            "The specified \"\(typeName(storage))\" was already added to the data stack: \(storage)"
         )
         
 // TODO: check
 //        if let store = coordinator.persistentStoreForURL(fileURL) {
 //            
-//            guard store.type == NSSQLiteStoreType
+//            guard store.type == storage.dynamicType.storeType
 //                && store.configurationName == (configuration ?? Into.defaultConfigurationName) else {
 //                    
 //                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
@@ -152,16 +148,114 @@ public final class DataStack {
         
         do {
             
-            let persistentStore = try store.addToPersistentStoreCoordinatorSynchronously(self.coordinator)
+            let persistentStore = try self.coordinator.addPersistentStoreSynchronously(
+                storage.dynamicType.storeType,
+                configuration: storage.configuration,
+                URL: nil,
+                options: storage.storeOptions
+            )
             self.updateMetadataForPersistentStore(persistentStore)
-            store.internalStore = persistentStore
-            return store
+            storage.internalStore = persistentStore
+            return storage
         }
         catch {
             
             CoreStore.handleError(
                 error as NSError,
-                "Failed to add \(typeName(T)) to the stack."
+                "Failed to add \(typeName(storage)) to the stack."
+            )
+            throw error
+        }
+    }
+    
+    /**
+     Creates a `LocalStorageface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
+     
+     - parameter storeType: the `LocalStorageface` type
+     - returns: the local storage added to the stack
+     */
+    public func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(storageType: T.Type) throws -> T {
+        
+        return try self.addStorageAndWait(storageType.init())
+    }
+    
+    /**
+     Adds a `LocalStorage` to the stack and blocks until completion.
+     
+     - parameter storage: the local storage
+     - returns: the local storage added to the stack
+     */
+    public func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {
+        
+        CoreStore.assert(
+            storage.internalStore == nil,
+            "The specified \"\(typeName(storage))\" was already added to the data stack: \(storage)"
+        )
+        
+        let fileURL = storage.fileURL
+        CoreStore.assert(
+            fileURL.fileURL,
+            "The specified store URL for the \"\(typeName(storage))\" is invalid: \"\(fileURL)\""
+        )
+        
+        if let persistentStore = coordinator.persistentStoreForURL(fileURL) {
+
+            guard persistentStore.type == storage.dynamicType.storeType
+                && persistentStore.configurationName == (storage.configuration ?? Into.defaultConfigurationName) else {
+
+                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
+                    CoreStore.handleError(
+                        error,
+                        "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                    )
+                    throw error
+            }
+            
+            storage.internalStore = persistentStore
+            return storage
+        }
+        
+        do {
+            
+            let coordinator = self.coordinator
+            let persistentStore = try coordinator.performBlockAndWait { () throws -> NSPersistentStore in
+                
+                let fileManager = NSFileManager.defaultManager()
+                do {
+                    
+                    try fileManager.createDirectoryAtURL(
+                        fileURL.URLByDeletingLastPathComponent!,
+                        withIntermediateDirectories: true,
+                        attributes: nil
+                    )
+                    return try coordinator.addPersistentStoreWithType(
+                        storage.dynamicType.storeType,
+                        configuration: storage.configuration,
+                        URL: fileURL,
+                        options: storage.storeOptions
+                    )
+                }
+                catch let error as NSError where storage.resetStoreOnModelMismatch && error.isCoreDataMigrationError {
+                    
+                    try storage.eraseStorageAndWait()
+                    
+                    return try coordinator.addPersistentStoreWithType(
+                        storage.dynamicType.storeType,
+                        configuration: storage.configuration,
+                        URL: fileURL,
+                        options: storage.storeOptions
+                    )
+                }
+            }
+            self.updateMetadataForPersistentStore(persistentStore)
+            storage.internalStore = persistentStore
+            return storage
+        }
+        catch {
+            
+            CoreStore.handleError(
+                error as NSError,
+                "Failed to add \(typeName(storage)) to the stack."
             )
             throw error
         }
@@ -188,11 +282,6 @@ public final class DataStack {
         migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
         return migrationQueue
     }()
-    
-    internal func optionsForSQLiteStore() -> [String: AnyObject] {
-        
-        return [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
-    }
     
     internal func entityNameForEntityClass(entityClass: AnyClass) -> String? {
         
