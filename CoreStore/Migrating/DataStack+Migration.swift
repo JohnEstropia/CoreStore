@@ -282,9 +282,12 @@ public extension DataStack {
                 options: storage.storeOptions
             )
         }
+        catch let error as NSError where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
+            
+            return []
+        }
         catch {
             
-            // TODO: throws when file not exists yet
             CoreStore.handleError(
                 error as NSError,
                 "Failed to load \(typeName(storage)) metadata from URL \"\(fileURL)\"."
