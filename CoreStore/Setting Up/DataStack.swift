@@ -154,8 +154,7 @@ public final class DataStack {
                 URL: nil,
                 options: storage.storeOptions
             )
-            self.updateMetadataForPersistentStore(persistentStore)
-            storage.internalStore = persistentStore
+            self.updateMetadataForStorage(storage, persistentStore: persistentStore)
             return storage
         }
         catch {
@@ -237,7 +236,12 @@ public final class DataStack {
                 }
                 catch let error as NSError where storage.resetStoreOnModelMismatch && error.isCoreDataMigrationError {
                     
-                    try storage.eraseStorageAndWait()
+                    let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
+                        storage.dynamicType.storeType,
+                        URL: fileURL,
+                        options: storage.storeOptions
+                    )
+                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
                     
                     return try coordinator.addPersistentStoreWithType(
                         storage.dynamicType.storeType,
@@ -247,8 +251,7 @@ public final class DataStack {
                     )
                 }
             }
-            self.updateMetadataForPersistentStore(persistentStore)
-            storage.internalStore = persistentStore
+            self.updateMetadataForStorage(storage, persistentStore: persistentStore)
             return storage
         }
         catch {
@@ -335,7 +338,9 @@ public final class DataStack {
         return returnValue
     }
     
-    internal func updateMetadataForPersistentStore(persistentStore: NSPersistentStore) {
+    internal func updateMetadataForStorage(storage: StorageInterface, persistentStore: NSPersistentStore) {
+        
+        storage.internalStore = persistentStore
         
         self.storeMetadataUpdateQueue.barrierAsync {
             

@@ -73,8 +73,7 @@ public extension DataStack {
                     URL: nil,
                     options: storage.storeOptions
                 )
-                self.updateMetadataForPersistentStore(persistentStore)
-                storage.internalStore = persistentStore
+                self.updateMetadataForStorage(storage, persistentStore: persistentStore)
                 
                 GCDQueue.Main.async {
                     
@@ -147,7 +146,8 @@ public extension DataStack {
         let fileManager = NSFileManager.defaultManager()
         
         do {
-            _ = try? fileManager.createDirectoryAtURL(
+           
+            try fileManager.createDirectoryAtURL(
                 fileURL.URLByDeletingLastPathComponent!,
                 withIntermediateDirectories: true,
                 attributes: nil
@@ -168,9 +168,9 @@ public extension DataStack {
                         
                         if storage.resetStoreOnModelMismatch && error.isCoreDataMigrationError {
                             
-                            fileManager.removeSQLiteStoreAtURL(fileURL)
                             do {
                                 
+                                try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
                                 try self.addStorageAndWait(storage)
                                 
                                 GCDQueue.Main.async {
@@ -281,10 +281,6 @@ public extension DataStack {
                 URL: fileURL,
                 options: storage.storeOptions
             )
-        }
-        catch let error as NSError where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
-            
-            return []
         }
         catch {
             
@@ -507,8 +503,6 @@ public extension DataStack {
             fileURL.lastPathComponent!,
             isDirectory: false
         )
-        
-        try storage.eraseStorageAndWait()
         
         let migrationManager = MigrationManager(
             sourceModel: sourceModel,

@@ -33,7 +33,7 @@ internal extension NSPersistentStoreCoordinator {
     
     // MARK: Internal
     
-    internal func performBlockAndWait<T>(block: () throws -> T) throws -> T {
+    @nonobjc internal func performBlockAndWait<T>(block: () throws -> T) throws -> T {
         
         var result: T?
         var closureError: ErrorType?
@@ -58,7 +58,7 @@ internal extension NSPersistentStoreCoordinator {
         throw closureError!
     }
     
-    internal func addPersistentStoreSynchronously(storeType: String, configuration: String?, URL storeURL: NSURL?, options: [NSObject : AnyObject]?) throws -> NSPersistentStore {
+    @nonobjc internal func addPersistentStoreSynchronously(storeType: String, configuration: String?, URL storeURL: NSURL?, options: [NSObject : AnyObject]?) throws -> NSPersistentStore {
         
         var store: NSPersistentStore?
         var storeError: NSError?

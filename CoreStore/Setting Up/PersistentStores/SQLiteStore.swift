@@ -95,14 +95,14 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
     
     public var internalStore: NSPersistentStore?
     
-    public func eraseStorageAndWait() throws {
+    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws {
         
         // TODO: check if attached to persistent store 
         
         let fileURL = self.fileURL
         try autoreleasepool {
             
-            let journalUpdatingCoordinator = NSPersistentStoreCoordinator()
+            let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
             let store = try journalUpdatingCoordinator.addPersistentStoreWithType(
                 self.dynamicType.storeType,
                 configuration: self.configuration,

@@ -256,8 +256,8 @@ class MigrationsDemoViewController: UIViewController {
         else {
            
             self.segmentedControl?.selectedSegmentIndex = UISegmentedControlNoSegment
-            self._dataStack = nil
             self._listMonitor = nil
+            self._dataStack = nil
         }
         
         self.updateDisplay(reloadData: true, scrollToSelection: scrollToSelection, animated: false)

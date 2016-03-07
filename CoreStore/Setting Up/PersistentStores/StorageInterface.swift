@@ -55,5 +55,5 @@ public protocol LocalStorage: StorageInterface {
     var mappingModelBundles: [NSBundle] { get }
     var resetStoreOnModelMismatch: Bool { get }
     
-    func eraseStorageAndWait() throws
+    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws
 }
