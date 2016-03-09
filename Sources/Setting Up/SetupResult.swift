@@ -29,9 +29,48 @@ import CoreData
 
 // MARK: - SetupResult
 
+
+/**
+ The `SetupResult` indicates the result of an asynchronous initialization of a persistent store.
+ The `SetupResult` can be treated as a boolean:
+ ```
+ try! CoreStore.addStorage(
+     SQLiteStore(),
+     completion: { (result: SetupResult) -> Void in
+         if result {
+             // succeeded
+         }
+         else {
+             // failed
+         }
+     }n
+ )
+ ```
+ or as an `enum`, where the resulting associated object can also be inspected:
+ ```
+ try! CoreStore.addStorage(
+     SQLiteStore(),
+     completion: { (result: SetupResult) -> Void in
+         switch result {
+         case .Success(let storage):
+             // storage is the related StorageInterface instance
+         case .Failure(let error):
+             // error is the NSError instance for the failure
+         }
+     }
+ )
+ ```
+ */
 public enum SetupResult<T: StorageInterface>: BooleanType {
     
+    /**
+     `SetupResult.Success` indicates that the storage setup succeeded. The associated object for this `enum` value is the related `StorageInterface` instance.
+     */
     case Success(T)
+    
+    /**
+     `SetupResult.Failure` indicates that the storage setup failed. The associated object for this value is the related `NSError` instance.
+     */
     case Failure(NSError)
     
     
@@ -71,44 +110,36 @@ public enum SetupResult<T: StorageInterface>: BooleanType {
 }
 
 
-// MARK: - PersistentStoreResult
+// MARK: - Deprecated
+
 
 /**
- The `PersistentStoreResult` indicates the result of an asynchronous initialization of a persistent store.
- The `PersistentStoreResult` can be treated as a boolean:
- ```
- try! CoreStore.addSQLiteStore(completion: { (result: PersistentStoreResult) -> Void in
-     if result {
-        // succeeded
-     }
-     else {
-        // failed
-     }
- })
- ```
- or as an `enum`, where the resulting associated object can also be inspected:
- ```
- try! CoreStore.addSQLiteStore(completion: { (result: PersistentStoreResult) -> Void in
-     switch result {
-     case .Success(let persistentStore):
-        // persistentStore is the related NSPersistentStore instance
-     case .Failure(let error):
-        // error is the NSError instance for the failure
-     }
- })
- ```
+ Deprecated. Replaced by `SetupResult<T>` by using the new `addStorage(_:completion:)` method variants.
  */
-public enum PersistentStoreResult {
+@available(*, deprecated=2.0.0, message="Replaced by SetupResult by using the new addStorage(_:completion:) method variants.")
+public enum PersistentStoreResult: BooleanType {
     
     /**
-     `PersistentStoreResult.Success` indicates that the persistent store process succeeded. The associated object for this `enum` value is the related `NSPersistentStore` instance.
+     Deprecated. Replaced by `SetupResult.Success` by using the new `addStorage(_:completion:)` method variants.
      */
     case Success(NSPersistentStore)
     
     /**
-     `PersistentStoreResult.Failure` indicates that the persistent store process failed. The associated object for this value is the related `NSError` instance.
+     Deprecated. Replaced by `SetupResult.Failure` by using the new `addStorage(_:completion:)` method variants.
      */
     case Failure(NSError)
+    
+    
+    // MARK: BooleanType
+    
+    public var boolValue: Bool {
+        
+        switch self {
+            
+        case .Success: return true
+        case .Failure: return false
+        }
+    }
     
     
     // MARK: Internal
@@ -131,20 +162,5 @@ public enum PersistentStoreResult {
     internal init(_ errorCode: CoreStoreErrorCode, userInfo: [NSObject: AnyObject]?) {
         
         self.init(NSError(coreStoreErrorCode: errorCode, userInfo: userInfo))
-    }
-}
-
-
-// MARK: - PersistentStoreResult: BooleanType
-
-extension PersistentStoreResult: BooleanType {
-    
-    public var boolValue: Bool {
-        
-        switch self {
-            
-        case .Success: return true
-        case .Failure: return false
-        }
     }
 }

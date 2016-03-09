@@ -600,9 +600,9 @@
 		B5E84EDA1AFF84500064E85B /* Setting Up */ = {
 			isa = PBXGroup;
 			children = (
+				B504D0D51B02362500B2BBB1 /* CoreStore+Setup.swift */,
 				B5E84EDB1AFF84500064E85B /* DataStack.swift */,
 				B5E84EDE1AFF84500064E85B /* SetupResult.swift */,
-				B504D0D51B02362500B2BBB1 /* CoreStore+Setup.swift */,
 				B5FE4DA01C84818B00FA6A91 /* StorageInterfaces */,
 			);
 			path = "Setting Up";

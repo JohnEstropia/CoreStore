@@ -391,12 +391,7 @@ class CoreStoreTests: XCTestCase {
         
         do {
             
-            let defaultDirectory = NSFileManager.defaultManager().URLsForDirectory(
-                .ApplicationSupportDirectory,
-                inDomains: .UserDomainMask
-                ).first!
-            let fileManager = NSFileManager.defaultManager()
-            try fileManager.removeItemAtURL(defaultDirectory)
+            try NSFileManager.defaultManager().removeItemAtURL(SQLiteStore.defaultRootDirectory)
         }
         catch _ { }
     }

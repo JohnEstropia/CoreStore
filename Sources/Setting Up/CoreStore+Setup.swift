@@ -59,7 +59,23 @@ public extension CoreStore {
     }
     
     /**
+     Creates an `SQLiteStore` with default parameters and adds it to the `defaultStack`. This method blocks until completion.
+     ```
+     try CoreStore.addStorageAndWait()
+     ```
+     
+     - returns: the local SQLite storage added to the `defaultStack`
+     */
+    public static func addStorageAndWait() throws -> SQLiteStore {
+        
+        return try self.defaultStack.addStorageAndWait(SQLiteStore)
+    }
+    
+    /**
      Creates a `StorageInterface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
+     ```
+     try CoreStore.addStorageAndWait(InMemoryStore)
+     ```
      
      - parameter storeType: the `StorageInterface` type
      - returns: the `StorageInterface` added to the `defaultStack`
@@ -71,6 +87,9 @@ public extension CoreStore {
     
     /**
      Adds a `StorageInterface` to the `defaultStack` and blocks until completion.
+     ```
+     try CoreStore.addStorageAndWait(InMemoryStore(configuration: "Config1"))
+     ```
      
      - parameter storage: the `StorageInterface`
      - returns: the `StorageInterface` added to the `defaultStack`
@@ -82,9 +101,12 @@ public extension CoreStore {
     
     /**
      Creates a `LocalStorageface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
+     ```
+     try CoreStore.addStorageAndWait(SQLiteStore)
+     ```
      
      - parameter storeType: the `LocalStorageface` type
-     - returns: the local storage added to the stack
+     - returns: the local storage added to the `defaultStack`
      */
     public static func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(storageType: T.Type) throws -> T {
         
@@ -92,10 +114,13 @@ public extension CoreStore {
     }
     
     /**
-     Adds a `LocalStorage` to the stack and blocks until completion.
+     Adds a `LocalStorage` to the `defaultStack` and blocks until completion.
+     ```
+     try CoreStore.addStorageAndWait(SQLiteStore(configuration: "Config1"))
+     ```
      
      - parameter storage: the local storage
-     - returns: the local storage added to the stack
+     - returns: the local storage added to the `defaultStack`
      */
     public static func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {
         

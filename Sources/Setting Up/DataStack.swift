@@ -112,9 +112,22 @@ public final class DataStack {
     }
     
     /**
+     Creates an `SQLiteStore` with default parameters and adds it to the stack. This method blocks until completion.
+     ```
+     try dataStack.addStorageAndWait()
+     ```
+     
+     - returns: the local SQLite storage added to the stack
+     */
+    public func addStorageAndWait() throws -> SQLiteStore {
+        
+        return try self.addStorageAndWait(SQLiteStore)
+    }
+    
+    /**
      Creates a `StorageInterface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
      ```
-     try CoreStore.addStorageAndWait(InMemoryStore)
+     try dataStack.addStorageAndWait(InMemoryStore)
      ```
      
      - parameter storeType: the `StorageInterface` type
@@ -128,7 +141,7 @@ public final class DataStack {
     /**
      Adds a `StorageInterface` to the stack and blocks until completion.
      ```
-     try CoreStore.addStorageAndWait(InMemoryStore(configuration: "Config1"))
+     try dataStack.addStorageAndWait(InMemoryStore(configuration: "Config1"))
      ```
      
      - parameter storage: the `StorageInterface`
@@ -165,7 +178,7 @@ public final class DataStack {
     /**
      Creates a `LocalStorageface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
      ```
-     try CoreStore.addStorageAndWait(SQLiteStore)
+     try dataStack.addStorageAndWait(SQLiteStore)
      ```
      
      - parameter storeType: the `LocalStorageface` type
@@ -179,7 +192,7 @@ public final class DataStack {
     /**
      Adds a `LocalStorage` to the stack and blocks until completion.
      ```
-     try CoreStore.addStorageAndWait(SQLiteStore(configuration: "Config1"))
+     try dataStack.addStorageAndWait(SQLiteStore(configuration: "Config1"))
      ```
      
      - parameter storage: the local storage
@@ -206,7 +219,7 @@ public final class DataStack {
                     let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
                     CoreStore.handleError(
                         error,
-                        "Failed to add \"\(typeName(storage))\" at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                        "Failed to add \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
                     )
                     throw error
             }
