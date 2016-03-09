@@ -38,23 +38,33 @@ import CoreData
 public final class DataStack {
     
     /**
-     Initializes a `DataStack` from an `NSManagedObjectModel`.
+     Initializes a `DataStack` from the model with the specified `modelName` in the specified `bundle`.
      
      - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
      - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    public required init(modelName: String = DataStack.applicationName, bundle: NSBundle = NSBundle.mainBundle(), migrationChain: MigrationChain = nil) {
-        
-        CoreStore.assert(
-            migrationChain.valid,
-            "Invalid migration chain passed to the \(typeName(DataStack)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
-        )
+    public convenience init(modelName: String = DataStack.applicationName, bundle: NSBundle = NSBundle.mainBundle(), migrationChain: MigrationChain = nil) {
         
         let model = NSManagedObjectModel.fromBundle(
             bundle,
             modelName: modelName,
             modelVersionHints: migrationChain.leafVersions
+        )
+        self.init(model: model, migrationChain: migrationChain)
+    }
+    
+    /**
+     Initializes a `DataStack` from an `NSManagedObjectModel`.
+     
+     - parameter model: the `NSManagedObjectModel` for the stack
+     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     */
+    public required init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {
+        
+        CoreStore.assert(
+            migrationChain.valid,
+            "Invalid migration chain passed to the \(typeName(DataStack)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
         )
         
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
@@ -103,6 +113,9 @@ public final class DataStack {
     
     /**
      Creates a `StorageInterface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
+     ```
+     try CoreStore.addStorageAndWait(InMemoryStore)
+     ```
      
      - parameter storeType: the `StorageInterface` type
      - returns: the `StorageInterface` added to the stack
@@ -114,6 +127,9 @@ public final class DataStack {
     
     /**
      Adds a `StorageInterface` to the stack and blocks until completion.
+     ```
+     try CoreStore.addStorageAndWait(InMemoryStore(configuration: "Config1"))
+     ```
      
      - parameter storage: the `StorageInterface`
      - returns: the `StorageInterface` added to the stack
@@ -124,27 +140,6 @@ public final class DataStack {
             storage.internalStore == nil,
             "The specified \"\(typeName(storage))\" was already added to the data stack: \(storage)"
         )
-        
-// TODO: check
-//        if let store = coordinator.persistentStoreForURL(fileURL) {
-//            
-//            guard store.type == storage.dynamicType.storeType
-//                && store.configurationName == (configuration ?? Into.defaultConfigurationName) else {
-//                    
-//                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
-//                    CoreStore.handleError(
-//                        error,
-//                        "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
-//                    )
-//                    throw error
-//            }
-//            
-//            GCDQueue.Main.async {
-//                
-//                completion(PersistentStoreResult(store))
-//            }
-//            return nil
-//        }
         
         do {
             
@@ -169,6 +164,9 @@ public final class DataStack {
     
     /**
      Creates a `LocalStorageface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
+     ```
+     try CoreStore.addStorageAndWait(SQLiteStore)
+     ```
      
      - parameter storeType: the `LocalStorageface` type
      - returns: the local storage added to the stack
@@ -180,6 +178,9 @@ public final class DataStack {
     
     /**
      Adds a `LocalStorage` to the stack and blocks until completion.
+     ```
+     try CoreStore.addStorageAndWait(SQLiteStore(configuration: "Config1"))
+     ```
      
      - parameter storage: the local storage
      - returns: the local storage added to the stack
@@ -205,7 +206,7 @@ public final class DataStack {
                     let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
                     CoreStore.handleError(
                         error,
-                        "Failed to add SQLite \(typeName(NSPersistentStore)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                        "Failed to add \"\(typeName(storage))\" at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
                     )
                     throw error
             }
@@ -217,7 +218,19 @@ public final class DataStack {
         do {
             
             let coordinator = self.coordinator
-            let persistentStore = try coordinator.performBlockAndWait { () throws -> NSPersistentStore in
+            return try coordinator.performBlockAndWait {
+                
+                let addStorage = { () throws -> T in
+                    
+                    let persistentStore = try coordinator.addPersistentStoreWithType(
+                        storage.dynamicType.storeType,
+                        configuration: storage.configuration,
+                        URL: fileURL,
+                        options: storage.storeOptions
+                    )
+                    self.updateMetadataForStorage(storage, persistentStore: persistentStore)
+                    return storage
+                }
                 
                 let fileManager = NSFileManager.defaultManager()
                 do {
@@ -227,12 +240,7 @@ public final class DataStack {
                         withIntermediateDirectories: true,
                         attributes: nil
                     )
-                    return try coordinator.addPersistentStoreWithType(
-                        storage.dynamicType.storeType,
-                        configuration: storage.configuration,
-                        URL: fileURL,
-                        options: storage.storeOptions
-                    )
+                    return try addStorage()
                 }
                 catch let error as NSError where storage.resetStoreOnModelMismatch && error.isCoreDataMigrationError {
                     
@@ -243,16 +251,9 @@ public final class DataStack {
                     )
                     try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
                     
-                    return try coordinator.addPersistentStoreWithType(
-                        storage.dynamicType.storeType,
-                        configuration: storage.configuration,
-                        URL: fileURL,
-                        options: storage.storeOptions
-                    )
+                    return try addStorage()
                 }
             }
-            self.updateMetadataForStorage(storage, persistentStore: persistentStore)
-            return storage
         }
         catch {
             
