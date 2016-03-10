@@ -174,23 +174,33 @@ class MigrationsDemoViewController: UIViewController {
                 
                 self.setDataStack(dataStack, model: model, scrollToSelection: true)
                 
-                let count = dataStack.queryValue(From(model.entityType), Select<Int>(.Count("dna")))
+                let count = dataStack.queryValue(
+                    From(model.entityType),
+                    Select<Int>(.Count("dna"))
+                )
                 if count > 0 {
                     
                     self.setEnabled(true)
                 }
                 else {
                     
+                    for i: Int64 in 0 ..< 20 {
+                        
+                        dataStack.beginAsynchronous { (transaction) -> Void in
+                            
+                            for j: Int64 in 0 ..< 500 {
+                                
+                                let organism = transaction.create(Into(model.entityType)) as! OrganismProtocol
+                                organism.dna = (i * 500) + j + 1
+                                organism.mutate()
+                            }
+                            
+                            transaction.commit()
+                        }
+                    }
                     dataStack.beginAsynchronous { [weak self] (transaction) -> Void in
                         
-                        for i: Int64 in 1 ..< 10000 {
-                            
-                            let organism = transaction.create(Into(model.entityType)) as! OrganismProtocol
-                            organism.dna = i
-                            organism.mutate()
-                        }
-                        
-                        transaction.commit { result -> Void in
+                        transaction.commit { _ in
                             
                             self?.setEnabled(true)
                         }
