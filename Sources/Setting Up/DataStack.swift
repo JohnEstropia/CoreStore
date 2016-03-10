@@ -149,21 +149,18 @@ public final class DataStack {
      */
     public func addStorageAndWait<T: StorageInterface>(storage: T) throws -> T {
         
-        CoreStore.assert(
-            storage.internalStore == nil,
-            "The specified \"\(typeName(storage))\" was already added to the data stack: \(storage)"
-        )
-        
         do {
             
-            let persistentStore = try self.coordinator.addPersistentStoreSynchronously(
-                storage.dynamicType.storeType,
-                configuration: storage.configuration,
-                URL: nil,
-                options: storage.storeOptions
-            )
-            self.updateMetadataForStorage(storage, persistentStore: persistentStore)
-            return storage
+            return try self.coordinator.performBlockAndWait { () -> T in
+                
+                if let _ = self.persistentStoreForStorage(storage) {
+                    
+                    return storage
+                }
+                
+                try self.createPersistentStoreFromStorage(storage, finalURL: nil)
+                return storage
+            }
         }
         catch {
             
@@ -196,64 +193,50 @@ public final class DataStack {
      ```
      
      - parameter storage: the local storage
-     - returns: the local storage added to the stack
+     - returns: the local storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      */
     public func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {
         
-        CoreStore.assert(
-            storage.internalStore == nil,
-            "The specified \"\(typeName(storage))\" was already added to the data stack: \(storage)"
-        )
-        
-        let fileURL = storage.fileURL
-        CoreStore.assert(
-            fileURL.fileURL,
-            "The specified store URL for the \"\(typeName(storage))\" is invalid: \"\(fileURL)\""
-        )
-        
-        if let persistentStore = coordinator.persistentStoreForURL(fileURL) {
-
-            guard persistentStore.type == storage.dynamicType.storeType
-                && persistentStore.configurationName == (storage.configuration ?? Into.defaultConfigurationName) else {
-
-                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
-                    CoreStore.handleError(
-                        error,
-                        "Failed to add \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
-                    )
-                    throw error
+        return try self.coordinator.performBlockAndWait {
+            
+            let fileURL = storage.fileURL
+            CoreStore.assert(
+                fileURL.fileURL,
+                "The specified store URL for the \"\(typeName(storage))\" is invalid: \"\(fileURL)\""
+            )
+            
+            if let _ = self.persistentStoreForStorage(storage) {
+                
+                return storage
             }
             
-            storage.internalStore = persistentStore
-            return storage
-        }
-        
-        do {
-            
-            let coordinator = self.coordinator
-            return try coordinator.performBlockAndWait {
+            if let persistentStore = self.coordinator.persistentStoreForURL(fileURL) {
                 
-                let addStorage = { () throws -> T in
+                if let existingStorage = persistentStore.storageInterface as? T
+                    where storage.matchesPersistentStore(persistentStore) {
                     
-                    let persistentStore = try coordinator.addPersistentStoreWithType(
-                        storage.dynamicType.storeType,
-                        configuration: storage.configuration,
-                        URL: fileURL,
-                        options: storage.storeOptions
-                    )
-                    self.updateMetadataForStorage(storage, persistentStore: persistentStore)
-                    return storage
+                    return existingStorage
                 }
                 
-                let fileManager = NSFileManager.defaultManager()
+                let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
+                CoreStore.handleError(
+                    error,
+                    "Failed to add \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                )
+                throw error
+            }
+            
+            do {
+                
                 do {
                     
-                    try fileManager.createDirectoryAtURL(
+                    try NSFileManager.defaultManager().createDirectoryAtURL(
                         fileURL.URLByDeletingLastPathComponent!,
                         withIntermediateDirectories: true,
                         attributes: nil
                     )
-                    return try addStorage()
+                    try self.createPersistentStoreFromStorage(storage, finalURL: fileURL)
+                    return storage
                 }
                 catch let error as NSError where storage.resetStoreOnModelMismatch && error.isCoreDataMigrationError {
                     
@@ -264,17 +247,18 @@ public final class DataStack {
                     )
                     try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
                     
-                    return try addStorage()
+                    try self.createPersistentStoreFromStorage(storage, finalURL: fileURL)
+                    return storage
                 }
             }
-        }
-        catch {
-            
-            CoreStore.handleError(
-                error as NSError,
-                "Failed to add \(typeName(storage)) to the stack."
-            )
-            throw error
+            catch {
+                
+                CoreStore.handleError(
+                    error as NSError,
+                    "Failed to add \(typeName(storage)) to the stack."
+                )
+                throw error
+            }
         }
     }
     
@@ -299,6 +283,13 @@ public final class DataStack {
         migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
         return migrationQueue
     }()
+    
+    internal func persistentStoreForStorage(storage: StorageInterface) -> NSPersistentStore? {
+        
+        return self.coordinator.persistentStores
+            .filter { $0.storageInterface === storage }
+            .first
+    }
     
     internal func entityNameForEntityClass(entityClass: AnyClass) -> String? {
         
@@ -352,9 +343,15 @@ public final class DataStack {
         return returnValue
     }
     
-    internal func updateMetadataForStorage(storage: StorageInterface, persistentStore: NSPersistentStore) {
+    internal func createPersistentStoreFromStorage(storage: StorageInterface, finalURL: NSURL?) throws -> NSPersistentStore {
         
-        storage.internalStore = persistentStore
+        let persistentStore = try self.coordinator.addPersistentStoreWithType(
+            storage.dynamicType.storeType,
+            configuration: storage.configuration,
+            URL: finalURL,
+            options: storage.storeOptions
+        )
+        persistentStore.storageInterface = storage
         
         self.storeMetadataUpdateQueue.barrierAsync {
             
@@ -375,6 +372,7 @@ public final class DataStack {
                 self.entityConfigurationsMapping[managedObjectClassName]?.insert(configurationName)
             }
         }
+        return persistentStore
     }
     
     

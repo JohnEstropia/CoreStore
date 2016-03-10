@@ -41,39 +41,20 @@ public extension DataStack {
     
     public func addStorage<T: StorageInterface>(storage: T, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
         
-        // TODO: check
-        let coordinator = self.coordinator;
-//        if let persistentStore = coordinator.persistentStoreForURL(fileURL) {
-//            
-//            guard persistentStore.type == storage.dynamicType.storeType
-//                && persistentStore.configurationName == (storage.configuration ?? Into.defaultConfigurationName) else {
-//                    
-//                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
-//                    CoreStore.handleError(
-//                        error,
-//                        "Failed to add SQLite \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
-//                    )
-//                    throw error
-//            }
-//            
-//            GCDQueue.Main.async {
-//                
-//                completion(SetupResult(storage))
-//            }
-//            return nil
-//        }
-        
-        coordinator.performBlock {
+        self.coordinator.performBlock {
+            
+            if let _ = self.persistentStoreForStorage(storage) {
+                
+                GCDQueue.Main.async {
+                    
+                    completion(SetupResult(storage))
+                }
+                return
+            }
             
             do {
                 
-                let persistentStore = try coordinator.addPersistentStoreWithType(
-                    storage.dynamicType.storeType,
-                    configuration: storage.configuration,
-                    URL: nil,
-                    options: storage.storeOptions
-                )
-                self.updateMetadataForStorage(storage, persistentStore: persistentStore)
+                try self.createPersistentStoreFromStorage(storage, finalURL: nil)
                 
                 GCDQueue.Main.async {
                     
@@ -121,105 +102,113 @@ public extension DataStack {
             "The specified URL for the \(typeName(storage)) is invalid: \"\(fileURL)\""
         )
         
-        // TODO: check
-        let coordinator = self.coordinator;
-        if let persistentStore = coordinator.persistentStoreForURL(fileURL) {
+        return try self.coordinator.performBlockAndWait {
             
-            guard persistentStore.type == storage.dynamicType.storeType
-                && persistentStore.configurationName == (storage.configuration ?? Into.defaultConfigurationName) else {
-                    
-                    let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
-                    CoreStore.handleError(
-                        error,
-                        "Failed to add \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
-                    )
-                    throw error
-            }
-            
-            GCDQueue.Main.async {
-                
-                completion(SetupResult(storage))
-            }
-            return nil
-        }
-        
-        let fileManager = NSFileManager.defaultManager()
-        
-        do {
-           
-            try fileManager.createDirectoryAtURL(
-                fileURL.URLByDeletingLastPathComponent!,
-                withIntermediateDirectories: true,
-                attributes: nil
-            )
-            
-            let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
-                storage.dynamicType.storeType,
-                URL: fileURL,
-                options: storage.storeOptions
-            )
-            
-            return self.upgradeStorageIfNeeded(
-                storage,
-                metadata: metadata,
-                completion: { (result) -> Void in
-                    
-                    if case .Failure(let error) = result {
-                        
-                        if storage.resetStoreOnModelMismatch && error.isCoreDataMigrationError {
-                            
-                            do {
-                                
-                                try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
-                                try self.addStorageAndWait(storage)
-                                
-                                GCDQueue.Main.async {
-                                    
-                                    completion(SetupResult(storage))
-                                }
-                            }
-                            catch {
-                                
-                                completion(SetupResult(error as NSError))
-                            }
-                            return
-                        }
-                        
-                        completion(SetupResult(error))
-                        return
-                    }
-                    
-                    do {
-                        
-                        try self.addStorageAndWait(storage)
-                        
-                        completion(SetupResult(storage))
-                    }
-                    catch {
-                        
-                        completion(SetupResult(error as NSError))
-                    }
-                }
-            )
-        }
-        catch let error as NSError
-            where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
-                
-                try self.addStorageAndWait(storage)
+            if let _ = self.persistentStoreForStorage(storage) {
                 
                 GCDQueue.Main.async {
                     
                     completion(SetupResult(storage))
                 }
                 return nil
-        }
-        catch {
+            }
             
-            CoreStore.handleError(
-                error as NSError,
-                "Failed to load SQLite \(typeName(NSPersistentStore)) metadata."
-            )
-            throw error
+            if let persistentStore = self.coordinator.persistentStoreForURL(fileURL) {
+                
+                if let existingStorage = persistentStore.storageInterface as? T
+                    where storage.matchesPersistentStore(persistentStore) {
+                    
+                    GCDQueue.Main.async {
+                        
+                        completion(SetupResult(existingStorage))
+                    }
+                    return nil
+                }
+                
+                let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
+                CoreStore.handleError(
+                    error,
+                    "Failed to add \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                )
+                throw error
+            }
+            
+            do {
+                
+                try NSFileManager.defaultManager().createDirectoryAtURL(
+                    fileURL.URLByDeletingLastPathComponent!,
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
+                
+                let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
+                    storage.dynamicType.storeType,
+                    URL: fileURL,
+                    options: storage.storeOptions
+                )
+                
+                return self.upgradeStorageIfNeeded(
+                    storage,
+                    metadata: metadata,
+                    completion: { (result) -> Void in
+                        
+                        if case .Failure(let error) = result {
+                            
+                            if storage.resetStoreOnModelMismatch && error.isCoreDataMigrationError {
+                                
+                                do {
+                                    
+                                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                                    try self.addStorageAndWait(storage)
+                                    
+                                    GCDQueue.Main.async {
+                                        
+                                        completion(SetupResult(storage))
+                                    }
+                                }
+                                catch {
+                                    
+                                    completion(SetupResult(error as NSError))
+                                }
+                                return
+                            }
+                            
+                            completion(SetupResult(error))
+                            return
+                        }
+                        
+                        do {
+                            
+                            try self.addStorageAndWait(storage)
+                            
+                            completion(SetupResult(storage))
+                        }
+                        catch {
+                            
+                            completion(SetupResult(error as NSError))
+                        }
+                    }
+                )
+            }
+            catch let error as NSError
+                where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
+                    
+                    try self.addStorageAndWait(storage)
+                    
+                    GCDQueue.Main.async {
+                        
+                        completion(SetupResult(storage))
+                    }
+                    return nil
+            }
+            catch {
+                
+                CoreStore.handleError(
+                    error as NSError,
+                    "Failed to load SQLite \(typeName(NSPersistentStore)) metadata."
+                )
+                throw error
+            }
         }
     }
     
@@ -234,30 +223,36 @@ public extension DataStack {
      */
     public func upgradeStorageIfNeeded<T: LocalStorage>(storage: T, completion: (MigrationResult) -> Void) throws -> NSProgress? {
         
-        let fileURL = storage.fileURL
-        let metadata: [String: AnyObject]
-        do {
+        return try self.coordinator.performBlockAndWait {
             
-            metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
-                storage.dynamicType.storeType,
-                URL: fileURL,
-                options: storage.storeOptions
-            )
+            let fileURL = storage.fileURL
+            do {
+                
+                CoreStore.assert(
+                    self.persistentStoreForStorage(storage) == nil,
+                    "Attempted to migrate an already added \(typeName(storage)) at URL \"\(fileURL)\""
+                )
+                
+                let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
+                    storage.dynamicType.storeType,
+                    URL: fileURL,
+                    options: storage.storeOptions
+                )
+                return self.upgradeStorageIfNeeded(
+                    storage,
+                    metadata: metadata,
+                    completion: completion
+                )
+            }
+            catch {
+                
+                CoreStore.handleError(
+                    error as NSError,
+                    "Failed to load \(typeName(storage)) metadata from URL \"\(fileURL)\"."
+                )
+                throw error
+            }
         }
-        catch {
-            
-            CoreStore.handleError(
-                error as NSError,
-                "Failed to load \(typeName(storage)) metadata from URL \"\(fileURL)\"."
-            )
-            throw error
-        }
-        
-        return self.upgradeStorageIfNeeded(
-            storage,
-            metadata: metadata,
-            completion: completion
-        )
     }
     
     
@@ -272,36 +267,48 @@ public extension DataStack {
     @warn_unused_result
     public func requiredMigrationsForStorage<T: LocalStorage>(storage: T) throws -> [MigrationType] {
         
-        let fileURL = storage.fileURL
-        let metadata: [String : AnyObject]
-        do {
+        return try self.coordinator.performBlockAndWait {
             
-            metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
-                storage.dynamicType.storeType,
-                URL: fileURL,
-                options: storage.storeOptions
-            )
-        }
-        catch {
+            let fileURL = storage.fileURL
             
-            CoreStore.handleError(
-                error as NSError,
-                "Failed to load \(typeName(storage)) metadata from URL \"\(fileURL)\"."
+            CoreStore.assert(
+                self.persistentStoreForStorage(storage) == nil,
+                "Attempted to query required migrations for an already added \(typeName(storage)) at URL \"\(fileURL)\""
             )
-            throw error
+            do {
+                
+                let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
+                    storage.dynamicType.storeType,
+                    URL: fileURL,
+                    options: storage.storeOptions
+                )
+                
+                guard let migrationSteps = self.computeMigrationFromStorageMetadata(metadata, configuration: storage.configuration, mappingModelBundles: storage.mappingModelBundles) else {
+                    
+                    let error = NSError(coreStoreErrorCode: .MappingModelNotFound)
+                    CoreStore.handleError(
+                        error,
+                        "Failed to find migration steps from the \(typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\"."
+                    )
+                    throw error
+                }
+                
+                return migrationSteps.map { $0.migrationType }
+            }
+            catch let error as NSError
+                where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
+                    
+                    return []
+            }
+            catch {
+                
+                CoreStore.handleError(
+                    error as NSError,
+                    "Failed to load \(typeName(storage)) metadata from URL \"\(fileURL)\"."
+                )
+                throw error
+            }
         }
-        
-        guard let migrationSteps = self.computeMigrationFromStorageMetadata(metadata, configuration: storage.configuration, mappingModelBundles: storage.mappingModelBundles) else {
-            
-            let error = NSError(coreStoreErrorCode: .MappingModelNotFound)
-            CoreStore.handleError(
-                error,
-                "Failed to find migration steps from the \(typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\"."
-            )
-            throw error
-        }
-        
-        return migrationSteps.map { $0.migrationType }
     }
     
     

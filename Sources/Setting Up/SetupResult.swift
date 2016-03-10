@@ -29,7 +29,6 @@ import CoreData
 
 // MARK: - SetupResult
 
-
 /**
  The `SetupResult` indicates the result of an asynchronous initialization of a persistent store.
  The `SetupResult` can be treated as a boolean:
@@ -43,7 +42,7 @@ import CoreData
          else {
              // failed
          }
-     }n
+     }
  )
  ```
  or as an `enum`, where the resulting associated object can also be inspected:
@@ -114,18 +113,18 @@ public enum SetupResult<T: StorageInterface>: BooleanType {
 
 
 /**
- Deprecated. Replaced by `SetupResult<T>` by using the new `addStorage(_:completion:)` method variants.
+ Deprecated. Replaced by `SetupResult<T>` when using the new `addStorage(_:completion:)` method variants.
  */
 @available(*, deprecated=2.0.0, message="Replaced by SetupResult by using the new addStorage(_:completion:) method variants.")
 public enum PersistentStoreResult: BooleanType {
     
     /**
-     Deprecated. Replaced by `SetupResult.Success` by using the new `addStorage(_:completion:)` method variants.
+     Deprecated. Replaced by `SetupResult.Success` when using the new `addStorage(_:completion:)` method variants.
      */
     case Success(NSPersistentStore)
     
     /**
-     Deprecated. Replaced by `SetupResult.Failure` by using the new `addStorage(_:completion:)` method variants.
+     Deprecated. Replaced by `SetupResult.Failure` when using the new `addStorage(_:completion:)` method variants.
      */
     case Failure(NSError)
     

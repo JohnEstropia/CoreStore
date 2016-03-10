@@ -1,5 +1,5 @@
 //
-//  StorageInterface.swift
+//  NSPersistentStore+Setup.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia
@@ -23,48 +23,56 @@
 //  SOFTWARE.
 //
 
+import Foundation
 import CoreData
 
 
-// MARK: - StorageInterface
+// MARK: - NSPersistentStore
 
-public protocol StorageInterface: class {
-
-    static var storeType: String { get }
+internal extension NSPersistentStore {
     
-    var configuration: String? { get }
-    var storeOptions: [String: AnyObject]? { get }
-}
-
-
-// MARK: - DefaultInitializableStore
-
-public protocol DefaultInitializableStore: StorageInterface {
+    // MARK: Internal
     
-    init()
-}
-
-
-// MARK: - LocalStorage
-
-public protocol LocalStorage: StorageInterface {
-    
-    var fileURL: NSURL { get }
-    var mappingModelBundles: [NSBundle] { get }
-    var resetStoreOnModelMismatch: Bool { get }
-    
-    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws
-}
-
-
-// MARK: Internal
-
-internal extension LocalStorage {
-    
-    internal func matchesPersistentStore(persistentStore: NSPersistentStore) -> Bool {
+    @nonobjc internal var storageInterface: StorageInterface? {
         
-        return persistentStore.type == self.dynamicType.storeType
-            && persistentStore.configurationName == (self.configuration ?? Into.defaultConfigurationName)
-            && persistentStore.URL == self.fileURL
+        get {
+            
+            let wrapper: StorageObject? = getAssociatedObjectForKey(
+                &PropertyKeys.storageInterface,
+                inObject: self
+            )
+            return wrapper?.storageInterface
+        }
+        set {
+            
+            setAssociatedRetainedObject(
+                StorageObject(newValue),
+                forKey: &PropertyKeys.storageInterface,
+                inObject: self
+            )
+        }
+    }
+    
+    
+    // MARK: Private
+    
+    private struct PropertyKeys {
+        
+        static var storageInterface: Void?
+    }
+}
+
+
+// MARK: - StorageObject
+
+private class StorageObject: NSObject {
+    
+    // MARK: Private
+    
+    private let storageInterface: StorageInterface?
+    
+    private init(_ storage: StorageInterface?) {
+        
+        self.storageInterface = storage
     }
 }

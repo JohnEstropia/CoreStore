@@ -120,7 +120,7 @@ public extension CoreStore {
      ```
      
      - parameter storage: the local storage
-     - returns: the local storage added to the `defaultStack`
+     - returns: the local storage added to the `defaultStack`. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      */
     public static func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {
         

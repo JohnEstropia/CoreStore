@@ -50,22 +50,21 @@ class MigrationsDemoViewController: UIViewController {
             (dataStack: DataStack) -> ModelMetadata in
             
             let models = self.models
-            do {
+            let migrations = try! dataStack.requiredMigrationsForStorage(
+                SQLiteStore(fileName: "MigrationDemo.sqlite")
+            )
+            
+            guard let storeVersion = migrations.first?.sourceVersion else {
+            
+                return models.first!
+            }
+            for model in models {
                 
-                let migrations = try dataStack.requiredMigrationsForStorage(
-                    SQLiteStore(fileName: "MigrationDemo.sqlite")
-                )
-                
-                let storeVersion = migrations.first?.sourceVersion ?? dataStack.modelVersion
-                for model in models {
+                if model.version == storeVersion {
                     
-                    if model.version == storeVersion {
-                        
-                        return model
-                    }
+                    return model
                 }
             }
-            catch _ { }
             
             return models.first!
         }
