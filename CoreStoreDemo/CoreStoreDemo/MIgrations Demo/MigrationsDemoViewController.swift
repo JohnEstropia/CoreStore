@@ -162,36 +162,46 @@ class MigrationsDemoViewController: UIViewController {
             fileName: "MigrationDemo.sqlite",
             completion: { [weak self] (result) -> Void in
                 
-                guard let strongSelf = self else {
+                guard let `self` = self else {
                     
                     return
                 }
                 
                 guard case .Success = result else {
                     
-                    strongSelf.setEnabled(true)
+                    self.setEnabled(true)
                     return
                 }
                 
-                strongSelf.setDataStack(dataStack, model: model, scrollToSelection: true)
+                self.setDataStack(dataStack, model: model, scrollToSelection: true)
                 
-                let count = dataStack.queryValue(From(model.entityType), Select<Int>(.Count("dna")))
+                let count = dataStack.queryValue(
+                    From(model.entityType),
+                    Select<Int>(.Count("dna"))
+                )
                 if count > 0 {
                     
-                    strongSelf.setEnabled(true)
+                    self.setEnabled(true)
                 }
                 else {
                     
-                    dataStack.beginAsynchronous { (transaction) -> Void in
+                    for i: Int64 in 0 ..< 20 {
                         
-                        for i: Int64 in 1 ..< 10000 {
+                        dataStack.beginAsynchronous { (transaction) -> Void in
                             
-                            let organism = transaction.create(Into(model.entityType)) as! OrganismProtocol
-                            organism.dna = i
-                            organism.mutate()
+                            for j: Int64 in 0 ..< 500 {
+                                
+                                let organism = transaction.create(Into(model.entityType)) as! OrganismProtocol
+                                organism.dna = (i * 500) + j + 1
+                                organism.mutate()
+                            }
+                            
+                            transaction.commit()
                         }
+                    }
+                    dataStack.beginAsynchronous { [weak self] (transaction) -> Void in
                         
-                        transaction.commit { result -> Void in
+                        transaction.commit { _ in
                             
                             self?.setEnabled(true)
                         }

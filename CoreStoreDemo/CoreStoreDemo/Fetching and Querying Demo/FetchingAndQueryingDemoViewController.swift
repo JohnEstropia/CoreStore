@@ -99,10 +99,10 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.segmentedControl?.selectedSegmentIndex {
             
-        case .Some(Section.Fetching.rawValue):
+        case Section.Fetching.rawValue?:
             return self.fetchingItems.count
             
-        case .Some(Section.Querying.rawValue):
+        case Section.Querying.rawValue?:
             return self.queryingItems.count
             
         default:
@@ -116,10 +116,10 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
-        case .Some(Section.Fetching.rawValue):
+        case Section.Fetching.rawValue?:
             cell.textLabel?.text = self.fetchingItems[indexPath.row].title
             
-        case .Some(Section.Querying.rawValue):
+        case Section.Querying.rawValue?:
             cell.textLabel?.text = self.queryingItems[indexPath.row].title
             
         default:
@@ -138,10 +138,10 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
-        case .Some(Section.Fetching.rawValue):
+        case Section.Fetching.rawValue?:
             self.performSegueWithIdentifier("FetchingResultsViewController", sender: indexPath)
             
-        case .Some(Section.Querying.rawValue):
+        case Section.Querying.rawValue?:
             self.performSegueWithIdentifier("QueryingResultsViewController", sender: indexPath)
             
         default:

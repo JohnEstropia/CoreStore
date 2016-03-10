@@ -88,7 +88,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
             UIBarButtonItem(
                 barButtonSystemItem: .Trash,
                 target: self,
-                action: "resetBarButtonItemTouched:"
+                action: #selector(self.resetBarButtonItemTouched(_:))
             )
         ]
         
@@ -96,13 +96,13 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
             title: Static.filter.rawValue,
             style: .Plain,
             target: self,
-            action: "filterBarButtonItemTouched:"
+            action: #selector(self.filterBarButtonItemTouched(_:))
         )
         navigationItem.rightBarButtonItems = [
             UIBarButtonItem(
                 barButtonSystemItem: .Add,
                 target: self,
-                action: "addBarButtonItemTouched:"
+                action: #selector(self.addBarButtonItemTouched(_:))
             ),
             filterBarButton
         ]
@@ -119,7 +119,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         
         switch (segue.identifier, segue.destinationViewController, sender) {
             
-        case (.Some("ObjectObserverDemoViewController"), let destinationViewController as ObjectObserverDemoViewController, let palette as Palette):
+        case ("ObjectObserverDemoViewController"?, let destinationViewController as ObjectObserverDemoViewController, let palette as Palette):
             destinationViewController.palette = palette
             
         default:

@@ -102,20 +102,20 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
-        case .Some(0):
+        case 0?:
             self.dataStack.beginAsynchronous { (transaction) -> Void in
                 
                 transaction.create(Into(Palette))
             }
             
-        case .Some(1):
+        case 1?:
             do {
                 
                 try self.dataStack.addSQLiteStoreAndWait(fileName: "emptyStore.sqlite", configuration: "invalidStore")
             }
             catch _ { }
             
-        case .Some(2):
+        case 2?:
             self.dataStack.beginAsynchronous { (transaction) -> Void in
                 
                 transaction.commit()

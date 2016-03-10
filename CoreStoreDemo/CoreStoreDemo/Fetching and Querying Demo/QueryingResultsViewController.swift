@@ -16,19 +16,19 @@ class QueryingResultsViewController: UITableViewController {
         
         switch value {
             
-        case .Some(let array as [AnyObject]):
+        case (let array as [AnyObject])?:
             self.values = array.map { (item: AnyObject) -> (title: String, detail: String) in
                 (
                     title: item.description,
-                    detail: _stdlib_getDemangledTypeName(item)
+                    detail: String(reflecting: item)
                 )
             }
             
-        case .Some(let item):
+        case let item?:
             self.values = [
                 (
                     title: item.description,
-                    detail: _stdlib_getDemangledTypeName(item)
+                    detail: String(reflecting: item)
                 )
             ]
             
