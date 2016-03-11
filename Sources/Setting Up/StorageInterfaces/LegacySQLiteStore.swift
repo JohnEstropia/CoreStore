@@ -28,8 +28,20 @@ import Foundation
 
 // MARK: - LegacySQLiteStore
 
+/**
+ A storage interface backed by an SQLite database that was created before CoreStore 2.0.0.
+ - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
+ */
 public final class LegacySQLiteStore: SQLiteStore {
     
+    /**
+     Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
+     
+     - parameter fileURL: the local file URL for the target SQLite persistent store. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
+     - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a `true` value tells the `DataStack` to delete the store on model mismatch; a `false` value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to `false`.
+     */
     public required init(fileURL: NSURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false) {
         
         super.init(

@@ -28,14 +28,19 @@ import CoreData
 
 // MARK: - SQLiteStore
 
+/**
+ A storage interface that is backed by an SQLite database.
+ - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
+ */
 public class SQLiteStore: LocalStorage, DefaultInitializableStore {
     
     /**
      Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
      
-     - parameter fileURL: the local file URL for the target SQLite persistent store. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter fileURL: the local file URL for the target SQLite persistent store. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-     - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a true value tells the `DataStack` to delete the store on model mismatch; a false value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
+     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
+     - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a `true` value tells the `DataStack` to delete the store on model mismatch; a `false` value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to `false`.
      */
     public required init(fileURL: NSURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false) {
         
@@ -47,10 +52,12 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
     
     /**
      Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
+     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
      
      - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-     - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a true value tells the `DataStack` to delete the store on model mismatch; a false value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
+     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration
+     - parameter resetStoreOnModelMismatch: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, a `true` value tells the `DataStack` to delete the store on model mismatch; a `false` value lets exceptions be thrown on failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to `false`.
      */
     public required init(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false) {
         
@@ -64,6 +71,9 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
     
     // MARK: DefaultInitializableStore
     
+    /**
+     Initializes an `SQLiteStore` with an all-default settings: a `fileURL` pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS), a `nil` `configuration` pertaining to the "Default" configuration, a `mappingModelBundles` set to search all `NSBundle`s, and `resetStoreOnModelMismatch` disabled.
+     */
     public required init() {
         
         self.fileURL = SQLiteStore.defaultFileURL
@@ -75,26 +85,45 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
     
     // MAKR: LocalStorage
     
+    /**
+     The `NSURL` that points to the SQLite file
+     */
     public let fileURL: NSURL
     
+    /**
+     The `NSBundle`s from which to search mapping models for migrations
+     */
+    public let mappingModelBundles: [NSBundle]
+    
+    /**
+     When `true`, tells the `DataStack` to delete and recreate the store on model mismatch, otherwise exceptions will be thrown on failure instead.
+     */
     public let resetStoreOnModelMismatch: Bool
     
     
     // MARK: StorageInterface
     
+    /**
+     The string identifier for the `NSPersistentStore`'s `type` property. For `SQLiteStore`s, this is always set to `NSSQLiteStoreType`.
+     */
     public static let storeType = NSSQLiteStoreType
     
-    public static func validateStoreURL(storeURL: NSURL?) -> Bool {
-        
-        return storeURL?.fileURL == true
-    }
-
+    /**
+     The configuration name in the model file
+     */
     public let configuration: String?
+    
+    /**
+     The options dictionary for the `NSPersistentStore`. For `SQLiteStore`s, this is always set to 
+     ```
+     [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+     ```
+     */
     public let storeOptions: [String: AnyObject]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
-    public let mappingModelBundles: [NSBundle]
-    
-    public var internalStore: NSPersistentStore?
-    
+
+    /**
+     Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
+     */
     public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws {
         
         // TODO: check if attached to persistent store 

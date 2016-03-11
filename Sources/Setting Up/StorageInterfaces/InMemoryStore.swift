@@ -28,8 +28,16 @@ import CoreData
 
 // MARK: - InMemoryStore
 
+/**
+ A storage interface that is backed only by memory.
+ */
 public class InMemoryStore: StorageInterface, DefaultInitializableStore {
     
+    /**
+     Initializes an `InMemoryStore` for the specified configuration
+     
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration.
+     */
     public required init(configuration: String?) {
     
         self.configuration = configuration
@@ -38,6 +46,9 @@ public class InMemoryStore: StorageInterface, DefaultInitializableStore {
     
     // MARK: DefaultInitializableStore
     
+    /**
+     Initializes an `InMemoryStore` with the "Default" configuration
+     */
     public required init() {
         
         self.configuration = nil
@@ -45,16 +56,19 @@ public class InMemoryStore: StorageInterface, DefaultInitializableStore {
     
     
     // MARK: StorageInterface
-
+    
+    /**
+     The string identifier for the `NSPersistentStore`'s `type` property. For `InMemoryStore`s, this is always set to `NSInMemoryStoreType`.
+     */
     public static let storeType = NSInMemoryStoreType
     
-    public static func validateStoreURL(storeURL: NSURL?) -> Bool {
-        
-        return storeURL == nil
-    }
-    
+    /**
+     The configuration name in the model file
+     */
     public let configuration: String?
-    public let storeOptions: [String: AnyObject]? = nil
     
-    public var internalStore: NSPersistentStore?
+    /**
+     The options dictionary for the `NSPersistentStore`. For `InMemoryStore`s, this is always set to `nil`.
+     */
+    public let storeOptions: [String: AnyObject]? = nil
 }

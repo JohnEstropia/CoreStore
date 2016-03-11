@@ -28,31 +28,67 @@ import CoreData
 
 // MARK: - StorageInterface
 
+/**
+ The `StorageInterface` represents the data store managed (or to be managed) by the `DataStack`. When added to the `DataStack`, the `StorageInterface` serves as the interface for the `NSPersistentStore`. This may be a database file, an in-memory store, etc.
+ */
 public protocol StorageInterface: class {
-
+    
+    /**
+     The string identifier for the `NSPersistentStore`'s `type` property. This is the same string CoreStore will use to create the `NSPersistentStore` from the `NSPersistentStoreCoordinator`'s `addPersistentStoreWithType(...)` method.
+     */
     static var storeType: String { get }
     
+    /**
+     The configuration name in the model file
+     */
     var configuration: String? { get }
+    
+    /**
+     The options dictionary for the `NSPersistentStore`
+     */
     var storeOptions: [String: AnyObject]? { get }
 }
 
 
 // MARK: - DefaultInitializableStore
 
+/**
+ The `DefaultInitializableStore` represents `StorageInterface`s that can be initialized with default values
+ */
 public protocol DefaultInitializableStore: StorageInterface {
     
+    /**
+     Initializes the `StorageInterface` with the default configurations
+     */
     init()
 }
 
 
 // MARK: - LocalStorage
 
+/**
+ The `LocalStorage` represents `StorageInterface`s that are backed by local files.
+ */
 public protocol LocalStorage: StorageInterface {
     
+    /**
+     The `NSURL` that points to the store file
+     */
     var fileURL: NSURL { get }
+    
+    /**
+     The `NSBundle`s from which to search mapping models for migrations
+     */
     var mappingModelBundles: [NSBundle] { get }
+    
+    /**
+     When `true`, tells the `DataStack` to delete and recreate the store on model mismatch, otherwise exceptions will be thrown on failure instead.
+     */
     var resetStoreOnModelMismatch: Bool { get }
     
+    /**
+     Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
+     */
     func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws
 }
 
