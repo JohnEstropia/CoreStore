@@ -65,6 +65,9 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 - [Installation](#installation)
 - [Changesets](#changesets)
     - [Upgrading from v0.2.0 to 1.0.0](#upgrading-from-v020-to-100)
+- [Contact](#contact)
+- [Who uses CoreStore?](#who-uses-corestore)
+- [License](#license)
 
 
 
@@ -1214,11 +1217,17 @@ The protocols above had their methods renamed as well, to retain the natural lan
 - New migration utilities! (README still pending) Check out *DataStack+Migration.swift* and *CoreStore+Migration.swift* for the new methods, as well as *DataStack.swift* for its new initializer.
 
 
-# Contributions
-While CoreStore's design is pretty solid and the unit test and demo app work well, CoreStore is pretty much still in its early stage. With more exposure to production code usage and criticisms from the developer community, CoreStore hopes to mature as well.
-Please feel free to report any issues, suggestions, or criticisms!
-日本語で連絡していただいても構いません！
+# Contact
+Questions? Suggestions?
+Reach me at [Twitter @JohnEstropia](https://twitter.com/JohnEstropia)
+or tag your Stackoverflow question with **corestore**
+日本語の対応も可能なので是非！
 
-## License
+
+# Who uses CoreStore?
+Did CoreStore serve you well? I'd love to hear about your app :)
+
+
+# License
 CoreStore is released under an MIT license. See the LICENSE file for more information
 
