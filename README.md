@@ -1219,8 +1219,11 @@ The protocols above had their methods renamed as well, to retain the natural lan
 
 # Contact
 Questions? Suggestions?
-Reach me at [Twitter @JohnEstropia](https://twitter.com/JohnEstropia)
+
+Reach me on Twitter [@JohnEstropia](https://twitter.com/JohnEstropia)
+
 or tag your Stackoverflow question with **corestore**
+
 日本語の対応も可能なので是非！
 
 
