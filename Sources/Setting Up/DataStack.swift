@@ -397,7 +397,7 @@ public final class DataStack {
     public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
         
         let storage = try self.addStorageAndWait(InMemoryStore(configuration: configuration))
-        return storage.internalStore!
+        return self.persistentStoreForStorage(storage)!
     }
     
     /**
@@ -415,7 +415,7 @@ public final class DataStack {
                 resetStoreOnModelMismatch: resetStoreOnModelMismatch
             )
         )
-        return storage.internalStore!
+        return self.persistentStoreForStorage(storage)!
     }
     
     /**
@@ -433,6 +433,6 @@ public final class DataStack {
                 resetStoreOnModelMismatch: resetStoreOnModelMismatch
             )
         )
-        return storage.internalStore!
+        return self.persistentStoreForStorage(storage)!
     }
 }

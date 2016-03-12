@@ -71,7 +71,7 @@ public /*abstract*/ class BaseDataTransaction {
                 context.assignObject(object, toPersistentStore: persistentStore)
                 return object
                 
-            case (.None, true):
+            case (nil, true):
                 fatalError("Attempted to create an entity of type \(typeName(entityClass)) with ambiguous destination persistent store, but the configuration name was not specified.")
                 
             default:

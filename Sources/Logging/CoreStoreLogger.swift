@@ -78,7 +78,7 @@ public protocol CoreStoreLogger {
      :lineNumber: the source line number
      :functionName: the source function name
      */
-    func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
 }
 
 

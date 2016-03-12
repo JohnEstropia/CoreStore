@@ -596,7 +596,7 @@ public extension DataStack {
                     switch result {
                         
                     case .Success(let storage):
-                        completion(PersistentStoreResult(storage.internalStore!))
+                        completion(PersistentStoreResult(self.persistentStoreForStorage(storage)!))
                         
                     case .Failure(let error):
                         completion(PersistentStoreResult(error))
@@ -630,7 +630,7 @@ public extension DataStack {
                 switch result {
                     
                 case .Success(let storage):
-                    completion(PersistentStoreResult(storage.internalStore!))
+                    completion(PersistentStoreResult(self.persistentStoreForStorage(storage)!))
                     
                 case .Failure(let error):
                     completion(PersistentStoreResult(error))
@@ -659,7 +659,7 @@ public extension DataStack {
                 switch result {
                     
                 case .Success(let storage):
-                    completion(PersistentStoreResult(storage.internalStore!))
+                    completion(PersistentStoreResult(self.persistentStoreForStorage(storage)!))
                     
                 case .Failure(let error):
                     completion(PersistentStoreResult(error))

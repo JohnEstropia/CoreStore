@@ -121,7 +121,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         
         switch (segue.identifier, segue.destinationViewController, sender) {
             
-        case (.Some("ObjectObserverDemoViewController"), let destinationViewController as ObjectObserverDemoViewController, let palette as Palette):
+        case ("ObjectObserverDemoViewController"?, let destinationViewController as ObjectObserverDemoViewController, let palette as Palette):
             destinationViewController.palette = palette
             
         default:

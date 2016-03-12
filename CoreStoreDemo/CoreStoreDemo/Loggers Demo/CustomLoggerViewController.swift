@@ -74,16 +74,17 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         }
     }
     
-    func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         if condition() {
             
             return
         }
         
+        let messageString = message()
         GCDQueue.Main.async { [weak self] in
             
-            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(message)\n\n")
+            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(messageString)\n\n")
         }
     }
     
@@ -102,13 +103,13 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
-        case .Some(0):
+        case 0?:
             self.dataStack.beginAsynchronous { (transaction) -> Void in
                 
                 transaction.create(Into(Palette))
             }
             
-        case .Some(1):
+        case 1?:
             _ = try? dataStack.addStorageAndWait(
                 SQLiteStore(
                     fileName: "emptyStore.sqlite",
@@ -116,7 +117,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
                 )
             )
             
-        case .Some(2):
+        case 2?:
             self.dataStack.beginAsynchronous { (transaction) -> Void in
                 
                 transaction.commit()

@@ -5,11 +5,13 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "8B2E522D57154DFA93A06982C36315ECBEA4FA97" : 0,
+    "95438028B10BBB846574013D29F154A00556A9D1" : 0,
     "4B60F1BCB491FF717C56441AE7783C74F417BE48" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "EBFDEFFE-8BA0-441A-862A-1DE28AA5CD21",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "8B2E522D57154DFA93A06982C36315ECBEA4FA97" : "CoreStore\/Carthage\/Checkouts\/GCDKit\/",
+    "95438028B10BBB846574013D29F154A00556A9D1" : "CoreStore\/Carthage\/Checkouts\/Nimble\/",
     "4B60F1BCB491FF717C56441AE7783C74F417BE48" : "CoreStore\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "CoreStore",
@@ -25,6 +27,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/JohnEstropia\/GCDKit.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8B2E522D57154DFA93A06982C36315ECBEA4FA97"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Quick\/Nimble.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "95438028B10BBB846574013D29F154A00556A9D1"
     }
   ]
 }

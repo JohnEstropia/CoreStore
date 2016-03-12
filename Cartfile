@@ -1,1 +1,2 @@
 github "JohnEstropia/GCDKit" == 1.2.0
+github "younata/Nimble" "swift2.2"
