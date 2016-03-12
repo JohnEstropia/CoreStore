@@ -61,7 +61,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
                 let palette = transaction.create(Into(Palette))
                 palette.setInitialValues()
                 
-                transaction.commit()
+                transaction.commitAndWait()
             }
             
             let palette = CoreStore.fetchOne(From(Palette), OrderBy(.Ascending("hue")))!

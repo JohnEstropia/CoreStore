@@ -265,7 +265,7 @@ class CoreStoreTests: XCTestCase {
             )
             XCTAssertTrue(numberOfDeletedObjects2 == 2, "numberOfDeletedObjects2 == 2 (actual: \(numberOfDeletedObjects2))")
             
-            transaction.commit()
+            transaction.commitAndWait()
         }
         
         CoreStore.beginSynchronous({ (transaction) -> Void in
@@ -277,7 +277,7 @@ class CoreStoreTests: XCTestCase {
                 obj.testEntityID = oldID
             }
             
-            transaction.commit()
+            transaction.commitAndWait()
         })
         
         let objs1 = CoreStore.fetchAll(From(TestEntity1))
@@ -351,7 +351,7 @@ class CoreStoreTests: XCTestCase {
                             let obj5 = transaction.edit(obj5)
                             transaction.delete(obj5, obj6)
                             
-                            transaction.commit()
+                            transaction.commitAndWait()
                         }
                         
                         let count2 = CoreStore.queryValue(

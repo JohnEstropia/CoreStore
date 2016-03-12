@@ -37,7 +37,7 @@ private struct Static {
                 cachedTimeZone.daylightSavingTimeOffset = rawTimeZone.daylightSavingTimeOffset
             }
             
-            transaction.commit()
+            transaction.commitAndWait()
         }
         
         return dataStack
