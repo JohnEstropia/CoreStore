@@ -158,7 +158,7 @@ public extension CoreStore {
      - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
      */
     @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    public static func addSQLiteStoreAndWait(fileURL fileURL: NSURL = LegacySQLiteStore.legacyDefaultFileURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
+    public static func addSQLiteStoreAndWait(fileURL fileURL: NSURL = LegacySQLiteStore.defaultFileURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
         
         return try self.defaultStack.addSQLiteStoreAndWait(
             fileURL: fileURL,
