@@ -158,7 +158,11 @@ public final class DataStack {
                     return storage
                 }
                 
-                try self.createPersistentStoreFromStorage(storage, finalURL: nil)
+                try self.createPersistentStoreFromStorage(
+                    storage,
+                    finalURL: nil,
+                    finalStoreOptions: storage.storeOptions
+                )
                 return storage
             }
         }
@@ -228,6 +232,12 @@ public final class DataStack {
             
             do {
                 
+                var storeOptions = storage.storeOptions ?? [:]
+                if storage.localStorageOptions.contains(.AllowSynchronousLightweightMigration) {
+                    
+                    storeOptions[NSMigratePersistentStoresAutomaticallyOption] = true
+                    storeOptions[NSInferMappingModelAutomaticallyOption] = true
+                }
                 do {
                     
                     try NSFileManager.defaultManager().createDirectoryAtURL(
@@ -235,19 +245,27 @@ public final class DataStack {
                         withIntermediateDirectories: true,
                         attributes: nil
                     )
-                    try self.createPersistentStoreFromStorage(storage, finalURL: fileURL)
+                    try self.createPersistentStoreFromStorage(
+                        storage,
+                        finalURL: fileURL,
+                        finalStoreOptions: storeOptions
+                    )
                     return storage
                 }
-                catch let error as NSError where storage.resetStoreOnModelMismatch && error.isCoreDataMigrationError {
+                catch let error as NSError where storage.localStorageOptions.contains(.RecreateStoreOnModelMismatch) && error.isCoreDataMigrationError {
                     
                     let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
                         storage.dynamicType.storeType,
                         URL: fileURL,
-                        options: storage.storeOptions
+                        options: storeOptions
                     )
                     try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
                     
-                    try self.createPersistentStoreFromStorage(storage, finalURL: fileURL)
+                    try self.createPersistentStoreFromStorage(
+                        storage,
+                        finalURL: fileURL,
+                        finalStoreOptions: storeOptions
+                    )
                     return storage
                 }
             }
@@ -343,13 +361,13 @@ public final class DataStack {
         return returnValue
     }
     
-    internal func createPersistentStoreFromStorage(storage: StorageInterface, finalURL: NSURL?) throws -> NSPersistentStore {
+    internal func createPersistentStoreFromStorage(storage: StorageInterface, finalURL: NSURL?, finalStoreOptions: [String: AnyObject]?) throws -> NSPersistentStore {
         
         let persistentStore = try self.coordinator.addPersistentStoreWithType(
             storage.dynamicType.storeType,
             configuration: storage.configuration,
             URL: finalURL,
-            options: storage.storeOptions
+            options: finalStoreOptions
         )
         persistentStore.storageInterface = storage
         
@@ -412,7 +430,7 @@ public final class DataStack {
             LegacySQLiteStore(
                 fileName: fileName,
                 configuration: configuration,
-                resetStoreOnModelMismatch: resetStoreOnModelMismatch
+                localStorageOptions: resetStoreOnModelMismatch ? .RecreateStoreOnModelMismatch : .None
             )
         )
         return self.persistentStoreForStorage(storage)!
@@ -430,7 +448,7 @@ public final class DataStack {
             LegacySQLiteStore(
                 fileURL: fileURL,
                 configuration: configuration,
-                resetStoreOnModelMismatch: resetStoreOnModelMismatch
+                localStorageOptions: resetStoreOnModelMismatch ? .RecreateStoreOnModelMismatch : .None
             )
         )
         return self.persistentStoreForStorage(storage)!

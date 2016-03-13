@@ -54,7 +54,11 @@ public extension DataStack {
             
             do {
                 
-                try self.createPersistentStoreFromStorage(storage, finalURL: nil)
+                try self.createPersistentStoreFromStorage(
+                    storage,
+                    finalURL: nil,
+                    finalStoreOptions: storage.storeOptions
+                )
                 
                 GCDQueue.Main.async {
                     
@@ -85,13 +89,20 @@ public extension DataStack {
     }
     
     /**
-     Asynchronously adds to the stack an SQLite store from the given SQLite file URL. Note that using `addSQLiteStore(...)` instead of `addSQLiteStoreAndWait(...)` implies that the migrations are allowed and expected (thus the asynchronous `completion`.)
-     
-     - parameter fileURL: the local file URL for the SQLite persistent store. A new SQLite file will be created if it does not exist. If not specified, defaults to a file URL pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-     - parameter mappingModelBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
-     - parameter resetStoreOnModelMismatch: Set to true to delete the store on model mismatch; or set to false to report failure instead. Typically should only be set to true when debugging, or if the persistent store can be recreated easily. If not specified, defaults to false.
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `PersistentStoreResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
+     Asynchronously adds a `LocalStorage` to the stack.
+     ```
+     try dataStack.addStorage(
+         SQLiteStore(configuration: "Config1"), 
+         completion: { result in
+             switch result {
+             case .Success(let storage): // ...
+             case .Failure(let error): // ...
+             }
+         }
+     )
+     ```
+     - parameter storage: the local storage
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
     public func addStorage<T: LocalStorage>(storage: T, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
@@ -154,7 +165,7 @@ public extension DataStack {
                         
                         if case .Failure(let error) = result {
                             
-                            if storage.resetStoreOnModelMismatch && error.isCoreDataMigrationError {
+                            if storage.localStorageOptions.contains(.RecreateStoreOnModelMismatch) && error.isCoreDataMigrationError {
                                 
                                 do {
                                     
@@ -283,7 +294,7 @@ public extension DataStack {
                     options: storage.storeOptions
                 )
                 
-                guard let migrationSteps = self.computeMigrationFromStorageMetadata(metadata, configuration: storage.configuration, mappingModelBundles: storage.mappingModelBundles) else {
+                guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
                     
                     let error = NSError(coreStoreErrorCode: .MappingModelNotFound)
                     CoreStore.handleError(
@@ -316,7 +327,7 @@ public extension DataStack {
     
     private func upgradeStorageIfNeeded<T: LocalStorage>(storage: T, metadata: [String: AnyObject], completion: (MigrationResult) -> Void) -> NSProgress? {
         
-        guard let migrationSteps = self.computeMigrationFromStorageMetadata(metadata, configuration: storage.configuration, mappingModelBundles: storage.mappingModelBundles) else {
+        guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
             
             CoreStore.handleError(
                 NSError(coreStoreErrorCode: .MappingModelNotFound),
@@ -413,10 +424,10 @@ public extension DataStack {
         return progress
     }
     
-    private func computeMigrationFromStorageMetadata(metadata: [String: AnyObject], configuration: String?, mappingModelBundles: [NSBundle]) -> [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]? {
+    private func computeMigrationFromStorage<T: LocalStorage>(storage: T, metadata: [String: AnyObject]) -> [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]? {
         
         let model = self.model
-        if model.isConfiguration(configuration, compatibleWithStoreMetadata: metadata) {
+        if model.isConfiguration(storage.configuration, compatibleWithStoreMetadata: metadata) {
             
             return []
         }
@@ -438,7 +449,7 @@ public extension DataStack {
             let destinationModel = model[nextVersion] where sourceModel != model {
                 
                 if let mappingModel = NSMappingModel(
-                    fromBundles: mappingModelBundles,
+                    fromBundles: storage.mappingModelBundles,
                     forSourceModel: sourceModel,
                     destinationModel: destinationModel) {
                         
@@ -623,7 +634,7 @@ public extension DataStack {
                 fileName: fileName,
                 configuration: configuration,
                 mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
-                resetStoreOnModelMismatch: resetStoreOnModelMismatch
+                localStorageOptions: resetStoreOnModelMismatch ? .RecreateStoreOnModelMismatch : .None
             ),
             completion: { result in
                 
@@ -652,7 +663,7 @@ public extension DataStack {
                 fileURL: fileURL,
                 configuration: configuration,
                 mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
-                resetStoreOnModelMismatch: resetStoreOnModelMismatch
+                localStorageOptions: resetStoreOnModelMismatch ? .RecreateStoreOnModelMismatch : .None
             ),
             completion: { result in
                 

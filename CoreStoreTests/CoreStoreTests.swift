@@ -54,7 +54,7 @@ class CoreStoreTests: XCTestCase {
                 SQLiteStore(
                     fileName: "ConfigStore1.sqlite",
                     configuration: "Config1",
-                    resetStoreOnModelMismatch: true
+                    localStorageOptions: .RecreateStoreOnModelMismatch
                 )
             )
         }
@@ -69,7 +69,7 @@ class CoreStoreTests: XCTestCase {
                 SQLiteStore(
                     fileName: "ConfigStore2.sqlite",
                     configuration: "Config2",
-                    resetStoreOnModelMismatch: true
+                    localStorageOptions: .RecreateStoreOnModelMismatch
                 )
             )
         }

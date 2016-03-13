@@ -81,7 +81,7 @@ class StorageInterfaceTests: XCTestCase {
         
         XCTAssertEqual(store.fileURL, SQLiteStore.defaultFileURL)
         XCTAssertEqual(store.mappingModelBundles, NSBundle.allBundles())
-        XCTAssertFalse(store.resetStoreOnModelMismatch)
+        XCTAssertEqual(store.localStorageOptions, [.None])
     }
     
     func testSQLiteStoreFileURL() {
@@ -95,7 +95,7 @@ class StorageInterfaceTests: XCTestCase {
             fileURL: fileURL,
             configuration: "config1",
             mappingModelBundles: bundles,
-            resetStoreOnModelMismatch: true
+            localStorageOptions: .RecreateStoreOnModelMismatch
         )
         XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
         XCTAssertEqual(store.configuration, "config1")
@@ -103,7 +103,7 @@ class StorageInterfaceTests: XCTestCase {
         
         XCTAssertEqual(store.fileURL, fileURL)
         XCTAssertEqual(store.mappingModelBundles, bundles)
-        XCTAssertTrue(store.resetStoreOnModelMismatch)
+        XCTAssertEqual(store.localStorageOptions, [.RecreateStoreOnModelMismatch])
     }
     
     func testSQLiteStoreFileName() {
@@ -115,7 +115,7 @@ class StorageInterfaceTests: XCTestCase {
             fileName: fileName,
             configuration: "config1",
             mappingModelBundles: bundles,
-            resetStoreOnModelMismatch: true
+            localStorageOptions: .RecreateStoreOnModelMismatch
         )
         XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
         XCTAssertEqual(store.configuration, "config1")
@@ -124,7 +124,7 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.fileURL.URLByDeletingLastPathComponent, SQLiteStore.defaultRootDirectory)
         XCTAssertEqual(store.fileURL.lastPathComponent, fileName)
         XCTAssertEqual(store.mappingModelBundles, bundles)
-        XCTAssertTrue(store.resetStoreOnModelMismatch)
+        XCTAssertEqual(store.localStorageOptions, [.RecreateStoreOnModelMismatch])
     }
     
     func testLegacySQLiteStoreDefaultDirectories() {
@@ -157,7 +157,7 @@ class StorageInterfaceTests: XCTestCase {
         
         XCTAssertEqual(store.fileURL, LegacySQLiteStore.defaultFileURL)
         XCTAssertEqual(store.mappingModelBundles, NSBundle.allBundles())
-        XCTAssertFalse(store.resetStoreOnModelMismatch)
+        XCTAssertEqual(store.localStorageOptions, [.None])
     }
     
     func testLegacySQLiteStoreFileURL() {
@@ -171,7 +171,7 @@ class StorageInterfaceTests: XCTestCase {
             fileURL: fileURL,
             configuration: "config1",
             mappingModelBundles: bundles,
-            resetStoreOnModelMismatch: true
+            localStorageOptions: .RecreateStoreOnModelMismatch
         )
         XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
         XCTAssertEqual(store.configuration, "config1")
@@ -179,7 +179,7 @@ class StorageInterfaceTests: XCTestCase {
         
         XCTAssertEqual(store.fileURL, fileURL)
         XCTAssertEqual(store.mappingModelBundles, bundles)
-        XCTAssertTrue(store.resetStoreOnModelMismatch)
+        XCTAssertEqual(store.localStorageOptions, [.RecreateStoreOnModelMismatch])
     }
     
     func testLegacySQLiteStoreFileName() {
@@ -191,7 +191,7 @@ class StorageInterfaceTests: XCTestCase {
             fileName: fileName,
             configuration: "config1",
             mappingModelBundles: bundles,
-            resetStoreOnModelMismatch: true
+            localStorageOptions: .RecreateStoreOnModelMismatch
         )
         XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
         XCTAssertEqual(store.configuration, "config1")
@@ -200,6 +200,6 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.fileURL.URLByDeletingLastPathComponent, LegacySQLiteStore.defaultRootDirectory)
         XCTAssertEqual(store.fileURL.lastPathComponent, fileName)
         XCTAssertEqual(store.mappingModelBundles, bundles)
-        XCTAssertTrue(store.resetStoreOnModelMismatch)
+        XCTAssertEqual(store.localStorageOptions, [.RecreateStoreOnModelMismatch])
     }
 }

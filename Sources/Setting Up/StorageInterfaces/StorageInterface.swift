@@ -82,9 +82,9 @@ public protocol LocalStorage: StorageInterface {
     var mappingModelBundles: [NSBundle] { get }
     
     /**
-     When `true`, tells the `DataStack` to delete and recreate the store on model mismatch, otherwise exceptions will be thrown on failure instead.
+     Options that tell the `DataStack` how to setup the persistent store
      */
-    var resetStoreOnModelMismatch: Bool { get }
+    var localStorageOptions: LocalStorageOptions { get }
     
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
