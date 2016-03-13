@@ -33,44 +33,43 @@ class MigrationChainTests: XCTestCase {
     @objc dynamic func testEmptyChain() {
         
         let chain: MigrationChain = nil
-        expect(chain.valid).to(beTrue())
-        expect(chain.empty).to(beTrue())
+        XCTAssertTrue(chain.valid)
+        XCTAssertTrue(chain.empty)
         
-        expect(chain.contains("version1")).to(beFalse())
-        
-        expect(chain.nextVersionFrom("version1")).to(beNil())
+        XCTAssertFalse(chain.contains("version1"))
+        XCTAssertNil(chain.nextVersionFrom("version1"))
     }
     
     @objc dynamic func testSingleChain() {
         
         let chain: MigrationChain = "version1"
-        expect(chain.valid).to(beTrue())
-        expect(chain.empty).to(beTrue())
+        XCTAssertTrue(chain.valid)
+        XCTAssertTrue(chain.empty)
         
-        expect(chain.contains("version1")).to(beTrue())
-        expect(chain.contains("version2")).to(beFalse())
+        XCTAssertTrue(chain.contains("version1"))
+        XCTAssertFalse(chain.contains("version2"))
         
-        expect(chain.nextVersionFrom("version1")).to(beNil())
-        expect(chain.nextVersionFrom("version2")).to(beNil())
+        XCTAssertNil(chain.nextVersionFrom("version1"))
+        XCTAssertNil(chain.nextVersionFrom("version2"))
     }
     
     @objc dynamic func testLinearChain() {
         
         let chain: MigrationChain = ["version1", "version2", "version3", "version4"]
-        expect(chain.valid).to(beTrue())
-        expect(chain.empty).to(beFalse())
+        XCTAssertTrue(chain.valid)
+        XCTAssertFalse(chain.empty)
         
-        expect(chain.contains("version1")).to(beTrue())
-        expect(chain.contains("version2")).to(beTrue())
-        expect(chain.contains("version3")).to(beTrue())
-        expect(chain.contains("version4")).to(beTrue())
-        expect(chain.contains("version5")).to(beFalse())
+        XCTAssertTrue(chain.contains("version1"))
+        XCTAssertTrue(chain.contains("version2"))
+        XCTAssertTrue(chain.contains("version3"))
+        XCTAssertTrue(chain.contains("version4"))
+        XCTAssertFalse(chain.contains("version5"))
         
-        expect(chain.nextVersionFrom("version1")).to(equal("version2"))
-        expect(chain.nextVersionFrom("version2")).to(equal("version3"))
-        expect(chain.nextVersionFrom("version3")).to(equal("version4"))
-        expect(chain.nextVersionFrom("version4")).to(beNil())
-        expect(chain.nextVersionFrom("version5")).to(beNil())
+        XCTAssertEqual(chain.nextVersionFrom("version1"), "version2")
+        XCTAssertEqual(chain.nextVersionFrom("version2"), "version3")
+        XCTAssertEqual(chain.nextVersionFrom("version3"), "version4")
+        XCTAssertNil(chain.nextVersionFrom("version4"))
+        XCTAssertNil(chain.nextVersionFrom("version5"))
     }
     
     @objc dynamic func testTreeChain() {
@@ -80,20 +79,20 @@ class MigrationChainTests: XCTestCase {
             "version2": "version3",
             "version3": "version4"
         ]
-        expect(chain.valid).to(beTrue())
-        expect(chain.empty).to(beFalse())
+        XCTAssertTrue(chain.valid)
+        XCTAssertFalse(chain.empty)
         
-        expect(chain.contains("version1")).to(beTrue())
-        expect(chain.contains("version2")).to(beTrue())
-        expect(chain.contains("version3")).to(beTrue())
-        expect(chain.contains("version4")).to(beTrue())
-        expect(chain.contains("version5")).to(beFalse())
+        XCTAssertTrue(chain.contains("version1"))
+        XCTAssertTrue(chain.contains("version2"))
+        XCTAssertTrue(chain.contains("version3"))
+        XCTAssertTrue(chain.contains("version4"))
+        XCTAssertFalse(chain.contains("version5"))
         
-        expect(chain.nextVersionFrom("version1")).to(equal("version4"))
-        expect(chain.nextVersionFrom("version2")).to(equal("version3"))
-        expect(chain.nextVersionFrom("version3")).to(equal("version4"))
-        expect(chain.nextVersionFrom("version4")).to(beNil())
-        expect(chain.nextVersionFrom("version5")).to(beNil())
+        XCTAssertEqual(chain.nextVersionFrom("version1"), "version4")
+        XCTAssertEqual(chain.nextVersionFrom("version2"), "version3")
+        XCTAssertEqual(chain.nextVersionFrom("version3"), "version4")
+        XCTAssertNil(chain.nextVersionFrom("version4"))
+        XCTAssertNil(chain.nextVersionFrom("version5"))
         
         // The cases below will trigger assertion failures internally
         

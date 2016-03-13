@@ -64,7 +64,7 @@ public final class LegacySQLiteStore: SQLiteStore {
     public required init(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false) {
         
         super.init(
-            fileURL: LegacySQLiteStore.legacyDefaultRootDirectory.URLByAppendingPathComponent(
+            fileURL: LegacySQLiteStore.defaultRootDirectory.URLByAppendingPathComponent(
                 fileName,
                 isDirectory: false
             ),
@@ -72,6 +72,30 @@ public final class LegacySQLiteStore: SQLiteStore {
             mappingModelBundles: mappingModelBundles,
             resetStoreOnModelMismatch: resetStoreOnModelMismatch
         )
+    }
+    
+    
+    // MARK: SQLiteStore
+    
+    internal override class var defaultRootDirectory: NSURL {
+        
+        #if os(tvOS)
+            let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
+        #else
+            let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
+        #endif
+        
+        return NSFileManager.defaultManager().URLsForDirectory(
+            systemDirectorySearchPath,
+            inDomains: .UserDomainMask
+            ).first!
+    }
+    
+    internal override class var defaultFileURL: NSURL {
+        
+        return LegacySQLiteStore.defaultRootDirectory
+            .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
+            .URLByAppendingPathExtension("sqlite")
     }
     
     
@@ -83,24 +107,6 @@ public final class LegacySQLiteStore: SQLiteStore {
      */
     public required init() {
         
-        super.init(fileURL: LegacySQLiteStore.legacyDefaultFileURL)
+        super.init(fileURL: LegacySQLiteStore.defaultFileURL)
     }
-    
-    
-    // MARK: Internal
-    
-    #if os(tvOS)
-    internal static let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
-    #else
-    internal static let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
-    #endif
-    
-    internal static let legacyDefaultRootDirectory = NSFileManager.defaultManager().URLsForDirectory(
-        LegacySQLiteStore.systemDirectorySearchPath,
-        inDomains: .UserDomainMask
-        ).first!
-    
-    internal static let legacyDefaultFileURL = LegacySQLiteStore.legacyDefaultRootDirectory
-        .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
-        .URLByAppendingPathExtension("sqlite")
 }

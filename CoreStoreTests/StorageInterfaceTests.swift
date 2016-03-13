@@ -33,17 +33,17 @@ class StorageInterfaceTests: XCTestCase {
     func testDefaultInMemoryStore() {
         
         let store = InMemoryStore()
-        expect(store.dynamicType.storeType).to(equal(NSInMemoryStoreType))
-        expect(store.configuration).to(beNil())
-        expect(store.storeOptions).to(beNil())
+        XCTAssertEqual(store.dynamicType.storeType, NSInMemoryStoreType)
+        XCTAssertNil(store.configuration)
+        XCTAssertNil(store.storeOptions)
     }
     
     func testInMemoryStoreConfiguration() {
         
         let store = InMemoryStore(configuration: "config1")
-        expect(store.dynamicType.storeType).to(equal(NSInMemoryStoreType))
-        expect(store.configuration).to(equal("config1"))
-        expect(store.storeOptions).to(beNil())
+        XCTAssertEqual(store.dynamicType.storeType, NSInMemoryStoreType)
+        XCTAssertEqual(store.configuration, "config1")
+        XCTAssertNil(store.storeOptions)
     }
     
     func testSQLiteStoreDefaultDirectories() {
@@ -68,20 +68,20 @@ class StorageInterfaceTests: XCTestCase {
             .URLByAppendingPathComponent(applicationName, isDirectory: false)
             .URLByAppendingPathExtension("sqlite")
         
-        expect(SQLiteStore.defaultRootDirectory).to(equal(defaultRootDirectory))
-        expect(SQLiteStore.defaultFileURL).to(equal(defaultFileURL))
+        XCTAssertEqual(SQLiteStore.defaultRootDirectory, defaultRootDirectory)
+        XCTAssertEqual(SQLiteStore.defaultFileURL, defaultFileURL)
     }
     
     func testDefaultSQLiteStore() {
         
         let store = SQLiteStore()
-        expect(store.dynamicType.storeType).to(equal(NSSQLiteStoreType))
-        expect(store.configuration).to(beNil())
-        expect(store.storeOptions).to(equal([NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary))
+        XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
+        XCTAssertNil(store.configuration)
+        XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        expect(store.fileURL).to(equal(SQLiteStore.defaultFileURL))
-        expect(store.mappingModelBundles).to(equal(NSBundle.allBundles()))
-        expect(store.resetStoreOnModelMismatch).to(beFalse())
+        XCTAssertEqual(store.fileURL, SQLiteStore.defaultFileURL)
+        XCTAssertEqual(store.mappingModelBundles, NSBundle.allBundles())
+        XCTAssertFalse(store.resetStoreOnModelMismatch)
     }
     
     func testSQLiteStoreFileURL() {
@@ -97,13 +97,13 @@ class StorageInterfaceTests: XCTestCase {
             mappingModelBundles: bundles,
             resetStoreOnModelMismatch: true
         )
-        expect(store.dynamicType.storeType).to(equal(NSSQLiteStoreType))
-        expect(store.configuration).to(equal("config1"))
-        expect(store.storeOptions).to(equal([NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary))
+        XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
+        XCTAssertEqual(store.configuration, "config1")
+        XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        expect(store.fileURL).to(equal(fileURL))
-        expect(store.mappingModelBundles).to(equal(bundles))
-        expect(store.resetStoreOnModelMismatch).to(beTrue())
+        XCTAssertEqual(store.fileURL, fileURL)
+        XCTAssertEqual(store.mappingModelBundles, bundles)
+        XCTAssertTrue(store.resetStoreOnModelMismatch)
     }
     
     func testSQLiteStoreFileName() {
@@ -117,14 +117,14 @@ class StorageInterfaceTests: XCTestCase {
             mappingModelBundles: bundles,
             resetStoreOnModelMismatch: true
         )
-        expect(store.dynamicType.storeType).to(equal(NSSQLiteStoreType))
-        expect(store.configuration).to(equal("config1"))
-        expect(store.storeOptions).to(equal([NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary))
+        XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
+        XCTAssertEqual(store.configuration, "config1")
+        XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        expect(store.fileURL.URLByDeletingLastPathComponent).to(equal(SQLiteStore.defaultRootDirectory))
-        expect(store.fileURL.lastPathComponent).to(equal(fileName))
-        expect(store.mappingModelBundles).to(equal(bundles))
-        expect(store.resetStoreOnModelMismatch).to(beTrue())
+        XCTAssertEqual(store.fileURL.URLByDeletingLastPathComponent, SQLiteStore.defaultRootDirectory)
+        XCTAssertEqual(store.fileURL.lastPathComponent, fileName)
+        XCTAssertEqual(store.mappingModelBundles, bundles)
+        XCTAssertTrue(store.resetStoreOnModelMismatch)
     }
     
     func testLegacySQLiteStoreDefaultDirectories() {
@@ -144,20 +144,20 @@ class StorageInterfaceTests: XCTestCase {
             .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
             .URLByAppendingPathExtension("sqlite")
         
-        expect(LegacySQLiteStore.legacyDefaultRootDirectory).to(equal(legacyDefaultRootDirectory))
-        expect(LegacySQLiteStore.legacyDefaultFileURL).to(equal(legacyDefaultFileURL))
+        XCTAssertEqual(LegacySQLiteStore.defaultRootDirectory, legacyDefaultRootDirectory)
+        XCTAssertEqual(LegacySQLiteStore.defaultFileURL, legacyDefaultFileURL)
     }
     
     func testDefaultLegacySQLiteStore() {
         
         let store = LegacySQLiteStore()
-        expect(store.dynamicType.storeType).to(equal(NSSQLiteStoreType))
-        expect(store.configuration).to(beNil())
-        expect(store.storeOptions).to(equal([NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary))
+        XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
+        XCTAssertNil(store.configuration)
+        XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        expect(store.fileURL).to(equal(LegacySQLiteStore.legacyDefaultFileURL))
-        expect(store.mappingModelBundles).to(equal(NSBundle.allBundles()))
-        expect(store.resetStoreOnModelMismatch).to(beFalse())
+        XCTAssertEqual(store.fileURL, LegacySQLiteStore.defaultFileURL)
+        XCTAssertEqual(store.mappingModelBundles, NSBundle.allBundles())
+        XCTAssertFalse(store.resetStoreOnModelMismatch)
     }
     
     func testLegacySQLiteStoreFileURL() {
@@ -173,13 +173,13 @@ class StorageInterfaceTests: XCTestCase {
             mappingModelBundles: bundles,
             resetStoreOnModelMismatch: true
         )
-        expect(store.dynamicType.storeType).to(equal(NSSQLiteStoreType))
-        expect(store.configuration).to(equal("config1"))
-        expect(store.storeOptions).to(equal([NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary))
+        XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
+        XCTAssertEqual(store.configuration, "config1")
+        XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        expect(store.fileURL).to(equal(fileURL))
-        expect(store.mappingModelBundles).to(equal(bundles))
-        expect(store.resetStoreOnModelMismatch).to(beTrue())
+        XCTAssertEqual(store.fileURL, fileURL)
+        XCTAssertEqual(store.mappingModelBundles, bundles)
+        XCTAssertTrue(store.resetStoreOnModelMismatch)
     }
     
     func testLegacySQLiteStoreFileName() {
@@ -193,13 +193,13 @@ class StorageInterfaceTests: XCTestCase {
             mappingModelBundles: bundles,
             resetStoreOnModelMismatch: true
         )
-        expect(store.dynamicType.storeType).to(equal(NSSQLiteStoreType))
-        expect(store.configuration).to(equal("config1"))
-        expect(store.storeOptions).to(equal([NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary))
+        XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
+        XCTAssertEqual(store.configuration, "config1")
+        XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        expect(store.fileURL.URLByDeletingLastPathComponent).to(equal(LegacySQLiteStore.legacyDefaultRootDirectory))
-        expect(store.fileURL.lastPathComponent).to(equal(fileName))
-        expect(store.mappingModelBundles).to(equal(bundles))
-        expect(store.resetStoreOnModelMismatch).to(beTrue())
+        XCTAssertEqual(store.fileURL.URLByDeletingLastPathComponent, LegacySQLiteStore.defaultRootDirectory)
+        XCTAssertEqual(store.fileURL.lastPathComponent, fileName)
+        XCTAssertEqual(store.mappingModelBundles, bundles)
+        XCTAssertTrue(store.resetStoreOnModelMismatch)
     }
 }

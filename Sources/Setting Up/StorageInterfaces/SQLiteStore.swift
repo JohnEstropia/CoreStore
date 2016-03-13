@@ -147,7 +147,7 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
     
     // MARK: Internal
     
-    internal static let defaultRootDirectory: NSURL = {
+    internal class var defaultRootDirectory: NSURL {
         
         #if os(tvOS)
             let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
@@ -163,14 +163,14 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
             NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack",
             isDirectory: true
         )
-    }()
+    }
     
-    internal static let defaultFileURL: NSURL = {
+    internal class var defaultFileURL: NSURL {
         
         let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
         
         return SQLiteStore.defaultRootDirectory
             .URLByAppendingPathComponent(applicationName, isDirectory: false)
             .URLByAppendingPathExtension("sqlite")
-    }()
+    }
 }
