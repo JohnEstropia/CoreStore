@@ -58,6 +58,11 @@ public enum CoreStoreErrorCode: Int {
      An `NSMappingModel` could not be found for a specific source and destination model versions.
      */
     case MappingModelNotFound
+    
+    /**
+     Progressive migrations are disabled for a store, but an `NSMappingModel` could not be found for a specific source and destination model versions.
+     */
+    case ProgressiveMigrationRequired
 }
 
 

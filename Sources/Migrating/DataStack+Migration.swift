@@ -34,11 +34,45 @@ import CoreData
 
 public extension DataStack {
     
+    /**
+     Asynchronously adds a `StorageInterface` with default settings to the stack. Migrations are also initiated by default.
+     ```
+     try dataStack.addStorage(
+         InMemoryStore.self,
+         completion: { result in
+             switch result {
+             case .Success(let storage): // ...
+             case .Failure(let error): // ...
+             }
+         }
+     )
+     ```
+     - parameter storeType: the storage type
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
+     */
     public func addStorage<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
         
         return try self.addStorage(storeType.init(), completion: completion)
     }
     
+    /**
+     Asynchronously adds a `StorageInterface` to the stack. Migrations are also initiated by default.
+     ```
+     try dataStack.addStorage(
+         InMemoryStore(configuration: "Config1"),
+         completion: { result in
+             switch result {
+             case .Success(let storage): // ...
+             case .Failure(let error): // ...
+             }
+         }
+     )
+     ```
+     - parameter storage: the local storage
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
+     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
+     */
     public func addStorage<T: StorageInterface>(storage: T, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
         
         self.coordinator.performBlock {
@@ -83,13 +117,30 @@ public extension DataStack {
         return nil
     }
     
+    /**
+     Asynchronously adds a `LocalStorage` with default settings to the stack. Migrations are also initiated by default.
+     ```
+     try dataStack.addStorage(
+         SQLiteStore.self,
+         completion: { result in
+             switch result {
+             case .Success(let storage): // ...
+             case .Failure(let error): // ...
+             }
+         }
+     )
+     ```
+     - parameter storeType: the local storage type
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
+     */
     public func addStorage<T: LocalStorage where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
         
         return try self.addStorage(storeType.init(), completion: completion)
     }
     
     /**
-     Asynchronously adds a `LocalStorage` to the stack.
+     Asynchronously adds a `LocalStorage` to the stack. Migrations are also initiated by default.
      ```
      try dataStack.addStorage(
          SQLiteStore(configuration: "Config1"), 
@@ -224,12 +275,10 @@ public extension DataStack {
     }
     
     /**
-     Migrates an SQLite store at the specified file URL and configuration name to the `DataStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
+     Migrates a local storage to match the `DataStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
      
-     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS).
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil` which indicates the "Default" configuration.
-     - parameter mappingModelBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.mainBundle()`.
-     - parameter sourceBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.mainBundle()`.
+     - parameter storage: the local storage
+     - parameter completion: the closure to be executed on the main queue when the migration completes, either due to success or failure. The closure's `MigrationResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
     public func upgradeStorageIfNeeded<T: LocalStorage>(storage: T, completion: (MigrationResult) -> Void) throws -> NSProgress? {
@@ -266,14 +315,11 @@ public extension DataStack {
         }
     }
     
-    
     /**
-     Checks if the storage needs to be migrated to the `DataStack`'s managed object model version.
+     Checks the migration steps required for the storage to match the `DataStack`'s managed object model version.
      
-     - parameter fileURL: the local file URL for the SQLite persistent store.
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil` which indicates the "Default" configuration.
-     - parameter mappingModelBundles: an optional array of bundles to search mapping model files from. If not set, defaults to the `NSBundle.allBundles()`.
-     :return: a `MigrationType` indicating the type of migration required for the store; or `nil` if either inspection of the store failed, or no mapping model was found/inferred. `MigrationType` acts as a `Bool` and evaluates to `false` if no migration is required, and `true` if either a lightweight or custom migration is needed.
+     - parameter storage: the local storage
+     - returns: a `MigrationType` array indicating the migration steps required for the store, or an empty array if the file does not exist yet. Otherwise, an error is thrown if either inspection of the store failed, or if no mapping model was found/inferred.
      */
     @warn_unused_result
     public func requiredMigrationsForStorage<T: LocalStorage>(storage: T) throws -> [MigrationType] {
@@ -300,6 +346,16 @@ public extension DataStack {
                     CoreStore.handleError(
                         error,
                         "Failed to find migration steps from the \(typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\"."
+                    )
+                    throw error
+                }
+                
+                if migrationSteps.count > 1 && storage.localStorageOptions.contains(.PreventProgressiveMigration) {
+                    
+                    let error = NSError(coreStoreErrorCode: .ProgressiveMigrationRequired)
+                    CoreStore.handleError(
+                        error,
+                        "Failed to find migration mapping from the \(typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
                     )
                     throw error
                 }
@@ -348,6 +404,19 @@ public extension DataStack {
                 
                 completion(MigrationResult([]))
                 return
+            }
+            return nil
+        }
+        else if numberOfMigrations > 1 && storage.localStorageOptions.contains(.PreventProgressiveMigration) {
+            
+            let error = NSError(coreStoreErrorCode: .ProgressiveMigrationRequired)
+            CoreStore.handleError(
+                error,
+                "Failed to find migration mapping from the \(typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
+            )
+            GCDQueue.Main.async {
+                
+                completion(MigrationResult(.ProgressiveMigrationRequired))
             }
             return nil
         }
