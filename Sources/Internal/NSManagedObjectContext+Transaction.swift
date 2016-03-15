@@ -93,8 +93,8 @@ internal extension NSManagedObjectContext {
             }
             catch {
                 
-                let saveError = error as NSError
-                CoreStore.handleError(
+                let saveError = CoreStoreError(error)
+                CoreStore.log(
                     saveError,
                     "Failed to save \(typeName(NSManagedObjectContext))."
                 )
@@ -141,8 +141,8 @@ internal extension NSManagedObjectContext {
             }
             catch {
                 
-                let saveError = error as NSError
-                CoreStore.handleError(
+                let saveError = CoreStoreError(error)
+                CoreStore.log(
                     saveError,
                     "Failed to save \(typeName(NSManagedObjectContext))."
                 )

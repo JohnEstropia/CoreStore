@@ -96,8 +96,8 @@ internal extension NSManagedObjectContext {
                 }
                 catch {
                     
-                    CoreStore.handleError(
-                        error as NSError,
+                    CoreStore.log(
+                        CoreStoreError(error),
                         "Failed to obtain permanent ID(s) for \(numberOfInsertedObjects) inserted object(s)."
                     )
                 }

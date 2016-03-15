@@ -66,7 +66,7 @@ public final class DefaultLogger: CoreStoreLogger {
         #endif
     }
     
-    public func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
             Swift.print("⚠️ [CoreStore: Error] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")

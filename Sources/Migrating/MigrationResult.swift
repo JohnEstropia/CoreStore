@@ -52,7 +52,7 @@ import Foundation
      case .Success(let hasChanges):
          // hasChanges indicates if there were changes or not
      case .Failure(let error):
-         // error is the NSError instance for the failure
+         // error is a CoreStoreError enum value
      }
  }
  ```
@@ -65,9 +65,9 @@ public enum MigrationResult {
     case Success([MigrationType])
     
     /**
-     `SaveResult.Failure` indicates that the migration failed. The associated object for this value is the related `NSError` instance.
+     `SaveResult.Failure` indicates that the migration failed. The associated object for this value is the a `CoreStoreError` enum value.
      */
-    case Failure(NSError)
+    case Failure(CoreStoreError)
     
     
     // MARK: Internal
@@ -77,19 +77,14 @@ public enum MigrationResult {
         self = .Success(migrationTypes)
     }
     
-    internal init(_ error: NSError) {
+    internal init(_ error: CoreStoreError) {
         
         self = .Failure(error)
     }
     
-    internal init(_ errorCode: CoreStoreErrorCode) {
+    internal init(_ error: ErrorType) {
         
-        self.init(errorCode, userInfo: nil)
-    }
-    
-    internal init(_ errorCode: CoreStoreErrorCode, userInfo: [NSObject: AnyObject]?) {
-        
-        self.init(NSError(coreStoreErrorCode: errorCode, userInfo: userInfo))
+        self = .Failure(CoreStoreError(error))
     }
 }
 

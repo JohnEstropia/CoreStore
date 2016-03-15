@@ -168,11 +168,12 @@ public final class DataStack {
         }
         catch {
             
-            CoreStore.handleError(
-                error as NSError,
+            let storeError = CoreStoreError(error)
+            CoreStore.log(
+                storeError,
                 "Failed to add \(typeName(storage)) to the stack."
             )
-            throw error
+            throw storeError
         }
     }
     
@@ -222,8 +223,8 @@ public final class DataStack {
                     return existingStorage
                 }
                 
-                let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
-                CoreStore.handleError(
+                let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: fileURL)
+                CoreStore.log(
                     error,
                     "Failed to add \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
                 )
@@ -271,11 +272,12 @@ public final class DataStack {
             }
             catch {
                 
-                CoreStore.handleError(
-                    error as NSError,
+                let storeError = CoreStoreError(error)
+                CoreStore.log(
+                    storeError,
                     "Failed to add \(typeName(storage)) to the stack."
                 )
-                throw error
+                throw storeError
             }
         }
     }
@@ -410,6 +412,9 @@ public final class DataStack {
     
     /**
      Deprecated. Use `addStorageAndWait(_:)` by passing a `InMemoryStore` instance.
+     ```
+     try dataStack.addStorage(InMemoryStore(configuration: configuration))
+     ```
      */
     @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an InMemoryStore instance.")
     public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
@@ -420,7 +425,15 @@ public final class DataStack {
     
     /**
      Deprecated. Use `addStorageAndWait(_:)` by passing a `LegacySQLiteStore` instance.
-     
+     ```
+     try dataStack.addStorage(
+         LegacySQLiteStore(
+             fileName: fileName,
+             configuration: configuration,
+             localStorageOptions: .RecreateStoreOnModelMismatch
+         )
+     )
+     ```
      - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
      */
     @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
@@ -438,7 +451,15 @@ public final class DataStack {
     
     /**
      Deprecated. Use `addStorageAndWait(_:)` by passing a `LegacySQLiteStore` instance.
-     
+     ```
+     try dataStack.addStorage(
+         LegacySQLiteStore(
+             fileURL: fileURL,
+             configuration: configuration,
+             localStorageOptions: .RecreateStoreOnModelMismatch
+         )
+     )
+     ```
      - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
      */
     @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")

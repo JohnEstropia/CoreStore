@@ -1,5 +1,5 @@
 //
-//  PersistentStoreResult.swift
+//  SetupResult.swift
 //  CoreStore
 //
 //  Copyright © 2014 John Rommel Estropia
@@ -54,7 +54,7 @@ import CoreData
          case .Success(let storage):
              // storage is the related StorageInterface instance
          case .Failure(let error):
-             // error is the NSError instance for the failure
+             // error is the CoreStoreError enum value for the failure
          }
      }
  )
@@ -68,9 +68,9 @@ public enum SetupResult<T: StorageInterface>: BooleanType {
     case Success(T)
     
     /**
-     `SetupResult.Failure` indicates that the storage setup failed. The associated object for this value is the related `NSError` instance.
+     `SetupResult.Failure` indicates that the storage setup failed. The associated object for this value is the related `CoreStoreError` enum value.
      */
-    case Failure(NSError)
+    case Failure(CoreStoreError)
     
     
     // MARK: BooleanType
@@ -92,19 +92,14 @@ public enum SetupResult<T: StorageInterface>: BooleanType {
         self = .Success(storage)
     }
     
-    internal init(_ error: NSError) {
+    internal init(_ error: CoreStoreError) {
         
         self = .Failure(error)
     }
     
-    internal init(_ errorCode: CoreStoreErrorCode) {
+    internal init(_ error: ErrorType) {
         
-        self.init(errorCode, userInfo: nil)
-    }
-    
-    internal init(_ errorCode: CoreStoreErrorCode, userInfo: [NSObject: AnyObject]?) {
-        
-        self.init(NSError(coreStoreErrorCode: errorCode, userInfo: userInfo))
+        self = .Failure(CoreStoreError(error))
     }
 }
 
@@ -151,15 +146,5 @@ public enum PersistentStoreResult: BooleanType {
     internal init(_ error: NSError) {
         
         self = .Failure(error)
-    }
-    
-    internal init(_ errorCode: CoreStoreErrorCode) {
-        
-        self.init(errorCode, userInfo: nil)
-    }
-    
-    internal init(_ errorCode: CoreStoreErrorCode, userInfo: [NSObject: AnyObject]?) {
-        
-        self.init(NSError(coreStoreErrorCode: errorCode, userInfo: userInfo))
     }
 }

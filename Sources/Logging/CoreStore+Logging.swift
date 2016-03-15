@@ -49,9 +49,9 @@ public extension CoreStore {
         )
     }
     
-    internal static func handleError(error: NSError, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
+    internal static func log(error: CoreStoreError, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
         
-        self.logger.handleError(
+        self.logger.log(
             error: error,
             message: message,
             fileName: fileName,

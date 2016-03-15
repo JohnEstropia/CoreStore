@@ -67,7 +67,7 @@ public protocol CoreStoreLogger {
      :lineNumber: the source line number
      :functionName: the source function name
      */
-    func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
      Handles assertions made throughout the `CoreStore` framework.
@@ -79,6 +79,24 @@ public protocol CoreStoreLogger {
      :functionName: the source function name
      */
     func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Deprecated. Use `log(error:message:fileName:lineNumber:functionName:)` instead.
+     */
+    @available(*, deprecated=2.0.0, message="Use log(error:message:fileName:lineNumber:functionName:) instead.")
+    func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+}
+
+extension CoreStoreLogger {
+    
+    /**
+     Deprecated. Use `log(error:message:fileName:lineNumber:functionName:)` instead.
+     */
+    @available(*, deprecated=2.0.0, message="Use log(error:message:fileName:lineNumber:functionName:) instead.")
+    public func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {}
 }
 
 

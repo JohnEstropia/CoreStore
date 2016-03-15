@@ -101,8 +101,8 @@ public extension DataStack {
             }
             catch {
                 
-                let storeError = error as NSError
-                CoreStore.handleError(
+                let storeError = CoreStoreError(error)
+                CoreStore.log(
                     storeError,
                     "Failed to add \(typeName(storage)) to the stack."
                 )
@@ -187,8 +187,8 @@ public extension DataStack {
                     return nil
                 }
                 
-                let error = NSError(coreStoreErrorCode: .DifferentPersistentStoreExistsAtURL)
-                CoreStore.handleError(
+                let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: fileURL)
+                CoreStore.log(
                     error,
                     "Failed to add \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
                 )
@@ -214,7 +214,7 @@ public extension DataStack {
                     metadata: metadata,
                     completion: { (result) -> Void in
                         
-                        if case .Failure(let error) = result {
+                        if case .Failure(.InternalError(let error)) = result {
                             
                             if storage.localStorageOptions.contains(.RecreateStoreOnModelMismatch) && error.isCoreDataMigrationError {
                                 
@@ -230,7 +230,7 @@ public extension DataStack {
                                 }
                                 catch {
                                     
-                                    completion(SetupResult(error as NSError))
+                                    completion(SetupResult(error))
                                 }
                                 return
                             }
@@ -247,7 +247,7 @@ public extension DataStack {
                         }
                         catch {
                             
-                            completion(SetupResult(error as NSError))
+                            completion(SetupResult(error))
                         }
                     }
                 )
@@ -265,11 +265,12 @@ public extension DataStack {
             }
             catch {
                 
-                CoreStore.handleError(
-                    error as NSError,
+                let storeError = CoreStoreError(error)
+                CoreStore.log(
+                    storeError,
                     "Failed to load SQLite \(typeName(NSPersistentStore)) metadata."
                 )
-                throw error
+                throw storeError
             }
         }
     }
@@ -306,11 +307,12 @@ public extension DataStack {
             }
             catch {
                 
-                CoreStore.handleError(
-                    error as NSError,
+                let metadataError = CoreStoreError(error)
+                CoreStore.log(
+                    metadataError,
                     "Failed to load \(typeName(storage)) metadata from URL \"\(fileURL)\"."
                 )
-                throw error
+                throw metadataError
             }
         }
     }
@@ -342,8 +344,12 @@ public extension DataStack {
                 
                 guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
                     
-                    let error = NSError(coreStoreErrorCode: .MappingModelNotFound)
-                    CoreStore.handleError(
+                    let error = CoreStoreError.MappingModelNotFound(
+                        storage: storage,
+                        targetModel: self.model,
+                        targetModelVersion: self.modelVersion
+                    )
+                    CoreStore.log(
                         error,
                         "Failed to find migration steps from the \(typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\"."
                     )
@@ -352,8 +358,8 @@ public extension DataStack {
                 
                 if migrationSteps.count > 1 && storage.localStorageOptions.contains(.PreventProgressiveMigration) {
                     
-                    let error = NSError(coreStoreErrorCode: .ProgressiveMigrationRequired)
-                    CoreStore.handleError(
+                    let error = CoreStoreError.ProgressiveMigrationRequired(storage: storage)
+                    CoreStore.log(
                         error,
                         "Failed to find migration mapping from the \(typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
                     )
@@ -369,11 +375,12 @@ public extension DataStack {
             }
             catch {
                 
-                CoreStore.handleError(
-                    error as NSError,
+                let metadataError = CoreStoreError(error)
+                CoreStore.log(
+                    metadataError,
                     "Failed to load \(typeName(storage)) metadata from URL \"\(fileURL)\"."
                 )
-                throw error
+                throw metadataError
             }
         }
     }
@@ -385,14 +392,19 @@ public extension DataStack {
         
         guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
             
-            CoreStore.handleError(
-                NSError(coreStoreErrorCode: .MappingModelNotFound),
-                "Failed to find migration steps from \(typeName(storage)) at URL \"\(storage.fileURL )\" to version model \"\(model)\"."
+            let error = CoreStoreError.MappingModelNotFound(
+                storage: storage,
+                targetModel: self.model,
+                targetModelVersion: self.modelVersion
+            )
+            CoreStore.log(
+                error,
+                "Failed to find migration steps from \(typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.model)\"."
             )
             
             GCDQueue.Main.async {
                 
-                completion(MigrationResult(.MappingModelNotFound))
+                completion(MigrationResult(error))
             }
             return nil
         }
@@ -409,14 +421,14 @@ public extension DataStack {
         }
         else if numberOfMigrations > 1 && storage.localStorageOptions.contains(.PreventProgressiveMigration) {
             
-            let error = NSError(coreStoreErrorCode: .ProgressiveMigrationRequired)
-            CoreStore.handleError(
+            let error = CoreStoreError.ProgressiveMigrationRequired(storage: storage)
+            CoreStore.log(
                 error,
                 "Failed to find migration mapping from the \(typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
             )
             GCDQueue.Main.async {
                 
-                completion(MigrationResult(.ProgressiveMigrationRequired))
+                completion(MigrationResult(error))
             }
             return nil
         }
@@ -458,7 +470,7 @@ public extension DataStack {
                         }
                         catch {
                             
-                            migrationResult = MigrationResult(error as NSError)
+                            migrationResult = MigrationResult(error)
                             cancelled = true
                         }
                     }
@@ -619,12 +631,13 @@ public extension DataStack {
             
             let sourceVersion = migrationManager.sourceModel.currentModelVersion ?? "???"
             let destinationVersion = migrationManager.destinationModel.currentModelVersion ?? "???"
-            CoreStore.handleError(
-                error as NSError,
+            let migrationError = CoreStoreError(error)
+            CoreStore.log(
+                migrationError,
                 "Failed to migrate from version model \"\(sourceVersion)\" to version model \"\(destinationVersion)\"."
             )
             
-            throw error
+            throw migrationError
         }
         
         do {
@@ -649,12 +662,13 @@ public extension DataStack {
             
             let sourceVersion = migrationManager.sourceModel.currentModelVersion ?? "???"
             let destinationVersion = migrationManager.destinationModel.currentModelVersion ?? "???"
-            CoreStore.handleError(
-                error as NSError,
+            let fileError = CoreStoreError(error)
+            CoreStore.log(
+                fileError,
                 "Failed to save store after migrating from version model \"\(sourceVersion)\" to version model \"\(destinationVersion)\"."
             )
             
-            throw error
+            throw fileError
         }
     }
     
@@ -679,7 +693,7 @@ public extension DataStack {
                         completion(PersistentStoreResult(self.persistentStoreForStorage(storage)!))
                         
                     case .Failure(let error):
-                        completion(PersistentStoreResult(error))
+                        completion(PersistentStoreResult(error as NSError))
                     }
                 }
             )
@@ -713,7 +727,7 @@ public extension DataStack {
                     completion(PersistentStoreResult(self.persistentStoreForStorage(storage)!))
                     
                 case .Failure(let error):
-                    completion(PersistentStoreResult(error))
+                    completion(PersistentStoreResult(error as NSError))
                 }
             }
         )
@@ -742,7 +756,7 @@ public extension DataStack {
                     completion(PersistentStoreResult(self.persistentStoreForStorage(storage)!))
                     
                 case .Failure(let error):
-                    completion(PersistentStoreResult(error))
+                    completion(PersistentStoreResult(error as NSError))
                 }
             }
         )

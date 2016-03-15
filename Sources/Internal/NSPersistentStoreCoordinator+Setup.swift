@@ -84,6 +84,6 @@ internal extension NSPersistentStoreCoordinator {
             return store
         }
         
-        throw storeError ?? NSError(coreStoreErrorCode: .UnknownError)
+        throw CoreStoreError(storeError)
     }
 }
