@@ -1,16 +1,18 @@
+<p align="center">
 <img alt="CoreStore" src="https://cloud.githubusercontent.com/assets/3029684/13373932/84daee2a-ddb8-11e5-99db-fdf415620102.png" height=170 />
 <br />
-
+<br />
 Unleashing the real power of Core Data with the elegance and safety of Swift
-
-
-[![Build Status](https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg?style=flat)](https://travis-ci.org/JohnEstropia/CoreStore)
-[![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
-[![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
-[![License](https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat)](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Swift Package Manager compatible](https://img.shields.io/badge/Swift_Package_Manager-compatible-orange.svg?style=flat)](https://swiftpkgs.ng.bluemix.net/package/27993573)
-
+<br />
+<br />
+<a href="https://travis-ci.org/JohnEstropia/CoreStore"><img alt="Build Status" src="https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg?style=flat" /></a>
+<a href="http://cocoadocs.org/docsets/CoreStore"><img alt=Version" src="https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat" /></a>
+<a href="http://cocoadocs.org/docsets/CoreStore"><img alt="Platform" src="https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat" /></a>
+<a href="https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE"><img alt="License" src="https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat" /></a>
+<a href="https://github.com/Carthage/Carthage"><img alt="Carthage compatible" src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" /></a>
+<a href="https://swiftpkgs.ng.bluemix.net/package/27993573"><img alt="Swift Package Manager compatible" src="https://img.shields.io/badge/Swift_Package_Manager-compatible-orange.svg?style=flat" /></a>
+<br />
+</p>
 * Swift 2.2 (Xcode 7.3)
 * iOS 8+ / OSX 10.10+ / watchOS 2.0+ / tvOS 9.0+
 
@@ -1231,5 +1233,5 @@ Did CoreStore serve you well? I'd love to hear about your app :)
 
 
 # License
-CoreStore is released under an MIT license. See the LICENSE file for more information
+CoreStore is released under an MIT license. See the [LICENSE](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE) file for more information
 
