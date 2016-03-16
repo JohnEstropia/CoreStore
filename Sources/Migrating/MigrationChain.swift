@@ -62,9 +62,7 @@ import CoreData
  */
 public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, DictionaryLiteralConvertible, ArrayLiteralConvertible {
     
-    // MARK: NilLiteralConvertible
-    
-    public init(nilLiteral: ()) {
+    public init() {
         
         self.versionTree = [:]
         self.rootVersions = []
@@ -72,10 +70,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.valid = true
     }
     
-    
-    // MARK: StringLiteralConvertible
-    
-    public init(stringLiteral value: String) {
+    public init(_ value: String) {
         
         self.versionTree = [:]
         self.rootVersions = [value]
@@ -83,32 +78,30 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.valid = true
     }
     
-    
-    // MARK: ExtendedGraphemeClusterLiteralConvertible
-    
-    public init(extendedGraphemeClusterLiteral value: String) {
+    public init<T: CollectionType where T.Generator.Element == String, T.Index: BidirectionalIndexType>(_ elements: T) {
         
-        self.versionTree = [:]
-        self.rootVersions = [value]
-        self.leafVersions = [value]
-        self.valid = true
+        CoreStore.assert(Set(elements).count == Array(elements).count, "\(typeName(MigrationChain))'s migration chain could not be created due to duplicate version strings.")
+        
+        var lastVersion: String?
+        var versionTree = [String: String]()
+        var valid = true
+        for version in elements {
+            
+            if let lastVersion = lastVersion,
+                let _ = versionTree.updateValue(version, forKey: lastVersion) {
+                
+                valid = false
+            }
+            lastVersion = version
+        }
+        
+        self.versionTree = versionTree
+        self.rootVersions = Set([elements.first].flatMap { $0 == nil ? [] : [$0!] })
+        self.leafVersions = Set([elements.last].flatMap { $0 == nil ? [] : [$0!] })
+        self.valid = valid
     }
     
-    
-    // MARK: UnicodeScalarLiteralConvertible
-    
-    public init(unicodeScalarLiteral value: String) {
-        
-        self.versionTree = [:]
-        self.rootVersions = [value]
-        self.leafVersions = [value]
-        self.valid = true
-    }
-    
-    
-    // MARK: DictionaryLiteralConvertible
-    
-    public init(dictionaryLiteral elements: (String, String)...) {
+    public init(_ elements: [(String, String)]) {
         
         var valid = true
         var versionTree = [String: String]()
@@ -124,11 +117,9 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
             valid = false
         }
         let leafVersions = Set(
-            elements.filter { (tuple: (String, String)) -> Bool in
-                
-                return versionTree[tuple.1] == nil
-                
-            }.map { $1 }
+            elements
+                .filter { versionTree[$1] == nil }
+                .map { $1 }
         )
         
         let isVersionAmbiguous = { (start: String) -> Bool in
@@ -156,30 +147,57 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.valid = valid && Set(versionTree.keys).union(versionTree.values).filter { isVersionAmbiguous($0) }.count <= 0
     }
     
+    public init(_ dictionary: [String: String]) {
+        
+        self.init(dictionary.map { $0 })
+    }
+    
+    
+    // MARK: NilLiteralConvertible
+    
+    public init(nilLiteral: ()) {
+        
+        self.init()
+    }
+    
+    
+    // MARK: StringLiteralConvertible
+    
+    public init(stringLiteral value: String) {
+        
+        self.init(value)
+    }
+    
+    
+    // MARK: ExtendedGraphemeClusterLiteralConvertible
+    
+    public init(extendedGraphemeClusterLiteral value: String) {
+        
+        self.init(value)
+    }
+    
+    
+    // MARK: UnicodeScalarLiteralConvertible
+    
+    public init(unicodeScalarLiteral value: String) {
+        
+        self.init(value)
+    }
+    
+    
+    // MARK: DictionaryLiteralConvertible
+    
+    public init(dictionaryLiteral elements: (String, String)...) {
+        
+        self.init(elements)
+    }
+    
     
     // MARK: ArrayLiteralConvertible
     
     public init(arrayLiteral elements: String...) {
         
-        CoreStore.assert(Set(elements).count == elements.count, "\(typeName(MigrationChain))'s migration chain could not be created due to duplicate version strings.")
-        
-        var lastVersion: String?
-        var versionTree = [String: String]()
-        var valid = true
-        for version in elements {
-            
-            if let lastVersion = lastVersion,
-                let _ = versionTree.updateValue(version, forKey: lastVersion) {
-                    
-                    valid = false
-            }
-            lastVersion = version
-        }
-        
-        self.versionTree = versionTree
-        self.rootVersions = Set([elements.first].flatMap { $0 == nil ? [] : [$0!] })
-        self.leafVersions = Set([elements.last].flatMap { $0 == nil ? [] : [$0!] })
-        self.valid = valid
+        self.init(elements)
     }
     
     

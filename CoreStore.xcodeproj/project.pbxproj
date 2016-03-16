@@ -217,6 +217,10 @@
 		B59AFF411C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B59D5C221B5BA34B00453479 /* NSFileManager+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */; };
 		B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A261201B64BFDB006EB6D3 /* MigrationType.swift */; };
+		B5AEFAB51C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
+		B5AEFAB61C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
+		B5AEFAB71C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
+		B5AEFAB81C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
 		B5C976E31C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */; };
 		B5C976E41C6C9F9A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */; };
 		B5C976E51C6C9F9B00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */; };
@@ -232,6 +236,17 @@
 		B5D3F6471C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */; };
 		B5D3F6481C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */; };
 		B5D5E0CF1A4D6AAB006468AF /* TestEntity2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */; };
+		B5DBE2CD1C9914A900B5CEFA /* CSCoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */; };
+		B5DBE2CE1C9914A900B5CEFA /* CSCoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */; };
+		B5DBE2CF1C9914A900B5CEFA /* CSCoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */; };
+		B5DBE2D01C9914A900B5CEFA /* CSCoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */; };
+		B5DBE2D21C991B3E00B5CEFA /* CSDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */; };
+		B5DBE2D31C991B3E00B5CEFA /* CSDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */; };
+		B5DBE2D41C991B3E00B5CEFA /* CSDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */; };
+		B5DBE2D51C991B3E00B5CEFA /* CSDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */; };
+		B5DBE2DF1C9939E100B5CEFA /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */; };
+		B5DBE2E01C9939E100B5CEFA /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */; };
+		B5DBE2E11C9939E100B5CEFA /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */; };
 		B5DC47C61C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */; };
 		B5DC47C71C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */; };
 		B5DC47C81C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */; };
@@ -360,6 +375,7 @@
 		B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFileManager+Setup.swift"; sourceTree = "<group>"; };
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
 		B5AD60CD1C90141E00F2B2E8 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
+		B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreBridge.swift; sourceTree = "<group>"; };
 		B5BDC91A1C202269008147CD /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cartfile; path = ../Cartfile; sourceTree = "<group>"; };
 		B5BDC9271C2024F2008147CD /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = SOURCE_ROOT; };
 		B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UnsafeDataTransaction+Observing.swift"; sourceTree = "<group>"; };
@@ -371,6 +387,11 @@
 		B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacySQLiteStore.swift; sourceTree = "<group>"; };
 		B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity2.swift; sourceTree = "<group>"; };
 		B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = CoreStore.podspec; sourceTree = SOURCE_ROOT; };
+		B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSCoreStore.swift; sourceTree = "<group>"; };
+		B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSDataStack.swift; sourceTree = "<group>"; };
+		B5DBE2DA1C9939E100B5CEFA /* CoreStoreTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CoreStoreTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		B5DBE2DD1C9939E100B5CEFA /* BridgingTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgingTests.h; sourceTree = "<group>"; };
+		B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BridgingTests.m; sourceTree = "<group>"; };
 		B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationChainTests.swift; sourceTree = "<group>"; };
 		B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageInterfaceTests.swift; sourceTree = "<group>"; };
 		B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+Importing.swift"; sourceTree = "<group>"; };
@@ -531,6 +552,7 @@
 				B5E84F191AFF84860064E85B /* Observing */,
 				B56964D11B22FF700075EE4A /* Migrating */,
 				B5E84F261AFF84920064E85B /* Convenience Helpers */,
+				B5DBE2CB1C99148100B5CEFA /* ObjectiveC */,
 				B5E84F291AFF849C0064E85B /* Internal */,
 				2F03A53319C5C6DA005002A5 /* Supporting Files */,
 			);
@@ -556,10 +578,13 @@
 			children = (
 				2F03A53F19C5C6DA005002A5 /* CoreStoreTests.swift */,
 				B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */,
+				B5DBE2DD1C9939E100B5CEFA /* BridgingTests.h */,
+				B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */,
 				B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */,
 				B5D372851A39CDDB00F583D9 /* TestEntity1.swift */,
 				B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */,
 				2F03A53D19C5C6DA005002A5 /* Supporting Files */,
+				B5DBE2DA1C9939E100B5CEFA /* CoreStoreTests-Bridging-Header.h */,
 			);
 			path = CoreStoreTests;
 			sourceTree = "<group>";
@@ -607,6 +632,16 @@
 				B56965231B356B820075EE4A /* MigrationResult.swift */,
 			);
 			path = Migrating;
+			sourceTree = "<group>";
+		};
+		B5DBE2CB1C99148100B5CEFA /* ObjectiveC */ = {
+			isa = PBXGroup;
+			children = (
+				B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */,
+				B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */,
+				B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */,
+			);
+			path = ObjectiveC;
 			sourceTree = "<group>";
 		};
 		B5E834B61B7630BD001D3D50 /* Importing Data */ = {
@@ -918,7 +953,7 @@
 		2F03A52719C5C6DA005002A5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "John Rommel Estropia";
 				TargetAttributes = {
@@ -1048,6 +1083,7 @@
 				B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */,
 				B5E84F111AFF847B0064E85B /* Select.swift in Sources */,
 				B5FE4DA21C8481E100FA6A91 /* StorageInterface.swift in Sources */,
+				B5DBE2D21C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
 				B50392F91C478FF3009900CA /* NSManagedObject+Transaction.swift in Sources */,
 				B5202CFA1C04688100DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5E84EE11AFF84500064E85B /* SetupResult.swift in Sources */,
@@ -1077,6 +1113,7 @@
 				B5E84EFC1AFF846E0064E85B /* SynchronousDataTransaction.swift in Sources */,
 				B5E84F281AFF84920064E85B /* NSManagedObject+Convenience.swift in Sources */,
 				B51BE06A1B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift in Sources */,
+				B5AEFAB51C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				B5E84F391AFF85470064E85B /* NSManagedObjectContext+Querying.swift in Sources */,
 				B5E84EE81AFF84610064E85B /* CoreStoreLogger.swift in Sources */,
 				B5E84F311AFF849C0064E85B /* WeakObject.swift in Sources */,
@@ -1089,6 +1126,7 @@
 				B5E834B91B76311F001D3D50 /* BaseDataTransaction+Importing.swift in Sources */,
 				B5E84EE61AFF84610064E85B /* DefaultLogger.swift in Sources */,
 				B5E84EF41AFF846E0064E85B /* AsynchronousDataTransaction.swift in Sources */,
+				B5DBE2CD1C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
 				B5E84F151AFF847B0064E85B /* CoreStore+Querying.swift in Sources */,
 				B5E84F241AFF84860064E85B /* ListObserver.swift in Sources */,
 				B5E84F2E1AFF849C0064E85B /* AssociatedObjects.swift in Sources */,
@@ -1103,6 +1141,7 @@
 				B5DC47C61C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B5D372861A39CDDB00F583D9 /* TestEntity1.swift in Sources */,
 				B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */,
+				B5DBE2DF1C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B5D5E0CF1A4D6AAB006468AF /* TestEntity2.swift in Sources */,
 				B5DC47CA1C93D9C800FA3BF3 /* StorageInterfaceTests.swift in Sources */,
 			);
@@ -1134,6 +1173,7 @@
 				82BA18B11C4BBD3100A0916E /* SaveResult.swift in Sources */,
 				82BA18DD1C4BBE1400A0916E /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5FE4DA81C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
+				B5DBE2D31C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
 				82BA18B41C4BBD3900A0916E /* BaseDataTransaction+Importing.swift in Sources */,
 				82BA18CA1C4BBD5900A0916E /* MigrationResult.swift in Sources */,
 				82BA18C11C4BBD5300A0916E /* CoreStore+Observing.swift in Sources */,
@@ -1163,6 +1203,7 @@
 				82BA18C71C4BBD5900A0916E /* CoreStore+Migration.swift in Sources */,
 				82BA18C41C4BBD5300A0916E /* ListMonitor.swift in Sources */,
 				82BA18BA1C4BBD4A00A0916E /* Select.swift in Sources */,
+				B5AEFAB61C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				82BA18A71C4BBD2900A0916E /* CoreStore+Logging.swift in Sources */,
 				82BA18D81C4BBD7100A0916E /* WeakObject.swift in Sources */,
 				82BA18AF1C4BBD3100A0916E /* CoreStore+Transaction.swift in Sources */,
@@ -1175,6 +1216,7 @@
 				82BA18D61C4BBD7100A0916E /* NSManagedObjectContext+Transaction.swift in Sources */,
 				82BA18B91C4BBD4A00A0916E /* From.swift in Sources */,
 				82BA18BE1C4BBD4A00A0916E /* Tweak.swift in Sources */,
+				B5DBE2CE1C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
 				82BA18CC1C4BBD6400A0916E /* NSProgress+Convenience.swift in Sources */,
 				82BA18C01C4BBD5300A0916E /* DataStack+Observing.swift in Sources */,
 				82BA18A61C4BBD2900A0916E /* DefaultLogger.swift in Sources */,
@@ -1188,6 +1230,7 @@
 				82BA18DA1C4BBD9700A0916E /* TestEntity1.swift in Sources */,
 				B5DC47C71C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				82BA18DB1C4BBD9700A0916E /* TestEntity2.swift in Sources */,
+				B5DBE2E01C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				82BA18D91C4BBD9700A0916E /* CoreStoreTests.swift in Sources */,
 				82BA18DC1C4BBD9C00A0916E /* Model.xcdatamodeld in Sources */,
 				B5DC47CB1C93D9C800FA3BF3 /* StorageInterfaceTests.swift in Sources */,
@@ -1198,6 +1241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5DBE2D01C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
 				B52DD1BE1BE1F94300949AFE /* NSProgress+Convenience.swift in Sources */,
 				B52DD1951BE1F92500949AFE /* CoreStoreError.swift in Sources */,
 				B52DD1C21BE1F94600949AFE /* MigrationManager.swift in Sources */,
@@ -1251,6 +1295,8 @@
 				B52DD19B1BE1F92800949AFE /* CoreStoreLogger.swift in Sources */,
 				B52DD1991BE1F92800949AFE /* DefaultLogger.swift in Sources */,
 				B52DD1B91BE1F94000949AFE /* CoreStore+Migration.swift in Sources */,
+				B5DBE2D51C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
+				B5AEFAB81C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				B598514B1C90289F00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B52DD1AA1BE1F93500949AFE /* ClauseTypes.swift in Sources */,
 			);
@@ -1263,6 +1309,7 @@
 				B52DD1CD1BE1F94D00949AFE /* TestEntity1.swift in Sources */,
 				B5DC47C81C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B52DD1CE1BE1F94D00949AFE /* TestEntity2.swift in Sources */,
+				B5DBE2E11C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B52DD1CC1BE1F94D00949AFE /* CoreStoreTests.swift in Sources */,
 				B5598BCC1BE2093D0092EFCE /* Model.xcdatamodeld in Sources */,
 				B5DC47CC1C93D9C800FA3BF3 /* StorageInterfaceTests.swift in Sources */,
@@ -1295,6 +1342,7 @@
 				B56321981BD65216006C9394 /* Where.swift in Sources */,
 				B5202CFD1C046E8400DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5FE4DA91C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
+				B5DBE2D41C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
 				B56321AF1BD6521C006C9394 /* NSFileManager+Setup.swift in Sources */,
 				B50392FA1C47963F009900CA /* NSManagedObject+Transaction.swift in Sources */,
 				B56321971BD65216006C9394 /* Select.swift in Sources */,
@@ -1324,6 +1372,7 @@
 				B563218E1BD65216006C9394 /* SaveResult.swift in Sources */,
 				B56321A21BD65216006C9394 /* ListObserver.swift in Sources */,
 				B563218A1BD65216006C9394 /* SynchronousDataTransaction.swift in Sources */,
+				B5AEFAB71C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				B563219F1BD65216006C9394 /* ObjectMonitor.swift in Sources */,
 				B56321B61BD6521C006C9394 /* WeakObject.swift in Sources */,
 				B56321AC1BD6521C006C9394 /* Functions.swift in Sources */,
@@ -1336,6 +1385,7 @@
 				B56321B41BD6521C006C9394 /* NSManagedObjectContext+Transaction.swift in Sources */,
 				B56321861BD65216006C9394 /* CoreStoreLogger.swift in Sources */,
 				B56321841BD65216006C9394 /* DefaultLogger.swift in Sources */,
+				B5DBE2CF1C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
 				B56321A41BD65216006C9394 /* CoreStore+Migration.swift in Sources */,
 				B56321A01BD65216006C9394 /* ObjectObserver.swift in Sources */,
 				B56321951BD65216006C9394 /* ClauseTypes.swift in Sources */,
@@ -1475,6 +1525,7 @@
 				PRODUCT_NAME = CoreStore;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -1508,6 +1559,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1521,12 +1573,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 			};
 			name = Release;
 		};
 		82BA189A1C4BBCBA00A0916E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1538,6 +1592,7 @@
 				PRODUCT_NAME = CoreStore;
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Debug;
@@ -1545,6 +1600,7 @@
 		82BA189B1C4BBCBA00A0916E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1563,12 +1619,15 @@
 		82BA189C1C4BBCBA00A0916E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = CoreStoreTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Debug;
@@ -1576,6 +1635,7 @@
 		82BA189D1C4BBCBA00A0916E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = CoreStoreTests/Info.plist;
@@ -1583,6 +1643,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.johnestropia.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = appletvos;
+				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Release;
@@ -1591,6 +1652,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -1606,6 +1668,7 @@
 				PRODUCT_NAME = CoreStore;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -1613,6 +1676,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
@@ -1645,6 +1709,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.CoreStore;
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1663,12 +1728,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.CoreStore;
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 			};
 			name = Release;
 		};
 		B56321751BD65082006C9394 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1681,6 +1748,7 @@
 				PRODUCT_NAME = CoreStore;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Debug;
@@ -1688,6 +1756,7 @@
 		B56321761BD65082006C9394 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;

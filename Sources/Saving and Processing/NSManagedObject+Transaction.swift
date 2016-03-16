@@ -38,6 +38,7 @@ public extension NSManagedObject {
      
      Note that the internal reference to the transaction is `weak`, and it is still the developer's responsibility to retain a strong reference to the `UnsafeDataTransaction`.
      */
+    @nonobjc
     public var unsafeDataTransaction: UnsafeDataTransaction? {
         
         return self.managedObjectContext?.parentTransaction as? UnsafeDataTransaction

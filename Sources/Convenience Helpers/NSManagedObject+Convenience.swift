@@ -38,6 +38,7 @@ public extension NSManagedObject {
      - returns: the primitive value for the KVC key
      */
     @warn_unused_result
+    @nonobjc
     public func accessValueForKVCKey(KVCKey: KeyPath) -> AnyObject? {
         
         self.willAccessValueForKey(KVCKey)
@@ -53,6 +54,7 @@ public extension NSManagedObject {
      - parameter value: the value to set the KVC key with
      - parameter KVCKey: the KVC key
      */
+    @nonobjc
     public func setValue(value: AnyObject?, forKVCKey KVCKey: KeyPath) {
         
         self.willChangeValueForKey(KVCKey)
@@ -63,6 +65,7 @@ public extension NSManagedObject {
     /**
      Re-faults the object to use the latest values from the persistent store
      */
+    @nonobjc
     public func refreshAsFault() {
         
         self.managedObjectContext?.refreshObject(self, mergeChanges: false)
@@ -71,6 +74,7 @@ public extension NSManagedObject {
     /**
      Re-faults the object to use the latest values from the persistent store and merges previously pending changes back
      */
+    @nonobjc
     public func refreshAndMerge() {
         
         self.managedObjectContext?.refreshObject(self, mergeChanges: true)

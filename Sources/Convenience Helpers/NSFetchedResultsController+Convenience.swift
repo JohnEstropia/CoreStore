@@ -34,6 +34,7 @@ public extension NSFetchedResultsController {
     /**
      Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful to partially support Objective-C classes by passing an `NSFetchedResultsController` instance instead of a `ListMonitor`.
      */
+    @nonobjc
     public static func createForStack<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
         
         return CoreStoreFetchedResultsController<T>(
