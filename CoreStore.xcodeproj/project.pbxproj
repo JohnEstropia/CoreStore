@@ -145,6 +145,14 @@
 		B546F9541C95529D00D5AC55 /* LocalStorageOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9521C95529D00D5AC55 /* LocalStorageOptions.swift */; };
 		B546F9551C95529D00D5AC55 /* LocalStorageOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9521C95529D00D5AC55 /* LocalStorageOptions.swift */; };
 		B546F9561C95529D00D5AC55 /* LocalStorageOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9521C95529D00D5AC55 /* LocalStorageOptions.swift */; };
+		B546F9581C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */; };
+		B546F9591C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */; };
+		B546F95A1C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */; };
+		B546F95B1C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */; };
+		B546F95D1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */; };
+		B546F95E1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */; };
+		B546F95F1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */; };
+		B546F9601C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */; };
 		B54A6A551BA15F2A007870FD /* FetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54A6A541BA15F2A007870FD /* FetchedResultsControllerDelegate.swift */; };
 		B5598BCC1BE2093D0092EFCE /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007101B3F6BD500A9A8F9 /* Into.swift */; };
@@ -360,6 +368,8 @@
 		B52DD1741BE1F8CC00949AFE /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B546F9521C95529D00D5AC55 /* LocalStorageOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalStorageOptions.swift; sourceTree = "<group>"; };
+		B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSCoreStore+Setup.swift"; sourceTree = "<group>"; };
+		B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSQliteStore.swift; sourceTree = "<group>"; };
 		B54A6A541BA15F2A007870FD /* FetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
 		B5548CD51BD65AE00077652A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B5548CD71BD65AE50077652A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
@@ -622,6 +632,24 @@
 			path = iCloud;
 			sourceTree = "<group>";
 		};
+		B546F9611C9A13F400D5AC55 /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */,
+				B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */,
+				B546F9621C9A140E00D5AC55 /* StorageInterfaces */,
+			);
+			name = Setup;
+			sourceTree = "<group>";
+		};
+		B546F9621C9A140E00D5AC55 /* StorageInterfaces */ = {
+			isa = PBXGroup;
+			children = (
+				B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */,
+			);
+			name = StorageInterfaces;
+			sourceTree = "<group>";
+		};
 		B56964D11B22FF700075EE4A /* Migrating */ = {
 			isa = PBXGroup;
 			children = (
@@ -637,9 +665,9 @@
 		B5DBE2CB1C99148100B5CEFA /* ObjectiveC */ = {
 			isa = PBXGroup;
 			children = (
-				B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */,
-				B5DBE2D11C991B3E00B5CEFA /* CSDataStack.swift */,
 				B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */,
+				B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */,
+				B546F9611C9A13F400D5AC55 /* Setup */,
 			);
 			path = ObjectiveC;
 			sourceTree = "<group>";
@@ -1077,6 +1105,7 @@
 				B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */,
 				B5E84F0E1AFF847B0064E85B /* Tweak.swift in Sources */,
 				B5E84F121AFF847B0064E85B /* OrderBy.swift in Sources */,
+				B546F9581C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
 				B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */,
 				B5FAD6AE1B518DCB00714891 /* CoreStore+Migration.swift in Sources */,
 				B5E84EE71AFF84610064E85B /* CoreStore+Logging.swift in Sources */,
@@ -1127,6 +1156,7 @@
 				B5E84EE61AFF84610064E85B /* DefaultLogger.swift in Sources */,
 				B5E84EF41AFF846E0064E85B /* AsynchronousDataTransaction.swift in Sources */,
 				B5DBE2CD1C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
+				B546F95D1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				B5E84F151AFF847B0064E85B /* CoreStore+Querying.swift in Sources */,
 				B5E84F241AFF84860064E85B /* ListObserver.swift in Sources */,
 				B5E84F2E1AFF849C0064E85B /* AssociatedObjects.swift in Sources */,
@@ -1167,6 +1197,7 @@
 				B5D3F6461C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				82BA18B31C4BBD3900A0916E /* ImportableUniqueObject.swift in Sources */,
 				82BA18A11C4BBD1D00A0916E /* CoreStore.swift in Sources */,
+				B546F9591C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
 				82BA18CF1C4BBD7100A0916E /* Functions.swift in Sources */,
 				82BA18A31C4BBD2200A0916E /* DataStack.swift in Sources */,
 				82BA18C81C4BBD5900A0916E /* MigrationChain.swift in Sources */,
@@ -1217,6 +1248,7 @@
 				82BA18B91C4BBD4A00A0916E /* From.swift in Sources */,
 				82BA18BE1C4BBD4A00A0916E /* Tweak.swift in Sources */,
 				B5DBE2CE1C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
+				B546F95E1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				82BA18CC1C4BBD6400A0916E /* NSProgress+Convenience.swift in Sources */,
 				82BA18C01C4BBD5300A0916E /* DataStack+Observing.swift in Sources */,
 				82BA18A61C4BBD2900A0916E /* DefaultLogger.swift in Sources */,
@@ -1244,10 +1276,12 @@
 				B5DBE2D01C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
 				B52DD1BE1BE1F94300949AFE /* NSProgress+Convenience.swift in Sources */,
 				B52DD1951BE1F92500949AFE /* CoreStoreError.swift in Sources */,
+				B546F9601C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				B52DD1C21BE1F94600949AFE /* MigrationManager.swift in Sources */,
 				B5FEC1911C9166E700532541 /* NSPersistentStore+Setup.swift in Sources */,
 				B52DD1AB1BE1F93900949AFE /* From.swift in Sources */,
 				B52DD1BF1BE1F94600949AFE /* AssociatedObjects.swift in Sources */,
+				B546F95B1C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
 				B52DD1A11BE1F92C00949AFE /* DataStack+Transaction.swift in Sources */,
 				B5D3F6481C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				B52DD19E1BE1F92C00949AFE /* AsynchronousDataTransaction.swift in Sources */,
@@ -1336,6 +1370,7 @@
 				B5D3F6471C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				B563217F1BD65216006C9394 /* CoreStore.swift in Sources */,
 				B56321911BD65216006C9394 /* BaseDataTransaction+Importing.swift in Sources */,
+				B546F95A1C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
 				B56321941BD65216006C9394 /* CoreStore+Querying.swift in Sources */,
 				B56321811BD65216006C9394 /* DataStack.swift in Sources */,
 				B56321A81BD65219006C9394 /* NSManagedObject+Convenience.swift in Sources */,
@@ -1386,6 +1421,7 @@
 				B56321861BD65216006C9394 /* CoreStoreLogger.swift in Sources */,
 				B56321841BD65216006C9394 /* DefaultLogger.swift in Sources */,
 				B5DBE2CF1C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
+				B546F95F1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				B56321A41BD65216006C9394 /* CoreStore+Migration.swift in Sources */,
 				B56321A01BD65216006C9394 /* ObjectObserver.swift in Sources */,
 				B56321951BD65216006C9394 /* ClauseTypes.swift in Sources */,
