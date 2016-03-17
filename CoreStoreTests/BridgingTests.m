@@ -24,8 +24,10 @@
 //
 
 #import "BridgingTests.h"
+#import <CoreStore/CoreStore-Swift.h>
 
-@import CoreStore;
+@import CoreData;
+
 
 @implementation BridgingTests
 
@@ -39,6 +41,15 @@
     
     [CSCoreStore setDefaultStack:dataStack];
     XCTAssertTrue([dataStack isEqual:[CSCoreStore defaultStack]]);
+    
+    CSInMemoryStore *storage = [CSCoreStore
+                                addStorageAndWait:[CSInMemoryStore new]
+                                error:nil];
+    XCTAssertNotNil(storage);
+    XCTAssertEqual([[storage class] storeType], [CSInMemoryStore storeType]);
+    XCTAssertEqual([[storage class] storeType], NSInMemoryStoreType);
+    XCTAssertNil(storage.configuration);
+    XCTAssertNil(storage.storeOptions);
 }
 
 @end

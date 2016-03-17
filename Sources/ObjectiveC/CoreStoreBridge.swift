@@ -36,10 +36,10 @@ public protocol CoreStoreBridge: class, AnyObject {
 
 public protocol CoreStoreBridgeable: _ObjectiveCBridgeable {
     
-    associatedtype NativeType: CoreStoreBridge
+    associatedtype ObjCType: CoreStoreBridge
 }
 
-public extension CoreStoreBridgeable where NativeType.SwiftType == Self {
+public extension CoreStoreBridgeable where Self == ObjCType.SwiftType {
     
     static func _isBridgedToObjectiveC() -> Bool {
         
@@ -48,26 +48,26 @@ public extension CoreStoreBridgeable where NativeType.SwiftType == Self {
     
     static func _getObjectiveCType() -> Any.Type {
         
-        return NativeType.self
+        return ObjCType.self
     }
     
-    func _bridgeToObjectiveC() -> NativeType {
+    func _bridgeToObjectiveC() -> ObjCType {
         
-        return NativeType(self)
+        return ObjCType(self)
     }
     
-    static func _forceBridgeFromObjectiveC(source: NativeType, inout result: Self?) {
+    static func _forceBridgeFromObjectiveC(source: ObjCType, inout result: ObjCType.SwiftType?) {
         
         result = source.swift
     }
     
-    static func _conditionallyBridgeFromObjectiveC(source: NativeType, inout result: Self?) -> Bool {
+    static func _conditionallyBridgeFromObjectiveC(source: ObjCType, inout result: ObjCType.SwiftType?) -> Bool {
         
-        self._forceBridgeFromObjectiveC(source, result: &result)
+        result = source.swift
         return true
     }
     
-    var objc: NativeType {
+    var objc: ObjCType {
         
         return self._bridgeToObjectiveC()
     }

@@ -32,7 +32,7 @@ import CoreData
  A storage interface that is backed by an SQLite database.
  - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
  */
-public class SQLiteStore: LocalStorage, DefaultInitializableStore {
+public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     
     /**
      Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
@@ -42,7 +42,7 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public required init(fileURL: NSURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), localStorageOptions: LocalStorageOptions = nil) {
+    public init(fileURL: NSURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), localStorageOptions: LocalStorageOptions = nil) {
         
         self.fileURL = fileURL
         self.configuration = configuration
@@ -59,7 +59,7 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public required init(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), localStorageOptions: LocalStorageOptions = nil) {
+    public init(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), localStorageOptions: LocalStorageOptions = nil) {
         
         self.fileURL = SQLiteStore.defaultRootDirectory
             .URLByAppendingPathComponent(fileName, isDirectory: false)
@@ -75,7 +75,7 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
      Initializes an `SQLiteStore` with an all-default settings: a `fileURL` pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS), a `nil` `configuration` pertaining to the "Default" configuration, a `mappingModelBundles` set to search all `NSBundle`s, and `localStorageOptions` set to `.AllowProgresiveMigration`.
      - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
      */
-    public required init() {
+    public init() {
         
         self.fileURL = SQLiteStore.defaultFileURL
         self.configuration = nil
@@ -145,9 +145,9 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
     }
     
     
-    // MARK: Internal
+    // MARK: Private
     
-    internal class var defaultRootDirectory: NSURL {
+    internal static let defaultRootDirectory: NSURL = {
         
         #if os(tvOS)
             let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
@@ -163,14 +163,12 @@ public class SQLiteStore: LocalStorage, DefaultInitializableStore {
             NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack",
             isDirectory: true
         )
-    }
+    }()
     
-    internal class var defaultFileURL: NSURL {
-        
-        let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
-        
-        return SQLiteStore.defaultRootDirectory
-            .URLByAppendingPathComponent(applicationName, isDirectory: false)
-            .URLByAppendingPathExtension("sqlite")
-    }
+    internal static let defaultFileURL = SQLiteStore.defaultRootDirectory
+        .URLByAppendingPathComponent(
+            (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData",
+            isDirectory: false
+        )
+        .URLByAppendingPathExtension("sqlite")
 }

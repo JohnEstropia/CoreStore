@@ -1,5 +1,5 @@
 //
-//  InMemoryStore.swift
+//  CSLegacySQLiteStore.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia
@@ -23,52 +23,53 @@
 //  SOFTWARE.
 //
 
+import Foundation
 import CoreData
 
 
-// MARK: - InMemoryStore
+// MARK: - LegacySQLiteStore
+
+extension LegacySQLiteStore: CoreStoreBridgeable {
+    
+    // MARK: CoreStoreBridgeable
+    
+    public typealias ObjCType = CSLegacySQLiteStore
+}
+
+
+// MARK: - CSSQLiteStore
 
 /**
- A storage interface that is backed only by memory.
+ The `CSLegacySQLiteStore` serves as the Objective-C bridging type for `LegacySQLiteStore`.
  */
-public final class InMemoryStore: StorageInterface, DefaultInitializableStore {
-    
-    /**
-     Initializes an `InMemoryStore` for the specified configuration
-     
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration.
-     */
-    public init(configuration: String?) {
-    
-        self.configuration = configuration
-    }
+@objc
+public final class CSLegacySQLiteStore: NSObject, CoreStoreBridge {
     
     
-    // MARK: DefaultInitializableStore
     
-    /**
-     Initializes an `InMemoryStore` with the "Default" configuration
-     */
-    public init() {
+    // MARK: NSObject
+    
+    public override var hash: Int {
         
-        self.configuration = nil
+        return ObjectIdentifier(self.swift).hashValue
+    }
+    
+    public override func isEqual(object: AnyObject?) -> Bool {
+        
+        guard let object = object as? CSLegacySQLiteStore else {
+            
+            return false
+        }
+        return self.swift === object.swift
     }
     
     
-    // MARK: StorageInterface
+    // MARK: CoreStoreBridge
     
-    /**
-     The string identifier for the `NSPersistentStore`'s `type` property. For `InMemoryStore`s, this is always set to `NSInMemoryStoreType`.
-     */
-    public static let storeType = NSInMemoryStoreType
+    public let swift: LegacySQLiteStore
     
-    /**
-     The configuration name in the model file
-     */
-    public let configuration: String?
-    
-    /**
-     The options dictionary for the `NSPersistentStore`. For `InMemoryStore`s, this is always set to `nil`.
-     */
-    public let storeOptions: [String: AnyObject]? = nil
+    public required init(_ swiftObject: LegacySQLiteStore) {
+        
+        self.swift = swiftObject
+    }
 }

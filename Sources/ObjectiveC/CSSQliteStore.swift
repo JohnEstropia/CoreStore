@@ -33,18 +33,139 @@ extension SQLiteStore: CoreStoreBridgeable {
     
     // MARK: CoreStoreBridgeable
     
-    public typealias NativeType = CSSQLiteStore
+    public typealias ObjCType = CSSQLiteStore
 }
 
 
 // MARK: - CSSQLiteStore
 
 /**
- The `CSSQLiteStore` serves as the Objective-C bridging type for `SQLiteStore`.
+ The `CSSQLiteStore` serves as the Objective-C bridging type for `CSSQLiteStore`.
  */
 @objc
 public final class CSSQLiteStore: NSObject, CoreStoreBridge {
     
+    /**
+     Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `CSDataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
+     
+     - parameter fileURL: the local file URL for the target SQLite persistent store. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
+     - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `.None`.
+     */
+    @objc
+    public convenience init(fileURL: NSURL, configuration: String?, mappingModelBundles: [NSBundle]?, localStorageOptions: CSLocalStorageOptions) {
+        
+        self.init(
+            SQLiteStore(
+                fileURL: fileURL,
+                configuration: configuration,
+                mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
+                localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions.rawValue)
+            )
+        )
+    }
+    
+    /**
+     Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `CSDataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
+     - Warning: The default SQLite file location for the `CSLegacySQLiteStore` and `CSSQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `CSLegacySQLiteStore` instead of `CSSQLiteStore`.
+     
+     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration
+     - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `.None`.
+     */
+    @objc
+    public convenience init(fileName: String, configuration: String?, mappingModelBundles: [NSBundle]?, localStorageOptions: CSLocalStorageOptions) {
+        
+        self.init(
+            SQLiteStore(
+                fileName: fileName,
+                configuration: configuration,
+                mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
+                localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions.rawValue)
+            )
+        )
+    }
+    
+    /**
+     Initializes an `CSSQLiteStore` with an all-default settings: a `fileURL` pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS), a `nil` `configuration` pertaining to the "Default" configuration, a `mappingModelBundles` set to search all `NSBundle`s, and `localStorageOptions` set to `.AllowProgresiveMigration`.
+     - Warning: The default SQLite file location for the `CSLegacySQLiteStore` and `CSSQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `CSLegacySQLiteStore` instead of `CSSQLiteStore`.
+     */
+    @objc
+    public convenience override init() {
+        
+        self.init(SQLiteStore())
+    }
+    
+    
+    // MAKR: CSLocalStorage
+    
+    /**
+     The `NSURL` that points to the SQLite file
+     */
+    @objc
+    public var fileURL: NSURL {
+     
+        return self.swift.fileURL
+    }
+    
+    /**
+     The `NSBundle`s from which to search mapping models for migrations
+     */
+    @objc
+    public var mappingModelBundles: [NSBundle] {
+        
+        return self.swift.mappingModelBundles
+    }
+    
+    /**
+     Options that tell the `CSDataStack` how to setup the persistent store
+     */
+    @objc
+    public var localStorageOptions: CSLocalStorageOptions {
+        
+        // TODO: allow options
+        return CSLocalStorageOptions(rawValue: self.swift.localStorageOptions.rawValue) ?? .None
+    }
+    
+    
+    // MARK: CSStorageInterface
+    
+    /**
+     The string identifier for the `NSPersistentStore`'s `type` property. For `CSSQLiteStore`s, this is always set to `NSSQLiteStoreType`.
+     */
+    @objc
+    public static let storeType = NSSQLiteStoreType
+    
+    /**
+     The configuration name in the model file
+     */
+    public var configuration: String? {
+        
+        return self.swift.configuration
+    }
+    
+    /**
+     The options dictionary for the `NSPersistentStore`. For `CSSQLiteStore`s, this is always set to
+     ```
+     [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+     ```
+     */
+    @objc
+    public var storeOptions: [String: AnyObject]? {
+        
+        return self.swift.storeOptions
+    }
+    
+    /**
+     Called by the `CSDataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `CSSQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
+     */
+    @objc
+    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws {
+        
+        try self.swift.eraseStorageAndWait(soureModel: soureModel)
+    }
     
     
     // MARK: NSObject

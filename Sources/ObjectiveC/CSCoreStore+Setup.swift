@@ -40,7 +40,7 @@ public extension CSCoreStore {
     /**
      Creates an `CSSQLiteStore` with default parameters and adds it to the `defaultStack`. This method blocks until completion.
      ```
-     try CSCoreStore.addStorageAndWait()
+     CSSQLiteStore *storage = [CSCoreStore addStorageAndWaitAndReturnError:&error];
      ```
      
      - returns: the local SQLite storage added to the `defaultStack`
@@ -54,17 +54,19 @@ public extension CSCoreStore {
     /**
      Adds a `StorageInterface` to the `defaultStack` and blocks until completion.
      ```
-     try CoreStore.addStorageAndWait(InMemoryStore(configuration: "Config1"))
+     CSInMemoryStore *storage = [CoreStore
+         addStorageAndWait: [[InMemoryStore alloc] initWithConfiguration: @"Config1"]
+         error: &error];
      ```
      
      - parameter storage: the `StorageInterface`
      - returns: the `StorageInterface` added to the `defaultStack`
      */
-//    @objc
-//    public static func addStorageAndWait(storage: StorageInterface) throws -> StorageInterface {
-//        
-//        return try self.defaultStack.swift.addStorageAndWait(storage)
-//    }
+    @objc
+    public static func addStorageAndWait(storage: CSInMemoryStore) throws -> CSInMemoryStore {
+        
+        return try CoreStore.defaultStack.addStorageAndWait(storage.swift).objc
+    }
     
     /**
      Creates a `LocalStorageface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.

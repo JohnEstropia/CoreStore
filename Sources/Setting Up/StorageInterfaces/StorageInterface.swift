@@ -64,6 +64,56 @@ public protocol DefaultInitializableStore: StorageInterface {
 }
 
 
+// MARK: - LocalStorageOptions
+
+/**
+ The `LocalStorageOptions` provides settings that tells the `DataStack` how to setup the persistent store for `LocalStorage` implementers.
+ */
+public struct LocalStorageOptions: OptionSetType, NilLiteralConvertible {
+    
+    /**
+     Tells the `DataStack` that the store should not be migrated or recreated, and should simply fail on model mismatch
+     */
+    public static let None = LocalStorageOptions(rawValue: 0)
+    
+    /**
+     Tells the `DataStack` to delete and recreate the store on model mismatch, otherwise exceptions will be thrown on failure instead
+     */
+    public static let RecreateStoreOnModelMismatch = LocalStorageOptions(rawValue: 1 << 0)
+    
+    /**
+     Tells the `DataStack` to prevent progressive migrations for the store
+     */
+    public static let PreventProgressiveMigration = LocalStorageOptions(rawValue: 1 << 1)
+    
+    /**
+     Tells the `DataStack` to allow lightweight migration for the store when added synchronously
+     */
+    public static let AllowSynchronousLightweightMigration = LocalStorageOptions(rawValue: 1 << 2)
+    
+    
+    // MARK: OptionSetType
+    
+    public init(rawValue: Int) {
+        
+        self.rawValue = rawValue
+    }
+    
+    
+    // MARK: RawRepresentable
+    
+    public let rawValue: Int
+    
+    
+    // MARK: NilLiteralConvertible
+    
+    public init(nilLiteral: ()) {
+        
+        self.rawValue = 0
+    }
+}
+
+
 // MARK: - LocalStorage
 
 /**

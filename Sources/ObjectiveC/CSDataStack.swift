@@ -33,7 +33,7 @@ extension DataStack: CoreStoreBridgeable {
     
     // MARK: CoreStoreBridgeable
     
-    public typealias NativeType = CSDataStack
+    public typealias ObjCType = CSDataStack
 }
 
 
@@ -62,12 +62,12 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
      - parameter versionChain: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(modelName: String = DataStack.applicationName, bundle: NSBundle = NSBundle.mainBundle(), versionChain: [String]? = nil) {
+    public convenience init(modelName: String?, bundle: NSBundle?, versionChain: [String]?) {
         
         self.init(
             DataStack(
-                modelName: modelName,
-                bundle: bundle,
+                modelName: modelName ?? DataStack.applicationName,
+                bundle: bundle ?? NSBundle.mainBundle(),
                 migrationChain: versionChain.flatMap { MigrationChain($0) } ?? nil
             )
         )
@@ -81,12 +81,12 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
      - parameter versionTree: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(modelName: String = DataStack.applicationName, bundle: NSBundle = NSBundle.mainBundle(), versionTree: [String: String]? = nil) {
+    public convenience init(modelName: String?, bundle: NSBundle?, versionTree: [String: String]?) {
         
         self.init(
             DataStack(
-                modelName: modelName,
-                bundle: bundle,
+                modelName: modelName ?? DataStack.applicationName,
+                bundle: bundle ?? NSBundle.mainBundle(),
                 migrationChain: versionTree.flatMap { MigrationChain($0) } ?? nil
             )
         )
@@ -99,7 +99,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
      - parameter versionChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(model: NSManagedObjectModel, versionChain: [String]? = nil) {
+    public convenience init(model: NSManagedObjectModel, versionChain: [String]?) {
         
         self.init(
             DataStack(
@@ -116,7 +116,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
      - parameter versionTree: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(model: NSManagedObjectModel, versionTree: [String]? = nil) {
+    public convenience init(model: NSManagedObjectModel, versionTree: [String]?) {
         
         self.init(
             DataStack(
