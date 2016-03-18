@@ -51,17 +51,17 @@ public final class CSSQLiteStore: NSObject, CoreStoreBridge {
      - parameter fileURL: the local file URL for the target SQLite persistent store. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
-     - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `.None`.
+     - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `[CSLocalStorageOptions none]`.
      */
     @objc
-    public convenience init(fileURL: NSURL, configuration: String?, mappingModelBundles: [NSBundle]?, localStorageOptions: CSLocalStorageOptions) {
+    public convenience init(fileURL: NSURL, configuration: String?, mappingModelBundles: [NSBundle]?, localStorageOptions: Int) {
         
         self.init(
             SQLiteStore(
                 fileURL: fileURL,
                 configuration: configuration,
                 mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
-                localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions.rawValue)
+                localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions)
             )
         )
     }
@@ -73,17 +73,17 @@ public final class CSSQLiteStore: NSObject, CoreStoreBridge {
      - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration
-     - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `.None`.
+     - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `[CSLocalStorageOptions none]`.
      */
     @objc
-    public convenience init(fileName: String, configuration: String?, mappingModelBundles: [NSBundle]?, localStorageOptions: CSLocalStorageOptions) {
+    public convenience init(fileName: String, configuration: String?, mappingModelBundles: [NSBundle]?, localStorageOptions: Int) {
         
         self.init(
             SQLiteStore(
                 fileName: fileName,
                 configuration: configuration,
                 mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
-                localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions.rawValue)
+                localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions)
             )
         )
     }
@@ -123,10 +123,9 @@ public final class CSSQLiteStore: NSObject, CoreStoreBridge {
      Options that tell the `CSDataStack` how to setup the persistent store
      */
     @objc
-    public var localStorageOptions: CSLocalStorageOptions {
+    public var localStorageOptions: Int {
         
-        // TODO: allow options
-        return CSLocalStorageOptions(rawValue: self.swift.localStorageOptions.rawValue) ?? .None
+        return self.swift.localStorageOptions.rawValue
     }
     
     

@@ -31,25 +31,46 @@
 
 @implementation BridgingTests
 
+- (void)testFlags {
+    
+    XCTAssertEqual([CSLocalStorageOptions none], 0);
+    XCTAssertEqual([CSLocalStorageOptions recreateStoreOnModelMismatch], 1);
+    XCTAssertEqual([CSLocalStorageOptions preventProgressiveMigration], 2);
+    XCTAssertEqual([CSLocalStorageOptions allowSynchronousLightweightMigration], 4);
+}
+
 - (void)testDataStack {
     
     CSDataStack *dataStack = [[CSDataStack alloc]
-                              initWithModelName: @"Model"
-                              bundle: [NSBundle bundleForClass:[self class]]
-                              versionChain: nil];
+                              initWithModelName:@"Model"
+                              bundle:[NSBundle bundleForClass:[self class]]
+                              versionChain:nil];
     XCTAssertNotNil(dataStack);
     
     [CSCoreStore setDefaultStack:dataStack];
     XCTAssertTrue([dataStack isEqual:[CSCoreStore defaultStack]]);
     
-    CSInMemoryStore *storage = [CSCoreStore
-                                addStorageAndWait:[CSInMemoryStore new]
-                                error:nil];
-    XCTAssertNotNil(storage);
-    XCTAssertEqual([[storage class] storeType], [CSInMemoryStore storeType]);
-    XCTAssertEqual([[storage class] storeType], NSInMemoryStoreType);
-    XCTAssertNil(storage.configuration);
-    XCTAssertNil(storage.storeOptions);
+    NSError *memoryError;
+    CSInMemoryStore *memoryStorage = [CSCoreStore
+                                      addInMemoryStorageAndWait:[CSInMemoryStore new]
+                                      error:&memoryError];
+    XCTAssertNotNil(memoryStorage);
+    XCTAssertEqualObjects([[memoryStorage class] storeType], [CSInMemoryStore storeType]);
+    XCTAssertEqualObjects([[memoryStorage class] storeType], NSInMemoryStoreType);
+    XCTAssertNil(memoryStorage.configuration);
+    XCTAssertNil(memoryStorage.storeOptions);
+    XCTAssertNil(memoryError);
+    
+    NSError *sqliteError;
+    CSSQLiteStore *sqliteStorage = [CSCoreStore
+                                    addSQLiteStorageAndWait:[CSSQLiteStore new]
+                                    error:&sqliteError];
+    XCTAssertNotNil(sqliteStorage);
+    XCTAssertEqualObjects([[sqliteStorage class] storeType], [CSSQLiteStore storeType]);
+    XCTAssertEqualObjects([[sqliteStorage class] storeType], NSSQLiteStoreType);
+    XCTAssertNil(sqliteStorage.configuration);
+    XCTAssertEqualObjects(sqliteStorage.storeOptions, @{ NSSQLitePragmasOption: @{ @"journal_mode": @"WAL" } });
+    XCTAssertNil(sqliteError);
 }
 
 @end

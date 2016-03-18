@@ -149,10 +149,6 @@
 		B546F95E1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */; };
 		B546F95F1C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */; };
 		B546F9601C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */; };
-		B546F9641C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9631C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift */; };
-		B546F9651C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9631C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift */; };
-		B546F9661C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9631C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift */; };
-		B546F9671C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9631C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift */; };
 		B546F9691C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9681C9AF26D00D5AC55 /* CSInMemoryStore.swift */; };
 		B546F96A1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9681C9AF26D00D5AC55 /* CSInMemoryStore.swift */; };
 		B546F96B1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9681C9AF26D00D5AC55 /* CSInMemoryStore.swift */; };
@@ -377,7 +373,6 @@
 		B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSCoreStore+Setup.swift"; sourceTree = "<group>"; };
 		B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSQliteStore.swift; sourceTree = "<group>"; };
-		B546F9631C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSLegacySQLiteStore.swift; sourceTree = "<group>"; };
 		B546F9681C9AF26D00D5AC55 /* CSInMemoryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSInMemoryStore.swift; sourceTree = "<group>"; };
 		B546F96D1C9B14AC00D5AC55 /* CSStorageInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSStorageInterface.swift; sourceTree = "<group>"; };
 		B54A6A541BA15F2A007870FD /* FetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
@@ -658,7 +653,6 @@
 				B546F96D1C9B14AC00D5AC55 /* CSStorageInterface.swift */,
 				B546F9681C9AF26D00D5AC55 /* CSInMemoryStore.swift */,
 				B546F95C1C9A12B800D5AC55 /* CSSQliteStore.swift */,
-				B546F9631C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift */,
 			);
 			name = StorageInterfaces;
 			sourceTree = "<group>";
@@ -1132,7 +1126,6 @@
 				B5E84F251AFF84860064E85B /* ObjectObserver.swift in Sources */,
 				B5E84F2F1AFF849C0064E85B /* NotificationObserver.swift in Sources */,
 				B5F1DA8D1B9AA97D007C5CBB /* ImportableObject.swift in Sources */,
-				B546F9641C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift in Sources */,
 				B56965241B356B820075EE4A /* MigrationResult.swift in Sources */,
 				B5FE4DAC1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */,
@@ -1226,7 +1219,6 @@
 				82BA18BC1C4BBD4A00A0916E /* OrderBy.swift in Sources */,
 				82BA18B01C4BBD3100A0916E /* NSManagedObject+Transaction.swift in Sources */,
 				82BA18D41C4BBD7100A0916E /* NSManagedObjectContext+Querying.swift in Sources */,
-				B546F9651C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift in Sources */,
 				82BA18D51C4BBD7100A0916E /* NSManagedObjectContext+Setup.swift in Sources */,
 				B5FE4DA31C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				82BA18C91C4BBD5900A0916E /* MigrationType.swift in Sources */,
@@ -1329,7 +1321,6 @@
 				B52DD1CA1BE1F94600949AFE /* NSManagedObjectModel+Setup.swift in Sources */,
 				B52DD1A41BE1F92F00949AFE /* ImportableObject.swift in Sources */,
 				B52DD1AE1BE1F93900949AFE /* OrderBy.swift in Sources */,
-				B546F9671C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift in Sources */,
 				B52DD1BA1BE1F94000949AFE /* MigrationChain.swift in Sources */,
 				B50392FB1C479640009900CA /* NSManagedObject+Transaction.swift in Sources */,
 				B52DD1A31BE1F92C00949AFE /* SaveResult.swift in Sources */,
@@ -1403,7 +1394,6 @@
 				B56321AB1BD6521C006C9394 /* FetchedResultsControllerDelegate.swift in Sources */,
 				B56321821BD65216006C9394 /* SetupResult.swift in Sources */,
 				B563219C1BD65216006C9394 /* SectionBy.swift in Sources */,
-				B546F9661C9AEFBA00D5AC55 /* CSLegacySQLiteStore.swift in Sources */,
 				B56321B21BD6521C006C9394 /* NSManagedObjectContext+Querying.swift in Sources */,
 				B5FE4DA41C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B56321B31BD6521C006C9394 /* NSManagedObjectContext+Setup.swift in Sources */,

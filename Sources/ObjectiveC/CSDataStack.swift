@@ -126,6 +126,97 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
         )
     }
     
+    /**
+     Returns the stack's model version. The version string is the same as the name of the version-specific .xcdatamodeld file.
+     */
+    @objc
+    public var modelVersion: String {
+        
+        return self.swift.modelVersion
+    }
+    
+    /**
+     Returns the entity name-to-class type mapping from the stack's model.
+     */
+    @objc
+    public var entityClassesByName: [String: NSManagedObject.Type] {
+        
+        return self.swift.entityTypesByName
+    }
+    
+    /**
+     Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from stack's model.
+     */
+    @objc
+    public func entityDescriptionForClass(type: NSManagedObject.Type) -> NSEntityDescription? {
+        
+        return self.swift.entityDescriptionForType(type)
+    }
+    
+    /**
+     Creates an `CSInMemoryStore` with default parameters and adds it to the stack. This method blocks until completion.
+     ```
+     CSSQLiteStore *storage = [dataStack addInMemoryStorageAndWaitAndReturnError:&error];
+     ```
+     
+     - returns: the `CSInMemoryStore` added to the stack
+     */
+    @objc
+    public func addInMemoryStorageAndWait() throws -> CSInMemoryStore {
+        
+        return try self.swift.addStorageAndWait(InMemoryStore).objc
+    }
+    
+    /**
+     Creates an `CSSQLiteStore` with default parameters and adds it to the stack. This method blocks until completion.
+     ```
+     CSSQLiteStore *storage = [dataStack addSQLiteStorageAndWaitAndReturnError:&error];
+     ```
+     
+     - returns: the `CSSQLiteStore` added to the stack
+     */
+    @objc
+    public func addSQLiteStorageAndWait() throws -> CSSQLiteStore {
+        
+        return try self.swift.addStorageAndWait(SQLiteStore).objc
+    }
+    
+    /**
+     Adds a `CSInMemoryStore` to the stack and blocks until completion.
+     ```
+     NSError *error;
+     CSInMemoryStore *storage = [dataStack
+         addStorageAndWait: [[CSInMemoryStore alloc] initWithConfiguration: @"Config1"]
+         error: &error];
+     ```
+     
+     - parameter storage: the `CSInMemoryStore`
+     - returns: the `CSInMemoryStore` added to the stack
+     */
+    @objc
+    public func addInMemoryStorageAndWait(storage: CSInMemoryStore) throws -> CSInMemoryStore {
+        
+        return try self.swift.addStorageAndWait(storage.swift).objc
+    }
+    
+    /**
+     Adds a `CSSQLiteStore` to the stack and blocks until completion.
+     ```
+     NSError *error;
+     CSSQLiteStore *storage = [dataStack
+         addStorageAndWait: [[CSSQLiteStore alloc] initWithConfiguration: @"Config1"]
+         error: &error];
+     ```
+     
+     - parameter storage: the `CSSQLiteStore`
+     - returns: the `CSSQLiteStore` added to the stack
+     */
+    @objc
+    public func addSQLiteStorageAndWait(storage: CSSQLiteStore) throws -> CSSQLiteStore {
+        
+        return try self.swift.addStorageAndWait(storage.swift).objc
+    }
+    
     
     // MARK: NSObject
     

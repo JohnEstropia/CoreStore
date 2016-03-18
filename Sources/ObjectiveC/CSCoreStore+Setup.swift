@@ -23,7 +23,7 @@ public extension CSCoreStore {
      Returns the entity name-to-class type mapping from the `defaultStack`'s model.
      */
     @objc
-    public static var entityTypesByName: [String: NSManagedObject.Type] {
+    public static var entityClassesByName: [String: NSManagedObject.Type] {
         
         return CoreStore.defaultStack.entityTypesByName
     }
@@ -32,69 +32,72 @@ public extension CSCoreStore {
      Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from `defaultStack`'s model.
      */
     @objc
-    public static func entityDescriptionForType(type: NSManagedObject.Type) -> NSEntityDescription? {
+    public static func entityDescriptionForClass(type: NSManagedObject.Type) -> NSEntityDescription? {
         
         return CoreStore.defaultStack.entityDescriptionForType(type)
     }
     
     /**
-     Creates an `CSSQLiteStore` with default parameters and adds it to the `defaultStack`. This method blocks until completion.
+     Creates an `CSInMemoryStore` with default parameters and adds it to the `defaultStack`. This method blocks until completion.
      ```
-     CSSQLiteStore *storage = [CSCoreStore addStorageAndWaitAndReturnError:&error];
+     CSSQLiteStore *storage = [CSCoreStore addInMemoryStorageAndWaitAndReturnError:&error];
      ```
      
-     - returns: the local SQLite storage added to the `defaultStack`
+     - returns: the `CSInMemoryStore` added to the `defaultStack`
      */
     @objc
-    public static func addStorageAndWait() throws -> CSSQLiteStore {
+    public static func addInMemoryStorageAndWait() throws -> CSInMemoryStore {
+        
+        return try CoreStore.defaultStack.addStorageAndWait(InMemoryStore).objc
+    }
+    
+    /**
+     Creates an `CSSQLiteStore` with default parameters and adds it to the `defaultStack`. This method blocks until completion.
+     ```
+     CSSQLiteStore *storage = [CSCoreStore addSQLiteStorageAndWaitAndReturnError:&error];
+     ```
+     
+     - returns: the `CSSQLiteStore` added to the `defaultStack`
+     */
+    @objc
+    public static func addSQLiteStorageAndWait() throws -> CSSQLiteStore {
         
         return try CoreStore.defaultStack.addStorageAndWait(SQLiteStore).objc
     }
     
     /**
-     Adds a `StorageInterface` to the `defaultStack` and blocks until completion.
+     Adds a `CSInMemoryStore` to the `defaultStack` and blocks until completion.
      ```
-     CSInMemoryStore *storage = [CoreStore
-         addStorageAndWait: [[InMemoryStore alloc] initWithConfiguration: @"Config1"]
+     NSError *error;
+     CSInMemoryStore *storage = [CSCoreStore
+         addStorageAndWait: [[CSInMemoryStore alloc] initWithConfiguration: @"Config1"]
          error: &error];
      ```
      
-     - parameter storage: the `StorageInterface`
-     - returns: the `StorageInterface` added to the `defaultStack`
+     - parameter storage: the `CSInMemoryStore`
+     - returns: the `CSInMemoryStore` added to the `defaultStack`
      */
     @objc
-    public static func addStorageAndWait(storage: CSInMemoryStore) throws -> CSInMemoryStore {
+    public static func addInMemoryStorageAndWait(storage: CSInMemoryStore) throws -> CSInMemoryStore {
         
         return try CoreStore.defaultStack.addStorageAndWait(storage.swift).objc
     }
     
     /**
-     Creates a `LocalStorageface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
+     Adds a `CSSQLiteStore` to the `defaultStack` and blocks until completion.
      ```
-     try CoreStore.addStorageAndWait(SQLiteStore)
-     ```
-     
-     - parameter storeType: the `LocalStorageface` type
-     - returns: the local storage added to the `defaultStack`
-     */
-//    @objc
-//    public static func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(storageType: T.Type) throws -> T {
-//        
-//        return try self.defaultStack.swift.addStorageAndWait(storageType.init())
-//    }
-    
-    /**
-     Adds a `LocalStorage` to the `defaultStack` and blocks until completion.
-     ```
-     try CoreStore.addStorageAndWait(SQLiteStore(configuration: "Config1"))
+     NSError *error;
+     CSSQLiteStore *storage = [CSCoreStore
+         addStorageAndWait: [[CSSQLiteStore alloc] initWithConfiguration: @"Config1"]
+         error: &error];
      ```
      
-     - parameter storage: the local storage
-     - returns: the local storage added to the `defaultStack`. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - parameter storage: the `CSSQLiteStore`
+     - returns: the `CSSQLiteStore` added to the `defaultStack`
      */
-//    @objc
-//    public static func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {
-//        
-//        return try self.defaultStack.swift.addStorageAndWait(storage)
-//    }
+    @objc
+    public static func addSQLiteStorageAndWait(storage: CSSQLiteStore) throws -> CSSQLiteStore {
+        
+        return try CoreStore.defaultStack.addStorageAndWait(storage.swift).objc
+    }
 }
