@@ -96,7 +96,10 @@ extension CoreStoreLogger {
      Deprecated. Use `log(error:message:fileName:lineNumber:functionName:)` instead.
      */
     @available(*, deprecated=2.0.0, message="Use log(error:message:fileName:lineNumber:functionName:) instead.")
-    public func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {}
+    public func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    
+        self.log(error: (error as ErrorType) as! CoreStoreError, message: message, fileName: fileName, lineNumber: lineNumber, functionName: functionName)
+    }
 }
 
 

@@ -54,7 +54,7 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     /**
      An internal SDK call failed with the specified `NSError`.
      */
-    case InternalError(NSError)
+    case InternalError(NSError: NSError)
     
     
     // MARK: ErrorType
@@ -68,12 +68,17 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     
         switch self {
             
-        case .Unknown:                      return 1
-        case .DifferentStorageExistsAtURL:  return 2
-        case .MappingModelNotFound:         return 3
-        case .ProgressiveMigrationRequired: return 4
-        case .InternalError:                return 5
+        case .Unknown:                      return Code.Unknown.rawValue
+        case .DifferentStorageExistsAtURL:  return Code.DifferentStorageExistsAtURL.rawValue
+        case .MappingModelNotFound:         return Code.MappingModelNotFound.rawValue
+        case .ProgressiveMigrationRequired: return Code.ProgressiveMigrationRequired.rawValue
+        case .InternalError:                return Code.InternalError.rawValue
         }
+    }
+    
+    public var _userInfo: [NSObject: AnyObject] {
+        
+        return ["test": 1]
     }
     
     
@@ -98,17 +103,19 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     
     internal init(_ error: ErrorType?) {
         
-        switch error {
-            
-        case (let error as CoreStoreError)?:
-            self = error
-            
-        case (let error as NSError)?:
-            self = .InternalError(error)
-            
-        default:
-            self = .Unknown
-        }
+        self = error.flatMap { $0.swift } ?? .Unknown
+    }
+    
+    
+    // MARK: Private
+    
+    private enum Code: Int {
+        
+        case Unknown
+        case DifferentStorageExistsAtURL
+        case MappingModelNotFound
+        case ProgressiveMigrationRequired
+        case InternalError
     }
 }
 
@@ -176,5 +183,123 @@ public extension NSError {
         return (self.domain == CoreStoreErrorDomain
             ? CoreStoreErrorCode(rawValue: self.code)
             : nil)
+    }
+}
+
+
+// MARK: Internal
+
+internal extension ErrorType {
+    
+    internal var swift: CoreStoreError {
+        
+        if case let error as CoreStoreError = self {
+            
+            return error
+        }
+        
+        let error = self as NSError
+        guard error.domain == "com.corestore.error" else {
+            
+            return .InternalError(NSError: error)
+        }
+        
+        guard let code = CoreStoreError.Code(rawValue: error.code) else {
+            
+            return .Unknown
+        }
+        
+        let info = error.userInfo
+        switch code {
+            
+        case .Unknown:
+            return .Unknown
+            
+        case .DifferentStorageExistsAtURL:
+            guard case let existingPersistentStoreURL as NSURL = info["existingPersistentStoreURL"] else {
+                
+                return .Unknown
+            }
+            return .DifferentStorageExistsAtURL(existingPersistentStoreURL: existingPersistentStoreURL)
+            
+        case .MappingModelNotFound:
+            guard let persistentStore = info["persistentStore"] as? NSPersistentStore,
+                let storage = persistentStore.storageInterface as? LocalStorage,
+                let targetModel = info["targetModel"] as? NSManagedObjectModel,
+                let targetModelVersion = info["targetModelVersion"] as? String else {
+                
+                return .Unknown
+            }
+            return .MappingModelNotFound(storage: storage, targetModel: targetModel, targetModelVersion: targetModelVersion)
+            
+        case .ProgressiveMigrationRequired:
+            guard let persistentStore = info["persistentStore"] as? NSPersistentStore,
+                let storage = persistentStore.storageInterface as? LocalStorage else {
+                
+                return .Unknown
+            }
+            return .ProgressiveMigrationRequired(storage: storage)
+            
+        case .InternalError:
+            guard case let NSError as NSError = info["NSError"] else {
+                
+                return .Unknown
+            }
+            return .InternalError(NSError: NSError)
+            
+        default:
+            return .Unknown
+        }
+    }
+    
+    internal var objc: NSError {
+        
+        guard let error = self as? CoreStoreError else {
+            
+            return self as NSError
+        }
+        
+        let domain = "com.corestore.error"
+        let code: CoreStoreError.Code
+        let info: [NSObject: AnyObject]
+        switch error {
+            
+        case .Unknown:
+            return self as NSError
+            
+        case .DifferentStorageExistsAtURL(let existingPersistentStoreURL):
+            code = .DifferentStorageExistsAtURL
+            info = [
+                "existingPersistentStoreURL": existingPersistentStoreURL
+            ]
+            
+        case .MappingModelNotFound(let storage, let targetModel, let targetModelVersion):
+            code = .MappingModelNotFound
+            info = [
+                "storage": storage.objc,
+                "targetModel": targetModel,
+                "targetModelVersion": targetModelVersion
+            ]
+            
+        case .ProgressiveMigrationRequired:
+            guard let persistentStore = info["persistentStore"] as? NSPersistentStore,
+                let storage = persistentStore.storageInterface as? LocalStorage else {
+                    
+                    return .Unknown
+            }
+            return .ProgressiveMigrationRequired(storage: storage)
+            
+        case .InternalError:
+            guard case let NSError as NSError = info["NSError"] else {
+                
+                return .Unknown
+            }
+            return .InternalError(NSError: NSError)
+            
+        default:
+            return self as NSError
+        }
+        
+        return NSError(domain: domain, code: code.rawValue, userInfo: info)
     }
 }

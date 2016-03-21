@@ -44,6 +44,10 @@ class CoreStoreTests: XCTestCase {
     
     func testExample() {
         
+        let err = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: NSURL(string: "http://google.com")!)
+        let err1 = err as NSError
+        let err2 = err1 as! CoreStoreError
+        
         let stack = DataStack(modelName: "Model", bundle: NSBundle(forClass: self.dynamicType))
         CoreStore.defaultStack = stack
         XCTAssert(CoreStore.defaultStack === stack, "CoreStore.defaultStack === stack")
@@ -168,7 +172,7 @@ class CoreStoreTests: XCTestCase {
                     createExpectation.fulfill()
                     
                 case .Failure(let error):
-                    XCTFail(error.description)
+                    XCTFail("\(error)")
                 }
             }
         }
@@ -210,7 +214,7 @@ class CoreStoreTests: XCTestCase {
                     queryExpectation.fulfill()
                     
                 case .Failure(let error):
-                    XCTFail(error.description)
+                    XCTFail("\(error)")
                 }
             }
         }
@@ -339,12 +343,12 @@ class CoreStoreTests: XCTestCase {
                         unsafeExpectation.fulfill()
                         
                     case .Failure(let error):
-                        XCTFail(error.description)
+                        XCTFail("\(error)")
                     }
                 }
                 
             case .Failure(let error):
-                XCTFail(error.description)
+                XCTFail("\(error)")
             }
         }
         
