@@ -44,12 +44,12 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     /**
      An `NSMappingModel` could not be found for a specific source and destination model versions.
      */
-    case MappingModelNotFound(storage: LocalStorage, targetModel: NSManagedObjectModel, targetModelVersion: String)
+    case MappingModelNotFound(localStoreURL: NSURL, targetModel: NSManagedObjectModel, targetModelVersion: String)
     
     /**
      Progressive migrations are disabled for a store, but an `NSMappingModel` could not be found for a specific source and destination model versions.
      */
-    case ProgressiveMigrationRequired(storage: LocalStorage)
+    case ProgressiveMigrationRequired(localStoreURL: NSURL)
     
     /**
      An internal SDK call failed with the specified `NSError`.
@@ -87,7 +87,7 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     public var description: String {
         
         // TODO:
-        return (self as NSError).description
+        return self.objc.description
     }
     
     
@@ -198,7 +198,11 @@ internal extension ErrorType {
             return error
         }
         
-        let error = self as NSError
+        guard let error = (self as Any) as? NSError else {
+            
+            return .Unknown
+        }
+        
         guard error.domain == "com.corestore.error" else {
             
             return .InternalError(NSError: error)
@@ -223,22 +227,20 @@ internal extension ErrorType {
             return .DifferentStorageExistsAtURL(existingPersistentStoreURL: existingPersistentStoreURL)
             
         case .MappingModelNotFound:
-            guard let persistentStore = info["persistentStore"] as? NSPersistentStore,
-                let storage = persistentStore.storageInterface as? LocalStorage,
+            guard let localStoreURL = info["localStoreURL"] as? NSURL,
                 let targetModel = info["targetModel"] as? NSManagedObjectModel,
                 let targetModelVersion = info["targetModelVersion"] as? String else {
                 
                 return .Unknown
             }
-            return .MappingModelNotFound(storage: storage, targetModel: targetModel, targetModelVersion: targetModelVersion)
+            return .MappingModelNotFound(localStoreURL: localStoreURL, targetModel: targetModel, targetModelVersion: targetModelVersion)
             
         case .ProgressiveMigrationRequired:
-            guard let persistentStore = info["persistentStore"] as? NSPersistentStore,
-                let storage = persistentStore.storageInterface as? LocalStorage else {
+            guard let localStoreURL = info["localStoreURL"] as? NSURL else {
                 
                 return .Unknown
             }
-            return .ProgressiveMigrationRequired(storage: storage)
+            return .ProgressiveMigrationRequired(localStoreURL: localStoreURL)
             
         case .InternalError:
             guard case let NSError as NSError = info["NSError"] else {
@@ -246,26 +248,25 @@ internal extension ErrorType {
                 return .Unknown
             }
             return .InternalError(NSError: NSError)
-            
-        default:
-            return .Unknown
         }
     }
     
     internal var objc: NSError {
         
+        let domain = "com.corestore.error"
         guard let error = self as? CoreStoreError else {
             
-            return self as NSError
+            return ((self as Any) as? NSError)
+                ?? NSError(domain: domain, code: CoreStoreError.Code.Unknown.rawValue, userInfo: [:])
         }
         
-        let domain = "com.corestore.error"
         let code: CoreStoreError.Code
         let info: [NSObject: AnyObject]
         switch error {
             
         case .Unknown:
-            return self as NSError
+            code = .Unknown
+            info = [:]
             
         case .DifferentStorageExistsAtURL(let existingPersistentStoreURL):
             code = .DifferentStorageExistsAtURL
@@ -273,31 +274,25 @@ internal extension ErrorType {
                 "existingPersistentStoreURL": existingPersistentStoreURL
             ]
             
-        case .MappingModelNotFound(let storage, let targetModel, let targetModelVersion):
+        case .MappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
             code = .MappingModelNotFound
             info = [
-                "storage": storage.objc,
+                "localStoreURL": localStoreURL,
                 "targetModel": targetModel,
                 "targetModelVersion": targetModelVersion
             ]
             
-        case .ProgressiveMigrationRequired:
-            guard let persistentStore = info["persistentStore"] as? NSPersistentStore,
-                let storage = persistentStore.storageInterface as? LocalStorage else {
-                    
-                    return .Unknown
-            }
-            return .ProgressiveMigrationRequired(storage: storage)
+        case .ProgressiveMigrationRequired(let localStoreURL):
+            code = .ProgressiveMigrationRequired
+            info = [
+                "localStoreURL": localStoreURL
+            ]
             
-        case .InternalError:
-            guard case let NSError as NSError = info["NSError"] else {
-                
-                return .Unknown
-            }
-            return .InternalError(NSError: NSError)
-            
-        default:
-            return self as NSError
+        case .InternalError(let NSError):
+            code = .InternalError
+            info = [
+                "NSError": NSError
+            ]
         }
         
         return NSError(domain: domain, code: code.rawValue, userInfo: info)

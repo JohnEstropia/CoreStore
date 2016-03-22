@@ -345,7 +345,7 @@ public extension DataStack {
                 guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
                     
                     let error = CoreStoreError.MappingModelNotFound(
-                        storage: storage,
+                        localStoreURL: fileURL,
                         targetModel: self.model,
                         targetModelVersion: self.modelVersion
                     )
@@ -358,7 +358,7 @@ public extension DataStack {
                 
                 if migrationSteps.count > 1 && storage.localStorageOptions.contains(.PreventProgressiveMigration) {
                     
-                    let error = CoreStoreError.ProgressiveMigrationRequired(storage: storage)
+                    let error = CoreStoreError.ProgressiveMigrationRequired(localStoreURL: fileURL)
                     CoreStore.log(
                         error,
                         "Failed to find migration mapping from the \(typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
@@ -393,7 +393,7 @@ public extension DataStack {
         guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
             
             let error = CoreStoreError.MappingModelNotFound(
-                storage: storage,
+                localStoreURL: storage.fileURL,
                 targetModel: self.model,
                 targetModelVersion: self.modelVersion
             )
@@ -421,7 +421,7 @@ public extension DataStack {
         }
         else if numberOfMigrations > 1 && storage.localStorageOptions.contains(.PreventProgressiveMigration) {
             
-            let error = CoreStoreError.ProgressiveMigrationRequired(storage: storage)
+            let error = CoreStoreError.ProgressiveMigrationRequired(localStoreURL: storage.fileURL)
             CoreStore.log(
                 error,
                 "Failed to find migration mapping from the \(typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
