@@ -42,7 +42,7 @@ public extension DataStack {
      */
     public func addInMemoryStore(configuration configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
         
-        self.coordinator.performBlock {
+        self.coordinator.performAsynchronously {
             
             do {
                 
@@ -438,7 +438,16 @@ public extension DataStack {
         }
         
         let migrationOperation = NSBlockOperation()
-        migrationOperation.qualityOfService = .Utility
+        #if USE_FRAMEWORKS
+            
+            migrationOperation.qualityOfService = .Utility
+        #else
+            
+            if #available(iOS 8.0, *) {
+                
+                migrationOperation.qualityOfService = .Utility
+            }
+        #endif
         operations.forEach { migrationOperation.addDependency($0) }
         migrationOperation.addExecutionBlock { () -> Void in
             

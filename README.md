@@ -1,14 +1,19 @@
-# CoreStore
-[![Build Status](https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg)](https://travis-ci.org/JohnEstropia/CoreStore)
-[![Version](https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
-[![Platform](https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat)](http://cocoadocs.org/docsets/CoreStore)
-[![License](https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat)](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-
+<p align="center">
+<img alt="CoreStore" src="https://cloud.githubusercontent.com/assets/3029684/13373932/84daee2a-ddb8-11e5-99db-fdf415620102.png" height=170 />
+<br />
+<br />
 Unleashing the real power of Core Data with the elegance and safety of Swift
-* Swift 2.2 (Xcode 7.3), iOS 8+/OSX 10.10+ (or try out the [iOS 7 branch](https://github.com/JohnEstropia/CoreStore/tree/ios7_support_alpha))
-
-[Click here for a wiki version of this README](https://github.com/JohnEstropia/CoreStore/wiki)
+<br />
+<br />
+<a href="https://travis-ci.org/JohnEstropia/CoreStore"><img alt="Build Status" src="https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg?style=flat" /></a>
+<a href="http://cocoadocs.org/docsets/CoreStore"><img alt=Version" src="https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat" /></a>
+<a href="http://cocoadocs.org/docsets/CoreStore"><img alt="Platform" src="https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat" /></a>
+<a href="https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE"><img alt="License" src="https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat" /></a>
+<a href="https://github.com/Carthage/Carthage"><img alt="Carthage compatible" src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" /></a>
+<br />
+</p>
+* Swift 2.2 (Xcode 7.3)
+* iOS 7+ / OSX 10.10+ / watchOS 2.0+ / tvOS 9.0+
 
 
 
@@ -1166,12 +1171,12 @@ let person2 = self.monitor[1, 2]
 
 # Installation
 - Requires:
-    - iOS 8 SDK and above
-    - Swift 2.1 (Xcode 7.2)
+    - iOS 7 SDK and above
+    - Swift 2.2 (Xcode 7.3)
 - Dependencies:
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
 
-### Install with CocoaPods
+### Install with CocoaPods (iOS 7 not supported)
 ```
 pod 'CoreStore'
 ```
@@ -1180,8 +1185,8 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 1.4.4
-github "JohnEstropia/GCDKit" >= 1.1.7
+github "JohnEstropia/CoreStore" >= 1.6.0
+github "JohnEstropia/GCDKit" >= 1.2.2
 ```
 and run 
 ```
@@ -1194,7 +1199,7 @@ git submodule add https://github.com/JohnEstropia/CoreStore.git <destination dir
 ```
 Drag and drop **CoreStore.xcodeproj** to your project.
 
-#### To install as a framework:
+#### To install as a framework (iOS 7 not supported):
 Drag and drop **CoreStore.xcodeproj** to your project.
 
 #### To include directly in your app module:
@@ -1228,7 +1233,7 @@ or tag your Stackoverflow question with **corestore**
 
 
 # Who uses CoreStore?
-Did CoreStore serve you well? I'd love to hear about your app :)
+I'd love to hear about apps using CoreStore. Send me a message and I'll feature your apps here!
 
 
 # License

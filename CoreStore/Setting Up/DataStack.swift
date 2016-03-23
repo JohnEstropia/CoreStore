@@ -126,7 +126,7 @@ public final class DataStack {
         
         var store: NSPersistentStore?
         var storeError: NSError?
-        coordinator.performBlockAndWait {
+        coordinator.performSynchronously {
             
             do {
                 
@@ -220,7 +220,7 @@ public final class DataStack {
         var store: NSPersistentStore?
         var storeError: NSError?
         let options = self.optionsForSQLiteStore()
-        coordinator.performBlockAndWait {
+        coordinator.performSynchronously {
             
             do {
                 
@@ -249,7 +249,7 @@ public final class DataStack {
                 fileManager.removeSQLiteStoreAtURL(fileURL)
                 
                 var store: NSPersistentStore?
-                coordinator.performBlockAndWait {
+                coordinator.performSynchronously {
                     
                     do {
                         
@@ -295,8 +295,18 @@ public final class DataStack {
         let migrationQueue = NSOperationQueue()
         migrationQueue.maxConcurrentOperationCount = 1
         migrationQueue.name = "com.coreStore.migrationOperationQueue"
-        migrationQueue.qualityOfService = .Utility
-        migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
+        #if USE_FRAMEWORKS
+            
+            migrationQueue.qualityOfService = .Utility
+            migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
+        #else
+            
+            if #available(iOS 8.0, *) {
+                
+                migrationQueue.qualityOfService = .Utility
+                migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
+            }
+        #endif
         return migrationQueue
     }()
     
