@@ -128,7 +128,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
                 
                 return versionTree[tuple.1] == nil
                 
-            }.map { $1 }
+                }.map { $1 }
         )
         
         let isVersionAmbiguous = { (start: String) -> Bool in
