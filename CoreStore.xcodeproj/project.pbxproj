@@ -287,6 +287,11 @@
 		B5D9E3461CA2C6C4007A9D52 /* GCDQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E33A1CA2C6BF007A9D52 /* GCDQueue.swift */; };
 		B5D9E3471CA2C6C4007A9D52 /* GCDSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E33B1CA2C6BF007A9D52 /* GCDSemaphore.swift */; };
 		B5D9E3481CA2C6C4007A9D52 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E33C1CA2C6BF007A9D52 /* GCDTimer.swift */; };
+		B5D9E3501CA2D0D7007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E34F1CA2D0D7007A9D52 /* NSPersistentStoreCoordinator+Setup.swift */; };
+		B5D9E3511CA2D0DD007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E34F1CA2D0D7007A9D52 /* NSPersistentStoreCoordinator+Setup.swift */; };
+		B5D9E3521CA2D0DE007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E34F1CA2D0D7007A9D52 /* NSPersistentStoreCoordinator+Setup.swift */; };
+		B5D9E3531CA2D0DE007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E34F1CA2D0D7007A9D52 /* NSPersistentStoreCoordinator+Setup.swift */; };
+		B5D9E3541CA2D0DF007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E34F1CA2D0D7007A9D52 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B5E834B91B76311F001D3D50 /* BaseDataTransaction+Importing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */; };
 		B5E834BB1B7691F3001D3D50 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E834BA1B7691F3001D3D50 /* Functions.swift */; };
 		B5E84EDF1AFF84500064E85B /* DataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EDB1AFF84500064E85B /* DataStack.swift */; };
@@ -406,6 +411,7 @@
 		B5D9E33A1CA2C6BF007A9D52 /* GCDQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDQueue.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDQueue.swift; sourceTree = "<group>"; };
 		B5D9E33B1CA2C6BF007A9D52 /* GCDSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDSemaphore.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDSemaphore.swift; sourceTree = "<group>"; };
 		B5D9E33C1CA2C6BF007A9D52 /* GCDTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDTimer.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDTimer.swift; sourceTree = "<group>"; };
+		B5D9E34F1CA2D0D7007A9D52 /* NSPersistentStoreCoordinator+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+Setup.swift"; sourceTree = "<group>"; };
 		B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+Importing.swift"; sourceTree = "<group>"; };
 		B5E834BA1B7691F3001D3D50 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		B5E84ED81AFF82360064E85B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
@@ -768,6 +774,7 @@
 				B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */,
 				B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */,
 				B51BE0691B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift */,
+				B5D9E34F1CA2D0D7007A9D52 /* NSPersistentStoreCoordinator+Setup.swift */,
 				B5E84F2D1AFF849C0064E85B /* WeakObject.swift */,
 			);
 			path = Internal;
@@ -1136,6 +1143,7 @@
 				B5E84F311AFF849C0064E85B /* WeakObject.swift in Sources */,
 				B5E84F101AFF847B0064E85B /* GroupBy.swift in Sources */,
 				B5E84F201AFF84860064E85B /* DataStack+Observing.swift in Sources */,
+				B5D9E3501CA2D0D7007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B5E84EF81AFF846E0064E85B /* CoreStore+Transaction.swift in Sources */,
 				B5E84F301AFF849C0064E85B /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				B5E84F211AFF84860064E85B /* CoreStore+Observing.swift in Sources */,
@@ -1213,6 +1221,7 @@
 				82BA18CB1C4BBD6400A0916E /* NSManagedObject+Convenience.swift in Sources */,
 				82BA18B51C4BBD3F00A0916E /* BaseDataTransaction+Querying.swift in Sources */,
 				82BA18D31C4BBD7100A0916E /* NSManagedObjectContext+CoreStore.swift in Sources */,
+				B5D9E3521CA2D0DE007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				82BA18AD1C4BBD3100A0916E /* UnsafeDataTransaction.swift in Sources */,
 				82BA18A81C4BBD2900A0916E /* CoreStoreLogger.swift in Sources */,
 				82BA18B81C4BBD4200A0916E /* ClauseTypes.swift in Sources */,
@@ -1244,6 +1253,7 @@
 				B52DD1951BE1F92500949AFE /* NSError+CoreStore.swift in Sources */,
 				B52DD1C21BE1F94600949AFE /* MigrationManager.swift in Sources */,
 				B52DD1AB1BE1F93900949AFE /* From.swift in Sources */,
+				B5D9E3541CA2D0DF007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B52DD1BF1BE1F94600949AFE /* AssociatedObjects.swift in Sources */,
 				B52DD1A11BE1F92C00949AFE /* DataStack+Transaction.swift in Sources */,
 				B52DD19E1BE1F92C00949AFE /* AsynchronousDataTransaction.swift in Sources */,
@@ -1356,6 +1366,7 @@
 				B56321851BD65216006C9394 /* CoreStore+Logging.swift in Sources */,
 				B56321921BD65216006C9394 /* BaseDataTransaction+Querying.swift in Sources */,
 				B56321B11BD6521C006C9394 /* NSManagedObjectContext+CoreStore.swift in Sources */,
+				B5D9E3531CA2D0DE007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B563218D1BD65216006C9394 /* CoreStore+Transaction.swift in Sources */,
 				B563218B1BD65216006C9394 /* UnsafeDataTransaction.swift in Sources */,
 				B56321A61BD65216006C9394 /* MigrationType.swift in Sources */,
@@ -1372,6 +1383,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5D9E3511CA2D0DD007A9D52 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B5D9E2EF1CA2C317007A9D52 /* ObjectMonitor.swift in Sources */,
 				B5D9E2F01CA2C317007A9D52 /* CoreStoreFetchedResultsController.swift in Sources */,
 				B5D9E3461CA2C6C4007A9D52 /* GCDQueue.swift in Sources */,
