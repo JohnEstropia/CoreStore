@@ -154,7 +154,7 @@ internal extension NSManagedObjectModel {
     }
     
     @nonobjc internal func entityTypesMapping() -> [String: NSManagedObject.Type] {
-    
+        
         var mapping = [String: NSManagedObject.Type]()
         self.entityNameMapping.forEach { (className, entityName) in
             
