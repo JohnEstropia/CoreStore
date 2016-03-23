@@ -111,22 +111,24 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     public init(dictionaryLiteral elements: (String, String)...) {
         
         var valid = true
-        let versionTree = elements.reduce([String: String]()) { (var versionTree, tuple: (String, String)) -> [String: String] in
+        var versionTree = [String: String]()
+        elements.forEach { (sourceVersion, destinationVersion) in
             
-            if let _ = versionTree.updateValue(tuple.1, forKey: tuple.0) {
+            guard let _ = versionTree.updateValue(destinationVersion, forKey: sourceVersion) else {
                 
-                CoreStore.assert(false, "\(typeName(MigrationChain))'s migration chain could not be created due to ambiguous version paths.")
-                
-                valid = false
+                return
             }
-            return versionTree
+            
+            CoreStore.assert(false, "\(typeName(MigrationChain))'s migration chain could not be created due to ambiguous version paths.")
+            
+            valid = false
         }
         let leafVersions = Set(
             elements.filter { (tuple: (String, String)) -> Bool in
                 
                 return versionTree[tuple.1] == nil
                 
-            }.map { $1 }
+                }.map { $1 }
         )
         
         let isVersionAmbiguous = { (start: String) -> Bool in

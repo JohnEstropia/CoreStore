@@ -42,7 +42,7 @@ public protocol ObjectObserver: class {
     /**
      The `NSManagedObject` type for the observed object
      */
-    typealias ObjectEntityType: NSManagedObject
+    associatedtype ObjectEntityType: NSManagedObject
     
     /**
      Handles processing just before a change to the observed `object` occurs

@@ -53,7 +53,7 @@ public protocol ImportableObject: class {
     /**
      The data type for the import source. This is most commonly an `NSDictionary` or another external source such as an `NSUserDefaults`.
      */
-    typealias ImportSource
+    associatedtype ImportSource
     
     /**
      Return `true` if an object should be created from `source`. Return `false` to ignore and skip `source`. The default implementation returns `true`.

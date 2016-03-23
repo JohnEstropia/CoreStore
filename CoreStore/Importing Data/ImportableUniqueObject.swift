@@ -54,12 +54,12 @@ public protocol ImportableUniqueObject: ImportableObject {
     /**
      The data type for the import source. This is most commonly an `NSDictionary` or another external source such as an `NSUserDefaults`.
      */
-    typealias ImportSource
+    associatedtype ImportSource
     
     /**
      The data type for the entity's unique ID attribute
      */
-    typealias UniqueIDType: NSObject
+    associatedtype UniqueIDType: NSObject
     
     /**
      The keyPath to the entity's unique ID attribute
