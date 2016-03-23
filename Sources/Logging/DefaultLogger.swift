@@ -37,6 +37,9 @@ import Foundation
  */
 public final class DefaultLogger: CoreStoreLogger {
     
+    /**
+     Creates a `DefaultLogger`.
+     */
     public init() { }
    
     public func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {

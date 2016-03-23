@@ -40,10 +40,10 @@ extension SQLiteStore: CoreStoreBridgeable {
 // MARK: - CSSQLiteStore
 
 /**
- The `CSSQLiteStore` serves as the Objective-C bridging type for `CSSQLiteStore`.
+ The `CSSQLiteStore` serves as the Objective-C bridging type for `SQLiteStore`.
  */
 @objc
-public final class CSSQLiteStore: NSObject, CoreStoreBridge {
+public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     
     /**
      Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `CSDataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
@@ -163,7 +163,10 @@ public final class CSSQLiteStore: NSObject, CoreStoreBridge {
     @objc
     public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws {
         
-        try self.swift.eraseStorageAndWait(soureModel: soureModel)
+        try bridge {
+            
+            try self.swift.eraseStorageAndWait(soureModel: soureModel)
+        }
     }
     
     

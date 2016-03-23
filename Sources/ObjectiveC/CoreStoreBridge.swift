@@ -25,6 +25,9 @@
 
 import Foundation
 
+
+// MARK: - CoreStoreBridge
+
 public protocol CoreStoreBridge: class, AnyObject {
     
     associatedtype SwiftType
@@ -33,6 +36,9 @@ public protocol CoreStoreBridge: class, AnyObject {
     
     init(_ swiftObject: SwiftType)
 }
+
+
+// MARK: - CoreStoreBridgeable
 
 public protocol CoreStoreBridgeable: _ObjectiveCBridgeable {
     
@@ -72,3 +78,37 @@ public extension CoreStoreBridgeable where Self == ObjCType.SwiftType {
         return self._bridgeToObjectiveC()
     }
 }
+
+
+// MARK: - Internal
+
+internal func bridge<T: CoreStoreBridgeable where T == T.ObjCType.SwiftType>(@noescape closure: () -> T) -> T.ObjCType {
+    
+    return closure().objc
+}
+
+internal func bridge<T: CoreStoreBridgeable where T == T.ObjCType.SwiftType>(@noescape closure: () throws -> T) throws -> T.ObjCType {
+    
+    do {
+        
+        return try closure().objc
+    }
+    catch {
+        
+        throw error.objc
+    }
+}
+
+internal func bridge(@noescape closure: () throws -> Void) throws {
+    
+    do {
+        
+        try closure()
+    }
+    catch {
+        
+        throw error.objc
+    }
+}
+
+

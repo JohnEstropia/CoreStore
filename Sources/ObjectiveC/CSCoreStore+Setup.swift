@@ -48,7 +48,10 @@ public extension CSCoreStore {
     @objc
     public static func addInMemoryStorageAndWait() throws -> CSInMemoryStore {
         
-        return try CoreStore.defaultStack.addStorageAndWait(InMemoryStore).objc
+        return try bridge {
+            
+            try CoreStore.defaultStack.addStorageAndWait(InMemoryStore)
+        }
     }
     
     /**
@@ -62,7 +65,10 @@ public extension CSCoreStore {
     @objc
     public static func addSQLiteStorageAndWait() throws -> CSSQLiteStore {
         
-        return try CoreStore.defaultStack.addStorageAndWait(SQLiteStore).objc
+        return try bridge {
+            
+            try CoreStore.defaultStack.addStorageAndWait(SQLiteStore)
+        }
     }
     
     /**
@@ -80,7 +86,10 @@ public extension CSCoreStore {
     @objc
     public static func addInMemoryStorageAndWait(storage: CSInMemoryStore) throws -> CSInMemoryStore {
         
-        return try CoreStore.defaultStack.addStorageAndWait(storage.swift).objc
+        return try bridge {
+            
+            try CoreStore.defaultStack.addStorageAndWait(storage.swift)
+        }
     }
     
     /**
@@ -98,6 +107,9 @@ public extension CSCoreStore {
     @objc
     public static func addSQLiteStorageAndWait(storage: CSSQLiteStore) throws -> CSSQLiteStore {
         
-        return try CoreStore.defaultStack.addStorageAndWait(storage.swift).objc
+        return try bridge {
+            
+            try CoreStore.defaultStack.addStorageAndWait(storage.swift)
+        }
     }
 }

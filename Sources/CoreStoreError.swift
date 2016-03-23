@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CoreStoreError
 
-public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStringConvertible {
+public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStringConvertible, Equatable {
     
     /**
      A failure occured because of an unknown error.
@@ -61,24 +61,19 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     
     public var _domain: String {
         
-        return "com.corestore.error"
+        return CoreStoreErrorDomain
     }
     
     public var _code: Int {
     
         switch self {
             
-        case .Unknown:                      return Code.Unknown.rawValue
-        case .DifferentStorageExistsAtURL:  return Code.DifferentStorageExistsAtURL.rawValue
-        case .MappingModelNotFound:         return Code.MappingModelNotFound.rawValue
-        case .ProgressiveMigrationRequired: return Code.ProgressiveMigrationRequired.rawValue
-        case .InternalError:                return Code.InternalError.rawValue
+        case .Unknown:                      return CoreStoreErrorCode.UnknownError.rawValue
+        case .DifferentStorageExistsAtURL:  return CoreStoreErrorCode.DifferentPersistentStoreExistsAtURL.rawValue
+        case .MappingModelNotFound:         return CoreStoreErrorCode.MappingModelNotFound.rawValue
+        case .ProgressiveMigrationRequired: return CoreStoreErrorCode.ProgressiveMigrationRequired.rawValue
+        case .InternalError:                return CoreStoreErrorCode.InternalError.rawValue
         }
-    }
-    
-    public var _userInfo: [NSObject: AnyObject] {
-        
-        return ["test": 1]
     }
     
     
@@ -105,33 +100,51 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
         
         self = error.flatMap { $0.swift } ?? .Unknown
     }
+}
+
+
+// MARK: - CoreStoreError: Equatable
+
+@warn_unused_result
+public func == (lhs: CoreStoreError, rhs: CoreStoreError) -> Bool {
     
-    
-    // MARK: Private
-    
-    private enum Code: Int {
+    switch (lhs, rhs) {
         
-        case Unknown
-        case DifferentStorageExistsAtURL
-        case MappingModelNotFound
-        case ProgressiveMigrationRequired
-        case InternalError
+    case (.Unknown, .Unknown):
+        return true
+        
+    case (.DifferentStorageExistsAtURL(let url1), .DifferentStorageExistsAtURL(let url2)):
+        return url1 == url2
+        
+    case (.MappingModelNotFound(let url1, let model1, let version1), .MappingModelNotFound(let url2, let model2, let version2)):
+        return url1 == url2 && model1 == model2 && version1 == version2
+        
+    case (.ProgressiveMigrationRequired(let url1), .ProgressiveMigrationRequired(let url2)):
+        return url1 == url2
+        
+    case (.InternalError(let NSError1), .InternalError(let NSError2)):
+        return NSError1 == NSError2
+        
+    default:
+        return false
     }
 }
+
+
+// MARK: - CoreStoreErrorDomain
+
+/**
+ The `NSError` error domain for `CoreStore`.
+ */
+@nonobjc
+public let CoreStoreErrorDomain = "com.corestore.error"
 
 
 // MARK: - CoreStoreErrorCode
 
 /**
- The `NSError` error domain for `CoreStore`.
- */
-@available(*, deprecated=2.0.0, message="Use CoreStoreError enum values instead.")
-public let CoreStoreErrorDomain = "com.corestore.error"
-
-/**
  The `NSError` error codes for `CoreStoreErrorDomain`.
  */
-@available(*, deprecated=2.0.0, message="Use CoreStoreError enum values instead.")
 public enum CoreStoreErrorCode: Int {
     
     /**
@@ -153,6 +166,11 @@ public enum CoreStoreErrorCode: Int {
      Progressive migrations are disabled for a store, but an `NSMappingModel` could not be found for a specific source and destination model versions.
      */
     case ProgressiveMigrationRequired
+    
+    /**
+     An internal SDK call failed with the specified "NSError" userInfo key.
+     */
+    case InternalError
 }
 
 
@@ -203,12 +221,12 @@ internal extension ErrorType {
             return .Unknown
         }
         
-        guard error.domain == "com.corestore.error" else {
+        guard error.domain == CoreStoreErrorDomain else {
             
             return .InternalError(NSError: error)
         }
         
-        guard let code = CoreStoreError.Code(rawValue: error.code) else {
+        guard let code = CoreStoreErrorCode(rawValue: error.code) else {
             
             return .Unknown
         }
@@ -216,10 +234,10 @@ internal extension ErrorType {
         let info = error.userInfo
         switch code {
             
-        case .Unknown:
+        case .UnknownError:
             return .Unknown
             
-        case .DifferentStorageExistsAtURL:
+        case .DifferentPersistentStoreExistsAtURL:
             guard case let existingPersistentStoreURL as NSURL = info["existingPersistentStoreURL"] else {
                 
                 return .Unknown
@@ -253,23 +271,21 @@ internal extension ErrorType {
     
     internal var objc: NSError {
         
-        let domain = "com.corestore.error"
         guard let error = self as? CoreStoreError else {
             
-            return ((self as Any) as? NSError)
-                ?? NSError(domain: domain, code: CoreStoreError.Code.Unknown.rawValue, userInfo: [:])
+            return ((self as Any) as? NSError) ?? self as NSError
         }
         
-        let code: CoreStoreError.Code
+        let code: CoreStoreErrorCode
         let info: [NSObject: AnyObject]
         switch error {
             
         case .Unknown:
-            code = .Unknown
+            code = .UnknownError
             info = [:]
             
         case .DifferentStorageExistsAtURL(let existingPersistentStoreURL):
-            code = .DifferentStorageExistsAtURL
+            code = .DifferentPersistentStoreExistsAtURL
             info = [
                 "existingPersistentStoreURL": existingPersistentStoreURL
             ]
@@ -295,6 +311,6 @@ internal extension ErrorType {
             ]
         }
         
-        return NSError(domain: domain, code: code.rawValue, userInfo: info)
+        return NSError(domain: CoreStoreErrorDomain, code: code.rawValue, userInfo: info)
     }
 }

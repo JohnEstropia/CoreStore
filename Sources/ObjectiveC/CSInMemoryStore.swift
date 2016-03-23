@@ -43,7 +43,7 @@ extension InMemoryStore: CoreStoreBridgeable {
  The `CSInMemoryStore` serves as the Objective-C bridging type for `InMemoryStore`.
  */
 @objc
-public final class CSInMemoryStore: NSObject, CoreStoreBridge {
+public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreBridge {
     
     /**
      Initializes a `CSInMemoryStore` for the specified configuration

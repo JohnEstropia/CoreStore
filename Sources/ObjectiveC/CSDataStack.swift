@@ -164,7 +164,10 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     @objc
     public func addInMemoryStorageAndWait() throws -> CSInMemoryStore {
         
-        return try self.swift.addStorageAndWait(InMemoryStore).objc
+        return try bridge {
+            
+            try self.swift.addStorageAndWait(InMemoryStore)
+        }
     }
     
     /**
@@ -178,7 +181,10 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     @objc
     public func addSQLiteStorageAndWait() throws -> CSSQLiteStore {
         
-        return try self.swift.addStorageAndWait(SQLiteStore).objc
+        return try bridge {
+            
+            return try self.swift.addStorageAndWait(SQLiteStore)
+        }
     }
     
     /**
@@ -196,7 +202,10 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     @objc
     public func addInMemoryStorageAndWait(storage: CSInMemoryStore) throws -> CSInMemoryStore {
         
-        return try self.swift.addStorageAndWait(storage.swift).objc
+        return try bridge {
+            
+            return try self.swift.addStorageAndWait(storage.swift)
+        }
     }
     
     /**
@@ -214,7 +223,10 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     @objc
     public func addSQLiteStorageAndWait(storage: CSSQLiteStore) throws -> CSSQLiteStore {
         
-        return try self.swift.addStorageAndWait(storage.swift).objc
+        return try bridge {
+            
+            return try self.swift.addStorageAndWait(storage.swift)
+        }
     }
     
     
