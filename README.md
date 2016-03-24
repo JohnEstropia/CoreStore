@@ -14,7 +14,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 </p>
 * Swift 2.2 (Xcode 7.3)
-* iOS 8+ / OSX 10.10+ / watchOS 2.0+ / tvOS 9.0+
+* iOS 7+ / OSX 10.10+ / watchOS 2.0+ / tvOS 9.0+
 
 
 
@@ -1167,12 +1167,12 @@ let person2 = self.monitor[1, 2]
 
 # Installation
 - Requires:
-    - iOS 8 SDK and above
-    - Swift 2.1 (Xcode 7.2)
+    - iOS 7 SDK and above
+    - Swift 2.2 (Xcode 7.3)
 - Dependencies:
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
 
-### Install with CocoaPods
+### Install with CocoaPods (iOS 7 not supported)
 ```
 pod 'CoreStore'
 ```
@@ -1181,8 +1181,8 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 1.4.4
-github "JohnEstropia/GCDKit" >= 1.2.0
+github "JohnEstropia/CoreStore" >= 1.6.0
+github "JohnEstropia/GCDKit" >= 1.2.2
 ```
 and run 
 ```
@@ -1195,7 +1195,7 @@ git submodule add https://github.com/JohnEstropia/CoreStore.git <destination dir
 ```
 Drag and drop **CoreStore.xcodeproj** to your project.
 
-#### To install as a framework:
+#### To install as a framework (iOS 7 not supported):
 Drag and drop **CoreStore.xcodeproj** to your project.
 
 #### To include directly in your app module:
@@ -1229,7 +1229,7 @@ or tag your Stackoverflow question with **corestore**
 
 
 # Who uses CoreStore?
-Did CoreStore serve you well? I'd love to hear about your app :)
+I'd love to hear about apps using CoreStore. Send me a message and I'll feature your apps here!
 
 
 # License
