@@ -255,6 +255,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     internal init(_ swiftObject: DataStack) {
         
         self.swift = swiftObject
+        super.init()
     }
 }
 

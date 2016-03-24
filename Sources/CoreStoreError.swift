@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CoreStoreError
 
-public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStringConvertible, Equatable {
+public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
     
     /**
      A failure occured because of an unknown error.
@@ -91,6 +91,31 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     public var debugDescription: String {
         
         return self.description
+    }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        let code = self._code
+        switch self {
+            
+        case .Unknown:
+            return code.hashValue
+            
+        case .DifferentStorageExistsAtURL(let existingPersistentStoreURL):
+            return code.hashValue ^ existingPersistentStoreURL.hashValue
+            
+        case .MappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
+            return code.hashValue ^ localStoreURL.hashValue ^ targetModel.hashValue ^ targetModelVersion.hashValue
+            
+        case .ProgressiveMigrationRequired(let localStoreURL):
+            return code.hashValue ^ localStoreURL.hashValue
+            
+        case .InternalError(let NSError):
+            return code.hashValue ^ NSError.hashValue
+        }
     }
     
     

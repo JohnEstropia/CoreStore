@@ -107,6 +107,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreBridg
     public required init(_ swiftObject: InMemoryStore) {
         
         self.swift = swiftObject
+        super.init()
     }
 }
 

@@ -184,6 +184,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     public required init(_ swiftObject: SQLiteStore) {
         
         self.swift = swiftObject
+        super.init()
     }
 }
 

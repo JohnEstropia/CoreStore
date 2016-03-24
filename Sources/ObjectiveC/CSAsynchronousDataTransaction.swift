@@ -24,6 +24,7 @@
 //
 
 import Foundation
+import CoreData
 
 
 // MARK: - CSAsynchronousDataTransaction
@@ -34,34 +35,20 @@ import Foundation
 @objc
 public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     
-//    /**
-//     Saves the transaction changes. This method should not be used after the `commit()` method was already called once.
-//     
-//     - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
-//     */
-//    public func commit(completion: (result: SaveResult) -> Void = { _ in }) {
-//        
-//        CoreStore.assert(
-//            self.transactionQueue.isCurrentExecutionContext(),
-//            "Attempted to commit a \(typeName(self)) outside its designated queue."
-//        )
-//        CoreStore.assert(
-//            !self.isCommitted,
-//            "Attempted to commit a \(typeName(self)) more than once."
-//        )
-//        
-//        self.isCommitted = true
-//        let group = GCDGroup()
-//        group.enter()
-//        self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
-//            
-//            self.result = result
-//            completion(result: result)
-//            group.leave()
-//        }
-//        group.wait()
-//    }
-//    
+    /**
+     Saves the transaction changes. This method should not be used after the `commit()` method was already called once.
+     
+     - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
+     */
+    @objc
+    public func commit(completion: ((result: CSSaveResult) -> Void)?) {
+        
+        self.swift.commit { (result) in
+            
+            completion?(result: result.objc)
+        }
+    }
+    
 //    /**
 //     Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
 //     

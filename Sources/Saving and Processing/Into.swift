@@ -148,32 +148,6 @@ public struct Into<T: NSManagedObject>: Hashable {
         self.configuration = configuration
         self.inferStoreIfPossible = inferStoreIfPossible
     }
-    
-    internal func upcast() -> Into<NSManagedObject> {
-        
-        return Into<NSManagedObject>(
-            entityClass: self.entityClass,
-            configuration: self.configuration,
-            inferStoreIfPossible: self.inferStoreIfPossible
-        )
-    }
-    
-    internal func downCast<U: NSManagedObject>(type: U.Type) -> Into<U>? {
-        
-        let entityClass: AnyClass = self.entityClass
-        guard entityClass.isSubclassOfClass(U) else {
-
-            return nil
-        }
-        return Into<U>(
-            entityClass: entityClass,
-            configuration: self.configuration,
-            inferStoreIfPossible: self.inferStoreIfPossible
-        )
-    }
-    
-    
-    // MARK: Private
 }
 
 
