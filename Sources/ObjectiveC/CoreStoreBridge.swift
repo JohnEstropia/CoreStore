@@ -28,7 +28,7 @@ import Foundation
 
 // MARK: - CoreStoreBridge
 
-public protocol CoreStoreBridge: class, AnyObject {
+internal protocol CoreStoreBridge: class, AnyObject {
     
     associatedtype SwiftType
     
@@ -40,42 +40,18 @@ public protocol CoreStoreBridge: class, AnyObject {
 
 // MARK: - CoreStoreBridgeable
 
-public protocol CoreStoreBridgeable: _ObjectiveCBridgeable {
+internal protocol CoreStoreBridgeable {
     
     associatedtype ObjCType: CoreStoreBridge
+    
+    var objc: ObjCType { get }
 }
 
-public extension CoreStoreBridgeable where Self == ObjCType.SwiftType {
-    
-    static func _isBridgedToObjectiveC() -> Bool {
-        
-        return true
-    }
-    
-    static func _getObjectiveCType() -> Any.Type {
-        
-        return ObjCType.self
-    }
-    
-    func _bridgeToObjectiveC() -> ObjCType {
-        
-        return ObjCType(self)
-    }
-    
-    static func _forceBridgeFromObjectiveC(source: ObjCType, inout result: ObjCType.SwiftType?) {
-        
-        result = source.swift
-    }
-    
-    static func _conditionallyBridgeFromObjectiveC(source: ObjCType, inout result: ObjCType.SwiftType?) -> Bool {
-        
-        result = source.swift
-        return true
-    }
+internal extension CoreStoreBridgeable where Self == ObjCType.SwiftType {
     
     var objc: ObjCType {
         
-        return self._bridgeToObjectiveC()
+        return ObjCType(self)
     }
 }
 

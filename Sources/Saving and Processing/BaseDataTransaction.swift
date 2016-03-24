@@ -208,7 +208,8 @@ public /*abstract*/ class BaseDataTransaction {
     Returns all pending `NSManagedObject`s that were inserted to the transaction. This method should not be called after the `commit()` method was called.
     
     - returns: a `Set` of pending `NSManagedObject`s that were inserted to the transaction.
-    */
+     */
+    @warn_unused_result
     public func insertedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(
@@ -229,6 +230,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObject`s of the specified type that were inserted to the transaction.
      */
+    @warn_unused_result
     public func insertedObjects<T: NSManagedObject>(entity: T.Type) -> Set<T> {
         
         CoreStore.assert(
@@ -248,6 +250,7 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObjectID`s that were inserted to the transaction.
      */
+    @warn_unused_result
     public func insertedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -268,6 +271,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were inserted to the transaction.
      */
+    @warn_unused_result
     public func insertedObjectIDs<T: NSManagedObject>(entity: T.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -279,7 +283,7 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access inserted objects IDs from an already committed \(typeName(self))."
         )
         
-        return Set(self.context.insertedObjects.flatMap { $0 as? T }.map { $0.objectID })
+        return Set(self.context.insertedObjects.filter { $0.isKindOfClass(entity) }.map { $0.objectID })
     }
     
     /**
@@ -287,6 +291,7 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObject`s that were updated to the transaction.
      */
+    @warn_unused_result
     public func updatedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(
@@ -307,6 +312,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObject`s of the specified type that were updated in the transaction.
      */
+    @warn_unused_result
     public func updatedObjects<T: NSManagedObject>(entity: T.Type) -> Set<T> {
         
         CoreStore.assert(
@@ -318,7 +324,7 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access updated objects from an already committed \(typeName(self))."
         )
         
-        return Set(self.context.updatedObjects.flatMap { $0 as? T })
+        return Set(self.context.updatedObjects.filter { $0.isKindOfClass(entity) }.map { $0 as! T })
     }
     
     /**
@@ -326,6 +332,7 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObjectID`s that were updated in the transaction.
      */
+    @warn_unused_result
     public func updatedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -346,6 +353,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were updated in the transaction.
      */
+    @warn_unused_result
     public func updatedObjectIDs<T: NSManagedObject>(entity: T.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -357,7 +365,7 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access updated object IDs from an already committed \(typeName(self))."
         )
         
-        return Set(self.context.updatedObjects.flatMap { $0 as? T }.map { $0.objectID })
+        return Set(self.context.updatedObjects.filter { $0.isKindOfClass(entity) }.map { $0.objectID })
     }
     
     /**
@@ -365,6 +373,7 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObject`s that were deleted from the transaction.
      */
+    @warn_unused_result
     public func deletedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(
@@ -385,6 +394,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObject`s of the specified type that were deleted from the transaction.
      */
+    @warn_unused_result
     public func deletedObjects<T: NSManagedObject>(entity: T.Type) -> Set<T> {
         
         CoreStore.assert(
@@ -396,7 +406,7 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access deleted objects from an already committed \(typeName(self))."
         )
         
-        return Set(self.context.deletedObjects.flatMap { $0 as? T })
+        return Set(self.context.deletedObjects.filter { $0.isKindOfClass(entity) }.map { $0 as! T })
     }
     
     /**
@@ -405,6 +415,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
+    @warn_unused_result
     public func deletedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -425,6 +436,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
+    @warn_unused_result
     public func deletedObjectIDs<T: NSManagedObject>(entity: T.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -436,7 +448,7 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access deleted object IDs from an already committed \(typeName(self))."
         )
         
-        return Set(self.context.deletedObjects.flatMap { $0 as? T }.map { $0.objectID })
+        return Set(self.context.deletedObjects.filter { $0.isKindOfClass(entity) }.map { $0.objectID })
     }
     
     

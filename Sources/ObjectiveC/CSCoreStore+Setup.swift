@@ -29,6 +29,17 @@ public extension CSCoreStore {
     }
     
     /**
+     Returns the entity class for the given entity name from the `defaultStack`'s model.
+     - parameter name: the entity name
+     - returns: the `NSManagedObject` class for the given entity name, or `nil` if not found
+     */
+    @objc
+    public static func entityClassWithName(name: String) -> NSManagedObject.Type? {
+        
+        return CoreStore.defaultStack.entityTypesByName[name]
+    }
+    
+    /**
      Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from `defaultStack`'s model.
      */
     @objc

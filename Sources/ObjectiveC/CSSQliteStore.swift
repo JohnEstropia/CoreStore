@@ -27,16 +27,6 @@ import Foundation
 import CoreData
 
 
-// MARK: - SQLiteStore
-
-extension SQLiteStore: CoreStoreBridgeable {
-    
-    // MARK: CoreStoreBridgeable
-    
-    public typealias ObjCType = CSSQLiteStore
-}
-
-
 // MARK: - CSSQLiteStore
 
 /**
@@ -189,10 +179,20 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     
     // MARK: CoreStoreBridge
     
-    public let swift: SQLiteStore
+    internal let swift: SQLiteStore
     
     public required init(_ swiftObject: SQLiteStore) {
         
         self.swift = swiftObject
     }
+}
+
+
+// MARK: - SQLiteStore
+
+extension SQLiteStore: CoreStoreBridgeable {
+    
+    // MARK: CoreStoreBridgeable
+    
+    internal typealias ObjCType = CSSQLiteStore
 }

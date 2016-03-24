@@ -27,16 +27,6 @@ import Foundation
 import CoreData
 
 
-// MARK: - DataStack
-
-extension DataStack: CoreStoreBridgeable {
-    
-    // MARK: CoreStoreBridgeable
-    
-    public typealias ObjCType = CSDataStack
-}
-
-
 // MARK: - CSDataStack
 
 /**
@@ -145,6 +135,17 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     }
     
     /**
+     Returns the entity class for the given entity name from the stack's's model.
+     - parameter name: the entity name
+     - returns: the `NSManagedObject` class for the given entity name, or `nil` if not found
+     */
+    @objc
+    public func entityClassWithName(name: String) -> NSManagedObject.Type? {
+        
+        return self.swift.entityTypesByName[name]
+    }
+    
+    /**
      Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from stack's model.
      */
     @objc
@@ -249,10 +250,20 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     
     // MARK: CoreStoreBridge
     
-    public let swift: DataStack
+    internal let swift: DataStack
     
-    public required init(_ swiftObject: DataStack) {
+    internal init(_ swiftObject: DataStack) {
         
         self.swift = swiftObject
     }
+}
+
+
+// MARK: - DataStack
+
+extension DataStack: CoreStoreBridgeable {
+    
+    // MARK: CoreStoreBridgeable
+    
+    internal typealias ObjCType = CSDataStack
 }

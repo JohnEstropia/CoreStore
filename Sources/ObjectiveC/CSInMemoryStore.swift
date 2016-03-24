@@ -27,16 +27,6 @@ import Foundation
 import CoreData
 
 
-// MARK: - InMemoryStore
-
-extension InMemoryStore: CoreStoreBridgeable {
-    
-    // MARK: CoreStoreBridgeable
-    
-    public typealias ObjCType = CSInMemoryStore
-}
-
-
 // MARK: - CSInMemoryStore
 
 /**
@@ -112,10 +102,20 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreBridg
     
     // MARK: CoreStoreBridge
     
-    public let swift: InMemoryStore
+    internal let swift: InMemoryStore
     
     public required init(_ swiftObject: InMemoryStore) {
         
         self.swift = swiftObject
     }
+}
+
+
+// MARK: - InMemoryStore
+
+extension InMemoryStore: CoreStoreBridgeable {
+    
+    // MARK: CoreStoreBridgeable
+    
+    internal typealias ObjCType = CSInMemoryStore
 }

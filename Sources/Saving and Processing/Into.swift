@@ -39,7 +39,7 @@ import CoreData
  let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
  ```
  */
-public struct Into<T: NSManagedObject> {
+public struct Into<T: NSManagedObject>: Hashable {
     
     /**
      Initializes an `Into` clause.
@@ -50,9 +50,7 @@ public struct Into<T: NSManagedObject> {
      */
     public init(){
         
-        self.configuration = nil
-        self.inferStoreIfPossible = true
-        self.entityClass = T.self
+        self.init(entityClass: T.self, configuration: nil, inferStoreIfPossible: true)
     }
     
     /**
@@ -65,9 +63,7 @@ public struct Into<T: NSManagedObject> {
      */
     public init(_ entity: T.Type) {
         
-        self.configuration = nil
-        self.inferStoreIfPossible = true
-        self.entityClass = entity
+        self.init(entityClass: entity, configuration: nil, inferStoreIfPossible: true)
     }
     
     /**
@@ -80,9 +76,7 @@ public struct Into<T: NSManagedObject> {
      */
     public init(_ entityClass: AnyClass) {
         
-        self.configuration = nil
-        self.inferStoreIfPossible = true
-        self.entityClass = entityClass
+        self.init(entityClass: entityClass, configuration: nil, inferStoreIfPossible: true)
     }
     
     /**
@@ -95,9 +89,7 @@ public struct Into<T: NSManagedObject> {
      */
     public init(_ configuration: String?) {
         
-        self.configuration = configuration
-        self.inferStoreIfPossible = false
-        self.entityClass = T.self
+        self.init(entityClass: T.self, configuration: configuration, inferStoreIfPossible: false)
     }
     
     /**
@@ -111,9 +103,7 @@ public struct Into<T: NSManagedObject> {
      */
     public init(_ entity: T.Type, _ configuration: String?) {
         
-        self.configuration = configuration
-        self.inferStoreIfPossible = false
-        self.entityClass = entity
+        self.init(entityClass: entity, configuration: configuration, inferStoreIfPossible: false)
     }
     
     /**
@@ -127,9 +117,17 @@ public struct Into<T: NSManagedObject> {
      */
     public init(_ entityClass: AnyClass, _ configuration: String?) {
         
-        self.configuration = configuration
-        self.inferStoreIfPossible = false
-        self.entityClass = entityClass
+        self.init(entityClass: entityClass, configuration: configuration, inferStoreIfPossible: false)
+    }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+    
+        return ObjectIdentifier(self.entityClass).hashValue
+            ^ (self.configuration?.hashValue ?? 0)
+            ^ self.inferStoreIfPossible.hashValue
     }
     
     
@@ -143,4 +141,48 @@ public struct Into<T: NSManagedObject> {
     internal let entityClass: AnyClass
     internal let configuration: String?
     internal let inferStoreIfPossible: Bool
+    
+    internal init(entityClass: AnyClass, configuration: String?, inferStoreIfPossible: Bool) {
+        
+        self.entityClass = entityClass
+        self.configuration = configuration
+        self.inferStoreIfPossible = inferStoreIfPossible
+    }
+    
+    internal func upcast() -> Into<NSManagedObject> {
+        
+        return Into<NSManagedObject>(
+            entityClass: self.entityClass,
+            configuration: self.configuration,
+            inferStoreIfPossible: self.inferStoreIfPossible
+        )
+    }
+    
+    internal func downCast<U: NSManagedObject>(type: U.Type) -> Into<U>? {
+        
+        let entityClass: AnyClass = self.entityClass
+        guard entityClass.isSubclassOfClass(U) else {
+
+            return nil
+        }
+        return Into<U>(
+            entityClass: entityClass,
+            configuration: self.configuration,
+            inferStoreIfPossible: self.inferStoreIfPossible
+        )
+    }
+    
+    
+    // MARK: Private
+}
+
+
+// MARK: - Into: Equatable
+
+@warn_unused_result
+public func == <T: NSManagedObject, U: NSManagedObject>(lhs: Into<T>, rhs: Into<U>) -> Bool {
+    
+    return lhs.entityClass == rhs.entityClass
+        && lhs.configuration == rhs.configuration
+        && lhs.inferStoreIfPossible == rhs.inferStoreIfPossible
 }

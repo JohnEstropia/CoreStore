@@ -23,8 +23,6 @@
 //  SOFTWARE.
 //
 
-import Foundation
-
 
 // MARK: - WeakObject
 
