@@ -151,7 +151,7 @@ public final class DataStack {
         
         do {
             
-            return try self.coordinator.performBlockAndWait { () -> T in
+            return try self.coordinator.performSynchronously {
                 
                 if let _ = self.persistentStoreForStorage(storage) {
                     
@@ -202,7 +202,7 @@ public final class DataStack {
      */
     public func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {
         
-        return try self.coordinator.performBlockAndWait {
+        return try self.coordinator.performSynchronously {
             
             let fileURL = storage.fileURL
             CoreStore.assert(
@@ -299,8 +299,18 @@ public final class DataStack {
         let migrationQueue = NSOperationQueue()
         migrationQueue.maxConcurrentOperationCount = 1
         migrationQueue.name = "com.coreStore.migrationOperationQueue"
-        migrationQueue.qualityOfService = .Utility
-        migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
+        #if USE_FRAMEWORKS
+            
+            migrationQueue.qualityOfService = .Utility
+            migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
+        #else
+            
+            if #available(iOS 8.0, *) {
+                
+                migrationQueue.qualityOfService = .Utility
+                migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
+            }
+        #endif
         return migrationQueue
     }()
     

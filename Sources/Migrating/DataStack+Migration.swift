@@ -75,7 +75,7 @@ public extension DataStack {
      */
     public func addStorage<T: StorageInterface>(storage: T, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
         
-        self.coordinator.performBlock {
+        self.coordinator.performAsynchronously {
             
             if let _ = self.persistentStoreForStorage(storage) {
                 
@@ -143,7 +143,7 @@ public extension DataStack {
      Asynchronously adds a `LocalStorage` to the stack. Migrations are also initiated by default.
      ```
      try dataStack.addStorage(
-         SQLiteStore(configuration: "Config1"), 
+         SQLiteStore(configuration: "Config1"),
          completion: { result in
              switch result {
              case .Success(let storage): // ...
@@ -164,7 +164,7 @@ public extension DataStack {
             "The specified URL for the \(typeName(storage)) is invalid: \"\(fileURL)\""
         )
         
-        return try self.coordinator.performBlockAndWait {
+        return try self.coordinator.performSynchronously {
             
             if let _ = self.persistentStoreForStorage(storage) {
                 
@@ -284,7 +284,7 @@ public extension DataStack {
      */
     public func upgradeStorageIfNeeded<T: LocalStorage>(storage: T, completion: (MigrationResult) -> Void) throws -> NSProgress? {
         
-        return try self.coordinator.performBlockAndWait {
+        return try self.coordinator.performSynchronously {
             
             let fileURL = storage.fileURL
             do {
@@ -326,7 +326,7 @@ public extension DataStack {
     @warn_unused_result
     public func requiredMigrationsForStorage<T: LocalStorage>(storage: T) throws -> [MigrationType] {
         
-        return try self.coordinator.performBlockAndWait {
+        return try self.coordinator.performSynchronously {
             
             let fileURL = storage.fileURL
             
@@ -486,7 +486,16 @@ public extension DataStack {
         }
         
         let migrationOperation = NSBlockOperation()
-        migrationOperation.qualityOfService = .Utility
+        #if USE_FRAMEWORKS
+            
+            migrationOperation.qualityOfService = .Utility
+        #else
+            
+            if #available(iOS 8.0, *) {
+                
+                migrationOperation.qualityOfService = .Utility
+            }
+        #endif
         operations.forEach { migrationOperation.addDependency($0) }
         migrationOperation.addExecutionBlock { () -> Void in
             
@@ -533,18 +542,18 @@ public extension DataStack {
                     fromBundles: storage.mappingModelBundles,
                     forSourceModel: sourceModel,
                     destinationModel: destinationModel) {
-                        
-                        migrationSteps.append(
-                            (
-                                sourceModel: sourceModel,
-                                destinationModel: destinationModel,
-                                mappingModel: mappingModel,
-                                migrationType: .Heavyweight(
-                                    sourceVersion: currentVersion,
-                                    destinationVersion: nextVersion
-                                )
+                    
+                    migrationSteps.append(
+                        (
+                            sourceModel: sourceModel,
+                            destinationModel: destinationModel,
+                            mappingModel: mappingModel,
+                            migrationType: .Heavyweight(
+                                sourceVersion: currentVersion,
+                                destinationVersion: nextVersion
                             )
                         )
+                    )
                 }
                 else {
                     
@@ -682,7 +691,7 @@ public extension DataStack {
     public func addInMemoryStore(configuration configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
         
         do {
-         
+            
             try self.addStorage(
                 InMemoryStore(configuration: configuration),
                 completion: { result in

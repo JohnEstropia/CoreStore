@@ -2,7 +2,7 @@
 //  NSPersistentStoreCoordinator+Setup.swift
 //  CoreStore
 //
-//  Copyright © 2016 John Rommel Estropia
+//  Copyright © 2016 John Rommel Estropia. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,43 +26,122 @@
 import Foundation
 import CoreData
 
+#if USE_FRAMEWORKS
+    import GCDKit
+#endif
+
 
 // MARK: - NSPersistentStoreCoordinator
 
 internal extension NSPersistentStoreCoordinator {
     
-    // MARK: Internal
+    internal func performAsynchronously(closure: () -> Void) {
+        
+        #if USE_FRAMEWORKS
+            
+            self.performBlock(closure)
+        #else
+            
+            if #available(iOS 8.0, *) {
+                
+                self.performBlock(closure)
+            }
+            else {
+                
+                self.lock()
+                GCDQueue.Default.async {
+                    
+                    closure()
+                    self.unlock()
+                }
+            }
+        #endif
+    }
     
-    @nonobjc internal func performBlockAndWait<T>(block: () throws -> T) throws -> T {
+    internal func performSynchronously(closure: () -> Void) {
         
-        var result: T?
+        #if USE_FRAMEWORKS
+            
+            self.performBlockAndWait(closure)
+        #else
+            
+            if #available(iOS 8.0, *) {
+                
+                self.performBlockAndWait(closure)
+            }
+            else {
+                
+                self.lock()
+                autoreleasepool(closure)
+                self.unlock()
+            }
+        #endif
+    }
+    
+    internal func performSynchronously<T>(closure: () throws -> T) throws -> T {
+        
         var closureError: ErrorType?
-        
-        self.performBlockAndWait {
+        var result: T?
+        #if USE_FRAMEWORKS
             
-            do {
+            self.performBlockAndWait {
                 
-                result = try block()
+                do {
+                    
+                    result = try closure()
+                }
+                catch {
+                    
+                    closureError = error
+                }
             }
-            catch {
+        #else
+            
+            if #available(iOS 8.0, *) {
                 
-                closureError = error
+                self.performBlockAndWait {
+                    
+                    do {
+                        
+                        result = try closure()
+                    }
+                    catch {
+                        
+                        closureError = error
+                    }
+                }
             }
+            else {
+                
+                self.lock()
+                autoreleasepool {
+                    
+                    do {
+                        
+                        result = try closure()
+                    }
+                    catch {
+                        
+                        closureError = error
+                    }
+                }
+                self.unlock()
+            }
+        #endif
+        
+        if let closureError = closureError {
+            
+            throw closureError
         }
         
-        if let result = result {
-            
-            return result
-        }
-        
-        throw closureError!
+        return result!
     }
     
     @nonobjc internal func addPersistentStoreSynchronously(storeType: String, configuration: String?, URL storeURL: NSURL?, options: [NSObject : AnyObject]?) throws -> NSPersistentStore {
         
         var store: NSPersistentStore?
         var storeError: NSError?
-        self.performBlockAndWait {
+        self.performSynchronously {
             
             do {
                 
