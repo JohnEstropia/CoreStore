@@ -6,7 +6,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 <br />
 <a href="https://travis-ci.org/JohnEstropia/CoreStore"><img alt="Build Status" src="https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg?style=flat" /></a>
-<a href="http://cocoadocs.org/docsets/CoreStore"><img alt=Version" src="https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat" /></a>
+<a href="http://cocoadocs.org/docsets/CoreStore"><img alt="Version" src="https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat" /></a>
 <a href="http://cocoadocs.org/docsets/CoreStore"><img alt="Platform" src="https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat" /></a>
 <a href="https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE"><img alt="License" src="https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat" /></a>
 <a href="https://github.com/Carthage/Carthage"><img alt="Carthage compatible" src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" /></a>
