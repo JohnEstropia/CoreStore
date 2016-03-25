@@ -20,7 +20,7 @@ class QueryingResultsViewController: UITableViewController {
             self.values = array.map { (item: AnyObject) -> (title: String, detail: String) in
                 (
                     title: item.description,
-                    detail: String(reflecting: item)
+                    detail: String(reflecting: item.dynamicType)
                 )
             }
             
@@ -28,7 +28,7 @@ class QueryingResultsViewController: UITableViewController {
             self.values = [
                 (
                     title: item.description,
-                    detail: String(reflecting: item)
+                    detail: String(reflecting: item.dynamicType)
                 )
             ]
             
