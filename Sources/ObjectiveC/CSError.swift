@@ -23,6 +23,9 @@
 //  SOFTWARE.
 //
 
+import Foundation
+import CoreData
+
 
 // MARK: - CSError
 

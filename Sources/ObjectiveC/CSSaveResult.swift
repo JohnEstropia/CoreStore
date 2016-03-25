@@ -35,6 +35,104 @@ import CoreData
 @objc
 public final class CSSaveResult: NSObject, CoreStoreBridge {
     
+    /**
+     `true` if the `commit` operation for the transaction succeeded, either because the save succeeded or because there were no changes to save. Returns `false` to indicate failure.
+     */
+    @objc
+    public var isSuccess: Bool {
+        
+        return self.swift.boolValue
+    }
+    
+    /**
+     `true` if the `commit` operation for the transaction failed, or `false` otherwise. When `true`, the `error` property returns the actual `NSError` for the failure.
+     */
+    @objc
+    public var isFailure: Bool {
+        
+        return !self.swift.boolValue
+    }
+    
+    /**
+     `true` if the `commit` operation for the transaction succeeded and if there was an actual change made. Returns `false` otherwise.
+     */
+    @objc
+    public var hasChanges: Bool {
+        
+        guard case .Success(let hasChanges) = self.swift else {
+            
+            return false
+        }
+        return hasChanges
+    }
+    
+    /**
+     The `NSError` for a failed `commit` operation, or `nil` if the `commit` succeeded
+     */
+    @objc
+    public var error: NSError? {
+        
+        guard case .Failure(let error) = self.swift else {
+            
+            return nil
+        }
+        return error.objc
+    }
+    
+    /**
+     If the result was a success, the `success` block is executed with a `BOOL` argument that indicates if there were any changes made. If the result was a failure, the `failure` block is executed with an `NSError` argument pertaining to the actual error.
+     
+     The blocks are executed immediately as `@noescape` and will not be retained.
+     
+     - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
+     - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actuall error.
+     */
+    @objc
+    public func handleSuccess(@noescape success: (hasChanges: Bool) -> Void, @noescape  failure: (error: NSError) -> Void) {
+        
+        switch self.swift {
+            
+        case .Success(let hasChanges):
+            success(hasChanges: hasChanges)
+            
+        case .Failure(let error):
+            failure(error: error.objc)
+        }
+    }
+    
+    /**
+     If the result was a success, the `success` block is executed with a `BOOL` argument that indicates if there were any changes made. If the result was a failure, this method does nothing.
+     
+     The block is executed immediately as `@noescape` and will not be retained.
+     
+     - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
+     */
+    @objc
+    public func handleSuccess(@noescape success: (hasChanges: Bool) -> Void) {
+        
+        guard case .Success(let hasChanges) = self.swift else {
+            
+            return
+        }
+        success(hasChanges: hasChanges)
+    }
+    
+    /**
+     If the result was a failure, the `failure` block is executed with an `NSError` argument pertaining to the actual error. If the result was a success, this method does nothing.
+     
+     The block is executed immediately as `@noescape` and will not be retained.
+     
+     - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actuall error.
+     */
+    @objc
+    public func handleFailure(@noescape failure: (error: NSError) -> Void) {
+        
+        guard case .Failure(let error) = self.swift else {
+                
+            return
+        }
+        failure(error: error.objc)
+    }
     
     
     // MARK: NSObject

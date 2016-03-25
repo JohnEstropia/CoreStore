@@ -38,7 +38,7 @@ import CoreData
 public final class UnsafeDataTransaction: BaseDataTransaction {
     
     /**
-     Saves the transaction changes asynchronously. For a `UnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
+     Saves the transaction changes asynchronously. For an `UnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
      
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
      */
@@ -52,7 +52,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Saves the transaction changes and waits for completion synchronously. For a `UnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
+     Saves the transaction changes and waits for completion synchronously. For an `UnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
      
      - returns: a `SaveResult` containing the success or failure information
      */
@@ -103,7 +103,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
      
      - prameter supportsUndo: `undo()`, `redo()`, and `rollback()` methods are only available when this parameter is `true`, otherwise those method will raise an exception. Defaults to `false`. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
-     - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
+     - returns: an `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @warn_unused_result
     public func beginUnsafe(supportsUndo supportsUndo: Bool = false) -> UnsafeDataTransaction {

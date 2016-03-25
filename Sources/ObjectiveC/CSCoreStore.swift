@@ -24,7 +24,6 @@
 //
 
 import Foundation
-import CoreData
 
 
 // MARK: - CSCoreStore
@@ -38,7 +37,7 @@ public final class CSCoreStore: NSObject {
     /**
      The default `CSDataStack` instance to be used. If `defaultStack` is not set before the first time accessed, a default-configured `DataStack` will be created.
      
-     Changing the `defaultStack` is thread safe, but it is recommended to setup `DataStacks` on a common queue (e.g. the main queue).
+     Changing the `defaultStack` is thread safe, but it is recommended to setup stacks on a common queue (e.g. the main queue).
      */
     @objc
     public class var defaultStack: CSDataStack {

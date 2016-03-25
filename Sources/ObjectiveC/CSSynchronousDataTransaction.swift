@@ -1,5 +1,5 @@
 //
-//  CSAsynchronousDataTransaction.swift
+//  CSSynchronousDataTransaction.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia
@@ -27,30 +27,30 @@ import Foundation
 import CoreData
 
 
-// MARK: - CSAsynchronousDataTransaction
+// MARK: - CSSynchronousDataTransaction
 
 /**
- The `CSAsynchronousDataTransaction` serves as the Objective-C bridging type for `AsynchronousDataTransaction`.
+ The `CSSynchronousDataTransaction` serves as the Objective-C bridging type for `SynchronousDataTransaction`.
  */
 @objc
-public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
+public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
     
     /**
-     Saves the transaction changes. This method should not be used after the `-commitWithCompletion:` method was already called once.
+     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `-commitAndWait` method was already called once.
      
-     - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
+     - returns: a `CSSaveResult` containing the success or failure information
      */
     @objc
-    public func commitWithCompletion(completion: ((result: CSSaveResult) -> Void)?) {
+    public func commitAndWait() -> CSSaveResult {
         
-        self.swift.commit { (result) in
+        return bridge {
             
-            completion?(result: result.objc)
+            self.swift.commitAndWait()
         }
     }
     
     /**
-     Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `-commitWithCompletion:` method was already called once.
+     Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `-commitAndWait` method was already called once.
      
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
@@ -83,7 +83,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     }
     
     /**
-     Returns an editable proxy of a specified `NSManagedObject`. This method should not be used after the `-commitWithCompletion:` method was already called once.
+     Returns an editable proxy of a specified `NSManagedObject`. This method should not be used after the `-commitAndWait` method was already called once.
      
      - parameter object: the `NSManagedObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
@@ -96,7 +96,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     }
     
     /**
-     Returns an editable proxy of the object with the specified `NSManagedObjectID`. This method should not be used after the `-commitWithCompletion:` method was already called once.
+     Returns an editable proxy of the object with the specified `NSManagedObjectID`. This method should not be used after the `-commitAndWait` method was already called once.
      
      - parameter into: a `CSInto` clause specifying the entity type
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
@@ -110,22 +110,21 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     }
     
     /**
-     Deletes a specified `NSManagedObject`. This method should not be used after the `-commitWithCompletion:` method was already called once.
+     Deletes a specified `NSManagedObject`. This method should not be used after the `-commitAndWait` method was already called once.
      
      - parameter object: the `NSManagedObject` type to be deleted
      */
     @objc
     public override func deleteObject(object: NSManagedObject?) {
         
-        self.swift.delete(object)
+        return self.swift.delete(object)
     }
     
     /**
      Deletes the specified `NSManagedObject`s.
      
-     - parameter objects: the `NSManagedObject`s type to be deleted
+     - parameter objects: the `NSManagedObject`s to be deleted
      */
-    @objc
     public override func deleteObjects(objects: [NSManagedObject]) {
         
         self.swift.delete(objects)
@@ -134,14 +133,14 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     
     // MARK: CoreStoreBridge
     
-    internal typealias SwiftType = AsynchronousDataTransaction
+    internal typealias SwiftType = SynchronousDataTransaction
     
-    internal override var swift: AsynchronousDataTransaction {
+    internal override var swift: SynchronousDataTransaction {
         
-        return super.swift as! AsynchronousDataTransaction
+        return super.swift as! SynchronousDataTransaction
     }
     
-    public required init(_ swiftObject: AsynchronousDataTransaction) {
+    public required init(_ swiftObject: SynchronousDataTransaction) {
         
         super.init(swiftObject)
     }
@@ -153,11 +152,11 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
 }
 
 
-// MARK: - AsynchronousDataTransaction
+// MARK: - SynchronousDataTransaction
 
-extension AsynchronousDataTransaction {
+extension SynchronousDataTransaction {
     
     // MARK: CoreStoreBridgeable
     
-    internal typealias ObjCType = CSAsynchronousDataTransaction
+    internal typealias ObjCType = CSSynchronousDataTransaction
 }

@@ -36,7 +36,7 @@ import CoreData
 public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     
     /**
-     Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `CSDataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
+     Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `CSDataStack`'s `-addStorage*:` methods, a new SQLite file will be created if it does not exist.
      
      - parameter fileURL: the local file URL for the target SQLite persistent store. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
@@ -57,7 +57,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     }
     
     /**
-     Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `CSDataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
+     Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `CSDataStack`'s `-addStorage*:` methods, a new SQLite file will be created if it does not exist.
      - Warning: The default SQLite file location for the `CSLegacySQLiteStore` and `CSSQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `CSLegacySQLiteStore` instead of `CSSQLiteStore`.
      
      - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.

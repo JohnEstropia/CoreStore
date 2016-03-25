@@ -97,7 +97,7 @@ public protocol CSLocalStorage: CSStorageInterface {
     var mappingModelBundles: [NSBundle] { get }
     
     /**
-     Options that tell the `DataStack` how to setup the persistent store
+     Options that tell the `CSDataStack` how to setup the persistent store
      */
     @objc
     var localStorageOptions: Int { get }

@@ -63,6 +63,11 @@ internal func bridge<T: CoreStoreBridgeable where T == T.ObjCType.SwiftType>(@no
     return closure().objc
 }
 
+internal func bridge<T: CoreStoreBridgeable where T == T.ObjCType.SwiftType>(@noescape closure: () -> T?) -> T.ObjCType? {
+    
+    return closure()?.objc
+}
+
 internal func bridge<T: CoreStoreBridgeable where T == T.ObjCType.SwiftType>(@noescape closure: () throws -> T) throws -> T.ObjCType {
     
     do {
