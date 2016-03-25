@@ -247,6 +247,7 @@
 		B59851491C90289D00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B598514A1C90289E00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B598514B1C90289F00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
+		B59983491CA54BC100E1A417 /* CSBaseDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A581CA2008C002BEF78 /* CSBaseDataTransaction.swift */; };
 		B59AFF411C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B59D5C221B5BA34B00453479 /* NSFileManager+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59D5C211B5BA34B00453479 /* NSFileManager+Setup.swift */; };
 		B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A261201B64BFDB006EB6D3 /* MigrationType.swift */; };
@@ -844,9 +845,9 @@
 			children = (
 				B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */,
 				B5519A491CA1F4FB002BEF78 /* CSError.swift */,
-				B5E2222F1CA5339200BA2E95 /* Importing Data */,
 				B546F9611C9A13F400D5AC55 /* Setup */,
 				B5519A5D1CA20093002BEF78 /* Saving and Processing */,
+				B5E2222F1CA5339200BA2E95 /* Importing Data */,
 				B5E222211CA4DE5700BA2E95 /* Internal */,
 			);
 			path = ObjectiveC;
@@ -1702,6 +1703,7 @@
 			files = (
 				B5EA11DD1CA3AFD9002282F8 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B5D9E2EF1CA2C317007A9D52 /* ObjectMonitor.swift in Sources */,
+				B59983491CA54BC100E1A417 /* CSBaseDataTransaction.swift in Sources */,
 				B5E2222B1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				B5D9E2F01CA2C317007A9D52 /* CoreStoreFetchedResultsController.swift in Sources */,
 				B5D9E3461CA2C6C4007A9D52 /* GCDQueue.swift in Sources */,

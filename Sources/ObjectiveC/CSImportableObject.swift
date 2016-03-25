@@ -33,17 +33,25 @@ import CoreData
 public protocol CSImportableObject: class, AnyObject {
     
     /**
-     Return `true` if an object should be created from `source`. Return `false` to ignore and skip `source`. The default implementation returns `true`.
+     Return the expected class of the import source. If not implemented, transactions will not validate the import source's type.
+     
+     - returns: the expected class of the import source
+     */
+    @objc
+    optional static func classForImportSource() -> AnyClass
+    
+    /**
+     Return `YES` if an object should be created from `source`. Return `NO` to ignore and skip `source`. If not implemented, transactions assume `YES`.
      
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
-     - returns: `true` if an object should be created from `source`. Return `false` to ignore.
+     - returns: `YES` if an object should be created from `source`. Return `NO` to ignore.
      */
     @objc
-    static func shouldInsertFromImportSource(source: AnyObject, inTransaction transaction: CSBaseDataTransaction) -> Bool
+    optional static func shouldInsertFromImportSource(source: AnyObject, inTransaction transaction: CSBaseDataTransaction) -> Bool
     
     /**
-     Implements the actual importing of data from `source`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importObjects(:sourceArray:)` call to be cancelled.
+     Implements the actual importing of data from `source`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `-importObjects:sourceArray:` call to be cancelled.
      
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.

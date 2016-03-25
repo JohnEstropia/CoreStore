@@ -36,7 +36,7 @@ import CoreData
 public final class CSSaveResult: NSObject, CoreStoreBridge {
     
     /**
-     `true` if the `commit` operation for the transaction succeeded, either because the save succeeded or because there were no changes to save. Returns `false` to indicate failure.
+     `YES` if the `commit` operation for the transaction succeeded, either because the save succeeded or because there were no changes to save. Returns `NO` to indicate failure.
      */
     @objc
     public var isSuccess: Bool {
@@ -45,7 +45,7 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     }
     
     /**
-     `true` if the `commit` operation for the transaction failed, or `false` otherwise. When `true`, the `error` property returns the actual `NSError` for the failure.
+     `YES` if the `commit` operation for the transaction failed, or `NO` otherwise. When `YES`, the `error` property returns the actual `NSError` for the failure.
      */
     @objc
     public var isFailure: Bool {
@@ -54,7 +54,7 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     }
     
     /**
-     `true` if the `commit` operation for the transaction succeeded and if there was an actual change made. Returns `false` otherwise.
+     `YES` if the `commit` operation for the transaction succeeded and if there was an actual change made. Returns `NO` otherwise.
      */
     @objc
     public var hasChanges: Bool {
