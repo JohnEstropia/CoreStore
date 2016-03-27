@@ -33,6 +33,7 @@ internal extension NSManagedObjectContext {
     
     // MARK: Internal
     
+    @nonobjc
     internal weak var parentStack: DataStack? {
         
         get {
@@ -59,6 +60,7 @@ internal extension NSManagedObjectContext {
         }
     }
     
+    @nonobjc
     internal class func rootSavingContextForCoordinator(coordinator: NSPersistentStoreCoordinator) -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
@@ -70,6 +72,7 @@ internal extension NSManagedObjectContext {
         return context
     }
     
+    @nonobjc
     internal class func mainContextForRootContext(rootContext: NSManagedObjectContext) -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
@@ -106,6 +109,7 @@ internal extension NSManagedObjectContext {
         static var observerForDidSaveNotification: Void?
     }
     
+    @nonobjc
     private var observerForDidSaveNotification: NotificationObserver? {
         
         get {

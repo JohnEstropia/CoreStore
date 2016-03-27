@@ -47,7 +47,8 @@ public extension NSManagedObject {
     
     // MARK: Internal
     
-    internal dynamic class func createInContext(context: NSManagedObjectContext) -> Self {
+    @nonobjc
+    internal class func createInContext(context: NSManagedObjectContext) -> Self {
         
         return self.init(
             entity: context.entityDescriptionForEntityType(self)!,
@@ -55,6 +56,7 @@ public extension NSManagedObject {
         )
     }
     
+    @nonobjc
     internal func deleteFromContext() {
         
         self.managedObjectContext?.deleteObject(self)

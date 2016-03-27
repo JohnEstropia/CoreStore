@@ -33,7 +33,8 @@ internal extension NSPersistentStore {
     
     // MARK: Internal
     
-    @nonobjc internal var storageInterface: StorageInterface? {
+    @nonobjc
+    internal var storageInterface: StorageInterface? {
         
         get {
             

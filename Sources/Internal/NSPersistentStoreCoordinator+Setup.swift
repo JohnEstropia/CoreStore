@@ -35,6 +35,7 @@ import CoreData
 
 internal extension NSPersistentStoreCoordinator {
     
+    @nonobjc
     internal func performAsynchronously(closure: () -> Void) {
         
         #if USE_FRAMEWORKS
@@ -58,6 +59,7 @@ internal extension NSPersistentStoreCoordinator {
         #endif
     }
     
+    @nonobjc
     internal func performSynchronously(closure: () -> Void) {
         
         #if USE_FRAMEWORKS
@@ -78,6 +80,7 @@ internal extension NSPersistentStoreCoordinator {
         #endif
     }
     
+    @nonobjc
     internal func performSynchronously<T>(closure: () throws -> T) throws -> T {
         
         var closureError: ErrorType?
@@ -137,7 +140,8 @@ internal extension NSPersistentStoreCoordinator {
         return result!
     }
     
-    @nonobjc internal func addPersistentStoreSynchronously(storeType: String, configuration: String?, URL storeURL: NSURL?, options: [NSObject : AnyObject]?) throws -> NSPersistentStore {
+    @nonobjc
+    internal func addPersistentStoreSynchronously(storeType: String, configuration: String?, URL storeURL: NSURL?, options: [NSObject : AnyObject]?) throws -> NSPersistentStore {
         
         var store: NSPersistentStore?
         var storeError: NSError?

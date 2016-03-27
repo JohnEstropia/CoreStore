@@ -36,6 +36,7 @@ internal extension NSManagedObjectContext {
     
     // MARK: Internal
     
+    @nonobjc
     internal var shouldCascadeSavesToParent: Bool {
         
         get {
@@ -56,11 +57,13 @@ internal extension NSManagedObjectContext {
         }
     }
     
+    @nonobjc
     internal func entityDescriptionForEntityType(entity: NSManagedObject.Type) -> NSEntityDescription? {
         
         return self.entityDescriptionForEntityClass(entity)
     }
     
+    @nonobjc
     internal func entityDescriptionForEntityClass(entity: AnyClass) -> NSEntityDescription? {
         
         guard let entityName = self.parentStack?.entityNameForEntityClass(entity) else {
@@ -73,6 +76,7 @@ internal extension NSManagedObjectContext {
         )
     }
     
+    @nonobjc
     internal func setupForCoreStoreWithContextName(contextName: String) {
 
         #if USE_FRAMEWORKS
@@ -123,6 +127,7 @@ internal extension NSManagedObjectContext {
         static var shouldCascadeSavesToParent: Void?
     }
     
+    @nonobjc
     private var observerForWillSaveNotification: NotificationObserver? {
         
         get {

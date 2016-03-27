@@ -33,7 +33,8 @@ internal extension NSManagedObjectModel {
     
     // MARK: Internal
     
-    @nonobjc internal class func fromBundle(bundle: NSBundle, modelName: String, modelVersionHints: Set<String> = []) -> NSManagedObjectModel {
+    @nonobjc
+    internal class func fromBundle(bundle: NSBundle, modelName: String, modelVersionHints: Set<String> = []) -> NSManagedObjectModel {
         
         guard let modelFilePath = bundle.pathForResource(modelName, ofType: "momd") else {
             
@@ -108,7 +109,8 @@ internal extension NSManagedObjectModel {
         fatalError("Could not create an \(typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
     }
     
-    @nonobjc internal private(set) var currentModelVersion: String? {
+    @nonobjc
+    internal private(set) var currentModelVersion: String? {
         
         get {
             
@@ -128,7 +130,8 @@ internal extension NSManagedObjectModel {
         }
     }
     
-    @nonobjc internal private(set) var modelVersions: Set<String>? {
+    @nonobjc
+    internal private(set) var modelVersions: Set<String>? {
         
         get {
             
@@ -148,12 +151,14 @@ internal extension NSManagedObjectModel {
         }
     }
     
-    @nonobjc internal func entityNameForClass(entityClass: AnyClass) -> String {
+    @nonobjc
+    internal func entityNameForClass(entityClass: AnyClass) -> String {
         
         return self.entityNameMapping[NSStringFromClass(entityClass)]!
     }
     
-    @nonobjc internal func entityTypesMapping() -> [String: NSManagedObject.Type] {
+    @nonobjc
+    internal func entityTypesMapping() -> [String: NSManagedObject.Type] {
         
         var mapping = [String: NSManagedObject.Type]()
         self.entityNameMapping.forEach { (className, entityName) in
@@ -163,12 +168,14 @@ internal extension NSManagedObjectModel {
         return mapping
     }
     
-    @nonobjc internal func mergedModels() -> [NSManagedObjectModel] {
+    @nonobjc
+    internal func mergedModels() -> [NSManagedObjectModel] {
         
         return self.modelVersions?.map { self[$0] }.flatMap { $0 == nil ? [] : [$0!] } ?? [self]
     }
     
-    @nonobjc internal subscript(modelVersion: String) -> NSManagedObjectModel? {
+    @nonobjc
+    internal subscript(modelVersion: String) -> NSManagedObjectModel? {
         
         if modelVersion == self.currentModelVersion {
             
@@ -194,7 +201,8 @@ internal extension NSManagedObjectModel {
         return model
     }
     
-    @nonobjc internal subscript(metadata: [String: AnyObject]) -> NSManagedObjectModel? {
+    @nonobjc
+    internal subscript(metadata: [String: AnyObject]) -> NSManagedObjectModel? {
         
         guard let modelHashes = metadata[NSStoreModelVersionHashesKey] as? [String : NSData] else {
             
@@ -213,6 +221,7 @@ internal extension NSManagedObjectModel {
     
     // MARK: Private
     
+    @nonobjc
     private var modelFileURL: NSURL? {
         
         get {
@@ -221,6 +230,7 @@ internal extension NSManagedObjectModel {
         }
     }
     
+    @nonobjc
     private var modelVersionFileURL: NSURL? {
         
         get {
@@ -241,6 +251,7 @@ internal extension NSManagedObjectModel {
         }
     }
     
+    @nonobjc
     private var entityNameMapping: [String: String] {
         
         get {

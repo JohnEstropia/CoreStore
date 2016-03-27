@@ -49,6 +49,7 @@ public extension NSFetchedResultsController {
     
     // MARK: Internal
     
+    @nonobjc
     internal static func createFromContext<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
         
         return CoreStoreFetchedResultsController<T>(
@@ -64,6 +65,7 @@ public extension NSFetchedResultsController {
     // MARK: Deprecated
     
     @available(*, deprecated=1.5.2, message="Use NSFetchedResultsController.createForStack(_:fetchRequest:from:sectionBy:fetchClauses:) to create NSFetchedResultsControllers directly")
+    @nonobjc
     public convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
         
         let context = dataStack.mainContext

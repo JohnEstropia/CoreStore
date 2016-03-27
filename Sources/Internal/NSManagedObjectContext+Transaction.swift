@@ -36,6 +36,7 @@ internal extension NSManagedObjectContext {
     
     // MARK: Internal
     
+    @nonobjc
     internal weak var parentTransaction: BaseDataTransaction? {
         
         get {
@@ -55,6 +56,7 @@ internal extension NSManagedObjectContext {
         }
     }
     
+    @nonobjc
     internal func isRunningInAllowedQueue() -> Bool {
         
         guard let parentTransaction = self.parentTransaction else {
@@ -64,6 +66,7 @@ internal extension NSManagedObjectContext {
         return parentTransaction.isRunningInAllowedQueue()
     }
     
+    @nonobjc
     internal func temporaryContextInTransactionWithConcurrencyType(concurrencyType: NSManagedObjectContextConcurrencyType) -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: concurrencyType)
@@ -76,6 +79,7 @@ internal extension NSManagedObjectContext {
         return context
     }
     
+    @nonobjc
     internal func saveSynchronously() -> SaveResult {
         
         var result = SaveResult(hasChanges: false)
@@ -122,6 +126,7 @@ internal extension NSManagedObjectContext {
         return result
     }
     
+    @nonobjc
     internal func saveAsynchronouslyWithCompletion(completion: ((result: SaveResult) -> Void) = { _ in }) {
         
         self.performBlock { () -> Void in
@@ -167,6 +172,7 @@ internal extension NSManagedObjectContext {
         }
     }
     
+    @nonobjc
     internal func refreshAllObjectsAsFaults() {
         
         if #available(iOS 8.3, OSX 10.11, *) {

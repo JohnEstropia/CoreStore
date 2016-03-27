@@ -51,6 +51,7 @@ public extension NSProgress {
         static var progressObserver: Void?
     }
     
+    @nonobjc
     private var progressObserver: ProgressObserver {
         
         get {
@@ -74,7 +75,10 @@ public extension NSProgress {
 }
 
 
-@objc private final class ProgressObserver: NSObject {
+// MARK: - ProgressObserver
+
+@objc
+private final class ProgressObserver: NSObject {
     
     private unowned let progress: NSProgress
     private var progressHandler: ((progress: NSProgress) -> Void)? {
