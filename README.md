@@ -1,5 +1,5 @@
 <p align="center">
-<img alt="CoreStore" src="https://cloud.githubusercontent.com/assets/3029684/13373932/84daee2a-ddb8-11e5-99db-fdf415620102.png" height=170 />
+<img alt="CoreStore" src="https://cloud.githubusercontent.com/assets/3029684/13373932/84daee2a-ddb8-11e5-99db-fdf415620102.png" width=614 height=170 />
 <br />
 <br />
 Unleashing the real power of Core Data with the elegance and safety of Swift
