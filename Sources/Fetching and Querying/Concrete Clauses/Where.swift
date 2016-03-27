@@ -48,7 +48,7 @@ public prefix func !(clause: Where) -> Where {
 /**
  The `Where` clause specifies the conditions for a fetch or a query.
  */
-public struct Where: FetchClause, QueryClause, DeleteClause {
+public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     
     /**
      Initializes a `Where` clause with an `NSPredicate`
@@ -152,4 +152,21 @@ public struct Where: FetchClause, QueryClause, DeleteClause {
         
         fetchRequest.predicate = self.predicate
     }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        return self.predicate.hashValue
+    }
+}
+
+
+// MARK: - Where: Equatable
+
+@warn_unused_result
+public func == (lhs: Where, rhs: Where) -> Bool {
+    
+    return lhs.predicate == rhs.predicate
 }

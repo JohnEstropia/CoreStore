@@ -30,7 +30,7 @@ import CoreData
 // MARK: - CSError
 
 /**
- The `CSError` provides a facade for CoreStore Objective-C constants.
+ The `CSError` provides a facade for global CoreStore error declarations.
  */
 public final class CSError: NSObject {
     

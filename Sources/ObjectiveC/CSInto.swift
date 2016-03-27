@@ -37,12 +37,11 @@ public final class CSInto: NSObject, CoreStoreBridge {
     
     /**
      Initializes a `CSInto` clause with the specified entity class.
-     Sample Usage:
      ```
-     MyPersonEntity *person = [transaction create:[CSInto entityClass:[MyPersonEntity class]]];
+     MyPersonEntity *person = [transaction createInto:[CSInto entityClass:[MyPersonEntity class]]];
      ```
      - parameter entityClass: the `NSManagedObject` class type to be created
-     - returns: a new `CSInto` with the specified entity class
+     - returns: a `CSInto` clause with the specified entity class
      */
     @objc
     public static func entityClass(entityClass: AnyClass) -> CSInto {
@@ -51,14 +50,13 @@ public final class CSInto: NSObject, CoreStoreBridge {
     }
     
     /**
-     Initializes an `CSInto` clause with the specified configuration.
-     Sample Usage:
+     Initializes a `CSInto` clause with the specified configuration.
      ```
-     MyPersonEntity *person = [transaction create:[CSInto entityClass:[MyPersonEntity class]]];
+     MyPersonEntity *person = [transaction createInto:[CSInto entityClass:[MyPersonEntity class]]];
      ```
      - parameter entityClass: the `NSManagedObject` class type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
-     - returns: a new `CSInto` with the specified configuration
+     - returns: a `CSInto` clause with the specified configuration
      */
     @objc
     public static func entityClass(entityClass: AnyClass, configuration: String?) -> CSInto {

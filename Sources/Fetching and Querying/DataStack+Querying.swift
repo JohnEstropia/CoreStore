@@ -110,7 +110,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchOne(from, fetchClauses)
     }
     
@@ -128,7 +127,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchOne(from, fetchClauses)
     }
     
@@ -146,7 +144,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchAll(from, fetchClauses)
     }
     
@@ -164,7 +161,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchAll(from, fetchClauses)
     }
     
@@ -182,7 +178,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchCount(from, fetchClauses)
     }
     
@@ -200,7 +195,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchCount(from, fetchClauses)
     }
     
@@ -218,7 +212,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchObjectID(from, fetchClauses)
     }
     
@@ -236,7 +229,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchObjectID(from, fetchClauses)
     }
     
@@ -254,7 +246,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchObjectIDs(from, fetchClauses)
     }
     
@@ -272,7 +263,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.fetchObjectIDs(from, fetchClauses)
     }
     
@@ -293,7 +283,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to query from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.queryValue(from, selectClause, queryClauses)
     }
     
@@ -314,7 +303,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to query from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.queryValue(from, selectClause, queryClauses)
     }
     
@@ -335,7 +323,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to query from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }
     
@@ -356,7 +343,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to query from a \(typeName(self)) outside the main thread."
         )
-        
         return self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }
 }

@@ -37,7 +37,7 @@ public extension CSCoreStore {
     @objc
     public class var modelVersion: String {
         
-        return CoreStore.defaultStack.modelVersion
+        return CoreStore.modelVersion
     }
     
     /**
@@ -46,7 +46,7 @@ public extension CSCoreStore {
     @objc
     public static var entityClassesByName: [String: NSManagedObject.Type] {
         
-        return CoreStore.defaultStack.entityTypesByName
+        return CoreStore.entityTypesByName
     }
     
     /**
@@ -57,7 +57,7 @@ public extension CSCoreStore {
     @objc
     public static func entityClassWithName(name: String) -> NSManagedObject.Type? {
         
-        return CoreStore.defaultStack.entityTypesByName[name]
+        return CoreStore.entityTypesByName[name]
     }
     
     /**
@@ -66,7 +66,7 @@ public extension CSCoreStore {
     @objc
     public static func entityDescriptionForClass(type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return CoreStore.defaultStack.entityDescriptionForType(type)
+        return CoreStore.entityDescriptionForType(type)
     }
     
     /**
@@ -82,7 +82,7 @@ public extension CSCoreStore {
         
         return try bridge {
             
-            try CoreStore.defaultStack.addStorageAndWait(InMemoryStore)
+            try CoreStore.addStorageAndWait(InMemoryStore)
         }
     }
     
@@ -99,7 +99,7 @@ public extension CSCoreStore {
         
         return try bridge {
             
-            try CoreStore.defaultStack.addStorageAndWait(SQLiteStore)
+            try CoreStore.addStorageAndWait(SQLiteStore)
         }
     }
     
@@ -120,7 +120,7 @@ public extension CSCoreStore {
         
         return try bridge {
             
-            try CoreStore.defaultStack.addStorageAndWait(storage.swift)
+            try CoreStore.addStorageAndWait(storage.swift)
         }
     }
     
@@ -141,7 +141,7 @@ public extension CSCoreStore {
         
         return try bridge {
             
-            try CoreStore.defaultStack.addStorageAndWait(storage.swift)
+            try CoreStore.addStorageAndWait(storage.swift)
         }
     }
 }

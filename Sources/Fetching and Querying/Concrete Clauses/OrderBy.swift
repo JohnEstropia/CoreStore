@@ -67,7 +67,7 @@ public enum SortKey {
 /**
  The `OrderBy` clause specifies the sort order for results for a fetch or a query.
  */
-public struct OrderBy: FetchClause, QueryClause, DeleteClause {
+public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     
     /**
      Initializes a `OrderBy` clause with a list of sort descriptors
@@ -147,4 +147,21 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause {
         
         fetchRequest.sortDescriptors = self.sortDescriptors
     }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        return (self.sortDescriptors as NSArray).hashValue
+    }
+}
+
+
+// MARK: - OrderBy: Equatable
+
+@warn_unused_result
+public func == (lhs: OrderBy, rhs: OrderBy) -> Bool {
+    
+    return lhs.sortDescriptors == rhs.sortDescriptors
 }

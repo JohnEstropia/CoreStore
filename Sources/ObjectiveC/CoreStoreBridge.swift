@@ -92,4 +92,19 @@ internal func bridge(@noescape closure: () throws -> Void) throws {
     }
 }
 
+internal func bridge<T>(error: NSErrorPointer, @noescape _ closure: () throws -> T) -> T? {
+    
+    do {
+        
+        let result = try closure()
+        error.memory = nil
+        return result
+    }
+    catch let swiftError {
+        
+        error.memory = swiftError.objc
+        return nil
+    }
+}
+
 

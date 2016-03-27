@@ -103,12 +103,7 @@ public extension BaseDataTransaction {
     @warn_unused_result
     public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
-        CoreStore.assert(
-            self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
-        )
-        
-        return self.context.fetchOne(from, fetchClauses)
+        return self.fetchOne(from, fetchClauses)
     }
     
     /**
@@ -125,7 +120,6 @@ public extension BaseDataTransaction {
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
-        
         return self.context.fetchOne(from, fetchClauses)
     }
     
@@ -139,12 +133,7 @@ public extension BaseDataTransaction {
     @warn_unused_result
     public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
-        CoreStore.assert(
-            self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
-        )
-        
-        return self.context.fetchAll(from, fetchClauses)
+        return self.fetchAll(from, fetchClauses)
     }
     
     /**
@@ -161,7 +150,6 @@ public extension BaseDataTransaction {
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
-        
         return self.context.fetchAll(from, fetchClauses)
     }
     
@@ -175,12 +163,7 @@ public extension BaseDataTransaction {
     @warn_unused_result
     public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
-        CoreStore.assert(
-            self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
-        )
-        
-        return self.context.fetchCount(from, fetchClauses)
+        return self.fetchCount(from, fetchClauses)
     }
     
     /**
@@ -211,12 +194,7 @@ public extension BaseDataTransaction {
     @warn_unused_result
     public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
-        CoreStore.assert(
-            self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
-        )
-        
-        return self.context.fetchObjectID(from, fetchClauses)
+        return self.fetchObjectID(from, fetchClauses)
     }
     
     /**
@@ -233,7 +211,6 @@ public extension BaseDataTransaction {
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
-        
         return self.context.fetchObjectID(from, fetchClauses)
     }
     
@@ -247,12 +224,7 @@ public extension BaseDataTransaction {
     @warn_unused_result
     public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
-        CoreStore.assert(
-            self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
-        )
-        
-        return self.context.fetchObjectIDs(from, fetchClauses)
+        return self.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
@@ -269,7 +241,6 @@ public extension BaseDataTransaction {
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(typeName(self)) outside its designated queue."
         )
-        
         return self.context.fetchObjectIDs(from, fetchClauses)
     }
     

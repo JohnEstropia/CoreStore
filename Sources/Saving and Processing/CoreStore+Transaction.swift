@@ -64,7 +64,7 @@ public extension CoreStore {
     }
     
     /**
-     Refreshes all registered objects `NSManagedObject`s in the `DataStack`.
+     Refreshes all registered objects `NSManagedObject`s in the `defaultStack`.
      */
     public static func refreshAllObjectsAsFaults() {
         

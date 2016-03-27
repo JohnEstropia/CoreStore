@@ -32,7 +32,7 @@ import CoreData
 /**
  The `GroupBy` clause specifies that the result of a query be grouped accoording to the specified key path.
  */
-public struct GroupBy: QueryClause {
+public struct GroupBy: QueryClause, Hashable {
     
     /**
      Initializes a `GroupBy` clause with a list of key path strings
@@ -80,4 +80,21 @@ public struct GroupBy: QueryClause {
         
         fetchRequest.propertiesToGroupBy = self.keyPaths
     }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        return (self.keyPaths as NSArray).hashValue
+    }
+}
+
+
+// MARK: - GroupBy: Equatable
+
+@warn_unused_result
+public func == (lhs: GroupBy, rhs: GroupBy) -> Bool {
+    
+    return lhs.keyPaths == rhs.keyPaths
 }

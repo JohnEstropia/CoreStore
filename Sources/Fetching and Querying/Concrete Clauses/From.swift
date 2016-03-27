@@ -39,7 +39,7 @@ import CoreData
  let person = transaction.fetchOne(From<MyPersonEntity>("Configuration1"))
  ```
  */
-public struct From<T: NSManagedObject> {
+public struct From<T: NSManagedObject>: Hashable {
     
     /**
      Initializes a `From` clause.
@@ -299,7 +299,19 @@ public struct From<T: NSManagedObject> {
     }
     
     
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        return ObjectIdentifier(self.entityClass).hashValue
+    }
+    
+    
     // MARK: Internal
+    
+    internal let entityClass: AnyClass
+    
+    internal let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
     
     internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext, applyAffectedStores: Bool = true) {
         
@@ -317,58 +329,77 @@ public struct From<T: NSManagedObject> {
         return stores?.isEmpty == false
     }
     
+    internal init(entityClass: AnyClass, findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?) {
+        
+        self.entityClass = entityClass
+        self.findPersistentStores = findPersistentStores
+    }
+    
     
     // MARK: Private
     
-    private let entityClass: AnyClass
-    
-    private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
-    
     private init(entityClass: AnyClass) {
         
-        self.entityClass = entityClass
-        self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
-            
-            return context.parentStack?.persistentStoresForEntityClass(entityClass)
-        }
+        self.init(
+            entityClass: entityClass,
+            findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
+                
+                return context.parentStack?.persistentStoresForEntityClass(entityClass)
+            }
+        )
     }
     
     private init(entityClass: AnyClass, configurations: [String?]) {
         
         let configurationsSet = Set(configurations.map { $0 ?? Into.defaultConfigurationName })
-        self.entityClass = entityClass
-        self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
-            
-            return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
+        self.init(
+            entityClass: entityClass,
+            findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
-                return configurationsSet.contains($0.configurationName)
+                return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
+                    
+                    return configurationsSet.contains($0.configurationName)
+                }
             }
-        }
+        )
     }
     
     private init(entityClass: AnyClass, storeURLs: [NSURL]) {
         
         let storeURLsSet = Set(storeURLs)
-        self.entityClass = entityClass
-        self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
-            
-            return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
+        self.init(
+            entityClass: entityClass,
+            findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
-                return $0.URL != nil && storeURLsSet.contains($0.URL!)
+                return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
+                    
+                    return $0.URL != nil && storeURLsSet.contains($0.URL!)
+                }
             }
-        }
+        )
     }
     
     private init(entityClass: AnyClass, persistentStores: [NSPersistentStore]) {
         
         let persistentStores = Set(persistentStores)
-        self.entityClass = entityClass
-        self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
-            
-            return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
+        self.init(
+            entityClass: entityClass,
+            findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
-                return persistentStores.contains($0)
+                return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
+                    
+                    return persistentStores.contains($0)
+                }
             }
-        }
+        )
     }
+}
+
+
+// MARK: - From: Equatable
+
+@warn_unused_result
+public func == <T: NSManagedObject, U: NSManagedObject>(lhs: From<T>, rhs: From<U>) -> Bool {
+    
+    return lhs.entityClass == rhs.entityClass
 }
