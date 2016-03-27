@@ -533,7 +533,6 @@
 		B504D0D51B02362500B2BBB1 /* CoreStore+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+Setup.swift"; sourceTree = "<group>"; };
 		B519E4571C4CD2CA00E7B469 /* GCDKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GCDKit.framework; path = "../../Library/Developer/Xcode/DerivedData/Build/Products/Debug-iphoneos/GCDKit.framework"; sourceTree = "<group>"; };
 		B51BE0691B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectModel+Setup.swift"; sourceTree = "<group>"; };
-		B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+iCloud.swift"; sourceTree = "<group>"; };
 		B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFetchedResultsController+Convenience.swift"; sourceTree = "<group>"; };
 		B529C2031CA4A2DB007E7EBD /* CSSaveResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSaveResult.swift; sourceTree = "<group>"; };
 		B52DD1741BE1F8CC00949AFE /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -761,7 +760,6 @@
 				2F291E2619C6D3CF007AF63F /* CoreStore.swift */,
 				B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */,
 				B5E84EDA1AFF84500064E85B /* Setup */,
-				B51F25981C5747790083A5DD /* iCloud */,
 				B5E84EE21AFF84610064E85B /* Logging */,
 				B5E84EE91AFF846E0064E85B /* Saving and Processing */,
 				B5E834B61B7630BD001D3D50 /* Importing Data */,
@@ -831,14 +829,6 @@
 				B5D39A0119FD00C9000E91BB /* Foundation.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		B51F25981C5747790083A5DD /* iCloud */ = {
-			isa = PBXGroup;
-			children = (
-				B51F25991C5747DD0083A5DD /* DataStack+iCloud.swift */,
-			);
-			path = iCloud;
 			sourceTree = "<group>";
 		};
 		B546F9611C9A13F400D5AC55 /* Setup */ = {
