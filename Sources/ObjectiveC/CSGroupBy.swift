@@ -33,7 +33,7 @@ import CoreData
  The `CSGroupBy` serves as the Objective-C bridging type for `GroupBy`.
  */
 @objc
-public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreBridge {
+public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
     
     /**
      Initializes a `CSGroupBy` clause with a list of key path strings
@@ -52,7 +52,7 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreBridge {
     
     public override var hash: Int {
         
-        return self.swift.hashValue
+        return self.bridgeToSwift.hashValue
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
@@ -61,7 +61,7 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreBridge {
             
             return false
         }
-        return self.swift == object.swift
+        return self.bridgeToSwift == object.bridgeToSwift
     }
     
     
@@ -70,17 +70,17 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreBridge {
     @objc
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        self.swift.applyToFetchRequest(fetchRequest)
+        self.bridgeToSwift.applyToFetchRequest(fetchRequest)
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: GroupBy
+    public let bridgeToSwift: GroupBy
     
-    internal init(_ swiftObject: GroupBy) {
+    public init(_ swiftValue: GroupBy) {
         
-        self.swift = swiftObject
+        self.bridgeToSwift = swiftValue
         super.init()
     }
 }
@@ -88,9 +88,9 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreBridge {
 
 // MARK: - GroupBy
 
-extension GroupBy: CoreStoreBridgeable {
+extension GroupBy: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSGroupBy
+    public typealias ObjectiveCType = CSGroupBy
 }

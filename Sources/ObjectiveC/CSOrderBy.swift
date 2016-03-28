@@ -56,7 +56,7 @@ public final class CSSortKey: NSSortDescriptor {
  The `CSOrderBy` serves as the Objective-C bridging type for `OrderBy`.
  */
 @objc
-public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreBridge {
+public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
     
     /**
      Initializes a `CSOrderBy` clause with a list of sort descriptors
@@ -87,7 +87,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
     
     public override var hash: Int {
         
-        return self.swift.hashValue
+        return self.bridgeToSwift.hashValue
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
@@ -96,7 +96,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
             
             return false
         }
-        return self.swift == object.swift
+        return self.bridgeToSwift == object.bridgeToSwift
     }
     
     
@@ -105,17 +105,17 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
     @objc
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        self.swift.applyToFetchRequest(fetchRequest)
+        self.bridgeToSwift.applyToFetchRequest(fetchRequest)
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: OrderBy
+    public let bridgeToSwift: OrderBy
     
-    internal init(_ swiftObject: OrderBy) {
+    public init(_ swiftValue: OrderBy) {
         
-        self.swift = swiftObject
+        self.bridgeToSwift = swiftValue
         super.init()
     }
 }
@@ -123,9 +123,9 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
 
 // MARK: - OrderBy
 
-extension OrderBy: CoreStoreBridgeable {
+extension OrderBy: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSOrderBy
+    public typealias ObjectiveCType = CSOrderBy
 }

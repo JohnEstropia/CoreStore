@@ -38,9 +38,9 @@ public extension CSDataStack {
     @objc
     public func beginAsynchronous(closure: (transaction: CSAsynchronousDataTransaction) -> Void) {
         
-        return self.swift.beginAsynchronous { (transaction) in
+        return self.bridgeToSwift.beginAsynchronous { (transaction) in
             
-            closure(transaction: transaction.objc)
+            closure(transaction: transaction.bridgeToObjectiveC)
         }
     }
     
@@ -55,9 +55,9 @@ public extension CSDataStack {
         
         return bridge {
             
-            self.swift.beginSynchronous { (transaction) in
+            self.bridgeToSwift.beginSynchronous { (transaction) in
                 
-                closure(transaction: transaction.objc)
+                closure(transaction: transaction.bridgeToObjectiveC)
             }
         }
     }
@@ -74,7 +74,7 @@ public extension CSDataStack {
         
         return bridge {
             
-            self.swift.beginUnsafe()
+            self.bridgeToSwift.beginUnsafe()
         }
     }
     
@@ -90,7 +90,7 @@ public extension CSDataStack {
         
         return bridge {
             
-            self.swift.beginUnsafe(supportsUndo: supportsUndo)
+            self.bridgeToSwift.beginUnsafe(supportsUndo: supportsUndo)
         }
     }
     
@@ -100,6 +100,6 @@ public extension CSDataStack {
     @objc
     public func refreshAllObjectsAsFaults() {
         
-        self.swift.refreshAllObjectsAsFaults()
+        self.bridgeToSwift.refreshAllObjectsAsFaults()
     }
 }

@@ -37,7 +37,7 @@ internal extension NSManagedObjectContext {
     internal func fetchOne(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObject? {
         
         let fetchRequest = NSFetchRequest()
-        from.swift.applyToFetchRequest(fetchRequest, context: self)
+        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .ManagedObjectResultType
@@ -50,7 +50,7 @@ internal extension NSManagedObjectContext {
     internal func fetchAll(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [NSManagedObject]? {
         
         let fetchRequest = NSFetchRequest()
-        from.swift.applyToFetchRequest(fetchRequest, context: self)
+        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
@@ -63,7 +63,7 @@ internal extension NSManagedObjectContext {
     internal func fetchCount(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> Int? {
         
         let fetchRequest = NSFetchRequest()
-        from.swift.applyToFetchRequest(fetchRequest, context: self)
+        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
         return self.fetchCount(fetchRequest)
@@ -73,7 +73,7 @@ internal extension NSManagedObjectContext {
     internal func fetchObjectID(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
         
         let fetchRequest = NSFetchRequest()
-        from.swift.applyToFetchRequest(fetchRequest, context: self)
+        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .ManagedObjectIDResultType
@@ -86,7 +86,7 @@ internal extension NSManagedObjectContext {
     internal func fetchObjectIDs(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
         
         let fetchRequest = NSFetchRequest()
-        from.swift.applyToFetchRequest(fetchRequest, context: self)
+        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectIDResultType
@@ -99,7 +99,7 @@ internal extension NSManagedObjectContext {
     internal func deleteAll(from: CSFrom, _ deleteClauses: [CSDeleteClause]) -> Int? {
         
         let fetchRequest = NSFetchRequest()
-        from.swift.applyToFetchRequest(fetchRequest, context: self)
+        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType

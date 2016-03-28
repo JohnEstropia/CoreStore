@@ -33,7 +33,7 @@ import CoreData
  The `CSInMemoryStore` serves as the Objective-C bridging type for `InMemoryStore`.
  */
 @objc
-public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreBridge {
+public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjectiveCType {
     
     /**
      Initializes a `CSInMemoryStore` for the specified configuration
@@ -70,7 +70,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreBridg
     @objc
     public var configuration: String? {
         
-        return self.swift.configuration
+        return self.bridgeToSwift.configuration
     }
     
     /**
@@ -79,7 +79,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreBridg
     @objc
     public var storeOptions: [String: AnyObject]? {
         
-        return self.swift.storeOptions
+        return self.bridgeToSwift.storeOptions
     }
     
     
@@ -87,7 +87,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreBridg
     
     public override var hash: Int {
         
-        return ObjectIdentifier(self.swift).hashValue
+        return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
@@ -96,17 +96,17 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreBridg
             
             return false
         }
-        return self.swift === object.swift
+        return self.bridgeToSwift === object.bridgeToSwift
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: InMemoryStore
+    public let bridgeToSwift: InMemoryStore
     
-    public required init(_ swiftObject: InMemoryStore) {
+    public required init(_ swiftValue: InMemoryStore) {
         
-        self.swift = swiftObject
+        self.bridgeToSwift = swiftValue
         super.init()
     }
 }
@@ -114,9 +114,9 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreBridg
 
 // MARK: - InMemoryStore
 
-extension InMemoryStore: CoreStoreBridgeable {
+extension InMemoryStore: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSInMemoryStore
+    public typealias ObjectiveCType = CSInMemoryStore
 }

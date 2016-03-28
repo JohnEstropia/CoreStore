@@ -33,7 +33,7 @@ import CoreData
  The `CSFrom` serves as the Objective-C bridging type for `From`.
  */
 @objc
-public final class CSFrom: NSObject, CoreStoreBridge {
+public final class CSFrom: NSObject, CoreStoreObjectiveCType {
     
     /**
      Initializes a `CSFrom` clause with the specified entity class.
@@ -106,13 +106,13 @@ public final class CSFrom: NSObject, CoreStoreBridge {
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: From<NSManagedObject>
+    public let bridgeToSwift: From<NSManagedObject>
     
-    internal init<T: NSManagedObject>(_ swiftObject: From<T>) {
+    public init<T: NSManagedObject>(_ swiftValue: From<T>) {
         
-        self.swift = swiftObject.upcast()
+        self.bridgeToSwift = swiftValue.upcast()
         super.init()
     }
 }
@@ -120,11 +120,11 @@ public final class CSFrom: NSObject, CoreStoreBridge {
 
 // MARK: - From
 
-extension From: CoreStoreBridgeable {
+extension From: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal var objc: CSFrom {
+    public var bridgeToObjectiveC: CSFrom {
         
         return CSFrom(self)
     }

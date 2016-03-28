@@ -33,7 +33,7 @@ import CoreData
  The `CSInto` serves as the Objective-C bridging type for `Into<T>`.
  */
 @objc
-public final class CSInto: NSObject, CoreStoreBridge {
+public final class CSInto: NSObject, CoreStoreObjectiveCType {
     
     /**
      Initializes a `CSInto` clause with the specified entity class.
@@ -69,7 +69,7 @@ public final class CSInto: NSObject, CoreStoreBridge {
     
     public override var hash: Int {
         
-        return self.swift.hashValue
+        return self.bridgeToSwift.hashValue
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
@@ -78,17 +78,17 @@ public final class CSInto: NSObject, CoreStoreBridge {
             
             return false
         }
-        return self.swift == object.swift
+        return self.bridgeToSwift == object.bridgeToSwift
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: Into<NSManagedObject>
+    public let bridgeToSwift: Into<NSManagedObject>
     
-    public required init<T: NSManagedObject>(_ swiftObject: Into<T>) {
+    public required init<T: NSManagedObject>(_ swiftValue: Into<T>) {
         
-        self.swift = swiftObject.upcast()
+        self.bridgeToSwift = swiftValue.upcast()
         super.init()
     }
 }
@@ -96,11 +96,11 @@ public final class CSInto: NSObject, CoreStoreBridge {
 
 // MARK: - Into
 
-extension Into: CoreStoreBridgeable {
+extension Into: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal var objc: CSInto {
+    public var bridgeToObjectiveC: CSInto {
         
         return CSInto(self)
     }

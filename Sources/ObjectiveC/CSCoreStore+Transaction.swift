@@ -40,7 +40,7 @@ public extension CSCoreStore {
         
         return CoreStore.beginAsynchronous { (transaction) in
             
-            closure(transaction: transaction.objc)
+            closure(transaction: transaction.bridgeToObjectiveC)
         }
     }
     
@@ -57,7 +57,7 @@ public extension CSCoreStore {
             
             CoreStore.beginSynchronous { (transaction) in
                 
-                closure(transaction: transaction.objc)
+                closure(transaction: transaction.bridgeToObjectiveC)
             }
         }
     }

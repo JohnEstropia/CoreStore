@@ -33,7 +33,7 @@ import CoreData
  The `CSWhere` serves as the Objective-C bridging type for `Where`.
  */
 @objc
-public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreBridge {
+public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
     
     /**
      Initializes a `CSWhere` clause with an `NSPredicate`
@@ -103,7 +103,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     
     public override var hash: Int {
         
-        return self.swift.hashValue
+        return self.bridgeToSwift.hashValue
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
@@ -112,7 +112,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
             
             return false
         }
-        return self.swift == object.swift
+        return self.bridgeToSwift == object.bridgeToSwift
     }
     
     
@@ -121,17 +121,17 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     @objc
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        self.swift.applyToFetchRequest(fetchRequest)
+        self.bridgeToSwift.applyToFetchRequest(fetchRequest)
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: Where
+    public let bridgeToSwift: Where
     
-    internal init(_ swiftObject: Where) {
+    public init(_ swiftValue: Where) {
         
-        self.swift = swiftObject
+        self.bridgeToSwift = swiftValue
         super.init()
     }
 }
@@ -139,9 +139,9 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
 
 // MARK: - Where
 
-extension Where: CoreStoreBridgeable {
+extension Where: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSWhere
+    public typealias ObjectiveCType = CSWhere
 }

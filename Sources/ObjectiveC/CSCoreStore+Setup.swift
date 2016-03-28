@@ -120,7 +120,7 @@ public extension CSCoreStore {
         
         return try bridge {
             
-            try CoreStore.addStorageAndWait(storage.swift)
+            try CoreStore.addStorageAndWait(storage.bridgeToSwift)
         }
     }
     
@@ -141,7 +141,7 @@ public extension CSCoreStore {
         
         return try bridge {
             
-            try CoreStore.addStorageAndWait(storage.swift)
+            try CoreStore.addStorageAndWait(storage.bridgeToSwift)
         }
     }
 }

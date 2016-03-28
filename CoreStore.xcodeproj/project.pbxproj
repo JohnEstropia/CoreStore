@@ -930,6 +930,7 @@
 		B5DBE2CB1C99148100B5CEFA /* ObjectiveC */ = {
 			isa = PBXGroup;
 			children = (
+				B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */,
 				B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */,
 				B5519A491CA1F4FB002BEF78 /* CSError.swift */,
 				B546F9611C9A13F400D5AC55 /* Setup */,
@@ -944,7 +945,6 @@
 		B5E222211CA4DE5700BA2E95 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */,
 				B5ECDBF81CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift */,
 			);
 			name = Internal;

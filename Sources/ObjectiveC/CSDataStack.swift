@@ -33,7 +33,7 @@ import CoreData
  The `CSDataStack` serves as the Objective-C bridging type for `DataStack`.
  */
 @objc
-public final class CSDataStack: NSObject, CoreStoreBridge {
+public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     
     /**
      Initializes a `CSDataStack` with default settings. CoreStore searches for <CFBundleName>.xcdatamodeld from the main `NSBundle` and loads an `NSManagedObjectModel` from it. An assertion is raised if the model could not be found.
@@ -122,7 +122,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     @objc
     public var modelVersion: String {
         
-        return self.swift.modelVersion
+        return self.bridgeToSwift.modelVersion
     }
     
     /**
@@ -131,7 +131,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     @objc
     public var entityClassesByName: [String: NSManagedObject.Type] {
         
-        return self.swift.entityTypesByName
+        return self.bridgeToSwift.entityTypesByName
     }
     
     /**
@@ -142,7 +142,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     @objc
     public func entityClassWithName(name: String) -> NSManagedObject.Type? {
         
-        return self.swift.entityTypesByName[name]
+        return self.bridgeToSwift.entityTypesByName[name]
     }
     
     /**
@@ -151,7 +151,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     @objc
     public func entityDescriptionForClass(type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return self.swift.entityDescriptionForType(type)
+        return self.bridgeToSwift.entityDescriptionForType(type)
     }
     
     /**
@@ -167,7 +167,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
         
         return try bridge {
             
-            try self.swift.addStorageAndWait(InMemoryStore)
+            try self.bridgeToSwift.addStorageAndWait(InMemoryStore)
         }
     }
     
@@ -184,7 +184,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
         
         return try bridge {
             
-            return try self.swift.addStorageAndWait(SQLiteStore)
+            return try self.bridgeToSwift.addStorageAndWait(SQLiteStore)
         }
     }
     
@@ -205,7 +205,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
         
         return try bridge {
             
-            return try self.swift.addStorageAndWait(storage.swift)
+            return try self.bridgeToSwift.addStorageAndWait(storage.bridgeToSwift)
         }
     }
     
@@ -226,7 +226,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
         
         return try bridge {
             
-            return try self.swift.addStorageAndWait(storage.swift)
+            return try self.bridgeToSwift.addStorageAndWait(storage.bridgeToSwift)
         }
     }
     
@@ -235,7 +235,7 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
     
     public override var hash: Int {
         
-        return ObjectIdentifier(self.swift).hashValue
+        return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
@@ -244,17 +244,17 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
             
             return false
         }
-        return self.swift === object.swift
+        return self.bridgeToSwift === object.bridgeToSwift
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: DataStack
+    public let bridgeToSwift: DataStack
     
-    internal init(_ swiftObject: DataStack) {
+    public init(_ swiftValue: DataStack) {
         
-        self.swift = swiftObject
+        self.bridgeToSwift = swiftValue
         super.init()
     }
 }
@@ -262,9 +262,9 @@ public final class CSDataStack: NSObject, CoreStoreBridge {
 
 // MARK: - DataStack
 
-extension DataStack: CoreStoreBridgeable {
+extension DataStack: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSDataStack
+    public typealias ObjectiveCType = CSDataStack
 }

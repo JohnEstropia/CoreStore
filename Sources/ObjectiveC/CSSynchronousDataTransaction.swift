@@ -45,7 +45,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
         
         return bridge {
             
-            self.swift.commitAndWait()
+            self.bridgeToSwift.commitAndWait()
         }
     }
     
@@ -60,9 +60,9 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
         
         return bridge {
             
-            self.swift.beginSynchronous { (transaction) in
+            self.bridgeToSwift.beginSynchronous { (transaction) in
                 
-                closure(transaction: transaction.objc)
+                closure(transaction: transaction.bridgeToObjectiveC)
             }
         }
     }
@@ -79,7 +79,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
     @objc
     public override func createInto(into: CSInto) -> NSManagedObject {
         
-        return self.swift.create(into.swift)
+        return self.bridgeToSwift.create(into.bridgeToSwift)
     }
     
     /**
@@ -92,7 +92,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
     @warn_unused_result
     public override func editObject(object: NSManagedObject?) -> NSManagedObject? {
         
-        return self.swift.edit(object)
+        return self.bridgeToSwift.edit(object)
     }
     
     /**
@@ -106,7 +106,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
     @warn_unused_result
     public override func editInto(into: CSInto, objectID: NSManagedObjectID) -> NSManagedObject? {
         
-        return self.swift.edit(into.swift, objectID)
+        return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
     }
     
     /**
@@ -117,7 +117,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
     @objc
     public override func deleteObject(object: NSManagedObject?) {
         
-        return self.swift.delete(object)
+        return self.bridgeToSwift.delete(object)
     }
     
     /**
@@ -127,27 +127,27 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
      */
     public override func deleteObjects(objects: [NSManagedObject]) {
         
-        self.swift.delete(objects)
+        self.bridgeToSwift.delete(objects)
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
     internal typealias SwiftType = SynchronousDataTransaction
     
-    internal override var swift: SynchronousDataTransaction {
+    public override var bridgeToSwift: SynchronousDataTransaction {
         
-        return super.swift as! SynchronousDataTransaction
+        return super.bridgeToSwift as! SynchronousDataTransaction
     }
     
-    public required init(_ swiftObject: SynchronousDataTransaction) {
+    public required init(_ swiftValue: SynchronousDataTransaction) {
         
-        super.init(swiftObject)
+        super.init(swiftValue)
     }
     
-    required public init(_ swiftObject: BaseDataTransaction) {
+    public required init(_ swiftValue: BaseDataTransaction) {
         
-        fatalError("init has not been implemented")
+        fatalError("init(_:) requires a BaseDataTransaction instance")
     }
 }
 
@@ -156,7 +156,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
 
 extension SynchronousDataTransaction {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSSynchronousDataTransaction
+    internal typealias ObjectiveCType = CSSynchronousDataTransaction
 }

@@ -33,7 +33,7 @@ import CoreData
  The `CSTweak` serves as the Objective-C bridging type for `Tweak`.
  */
 @objc
-public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreBridge {
+public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
     
     /**
      Initializes a `CSTweak` clause with a closure where the `NSFetchRequest` may be configured.
@@ -53,17 +53,17 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     @objc
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        self.swift.applyToFetchRequest(fetchRequest)
+        self.bridgeToSwift.applyToFetchRequest(fetchRequest)
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: Tweak
+    public let bridgeToSwift: Tweak
     
-    internal init(_ swiftObject: Tweak) {
+    public init(_ swiftValue: Tweak) {
         
-        self.swift = swiftObject
+        self.bridgeToSwift = swiftValue
         super.init()
     }
 }
@@ -71,9 +71,9 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
 
 // MARK: - Tweak
 
-extension Tweak: CoreStoreBridgeable {
+extension Tweak: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSTweak
+    public typealias ObjectiveCType = CSTweak
 }

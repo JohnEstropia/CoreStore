@@ -34,7 +34,7 @@ import CoreData
  */
 @available(OSX, unavailable)
 @objc
-public final class CSSectionBy: NSObject, CoreStoreBridge {
+public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
     
     /**
      Initializes a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
@@ -62,13 +62,13 @@ public final class CSSectionBy: NSObject, CoreStoreBridge {
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: SectionBy
+    public let bridgeToSwift: SectionBy
     
-    internal init(_ swiftObject: SectionBy) {
+    public init(_ swiftValue: SectionBy) {
         
-        self.swift = swiftObject
+        self.bridgeToSwift = swiftValue
         super.init()
     }
 }
@@ -76,9 +76,9 @@ public final class CSSectionBy: NSObject, CoreStoreBridge {
 
 // MARK: - SectionBy
 
-extension SectionBy: CoreStoreBridgeable {
+extension SectionBy: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSSectionBy
+    public typealias ObjectiveCType = CSSectionBy
 }

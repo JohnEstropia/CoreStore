@@ -82,7 +82,7 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     public var description: String {
         
         // TODO:
-        return self.objc.description
+        return self.bridgeToObjectiveC.description
     }
     
     
@@ -123,7 +123,7 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     
     internal init(_ error: ErrorType?) {
         
-        self = error.flatMap { $0.swift } ?? .Unknown
+        self = error.flatMap { $0.bridgeToSwift } ?? .Unknown
     }
 }
 

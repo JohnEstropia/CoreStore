@@ -44,11 +44,11 @@ public final class CSCoreStore: NSObject {
         
         get {
             
-            return CoreStore.defaultStack.objc
+            return CoreStore.defaultStack.bridgeToObjectiveC
         }
         set {
             
-            CoreStore.defaultStack = newValue.swift
+            CoreStore.defaultStack = newValue.bridgeToSwift
         }
     }
     

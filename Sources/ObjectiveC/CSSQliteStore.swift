@@ -33,7 +33,7 @@ import CoreData
  The `CSSQLiteStore` serves as the Objective-C bridging type for `SQLiteStore`.
  */
 @objc
-public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
+public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCType {
     
     /**
      Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `CSDataStack`'s `-addStorage*:` methods, a new SQLite file will be created if it does not exist.
@@ -97,7 +97,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     @objc
     public var fileURL: NSURL {
      
-        return self.swift.fileURL
+        return self.bridgeToSwift.fileURL
     }
     
     /**
@@ -106,7 +106,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     @objc
     public var mappingModelBundles: [NSBundle] {
         
-        return self.swift.mappingModelBundles
+        return self.bridgeToSwift.mappingModelBundles
     }
     
     /**
@@ -115,7 +115,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     @objc
     public var localStorageOptions: Int {
         
-        return self.swift.localStorageOptions.rawValue
+        return self.bridgeToSwift.localStorageOptions.rawValue
     }
     
     
@@ -132,7 +132,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
      */
     public var configuration: String? {
         
-        return self.swift.configuration
+        return self.bridgeToSwift.configuration
     }
     
     /**
@@ -144,7 +144,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     @objc
     public var storeOptions: [String: AnyObject]? {
         
-        return self.swift.storeOptions
+        return self.bridgeToSwift.storeOptions
     }
     
     /**
@@ -155,7 +155,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
         
         try bridge {
             
-            try self.swift.eraseStorageAndWait(soureModel: soureModel)
+            try self.bridgeToSwift.eraseStorageAndWait(soureModel: soureModel)
         }
     }
     
@@ -164,7 +164,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
     
     public override var hash: Int {
         
-        return ObjectIdentifier(self.swift).hashValue
+        return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
@@ -173,17 +173,17 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
             
             return false
         }
-        return self.swift === object.swift
+        return self.bridgeToSwift === object.bridgeToSwift
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: SQLiteStore
+    public let bridgeToSwift: SQLiteStore
     
-    public required init(_ swiftObject: SQLiteStore) {
+    public required init(_ swiftValue: SQLiteStore) {
         
-        self.swift = swiftObject
+        self.bridgeToSwift = swiftValue
         super.init()
     }
 }
@@ -191,9 +191,9 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreBridge {
 
 // MARK: - SQLiteStore
 
-extension SQLiteStore: CoreStoreBridgeable {
+extension SQLiteStore: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSSQLiteStore
+    public typealias ObjectiveCType = CSSQLiteStore
 }

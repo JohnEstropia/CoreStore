@@ -33,7 +33,7 @@ import CoreData
  The `CSSaveResult` serves as the Objective-C bridging type for `SaveResult`.
  */
 @objc
-public final class CSSaveResult: NSObject, CoreStoreBridge {
+public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     
     /**
      `YES` if the `commit` operation for the transaction succeeded, either because the save succeeded or because there were no changes to save. Returns `NO` to indicate failure.
@@ -41,7 +41,7 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     @objc
     public var isSuccess: Bool {
         
-        return self.swift.boolValue
+        return self.bridgeToSwift.boolValue
     }
     
     /**
@@ -50,7 +50,7 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     @objc
     public var isFailure: Bool {
         
-        return !self.swift.boolValue
+        return !self.bridgeToSwift.boolValue
     }
     
     /**
@@ -59,7 +59,7 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     @objc
     public var hasChanges: Bool {
         
-        guard case .Success(let hasChanges) = self.swift else {
+        guard case .Success(let hasChanges) = self.bridgeToSwift else {
             
             return false
         }
@@ -72,11 +72,11 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     @objc
     public var error: NSError? {
         
-        guard case .Failure(let error) = self.swift else {
+        guard case .Failure(let error) = self.bridgeToSwift else {
             
             return nil
         }
-        return error.objc
+        return error.bridgeToObjectiveC
     }
     
     /**
@@ -90,13 +90,13 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     @objc
     public func handleSuccess(@noescape success: (hasChanges: Bool) -> Void, @noescape  failure: (error: NSError) -> Void) {
         
-        switch self.swift {
+        switch self.bridgeToSwift {
             
         case .Success(let hasChanges):
             success(hasChanges: hasChanges)
             
         case .Failure(let error):
-            failure(error: error.objc)
+            failure(error: error.bridgeToObjectiveC)
         }
     }
     
@@ -110,7 +110,7 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     @objc
     public func handleSuccess(@noescape success: (hasChanges: Bool) -> Void) {
         
-        guard case .Success(let hasChanges) = self.swift else {
+        guard case .Success(let hasChanges) = self.bridgeToSwift else {
             
             return
         }
@@ -127,11 +127,11 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     @objc
     public func handleFailure(@noescape failure: (error: NSError) -> Void) {
         
-        guard case .Failure(let error) = self.swift else {
+        guard case .Failure(let error) = self.bridgeToSwift else {
                 
             return
         }
-        failure(error: error.objc)
+        failure(error: error.bridgeToObjectiveC)
     }
     
     
@@ -139,7 +139,7 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
     
     public override var hash: Int {
         
-        return self.swift.hashValue
+        return self.bridgeToSwift.hashValue
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
@@ -148,17 +148,17 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
             
             return false
         }
-        return self.swift == object.swift
+        return self.bridgeToSwift == object.bridgeToSwift
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
-    internal let swift: SaveResult
+    public let bridgeToSwift: SaveResult
     
-    public required init(_ swiftObject: SaveResult) {
+    public required init(_ swiftValue: SaveResult) {
         
-        self.swift = swiftObject
+        self.bridgeToSwift = swiftValue
         super.init()
     }
 }
@@ -166,9 +166,9 @@ public final class CSSaveResult: NSObject, CoreStoreBridge {
 
 // MARK: - SaveResult
 
-extension SaveResult: CoreStoreBridgeable {
+extension SaveResult: CoreStoreSwiftType {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSSaveResult
+    public typealias ObjectiveCType = CSSaveResult
 }

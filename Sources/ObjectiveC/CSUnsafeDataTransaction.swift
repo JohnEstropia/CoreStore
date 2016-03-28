@@ -43,9 +43,9 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     @objc
     public func commit(completion: ((result: CSSaveResult) -> Void)?) {
         
-        self.swift.commit { (result) in
+        self.bridgeToSwift.commit { (result) in
             
-            completion?(result: result.objc)
+            completion?(result: result.bridgeToObjectiveC)
         }
     }
     
@@ -59,7 +59,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
         
         return bridge {
             
-            self.swift.commitAndWait()
+            self.bridgeToSwift.commitAndWait()
         }
     }
     
@@ -69,7 +69,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     @objc
     public func rollback() {
         
-        self.swift.rollback()
+        self.bridgeToSwift.rollback()
     }
     
     /**
@@ -78,7 +78,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     @objc
     public func undo() {
         
-        self.swift.undo()
+        self.bridgeToSwift.undo()
     }
     
     /**
@@ -87,7 +87,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     @objc
     public func redo() {
         
-        self.swift.redo()
+        self.bridgeToSwift.redo()
     }
     
     /**
@@ -102,7 +102,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
         
         return bridge {
             
-            self.swift.beginUnsafe()
+            self.bridgeToSwift.beginUnsafe()
         }
     }
     
@@ -118,7 +118,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
         
         return bridge {
             
-            self.swift.beginUnsafe(supportsUndo: supportsUndo)
+            self.bridgeToSwift.beginUnsafe(supportsUndo: supportsUndo)
         }
     }
     
@@ -132,27 +132,27 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     @objc
     public var internalContext: NSManagedObjectContext {
         
-        return self.swift.context
+        return self.bridgeToSwift.context
     }
     
     
-    // MARK: CoreStoreBridge
+    // MARK: CoreStoreObjectiveCType
     
     internal typealias SwiftType = UnsafeDataTransaction
     
-    internal override var swift: UnsafeDataTransaction {
+    public override var bridgeToSwift: UnsafeDataTransaction {
         
-        return super.swift as! UnsafeDataTransaction
+        return super.bridgeToSwift as! UnsafeDataTransaction
     }
     
-    public required init(_ swiftObject: UnsafeDataTransaction) {
+    public required init(_ swiftValue: UnsafeDataTransaction) {
         
-        super.init(swiftObject)
+        super.init(swiftValue)
     }
     
-    required public init(_ swiftObject: BaseDataTransaction) {
+    public required init(_ swiftValue: BaseDataTransaction) {
         
-        fatalError("init has not been implemented")
+        fatalError("init(_:) requires an UnsafeDataTransaction instance")
     }
 }
 
@@ -161,7 +161,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
 
 extension UnsafeDataTransaction {
     
-    // MARK: CoreStoreBridgeable
+    // MARK: CoreStoreSwiftType
     
-    internal typealias ObjCType = CSUnsafeDataTransaction
+    internal typealias ObjectiveCType = CSUnsafeDataTransaction
 }

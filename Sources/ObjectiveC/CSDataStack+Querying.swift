@@ -43,7 +43,7 @@ public extension CSDataStack {
         
         do {
             
-            return try self.swift.mainContext.existingObjectWithID(object.objectID)
+            return try self.bridgeToSwift.mainContext.existingObjectWithID(object.objectID)
         }
         catch _ {
             
@@ -63,7 +63,7 @@ public extension CSDataStack {
         
         do {
             
-            return try self.swift.mainContext.existingObjectWithID(objectID)
+            return try self.bridgeToSwift.mainContext.existingObjectWithID(objectID)
         }
         catch _ {
             
@@ -81,7 +81,7 @@ public extension CSDataStack {
     @warn_unused_result
     public func fetchExistingObjects(objects: [NSManagedObject]) -> [NSManagedObject] {
         
-        return objects.flatMap { try? self.swift.mainContext.existingObjectWithID($0.objectID) }
+        return objects.flatMap { try? self.bridgeToSwift.mainContext.existingObjectWithID($0.objectID) }
     }
     
     /**
@@ -94,7 +94,7 @@ public extension CSDataStack {
     @warn_unused_result
     public func fetchExistingObjectsWithIDs(objectIDs: [NSManagedObjectID]) -> [NSManagedObject] {
         
-        return objectIDs.flatMap { try? self.swift.mainContext.existingObjectWithID($0) }
+        return objectIDs.flatMap { try? self.bridgeToSwift.mainContext.existingObjectWithID($0) }
     }
     
     /**
@@ -112,7 +112,7 @@ public extension CSDataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        return self.swift.mainContext.fetchOne(from, fetchClauses)
+        return self.bridgeToSwift.mainContext.fetchOne(from, fetchClauses)
     }
     
     /**
@@ -130,7 +130,7 @@ public extension CSDataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        return self.swift.mainContext.fetchAll(from, fetchClauses)
+        return self.bridgeToSwift.mainContext.fetchAll(from, fetchClauses)
     }
     
     /**
@@ -148,7 +148,7 @@ public extension CSDataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        return self.swift.mainContext.fetchCount(from, fetchClauses)
+        return self.bridgeToSwift.mainContext.fetchCount(from, fetchClauses)
     }
     
     /**
@@ -166,7 +166,7 @@ public extension CSDataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        return self.swift.mainContext.fetchObjectID(from, fetchClauses)
+        return self.bridgeToSwift.mainContext.fetchObjectID(from, fetchClauses)
     }
     
     /**
@@ -184,7 +184,7 @@ public extension CSDataStack {
             NSThread.isMainThread(),
             "Attempted to fetch from a \(typeName(self)) outside the main thread."
         )
-        return self.swift.mainContext.fetchObjectIDs(from, fetchClauses)
+        return self.bridgeToSwift.mainContext.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
@@ -201,6 +201,6 @@ public extension CSDataStack {
             NSThread.isMainThread(),
             "Attempted to delete from a \(typeName(self)) outside the main thread."
         )
-        return self.swift.mainContext.deleteAll(from, deleteClauses)
+        return self.bridgeToSwift.mainContext.deleteAll(from, deleteClauses)
     }
 }
