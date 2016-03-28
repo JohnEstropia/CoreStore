@@ -93,7 +93,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - returns: a `CSWhere` clause that compares membership
      */
     @objc
-    public static func keyPath(keyPath: KeyPath, isMemberOf list: NSArray) -> CSWhere {
+    public static func keyPath(keyPath: KeyPath, isMemberOf list: [NSObject]) -> CSWhere {
         
         return self.init(Where(keyPath, isMemberOf: list))
     }

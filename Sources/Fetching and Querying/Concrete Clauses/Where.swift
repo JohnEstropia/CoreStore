@@ -119,7 +119,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the array to check membership of
      */
-    public init(_ keyPath: KeyPath, isMemberOf list: NSArray) {
+    public init(_ keyPath: KeyPath, isMemberOf list: [NSObject]) {
         
         self.init(NSPredicate(format: "\(keyPath) IN %@", list))
     }
