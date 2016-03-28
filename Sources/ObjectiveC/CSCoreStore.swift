@@ -40,7 +40,7 @@ public final class CSCoreStore: NSObject {
      Changing the `defaultStack` is thread safe, but it is recommended to setup stacks on a common queue (e.g. the main queue).
      */
     @objc
-    public class var defaultStack: CSDataStack {
+    public static var defaultStack: CSDataStack {
         
         get {
             

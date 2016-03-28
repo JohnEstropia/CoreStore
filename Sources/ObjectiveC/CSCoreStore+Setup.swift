@@ -35,7 +35,7 @@ public extension CSCoreStore {
      Returns the `defaultStack`'s model version. The version string is the same as the name of the version-specific .xcdatamodeld file.
      */
     @objc
-    public class var modelVersion: String {
+    public static var modelVersion: String {
         
         return CoreStore.modelVersion
     }

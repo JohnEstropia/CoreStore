@@ -34,7 +34,7 @@ internal extension NSManagedObjectModel {
     // MARK: Internal
     
     @nonobjc
-    internal class func fromBundle(bundle: NSBundle, modelName: String, modelVersionHints: Set<String> = []) -> NSManagedObjectModel {
+    internal static func fromBundle(bundle: NSBundle, modelName: String, modelVersionHints: Set<String> = []) -> NSManagedObjectModel {
         
         guard let modelFilePath = bundle.pathForResource(modelName, ofType: "momd") else {
             

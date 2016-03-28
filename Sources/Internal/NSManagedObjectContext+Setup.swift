@@ -61,7 +61,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal class func rootSavingContextForCoordinator(coordinator: NSPersistentStoreCoordinator) -> NSManagedObjectContext {
+    internal static func rootSavingContextForCoordinator(coordinator: NSPersistentStoreCoordinator) -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         context.persistentStoreCoordinator = coordinator
@@ -73,7 +73,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal class func mainContextForRootContext(rootContext: NSManagedObjectContext) -> NSManagedObjectContext {
+    internal static func mainContextForRootContext(rootContext: NSManagedObjectContext) -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         context.parentContext = rootContext
