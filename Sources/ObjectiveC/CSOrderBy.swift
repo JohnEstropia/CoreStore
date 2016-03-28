@@ -27,6 +27,29 @@ import Foundation
 import CoreData
 
 
+// MARK: - CSSortKey
+
+/**
+ The `CSSortKey` is a syntax-sugar class for `NSSortDescriptor` meant to be used with `CSOrderBy`.
+ */
+@objc
+public final class CSSortKey: NSSortDescriptor {
+    
+    /**
+     Initializes a `CSSortKey` with a the specified key path and sort order
+     
+     - parameter keyPath: the property key to use when performing a comparison
+     - parameter ascending: `YES` if the receiver specifies sorting in ascending order, otherwise `NO`
+     - returns: a `CSSortKey` with a the specified key path and sort order
+     */
+    @objc
+    public static func withKeyPath(keyPath: KeyPath, ascending: Bool) -> CSSortKey {
+        
+        return self.init(key: keyPath, ascending: ascending)
+    }
+}
+
+
 // MARK: - CSOrderBy
 
 /**

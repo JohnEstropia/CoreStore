@@ -39,7 +39,7 @@ import CoreData
  let person = transaction.fetchOne(From<MyPersonEntity>("Configuration1"))
  ```
  */
-public struct From<T: NSManagedObject>: Hashable {
+public struct From<T: NSManagedObject> {
     
     /**
      Initializes a `From` clause.
@@ -299,19 +299,7 @@ public struct From<T: NSManagedObject>: Hashable {
     }
     
     
-    // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return ObjectIdentifier(self.entityClass).hashValue
-    }
-    
-    
     // MARK: Internal
-    
-    internal let entityClass: AnyClass
-    
-    internal let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
     
     internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext, applyAffectedStores: Bool = true) {
         
@@ -329,14 +317,19 @@ public struct From<T: NSManagedObject>: Hashable {
         return stores?.isEmpty == false
     }
     
-    internal init(entityClass: AnyClass, findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?) {
+    internal func upcast() -> From<NSManagedObject> {
         
-        self.entityClass = entityClass
-        self.findPersistentStores = findPersistentStores
+        return From<NSManagedObject>(
+            entityClass: self.entityClass,
+            findPersistentStores: self.findPersistentStores
+        )
     }
     
     
     // MARK: Private
+    
+    private let entityClass: AnyClass
+    private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
     
     private init(entityClass: AnyClass) {
         
@@ -393,13 +386,10 @@ public struct From<T: NSManagedObject>: Hashable {
             }
         )
     }
-}
-
-
-// MARK: - From: Equatable
-
-@warn_unused_result
-public func == <T: NSManagedObject, U: NSManagedObject>(lhs: From<T>, rhs: From<U>) -> Bool {
     
-    return lhs.entityClass == rhs.entityClass
+    private init(entityClass: AnyClass, findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?) {
+        
+        self.entityClass = entityClass
+        self.findPersistentStores = findPersistentStores
+    }
 }

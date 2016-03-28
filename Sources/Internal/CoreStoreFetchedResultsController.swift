@@ -30,11 +30,11 @@ import CoreData
 // MARK: - CoreStoreFetchedResultsController
 
 @available(OSX, unavailable)
-internal final class CoreStoreFetchedResultsController<T: NSManagedObject>: NSFetchedResultsController {
+internal final class CoreStoreFetchedResultsController: NSFetchedResultsController {
     
     // MARK: Internal
     
-    internal convenience init<T>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
+    internal convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
         
         self.init(
             context: dataStack.mainContext,
@@ -45,7 +45,7 @@ internal final class CoreStoreFetchedResultsController<T: NSManagedObject>: NSFe
         )
     }
     
-    internal init<T>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
+    internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
         
         from?.applyToFetchRequest(fetchRequest, context: context, applyAffectedStores: false)
         for clause in fetchClauses {

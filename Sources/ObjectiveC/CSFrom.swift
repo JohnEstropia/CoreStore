@@ -106,33 +106,13 @@ public final class CSFrom: NSObject, CoreStoreBridge {
     }
     
     
-    // MARK: NSObject
-    
-    public override var hash: Int {
-        
-        return self.swift.hashValue
-    }
-    
-    public override func isEqual(object: AnyObject?) -> Bool {
-        
-        guard let object = object as? CSFrom else {
-            
-            return false
-        }
-        return self.swift == object.swift
-    }
-    
-    
     // MARK: CoreStoreBridge
     
     internal let swift: From<NSManagedObject>
     
     internal init<T: NSManagedObject>(_ swiftObject: From<T>) {
         
-        self.swift = From<NSManagedObject>(
-            entityClass: swiftObject.entityClass,
-            findPersistentStores: swiftObject.findPersistentStores
-        )
+        self.swift = swiftObject.upcast()
         super.init()
     }
 }

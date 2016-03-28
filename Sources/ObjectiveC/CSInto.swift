@@ -88,11 +88,7 @@ public final class CSInto: NSObject, CoreStoreBridge {
     
     public required init<T: NSManagedObject>(_ swiftObject: Into<T>) {
         
-        self.swift = Into<NSManagedObject>(
-            entityClass: swiftObject.entityClass,
-            configuration: swiftObject.configuration,
-            inferStoreIfPossible: swiftObject.inferStoreIfPossible
-        )
+        self.swift = swiftObject.upcast()
         super.init()
     }
 }

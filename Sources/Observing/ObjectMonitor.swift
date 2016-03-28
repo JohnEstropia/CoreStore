@@ -183,7 +183,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        let fetchedResultsController = CoreStoreFetchedResultsController<T>(
+        let fetchedResultsController = CoreStoreFetchedResultsController(
             context: context,
             fetchRequest: fetchRequest,
             fetchClauses: [Where("SELF", isEqualTo: object.objectID)]
@@ -209,7 +209,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     // MARK: Private
     
-    private let fetchedResultsController: CoreStoreFetchedResultsController<T>
+    private let fetchedResultsController: CoreStoreFetchedResultsController
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private var lastCommittedAttributes = [String: NSObject]()
     

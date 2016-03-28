@@ -142,7 +142,19 @@ public struct Into<T: NSManagedObject>: Hashable {
     internal let configuration: String?
     internal let inferStoreIfPossible: Bool
     
-    internal init(entityClass: AnyClass, configuration: String?, inferStoreIfPossible: Bool) {
+    internal func upcast() -> Into<NSManagedObject> {
+        
+        return Into<NSManagedObject>(
+            entityClass: self.entityClass,
+            configuration: self.configuration,
+            inferStoreIfPossible: self.inferStoreIfPossible
+        )
+    }
+    
+    
+    // MARK: Private
+    
+    private init(entityClass: AnyClass, configuration: String?, inferStoreIfPossible: Bool) {
         
         self.entityClass = entityClass
         self.configuration = configuration

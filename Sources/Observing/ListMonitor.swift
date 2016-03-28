@@ -49,7 +49,7 @@ import CoreData
  ```
  let firstPerson: MyPersonEntity = monitor[0]
  ```
- Accessing the list with an index above the valid range will throw an exception.
+ Accessing the list with an index above the valid range will raise an exception.
  
  Creating a sectioned-list is also possible with the `monitorSectionedList(...)` method:
  ```
@@ -70,14 +70,14 @@ import CoreData
  In the example above, both `person1` and `person2` will contain the object at section=2, index=3.
  */
 @available(OSX, unavailable)
-public final class ListMonitor<T: NSManagedObject> {
+public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     // MARK: Public (Accessors)
     
     /**
      Returns the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
      
-     - parameter index: the index of the object. Using an index above the valid range will throw an exception.
+     - parameter index: the index of the object. Using an index above the valid range will raise an exception.
      - returns: the `NSManagedObject` at the specified index
      */
     public subscript(index: Int) -> T {
@@ -99,8 +99,8 @@ public final class ListMonitor<T: NSManagedObject> {
     /**
      Returns the object at the given `sectionIndex` and `itemIndex`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
      
-     - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will throw an exception.
-     - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will throw an exception.
+     - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will raise an exception.
+     - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will raise an exception.
      - returns: the `NSManagedObject` at the specified section and item index
      */
     public subscript(sectionIndex: Int, itemIndex: Int) -> T {
@@ -139,7 +139,7 @@ public final class ListMonitor<T: NSManagedObject> {
     /**
      Returns the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
      
-     - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will throw an exception.
+     - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will raise an exception.
      - returns: the `NSManagedObject` at the specified index path
      */
     public subscript(indexPath: NSIndexPath) -> T {
@@ -208,7 +208,7 @@ public final class ListMonitor<T: NSManagedObject> {
     /**
      Returns all objects in the specified section
      
-     - parameter section: the section index. Using an index outside the valid range will throw an exception.
+     - parameter section: the section index. Using an index outside the valid range will raise an exception.
      - returns: all objects in the specified section
      */
     @warn_unused_result
@@ -274,7 +274,7 @@ public final class ListMonitor<T: NSManagedObject> {
     /**
      Returns the number of objects in the specified section
      
-     - parameter section: the section index. Using an index outside the valid range will throw an exception.
+     - parameter section: the section index. Using an index outside the valid range will raise an exception.
      - returns: the number of objects in the specified section
      */
     @warn_unused_result
@@ -298,7 +298,7 @@ public final class ListMonitor<T: NSManagedObject> {
     /**
      Returns the `NSFetchedResultsSectionInfo` for the specified section
      
-     - parameter section: the section index. Using an index outside the valid range will throw an exception.
+     - parameter section: the section index. Using an index outside the valid range will raise an exception.
      - returns: the `NSFetchedResultsSectionInfo` for the specified section
      */
     @warn_unused_result
@@ -435,62 +435,23 @@ public final class ListMonitor<T: NSManagedObject> {
      */
     public func addObserver<U: ListObserver where U.ListEntityType == T>(observer: U) {
         
-        CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
-        )
-        
-        self.removeObserver(observer)
-        
-        self.registerChangeNotification(
-            &self.willChangeListKey,
-            name: ListMonitorWillChangeListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+        self.unregisterObserver(observer)
+        self.registerObserver(
+            observer,
+            willChange: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorWillChange(monitor)
-            }
-        )
-        self.registerChangeNotification(
-            &self.didChangeListKey,
-            name: ListMonitorDidChangeListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            },
+            didChange: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorDidChange(monitor)
-            }
-        )
-        self.registerChangeNotification(
-            &self.willRefetchListKey,
-            name: ListMonitorWillRefetchListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            },
+            willRefetch: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorWillRefetch(monitor)
-            }
-        )
-        self.registerChangeNotification(
-            &self.didRefetchListKey,
-            name: ListMonitorDidRefetchListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            },
+            didRefetch: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorDidRefetch(monitor)
             }
         )
@@ -509,133 +470,43 @@ public final class ListMonitor<T: NSManagedObject> {
      */
     public func addObserver<U: ListObjectObserver where U.ListEntityType == T>(observer: U) {
         
-        CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
-        )
-        
-        self.removeObserver(observer)
-        
-        self.registerChangeNotification(
-            &self.willChangeListKey,
-            name: ListMonitorWillChangeListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+        self.unregisterObserver(observer)
+        self.registerObserver(
+            observer,
+            willChange: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorWillChange(monitor)
-            }
-        )
-        self.registerChangeNotification(
-            &self.didChangeListKey,
-            name: ListMonitorDidChangeListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            },
+            didChange: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorDidChange(monitor)
-            }
-        )
-        self.registerChangeNotification(
-            &self.willRefetchListKey,
-            name: ListMonitorWillRefetchListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            },
+            willRefetch: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorWillRefetch(monitor)
-            }
-        )
-        self.registerChangeNotification(
-            &self.didRefetchListKey,
-            name: ListMonitorDidRefetchListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            },
+            didRefetch: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorDidRefetch(monitor)
             }
         )
-        
-        self.registerObjectNotification(
-            &self.didInsertObjectKey,
-            name: ListMonitorDidInsertObjectNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+        self.registerObserver(
+            observer,
+            didInsertObject: { (observer, monitor, object, toIndexPath) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didInsertObject: object,
-                    toIndexPath: newIndexPath!
-                )
-            }
-        )
-        self.registerObjectNotification(
-            &self.didDeleteObjectKey,
-            name: ListMonitorDidDeleteObjectNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+                observer.listMonitor(monitor, didInsertObject: object, toIndexPath: toIndexPath)
+            },
+            didDeleteObject: { (observer, monitor, object, fromIndexPath) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didDeleteObject: object,
-                    fromIndexPath: indexPath!
-                )
-            }
-        )
-        self.registerObjectNotification(
-            &self.didUpdateObjectKey,
-            name: ListMonitorDidUpdateObjectNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+                observer.listMonitor(monitor, didDeleteObject: object, fromIndexPath: fromIndexPath)
+            },
+            didUpdateObject: { (observer, monitor, object, atIndexPath) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didUpdateObject: object,
-                    atIndexPath: indexPath!
-                )
-            }
-        )
-        self.registerObjectNotification(
-            &self.didMoveObjectKey,
-            name: ListMonitorDidMoveObjectNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+                observer.listMonitor(monitor, didUpdateObject: object, atIndexPath: atIndexPath)
+            },
+            didMoveObject: { (observer, monitor, object, fromIndexPath, toIndexPath) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didMoveObject: object,
-                    fromIndexPath: indexPath!,
-                    toIndexPath: newIndexPath!
-                )
+                observer.listMonitor(monitor, didMoveObject: object, fromIndexPath: fromIndexPath, toIndexPath: toIndexPath)
             }
         )
     }
@@ -653,168 +524,54 @@ public final class ListMonitor<T: NSManagedObject> {
      */
     public func addObserver<U: ListSectionObserver where U.ListEntityType == T>(observer: U) {
         
-        CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
-        )
-        
-        self.removeObserver(observer)
-        
-        self.registerChangeNotification(
-            &self.willChangeListKey,
-            name: ListMonitorWillChangeListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+        self.unregisterObserver(observer)
+        self.registerObserver(
+            observer,
+            willChange: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorWillChange(monitor)
-            }
-        )
-        self.registerChangeNotification(
-            &self.didChangeListKey,
-            name: ListMonitorDidChangeListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            },
+            didChange: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorDidChange(monitor)
-            }
-        )
-        self.registerChangeNotification(
-            &self.willRefetchListKey,
-            name: ListMonitorWillRefetchListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            },
+            willRefetch: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorWillRefetch(monitor)
-            }
-        )
-        self.registerChangeNotification(
-            &self.didRefetchListKey,
-            name: ListMonitorDidRefetchListNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor) -> Void in
+            },
+            didRefetch: { (observer, monitor) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
                 observer.listMonitorDidRefetch(monitor)
             }
         )
-        
-        self.registerObjectNotification(
-            &self.didInsertObjectKey,
-            name: ListMonitorDidInsertObjectNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+        self.registerObserver(
+            observer,
+            didInsertObject: { (observer, monitor, object, toIndexPath) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didInsertObject: object,
-                    toIndexPath: newIndexPath!
-                )
+                observer.listMonitor(monitor, didInsertObject: object, toIndexPath: toIndexPath)
+            },
+            didDeleteObject: { (observer, monitor, object, fromIndexPath) in
+                
+                observer.listMonitor(monitor, didDeleteObject: object, fromIndexPath: fromIndexPath)
+            },
+            didUpdateObject: { (observer, monitor, object, atIndexPath) in
+                
+                observer.listMonitor(monitor, didUpdateObject: object, atIndexPath: atIndexPath)
+            },
+            didMoveObject: { (observer, monitor, object, fromIndexPath, toIndexPath) in
+                
+                observer.listMonitor(monitor, didMoveObject: object, fromIndexPath: fromIndexPath, toIndexPath: toIndexPath)
             }
         )
-        self.registerObjectNotification(
-            &self.didDeleteObjectKey,
-            name: ListMonitorDidDeleteObjectNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+        self.registerObserver(
+            observer,
+            didInsertSection: { (observer, monitor, sectionInfo, toIndex) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didDeleteObject: object,
-                    fromIndexPath: indexPath!
-                )
-            }
-        )
-        self.registerObjectNotification(
-            &self.didUpdateObjectKey,
-            name: ListMonitorDidUpdateObjectNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+                observer.listMonitor(monitor, didInsertSection: sectionInfo, toSectionIndex: toIndex)
+            },
+            didDeleteSection: { (observer, monitor, sectionInfo, fromIndex) in
                 
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didUpdateObject: object,
-                    atIndexPath: indexPath!
-                )
-            }
-        )
-        self.registerObjectNotification(
-            &self.didMoveObjectKey,
-            name: ListMonitorDidMoveObjectNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
-                
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didMoveObject: object,
-                    fromIndexPath: indexPath!,
-                    toIndexPath: newIndexPath!
-                )
-            }
-        )
-        
-        self.registerSectionNotification(
-            &self.didInsertSectionKey,
-            name: ListMonitorDidInsertSectionNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
-                
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didInsertSection: sectionInfo,
-                    toSectionIndex: sectionIndex
-                )
-            }
-        )
-        self.registerSectionNotification(
-            &self.didDeleteSectionKey,
-            name: ListMonitorDidDeleteSectionNotification,
-            toObserver: observer,
-            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
-                
-                guard let observer = observer else {
-                    
-                    return
-                }
-                observer.listMonitor(
-                    monitor,
-                    didDeleteSection: sectionInfo,
-                    fromSectionIndex: sectionIndex
-                )
+               observer.listMonitor(monitor, didDeleteSection: sectionInfo, fromSectionIndex: fromIndex)
             }
         )
     }
@@ -828,24 +585,7 @@ public final class ListMonitor<T: NSManagedObject> {
      */
     public func removeObserver<U: ListObserver where U.ListEntityType == T>(observer: U) {
         
-        CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to remove an observer of type \(typeName(observer)) outside the main thread."
-        )
-        
-        let nilValue: AnyObject? = nil
-        setAssociatedRetainedObject(nilValue, forKey: &self.willChangeListKey, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &self.didChangeListKey, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &self.willRefetchListKey, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &self.didRefetchListKey, inObject: observer)
-        
-        setAssociatedRetainedObject(nilValue, forKey: &self.didInsertObjectKey, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteObjectKey, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &self.didUpdateObjectKey, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &self.didMoveObjectKey, inObject: observer)
-        
-        setAssociatedRetainedObject(nilValue, forKey: &self.didInsertSectionKey, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteSectionKey, inObject: observer)
+        self.unregisterObserver(observer)
     }
     
     
@@ -877,6 +617,375 @@ public final class ListMonitor<T: NSManagedObject> {
      */
     public func refetch(fetchClauses: [FetchClause]) {
         
+        self.refetch { (fetchRequest) in
+            
+            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+        }
+    }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        return ObjectIdentifier(self).hashValue
+    }
+    
+    
+    // MARK: Internal
+    
+    internal var willChangeListKey: Void?
+    internal var didChangeListKey: Void?
+    internal var willRefetchListKey: Void?
+    internal var didRefetchListKey: Void?
+    
+    internal var didInsertObjectKey: Void?
+    internal var didDeleteObjectKey: Void?
+    internal var didUpdateObjectKey: Void?
+    internal var didMoveObjectKey: Void?
+    
+    internal var didInsertSectionKey: Void?
+    internal var didDeleteSectionKey: Void?
+    
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+        
+        self.init(
+            context: dataStack.mainContext,
+            transactionQueue: dataStack.childTransactionQueue,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            createAsynchronously: nil
+        )
+    }
+    
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
+        
+        self.init(
+            context: dataStack.mainContext,
+            transactionQueue: dataStack.childTransactionQueue,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            createAsynchronously: createAsynchronously
+        )
+    }
+    
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+        
+        self.init(
+            context: unsafeTransaction.context,
+            transactionQueue: unsafeTransaction.transactionQueue,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            createAsynchronously: nil
+        )
+    }
+    
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
+        
+        self.init(
+            context: unsafeTransaction.context,
+            transactionQueue: unsafeTransaction.transactionQueue,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses,
+            createAsynchronously: createAsynchronously
+        )
+    }
+    
+    internal func upcast() -> ListMonitor<NSManagedObject> {
+        
+        return unsafeBitCast(self, ListMonitor<NSManagedObject>.self)
+    }
+    
+    internal func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>) -> Void) {
+        
+        setAssociatedRetainedObject(
+            NotificationObserver(
+                notificationName: name,
+                object: self,
+                closure: { [weak self] (note) -> Void in
+                    
+                    guard let `self` = self else {
+                        
+                        return
+                    }
+                    callback(monitor: self)
+                }
+            ),
+            forKey: notificationKey,
+            inObject: observer
+        )
+    }
+    
+    internal func registerObjectNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>, object: T, indexPath: NSIndexPath?, newIndexPath: NSIndexPath?) -> Void) {
+        
+        setAssociatedRetainedObject(
+            NotificationObserver(
+                notificationName: name,
+                object: self,
+                closure: { [weak self] (note) -> Void in
+                    
+                    guard let `self` = self,
+                        let userInfo = note.userInfo,
+                        let object = userInfo[UserInfoKeyObject] as? T else {
+                            
+                            return
+                    }
+                    callback(
+                        monitor: self,
+                        object: object,
+                        indexPath: userInfo[UserInfoKeyIndexPath] as? NSIndexPath,
+                        newIndexPath: userInfo[UserInfoKeyNewIndexPath] as? NSIndexPath
+                    )
+                }
+            ),
+            forKey: notificationKey,
+            inObject: observer
+        )
+    }
+    
+    internal func registerSectionNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>, sectionInfo: NSFetchedResultsSectionInfo, sectionIndex: Int) -> Void) {
+        
+        setAssociatedRetainedObject(
+            NotificationObserver(
+                notificationName: name,
+                object: self,
+                closure: { [weak self] (note) -> Void in
+                    
+                    guard let `self` = self,
+                        let userInfo = note.userInfo,
+                        let sectionInfo = userInfo[UserInfoKeySectionInfo] as? NSFetchedResultsSectionInfo,
+                        let sectionIndex = (userInfo[UserInfoKeySectionIndex] as? NSNumber)?.integerValue else {
+                            
+                            return
+                    }
+                    callback(
+                        monitor: self,
+                        sectionInfo: sectionInfo,
+                        sectionIndex: sectionIndex
+                    )
+                }
+            ),
+            forKey: notificationKey,
+            inObject: observer
+        )
+    }
+    
+    internal func registerObserver<U: AnyObject>(observer: U, willChange: (observer: U, monitor: ListMonitor<T>) -> Void, didChange: (observer: U, monitor: ListMonitor<T>) -> Void, willRefetch: (observer: U, monitor: ListMonitor<T>) -> Void, didRefetch: (observer: U, monitor: ListMonitor<T>) -> Void) {
+        
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
+        
+        self.registerChangeNotification(
+            &self.willChangeListKey,
+            name: ListMonitorWillChangeListNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                willChange(observer: observer, monitor: monitor)
+            }
+        )
+        self.registerChangeNotification(
+            &self.didChangeListKey,
+            name: ListMonitorDidChangeListNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                didChange(observer: observer, monitor: monitor)
+            }
+        )
+        self.registerChangeNotification(
+            &self.willRefetchListKey,
+            name: ListMonitorWillRefetchListNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                willRefetch(observer: observer, monitor: monitor)
+            }
+        )
+        self.registerChangeNotification(
+            &self.didRefetchListKey,
+            name: ListMonitorDidRefetchListNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                didChange(observer: observer, monitor: monitor)
+            }
+        )
+    }
+    
+    internal func registerObserver<U: AnyObject>(observer: U, didInsertObject: (observer: U, monitor: ListMonitor<T>, object: T, toIndexPath: NSIndexPath) -> Void, didDeleteObject: (observer: U, monitor: ListMonitor<T>, object: T, fromIndexPath: NSIndexPath) -> Void, didUpdateObject: (observer: U, monitor: ListMonitor<T>, object: T, atIndexPath: NSIndexPath) -> Void, didMoveObject: (observer: U, monitor: ListMonitor<T>, object: T, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) -> Void) {
+        
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
+        
+        self.registerObjectNotification(
+            &self.didInsertObjectKey,
+            name: ListMonitorDidInsertObjectNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                didInsertObject(
+                    observer: observer,
+                    monitor: monitor,
+                    object: object,
+                    toIndexPath: newIndexPath!
+                )
+            }
+        )
+        self.registerObjectNotification(
+            &self.didDeleteObjectKey,
+            name: ListMonitorDidDeleteObjectNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                didDeleteObject(
+                    observer: observer,
+                    monitor: monitor,
+                    object: object,
+                    fromIndexPath: indexPath!
+                )
+            }
+        )
+        self.registerObjectNotification(
+            &self.didUpdateObjectKey,
+            name: ListMonitorDidUpdateObjectNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                didUpdateObject(
+                    observer: observer,
+                    monitor: monitor,
+                    object: object,
+                    atIndexPath: indexPath!
+                )
+            }
+        )
+        self.registerObjectNotification(
+            &self.didMoveObjectKey,
+            name: ListMonitorDidMoveObjectNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                didMoveObject(
+                    observer: observer,
+                    monitor: monitor,
+                    object: object,
+                    fromIndexPath: indexPath!,
+                    toIndexPath: newIndexPath!
+                )
+            }
+        )
+    }
+    
+    internal func registerObserver<U: AnyObject>(observer: U, didInsertSection: (observer: U, monitor: ListMonitor<T>, sectionInfo: NSFetchedResultsSectionInfo, toIndex: Int) -> Void, didDeleteSection: (observer: U, monitor: ListMonitor<T>, sectionInfo: NSFetchedResultsSectionInfo, fromIndex: Int) -> Void) {
+        
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+        )
+        
+        self.registerSectionNotification(
+            &self.didInsertSectionKey,
+            name: ListMonitorDidInsertSectionNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                didInsertSection(
+                    observer: observer,
+                    monitor: monitor,
+                    sectionInfo: sectionInfo,
+                    toIndex: sectionIndex
+                )
+            }
+        )
+        self.registerSectionNotification(
+            &self.didDeleteSectionKey,
+            name: ListMonitorDidDeleteSectionNotification,
+            toObserver: observer,
+            callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
+                
+                guard let observer = observer else {
+                    
+                    return
+                }
+                didDeleteSection(
+                    observer: observer,
+                    monitor: monitor,
+                    sectionInfo: sectionInfo,
+                    fromIndex: sectionIndex
+                )
+            }
+        )
+    }
+    
+    internal func unregisterObserver(observer: AnyObject) {
+        
+        CoreStore.assert(
+            NSThread.isMainThread(),
+            "Attempted to remove an observer of type \(typeName(observer)) outside the main thread."
+        )
+        
+        let nilValue: AnyObject? = nil
+        setAssociatedRetainedObject(nilValue, forKey: &self.willChangeListKey, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.didChangeListKey, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.willRefetchListKey, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.didRefetchListKey, inObject: observer)
+        
+        setAssociatedRetainedObject(nilValue, forKey: &self.didInsertObjectKey, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteObjectKey, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.didUpdateObjectKey, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.didMoveObjectKey, inObject: observer)
+        
+        setAssociatedRetainedObject(nilValue, forKey: &self.didInsertSectionKey, inObject: observer)
+        setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteSectionKey, inObject: observer)
+    }
+    
+    internal func refetch(applyClauses: (fetchRequest: NSFetchRequest) -> Void) {
+        
         CoreStore.assert(
             NSThread.isMainThread(),
             "Attempted to refetch a \(typeName(self)) outside the main thread."
@@ -900,12 +1009,7 @@ public final class ListMonitor<T: NSManagedObject> {
             }
             
             self.fetchedResultsControllerDelegate.enabled = false
-            
-            let fetchRequest = self.fetchedResultsController.fetchRequest
-            for clause in fetchClauses {
-                
-                clause.applyToFetchRequest(fetchRequest)
-            }
+            applyClauses(fetchRequest: self.fetchedResultsController.fetchRequest)
             
             self.transactionQueue.async { [weak self] in
                 
@@ -935,57 +1039,42 @@ public final class ListMonitor<T: NSManagedObject> {
         }
     }
     
-    
-    // MARK: Internal
-    
-    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+    deinit {
         
-        self.init(
-            context: dataStack.mainContext,
-            transactionQueue: dataStack.childTransactionQueue,
-            from: from,
-            sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
-            createAsynchronously: nil
-        )
+        self.fetchedResultsControllerDelegate.fetchedResultsController = nil
+        self.isPersistentStoreChanging = false
     }
     
-    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
-        
-        let queue = dataStack.childTransactionQueue
-        self.init(
-            context: dataStack.mainContext,
-            transactionQueue: queue,
-            from: from,
-            sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
-            createAsynchronously: createAsynchronously
-        )
-    }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
-        
-        self.init(
-            context: unsafeTransaction.context,
-            transactionQueue: unsafeTransaction.transactionQueue,
-            from: from,
-            sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
-            createAsynchronously: nil
-        )
-    }
+    // MARK: Private
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
+    private let fetchedResultsController: CoreStoreFetchedResultsController
+    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
+    private let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
+    private var observerForWillChangePersistentStore: NotificationObserver!
+    private var observerForDidChangePersistentStore: NotificationObserver!
+    private let taskGroup = GCDGroup()
+    private let transactionQueue: GCDQueue
+    
+    private var isPersistentStoreChanging: Bool = false {
         
-        let queue = unsafeTransaction.transactionQueue
-        self.init(
-            context: unsafeTransaction.context,
-            transactionQueue: queue,
-            from: from,
-            sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
-            createAsynchronously: createAsynchronously
-        )
+        didSet {
+            
+            let newValue = self.isPersistentStoreChanging
+            guard newValue != oldValue else {
+                
+                return
+            }
+            
+            if newValue {
+                
+                self.taskGroup.enter()
+            }
+            else {
+                
+                self.taskGroup.leave()
+            }
+        }
     }
     
     private init(context: NSManagedObjectContext, transactionQueue: GCDQueue, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: ((ListMonitor<T>) -> Void)?) {
@@ -997,7 +1086,7 @@ public final class ListMonitor<T: NSManagedObject> {
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        let fetchedResultsController = CoreStoreFetchedResultsController<T>(
+        let fetchedResultsController = CoreStoreFetchedResultsController(
             context: context,
             fetchRequest: fetchRequest,
             from: from,
@@ -1091,131 +1180,6 @@ public final class ListMonitor<T: NSManagedObject> {
             
             try! fetchedResultsController.performFetchFromSpecifiedStores()
         }
-    }
-    
-    deinit {
-        
-        self.fetchedResultsControllerDelegate.fetchedResultsController = nil
-        self.isPersistentStoreChanging = false
-    }
-    
-    private var isPersistentStoreChanging: Bool = false {
-        
-        didSet {
-            
-            let newValue = self.isPersistentStoreChanging
-            guard newValue != oldValue else {
-                
-                return
-            }
-            
-            if newValue {
-                
-                self.taskGroup.enter()
-            }
-            else {
-                
-                self.taskGroup.leave()
-            }
-        }
-    }
-    
-    
-    // MARK: Private
-    
-    private let fetchedResultsController: CoreStoreFetchedResultsController<T>
-    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
-    private let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
-    private var observerForWillChangePersistentStore: NotificationObserver!
-    private var observerForDidChangePersistentStore: NotificationObserver!
-    private let taskGroup = GCDGroup()
-    private let transactionQueue: GCDQueue
-    
-    private var willChangeListKey: Void?
-    private var didChangeListKey: Void?
-    private var willRefetchListKey: Void?
-    private var didRefetchListKey: Void?
-    
-    private var didInsertObjectKey: Void?
-    private var didDeleteObjectKey: Void?
-    private var didUpdateObjectKey: Void?
-    private var didMoveObjectKey: Void?
-    
-    private var didInsertSectionKey: Void?
-    private var didDeleteSectionKey: Void?
-    
-    private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>) -> Void) {
-        
-        setAssociatedRetainedObject(
-            NotificationObserver(
-                notificationName: name,
-                object: self,
-                closure: { [weak self] (note) -> Void in
-                    
-                    guard let `self` = self else {
-                        
-                        return
-                    }
-                    callback(monitor: self)
-                }
-            ),
-            forKey: notificationKey,
-            inObject: observer
-        )
-    }
-    
-    private func registerObjectNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>, object: T, indexPath: NSIndexPath?, newIndexPath: NSIndexPath?) -> Void) {
-        
-        setAssociatedRetainedObject(
-            NotificationObserver(
-                notificationName: name,
-                object: self,
-                closure: { [weak self] (note) -> Void in
-                    
-                    guard let `self` = self,
-                        let userInfo = note.userInfo,
-                        let object = userInfo[UserInfoKeyObject] as? T else {
-                            
-                            return
-                    }
-                    callback(
-                        monitor: self,
-                        object: object,
-                        indexPath: userInfo[UserInfoKeyIndexPath] as? NSIndexPath,
-                        newIndexPath: userInfo[UserInfoKeyNewIndexPath] as? NSIndexPath
-                    )
-                }
-            ),
-            forKey: notificationKey,
-            inObject: observer
-        )
-    }
-    
-    private func registerSectionNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>, sectionInfo: NSFetchedResultsSectionInfo, sectionIndex: Int) -> Void) {
-        
-        setAssociatedRetainedObject(
-            NotificationObserver(
-                notificationName: name,
-                object: self,
-                closure: { [weak self] (note) -> Void in
-                    
-                    guard let `self` = self,
-                        let userInfo = note.userInfo,
-                        let sectionInfo = userInfo[UserInfoKeySectionInfo] as? NSFetchedResultsSectionInfo,
-                        let sectionIndex = (userInfo[UserInfoKeySectionIndex] as? NSNumber)?.integerValue else {
-                            
-                            return
-                    }
-                    callback(
-                        monitor: self,
-                        sectionInfo: sectionInfo,
-                        sectionIndex: sectionIndex
-                    )
-                }
-            ),
-            forKey: notificationKey,
-            inObject: observer
-        )
     }
 }
 
@@ -1340,18 +1304,29 @@ extension ListMonitor: FetchedResultsControllerHandler {
 }
 
 
-private let ListMonitorWillChangeListNotification = "ListMonitorWillChangeListNotification"
-private let ListMonitorDidChangeListNotification = "ListMonitorDidChangeListNotification"
-private let ListMonitorWillRefetchListNotification = "ListMonitorWillRefetchListNotification"
-private let ListMonitorDidRefetchListNotification = "ListMonitorDidRefetchListNotification"
+// MARK: - ListMonitor: Equatable
 
-private let ListMonitorDidInsertObjectNotification = "ListMonitorDidInsertObjectNotification"
-private let ListMonitorDidDeleteObjectNotification = "ListMonitorDidDeleteObjectNotification"
-private let ListMonitorDidUpdateObjectNotification = "ListMonitorDidUpdateObjectNotification"
-private let ListMonitorDidMoveObjectNotification = "ListMonitorDidMoveObjectNotification"
+@warn_unused_result
+public func == <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+    
+    return lhs.fetchedResultsController === rhs.fetchedResultsController
+}
 
-private let ListMonitorDidInsertSectionNotification = "ListMonitorDidInsertSectionNotification"
-private let ListMonitorDidDeleteSectionNotification = "ListMonitorDidDeleteSectionNotification"
+
+// MARK: - Notification Keys
+
+internal let ListMonitorWillChangeListNotification = "ListMonitorWillChangeListNotification"
+internal let ListMonitorDidChangeListNotification = "ListMonitorDidChangeListNotification"
+internal let ListMonitorWillRefetchListNotification = "ListMonitorWillRefetchListNotification"
+internal let ListMonitorDidRefetchListNotification = "ListMonitorDidRefetchListNotification"
+
+internal let ListMonitorDidInsertObjectNotification = "ListMonitorDidInsertObjectNotification"
+internal let ListMonitorDidDeleteObjectNotification = "ListMonitorDidDeleteObjectNotification"
+internal let ListMonitorDidUpdateObjectNotification = "ListMonitorDidUpdateObjectNotification"
+internal let ListMonitorDidMoveObjectNotification = "ListMonitorDidMoveObjectNotification"
+
+internal let ListMonitorDidInsertSectionNotification = "ListMonitorDidInsertSectionNotification"
+internal let ListMonitorDidDeleteSectionNotification = "ListMonitorDidDeleteSectionNotification"
 
 private let UserInfoKeyObject = "UserInfoKeyObject"
 private let UserInfoKeyIndexPath = "UserInfoKeyIndexPath"

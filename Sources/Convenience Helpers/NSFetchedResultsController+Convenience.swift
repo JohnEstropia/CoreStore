@@ -37,7 +37,7 @@ public extension NSFetchedResultsController {
     @nonobjc
     public static func createForStack<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
         
-        return CoreStoreFetchedResultsController<T>(
+        return CoreStoreFetchedResultsController(
             context: dataStack.mainContext,
             fetchRequest: fetchRequest,
             from: from,
@@ -52,47 +52,12 @@ public extension NSFetchedResultsController {
     @nonobjc
     internal static func createFromContext<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
         
-        return CoreStoreFetchedResultsController<T>(
+        return CoreStoreFetchedResultsController(
             context: context,
             fetchRequest: fetchRequest,
             from: from,
             sectionBy: sectionBy,
             fetchClauses: fetchClauses
-        )
-    }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated=1.5.2, message="Use NSFetchedResultsController.createForStack(_:fetchRequest:from:sectionBy:fetchClauses:) to create NSFetchedResultsControllers directly")
-    @nonobjc
-    public convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
-        
-        let context = dataStack.mainContext
-        from?.applyToFetchRequest(fetchRequest, context: context, applyAffectedStores: false)
-        for clause in fetchClauses {
-            
-            clause.applyToFetchRequest(fetchRequest)
-        }
-        
-        if let from = from {
-            
-            from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
-        }
-        else {
-            
-            guard let from = (fetchRequest.entity.flatMap { $0.managedObjectClassName }).flatMap(NSClassFromString).flatMap(From.init) else {
-                
-                fatalError("Attempted to create an \(typeName(NSFetchedResultsController)) without a  From clause or an NSEntityDescription.")
-            }
-            from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
-        }
-        
-        self.init(
-            fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: sectionBy?.sectionKeyPath,
-            cacheName: nil
         )
     }
 }
