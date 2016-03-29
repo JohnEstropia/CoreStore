@@ -33,10 +33,10 @@
 
 - (void)testFlags {
     
-    XCTAssertEqual([CSLocalStorageOptions none], 0);
-    XCTAssertEqual([CSLocalStorageOptions recreateStoreOnModelMismatch], 1);
-    XCTAssertEqual([CSLocalStorageOptions preventProgressiveMigration], 2);
-    XCTAssertEqual([CSLocalStorageOptions allowSynchronousLightweightMigration], 4);
+    XCTAssertEqual(CSLocalStorageOptionsNone, 0);
+    XCTAssertEqual(CSLocalStorageOptionsRecreateStoreOnModelMismatch, 1);
+    XCTAssertEqual(CSLocalStorageOptionsPreventProgressiveMigration, 2);
+    XCTAssertEqual(CSLocalStorageOptionsAllowSynchronousLightweightMigration, 4);
 }
 
 - (void)testDataStack {

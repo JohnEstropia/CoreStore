@@ -60,7 +60,7 @@ import CoreData
  )
  ```
  */
-public enum SetupResult<T: StorageInterface>: BooleanType {
+public enum SetupResult<T: StorageInterface>: BooleanType, Hashable {
     
     /**
      `SetupResult.Success` indicates that the storage setup succeeded. The associated object for this `enum` value is the related `StorageInterface` instance.
@@ -85,6 +85,21 @@ public enum SetupResult<T: StorageInterface>: BooleanType {
     }
     
     
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        switch self {
+            
+        case .Success(let storage):
+            return self.boolValue.hashValue ^ ObjectIdentifier(storage).hashValue
+            
+        case .Failure(let error):
+            return self.boolValue.hashValue ^ error.hashValue
+        }
+    }
+    
+    
     // MARK: Internal
     
     internal init(_ storage: T) {
@@ -104,8 +119,26 @@ public enum SetupResult<T: StorageInterface>: BooleanType {
 }
 
 
-// MARK: - Deprecated
+// MARK: - SetupResult: Equatable
 
+@warn_unused_result
+public func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, rhs: SetupResult<U>) -> Bool {
+    
+    switch (lhs, rhs) {
+        
+    case (.Success(let storage1), .Success(let storage2)):
+        return storage1 === storage2
+        
+    case (.Failure(let error1), .Failure(let error2)):
+        return error1 == error2
+        
+    default:
+        return false
+    }
+}
+
+
+// MARK: - Deprecated
 
 /**
  Deprecated. Replaced by `SetupResult<T>` when using the new `addStorage(_:completion:)` method variants.

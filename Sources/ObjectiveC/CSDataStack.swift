@@ -229,7 +229,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
             try self.bridgeToSwift.addStorageAndWait(storage.bridgeToSwift)
         }
     }
-    
+
     
     // MARK: NSObject
     
