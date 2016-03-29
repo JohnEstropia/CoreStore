@@ -163,9 +163,9 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - returns: the `CSInMemoryStore` added to the stack
      */
     @objc
-    public func addInMemoryStorageAndWait() throws -> CSInMemoryStore {
+    public func addInMemoryStorageAndWaitAndReturnError(error: NSErrorPointer) -> CSInMemoryStore? {
         
-        return try bridge {
+        return bridge(error) {
             
             try self.bridgeToSwift.addStorageAndWait(InMemoryStore)
         }
@@ -180,11 +180,11 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - returns: the `CSSQLiteStore` added to the stack
      */
     @objc
-    public func addSQLiteStorageAndWait() throws -> CSSQLiteStore {
+    public func addSQLiteStorageAndWaitAndReturnError(error: NSErrorPointer) -> CSSQLiteStore? {
         
-        return try bridge {
+        return bridge(error) {
             
-            return try self.bridgeToSwift.addStorageAndWait(SQLiteStore)
+            try self.bridgeToSwift.addStorageAndWait(SQLiteStore)
         }
     }
     
@@ -201,11 +201,11 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - returns: the `CSInMemoryStore` added to the stack
      */
     @objc
-    public func addInMemoryStorageAndWait(storage: CSInMemoryStore) throws -> CSInMemoryStore {
+    public func addInMemoryStorageAndWait(storage: CSInMemoryStore, error: NSErrorPointer) -> CSInMemoryStore? {
         
-        return try bridge {
+        return bridge(error) {
             
-            return try self.bridgeToSwift.addStorageAndWait(storage.bridgeToSwift)
+            try self.bridgeToSwift.addStorageAndWait(storage.bridgeToSwift)
         }
     }
     
@@ -222,11 +222,11 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - returns: the `CSSQLiteStore` added to the stack
      */
     @objc
-    public func addSQLiteStorageAndWait(storage: CSSQLiteStore) throws -> CSSQLiteStore {
+    public func addSQLiteStorageAndWait(storage: CSSQLiteStore, error: NSErrorPointer) -> CSSQLiteStore? {
         
-        return try bridge {
+        return bridge(error) {
             
-            return try self.bridgeToSwift.addStorageAndWait(storage.bridgeToSwift)
+            try self.bridgeToSwift.addStorageAndWait(storage.bridgeToSwift)
         }
     }
     

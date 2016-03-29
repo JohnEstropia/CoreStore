@@ -78,12 +78,9 @@ public extension CSCoreStore {
      - returns: the `CSInMemoryStore` added to the `defaultStack`
      */
     @objc
-    public static func addInMemoryStorageAndWait() throws -> CSInMemoryStore {
+    public static func addInMemoryStorageAndWaitAndReturnError(error: NSErrorPointer) -> CSInMemoryStore? {
         
-        return try bridge {
-            
-            try CoreStore.addStorageAndWait(InMemoryStore)
-        }
+        return self.defaultStack.addInMemoryStorageAndWaitAndReturnError(error)
     }
     
     /**
@@ -95,12 +92,9 @@ public extension CSCoreStore {
      - returns: the `CSSQLiteStore` added to the `defaultStack`
      */
     @objc
-    public static func addSQLiteStorageAndWait() throws -> CSSQLiteStore {
+    public static func addSQLiteStorageAndWaitAndReturnError(error: NSErrorPointer) -> CSSQLiteStore? {
         
-        return try bridge {
-            
-            try CoreStore.addStorageAndWait(SQLiteStore)
-        }
+        return self.defaultStack.addSQLiteStorageAndWaitAndReturnError(error)
     }
     
     /**
@@ -116,12 +110,9 @@ public extension CSCoreStore {
      - returns: the `CSInMemoryStore` added to the `defaultStack`
      */
     @objc
-    public static func addInMemoryStorageAndWait(storage: CSInMemoryStore) throws -> CSInMemoryStore {
+    public static func addInMemoryStorageAndWait(storage: CSInMemoryStore, error: NSErrorPointer) -> CSInMemoryStore? {
         
-        return try bridge {
-            
-            try CoreStore.addStorageAndWait(storage.bridgeToSwift)
-        }
+        return self.defaultStack.addInMemoryStorageAndWait(storage, error: error)
     }
     
     /**
@@ -137,11 +128,8 @@ public extension CSCoreStore {
      - returns: the `CSSQLiteStore` added to the `defaultStack`
      */
     @objc
-    public static func addSQLiteStorageAndWait(storage: CSSQLiteStore) throws -> CSSQLiteStore {
+    public static func addSQLiteStorageAndWait(storage: CSSQLiteStore, error: NSErrorPointer) -> CSSQLiteStore? {
         
-        return try bridge {
-            
-            try CoreStore.addStorageAndWait(storage.bridgeToSwift)
-        }
+        return self.defaultStack.addSQLiteStorageAndWait(storage, error: error)
     }
 }

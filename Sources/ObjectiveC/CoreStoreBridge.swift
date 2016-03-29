@@ -92,13 +92,13 @@ internal func bridge(@noescape closure: () throws -> Void) throws {
     }
 }
 
-internal func bridge<T>(error: NSErrorPointer, @noescape _ closure: () throws -> T) -> T? {
+internal func bridge<T: CoreStoreSwiftType>(error: NSErrorPointer, @noescape _ closure: () throws -> T) -> T.ObjectiveCType? {
     
     do {
         
         let result = try closure()
         error.memory = nil
-        return result
+        return result.bridgeToObjectiveC
     }
     catch let swiftError {
         
