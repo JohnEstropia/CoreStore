@@ -34,24 +34,21 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     
     // MARK: Internal
     
-    internal convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
+    internal convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
             fetchRequest: fetchRequest,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses
+            applyFetchClauses: applyFetchClauses
         )
     }
     
-    internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
+    internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
         from?.applyToFetchRequest(fetchRequest, context: context, applyAffectedStores: false)
-        for clause in fetchClauses {
-            
-            clause.applyToFetchRequest(fetchRequest)
-        }
+        applyFetchClauses(fetchRequest: fetchRequest)
         
         if let from = from {
             

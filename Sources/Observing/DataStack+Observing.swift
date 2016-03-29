@@ -36,7 +36,7 @@ import CoreData
 public extension DataStack {
     
     /**
-     Creates a `ObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
+     Creates an `ObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
      
      - parameter object: the `NSManagedObject` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
@@ -48,11 +48,7 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to observe objects from \(typeName(self)) outside the main thread."
         )
-        
-        return ObjectMonitor(
-            dataStack: self,
-            object: object
-        )
+        return ObjectMonitor(dataStack: self, object: object)
     }
     
     /**
@@ -83,15 +79,17 @@ public extension DataStack {
             "Attempted to observe objects from \(typeName(self)) outside the main thread."
         )
         CoreStore.assert(
-            fetchClauses.filter { $0 is OrderBy }.count > 0,
+            fetchClauses.contains { $0 is OrderBy },
             "A ListMonitor requires an OrderBy clause."
         )
-        
         return ListMonitor(
             dataStack: self,
             from: from,
             sectionBy: nil,
-            fetchClauses: fetchClauses
+            applyFetchClauses: { fetchRequest in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            }
         )
     }
     
@@ -121,15 +119,17 @@ public extension DataStack {
             "Attempted to observe objects from \(typeName(self)) outside the main thread."
         )
         CoreStore.assert(
-            fetchClauses.filter { $0 is OrderBy }.count > 0,
+            fetchClauses.contains { $0 is OrderBy },
             "A ListMonitor requires an OrderBy clause."
         )
-        
         _ = ListMonitor(
             dataStack: self,
             from: from,
             sectionBy: nil,
-            fetchClauses: fetchClauses,
+            applyFetchClauses: { fetchRequest in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            },
             createAsynchronously: createAsynchronously
         )
     }
@@ -164,7 +164,7 @@ public extension DataStack {
             "Attempted to observe objects from \(typeName(self)) outside the main thread."
         )
         CoreStore.assert(
-            fetchClauses.filter { $0 is OrderBy }.count > 0,
+            fetchClauses.contains { $0 is OrderBy },
             "A ListMonitor requires an OrderBy clause."
         )
         
@@ -172,7 +172,10 @@ public extension DataStack {
             dataStack: self,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses
+            applyFetchClauses: { fetchRequest in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            }
         )
     }
     
@@ -204,7 +207,7 @@ public extension DataStack {
             "Attempted to observe objects from \(typeName(self)) outside the main thread."
         )
         CoreStore.assert(
-            fetchClauses.filter { $0 is OrderBy }.count > 0,
+            fetchClauses.contains { $0 is OrderBy },
             "A ListMonitor requires an OrderBy clause."
         )
         
@@ -212,7 +215,10 @@ public extension DataStack {
             dataStack: self,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
+            applyFetchClauses: { fetchRequest in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            },
             createAsynchronously: createAsynchronously
         )
     }

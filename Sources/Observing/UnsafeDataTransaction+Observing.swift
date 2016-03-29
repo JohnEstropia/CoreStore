@@ -82,7 +82,10 @@ public extension UnsafeDataTransaction {
             unsafeTransaction: self,
             from: from,
             sectionBy: nil,
-            fetchClauses: fetchClauses
+            applyFetchClauses: { fetchRequest in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            }
         )
     }
     
@@ -116,7 +119,10 @@ public extension UnsafeDataTransaction {
             unsafeTransaction: self,
             from: from,
             sectionBy: nil,
-            fetchClauses: fetchClauses,
+            applyFetchClauses: { fetchRequest in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            },
             createAsynchronously: createAsynchronously
         )
     }
@@ -155,7 +161,10 @@ public extension UnsafeDataTransaction {
             unsafeTransaction: self,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses
+            applyFetchClauses: { fetchRequest in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            }
         )
     }
     
@@ -191,7 +200,10 @@ public extension UnsafeDataTransaction {
             unsafeTransaction: self,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
+            applyFetchClauses: { fetchRequest in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            },
             createAsynchronously: createAsynchronously
         )
     }

@@ -42,7 +42,10 @@ public extension NSFetchedResultsController {
             fetchRequest: fetchRequest,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses
+            applyFetchClauses: { fetchRequest in
+            
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            }
         )
     }
     
@@ -57,7 +60,10 @@ public extension NSFetchedResultsController {
             fetchRequest: fetchRequest,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses
+            applyFetchClauses: { fetchRequest in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            }
         )
     }
 }

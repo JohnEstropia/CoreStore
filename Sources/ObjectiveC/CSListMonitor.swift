@@ -485,7 +485,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - parameter observer: a `CSListObserver` to unregister notifications to
      */
     @objc
-    public func removeObserver(observer: CSListObserver) {
+    public func removeListObserver(observer: CSListObserver) {
         
         self.bridgeToSwift.unregisterObserver(observer)
     }
@@ -509,6 +509,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Note that only specified clauses will be changed; unspecified clauses will use previous values.
      */
+    @objc
     public func refetch(fetchClauses: [CSFetchClause]) {
         
         self.bridgeToSwift.refetch { (fetchRequest) in
@@ -537,6 +538,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
     
     // MARK: CoreStoreObjectiveCType
     
+    @nonobjc
     public let bridgeToSwift: ListMonitor<NSManagedObject>
     
     @nonobjc

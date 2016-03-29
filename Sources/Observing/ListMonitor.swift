@@ -647,50 +647,50 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     internal var didInsertSectionKey: Void?
     internal var didDeleteSectionKey: Void?
     
-    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
             transactionQueue: dataStack.childTransactionQueue,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
+            applyFetchClauses: applyFetchClauses,
             createAsynchronously: nil
         )
     }
     
-    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void, createAsynchronously: (ListMonitor<T>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
             transactionQueue: dataStack.childTransactionQueue,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
+            applyFetchClauses: applyFetchClauses,
             createAsynchronously: createAsynchronously
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause]) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
             transactionQueue: unsafeTransaction.transactionQueue,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
+            applyFetchClauses: applyFetchClauses,
             createAsynchronously: nil
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: (ListMonitor<T>) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void, createAsynchronously: (ListMonitor<T>) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
             transactionQueue: unsafeTransaction.transactionQueue,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses,
+            applyFetchClauses: applyFetchClauses,
             createAsynchronously: createAsynchronously
         )
     }
@@ -984,7 +984,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteSectionKey, inObject: observer)
     }
     
-    internal func refetch(applyClauses: (fetchRequest: NSFetchRequest) -> Void) {
+    internal func refetch(applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
         CoreStore.assert(
             NSThread.isMainThread(),
@@ -1000,6 +1000,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                 object: self
             )
         }
+        self.applyFetchClauses = applyFetchClauses
         
         self.taskGroup.notify(.Main) { [weak self] () -> Void in
             
@@ -1009,7 +1010,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             }
             
             self.fetchedResultsControllerDelegate.enabled = false
-            applyClauses(fetchRequest: self.fetchedResultsController.fetchRequest)
+            self.applyFetchClauses(fetchRequest: self.fetchedResultsController.fetchRequest)
             
             self.transactionQueue.async { [weak self] in
                 
@@ -1055,6 +1056,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     private var observerForDidChangePersistentStore: NotificationObserver!
     private let taskGroup = GCDGroup()
     private let transactionQueue: GCDQueue
+    private var applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void
     
     private var isPersistentStoreChanging: Bool = false {
         
@@ -1077,7 +1079,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         }
     }
     
-    private init(context: NSManagedObjectContext, transactionQueue: GCDQueue, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: ((ListMonitor<T>) -> Void)?) {
+    private init(context: NSManagedObjectContext, transactionQueue: GCDQueue, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void, createAsynchronously: ((ListMonitor<T>) -> Void)?) {
         
         let fetchRequest = NSFetchRequest()
         fetchRequest.fetchLimit = 0
@@ -1091,7 +1093,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             fetchRequest: fetchRequest,
             from: from,
             sectionBy: sectionBy,
-            fetchClauses: fetchClauses
+            applyFetchClauses: applyFetchClauses
         )
         
         let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
@@ -1108,6 +1110,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             self.sectionIndexTransformer = { $0 }
         }
         self.transactionQueue = transactionQueue
+        self.applyFetchClauses = applyFetchClauses
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
@@ -1134,7 +1137,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                         
                         return
                 }
-                self.refetch(fetchClauses)
+                self.refetch(self.applyFetchClauses)
             }
         )
         
@@ -1157,7 +1160,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     if previousStores != currentStores {
                         
-                        self.refetch(fetchClauses)
+                        self.refetch(self.applyFetchClauses)
                     }
                 }
                 

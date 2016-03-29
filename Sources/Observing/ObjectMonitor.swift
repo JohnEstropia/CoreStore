@@ -74,13 +74,63 @@ public final class ObjectMonitor<T: NSManagedObject> {
      */
     public func addObserver<U: ObjectObserver where U.ObjectEntityType == T>(observer: U) {
         
+        self.unregisterObserver(observer)
+        self.registerObserver(
+            observer,
+            willChangeObject: { (observer, monitor, object) in
+                
+                observer.objectMonitor(monitor, willUpdateObject: object)
+            },
+            didDeleteObject: { (observer, monitor, object) in
+                
+                observer.objectMonitor(monitor, didDeleteObject: object)
+            },
+            didUpdateObject: { (observer, monitor, object, changedPersistentKeys) in
+                
+                observer.objectMonitor(monitor, didUpdateObject: object, changedPersistentKeys: changedPersistentKeys)
+            }
+        )
+    }
+    
+    /**
+     Unregisters an `ObjectObserver` from receiving notifications for changes to the receiver's `object`.
+     
+     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
+     
+     - parameter observer: an `ObjectObserver` to unregister notifications to
+     */
+    public func removeObserver<U: ObjectObserver where U.ObjectEntityType == T>(observer: U) {
+        
+        self.unregisterObserver(observer)
+    }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        return ObjectIdentifier(self).hashValue
+    }
+    
+    
+    // MARK: Internal
+    
+    internal convenience init(dataStack: DataStack, object: T) {
+        
+        self.init(context: dataStack.mainContext, object: object)
+    }
+    
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, object: T) {
+        
+        self.init(context: unsafeTransaction.context, object: object)
+    }
+    
+    internal func registerObserver<U: AnyObject>(observer: U, willChangeObject: (observer: U, monitor: ObjectMonitor<T>, object: T) -> Void, didDeleteObject: (observer: U, monitor: ObjectMonitor<T>, object: T) -> Void, didUpdateObject: (observer: U, monitor: ObjectMonitor<T>, object: T, changedPersistentKeys: Set<String>) -> Void) {
+        
         CoreStore.assert(
             NSThread.isMainThread(),
             "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
         )
-        
-        self.removeObserver(observer)
-        
         self.registerChangeNotification(
             &self.willChangeObjectKey,
             name: ObjectMonitorWillChangeObjectNotification,
@@ -91,7 +141,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
                     
                     return
                 }
-                observer.objectMonitor(monitor, willUpdateObject: object)
+                willChangeObject(observer: observer, monitor: monitor, object: object)
             }
         )
         self.registerObjectNotification(
@@ -104,7 +154,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
                     
                     return
                 }
-                observer.objectMonitor(monitor, didDeleteObject: object)
+                didDeleteObject(observer: observer, monitor: monitor, object: object)
             }
         )
         self.registerObjectNotification(
@@ -131,23 +181,17 @@ public final class ObjectMonitor<T: NSManagedObject> {
                 }
                 
                 self.lastCommittedAttributes = currentCommitedAttributes
-                observer.objectMonitor(
-                    monitor,
-                    didUpdateObject: object,
+                didUpdateObject(
+                    observer: observer,
+                    monitor: monitor,
+                    object: object,
                     changedPersistentKeys: changedKeys
                 )
             }
         )
     }
     
-    /**
-     Unregisters an `ObjectObserver` from receiving notifications for changes to the receiver's `object`.
-     
-     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
-     
-     - parameter observer: an `ObjectObserver` to unregister notifications to
-     */
-    public func removeObserver<U: ObjectObserver where U.ObjectEntityType == T>(observer: U) {
+    internal func unregisterObserver(observer: AnyObject) {
         
         CoreStore.assert(
             NSThread.isMainThread(),
@@ -160,45 +204,9 @@ public final class ObjectMonitor<T: NSManagedObject> {
         setAssociatedRetainedObject(nilValue, forKey: &self.didUpdateObjectKey, inObject: observer)
     }
     
-    
-    // MARK: Internal
-    
-    internal convenience init(dataStack: DataStack, object: T) {
+    internal func upcast() -> ObjectMonitor<NSManagedObject> {
         
-        self.init(context: dataStack.mainContext, object: object)
-    }
-    
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, object: T) {
-        
-        self.init(context: unsafeTransaction.context, object: object)
-    }
-    
-    private init(context: NSManagedObjectContext, object: T) {
-        
-        let fetchRequest = NSFetchRequest()
-        fetchRequest.entity = object.entity
-        fetchRequest.fetchLimit = 0
-        fetchRequest.resultType = .ManagedObjectResultType
-        fetchRequest.sortDescriptors = []
-        fetchRequest.includesPendingChanges = false
-        fetchRequest.shouldRefreshRefetchedObjects = true
-        
-        let fetchedResultsController = CoreStoreFetchedResultsController(
-            context: context,
-            fetchRequest: fetchRequest,
-            fetchClauses: [Where("SELF", isEqualTo: object.objectID)]
-        )
-        
-        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
-        
-        self.fetchedResultsController = fetchedResultsController
-        self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
-        
-        fetchedResultsControllerDelegate.handler = self
-        fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
-        try! fetchedResultsController.performFetchFromSpecifiedStores()
-        
-        self.lastCommittedAttributes = (self.object?.committedValuesForKeys(nil) as? [String: NSObject]) ?? [:]
+        return unsafeBitCast(self, ObjectMonitor<NSManagedObject>.self)
     }
     
     deinit {
@@ -216,6 +224,35 @@ public final class ObjectMonitor<T: NSManagedObject> {
     private var willChangeObjectKey: Void?
     private var didDeleteObjectKey: Void?
     private var didUpdateObjectKey: Void?
+    
+    private init(context: NSManagedObjectContext, object: T) {
+        
+        let fetchRequest = NSFetchRequest()
+        fetchRequest.entity = object.entity
+        fetchRequest.fetchLimit = 0
+        fetchRequest.resultType = .ManagedObjectResultType
+        fetchRequest.sortDescriptors = []
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.shouldRefreshRefetchedObjects = true
+        
+        let objectID = object.objectID
+        let fetchedResultsController = CoreStoreFetchedResultsController(
+            context: context,
+            fetchRequest: fetchRequest,
+            applyFetchClauses: Where("SELF", isEqualTo: objectID).applyToFetchRequest
+        )
+        
+        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
+        
+        self.fetchedResultsController = fetchedResultsController
+        self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
+        
+        fetchedResultsControllerDelegate.handler = self
+        fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
+        try! fetchedResultsController.performFetchFromSpecifiedStores()
+        
+        self.lastCommittedAttributes = (self.object?.committedValuesForKeys(nil) as? [String: NSObject]) ?? [:]
+    }
     
     private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<T>) -> Void) {
         

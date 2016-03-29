@@ -33,7 +33,7 @@ import CoreData
 public extension CoreStore {
     
     /**
-     Using the `defaultStack`, creates a `ObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
+     Using the `defaultStack`, creates an `ObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
      
      - parameter object: the `NSManagedObject` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
@@ -52,9 +52,9 @@ public extension CoreStore {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public static func monitorList<T: NSManagedObject>(from: From<T>, _ queryClauses: FetchClause...) -> ListMonitor<T> {
+    public static func monitorList<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
-        return self.defaultStack.monitorList(from, queryClauses)
+        return self.defaultStack.monitorList(from, fetchClauses)
     }
     
     /**
@@ -65,9 +65,9 @@ public extension CoreStore {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public static func monitorList<T: NSManagedObject>(from: From<T>, _ queryClauses: [FetchClause]) -> ListMonitor<T> {
+    public static func monitorList<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
-        return self.defaultStack.monitorList(from, queryClauses)
+        return self.defaultStack.monitorList(from, fetchClauses)
     }
     
     /**
