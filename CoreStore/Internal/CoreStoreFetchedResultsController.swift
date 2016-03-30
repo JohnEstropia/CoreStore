@@ -94,6 +94,11 @@ internal final class CoreStoreFetchedResultsController<T: NSManagedObject>: NSFe
         try self.performFetch()
     }
     
+    deinit {
+        
+        self.delegate = nil
+    }
+    
     
     // MARK: Private
     
