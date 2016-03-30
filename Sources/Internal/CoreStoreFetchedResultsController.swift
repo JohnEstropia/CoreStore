@@ -52,7 +52,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         
         if let from = from {
             
-            self.reapplyAffectedStores = {
+            self.reapplyAffectedStores = { fetchRequest, context in
                 
                 return from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
             }
@@ -64,7 +64,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
                 fatalError("Attempted to create an \(typeName(NSFetchedResultsController)) without a  From clause or an NSEntityDescription.")
             }
             
-            self.reapplyAffectedStores = {
+            self.reapplyAffectedStores = { fetchRequest, context in
                 
                 return from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
             }
@@ -80,7 +80,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     
     internal func performFetchFromSpecifiedStores() throws {
         
-        if !self.reapplyAffectedStores() {
+        if !self.reapplyAffectedStores(fetchRequest: self.fetchRequest, context: self.managedObjectContext) {
             
             CoreStore.log(
                 .Warning,
@@ -90,8 +90,13 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         try self.performFetch()
     }
     
+    deinit {
+        
+        self.delegate = nil
+    }
+    
     
     // MARK: Private
     
-    private let reapplyAffectedStores: () -> Bool
+    private let reapplyAffectedStores: (fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Bool
 }

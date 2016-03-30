@@ -84,7 +84,7 @@ internal extension NSManagedObjectContext {
         
         var result = SaveResult(hasChanges: false)
         
-        self.performBlockAndWait { [unowned self] () -> Void in
+        self.performBlockAndWait {
             
             guard self.hasChanges else {
                 
@@ -129,7 +129,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func saveAsynchronouslyWithCompletion(completion: ((result: SaveResult) -> Void) = { _ in }) {
         
-        self.performBlock { () -> Void in
+        self.performBlock {
             
             guard self.hasChanges else {
                 
