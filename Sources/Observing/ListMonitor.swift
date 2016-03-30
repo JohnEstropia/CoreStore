@@ -891,6 +891,7 @@ public final class ListMonitor<T: NSManagedObject> {
                 object: self
             )
         }
+        self.fetchClauses = fetchClauses
         
         self.taskGroup.notify(.Main) { [weak self] () -> Void in
             
@@ -902,7 +903,7 @@ public final class ListMonitor<T: NSManagedObject> {
             self.fetchedResultsControllerDelegate.enabled = false
             
             let fetchRequest = self.fetchedResultsController.fetchRequest
-            for clause in fetchClauses {
+            for clause in self.fetchClauses {
                 
                 clause.applyToFetchRequest(fetchRequest)
             }
@@ -1019,6 +1020,7 @@ public final class ListMonitor<T: NSManagedObject> {
             self.sectionIndexTransformer = { $0 }
         }
         self.transactionQueue = transactionQueue
+        self.fetchClauses = fetchClauses
         
         fetchedResultsControllerDelegate.handler = self
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
@@ -1045,7 +1047,7 @@ public final class ListMonitor<T: NSManagedObject> {
                         
                         return
                 }
-                self.refetch(fetchClauses)
+                self.refetch(self.fetchClauses)
             }
         )
         
@@ -1068,7 +1070,7 @@ public final class ListMonitor<T: NSManagedObject> {
                     
                     if previousStores != currentStores {
                         
-                        self.refetch(fetchClauses)
+                        self.refetch(self.fetchClauses)
                     }
                 }
                 
@@ -1130,6 +1132,7 @@ public final class ListMonitor<T: NSManagedObject> {
     private var observerForDidChangePersistentStore: NotificationObserver!
     private let taskGroup = GCDGroup()
     private let transactionQueue: GCDQueue
+    private var fetchClauses: [FetchClause]
     
     private var willChangeListKey: Void?
     private var didChangeListKey: Void?
