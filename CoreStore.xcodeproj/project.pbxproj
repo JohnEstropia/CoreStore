@@ -283,7 +283,6 @@
 		B5D9E32F1CA2C317007A9D52 /* CoreStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A53519C5C6DA005002A5 /* CoreStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B5D9E3431CA2C6C4007A9D52 /* GCDBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E3371CA2C6BF007A9D52 /* GCDBlock.swift */; };
 		B5D9E3441CA2C6C4007A9D52 /* GCDGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E3381CA2C6BF007A9D52 /* GCDGroup.swift */; };
-		B5D9E3451CA2C6C4007A9D52 /* GCDKit.h in Headers */ = {isa = PBXBuildFile; fileRef = B5D9E3391CA2C6BF007A9D52 /* GCDKit.h */; };
 		B5D9E3461CA2C6C4007A9D52 /* GCDQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E33A1CA2C6BF007A9D52 /* GCDQueue.swift */; };
 		B5D9E3471CA2C6C4007A9D52 /* GCDSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E33B1CA2C6BF007A9D52 /* GCDSemaphore.swift */; };
 		B5D9E3481CA2C6C4007A9D52 /* GCDTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D9E33C1CA2C6BF007A9D52 /* GCDTimer.swift */; };
@@ -407,7 +406,6 @@
 		B5D9E3341CA2C317007A9D52 /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5D9E3371CA2C6BF007A9D52 /* GCDBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDBlock.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDBlock.swift; sourceTree = "<group>"; };
 		B5D9E3381CA2C6BF007A9D52 /* GCDGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDGroup.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDGroup.swift; sourceTree = "<group>"; };
-		B5D9E3391CA2C6BF007A9D52 /* GCDKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDKit.h; path = Carthage/Checkouts/GCDKit/Sources/GCDKit.h; sourceTree = "<group>"; };
 		B5D9E33A1CA2C6BF007A9D52 /* GCDQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDQueue.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDQueue.swift; sourceTree = "<group>"; };
 		B5D9E33B1CA2C6BF007A9D52 /* GCDSemaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDSemaphore.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDSemaphore.swift; sourceTree = "<group>"; };
 		B5D9E33C1CA2C6BF007A9D52 /* GCDTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDTimer.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDTimer.swift; sourceTree = "<group>"; };
@@ -647,7 +645,6 @@
 			children = (
 				B5D9E3371CA2C6BF007A9D52 /* GCDBlock.swift */,
 				B5D9E3381CA2C6BF007A9D52 /* GCDGroup.swift */,
-				B5D9E3391CA2C6BF007A9D52 /* GCDKit.h */,
 				B5D9E33A1CA2C6BF007A9D52 /* GCDQueue.swift */,
 				B5D9E33B1CA2C6BF007A9D52 /* GCDSemaphore.swift */,
 				B5D9E33C1CA2C6BF007A9D52 /* GCDTimer.swift */,
@@ -819,7 +816,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5D9E3451CA2C6C4007A9D52 /* GCDKit.h in Headers */,
 				B5D9E32F1CA2C317007A9D52 /* CoreStore.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
