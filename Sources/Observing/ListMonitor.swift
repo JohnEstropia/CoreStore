@@ -830,7 +830,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didChange(observer: observer, monitor: monitor)
+                didRefetch(observer: observer, monitor: monitor)
             }
         )
     }
