@@ -1,5 +1,5 @@
 //
-//  CSDataStack+Migrating.swift
+//  CSCoreStore+Migrating.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia
@@ -27,15 +27,15 @@ import Foundation
 import CoreData
 
 
-// MARK: - CSDataStack
+// MARK: - CSCoreStore
 
-public extension CSDataStack {
+public extension CSCoreStore {
     
     /**
-     Asynchronously adds a `CSInMemoryStore` to the stack. Migrations are also initiated by default.
+     Asynchronously adds a `CSInMemoryStore` to the `defaultStack`. Migrations are also initiated by default.
      ```
      NSError *error;
-     NSProgress *migrationProgress = [dataStack 
+     NSProgress *migrationProgress = [dataStack
          addInMemoryStorage:[CSInMemoryStore new]
          completion:^(CSSetupResult *result) {
              if (result.isSuccess) {
@@ -48,26 +48,19 @@ public extension CSDataStack {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously.
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
-    @objc
-    public func addInMemoryStorage(storage: CSInMemoryStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> NSProgress? {
+    public static func addInMemoryStorage(storage: CSInMemoryStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> NSProgress? {
         
-        return bridge(error) {
-            
-            try self.bridgeToSwift.addStorage(
-                storage.bridgeToSwift,
-                completion: { completion($0.bridgeToObjectiveC) }
-            )
-        }
+        return self.defaultStack.addInMemoryStorage(storage, completion: completion, error: error)
     }
     
     /**
-     Asynchronously adds a `CSSQLiteStore` to the stack. Migrations are also initiated by default.
+     Asynchronously adds a `CSSQLiteStore` to the `defaultStack`. Migrations are also initiated by default.
      ```
      NSError *error;
      NSProgress *migrationProgress = [dataStack
-         addInMemoryStorage:[[CSSQLiteStore alloc] 
-             initWithFileName:@"core_data.sqlite"
-             configuration:@"Config1"]
+         addInMemoryStorage:[[CSSQLiteStore alloc]
+         initWithFileName:@"core_data.sqlite"
+         configuration:@"Config1"]
          completion:^(CSSetupResult *result) {
              if (result.isSuccess) {
                  // ...
@@ -79,50 +72,34 @@ public extension CSDataStack {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously. Note that the `CSLocalStorage` associated to the `-[CSSetupResult storage]` may not always be the same instance as the parameter argument if a previous `CSLocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
-    @objc
-    public func addSQLiteStorage(storage: CSSQLiteStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> NSProgress? {
+    public static func addSQLiteStorage(storage: CSSQLiteStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> NSProgress? {
         
-        return bridge(error) {
-            
-            try self.bridgeToSwift.addStorage(
-                storage.bridgeToSwift,
-                completion: { completion($0.bridgeToObjectiveC) }
-            )
-        }
+        return self.defaultStack.addSQLiteStorage(storage, completion: completion, error: error)
     }
     
     /**
-     Migrates a `CSSQLiteStore` to match the `CSDataStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
+     Migrates a `CSSQLiteStore` to match the `defaultStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
      
      - parameter storage: the `CSSQLiteStore` instance
      - parameter completion: the closure to be executed on the main queue when the migration completes, either due to success or failure. The closure's `CSMigrationResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously.
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
     @objc
-    public func upgradeStorageIfNeeded(storage: CSSQLiteStore, completion: (CSMigrationResult) -> Void, error: NSErrorPointer) -> NSProgress? {
+    public static func upgradeStorageIfNeeded(storage: CSSQLiteStore, completion: (CSMigrationResult) -> Void, error: NSErrorPointer) -> NSProgress? {
         
-        return bridge(error) {
-            
-            try self.bridgeToSwift.upgradeStorageIfNeeded(
-                storage.bridgeToSwift,
-                completion: { completion($0.bridgeToObjectiveC) }
-            )
-        }
+        return self.defaultStack.upgradeStorageIfNeeded(storage, completion: completion, error: error)
     }
     
     /**
-     Checks the migration steps required for the `CSSQLiteStore` to match the `CSDataStack`'s managed object model version.
+     Checks the migration steps required for the `CSSQLiteStore` to match the `defaultStack`'s managed object model version.
      
      - parameter storage: the `CSSQLiteStore` instance
      - returns: a `CSMigrationType` array indicating the migration steps required for the store, or an empty array if the file does not exist yet. Otherwise, `nil` is returned and the `error` argument is set if either inspection of the store failed, or if no mapping model was found/inferred.
      */
     @objc
     @warn_unused_result
-    public func requiredMigrationsForSQLiteStore(storage: CSSQLiteStore, error: NSErrorPointer) -> [CSMigrationType]? {
+    public static func requiredMigrationsForSQLiteStore(storage: CSSQLiteStore, error: NSErrorPointer) -> [CSMigrationType]? {
         
-        return bridge(error) {
-            
-            try self.bridgeToSwift.requiredMigrationsForStorage(storage.bridgeToSwift)
-        }
+        return self.defaultStack.requiredMigrationsForSQLiteStore(storage, error: error)
     }
 }

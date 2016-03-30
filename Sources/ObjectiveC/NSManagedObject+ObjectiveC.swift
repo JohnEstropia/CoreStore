@@ -1,8 +1,8 @@
 //
-//  NSManagedObject+Convenience.swift
+//  NSManagedObject+ObjectiveC.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2016 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -32,51 +32,45 @@ import CoreData
 public extension NSManagedObject {
     
     /**
-     Provides a convenience wrapper for accessing `primitiveValueForKey(...)` with proper calls to `willAccessValueForKey(...)` and `didAccessValueForKey(...)`. This is useful when implementing accessor methods for transient attributes.
+     Provides a convenience wrapper for accessing `-primitiveValueForKey:` with proper calls to `-willAccessValueForKey:` and `-didAccessValueForKey:`. This is useful when implementing accessor methods for transient attributes.
      
      - parameter KVCKey: the KVC key
      - returns: the primitive value for the KVC key
      */
-    @nonobjc
+    @objc
     @warn_unused_result
-    public func accessValueForKVCKey(KVCKey: KeyPath) -> AnyObject? {
+    public func cs_accessValueForKVCKey(KVCKey: KeyPath) -> AnyObject? {
         
-        self.willAccessValueForKey(KVCKey)
-        let primitiveValue: AnyObject? = self.primitiveValueForKey(KVCKey)
-        self.didAccessValueForKey(KVCKey)
-        
-        return primitiveValue
+        return self.accessValueForKVCKey(KVCKey)
     }
     
     /**
-     Provides a convenience wrapper for setting `setPrimitiveValue(...)` with proper calls to `willChangeValueForKey(...)` and `didChangeValueForKey(...)`. This is useful when implementing mutator methods for transient attributes.
+     Provides a convenience wrapper for setting `-setPrimitiveValue:` with proper calls to `-willChangeValueForKey:` and `-didChangeValueForKey:`. This is useful when implementing mutator methods for transient attributes.
      
      - parameter value: the value to set the KVC key with
      - parameter KVCKey: the KVC key
      */
-    @nonobjc
-    public func setValue(value: AnyObject?, forKVCKey KVCKey: KeyPath) {
+    @objc
+    public func cs_setValue(value: AnyObject?, forKVCKey KVCKey: KeyPath) {
         
-        self.willChangeValueForKey(KVCKey)
-        self.setPrimitiveValue(value, forKey: KVCKey)
-        self.didChangeValueForKey(KVCKey)
+        self.setValue(value, forKVCKey: KVCKey)
     }
     
     /**
      Re-faults the object to use the latest values from the persistent store
      */
-    @nonobjc
-    public func refreshAsFault() {
+    @objc
+    public func cs_refreshAsFault() {
         
-        self.managedObjectContext?.refreshObject(self, mergeChanges: false)
+        self.refreshAsFault()
     }
     
     /**
      Re-faults the object to use the latest values from the persistent store and merges previously pending changes back
      */
     @nonobjc
-    public func refreshAndMerge() {
+    public func cs_refreshAndMerge() {
         
-        self.managedObjectContext?.refreshObject(self, mergeChanges: true)
+        self.refreshAndMerge()
     }
 }

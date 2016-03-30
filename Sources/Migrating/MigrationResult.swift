@@ -57,7 +57,7 @@ import Foundation
  }
  ```
  */
-public enum MigrationResult {
+public enum MigrationResult: BooleanType, Hashable {
     
     /**
      `MigrationResult.Success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
@@ -68,6 +68,34 @@ public enum MigrationResult {
      `SaveResult.Failure` indicates that the migration failed. The associated object for this value is the a `CoreStoreError` enum value.
      */
     case Failure(CoreStoreError)
+    
+    
+    // MARK: BooleanType
+    
+    public var boolValue: Bool {
+        
+        switch self {
+            
+        case .Success: return true
+        case .Failure: return false
+        }
+    }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        switch self {
+            
+        case .Success(let migrationTypes):
+            return self.boolValue.hashValue
+                ^ migrationTypes.map { $0.hashValue }.reduce(0, combine: ^).hashValue
+            
+        case .Failure(let error):
+            return self.boolValue.hashValue ^ error.hashValue
+        }
+    }
     
     
     // MARK: Internal
@@ -89,16 +117,20 @@ public enum MigrationResult {
 }
 
 
-// MARK: - MigrationResult: BooleanType
+// MARK: - SetupResult: Equatable
 
-extension MigrationResult: BooleanType {
+@warn_unused_result
+public func == (lhs: MigrationResult, rhs: MigrationResult) -> Bool {
     
-    public var boolValue: Bool {
+    switch (lhs, rhs) {
         
-        switch self {
-            
-        case .Success: return true
-        case .Failure: return false
-        }
+    case (.Success(let migrationTypes1), .Success(let migrationTypes2)):
+        return migrationTypes1 == migrationTypes2
+        
+    case (.Failure(let error1), .Failure(let error2)):
+        return error1 == error2
+        
+    default:
+        return false
     }
 }

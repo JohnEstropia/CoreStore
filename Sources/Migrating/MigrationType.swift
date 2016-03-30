@@ -31,7 +31,7 @@ import Foundation
 /**
  The `MigrationType` specifies the type of migration required for a store.
  */
-public enum MigrationType: BooleanType {
+public enum MigrationType: BooleanType, Hashable {
     
     /**
      Indicates that the persistent store matches the latest model version and no migration is needed
@@ -119,5 +119,46 @@ public enum MigrationType: BooleanType {
         case .Lightweight:  return true
         case .Heavyweight:  return true
         }
+    }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        let preHash = self.boolValue.hashValue ^ self.isHeavyweightMigration.hashValue
+        switch self {
+            
+        case .None(let version):
+            return preHash ^ version.hashValue
+            
+        case .Lightweight(let sourceVersion, let destinationVersion):
+            return preHash ^ sourceVersion.hashValue ^ destinationVersion.hashValue
+            
+        case .Heavyweight(let sourceVersion, let destinationVersion):
+            return preHash ^ sourceVersion.hashValue ^ destinationVersion.hashValue
+        }
+    }
+}
+
+
+// MARK: - MigrationType: Equatable
+
+@warn_unused_result
+public func == (lhs: MigrationType, rhs: MigrationType) -> Bool {
+    
+    switch (lhs, rhs) {
+        
+    case (.None(let version1), .None(let version2)):
+        return version1 == version2
+        
+    case (.Lightweight(let source1, let destination1), .Lightweight(let source2, let destination2)):
+        return source1 == source2 && destination1 == destination2
+        
+    case (.Heavyweight(let source1, let destination1), .Heavyweight(let source2, let destination2)):
+        return source1 == source2 && destination1 == destination2
+        
+    default:
+        return false
     }
 }

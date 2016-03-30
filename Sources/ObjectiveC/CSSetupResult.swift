@@ -36,67 +36,53 @@ import CoreData
 public final class CSSetupResult: NSObject {
     
     /**
-     `YES` if the `commit` operation for the transaction succeeded, either because the save succeeded or because there were no changes to save. Returns `NO` to indicate failure.
+     `YES` if adding the `CSStorageInterface` to the `CSDataStack` succeeded, `NO` otherwise.
      */
     @objc
     public var isSuccess: Bool {
         
-        return self.bridgeToSwift.boolValue
+        return self.storage != nil
     }
     
     /**
-     `YES` if the `commit` operation for the transaction failed, or `NO` otherwise. When `YES`, the `error` property returns the actual `NSError` for the failure.
+     `YES` if adding the `CSStorageInterface` to the `CSDataStack` failed, `NO` otherwise. When `YES`, the `error` property returns the actual `NSError` for the failure.
      */
     @objc
     public var isFailure: Bool {
         
-        return !self.bridgeToSwift.boolValue
+        return self.storage == nil
     }
     
     /**
      A `CSStorageInterface` instance if the `commit` operation for the transaction succeeded. Returns `NO` otherwise.
      */
     @objc
-    public var storage: CSStorageInterface? {
-        
-        guard case .Success(let storage as CoreStoreSwiftType) = self.bridgeToSwift else {
-            
-            return nil
-        }
-        return storage.bridgeToObjectiveC
-    }
+    public let storage: CSStorageInterface?
     
     /**
      The `NSError` for a failed `commit` operation, or `nil` if the `commit` succeeded
      */
     @objc
-    public var error: NSError? {
-        
-        guard case .Failure(let error) = self.bridgeToSwift else {
-            
-            return nil
-        }
-        return error.bridgeToObjectiveC
-    }
+    public let error: NSError?
     
     /**
-     If the result was a success, the `success` block is executed with a `BOOL` argument that indicates if there were any changes made. If the result was a failure, the `failure` block is executed with an `NSError` argument pertaining to the actual error.
+     If the result was a success, the `success` block is executed with the `CSStorageInterface` instance that was added to the `CSDataStack`. If the result was a failure, the `failure` block is executed with an `NSError` argument pertaining to the actual error.
      
      The blocks are executed immediately as `@noescape` and will not be retained.
      
-     - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
-     - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actuall error.
+     - parameter success: the block to execute on success. The block passes a `CSStorageInterface` instance that was added to the `CSDataStack`.
+     - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
     public func handleSuccess(@noescape success: (storage: CSStorageInterface) -> Void, @noescape failure: (error: NSError) -> Void) {
         
-        switch self.bridgeToSwift {
+        if let storage = self.storage {
             
-        case .Success(let storage):
-            success(storage: storage.bridgeToObjectiveC)
+            success(storage: storage)
+        }
+        else {
             
-        case .Failure(let error):
-            failure(error: error.bridgeToObjectiveC)
+            failure(error: self.error!)
         }
     }
     
@@ -110,7 +96,7 @@ public final class CSSetupResult: NSObject {
     @objc
     public func handleSuccess(@noescape success: (storage: CSStorageInterface) -> Void) {
         
-        guard let storageInterface = self.storageInterface else {
+        guard let storage = self.storage else {
             
             return
         }
@@ -122,16 +108,16 @@ public final class CSSetupResult: NSObject {
      
      The block is executed immediately as `@noescape` and will not be retained.
      
-     - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actuall error.
+     - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
     public func handleFailure(@noescape failure: (error: NSError) -> Void) {
         
-        guard let coreStoreError = self.coreStoreError else {
+        guard let error = self.error else {
             
             return
         }
-        failure(error: coreStoreError.bridgeToObjectiveC)
+        failure(error: error)
     }
     
     
@@ -139,11 +125,11 @@ public final class CSSetupResult: NSObject {
     
     public override var hash: Int {
         
-        if let storageInterface = self.storageInterface {
+        if let storage = self.storage {
             
-            return self.isSuccess.hashValue ^ ObjectIdentifier(storageInterface).hashValue
+            return self.isSuccess.hashValue ^ ObjectIdentifier(storage).hashValue
         }
-        return self.isSuccess.hashValue ^ self.coreStoreError!.hashValue
+        return self.isSuccess.hashValue ^ self.error!.hashValue
     }
     
     public override func isEqual(object: AnyObject?) -> Bool {
@@ -152,36 +138,37 @@ public final class CSSetupResult: NSObject {
             
             return false
         }
-        return self.storageInterface === object.storageInterface
-            && self.coreStoreError == object.coreStoreError
+        return self.storage === object.storage
+            && self.error == object.error
     }
     
     
     // MARK: CoreStoreObjectiveCType
     
-    public required init<T: StorageInterface>(_ swiftValue: SetupResult<T>) {
+    public required init<T: StorageInterface where T: CoreStoreSwiftType, T.ObjectiveCType: CSStorageInterface>(_ swiftValue: SetupResult<T>) {
         
         switch swiftValue {
             
         case .Success(let storage):
-            self.storageInterface = storage
+            self.storage = storage.bridgeToObjectiveC
+            self.error = nil
             
         case .Failure(let error):
-            self.coreStoreError = error
+            self.storage = nil
+            self.error = error.bridgeToObjectiveC
         }
         super.init()
     }
-    
-    private var storageInterface: StorageInterface?
-    private var coreStoreError: CoreStoreError?
 }
 
 
 // MARK: - SetupResult
 
-extension SetupResult {
+extension SetupResult where T: CoreStoreSwiftType, T.ObjectiveCType: CSStorageInterface {
     
     // MARK: CoreStoreSwiftType
+    
+    public typealias ObjectiveCType = CSSetupResult
     
     public var bridgeToObjectiveC: CSSetupResult {
         

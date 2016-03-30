@@ -1,8 +1,8 @@
 //
-//  NSManagedObject+Convenience.swift
+//  NSFetchedResultsController+ObjectiveC.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2016 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,37 +29,20 @@ import CoreData
 
 // MARK: - NSFetchedResultsController
 
+@available(OSX, unavailable)
 public extension NSFetchedResultsController {
     
     /**
-     Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     Utility for creating an `NSFetchedResultsController` from a `CSDataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstraction.
      */
-    @nonobjc
-    public static func createForStack<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+    @objc
+    public static func cs_createForStack(dataStack: CSDataStack, fetchRequest: NSFetchRequest, from: CSFrom?, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController {
         
         return CoreStoreFetchedResultsController(
-            context: dataStack.mainContext,
+            context: dataStack.bridgeToSwift.mainContext,
             fetchRequest: fetchRequest,
-            from: from,
-            sectionBy: sectionBy,
-            applyFetchClauses: { fetchRequest in
-            
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-            }
-        )
-    }
-    
-    
-    // MARK: Internal
-    
-    @nonobjc
-    internal static func createFromContext<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
-        
-        return CoreStoreFetchedResultsController(
-            context: context,
-            fetchRequest: fetchRequest,
-            from: from,
-            sectionBy: sectionBy,
+            from: from?.bridgeToSwift,
+            sectionBy: sectionBy?.bridgeToSwift,
             applyFetchClauses: { fetchRequest in
                 
                 fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }

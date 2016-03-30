@@ -69,7 +69,7 @@ public extension CoreStore {
          }
      )
      ```
-     - parameter storage: the local storage
+     - parameter storage: the storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
@@ -104,7 +104,7 @@ public extension CoreStore {
      Asynchronously adds a `LocalStorage` to the `defaultStack`. Migrations are also initiated by default.
      ```
      try CoreStore.addStorage(
-         SQLiteStore(configuration: "Config1"),
+         SQLiteStore(fileName: "core_data.sqlite", configuration: "Config1"),
          completion: { result in
              switch result {
              case .Success(let storage): // ...

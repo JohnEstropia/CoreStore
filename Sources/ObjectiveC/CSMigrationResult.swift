@@ -1,5 +1,5 @@
 //
-//  CSSaveResult.swift
+//  CSMigrationResult.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia
@@ -27,16 +27,16 @@ import Foundation
 import CoreData
 
 
-// MARK: - CSSaveResult
+// MARK: - CSMigrationResult
 
 /**
- The `CSSaveResult` serves as the Objective-C bridging type for `SaveResult`.
+ The `CSMigrationResult` serves as the Objective-C bridging type for `MigrationResult`.
  */
 @objc
-public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
+public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
     
     /**
-     `YES` if the `commit` operation for the transaction succeeded, either because the save succeeded or because there were no changes to save. Returns `NO` to indicate failure.
+     `YES` if the migration succeeded, `NO` otherwise
      */
     @objc
     public var isSuccess: Bool {
@@ -45,7 +45,7 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     }
     
     /**
-     `YES` if the `commit` operation for the transaction failed, or `NO` otherwise. When `YES`, the `error` property returns the actual `NSError` for the failure.
+     `YES` if the migration failed, `NO` otherwise
      */
     @objc
     public var isFailure: Bool {
@@ -54,20 +54,20 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     }
     
     /**
-     `YES` if the `commit` operation for the transaction succeeded and if there was an actual change made. Returns `NO` otherwise.
+     `YES` if the migration succeeded, `NO` otherwise
      */
     @objc
-    public var hasChanges: Bool {
+    public var migrationTypes: [CSMigrationType]? {
         
-        guard case .Success(let hasChanges) = self.bridgeToSwift else {
+        guard case .Success(let migrationTypes) = self.bridgeToSwift else {
             
-            return false
+            return nil
         }
-        return hasChanges
+        return migrationTypes.map { $0.bridgeToObjectiveC }
     }
     
     /**
-     The `NSError` for a failed `commit` operation, or `nil` if the `commit` succeeded
+     The `NSError` for a failed migration, or `nil` if the migration succeeded
      */
     @objc
     public var error: NSError? {
@@ -80,20 +80,20 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     }
     
     /**
-     If the result was a success, the `success` block is executed with a `BOOL` argument that indicates if there were any changes made. If the result was a failure, the `failure` block is executed with an `NSError` argument pertaining to the actual error.
+     If the result was a success, the `success` block is executed with an array of `CSMigrationType`s that indicates the migration steps completed. If the result was a failure, the `failure` block is executed with an `NSError` argument pertaining to the actual error.
      
      The blocks are executed immediately as `@noescape` and will not be retained.
      
-     - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
+     - parameter success: the block to execute on success. The block passes an array of `CSMigrationType`s that indicates the migration steps completed.
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleSuccess(@noescape success: (hasChanges: Bool) -> Void, @noescape failure: (error: NSError) -> Void) {
+    public func handleSuccess(@noescape success: (migrationTypes: [CSMigrationType]) -> Void, @noescape failure: (error: NSError) -> Void) {
         
         switch self.bridgeToSwift {
             
-        case .Success(let hasChanges):
-            success(hasChanges: hasChanges)
+        case .Success(let migrationTypes):
+            success(migrationTypes: migrationTypes.map { $0.bridgeToObjectiveC })
             
         case .Failure(let error):
             failure(error: error.bridgeToObjectiveC)
@@ -101,20 +101,20 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     }
     
     /**
-     If the result was a success, the `success` block is executed with a `BOOL` argument that indicates if there were any changes made. If the result was a failure, this method does nothing.
+     If the result was a success, the `success` block is executed with an array of `CSMigrationType`s that indicates the migration steps completed. If the result was a failure, this method does nothing.
      
      The block is executed immediately as `@noescape` and will not be retained.
      
-     - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
+     - parameter success: the block to execute on success. The block passes an array of `CSMigrationType`s that indicates the migration steps completed.
      */
     @objc
-    public func handleSuccess(@noescape success: (hasChanges: Bool) -> Void) {
+    public func handleSuccess(@noescape success: (migrationTypes: [CSMigrationType]) -> Void) {
         
-        guard case .Success(let hasChanges) = self.bridgeToSwift else {
+        guard case .Success(let migrationTypes) = self.bridgeToSwift else {
             
             return
         }
-        success(hasChanges: hasChanges)
+        success(migrationTypes: migrationTypes.map { $0.bridgeToObjectiveC })
     }
     
     /**
@@ -128,7 +128,7 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     public func handleFailure(@noescape failure: (error: NSError) -> Void) {
         
         guard case .Failure(let error) = self.bridgeToSwift else {
-                
+            
             return
         }
         failure(error: error.bridgeToObjectiveC)
@@ -144,7 +144,7 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     
     public override func isEqual(object: AnyObject?) -> Bool {
         
-        guard let object = object as? CSSaveResult else {
+        guard let object = object as? CSMigrationResult else {
             
             return false
         }
@@ -154,9 +154,9 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     
     // MARK: CoreStoreObjectiveCType
     
-    public let bridgeToSwift: SaveResult
+    public let bridgeToSwift: MigrationResult
     
-    public required init(_ swiftValue: SaveResult) {
+    public required init(_ swiftValue: MigrationResult) {
         
         self.bridgeToSwift = swiftValue
         super.init()
@@ -164,11 +164,11 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
 }
 
 
-// MARK: - SaveResult
+// MARK: - MigrationResult
 
-extension SaveResult: CoreStoreSwiftType {
+extension MigrationResult: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSSaveResult
+    public typealias ObjectiveCType = CSMigrationResult
 }
