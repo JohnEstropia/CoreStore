@@ -227,7 +227,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     private init(context: NSManagedObjectContext, object: T) {
         
-        let fetchRequest = NSFetchRequest()
+        let fetchRequest = CoreStoreFetchRequest()
         fetchRequest.entity = object.entity
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType

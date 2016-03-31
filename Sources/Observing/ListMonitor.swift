@@ -1081,7 +1081,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     private init(context: NSManagedObjectContext, transactionQueue: GCDQueue, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void, createAsynchronously: ((ListMonitor<T>) -> Void)?) {
         
-        let fetchRequest = NSFetchRequest()
+        let fetchRequest = CoreStoreFetchRequest()
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.fetchBatchSize = 20
