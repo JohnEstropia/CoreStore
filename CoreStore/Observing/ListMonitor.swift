@@ -1033,6 +1033,7 @@ public final class ListMonitor<T: NSManagedObject> {
         self.observerForWillChangePersistentStore = NotificationObserver(
             notificationName: NSPersistentStoreCoordinatorStoresWillChangeNotification,
             object: coordinator,
+            queue: NSOperationQueue.mainQueue(),
             closure: { [weak self] (note) -> Void in
                 
                 guard let `self` = self else {
@@ -1054,6 +1055,7 @@ public final class ListMonitor<T: NSManagedObject> {
         self.observerForDidChangePersistentStore = NotificationObserver(
             notificationName: NSPersistentStoreCoordinatorStoresDidChangeNotification,
             object: coordinator,
+            queue: NSOperationQueue.mainQueue(),
             closure: { [weak self] (note) -> Void in
                 
                 guard let `self` = self else {
