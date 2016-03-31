@@ -104,3 +104,19 @@ internal final class CoreStoreFetchedResultsController<T: NSManagedObject>: NSFe
     
     private let reapplyAffectedStores: (fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Bool
 }
+
+
+// MARK: - CoreStoreFetchRequest
+
+// Bugfix for NSFetchRequest messing up memory management for `affectedStores`
+// http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
+internal final class CoreStoreFetchRequest: NSFetchRequest {
+    
+    override var affectedStores: [NSPersistentStore]? {
+        
+        get { return self.safeAffectedStores }
+        set { self.safeAffectedStores = newValue }
+    }
+    
+    private var safeAffectedStores: [NSPersistentStore]?
+}
