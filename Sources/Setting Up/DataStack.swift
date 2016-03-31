@@ -414,7 +414,16 @@ public final class DataStack {
     deinit {
         
         let coordinator = self.coordinator
-        coordinator.persistentStores.forEach { _ = try? coordinator.removePersistentStore($0) }
+        coordinator.performAsynchronously {
+            
+            withExtendedLifetime(coordinator) { coordinator in
+                
+                coordinator.persistentStores.forEach {
+                    
+                    _ = try? coordinator.removePersistentStore($0)
+                }
+            }
+        }
     }
     
     

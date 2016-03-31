@@ -53,7 +53,7 @@ private struct Static {
             SQLiteStore(
                 fileName: "ColorsDemo.sqlite",
                 configuration: "ObservingDemo",
-                resetStoreOnModelMismatch: true
+                localStorageOptions: .RecreateStoreOnModelMismatch
             )
         )
         

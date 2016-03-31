@@ -66,7 +66,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         }
     }
     
-    func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         GCDQueue.Main.async { [weak self] in
             

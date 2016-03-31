@@ -991,7 +991,7 @@ public final class ListMonitor<T: NSManagedObject> {
     
     private init(context: NSManagedObjectContext, transactionQueue: GCDQueue, from: From<T>, sectionBy: SectionBy?, fetchClauses: [FetchClause], createAsynchronously: ((ListMonitor<T>) -> Void)?) {
         
-        let fetchRequest = NSFetchRequest()
+        let fetchRequest = CoreStoreFetchRequest()
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchRequest.fetchBatchSize = 20
