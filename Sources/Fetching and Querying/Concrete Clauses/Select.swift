@@ -32,7 +32,7 @@ import CoreData
 /**
  The `SelectResultType` protocol is implemented by return types supported by the `Select` clause.
  */
-public protocol SelectResultType { }
+public protocol SelectResultType {}
 
 
 // MARK: - SelectValueResultType
@@ -41,6 +41,8 @@ public protocol SelectResultType { }
  The `SelectValueResultType` protocol is implemented by return types supported by the `queryValue(...)` methods.
  */
 public protocol SelectValueResultType: SelectResultType {
+    
+    static var attributeType: NSAttributeType { get }
     
     static func fromResultObject(result: AnyObject) -> Self?
 }
@@ -62,7 +64,7 @@ public protocol SelectAttributesResultType: SelectResultType {
 /**
  The `SelectTerm` is passed to the `Select` clause to indicate the attributes/aggregate keys to be queried.
  */
-public enum SelectTerm: StringLiteralConvertible {
+public enum SelectTerm: StringLiteralConvertible, Hashable {
     
     /**
      Provides a `SelectTerm` to a `Select` clause for querying an entity attribute. A shorter way to do the same is to assign from the string keypath directly:
@@ -218,10 +220,48 @@ public enum SelectTerm: StringLiteralConvertible {
     }
     
     
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        switch self {
+            
+        case ._Attribute(let keyPath):
+            return 0 ^ keyPath.hashValue
+            
+        case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            return 1 ^ function.hashValue ^ keyPath.hashValue ^ alias.hashValue ^ nativeType.hashValue
+        }
+    }
+    
+    
     // MARK: Internal
     
     case _Attribute(KeyPath)
     case _Aggregate(function: String, KeyPath, As: String, nativeType: NSAttributeType)
+}
+
+
+// MARK: - SelectTerm: Equatable
+
+@warn_unused_result
+public func == (lhs: SelectTerm, rhs: SelectTerm) -> Bool {
+    
+    switch (lhs, rhs) {
+        
+    case (._Attribute(let keyPath1), ._Attribute(let keyPath2)):
+        return keyPath1 == keyPath2
+        
+    case (._Aggregate(let function1, let keyPath1, let alias1, let nativeType1),
+        ._Aggregate(let function2, let keyPath2, let alias2, let nativeType2)):
+        return function1 == function2
+            && keyPath1 == keyPath2
+            && alias1 == alias2
+            && nativeType1 == nativeType2
+        
+    default:
+        return false
+    }
 }
 
 
@@ -267,7 +307,7 @@ public enum SelectTerm: StringLiteralConvertible {
  
  - parameter sortDescriptors: a series of `NSSortDescriptor`s
  */
-public struct Select<T: SelectResultType> {
+public struct Select<T: SelectResultType>: Hashable {
     
     /**
      The `SelectResultType` type for the query's return value
@@ -285,93 +325,37 @@ public struct Select<T: SelectResultType> {
         self.selectTerms = [selectTerm] + selectTerms
     }
     
+    /**
+     Initializes a `Select` clause with a list of `SelectTerm`s
+     
+     - parameter selectTerms: a series of `SelectTerm`s
+     */
+    public init(_ selectTerms: [SelectTerm]) {
+        
+        self.selectTerms = selectTerms
+    }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+        
+        return self.selectTerms.map { $0.hashValue }.reduce(0, combine: ^)
+    }
+    
     
     // MARK: Internal
     
-    internal func applyToFetchRequest(fetchRequest: NSFetchRequest) {
-        
-        if fetchRequest.propertiesToFetch != nil {
-            
-            CoreStore.log(
-                .Warning,
-                message: "An existing \"propertiesToFetch\" for the \(typeName(NSFetchRequest)) was overwritten by \(typeName(self)) query clause."
-            )
-        }
-        
-        fetchRequest.includesPendingChanges = false
-        fetchRequest.resultType = .DictionaryResultType
-        
-        let entityDescription = fetchRequest.entity!
-        let propertiesByName = entityDescription.propertiesByName
-        let attributesByName = entityDescription.attributesByName
-        
-        var propertiesToFetch = [AnyObject]()
-        for term in self.selectTerms {
-            
-            switch term {
-                
-            case ._Attribute(let keyPath):
-                if let propertyDescription = propertiesByName[keyPath] {
-                    
-                    propertiesToFetch.append(propertyDescription)
-                }
-                else {
-                    
-                    CoreStore.log(
-                        .Warning,
-                        message: "The property \"\(keyPath)\" does not exist in entity \(typeName(entityDescription.managedObjectClassName)) and will be ignored by \(typeName(self)) query clause."
-                    )
-                }
-                
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
-                if let attributeDescription = attributesByName[keyPath] {
-                    
-                    let expressionDescription = NSExpressionDescription()
-                    expressionDescription.name = alias
-                    if nativeType == .UndefinedAttributeType {
-                        
-                        expressionDescription.expressionResultType = attributeDescription.attributeType
-                    }
-                    else {
-                        
-                        expressionDescription.expressionResultType = nativeType
-                    }
-                    expressionDescription.expression = NSExpression(
-                        forFunction: function,
-                        arguments: [NSExpression(forKeyPath: keyPath)]
-                    )
-                    
-                    propertiesToFetch.append(expressionDescription)
-                }
-                else {
-                    
-                    CoreStore.log(
-                        .Warning,
-                        message: "The attribute \"\(keyPath)\" does not exist in entity \(typeName(entityDescription.managedObjectClassName)) and will be ignored by \(typeName(self)) query clause."
-                    )
-                }
-            }
-        }
-        
-        fetchRequest.propertiesToFetch = propertiesToFetch
-    }
+    internal let selectTerms: [SelectTerm]
+}
+
+
+// MARK: - Select: Equatable
+
+@warn_unused_result
+public func == <T: SelectResultType, U: SelectResultType>(lhs: Select<T>, rhs: Select<U>) -> Bool {
     
-    internal func keyPathForFirstSelectTerm() -> KeyPath {
-        
-        switch self.selectTerms.first! {
-            
-        case ._Attribute(let keyPath):
-            return keyPath
-            
-        case ._Aggregate(_, _, let alias, _):
-            return alias
-        }
-    }
-    
-    
-    // MARK: Private
-    
-    private let selectTerms: [SelectTerm]
+    return lhs.selectTerms == rhs.selectTerms
 }
 
 
@@ -664,5 +648,83 @@ extension NSDictionary: SelectAttributesResultType {
     public class func fromResultObjects(result: [AnyObject]) -> [[NSString: AnyObject]] {
         
         return result as! [[NSString: AnyObject]]
+    }
+}
+
+
+// MARK: - Internal
+
+internal extension CollectionType where Generator.Element == SelectTerm {
+    
+    internal func applyToFetchRequest<T>(fetchRequest: NSFetchRequest, owner: T) {
+        
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.resultType = .DictionaryResultType
+        
+        let entityDescription = fetchRequest.entity!
+        let propertiesByName = entityDescription.propertiesByName
+        let attributesByName = entityDescription.attributesByName
+        
+        var propertiesToFetch = [AnyObject]()
+        for term in self {
+            
+            switch term {
+                
+            case ._Attribute(let keyPath):
+                if let propertyDescription = propertiesByName[keyPath] {
+                    
+                    propertiesToFetch.append(propertyDescription)
+                }
+                else {
+                    
+                    CoreStore.log(
+                        .Warning,
+                        message: "The property \"\(keyPath)\" does not exist in entity \(typeName(entityDescription.managedObjectClassName)) and will be ignored by \(typeName(owner)) query clause."
+                    )
+                }
+                
+            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+                if let attributeDescription = attributesByName[keyPath] {
+                    
+                    let expressionDescription = NSExpressionDescription()
+                    expressionDescription.name = alias
+                    if nativeType == .UndefinedAttributeType {
+                        
+                        expressionDescription.expressionResultType = attributeDescription.attributeType
+                    }
+                    else {
+                        
+                        expressionDescription.expressionResultType = nativeType
+                    }
+                    expressionDescription.expression = NSExpression(
+                        forFunction: function,
+                        arguments: [NSExpression(forKeyPath: keyPath)]
+                    )
+                    
+                    propertiesToFetch.append(expressionDescription)
+                }
+                else {
+                    
+                    CoreStore.log(
+                        .Warning,
+                        message: "The attribute \"\(keyPath)\" does not exist in entity \(typeName(entityDescription.managedObjectClassName)) and will be ignored by \(typeName(owner)) query clause."
+                    )
+                }
+            }
+        }
+        
+        fetchRequest.propertiesToFetch = propertiesToFetch
+    }
+    
+    internal func keyPathForFirstSelectTerm() -> KeyPath {
+        
+        switch self.first! {
+            
+        case ._Attribute(let keyPath):
+            return keyPath
+            
+        case ._Aggregate(_, _, let alias, _):
+            return alias
+        }
     }
 }

@@ -170,37 +170,44 @@ public extension CSBaseDataTransaction {
     }
     
     /**
-     Fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `CSFetchClause`s. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
+     Queries aggregate values as specified by the `CSQueryClause`s. Requires at least a `CSSelect` clause, and optional `CSWhere`, `CSOrderBy`, `CSGroupBy`, and `CSTweak` clauses.
+     
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
      
      - parameter from: a `CSFrom` clause indicating the entity type
-     - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
-     - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `CSFetchClause`s
+     - parameter selectClause: a `CSSelect` clause indicating the properties to fetch, and with the generic type indicating the return type.
+     - parameter queryClauses: a series of `CSQueryClause` instances for the query request. Accepts `CSWhere`, `CSOrderBy`, `CSGroupBy`, and `CSTweak` clauses.
+     - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
     @warn_unused_result
-    public func fetchObjectIDsFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
+    public func queryValueFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to query from a \(typeName(self)) outside its designated queue."
         )
-        return self.bridgeToSwift.context.fetchObjectIDs(from, fetchClauses)
+        return self.bridgeToSwift.context.queryValue(from, selectClause, queryClauses)
     }
     
     /**
-     Deletes all `NSManagedObject`s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Queries a dictionary of attribute values as specified by the `CSQueryClause`s. Requires at least a `CSSelect` clause, and optional `CSWhere`, `CSOrderBy`, `CSGroupBy`, and `CSTweak` clauses.
      
-     - parameter from: a `From` clause indicating the entity type
-     - parameter deleteClauses: a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the number of `NSManagedObject`s deleted
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
+     
+     - parameter from: a `CSFrom` clause indicating the entity type
+     - parameter selectClause: a `CSSelect` clause indicating the properties to fetch, and with the generic type indicating the return type.
+     - parameter queryClauses: a series of `CSQueryClause` instances for the query request. Accepts `CSWhere`, `CSOrderBy`, `CSGroupBy`, and `CSTweak` clauses.
+     - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    public func deleteAllFrom(from: CSFrom, deleteClauses: [CSDeleteClause]) -> NSNumber? {
+    @warn_unused_result
+    public func queryAttributesFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
-            "Attempted to delete from a \(typeName(self)) outside its designated queue."
+            "Attempted to query from a \(typeName(self)) outside its designated queue."
         )
-        return self.bridgeToSwift.context.deleteAll(from, deleteClauses)
+        return self.bridgeToSwift.context.queryAttributes(from, selectClause, queryClauses)
     }
 }

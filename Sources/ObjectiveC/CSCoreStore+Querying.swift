@@ -154,15 +154,36 @@ public extension CSCoreStore {
     }
     
     /**
-     Using the `defaultStack`, deletes all `NSManagedObject`s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, queries aggregate values as specified by the `CSQueryClause`s. Requires at least a `CSSelect` clause, and optional `CSWhere`, `CSOrderBy`, `CSGroupBy`, and `CSTweak` clauses.
      
-     - parameter from: a `From` clause indicating the entity type
-     - parameter deleteClauses: a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the number of `NSManagedObject`s deleted
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
+     
+     - parameter from: a `CSFrom` clause indicating the entity type
+     - parameter selectClause: a `CSSelect` clause indicating the properties to fetch, and with the generic type indicating the return type.
+     - parameter queryClauses: a series of `CSQueryClause` instances for the query request. Accepts `CSWhere`, `CSOrderBy`, `CSGroupBy`, and `CSTweak` clauses.
+     - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    public static func deleteAllFrom(from: CSFrom, deleteClauses: [CSDeleteClause]) -> NSNumber? {
+    @warn_unused_result
+    public static func queryValueFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
         
-        return self.defaultStack.deleteAllFrom(from, deleteClauses: deleteClauses)
+        return self.defaultStack.queryValueFrom(from, selectClause: selectClause, queryClauses: queryClauses)
+    }
+    
+    /**
+     Using the `defaultStack`, queries a dictionary of attribute values as specified by the `CSQueryClause`s. Requires at least a `CSSelect` clause, and optional `CSWhere`, `CSOrderBy`, `CSGroupBy`, and `CSTweak` clauses.
+     
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
+     
+     - parameter from: a `CSFrom` clause indicating the entity type
+     - parameter selectClause: a `CSSelect` clause indicating the properties to fetch, and with the generic type indicating the return type.
+     - parameter queryClauses: a series of `CSQueryClause` instances for the query request. Accepts `CSWhere`, `CSOrderBy`, `CSGroupBy`, and `CSTweak` clauses.
+     - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
+     */
+    @objc
+    @warn_unused_result
+    public static func queryAttributesFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
+        
+        return self.defaultStack.queryAttributesFrom(from, selectClause: selectClause, queryClauses: queryClauses)
     }
 }

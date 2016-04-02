@@ -387,12 +387,15 @@ internal extension NSManagedObjectContext {
         
         fetchRequest.fetchLimit = 0
         
-        selectClause.applyToFetchRequest(fetchRequest)
+        let selectTerms = selectClause.selectTerms
+        selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
+        queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
-        for clause in queryClauses {
-            
-            clause.applyToFetchRequest(fetchRequest)
-        }
+        return self.queryValue(selectTerms, fetchRequest: fetchRequest)
+    }
+    
+    @nonobjc
+    internal func queryValue<U: SelectValueResultType>(selectTerms: [SelectTerm], fetchRequest: NSFetchRequest) -> U? {
         
         var fetchResults: [AnyObject]?
         var fetchError: ErrorType?
@@ -410,9 +413,42 @@ internal extension NSManagedObjectContext {
         if let fetchResults = fetchResults {
             
             if let rawResult = fetchResults.first as? NSDictionary,
-                let rawObject: AnyObject = rawResult[selectClause.keyPathForFirstSelectTerm()] {
-                    
-                    return Select<U>.ReturnType.fromResultObject(rawObject)
+                let rawObject: AnyObject = rawResult[selectTerms.keyPathForFirstSelectTerm()] {
+                
+                return Select<U>.ReturnType.fromResultObject(rawObject)
+            }
+            return nil
+        }
+        
+        CoreStore.log(
+            CoreStoreError(fetchError),
+            "Failed executing fetch request."
+        )
+        return nil
+    }
+    
+    @nonobjc
+    internal func queryValue(selectTerms: [SelectTerm], fetchRequest: NSFetchRequest) -> AnyObject? {
+        
+        var fetchResults: [AnyObject]?
+        var fetchError: ErrorType?
+        self.performBlockAndWait {
+            
+            do {
+                
+                fetchResults = try self.executeFetchRequest(fetchRequest)
+            }
+            catch {
+                
+                fetchError = error
+            }
+        }
+        if let fetchResults = fetchResults {
+            
+            if let rawResult = fetchResults.first as? NSDictionary,
+                let rawObject: AnyObject = rawResult[selectTerms.keyPathForFirstSelectTerm()] {
+                
+                return rawObject
             }
             return nil
         }
@@ -441,12 +477,14 @@ internal extension NSManagedObjectContext {
         
         fetchRequest.fetchLimit = 0
         
-        selectClause.applyToFetchRequest(fetchRequest)
+        selectClause.selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
+        queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
-        for clause in queryClauses {
-            
-            clause.applyToFetchRequest(fetchRequest)
-        }
+        return self.queryAttributes(fetchRequest)
+    }
+    
+    @nonobjc
+    internal func queryAttributes(fetchRequest: NSFetchRequest) -> [[NSString: AnyObject]]? {
         
         var fetchResults: [AnyObject]?
         var fetchError: ErrorType?
