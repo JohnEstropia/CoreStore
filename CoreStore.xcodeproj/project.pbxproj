@@ -188,7 +188,6 @@
 		B53FBA1F1CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FBA1D1CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift */; };
 		B53FBA201CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FBA1D1CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift */; };
 		B53FBA211CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FBA1D1CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift */; };
-		B53FBA221CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FBA1D1CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift */; };
 		B546F9581C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */; };
 		B546F9591C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */; };
 		B546F95A1C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B546F9571C99B17400D5AC55 /* CSCoreStore+Setup.swift */; };
@@ -860,18 +859,8 @@
 			isa = PBXGroup;
 			children = (
 				2F03A53519C5C6DA005002A5 /* CoreStore.h */,
-				2F291E2619C6D3CF007AF63F /* CoreStore.swift */,
-				B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */,
-				B5E84EDA1AFF84500064E85B /* Setup */,
-				B5E84EE21AFF84610064E85B /* Logging */,
-				B5E84EE91AFF846E0064E85B /* Saving and Processing */,
-				B5E834B61B7630BD001D3D50 /* Importing Data */,
-				B5E84EFD1AFF847B0064E85B /* Fetching and Querying */,
-				B5E84F191AFF84860064E85B /* Observing */,
-				B56964D11B22FF700075EE4A /* Migrating */,
-				B5E84F261AFF84920064E85B /* Convenience Helpers */,
+				B5A5F26B1CAFF8D0004AB9AF /* Swift */,
 				B5DBE2CB1C99148100B5CEFA /* ObjectiveC */,
-				B5E84F291AFF849C0064E85B /* Internal */,
 				2F03A53319C5C6DA005002A5 /* Supporting Files */,
 			);
 			path = Sources;
@@ -1004,6 +993,24 @@
 				B56965231B356B820075EE4A /* MigrationResult.swift */,
 			);
 			path = Migrating;
+			sourceTree = "<group>";
+		};
+		B5A5F26B1CAFF8D0004AB9AF /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				2F291E2619C6D3CF007AF63F /* CoreStore.swift */,
+				B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */,
+				B5E84EDA1AFF84500064E85B /* Setup */,
+				B5E84EE21AFF84610064E85B /* Logging */,
+				B5E84EE91AFF846E0064E85B /* Saving and Processing */,
+				B5E834B61B7630BD001D3D50 /* Importing Data */,
+				B5E84EFD1AFF847B0064E85B /* Fetching and Querying */,
+				B5E84F191AFF84860064E85B /* Observing */,
+				B56964D11B22FF700075EE4A /* Migrating */,
+				B5E84F261AFF84920064E85B /* Convenience Helpers */,
+				B5E84F291AFF849C0064E85B /* Internal */,
+			);
+			name = Swift;
 			sourceTree = "<group>";
 		};
 		B5D9E3361CA2C6A3007A9D52 /* GCDKit iOS7 */ = {
@@ -1875,7 +1882,6 @@
 				B52DD1C91BE1F94600949AFE /* NSManagedObjectContext+Transaction.swift in Sources */,
 				B52DD19B1BE1F92800949AFE /* CoreStoreLogger.swift in Sources */,
 				B52DD1991BE1F92800949AFE /* DefaultLogger.swift in Sources */,
-				B53FBA221CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift in Sources */,
 				B53FBA081CAB300C00F0D40A /* CSMigrationType.swift in Sources */,
 				B52DD1B91BE1F94000949AFE /* CoreStore+Migration.swift in Sources */,
 				B5519A5C1CA2008C002BEF78 /* CSBaseDataTransaction.swift in Sources */,
