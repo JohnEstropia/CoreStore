@@ -29,6 +29,9 @@ import CoreData
 
 // MARK: - CoreStoreError
 
+/**
+ All errors thrown from CoreStore is expressed in `CoreStoreError` enum values.
+ */
 public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
     
     /**

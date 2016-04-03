@@ -107,8 +107,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
         
         return ._Aggregate(
             function: "average:",
-            keyPath,
-            As: alias ?? "average(\(keyPath))",
+            keyPath: keyPath,
+            alias: alias ?? "average(\(keyPath))",
             nativeType: .DecimalAttributeType
         )
     }
@@ -129,8 +129,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
         
         return ._Aggregate(
             function: "count:",
-            keyPath,
-            As: alias ?? "count(\(keyPath))",
+            keyPath: keyPath,
+            alias: alias ?? "count(\(keyPath))",
             nativeType: .Integer64AttributeType
         )
     }
@@ -151,8 +151,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
         
         return ._Aggregate(
             function: "max:",
-            keyPath,
-            As: alias ?? "max(\(keyPath))",
+            keyPath: keyPath,
+            alias: alias ?? "max(\(keyPath))",
             nativeType: .UndefinedAttributeType
         )
     }
@@ -173,8 +173,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
         
         return ._Aggregate(
             function: "min:",
-            keyPath,
-            As: alias ?? "min(\(keyPath))",
+            keyPath: keyPath,
+            alias: alias ?? "min(\(keyPath))",
             nativeType: .UndefinedAttributeType
         )
     }
@@ -195,9 +195,30 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
         
         return ._Aggregate(
             function: "sum:",
-            keyPath,
-            As: alias ?? "sum(\(keyPath))",
+            keyPath: keyPath,
+            alias: alias ?? "sum(\(keyPath))",
             nativeType: .DecimalAttributeType
+        )
+    }
+    
+    /**
+     Provides a `SelectTerm` to a `Select` clause for querying the `NSManagedObjectID`.
+     ```
+     let objectID = CoreStore.queryValue(
+         From(MyPersonEntity),
+         Select<NSManagedObjectID>(),
+         Where("employeeID", isEqualTo: 1111)
+     )
+     ```
+     - parameter keyPath: the attribute name
+     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
+     - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
+     */
+    public static func ObjectID(As alias: KeyPath? = nil) -> SelectTerm {
+        
+        return ._Identity(
+            alias: alias ?? "objectID",
+            nativeType: .ObjectIDAttributeType
         )
     }
     
@@ -231,6 +252,9 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
             
         case ._Aggregate(let function, let keyPath, let alias, let nativeType):
             return 1 ^ function.hashValue ^ keyPath.hashValue ^ alias.hashValue ^ nativeType.hashValue
+            
+        case ._Identity(let alias, let nativeType):
+            return 3 ^ alias.hashValue ^ nativeType.hashValue
         }
     }
     
@@ -238,7 +262,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
     // MARK: Internal
     
     case _Attribute(KeyPath)
-    case _Aggregate(function: String, KeyPath, As: String, nativeType: NSAttributeType)
+    case _Aggregate(function: String, keyPath: KeyPath, alias: String, nativeType: NSAttributeType)
+    case _Identity(alias: String, nativeType: NSAttributeType)
 }
 
 
@@ -258,6 +283,9 @@ public func == (lhs: SelectTerm, rhs: SelectTerm) -> Bool {
             && keyPath1 == keyPath2
             && alias1 == alias2
             && nativeType1 == nativeType2
+        
+    case (._Identity(let alias1, let nativeType1), ._Identity(let alias2, let nativeType2)):
+        return alias1 == alias2 && nativeType1 == nativeType2
         
     default:
         return false
@@ -347,6 +375,14 @@ public struct Select<T: SelectResultType>: Hashable {
     // MARK: Internal
     
     internal let selectTerms: [SelectTerm]
+}
+
+public extension Select where T: NSManagedObjectID {
+    
+    public init() {
+        
+        self.init(.ObjectID())
+    }
 }
 
 
@@ -710,6 +746,21 @@ internal extension CollectionType where Generator.Element == SelectTerm {
                         message: "The attribute \"\(keyPath)\" does not exist in entity \(typeName(entityDescription.managedObjectClassName)) and will be ignored by \(typeName(owner)) query clause."
                     )
                 }
+                
+            case ._Identity(let alias, let nativeType):
+                let expressionDescription = NSExpressionDescription()
+                expressionDescription.name = alias
+                if nativeType == .UndefinedAttributeType {
+                    
+                    expressionDescription.expressionResultType = .ObjectIDAttributeType
+                }
+                else {
+                    
+                    expressionDescription.expressionResultType = nativeType
+                }
+                expressionDescription.expression = NSExpression.expressionForEvaluatedObject()
+                
+                propertiesToFetch.append(expressionDescription)
             }
         }
         
@@ -724,6 +775,9 @@ internal extension CollectionType where Generator.Element == SelectTerm {
             return keyPath
             
         case ._Aggregate(_, _, let alias, _):
+            return alias
+            
+        case ._Identity(let alias, _):
             return alias
         }
     }

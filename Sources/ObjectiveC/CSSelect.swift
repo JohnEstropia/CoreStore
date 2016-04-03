@@ -130,6 +130,32 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
         
         return self.init(.Sum(keyPath, As: alias))
     }
+    
+    /**
+     Provides a `CSSelectTerm` to a `CSSelect` clause for querying the `NSManagedObjectID`.
+     ```
+     NSManagedObjectID *objectID = [CSCoreStore
+         queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
+         select:[CSSelect objectIDForTerm:[CSSelectTerm objectIDAs:nil]]
+         fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
+     
+     let objectID = CoreStore.queryValue(
+     From(MyPersonEntity),
+     Select<NSManagedObjectID>(.ObjectID()),
+     Where("employeeID", isEqualTo: 1111)
+     )
+     ```
+     - parameter keyPath: the attribute name
+     - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
+     - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
+     */
+    public static func objectIDAs(alias: KeyPath? = nil) -> SelectTerm {
+        
+        return ._Identity(
+            alias: alias ?? "objectID",
+            nativeType: .ObjectIDAttributeType
+        )
+    }
 
     
     
@@ -262,15 +288,15 @@ public final class CSSelect: NSObject {
      ```
      NSManagedObjectID *objectIDForOldest = [CSCoreStore
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
-         select:[CSSelect managedObjectIDForTerm:[CSSelectTerm attribute:@"age" as:nil]]
+         select:[CSSelect objectID]
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
-    public static func managedObjectIDForTerm(term: CSSelectTerm) -> CSSelect {
+    public static func objectID() -> CSSelect {
         
-        return self.init(Select<NSManagedObjectID>(term.bridgeToSwift))
+        return self.init(Select<NSManagedObjectID>(.ObjectID()))
     }
     
     /**

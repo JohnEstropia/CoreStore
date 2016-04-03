@@ -88,11 +88,6 @@ class CoreStoreTests: XCTestCase {
             obj1.testString = "lololol"
             obj1.testNumber = 42
             obj1.testDate = NSDate()
-            let objID = transaction.queryValue(
-                From(TestEntity1),
-                Select<NSManagedObjectID>(.Attribute("testEntityID"))
-            )
-            print(objID)
             
             let count = transaction.queryValue(
                 From<TestEntity1>(),
