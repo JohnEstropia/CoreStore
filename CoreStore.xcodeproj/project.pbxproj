@@ -937,14 +937,14 @@
 			name = Observing;
 			sourceTree = "<group>";
 		};
-		B53FBA101CAB607000F0D40A /* Convenience Helpers */ = {
+		B53FBA101CAB607000F0D40A /* Convenience */ = {
 			isa = PBXGroup;
 			children = (
 				B53FBA171CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift */,
 				B53FBA111CAB63CB00F0D40A /* NSProgress+ObjectiveC.swift */,
 				B53FBA1D1CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift */,
 			);
-			name = "Convenience Helpers";
+			name = Convenience;
 			sourceTree = "<group>";
 		};
 		B546F9611C9A13F400D5AC55 /* Setup */ = {
@@ -967,7 +967,7 @@
 			name = StorageInterfaces;
 			sourceTree = "<group>";
 		};
-		B5519A5D1CA20093002BEF78 /* Saving and Processing */ = {
+		B5519A5D1CA20093002BEF78 /* Transactions */ = {
 			isa = PBXGroup;
 			children = (
 				B5D7A5B51CA3BF8F005C752B /* CSInto.swift */,
@@ -979,7 +979,7 @@
 				B5ECDC2E1CA81CDC00C7F112 /* CSCoreStore+Transaction.swift */,
 				B529C2031CA4A2DB007E7EBD /* CSSaveResult.swift */,
 			);
-			name = "Saving and Processing";
+			name = Transactions;
 			sourceTree = "<group>";
 		};
 		B56964D11B22FF700075EE4A /* Migrating */ = {
@@ -1002,12 +1002,12 @@
 				B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */,
 				B5E84EDA1AFF84500064E85B /* Setup */,
 				B5E84EE21AFF84610064E85B /* Logging */,
-				B5E84EE91AFF846E0064E85B /* Saving and Processing */,
-				B5E834B61B7630BD001D3D50 /* Importing Data */,
+				B5E84EE91AFF846E0064E85B /* Transactions */,
+				B5E834B61B7630BD001D3D50 /* Importing */,
 				B5E84EFD1AFF847B0064E85B /* Fetching and Querying */,
 				B5E84F191AFF84860064E85B /* Observing */,
 				B56964D11B22FF700075EE4A /* Migrating */,
-				B5E84F261AFF84920064E85B /* Convenience Helpers */,
+				B5E84F261AFF84920064E85B /* Convenience */,
 				B5E84F291AFF849C0064E85B /* Internal */,
 			);
 			name = Swift;
@@ -1031,12 +1031,12 @@
 				B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */,
 				B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */,
 				B5519A491CA1F4FB002BEF78 /* CSError.swift */,
-				B53FBA101CAB607000F0D40A /* Convenience Helpers */,
 				B546F9611C9A13F400D5AC55 /* Setup */,
-				B5519A5D1CA20093002BEF78 /* Saving and Processing */,
+				B5519A5D1CA20093002BEF78 /* Transactions */,
 				B5E2222F1CA5339200BA2E95 /* Fetching and Querying */,
 				B501FDDB1CA8D03600BE22EF /* Observing */,
 				B5E1B5A61CAA49CE007FD580 /* Migrating */,
+				B53FBA101CAB607000F0D40A /* Convenience */,
 				B5E222211CA4DE5700BA2E95 /* Internal */,
 			);
 			path = ObjectiveC;
@@ -1074,14 +1074,14 @@
 			name = "Fetching and Querying";
 			sourceTree = "<group>";
 		};
-		B5E834B61B7630BD001D3D50 /* Importing Data */ = {
+		B5E834B61B7630BD001D3D50 /* Importing */ = {
 			isa = PBXGroup;
 			children = (
 				B5F1DA8C1B9AA97D007C5CBB /* ImportableObject.swift */,
 				B5F1DA8F1B9AA991007C5CBB /* ImportableUniqueObject.swift */,
 				B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */,
 			);
-			path = "Importing Data";
+			path = Importing;
 			sourceTree = "<group>";
 		};
 		B5E84EDA1AFF84500064E85B /* Setup */ = {
@@ -1104,7 +1104,7 @@
 			path = Logging;
 			sourceTree = "<group>";
 		};
-		B5E84EE91AFF846E0064E85B /* Saving and Processing */ = {
+		B5E84EE91AFF846E0064E85B /* Transactions */ = {
 			isa = PBXGroup;
 			children = (
 				B56007101B3F6BD500A9A8F9 /* Into.swift */,
@@ -1117,7 +1117,7 @@
 				B50392F81C478FF3009900CA /* NSManagedObject+Transaction.swift */,
 				B5E84EF21AFF846E0064E85B /* SaveResult.swift */,
 			);
-			path = "Saving and Processing";
+			path = Transactions;
 			sourceTree = "<group>";
 		};
 		B5E84EFD1AFF847B0064E85B /* Fetching and Querying */ = {
@@ -1168,14 +1168,14 @@
 			path = Observing;
 			sourceTree = "<group>";
 		};
-		B5E84F261AFF84920064E85B /* Convenience Helpers */ = {
+		B5E84F261AFF84920064E85B /* Convenience */ = {
 			isa = PBXGroup;
 			children = (
 				B5E84F271AFF84920064E85B /* NSManagedObject+Convenience.swift */,
 				B5FAD6A81B50A4B300714891 /* NSProgress+Convenience.swift */,
 				B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */,
 			);
-			path = "Convenience Helpers";
+			path = Convenience;
 			sourceTree = "<group>";
 		};
 		B5E84F291AFF849C0064E85B /* Internal */ = {
