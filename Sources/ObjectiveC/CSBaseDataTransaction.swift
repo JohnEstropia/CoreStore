@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSBaseDataTransaction` serves as the Objective-C bridging type for `BaseDataTransaction`.
+ 
+ - SeeAlso: `BaseDataTransaction`
  */
 @objc
 public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {

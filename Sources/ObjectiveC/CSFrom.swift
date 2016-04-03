@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSFrom` serves as the Objective-C bridging type for `From`.
+ 
+ - SeeAlso: `From`
  */
 @objc
 public final class CSFrom: NSObject, CoreStoreObjectiveCType {
@@ -40,6 +42,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      ```
      MyPersonEntity *people = [transaction fetchAllFrom:[CSFrom entityClass:[MyPersonEntity class]]];
      ```
+     
      - parameter entityClass: the `NSManagedObject` class type to be created
      - returns: a `CSFrom` clause with the specified entity class
      */
@@ -54,6 +57,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      ```
      MyPersonEntity *people = [transaction fetchAllFrom:[CSFrom entityClass:[MyPersonEntity class] configuration:@"Configuration1"]];
      ```
+     
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      - returns: a `CSFrom` clause with the specified configurations
@@ -69,6 +73,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      ```
      MyPersonEntity *people = [transaction fetchAllFrom:[CSFrom entityClass:[MyPersonEntity class] configurations:@[[NSNull null], @"Configuration1"]]];
      ```
+     
      - parameter entity: the associated `NSManagedObject` entity class
      - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
      - returns: a `CSFrom` clause with the specified configurations

@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSWhere` serves as the Objective-C bridging type for `Where`.
+ 
+ - SeeAlso: `Where`
  */
 @objc
 public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {

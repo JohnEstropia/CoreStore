@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSInMemoryStore` serves as the Objective-C bridging type for `InMemoryStore`.
+ 
+ - SeeAlso: `InMemoryStore`
  */
 @objc
 public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjectiveCType {

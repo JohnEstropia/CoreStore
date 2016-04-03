@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSSynchronousDataTransaction` serves as the Objective-C bridging type for `SynchronousDataTransaction`.
+ 
+ - SeeAlso: `SynchronousDataTransaction`
  */
 @objc
 public final class CSSynchronousDataTransaction: CSBaseDataTransaction {

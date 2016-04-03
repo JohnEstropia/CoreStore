@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSInto` serves as the Objective-C bridging type for `Into<T>`.
+ 
+ - SeeAlso: `Into`
  */
 @objc
 public final class CSInto: NSObject, CoreStoreObjectiveCType {
@@ -40,6 +42,7 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
      ```
      MyPersonEntity *person = [transaction createInto:[CSInto entityClass:[MyPersonEntity class]]];
      ```
+     
      - parameter entityClass: the `NSManagedObject` class type to be created
      - returns: a `CSInto` clause with the specified entity class
      */
@@ -54,6 +57,7 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
      ```
      MyPersonEntity *person = [transaction createInto:[CSInto entityClass:[MyPersonEntity class]]];
      ```
+     
      - parameter entityClass: the `NSManagedObject` class type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      - returns: a `CSInto` clause with the specified configuration

@@ -35,6 +35,8 @@ import CoreData
  CSObjectMonitor *monitor = [CSCoreStore monitorObject:myObject];
  [monitor addObjectObserver:self];
  ```
+ 
+ - SeeAlso: `ObjectObserver`
  */
 @available(OSX, unavailable)
 @objc

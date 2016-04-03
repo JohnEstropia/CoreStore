@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSSectionBy` serves as the Objective-C bridging type for `SectionBy`.
+ 
+ - SeeAlso: `SectionBy`
  */
 @available(OSX, unavailable)
 @objc

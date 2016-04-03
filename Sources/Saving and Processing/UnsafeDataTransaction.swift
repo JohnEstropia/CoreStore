@@ -118,7 +118,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     /**
      Returns the `NSManagedObjectContext` for this unsafe transaction. Use only for cases where external frameworks need an `NSManagedObjectContext` instance to work with.
      
-     Note that it is the developer's responsibility to ensure the following:
+     - Note: It is the developer's responsibility to ensure the following:
      - that the `UnsafeDataTransaction` that owns this context should be strongly referenced and prevented from being deallocated during the context's lifetime
      - that all saves will be done either through the `UnsafeDataTransaction`'s `commit(...)` method, or by calling `save()` manually on the context, its parent, and all other ancestor contexts if there are any.
      */

@@ -78,6 +78,7 @@ public extension CoreStore {
      ```
      
      - parameter storeType: the `StorageInterface` type
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the `defaultStack`
      */
     public static func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
@@ -92,6 +93,7 @@ public extension CoreStore {
      ```
      
      - parameter storage: the `StorageInterface`
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the `defaultStack`
      */
     public static func addStorageAndWait<T: StorageInterface>(storage: T) throws -> T {
@@ -106,6 +108,7 @@ public extension CoreStore {
      ```
      
      - parameter storeType: the `LocalStorageface` type
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the `defaultStack`
      */
     public static func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(storageType: T.Type) throws -> T {
@@ -120,6 +123,7 @@ public extension CoreStore {
      ```
      
      - parameter storage: the local storage
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the `defaultStack`. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      */
     public static func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {

@@ -33,6 +33,12 @@ public extension NSFetchedResultsController {
     
     /**
      Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     
+     - parameter dataStack: the `DataStack` to observe objects from
+     - parameter fetchRequest: the `NSFetchRequest` instance to use with the `NSFetchedResultsController`
+     - parameter from: an optional `From` clause indicating the entity type. If not specified, the `fetchRequest` argument's `entity` property should already be set.
+     - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
     @nonobjc
     public static func createForStack<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {

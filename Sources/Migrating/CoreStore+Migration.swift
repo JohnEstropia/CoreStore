@@ -47,8 +47,10 @@ public extension CoreStore {
          }
      )
      ```
+     
      - parameter storeType: the storage type
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
     public static func addStorage<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
@@ -69,8 +71,10 @@ public extension CoreStore {
          }
      )
      ```
+     
      - parameter storage: the storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
     public static func addStorage<T: StorageInterface>(storage: T, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
@@ -91,8 +95,10 @@ public extension CoreStore {
          }
      )
      ```
+     
      - parameter storeType: the local storage type
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
     public static func addStorage<T: LocalStorage where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
@@ -113,8 +119,10 @@ public extension CoreStore {
          }
      )
      ```
+     
      - parameter storage: the local storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
     public static func addStorage<T: LocalStorage>(storage: T, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
@@ -127,6 +135,7 @@ public extension CoreStore {
 
      - parameter storage: the local storage
      - parameter completion: the closure to be executed on the main queue when the migration completes, either due to success or failure. The closure's `MigrationResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
     public static func upgradeStorageIfNeeded<T: LocalStorage>(storage: T, completion: (MigrationResult) -> Void) throws -> NSProgress? {
@@ -138,6 +147,7 @@ public extension CoreStore {
      Checks the migration steps required for the storage to match the `defaultStack`'s managed object model version.
      
      - parameter storage: the local storage
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: a `MigrationType` array indicating the migration steps required for the store, or an empty array if the file does not exist yet. Otherwise, an error is thrown if either inspection of the store failed, or if no mapping model was found/inferred.
      */
     @warn_unused_result

@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSUnsafeDataTransaction` serves as the Objective-C bridging type for `UnsafeDataTransaction`.
+ 
+ - SeeAlso: `UnsafeDataTransaction`
  */
 @objc
 public final class CSUnsafeDataTransaction: CSBaseDataTransaction {

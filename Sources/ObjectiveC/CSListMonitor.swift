@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSListMonitor` serves as the Objective-C bridging type for `ListMonitor<T>`.
+ 
+ - SeeAlso: `ListMonitor`
  */
 @available(OSX, unavailable)
 @objc

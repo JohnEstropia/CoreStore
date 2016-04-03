@@ -44,8 +44,10 @@ public extension CSDataStack {
          }
          error: &error];
      ```
+     
      - parameter storage: the `CSInMemoryStore` instance
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously.
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
     @objc
@@ -75,8 +77,10 @@ public extension CSDataStack {
          }
          error: &error];
      ```
+     
      - parameter storage: the `CSSQLiteStore` instance
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously. Note that the `CSLocalStorage` associated to the `-[CSSetupResult storage]` may not always be the same instance as the parameter argument if a previous `CSLocalStorage` was already added at the same URL and with the same configuration.
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
     @objc
@@ -96,6 +100,7 @@ public extension CSDataStack {
      
      - parameter storage: the `CSSQLiteStore` instance
      - parameter completion: the closure to be executed on the main queue when the migration completes, either due to success or failure. The closure's `CSMigrationResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously.
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
     @objc
@@ -114,6 +119,7 @@ public extension CSDataStack {
      Checks the migration steps required for the `CSSQLiteStore` to match the `CSDataStack`'s managed object model version.
      
      - parameter storage: the `CSSQLiteStore` instance
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: a `CSMigrationType` array indicating the migration steps required for the store, or an empty array if the file does not exist yet. Otherwise, `nil` is returned and the `error` argument is set if either inspection of the store failed, or if no mapping model was found/inferred.
      */
     @objc

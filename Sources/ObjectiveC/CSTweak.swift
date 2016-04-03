@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSTweak` serves as the Objective-C bridging type for `Tweak`.
+ 
+ - SeeAlso: `Tweak`
  */
 @objc
 public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {

@@ -117,6 +117,7 @@ public final class DataStack {
      try dataStack.addStorageAndWait()
      ```
      
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: the local SQLite storage added to the stack
      */
     public func addStorageAndWait() throws -> SQLiteStore {
@@ -131,6 +132,7 @@ public final class DataStack {
      ```
      
      - parameter storeType: the `StorageInterface` type
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the stack
      */
     public func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
@@ -145,6 +147,7 @@ public final class DataStack {
      ```
      
      - parameter storage: the `StorageInterface`
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the stack
      */
     public func addStorageAndWait<T: StorageInterface>(storage: T) throws -> T {
@@ -184,6 +187,7 @@ public final class DataStack {
      ```
      
      - parameter storeType: the `LocalStorageface` type
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the stack
      */
     public func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(storageType: T.Type) throws -> T {
@@ -198,6 +202,7 @@ public final class DataStack {
      ```
      
      - parameter storage: the local storage
+     - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      */
     public func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {

@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSSaveResult` serves as the Objective-C bridging type for `SaveResult`.
+ 
+ - SeeAlso: `SaveResult`
  */
 @objc
 public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {

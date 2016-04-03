@@ -35,7 +35,6 @@ public final class InMemoryStore: StorageInterface, DefaultInitializableStore {
     
     /**
      Initializes an `InMemoryStore` for the specified configuration
-     
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration.
      */
     public init(configuration: String?) {

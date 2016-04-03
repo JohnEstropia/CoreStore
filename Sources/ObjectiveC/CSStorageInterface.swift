@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSStorageInterface` serves as the Objective-C bridging type for `StorageInterface`.
+ 
+ - SeeAlso: `StorageInterface`
  */
 @objc
 public protocol CSStorageInterface {
@@ -59,6 +61,8 @@ public protocol CSStorageInterface {
 
 /**
  The `CSLocalStorageOptions` provides settings that tells the `CSDataStack` how to setup the persistent store for `CSLocalStorage` implementers.
+ 
+ - SeeAlso: `LocalStorageOptions`
  */
 @objc
 public enum CSLocalStorageOptions: Int {
@@ -89,6 +93,8 @@ public enum CSLocalStorageOptions: Int {
 
 /**
  The `CSLocalStorage` serves as the Objective-C bridging type for `LocalStorage`.
+ 
+ - SeeAlso: `LocalStorage`
  */
 @objc
 public protocol CSLocalStorage: CSStorageInterface {
@@ -115,5 +121,5 @@ public protocol CSLocalStorage: CSStorageInterface {
      Called by the `CSDataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
      */
     @objc
-    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws
+    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel, error: NSErrorPointer) -> Bool
 }

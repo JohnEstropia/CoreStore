@@ -33,7 +33,13 @@ import CoreData
 public extension NSFetchedResultsController {
     
     /**
-     Utility for creating an `NSFetchedResultsController` from a `CSDataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstraction.
+     Utility for creating an `NSFetchedResultsController` from a `CSDataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstractio
+     
+     - parameter dataStack: the `CSDataStack` to observe objects from
+     - parameter fetchRequest: the `NSFetchRequest` instance to use with the `NSFetchedResultsController`
+     - parameter from: an optional `CSFrom` clause indicating the entity type. If not specified, the `fetchRequest` argument's `entity` property should already be set.
+     - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      */
     @objc
     public static func cs_createForStack(dataStack: CSDataStack, fetchRequest: NSFetchRequest, from: CSFrom?, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController {

@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSDataStack` serves as the Objective-C bridging type for `DataStack`.
+ 
+ - SeeAlso: `DataStack`
  */
 @objc
 public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
@@ -160,6 +162,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      CSSQLiteStore *storage = [dataStack addInMemoryStorageAndWaitAndReturnError:&error];
      ```
      
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSInMemoryStore` added to the stack
      */
     @objc
@@ -177,6 +180,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      CSSQLiteStore *storage = [dataStack addSQLiteStorageAndWaitAndReturnError:&error];
      ```
      
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSSQLiteStore` added to the stack
      */
     @objc
@@ -198,6 +202,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      ```
      
      - parameter storage: the `CSInMemoryStore`
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSInMemoryStore` added to the stack
      */
     @objc
@@ -219,6 +224,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      ```
      
      - parameter storage: the `CSSQLiteStore`
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSSQLiteStore` added to the stack
      */
     @objc

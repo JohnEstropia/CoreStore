@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSSelectTerm` serves as the Objective-C bridging type for `SelectTerm`.
+ 
+ - SeeAlso: `SelectTerm`
  */
 @objc
 public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
@@ -43,6 +45,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          select:[CSSelect stringForTerm:[CSSelectTerm attribute:@"fullName"]]
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
+     
      - parameter keyPath: the attribute name
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying an entity attribute
      */
@@ -58,6 +61,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm average:@"age" as:nil]]];
      ```
+     
      - parameter keyPath: the attribute name
      - parameter `as`: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the average value of an attribute
@@ -74,6 +78,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm count:@"employeeID" as:nil]]];
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for a count query
@@ -90,6 +95,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm maximum:@"age" as:nil]]];
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the maximum value for an attribute
@@ -106,6 +112,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm minimum:@"age" as:nil]]];
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the minimum value for an attribute
@@ -122,6 +129,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm sum:@"age" as:nil]]];
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the sum value for an attribute
@@ -138,13 +146,8 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect objectIDForTerm:[CSSelectTerm objectIDAs:nil]]
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
-     
-     let objectID = CoreStore.queryValue(
-     From(MyPersonEntity),
-     Select<NSManagedObjectID>(.ObjectID()),
-     Where("employeeID", isEqualTo: 1111)
-     )
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
@@ -202,6 +205,8 @@ extension SelectTerm: CoreStoreSwiftType {
 
 /**
  The `CSSelect` serves as the Objective-C bridging type for `Select`.
+ 
+ - SeeAlso: `Select`
  */
 @objc
 public final class CSSelect: NSObject {
@@ -213,6 +218,7 @@ public final class CSSelect: NSObject {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm maximum:@"age" as:nil]]];
      ```
+     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
@@ -228,6 +234,7 @@ public final class CSSelect: NSObject {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect decimalNumberForTerm:[CSSelectTerm average:@"age" as:nil]]];
      ```
+     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
@@ -244,6 +251,7 @@ public final class CSSelect: NSObject {
          select:[CSSelect stringForTerm:[CSSelectTerm attribute:@"fullName"]]
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
+     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
@@ -259,6 +267,7 @@ public final class CSSelect: NSObject {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect dateForTerm:[CSSelectTerm maximum:@"updatedDate" as:nil]]];
      ```
+     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
@@ -275,6 +284,7 @@ public final class CSSelect: NSObject {
          select:[CSSelect dataForTerm:[CSSelectTerm attribute:@"imageData" as:nil]]
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
+     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
@@ -291,6 +301,7 @@ public final class CSSelect: NSObject {
          select:[CSSelect objectID]
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
+     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
@@ -306,6 +317,7 @@ public final class CSSelect: NSObject {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect dictionaryForTerm:[CSSelectTerm maximum:@"age" as:nil]]];
      ```
+     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
@@ -314,6 +326,20 @@ public final class CSSelect: NSObject {
         return self.init(Select<NSDictionary>(term.bridgeToSwift))
     }
     
+    /**
+     Creates a `CSSelect` clause for querying `NSDictionary` of an entity's attribute keys and values.
+     ```
+     NSDictionary *keyValues = [CSCoreStore
+         queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
+         select:[CSSelect dictionaryForTerms:@[
+             [CSSelectTerm attribute:@"name" as:nil],
+             [CSSelectTerm attribute:@"age" as:nil]
+         ]]];
+     ```
+     
+     - parameter terms: the `CSSelectTerm`s specifying the attribute/aggregate values to query
+     - returns: a `CSSelect` clause for querying an entity attribute
+     */
     public static func dictionaryForTerms(terms: [CSSelectTerm]) -> CSSelect {
         
         return self.init(Select<NSDictionary>(terms.map { $0.bridgeToSwift }))

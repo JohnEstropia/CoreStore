@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSObjectMonitor` serves as the Objective-C bridging type for `ObjectMonitor<T>`.
+ 
+ - SeeAlso: `ObjectMonitor`
  */
 @available(OSX, unavailable)
 @objc

@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSGroupBy` serves as the Objective-C bridging type for `GroupBy`.
+ 
+ - SeeAlso: `GroupBy`
  */
 @objc
 public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {

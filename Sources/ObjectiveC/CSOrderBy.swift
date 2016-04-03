@@ -31,6 +31,9 @@ import CoreData
 
 /**
  The `CSSortKey` is a syntax-sugar class for `NSSortDescriptor` meant to be used with `CSOrderBy`.
+ 
+ - SeeAlso: `CSOrderBy`
+ - SeeAlso: `SortKey`
  */
 @objc
 public final class CSSortKey: NSSortDescriptor {
@@ -54,6 +57,8 @@ public final class CSSortKey: NSSortDescriptor {
 
 /**
  The `CSOrderBy` serves as the Objective-C bridging type for `OrderBy`.
+ 
+ - SeeAlso: `OrderBy`
  */
 @objc
 public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {

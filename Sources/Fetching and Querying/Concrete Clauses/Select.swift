@@ -83,6 +83,7 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Where("employeeID", isEqualTo: 1111)
      )
      ```
+     
      - parameter keyPath: the attribute name
      - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
      */
@@ -99,6 +100,7 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.Average("age"))
      )
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
@@ -121,6 +123,7 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.Count("employeeID"))
      )
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for a count query
@@ -143,6 +146,7 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.Maximum("age"))
      )
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
@@ -165,6 +169,7 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.Minimum("age"))
      )
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
@@ -187,6 +192,7 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.Sum("age"))
      )
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
@@ -210,6 +216,7 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Where("employeeID", isEqualTo: 1111)
      )
      ```
+     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute

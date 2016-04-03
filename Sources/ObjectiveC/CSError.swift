@@ -30,13 +30,17 @@ import CoreData
 // MARK: - CSError
 
 /**
- The `CSError` provides a facade for global CoreStore error declarations.
+ All errors thrown from CoreStore are expressed in `CSError`s.
+ 
+ - SeeAlso: `CoreStoreError`
  */
 @objc
 public final class CSError: NSError, CoreStoreObjectiveCType {
     
     /**
-     The `NSError` error domain for `CSCoreStore`.
+     The `NSError` error domain for `CSError`.
+     
+     - SeeAlso: `CoreStoreErrorErrorDomain`
      */
     @objc
     public static let errorDomain = CoreStoreErrorDomain
@@ -60,8 +64,6 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
     
     
     // MARK: CoreStoreObjectiveCType
-    
-    private var swiftError: CoreStoreError?
     
     public var bridgeToSwift: CoreStoreError {
         
@@ -174,6 +176,11 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
         
         super.init(coder: aDecoder)
     }
+    
+    
+    // MARK: Private
+    
+    private var swiftError: CoreStoreError?
 }
 
 
@@ -181,6 +188,9 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
 
 /**
  The `NSError` error codes for `CSError.Domain`.
+ 
+ - SeeAlso: `CSError`
+ - SeeAlso: `CoreStoreError`
  */
 @objc
 public enum CSErrorCode: Int {

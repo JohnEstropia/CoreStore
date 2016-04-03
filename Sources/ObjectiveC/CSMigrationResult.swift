@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSMigrationResult` serves as the Objective-C bridging type for `MigrationResult`.
+ 
+ - SeeAlso: `MigrationResult`
  */
 @objc
 public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {

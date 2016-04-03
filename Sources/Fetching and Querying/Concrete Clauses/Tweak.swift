@@ -46,8 +46,8 @@ public struct Tweak: FetchClause, QueryClause, DeleteClause {
     
     /**
      Initializes a `Tweak` clause with a closure where the `NSFetchRequest` may be configured.
-     - Important: `Tweak`'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions. Also, some utilities (such as `ListMonitor`s) may keep `FetchClause`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      
+     - Important: `Tweak`'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions. Also, some utilities (such as `ListMonitor`s) may keep `FetchClause`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      - parameter customization: a list of key path strings to group results with
      */
     public init(_ customization: (fetchRequest: NSFetchRequest) -> Void) {

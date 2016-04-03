@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSSetupResult` serves as the Objective-C bridging type for `SetupResult`.
+ 
+ - SeeAlso: `SetupResult`
  */
 @objc
 public final class CSSetupResult: NSObject {

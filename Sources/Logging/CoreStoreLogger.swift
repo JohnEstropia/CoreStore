@@ -50,33 +50,33 @@ public protocol CoreStoreLogger {
     /**
      Handles log messages sent by the `CoreStore` framework.
      
-     :level: the severity of the log message
-     :message: the log message
-     :fileName: the source file name
-     :lineNumber: the source line number
-     :functionName: the source function name
+     - parameter level: the severity of the log message
+     - parameter message: the log message
+     - parameter fileName: the source file name
+     - parameter lineNumber: the source line number
+     - parameter functionName: the source function name
      */
     func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
      Handles errors sent by the `CoreStore` framework.
      
-     :error: the error
-     :message: the error message
-     :fileName: the source file name
-     :lineNumber: the source line number
-     :functionName: the source function name
+     - parameter error: the error
+     - parameter message: the error message
+     - parameter fileName: the source file name
+     - parameter lineNumber: the source line number
+     - parameter functionName: the source function name
      */
     func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
      Handles assertions made throughout the `CoreStore` framework.
      
-     :condition: the assertion condition
-     :message: the assertion message
-     :fileName: the source file name
-     :lineNumber: the source line number
-     :functionName: the source function name
+     - parameter condition: the assertion condition
+     - parameter message: the assertion message
+     - parameter fileName: the source file name
+     - parameter lineNumber: the source line number
+     - parameter functionName: the source function name
      */
     func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     

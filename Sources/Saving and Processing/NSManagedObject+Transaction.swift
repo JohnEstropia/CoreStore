@@ -36,7 +36,7 @@ public extension NSManagedObject {
      
      When using an `UnsafeDataTransaction` and passing around a temporary object, you can use this property to execute fetches and updates to the transaction without having to pass around both the object and the transaction instances.
      
-     Note that the internal reference to the transaction is `weak`, and it is still the developer's responsibility to retain a strong reference to the `UnsafeDataTransaction`.
+     - Note: The internal reference to the transaction is `weak`, and it is still the developer's responsibility to retain a strong reference to the `UnsafeDataTransaction`.
      */
     @nonobjc
     public var unsafeDataTransaction: UnsafeDataTransaction? {

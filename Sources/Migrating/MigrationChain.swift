@@ -62,6 +62,9 @@ import CoreData
  */
 public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, DictionaryLiteralConvertible, ArrayLiteralConvertible {
     
+    /**
+     Initializes the `MigrationChain` with empty values, which instructs the `DataStack` to use the .xcdatamodel's current version as the final version, and to disable progressive migrations.
+    */
     public init() {
         
         self.versionTree = [:]
@@ -70,6 +73,9 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.valid = true
     }
     
+    /**
+     Initializes the `MigrationChain` with a single model version, which instructs the `DataStack` to use the the specified version as the final version, and to disable progressive migrations.
+     */
     public init(_ value: String) {
         
         self.versionTree = [:]
@@ -78,6 +84,9 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.valid = true
     }
     
+    /**
+     Initializes the `MigrationChain` with a linear order of versions, which becomes the order of the `DataStack`'s progressive migrations.
+     */
     public init<T: CollectionType where T.Generator.Element == String, T.Index: BidirectionalIndexType>(_ elements: T) {
         
         CoreStore.assert(Set(elements).count == Array(elements).count, "\(typeName(MigrationChain))'s migration chain could not be created due to duplicate version strings.")
@@ -101,6 +110,9 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.valid = valid
     }
     
+    /**
+     Initializes the `MigrationChain` with a version tree, which becomes the order of the `DataStack`'s progressive migrations.
+     */
     public init(_ elements: [(String, String)]) {
         
         var valid = true
@@ -147,6 +159,9 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         self.valid = valid && Set(versionTree.keys).union(versionTree.values).filter { isVersionAmbiguous($0) }.count <= 0
     }
     
+    /**
+     Initializes the `MigrationChain` with a version tree, which becomes the order of the `DataStack`'s progressive migrations.
+     */
     public init(_ dictionary: [String: String]) {
         
         self.init(dictionary.map { $0 })

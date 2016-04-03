@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSFetchClause` implement clauses used to configure `NSFetchRequest`s.
+ 
+ - SeeAlso: `FetchClause`
  */
 @objc
 public protocol CSFetchClause {
@@ -44,6 +46,8 @@ public protocol CSFetchClause {
 
 /**
  The `CSQueryClause` implement clauses used to configure `NSFetchRequest`s.
+ 
+ - SeeAlso: `QueryClause`
  */
 @objc
 public protocol CSQueryClause {
@@ -57,6 +61,8 @@ public protocol CSQueryClause {
 
 /**
  The `CSDeleteClause` implement clauses used to configure `NSFetchRequest`s.
+ 
+ - SeeAlso: `DeleteClause`
  */
 @objc
 public protocol CSDeleteClause {

@@ -43,7 +43,6 @@ public struct Into<T: NSManagedObject>: Hashable {
     
     /**
      Initializes an `Into` clause.
-     Sample Usage:
      ```
      let person = transaction.create(Into<MyPersonEntity>())
      ```
@@ -55,10 +54,10 @@ public struct Into<T: NSManagedObject>: Hashable {
     
     /**
      Initializes an `Into` clause with the specified entity type.
-     Sample Usage:
      ```
      let person = transaction.create(Into(MyPersonEntity))
      ```
+     
      - parameter entity: the `NSManagedObject` type to be created
      */
     public init(_ entity: T.Type) {
@@ -68,10 +67,10 @@ public struct Into<T: NSManagedObject>: Hashable {
     
     /**
      Initializes an `Into` clause with the specified entity class.
-     Sample Usage:
      ```
      let person = transaction.create(Into(MyPersonEntity))
      ```
+     
      - parameter entityClass: the `NSManagedObject` class type to be created
      */
     public init(_ entityClass: AnyClass) {
@@ -81,10 +80,10 @@ public struct Into<T: NSManagedObject>: Hashable {
     
     /**
      Initializes an `Into` clause with the specified configuration.
-     Sample Usage:
      ```
      let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
      ```
+     
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */
     public init(_ configuration: String?) {
@@ -94,10 +93,10 @@ public struct Into<T: NSManagedObject>: Hashable {
     
     /**
      Initializes an `Into` clause with the specified entity type and configuration.
-     Sample Usage:
      ```
      let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
      ```
+     
      - parameter entity: the `NSManagedObject` type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */
@@ -108,10 +107,10 @@ public struct Into<T: NSManagedObject>: Hashable {
     
     /**
      Initializes an `Into` clause with the specified entity class and configuration.
-     Sample Usage:
      ```
      let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
      ```
+     
      - parameter entityClass: the `NSManagedObject` class type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */

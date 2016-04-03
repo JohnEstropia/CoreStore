@@ -137,7 +137,7 @@ public protocol LocalStorage: StorageInterface {
     var localStorageOptions: LocalStorageOptions { get }
     
     /**
-     Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
+     Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
      */
     func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws
 }

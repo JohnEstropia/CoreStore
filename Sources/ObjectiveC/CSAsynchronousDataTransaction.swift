@@ -31,6 +31,8 @@ import CoreData
 
 /**
  The `CSAsynchronousDataTransaction` serves as the Objective-C bridging type for `AsynchronousDataTransaction`.
+ 
+ - SeeAlso: `AsynchronousDataTransaction`
  */
 @objc
 public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {

@@ -28,22 +28,43 @@ import Foundation
 
 // MARK: - CoreStoreObjectiveCType
 
+/**
+ `CoreStoreObjectiveCType`s are Objective-C accessible classes that represent CoreStore's Swift types.
+ */
 public protocol CoreStoreObjectiveCType: class, AnyObject {
     
+    /**
+     The corresponding Swift type
+     */
     associatedtype SwiftType
     
+    /**
+     The bridged Swift instance
+     */
     var bridgeToSwift: SwiftType { get }
     
+    /**
+     Initializes this instance with the Swift instance to bridge from
+     */
     init(_ swiftValue: SwiftType)
 }
 
 
 // MARK: - CoreStoreSwiftType
 
+/**
+ `CoreStoreSwiftType`s are CoreStore's Swift types that are bridgeable to Objective-C.
+ */
 public protocol CoreStoreSwiftType {
     
+    /**
+     The corresponding Objective-C type
+     */
     associatedtype ObjectiveCType
     
+    /**
+     The bridged Objective-C instance
+     */
     var bridgeToObjectiveC: ObjectiveCType { get }
 }
 
@@ -104,6 +125,21 @@ internal func bridge<T: CoreStoreSwiftType>(error: NSErrorPointer, @noescape _ c
         
         error.memory = swiftError.bridgeToObjectiveC
         return nil
+    }
+}
+
+internal func bridge(error: NSErrorPointer, @noescape _ closure: () throws -> Void) -> Bool {
+    
+    do {
+        
+        try closure()
+        error.memory = nil
+        return true
+    }
+    catch let swiftError {
+        
+        error.memory = swiftError.bridgeToObjectiveC
+        return false
     }
 }
 

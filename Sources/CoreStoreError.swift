@@ -30,7 +30,7 @@ import CoreData
 // MARK: - CoreStoreError
 
 /**
- All errors thrown from CoreStore is expressed in `CoreStoreError` enum values.
+ All errors thrown from CoreStore are expressed in `CoreStoreError` enum values.
  */
 public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
     
@@ -40,7 +40,7 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     case Unknown
     
     /**
-     The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
+     The `NSPersistentStore` could not be initialized because another store existed at the specified `NSURL`.
      */
     case DifferentStorageExistsAtURL(existingPersistentStoreURL: NSURL)
     
@@ -71,11 +71,20 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
     
         switch self {
             
-        case .Unknown:                      return CoreStoreErrorCode.UnknownError.rawValue
-        case .DifferentStorageExistsAtURL:  return CoreStoreErrorCode.DifferentPersistentStoreExistsAtURL.rawValue
-        case .MappingModelNotFound:         return CoreStoreErrorCode.MappingModelNotFound.rawValue
-        case .ProgressiveMigrationRequired: return CoreStoreErrorCode.ProgressiveMigrationRequired.rawValue
-        case .InternalError:                return CoreStoreErrorCode.InternalError.rawValue
+        case .Unknown:
+            return CoreStoreErrorCode.UnknownError.rawValue
+            
+        case .DifferentStorageExistsAtURL:
+            return CoreStoreErrorCode.DifferentPersistentStoreExistsAtURL.rawValue
+            
+        case .MappingModelNotFound:
+            return CoreStoreErrorCode.MappingModelNotFound.rawValue
+            
+        case .ProgressiveMigrationRequired:
+            return CoreStoreErrorCode.ProgressiveMigrationRequired.rawValue
+            
+        case .InternalError:
+            return CoreStoreErrorCode.InternalError.rawValue
         }
     }
     
@@ -162,7 +171,7 @@ public func == (lhs: CoreStoreError, rhs: CoreStoreError) -> Bool {
 // MARK: - CoreStoreErrorDomain
 
 /**
- The `NSError` error domain for `CoreStore`.
+ The `NSError` error domain string for `CSError`.
  */
 @nonobjc
 public let CoreStoreErrorDomain = "com.corestore.error"
@@ -221,6 +230,8 @@ public extension NSError {
     // MARK: Deprecated
 
     /**
+     Deprecated. Use `CoreStoreError` enum values instead.
+     
      If the error's domain is equal to `CoreStoreErrorDomain`, returns the associated `CoreStoreErrorCode`. For other domains, returns `nil`.
      */
     @available(*, deprecated=2.0.0, message="Use CoreStoreError enum values instead.")

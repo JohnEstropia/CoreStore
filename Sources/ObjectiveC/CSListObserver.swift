@@ -37,6 +37,8 @@ import CoreData
      fetchClauses:@[[CSOrderBy sortDescriptor:[CSSortKey withKeyPath:@"lastName" ascending:YES]]]];
  [monitor addListObserver:self];
  ```
+ 
+ - SeeAlso: `ListObserver`
  */
 @available(OSX, unavailable)
 @objc
@@ -86,6 +88,8 @@ public protocol CSListObserver: class, AnyObject {
      fetchClauses:@[[CSOrderBy sortDescriptor:[CSSortKey withKeyPath:@"lastName" ascending:YES]]]];
  [monitor addListObjectObserver:self];
  ```
+ 
+ - SeeAlso: `ListObjectObserver`
  */
 @available(OSX, unavailable)
 @objc
@@ -145,6 +149,8 @@ public protocol CSListObjectObserver: CSListObserver {
      fetchClauses:@[[CSOrderBy sortDescriptor:[CSSortKey withKeyPath:@"lastName" ascending:YES]]]];
  [monitor addListSectionObserver:self];
  ```
+ 
+ - SeeAlso: `ListSectionObserver`
  */
 @available(OSX, unavailable)
 @objc

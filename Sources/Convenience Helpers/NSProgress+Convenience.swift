@@ -35,6 +35,7 @@ public extension NSProgress {
     
     /**
      Sets a closure that the `NSProgress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
+     
      - parameter closure: the closure to execute on progress change
      */
     @nonobjc
