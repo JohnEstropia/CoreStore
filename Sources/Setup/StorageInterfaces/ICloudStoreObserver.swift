@@ -28,18 +28,77 @@ import Foundation
 
 // MARK: - ICloudStoreObserver
 
+/**
+ Implement the `ICloudStoreObserver` protocol to observe ubiquitous storage notifications from the specified iCloud store.
+ Note that `ICloudStoreObserver` methods are only called when all the following conditions are true:
+ - the observer is registered to the `ICloudStore` via the `ICloudStore.addObserver(_:)` method
+ - the `ICloudStore` was added to a `DataStack`
+ - the `ICloudStore` and the `DataStack` are still persisted in memory
+ */
 public protocol ICloudStoreObserver: class {
     
+    /**
+     Notifies that the initial ubiquitous store import will complete
+     
+     - parameter storage: the `ICloudStore` instance being observed
+     - parameter dataStack: the `DataStack` that manages the peristent store
+     */
     func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack)
+    
+    /**
+     Notifies that the initial ubiquitous store import completed
+     
+     - parameter storage: the `ICloudStore` instance being observed
+     - parameter dataStack: the `DataStack` that manages the peristent store
+     */
     func iCloudStoreDidFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack)
     
+    /**
+     Notifies that an iCloud account will be added to the coordinator
+     
+     - parameter storage: the `ICloudStore` instance being observed
+     - parameter dataStack: the `DataStack` that manages the peristent store
+     */
     func iCloudStoreWillAddAccount(storage storage: ICloudStore, dataStack: DataStack)
+    
+    /**
+     Notifies that an iCloud account was added to the coordinator
+     
+     - parameter storage: the `ICloudStore` instance being observed
+     - parameter dataStack: the `DataStack` that manages the peristent store
+     */
     func iCloudStoreDidAddAccount(storage storage: ICloudStore, dataStack: DataStack)
     
+    /**
+     Notifies that an iCloud account will be removed from the coordinator
+     
+     - parameter storage: the `ICloudStore` instance being observed
+     - parameter dataStack: the `DataStack` that manages the peristent store
+     */
     func iCloudStoreWillRemoveAccount(storage storage: ICloudStore, dataStack: DataStack)
+    
+    /**
+     Notifies that an iCloud account was removed from the coordinator
+     
+     - parameter storage: the `ICloudStore` instance being observed
+     - parameter dataStack: the `DataStack` that manages the peristent store
+     */
     func iCloudStoreDidRemoveAccount(storage storage: ICloudStore, dataStack: DataStack)
     
+    /**
+     Notifies that iCloud contents will be deleted
+     
+     - parameter storage: the `ICloudStore` instance being observed
+     - parameter dataStack: the `DataStack` that manages the peristent store
+     */
     func iCloudStoreWillRemoveContent(storage storage: ICloudStore, dataStack: DataStack)
+    
+    /**
+     Notifies that iCloud contents were deleted
+     
+     - parameter storage: the `ICloudStore` instance being observed
+     - parameter dataStack: the `DataStack` that manages the peristent store
+     */
     func iCloudStoreDidRemoveContent(storage storage: ICloudStore, dataStack: DataStack)
 }
 

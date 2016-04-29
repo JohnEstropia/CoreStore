@@ -37,7 +37,7 @@ public extension DataStack {
     /**
      Asynchronously adds a `StorageInterface` with default settings to the stack. Migrations are also initiated by default.
      ```
-     try dataStack.addStorage(
+     dataStack.addStorage(
          InMemoryStore.self,
          completion: { result in
              switch result {
@@ -49,19 +49,17 @@ public extension DataStack {
      ```
      
      - parameter storeType: the storage type
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
-     - throws: a `CoreStoreError` value indicating the failure
-     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
+    public func addStorage<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) {
         
-        return try self.addStorage(storeType.init(), completion: completion)
+        self.addStorage(storeType.init(), completion: completion)
     }
     
     /**
      Asynchronously adds a `StorageInterface` to the stack. Migrations are also initiated by default.
      ```
-     try dataStack.addStorage(
+     dataStack.addStorage(
          InMemoryStore(configuration: "Config1"),
          completion: { result in
              switch result {
@@ -73,11 +71,9 @@ public extension DataStack {
      ```
      
      - parameter storage: the storage
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
-     - throws: a `CoreStoreError` value indicating the failure
-     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T: StorageInterface>(storage: T, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
+    public func addStorage<T: StorageInterface>(storage: T, completion: (SetupResult<T>) -> Void) {
         
         self.coordinator.performAsynchronously {
             
@@ -110,21 +106,18 @@ public extension DataStack {
                     storeError,
                     "Failed to add \(typeName(storage)) to the stack."
                 )
-                
                 GCDQueue.Main.async {
                     
                     completion(SetupResult(storeError))
                 }
             }
         }
-        
-        return nil
     }
     
     /**
      Asynchronously adds a `LocalStorage` with default settings to the stack. Migrations are also initiated by default.
      ```
-     try dataStack.addStorage(
+     let migrationProgress = dataStack.addStorage(
          SQLiteStore.self,
          completion: { result in
              switch result {
@@ -136,19 +129,18 @@ public extension DataStack {
      ```
      
      - parameter storeType: the local storage type
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
-     - throws: a `CoreStoreError` value indicating the failure
-     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public func addStorage<T: LocalStorage where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
+    public func addStorage<T: LocalStorage where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) -> NSProgress? {
         
-        return try self.addStorage(storeType.init(), completion: completion)
+        return self.addStorage(storeType.init(), completion: completion)
     }
     
     /**
      Asynchronously adds a `LocalStorage` to the stack. Migrations are also initiated by default.
      ```
-     try dataStack.addStorage(
+     let migrationProgress = dataStack.addStorage(
          SQLiteStore(fileName: "core_data.sqlite", configuration: "Config1"),
          completion: { result in
              switch result {
@@ -160,11 +152,10 @@ public extension DataStack {
      ```
      
      - parameter storage: the local storage
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
-     - throws: a `CoreStoreError` value indicating the failure
-     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public func addStorage<T: LocalStorage>(storage: T, completion: (SetupResult<T>) -> Void) throws -> NSProgress? {
+    public func addStorage<T: LocalStorage>(storage: T, completion: (SetupResult<T>) -> Void) -> NSProgress? {
         
         let fileURL = storage.fileURL
         CoreStore.assert(
@@ -172,7 +163,7 @@ public extension DataStack {
             "The specified URL for the \(typeName(storage)) is invalid: \"\(fileURL)\""
         )
         
-        return try self.coordinator.performSynchronously {
+        return self.coordinator.performSynchronously {
             
             if let _ = self.persistentStoreForStorage(storage) {
                 
@@ -200,7 +191,11 @@ public extension DataStack {
                     error,
                     "Failed to add \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
                 )
-                throw error
+                GCDQueue.Main.async {
+                    
+                    completion(SetupResult(error))
+                }
+                return nil
             }
             
             do {
@@ -263,11 +258,21 @@ public extension DataStack {
             catch let error as NSError
                 where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
                     
-                    try self.addStorageAndWait(storage)
-                    
-                    GCDQueue.Main.async {
+                    do {
                         
-                        completion(SetupResult(storage))
+                        try self.addStorageAndWait(storage)
+                        
+                        GCDQueue.Main.async {
+                            
+                            completion(SetupResult(storage))
+                        }
+                    }
+                    catch {
+                        
+                        GCDQueue.Main.async {
+                            
+                            completion(SetupResult(error))
+                        }
                     }
                     return nil
             }
@@ -278,7 +283,11 @@ public extension DataStack {
                     storeError,
                     "Failed to load SQLite \(typeName(NSPersistentStore)) metadata."
                 )
-                throw storeError
+                GCDQueue.Main.async {
+                    
+                    completion(SetupResult(storeError))
+                }
+                return nil
             }
         }
     }
@@ -286,7 +295,7 @@ public extension DataStack {
     /**
      Asynchronously adds a `CloudStorage` to the stack. Migrations are also initiated by default.
      ```
-     try dataStack.addStorage(
+     dataStack.addStorage(
          ICloudStore(
              ubiquitousContentName: "MyAppCloudData",
              ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
@@ -305,13 +314,12 @@ public extension DataStack {
      ```
      
      - parameter storage: the cloud storage
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
-     - throws: a `CoreStoreError` value indicating the failure
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `CloudStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T: CloudStorage>(storage: T, completion: (SetupResult<T>) -> Void) throws {
+    public func addStorage<T: CloudStorage>(storage: T, completion: (SetupResult<T>) -> Void)  {
         
         let cacheFileURL = storage.cacheFileURL
-        try self.coordinator.performSynchronously {
+        self.coordinator.performSynchronously {
             
             if let _ = self.persistentStoreForStorage(storage) {
                 
@@ -339,7 +347,11 @@ public extension DataStack {
                     error,
                     "Failed to add \(typeName(storage)) at \"\(cacheFileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
                 )
-                throw error
+                GCDQueue.Main.async {
+                    
+                    completion(SetupResult(error))
+                }
+                return
             }
             
             do {
@@ -384,11 +396,21 @@ public extension DataStack {
             catch let error as NSError
                 where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
                     
-                    try self.addStorageAndWait(storage)
-                    
-                    GCDQueue.Main.async {
+                    do {
                         
-                        completion(SetupResult(storage))
+                        try self.addStorageAndWait(storage)
+                        
+                        GCDQueue.Main.async {
+                            
+                            completion(SetupResult(storage))
+                        }
+                    }
+                    catch {
+                        
+                        GCDQueue.Main.async {
+                            
+                            completion(SetupResult(error))
+                        }
                     }
             }
             catch {
@@ -398,7 +420,10 @@ public extension DataStack {
                     storeError,
                     "Failed to load \(typeName(NSPersistentStore)) metadata."
                 )
-                throw storeError
+                GCDQueue.Main.async {
+                    
+                    completion(SetupResult(storeError))
+                }
             }
         }
     }
@@ -407,7 +432,7 @@ public extension DataStack {
      Migrates a local storage to match the `DataStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
      
      - parameter storage: the local storage
-     - parameter completion: the closure to be executed on the main queue when the migration completes, either due to success or failure. The closure's `MigrationResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously.
+     - parameter completion: the closure to be executed on the main queue when the migration completes, either due to success or failure. The closure's `MigrationResult` argument indicates the result.
      - throws: a `CoreStoreError` value indicating the failure
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */

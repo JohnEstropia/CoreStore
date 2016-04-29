@@ -99,14 +99,19 @@ public class ICloudStore: CloudStorage {
         self.storeOptions = storeOptions
     }
     
-    public func addUbiquitousStoreObserver<T: ICloudStoreObserver>(observer: T) {
+    /**
+     Registers an `ICloudStoreObserver` to start receive notifications from the ubiquitous store
+     
+     - parameter observer: the observer to start sending ubiquitous notifications to
+     */
+    public func addObserver<T: ICloudStoreObserver>(observer: T) {
         
         CoreStore.assert(
             NSThread.isMainThread(),
             "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
         )
         
-        self.removeUbiquitousStoreObserver(observer)
+        self.removeObserver(observer)
         
         self.registerNotification(
             &self.willFinishInitialImportKey,
@@ -182,7 +187,12 @@ public class ICloudStore: CloudStorage {
         )
     }
     
-    public func removeUbiquitousStoreObserver(observer: ICloudStoreObserver) {
+    /**
+     Unregisters an `ICloudStoreObserver` to stop receiving notifications from the ubiquitous store
+     
+     - parameter observer: the observer to stop sending ubiquitous notifications to
+     */
+    public func removeObserver(observer: ICloudStoreObserver) {
         
         CoreStore.assert(
             NSThread.isMainThread(),

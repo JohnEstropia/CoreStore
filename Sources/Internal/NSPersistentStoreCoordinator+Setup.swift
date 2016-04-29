@@ -60,24 +60,36 @@ internal extension NSPersistentStoreCoordinator {
     }
     
     @nonobjc
-    internal func performSynchronously(closure: () -> Void) {
+    internal func performSynchronously<T>(closure: () -> T) -> T {
         
+        var result: T?
         #if USE_FRAMEWORKS
             
-            self.performBlockAndWait(closure)
+            self.performBlockAndWait {
+                
+                result = closure()
+            }
         #else
             
             if #available(iOS 8.0, *) {
                 
-                self.performBlockAndWait(closure)
+                self.performBlockAndWait {
+                    
+                    result = closure()
+                }
             }
             else {
                 
                 self.lock()
-                autoreleasepool(closure)
+                autoreleasepool {
+                    
+                    result = closure()
+                }
                 self.unlock()
             }
         #endif
+        
+        return result!
     }
     
     @nonobjc
