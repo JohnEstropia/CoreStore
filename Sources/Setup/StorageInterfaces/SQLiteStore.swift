@@ -86,24 +86,6 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     }
     
     
-    // MAKR: LocalStorage
-    
-    /**
-     The `NSURL` that points to the SQLite file
-     */
-    public let fileURL: NSURL
-    
-    /**
-     The `NSBundle`s from which to search mapping models for migrations
-     */
-    public let mappingModelBundles: [NSBundle]
-    
-    /**
-     Options that tell the `DataStack` how to setup the persistent store
-     */
-    public var localStorageOptions: LocalStorageOptions
-    
-    
     // MARK: StorageInterface
     
     /**
@@ -123,13 +105,66 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
      ```
      */
     public let storeOptions: [String: AnyObject]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
-
+    
+    /**
+     Do not call directly. Used by the `DataStack` internally.
+     */
+    public func didAddToDataStack(dataStack: DataStack) {
+        
+        self.dataStack = dataStack
+    }
+    
+    /**
+     Do not call directly. Used by the `DataStack` internally.
+     */
+    public func didRemoveFromDataStack(dataStack: DataStack) {
+        
+        self.dataStack = nil
+    }
+    
+    
+    // MAKR: LocalStorage
+    
+    /**
+     The `NSURL` that points to the SQLite file
+     */
+    public let fileURL: NSURL
+    
+    /**
+     The `NSBundle`s from which to search mapping models for migrations
+     */
+    public let mappingModelBundles: [NSBundle]
+    
+    /**
+     Options that tell the `DataStack` how to setup the persistent store
+     */
+    public var localStorageOptions: LocalStorageOptions
+    
+    /**
+     The options dictionary for the specified `LocalStorageOptions`
+     */
+    public func storeOptionsForOptions(options: LocalStorageOptions) -> [String: AnyObject]? {
+        
+        if options == .None {
+            
+            return self.storeOptions
+        }
+        
+        var storeOptions = self.storeOptions ?? [:]
+        if options.contains(.AllowSynchronousLightweightMigration) {
+            
+            storeOptions[NSMigratePersistentStoresAutomaticallyOption] = true
+            storeOptions[NSInferMappingModelAutomaticallyOption] = true
+        }
+        return storeOptions
+    }
+    
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
     public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws {
         
-        // TODO: check if attached to persistent store 
+        // TODO: check if attached to persistent store
         
         let fileURL = self.fileURL
         try autoreleasepool {
@@ -147,7 +182,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     }
     
     
-    // MARK: Private
+    // MARK: Internal
     
     internal static let defaultRootDirectory: NSURL = {
         
@@ -173,4 +208,9 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
             isDirectory: false
         )
         .URLByAppendingPathExtension("sqlite")
+    
+    
+    // MARK: Private
+    
+    private weak var dataStack: DataStack?
 }

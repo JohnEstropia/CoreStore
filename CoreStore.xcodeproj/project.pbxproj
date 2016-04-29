@@ -290,6 +290,11 @@
 		B56321B41BD6521C006C9394 /* NSManagedObjectContext+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */; };
 		B56321B51BD6521C006C9394 /* NSManagedObjectModel+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51BE0691B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift */; };
 		B56321B61BD6521C006C9394 /* WeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2D1AFF849C0064E85B /* WeakObject.swift */; };
+		B5677D3D1CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */; };
+		B5677D3E1CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */; };
+		B5677D3F1CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */; };
+		B5677D401CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */; };
+		B5677D411CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */; };
 		B56964D41B22FFAD0075EE4A /* DataStack+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */; };
 		B56965241B356B820075EE4A /* MigrationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965231B356B820075EE4A /* MigrationResult.swift */; };
 		B58B22F51C93C1BA00521925 /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F03A53019C5C6DA005002A5 /* CoreStore.framework */; };
@@ -298,6 +303,11 @@
 		B598514B1C90289F00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B59983491CA54BC100E1A417 /* CSBaseDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A581CA2008C002BEF78 /* CSBaseDataTransaction.swift */; };
 		B59AFF411C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
+		B59FA0AE1CCBAC95007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
+		B59FA0AF1CCBACA6007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
+		B59FA0B01CCBACA7007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
+		B59FA0B11CCBACA7007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
+		B59FA0B21CCBACA8007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
 		B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A261201B64BFDB006EB6D3 /* MigrationType.swift */; };
 		B5A5F2661CAEC50F004AB9AF /* CSSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */; };
 		B5A5F2671CAEC50F004AB9AF /* CSSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */; };
@@ -652,9 +662,11 @@
 		B563216F1BD65082006C9394 /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56321791BD650DE006C9394 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
 		B563217B1BD650E3006C9394 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudStoreObserver.swift; sourceTree = "<group>"; };
 		B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Migration.swift"; sourceTree = "<group>"; };
 		B56965231B356B820075EE4A /* MigrationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationResult.swift; sourceTree = "<group>"; };
 		B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+Setup.swift"; sourceTree = "<group>"; };
+		B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudStore.swift; sourceTree = "<group>"; };
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
 		B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSelect.swift; sourceTree = "<group>"; };
 		B5AD60CD1C90141E00F2B2E8 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
@@ -1228,6 +1240,8 @@
 				B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */,
 				B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */,
 				B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */,
+				B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */,
+				B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */,
 			);
 			path = StorageInterfaces;
 			sourceTree = "<group>";
@@ -1576,6 +1590,7 @@
 				B5ECDC291CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				B5E84F121AFF847B0064E85B /* OrderBy.swift in Sources */,
 				B546F9581C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
+				B5677D3D1CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
 				B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */,
 				B5FAD6AE1B518DCB00714891 /* CoreStore+Migration.swift in Sources */,
 				B5E84EE71AFF84610064E85B /* CoreStore+Logging.swift in Sources */,
@@ -1633,6 +1648,7 @@
 				B5E84F101AFF847B0064E85B /* GroupBy.swift in Sources */,
 				B5E84F201AFF84860064E85B /* DataStack+Observing.swift in Sources */,
 				B501FDDD1CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
+				B59FA0AE1CCBAC95007C9BCA /* ICloudStore.swift in Sources */,
 				B5E84EF81AFF846E0064E85B /* CoreStore+Transaction.swift in Sources */,
 				B5E84F301AFF849C0064E85B /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				B546F9691C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
@@ -1705,6 +1721,7 @@
 				B5ECDC2B1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				82BA18A11C4BBD1D00A0916E /* CoreStore.swift in Sources */,
 				B546F9591C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
+				B5677D3F1CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
 				82BA18CF1C4BBD7100A0916E /* Functions.swift in Sources */,
 				82BA18A31C4BBD2200A0916E /* DataStack.swift in Sources */,
 				82BA18C81C4BBD5900A0916E /* MigrationChain.swift in Sources */,
@@ -1762,6 +1779,7 @@
 				82BA18CB1C4BBD6400A0916E /* NSManagedObject+Convenience.swift in Sources */,
 				82BA18B51C4BBD3F00A0916E /* BaseDataTransaction+Querying.swift in Sources */,
 				B501FDDF1CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
+				B59FA0B01CCBACA7007C9BCA /* ICloudStore.swift in Sources */,
 				82BA18D31C4BBD7100A0916E /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				82BA18AD1C4BBD3100A0916E /* UnsafeDataTransaction.swift in Sources */,
 				B546F96A1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
@@ -1803,6 +1821,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5DBE2D01C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
+				B5677D411CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
 				B52DD1BE1BE1F94300949AFE /* NSProgress+Convenience.swift in Sources */,
 				B5ECDC151CA816E500C7F112 /* CSTweak.swift in Sources */,
 				B546F9761C9C553300D5AC55 /* SetupResult.swift in Sources */,
@@ -1870,6 +1889,7 @@
 				B52DD1CB1BE1F94600949AFE /* WeakObject.swift in Sources */,
 				B52DD1C11BE1F94600949AFE /* Functions.swift in Sources */,
 				B53FBA0F1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,
+				B59FA0B21CCBACA8007C9BCA /* ICloudStore.swift in Sources */,
 				B52DD19A1BE1F92800949AFE /* CoreStore+Logging.swift in Sources */,
 				B52DD1A71BE1F93200949AFE /* BaseDataTransaction+Querying.swift in Sources */,
 				B546F96C1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
@@ -1944,6 +1964,7 @@
 				B5ECDC2C1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				B56321911BD65216006C9394 /* BaseDataTransaction+Importing.swift in Sources */,
 				B546F95A1C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
+				B5677D401CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
 				B56321941BD65216006C9394 /* CoreStore+Querying.swift in Sources */,
 				B56321811BD65216006C9394 /* DataStack.swift in Sources */,
 				B56321A81BD65219006C9394 /* NSManagedObject+Convenience.swift in Sources */,
@@ -2001,6 +2022,7 @@
 				B56321851BD65216006C9394 /* CoreStore+Logging.swift in Sources */,
 				B56321921BD65216006C9394 /* BaseDataTransaction+Querying.swift in Sources */,
 				B501FDE01CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
+				B59FA0B11CCBACA7007C9BCA /* ICloudStore.swift in Sources */,
 				B56321B11BD6521C006C9394 /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				B563218D1BD65216006C9394 /* CoreStore+Transaction.swift in Sources */,
 				B546F96B1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
@@ -2047,6 +2069,7 @@
 				B5ECDC3E1CA836BE00C7F112 /* CSCoreStore+Setup.swift in Sources */,
 				B5D9E2F31CA2C317007A9D52 /* CoreStoreError.swift in Sources */,
 				B5D9E2F41CA2C317007A9D52 /* Where.swift in Sources */,
+				B5677D3E1CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
 				B5D9E2F51CA2C317007A9D52 /* FetchedResultsControllerDelegate.swift in Sources */,
 				B5D9E2F61CA2C317007A9D52 /* MigrationType.swift in Sources */,
 				B5D9E2F71CA2C317007A9D52 /* DataStack+Querying.swift in Sources */,
@@ -2132,6 +2155,7 @@
 				B5D9E3211CA2C317007A9D52 /* CoreStore+Transaction.swift in Sources */,
 				B5D9E3221CA2C317007A9D52 /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				B5D9E3481CA2C6C4007A9D52 /* GCDTimer.swift in Sources */,
+				B59FA0AF1CCBACA6007C9BCA /* ICloudStore.swift in Sources */,
 				B5D9E3231CA2C317007A9D52 /* CoreStore+Observing.swift in Sources */,
 				B5ECDC3D1CA836BA00C7F112 /* CSError.swift in Sources */,
 				B5D9E3241CA2C317007A9D52 /* BaseDataTransaction+Importing.swift in Sources */,

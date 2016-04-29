@@ -68,7 +68,22 @@ internal extension NSManagedObjectContext {
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         context.undoManager = nil
         context.setupForCoreStoreWithContextName("com.corestore.rootcontext")
-        
+        context.observerForDidImportUbiquitousContentChangesNotification = NotificationObserver(
+            notificationName: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
+            object: coordinator,
+            closure: { [weak context] (note) -> Void in
+                
+                context?.performBlock { () -> Void in
+                    
+                    let updatedObjectIDs = (note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObjectID>) ?? []
+                    for objectID in updatedObjectIDs {
+                        
+                        context?.objectWithID(objectID).willAccessValueForKey(nil)
+                    }
+                    context?.mergeChangesFromContextDidSaveNotification(note)
+                }
+            }
+        )
         return context
     }
     
@@ -96,7 +111,6 @@ internal extension NSManagedObjectContext {
                 }
             }
         )
-        
         return context
     }
     
@@ -107,6 +121,7 @@ internal extension NSManagedObjectContext {
         
         static var parentStack: Void?
         static var observerForDidSaveNotification: Void?
+        static var observerForDidImportUbiquitousContentChangesNotification: Void?
     }
     
     @nonobjc
@@ -124,6 +139,26 @@ internal extension NSManagedObjectContext {
             setAssociatedRetainedObject(
                 newValue,
                 forKey: &PropertyKeys.observerForDidSaveNotification,
+                inObject: self
+            )
+        }
+    }
+    
+    @nonobjc
+    private var observerForDidImportUbiquitousContentChangesNotification: NotificationObserver? {
+        
+        get {
+            
+            return getAssociatedObjectForKey(
+                &PropertyKeys.observerForDidImportUbiquitousContentChangesNotification,
+                inObject: self
+            )
+        }
+        set {
+            
+            setAssociatedRetainedObject(
+                newValue,
+                forKey: &PropertyKeys.observerForDidImportUbiquitousContentChangesNotification,
                 inObject: self
             )
         }

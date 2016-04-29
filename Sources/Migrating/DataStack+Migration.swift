@@ -284,6 +284,126 @@ public extension DataStack {
     }
     
     /**
+     Asynchronously adds a `CloudStorage` to the stack. Migrations are also initiated by default.
+     ```
+     try dataStack.addStorage(
+         ICloudStore(
+             ubiquitousContentName: "MyAppCloudData",
+             ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
+             ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
+             ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
+             configuration: "Config1",
+             cloudStorageOptions: .AllowSynchronousLightweightMigration
+         ),
+         completion: { result in
+             switch result {
+             case .Success(let storage): // ...
+             case .Failure(let error): // ...
+             }
+         }
+     )
+     ```
+     
+     - parameter storage: the cloud storage
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a `.Failure` result if an error occurs asynchronously. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - throws: a `CoreStoreError` value indicating the failure
+     */
+    public func addStorage<T: CloudStorage>(storage: T, completion: (SetupResult<T>) -> Void) throws {
+        
+        let cacheFileURL = storage.cacheFileURL
+        try self.coordinator.performSynchronously {
+            
+            if let _ = self.persistentStoreForStorage(storage) {
+                
+                GCDQueue.Main.async {
+                    
+                    completion(SetupResult(storage))
+                }
+                return
+            }
+            
+            if let persistentStore = self.coordinator.persistentStoreForURL(cacheFileURL) {
+                
+                if let existingStorage = persistentStore.storageInterface as? T
+                    where storage.matchesPersistentStore(persistentStore) {
+                    
+                    GCDQueue.Main.async {
+                        
+                        completion(SetupResult(existingStorage))
+                    }
+                    return
+                }
+                
+                let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: cacheFileURL)
+                CoreStore.log(
+                    error,
+                    "Failed to add \(typeName(storage)) at \"\(cacheFileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                )
+                throw error
+            }
+            
+            do {
+                
+                var cloudStorageOptions = storage.cloudStorageOptions
+                cloudStorageOptions.remove(.RecreateLocalStoreOnModelMismatch)
+                
+                let storeOptions = storage.storeOptionsForOptions(cloudStorageOptions)
+                do {
+                    
+                    try NSFileManager.defaultManager().createDirectoryAtURL(
+                        cacheFileURL.URLByDeletingLastPathComponent!,
+                        withIntermediateDirectories: true,
+                        attributes: nil
+                    )
+                    try self.createPersistentStoreFromStorage(
+                        storage,
+                        finalURL: cacheFileURL,
+                        finalStoreOptions: storeOptions
+                    )
+                    GCDQueue.Main.async {
+                        
+                        completion(SetupResult(storage))
+                    }
+                }
+                catch let error as NSError where storage.cloudStorageOptions.contains(.RecreateLocalStoreOnModelMismatch) && error.isCoreDataMigrationError {
+                    
+                    let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
+                        storage.dynamicType.storeType,
+                        URL: cacheFileURL,
+                        options: storeOptions
+                    )
+                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                    
+                    try self.createPersistentStoreFromStorage(
+                        storage,
+                        finalURL: cacheFileURL,
+                        finalStoreOptions: storeOptions
+                    )
+                }
+            }
+            catch let error as NSError
+                where error.code == NSFileReadNoSuchFileError && error.domain == NSCocoaErrorDomain {
+                    
+                    try self.addStorageAndWait(storage)
+                    
+                    GCDQueue.Main.async {
+                        
+                        completion(SetupResult(storage))
+                    }
+            }
+            catch {
+                
+                let storeError = CoreStoreError(error)
+                CoreStore.log(
+                    storeError,
+                    "Failed to load \(typeName(NSPersistentStore)) metadata."
+                )
+                throw storeError
+            }
+        }
+    }
+    
+    /**
      Migrates a local storage to match the `DataStack`'s managed object model version. This method does NOT add the migrated store to the data stack.
      
      - parameter storage: the local storage

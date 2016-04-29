@@ -47,6 +47,19 @@ public protocol StorageInterface: class {
      The options dictionary for the `NSPersistentStore`
      */
     var storeOptions: [String: AnyObject]? { get }
+    
+    
+    // MARK: Internal (Do not call these directly)
+    
+    /**
+     Do not call directly. Used by the `DataStack` internally.
+     */
+    func didAddToDataStack(dataStack: DataStack)
+    
+    /**
+     Do not call directly. Used by the `DataStack` internally.
+     */
+    func didRemoveFromDataStack(dataStack: DataStack)
 }
 
 
@@ -90,6 +103,7 @@ public struct LocalStorageOptions: OptionSetType, NilLiteralConvertible {
      Tells the `DataStack` to allow lightweight migration for the store when added synchronously
      */
     public static let AllowSynchronousLightweightMigration = LocalStorageOptions(rawValue: 1 << 2)
+    
     
     
     // MARK: OptionSetType
@@ -137,13 +151,15 @@ public protocol LocalStorage: StorageInterface {
     var localStorageOptions: LocalStorageOptions { get }
     
     /**
+     The options dictionary for the specified `LocalStorageOptions`
+     */
+    func storeOptionsForOptions(options: LocalStorageOptions) -> [String: AnyObject]?
+    
+    /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
      */
     func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws
 }
-
-
-// MARK: Internal
 
 internal extension LocalStorage {
     
@@ -152,5 +168,107 @@ internal extension LocalStorage {
         return persistentStore.type == self.dynamicType.storeType
             && persistentStore.configurationName == (self.configuration ?? Into.defaultConfigurationName)
             && persistentStore.URL == self.fileURL
+    }
+}
+
+
+// MARK: - CloudStorageOptions
+
+/**
+ The `CloudStorageOptions` provides settings that tells the `DataStack` how to setup the persistent store for `LocalStorage` implementers.
+ */
+public struct CloudStorageOptions: OptionSetType, NilLiteralConvertible {
+    
+    /**
+     Tells the `DataStack` that the store should not be migrated or recreated, and should simply fail on model mismatch
+     */
+    public static let None = CloudStorageOptions(rawValue: 0)
+    
+    /**
+     Tells the `DataStack` to delete and recreate the local store from the cloud store on model mismatch, otherwise exceptions will be thrown on failure instead
+     */
+    public static let RecreateLocalStoreOnModelMismatch = CloudStorageOptions(rawValue: 1 << 0)
+    
+    /**
+     Tells the `DataStack` to allow lightweight migration for the store when added synchronously
+     */
+    public static let AllowSynchronousLightweightMigration = CloudStorageOptions(rawValue: 1 << 2)
+    
+    
+    // MARK: OptionSetType
+    
+    public init(rawValue: Int) {
+        
+        self.rawValue = rawValue
+    }
+    
+    
+    // MARK: RawRepresentable
+    
+    public let rawValue: Int
+    
+    
+    // MARK: NilLiteralConvertible
+    
+    public init(nilLiteral: ()) {
+        
+        self.rawValue = 0
+    }
+}
+
+
+// MARK: - CloudStorage
+
+/**
+ The `CloudStorage` represents `StorageInterface`s that are synchronized from a cloud-based store.
+ */
+public protocol CloudStorage: StorageInterface {
+    
+    /**
+     The `NSURL` that points to the store file
+     */
+    var cacheFileURL: NSURL { get }
+    
+    /**
+     Options that tell the `DataStack` how to setup the persistent store
+     */
+    var cloudStorageOptions: CloudStorageOptions { get }
+    
+    /**
+     The options dictionary for the specified `CloudStorageOptions`
+     */
+    func storeOptionsForOptions(options: CloudStorageOptions) -> [String: AnyObject]?
+    
+    /**
+     Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (Cloud stores for example, can set the NSPersistentStoreRemoveUbiquitousMetadataOption option before deleting)
+     */
+    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws
+}
+
+internal extension CloudStorage {
+    
+    internal func matchesPersistentStore(persistentStore: NSPersistentStore) -> Bool {
+        
+        guard persistentStore.type == self.dynamicType.storeType
+            && persistentStore.configurationName == (self.configuration ?? Into.defaultConfigurationName) else {
+                
+                return false
+        }
+        guard persistentStore.URL == self.cacheFileURL else {
+            
+            return false
+        }
+        guard let persistentStoreOptions = persistentStore.options,
+            let storeOptions = self.storeOptions else {
+                
+                return persistentStore.options == nil && self.storeOptions == nil
+        }
+        return storeOptions.reduce(true) { (isMatch, tuple) in
+            
+            let (key, value) = tuple
+            let obj1 = persistentStoreOptions[key] as? NSObject
+            let obj2 = value as? NSObject
+            return isMatch && (obj1 == obj2)
+        }
     }
 }

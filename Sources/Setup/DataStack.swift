@@ -238,12 +238,10 @@ public final class DataStack {
             
             do {
                 
-                var storeOptions = storage.storeOptions ?? [:]
-                if storage.localStorageOptions.contains(.AllowSynchronousLightweightMigration) {
-                    
-                    storeOptions[NSMigratePersistentStoresAutomaticallyOption] = true
-                    storeOptions[NSInferMappingModelAutomaticallyOption] = true
-                }
+                var localStorageOptions = storage.localStorageOptions
+                localStorageOptions.remove(.RecreateStoreOnModelMismatch)
+                
+                let storeOptions = storage.storeOptionsForOptions(localStorageOptions)
                 do {
                     
                     try NSFileManager.defaultManager().createDirectoryAtURL(
@@ -270,6 +268,100 @@ public final class DataStack {
                     try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: fileURL,
+                        finalStoreOptions: storeOptions
+                    )
+                    return storage
+                }
+            }
+            catch {
+                
+                let storeError = CoreStoreError(error)
+                CoreStore.log(
+                    storeError,
+                    "Failed to add \(typeName(storage)) to the stack."
+                )
+                throw storeError
+            }
+        }
+    }
+    
+    /**
+     Adds a `CloudStorage` to the stack and blocks until completion.
+     ```
+     try dataStack.addStorageAndWait(
+         ICloudStore(
+             ubiquitousContentName: "MyAppCloudData",
+             ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
+             ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
+             ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
+             configuration: "Config1",
+             cloudStorageOptions: .AllowSynchronousLightweightMigration
+         )
+     )
+     ```
+     
+     - parameter storage: the local storage
+     - throws: a `CoreStoreError` value indicating the failure
+     - returns: the cloud storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
+     */
+    public func addStorageAndWait<T: CloudStorage>(storage: T) throws -> T {
+        
+        return try self.coordinator.performSynchronously {
+            
+            if let _ = self.persistentStoreForStorage(storage) {
+                
+                return storage
+            }
+            
+            let cacheFileURL = storage.cacheFileURL
+            if let persistentStore = self.coordinator.persistentStoreForURL(cacheFileURL) {
+                
+                if let existingStorage = persistentStore.storageInterface as? T
+                    where storage.matchesPersistentStore(persistentStore) {
+                    
+                    return existingStorage
+                }
+                
+                let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: cacheFileURL)
+                CoreStore.log(
+                    error,
+                    "Failed to add \(typeName(storage)) at \"\(cacheFileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                )
+                throw error
+            }
+            
+            do {
+                
+                var cloudStorageOptions = storage.cloudStorageOptions
+                cloudStorageOptions.remove(.RecreateLocalStoreOnModelMismatch)
+                
+                let storeOptions = storage.storeOptionsForOptions(cloudStorageOptions)
+                do {
+                    
+                    try NSFileManager.defaultManager().createDirectoryAtURL(
+                        cacheFileURL.URLByDeletingLastPathComponent!,
+                        withIntermediateDirectories: true,
+                        attributes: nil
+                    )
+                    try self.createPersistentStoreFromStorage(
+                        storage,
+                        finalURL: cacheFileURL,
+                        finalStoreOptions: storeOptions
+                    )
+                    return storage
+                }
+                catch let error as NSError where storage.cloudStorageOptions.contains(.RecreateLocalStoreOnModelMismatch) && error.isCoreDataMigrationError {
+                    
+                    let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
+                        storage.dynamicType.storeType,
+                        URL: cacheFileURL,
+                        options: storeOptions
+                    )
+                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                    
+                    try self.createPersistentStoreFromStorage(
+                        storage,
+                        finalURL: cacheFileURL,
                         finalStoreOptions: storeOptions
                     )
                     return storage
@@ -407,6 +499,7 @@ public final class DataStack {
                 self.entityConfigurationsMapping[managedObjectClassName]?.insert(configurationName)
             }
         }
+        storage.didAddToDataStack(self)
         return persistentStore
     }
     

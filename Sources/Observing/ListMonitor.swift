@@ -634,19 +634,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     // MARK: Internal
     
-    internal var willChangeListKey: Void?
-    internal var didChangeListKey: Void?
-    internal var willRefetchListKey: Void?
-    internal var didRefetchListKey: Void?
-    
-    internal var didInsertObjectKey: Void?
-    internal var didDeleteObjectKey: Void?
-    internal var didUpdateObjectKey: Void?
-    internal var didMoveObjectKey: Void?
-    
-    internal var didInsertSectionKey: Void?
-    internal var didDeleteSectionKey: Void?
-    
     internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
         self.init(
@@ -1049,6 +1036,19 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     // MARK: Private
     
+    private var willChangeListKey: Void?
+    private var didChangeListKey: Void?
+    private var willRefetchListKey: Void?
+    private var didRefetchListKey: Void?
+    
+    private var didInsertObjectKey: Void?
+    private var didDeleteObjectKey: Void?
+    private var didUpdateObjectKey: Void?
+    private var didMoveObjectKey: Void?
+    
+    private var didInsertSectionKey: Void?
+    private var didDeleteSectionKey: Void?
+    
     private let fetchedResultsController: CoreStoreFetchedResultsController
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
@@ -1320,18 +1320,18 @@ public func == <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs
 
 // MARK: - Notification Keys
 
-internal let ListMonitorWillChangeListNotification = "ListMonitorWillChangeListNotification"
-internal let ListMonitorDidChangeListNotification = "ListMonitorDidChangeListNotification"
-internal let ListMonitorWillRefetchListNotification = "ListMonitorWillRefetchListNotification"
-internal let ListMonitorDidRefetchListNotification = "ListMonitorDidRefetchListNotification"
+private let ListMonitorWillChangeListNotification = "ListMonitorWillChangeListNotification"
+private let ListMonitorDidChangeListNotification = "ListMonitorDidChangeListNotification"
+private let ListMonitorWillRefetchListNotification = "ListMonitorWillRefetchListNotification"
+private let ListMonitorDidRefetchListNotification = "ListMonitorDidRefetchListNotification"
 
-internal let ListMonitorDidInsertObjectNotification = "ListMonitorDidInsertObjectNotification"
-internal let ListMonitorDidDeleteObjectNotification = "ListMonitorDidDeleteObjectNotification"
-internal let ListMonitorDidUpdateObjectNotification = "ListMonitorDidUpdateObjectNotification"
-internal let ListMonitorDidMoveObjectNotification = "ListMonitorDidMoveObjectNotification"
+private let ListMonitorDidInsertObjectNotification = "ListMonitorDidInsertObjectNotification"
+private let ListMonitorDidDeleteObjectNotification = "ListMonitorDidDeleteObjectNotification"
+private let ListMonitorDidUpdateObjectNotification = "ListMonitorDidUpdateObjectNotification"
+private let ListMonitorDidMoveObjectNotification = "ListMonitorDidMoveObjectNotification"
 
-internal let ListMonitorDidInsertSectionNotification = "ListMonitorDidInsertSectionNotification"
-internal let ListMonitorDidDeleteSectionNotification = "ListMonitorDidDeleteSectionNotification"
+private let ListMonitorDidInsertSectionNotification = "ListMonitorDidInsertSectionNotification"
+private let ListMonitorDidDeleteSectionNotification = "ListMonitorDidDeleteSectionNotification"
 
 private let UserInfoKeyObject = "UserInfoKeyObject"
 private let UserInfoKeyIndexPath = "UserInfoKeyIndexPath"

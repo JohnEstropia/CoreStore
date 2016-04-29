@@ -88,6 +88,62 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     }
     
     
+    // MARK: StorageInterface
+    
+    /**
+     The string identifier for the `NSPersistentStore`'s `type` property. For `SQLiteStore`s, this is always set to `NSSQLiteStoreType`.
+     */
+    public static let storeType = NSSQLiteStoreType
+    
+    /**
+     The options dictionary for the specified `LocalStorageOptions`
+     */
+    public func storeOptionsForOptions(options: LocalStorageOptions) -> [String: AnyObject]? {
+        
+        if options == .None {
+            
+            return self.storeOptions
+        }
+        
+        var storeOptions = self.storeOptions ?? [:]
+        if options.contains(.AllowSynchronousLightweightMigration) {
+            
+            storeOptions[NSMigratePersistentStoresAutomaticallyOption] = true
+            storeOptions[NSInferMappingModelAutomaticallyOption] = true
+        }
+        return storeOptions
+    }
+    
+    /**
+     The configuration name in the model file
+     */
+    public let configuration: String?
+    
+    /**
+     The options dictionary for the `NSPersistentStore`. For `SQLiteStore`s, this is always set to
+     ```
+     [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+     ```
+     */
+    public let storeOptions: [String: AnyObject]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+    
+    /**
+     Do not call directly. Used by the `DataStack` internally.
+     */
+    public func didAddToDataStack(dataStack: DataStack) {
+        
+        self.dataStack = dataStack
+    }
+    
+    /**
+     Do not call directly. Used by the `DataStack` internally.
+     */
+    public func didRemoveFromDataStack(dataStack: DataStack) {
+        
+        self.dataStack = nil
+    }
+    
+    
     // MAKR: LocalStorage
     
     /**
@@ -104,27 +160,6 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
      Options that tell the `DataStack` how to setup the persistent store
      */
     public var localStorageOptions: LocalStorageOptions
-    
-    
-    // MARK: StorageInterface
-    
-    /**
-     The string identifier for the `NSPersistentStore`'s `type` property. For `SQLiteStore`s, this is always set to `NSSQLiteStoreType`.
-     */
-    public static let storeType = NSSQLiteStoreType
-    
-    /**
-     The configuration name in the model file
-     */
-    public let configuration: String?
-    
-    /**
-     The options dictionary for the `NSPersistentStore`. For `SQLiteStore`s, this is always set to
-     ```
-     [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
-     ```
-     */
-    public let storeOptions: [String: AnyObject]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
     
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
@@ -168,4 +203,9 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     internal static let defaultFileURL = LegacySQLiteStore.defaultRootDirectory
         .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
         .URLByAppendingPathExtension("sqlite")
+    
+    
+    // MARK: Private
+    
+    private weak var dataStack: DataStack?
 }
