@@ -683,7 +683,7 @@
 		B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestEntity2.swift; sourceTree = "<group>"; };
 		B5D7A5B51CA3BF8F005C752B /* CSInto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSInto.swift; sourceTree = "<group>"; };
 		B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = CoreStore.podspec; sourceTree = SOURCE_ROOT; };
-		B5D9E3341CA2C317007A9D52 /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5D9E3341CA2C317007A9D52 /* CoreStore_iOS7.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore_iOS7.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5D9E3371CA2C6BF007A9D52 /* GCDBlock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDBlock.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDBlock.swift; sourceTree = "<group>"; };
 		B5D9E3381CA2C6BF007A9D52 /* GCDGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDGroup.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDGroup.swift; sourceTree = "<group>"; };
 		B5D9E33A1CA2C6BF007A9D52 /* GCDQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCDQueue.swift; path = Carthage/Checkouts/GCDKit/Sources/GCDQueue.swift; sourceTree = "<group>"; };
@@ -862,7 +862,7 @@
 				B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */,
 				82BA18891C4BBCBA00A0916E /* CoreStore.framework */,
 				82BA18921C4BBCBA00A0916E /* CoreStoreTests.xctest */,
-				B5D9E3341CA2C317007A9D52 /* CoreStore.framework */,
+				B5D9E3341CA2C317007A9D52 /* CoreStore_iOS7.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1433,7 +1433,7 @@
 			);
 			name = "CoreStore iOS7";
 			productName = CoreStore;
-			productReference = B5D9E3341CA2C317007A9D52 /* CoreStore.framework */;
+			productReference = B5D9E3341CA2C317007A9D52 /* CoreStore_iOS7.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -1482,8 +1482,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2F03A52F19C5C6DA005002A5 /* CoreStore iOS */,
 				B5D9E2ED1CA2C317007A9D52 /* CoreStore iOS7 */,
+				2F03A52F19C5C6DA005002A5 /* CoreStore iOS */,
 				2F03A53A19C5C6DA005002A5 /* CoreStoreTests iOS */,
 				82BA18881C4BBCBA00A0916E /* CoreStore tvOS */,
 				82BA18911C4BBCBA00A0916E /* CoreStoreTests tvOS */,
@@ -2549,6 +2549,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
+				PRODUCT_NAME = CoreStore_iOS7;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
@@ -2566,6 +2567,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "";
+				PRODUCT_NAME = CoreStore_iOS7;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
