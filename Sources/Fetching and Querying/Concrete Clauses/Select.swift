@@ -722,7 +722,7 @@ internal extension CollectionType where Generator.Element == SelectTerm {
                     
                     CoreStore.log(
                         .Warning,
-                        message: "The property \"\(keyPath)\" does not exist in entity \(typeName(entityDescription.managedObjectClassName)) and will be ignored by \(typeName(owner)) query clause."
+                        message: "The property \"\(keyPath)\" does not exist in entity \(cs_typeName(entityDescription.managedObjectClassName)) and will be ignored by \(cs_typeName(owner)) query clause."
                     )
                 }
                 
@@ -750,7 +750,7 @@ internal extension CollectionType where Generator.Element == SelectTerm {
                     
                     CoreStore.log(
                         .Warning,
-                        message: "The attribute \"\(keyPath)\" does not exist in entity \(typeName(entityDescription.managedObjectClassName)) and will be ignored by \(typeName(owner)) query clause."
+                        message: "The attribute \"\(keyPath)\" does not exist in entity \(cs_typeName(entityDescription.managedObjectClassName)) and will be ignored by \(cs_typeName(owner)) query clause."
                     )
                 }
                 

@@ -129,7 +129,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+            "Attempted to add an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         self.registerChangeNotification(
             &self.willChangeObjectKey,
@@ -195,13 +195,13 @@ public final class ObjectMonitor<T: NSManagedObject> {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to remove an observer of type \(typeName(observer)) outside the main thread."
+            "Attempted to remove an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         
         let nilValue: AnyObject? = nil
-        setAssociatedRetainedObject(nilValue, forKey: &self.willChangeObjectKey, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteObjectKey, inObject: observer)
-        setAssociatedRetainedObject(nilValue, forKey: &self.didUpdateObjectKey, inObject: observer)
+        cs_setAssociatedRetainedObject(nilValue, forKey: &self.willChangeObjectKey, inObject: observer)
+        cs_setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteObjectKey, inObject: observer)
+        cs_setAssociatedRetainedObject(nilValue, forKey: &self.didUpdateObjectKey, inObject: observer)
     }
     
     internal func upcast() -> ObjectMonitor<NSManagedObject> {
@@ -256,7 +256,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<T>) -> Void) {
         
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             NotificationObserver(
                 notificationName: name,
                 object: self,
@@ -276,7 +276,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     private func registerObjectNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<T>, object: T) -> Void) {
         
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             NotificationObserver(
                 notificationName: name,
                 object: self,

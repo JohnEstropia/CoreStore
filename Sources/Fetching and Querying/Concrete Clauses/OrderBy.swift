@@ -141,7 +141,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
             
             CoreStore.log(
                 .Warning,
-                message: "Existing sortDescriptors for the \(typeName(NSFetchRequest)) was overwritten by \(typeName(self)) query clause."
+                message: "Existing sortDescriptors for the \(cs_typeName(NSFetchRequest)) was overwritten by \(cs_typeName(self)) query clause."
             )
         }
         

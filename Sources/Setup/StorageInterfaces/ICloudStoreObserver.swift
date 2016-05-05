@@ -105,14 +105,18 @@ public protocol ICloudStoreObserver: class {
 public extension ICloudStoreObserver {
     
     public func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack) {}
+    
     public func iCloudStoreDidFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack) {}
     
     public func iCloudStoreWillAddAccount(storage storage: ICloudStore, dataStack: DataStack) {}
+    
     public func iCloudStoreDidAddAccount(storage storage: ICloudStore, dataStack: DataStack) {}
     
     public func iCloudStoreWillRemoveAccount(storage storage: ICloudStore, dataStack: DataStack) {}
+    
     public func iCloudStoreDidRemoveAccount(storage storage: ICloudStore, dataStack: DataStack) {}
     
     public func iCloudStoreWillRemoveContent(storage storage: ICloudStore, dataStack: DataStack) {}
+    
     public func iCloudStoreDidRemoveContent(storage storage: ICloudStore, dataStack: DataStack) {}
 }

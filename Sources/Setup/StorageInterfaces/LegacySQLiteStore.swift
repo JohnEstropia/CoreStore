@@ -169,7 +169,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
         // TODO: check if attached to persistent store
         
         let fileURL = self.fileURL
-        try autoreleasepool {
+        try cs_autoreleasepool {
             
             let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
             let store = try journalUpdatingCoordinator.addPersistentStoreWithType(

@@ -32,7 +32,7 @@ import CoreData
 /**
  All errors thrown from CoreStore are expressed in `CoreStoreError` enum values.
  */
-public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStringConvertible, Hashable {
+public enum CoreStoreError: ErrorType, Hashable {
     
     /**
      A failure occured because of an unknown error.
@@ -86,23 +86,6 @@ public enum CoreStoreError: ErrorType, CustomStringConvertible, CustomDebugStrin
         case .InternalError:
             return CoreStoreErrorCode.InternalError.rawValue
         }
-    }
-    
-    
-    // MARK: CustomStringConvertible
-    
-    public var description: String {
-        
-        // TODO:
-        return self.bridgeToObjectiveC.description
-    }
-    
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return self.description
     }
     
     

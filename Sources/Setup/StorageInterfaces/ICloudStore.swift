@@ -108,7 +108,7 @@ public class ICloudStore: CloudStorage {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to add an observer of type \(typeName(observer)) outside the main thread."
+            "Attempted to add an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         
         self.removeObserver(observer)
@@ -196,45 +196,45 @@ public class ICloudStore: CloudStorage {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to remove an observer of type \(typeName(observer)) outside the main thread."
+            "Attempted to remove an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         let nilValue: AnyObject? = nil
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &self.willFinishInitialImportKey,
             inObject: observer
         )
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &self.didFinishInitialImportKey,
             inObject: observer
         )
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &self.willAddAccountKey,
             inObject: observer
         )
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &self.didAddAccountKey,
             inObject: observer
         )
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &self.willRemoveAccountKey,
             inObject: observer
         )
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &self.didRemoveAccountKey,
             inObject: observer
         )
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &self.willRemoveContentKey,
             inObject: observer
         )
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &self.didRemoveContentKey,
             inObject: observer
@@ -272,7 +272,7 @@ public class ICloudStore: CloudStorage {
         self.dataStack = dataStack
         let coordinator = dataStack.coordinator
         
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             NotificationObserver(
                 notificationName: NSPersistentStoreCoordinatorStoresWillChangeNotification,
                 object: coordinator,
@@ -314,7 +314,7 @@ public class ICloudStore: CloudStorage {
             forKey: &Static.persistentStoreCoordinatorWillChangeStores,
             inObject: self
         )
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             NotificationObserver(
                 notificationName: NSPersistentStoreCoordinatorStoresDidChangeNotification,
                 object: coordinator,
@@ -365,12 +365,12 @@ public class ICloudStore: CloudStorage {
         
         let coordinator = dataStack.coordinator
         let nilValue: AnyObject? = nil
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &Static.persistentStoreCoordinatorWillChangeStores,
             inObject: coordinator
         )
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             nilValue,
             forKey: &Static.persistentStoreCoordinatorDidChangeStores,
             inObject: coordinator
@@ -423,7 +423,7 @@ public class ICloudStore: CloudStorage {
         // TODO: check if attached to persistent store
         
         let cacheFileURL = self.cacheFileURL
-        try autoreleasepool {
+        try cs_autoreleasepool {
             
             let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
             let options = [
@@ -467,7 +467,7 @@ public class ICloudStore: CloudStorage {
     
     private func registerNotification<T: ICloudStoreObserver>(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: T, callback: (observer: T, storage: ICloudStore, dataStack: DataStack) -> Void) {
         
-        setAssociatedRetainedObject(
+        cs_setAssociatedRetainedObject(
             NotificationObserver(
                 notificationName: name,
                 object: self,

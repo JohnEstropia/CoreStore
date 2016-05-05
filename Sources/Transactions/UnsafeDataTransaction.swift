@@ -70,7 +70,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             self.supportsUndo,
-            "Attempted to rollback a \(typeName(self)) with Undo support disabled."
+            "Attempted to rollback a \(cs_typeName(self)) with Undo support disabled."
         )
         self.context.rollback()
     }
@@ -82,7 +82,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             self.supportsUndo,
-            "Attempted to undo a \(typeName(self)) with Undo support disabled."
+            "Attempted to undo a \(cs_typeName(self)) with Undo support disabled."
         )
         self.context.undo()
     }
@@ -94,7 +94,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             self.supportsUndo,
-            "Attempted to redo a \(typeName(self)) with Undo support disabled."
+            "Attempted to redo a \(cs_typeName(self)) with Undo support disabled."
         )
         self.context.redo()
     }

@@ -47,12 +47,10 @@ public extension CSCoreStore {
      
      - parameter storage: the `CSInMemoryStore` instance
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously.
-     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
-     - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
-    public static func addInMemoryStorage(storage: CSInMemoryStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> NSProgress? {
+    public static func addInMemoryStorage(storage: CSInMemoryStore, completion: (CSSetupResult) -> Void) {
         
-        return self.defaultStack.addInMemoryStorage(storage, completion: completion, error: error)
+        self.defaultStack.addInMemoryStorage(storage, completion: completion)
     }
     
     /**

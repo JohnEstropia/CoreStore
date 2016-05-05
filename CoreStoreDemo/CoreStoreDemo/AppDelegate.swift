@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreStore
 
 
 // MARK: - AppDelegate
@@ -21,6 +22,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         application.statusBarStyle = .LightContent
+        
+        
+        print(InMemoryStore())
+        print(SQLiteStore())
+        print(LocalStorageOptions.None)
+        print([.AllowSynchronousLightweightMigration, .PreventProgressiveMigration] as LocalStorageOptions)
+        
         return true
     }
 }

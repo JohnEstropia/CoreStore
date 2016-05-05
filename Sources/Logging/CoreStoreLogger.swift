@@ -101,26 +101,3 @@ extension CoreStoreLogger {
         self.log(error: error.bridgeToSwift, message: message, fileName: fileName, lineNumber: lineNumber, functionName: functionName)
     }
 }
-
-
-// MARK: - Utilities
-
-internal func typeName<T>(value: T) -> String {
-    
-    return "'\(String(reflecting: value.dynamicType))'"
-}
-
-internal func typeName<T>(value: T.Type) -> String {
-    
-    return "'\(value)'"
-}
-
-internal func typeName(value: AnyClass) -> String {
-    
-    return "'\(value)'"
-}
-
-internal func typeName(name: String?) -> String {
-    
-    return "<\(name ?? "unknown")>"
-}

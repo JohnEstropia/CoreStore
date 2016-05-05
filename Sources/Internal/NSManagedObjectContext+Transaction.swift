@@ -41,14 +41,14 @@ internal extension NSManagedObjectContext {
         
         get {
             
-            return getAssociatedObjectForKey(
+            return cs_getAssociatedObjectForKey(
                 &PropertyKeys.parentTransaction,
                 inObject: self
             )
         }
         set {
             
-            setAssociatedWeakObject(
+            cs_setAssociatedWeakObject(
                 newValue,
                 forKey: &PropertyKeys.parentTransaction,
                 inObject: self
@@ -100,7 +100,7 @@ internal extension NSManagedObjectContext {
                 let saveError = CoreStoreError(error)
                 CoreStore.log(
                     saveError,
-                    "Failed to save \(typeName(NSManagedObjectContext))."
+                    "Failed to save \(cs_typeName(NSManagedObjectContext))."
                 )
                 result = SaveResult(saveError)
                 return
@@ -149,7 +149,7 @@ internal extension NSManagedObjectContext {
                 let saveError = CoreStoreError(error)
                 CoreStore.log(
                     saveError,
-                    "Failed to save \(typeName(NSManagedObjectContext))."
+                    "Failed to save \(cs_typeName(NSManagedObjectContext))."
                 )
                 GCDQueue.Main.async {
                     

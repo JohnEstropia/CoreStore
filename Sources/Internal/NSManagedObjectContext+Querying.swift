@@ -64,7 +64,7 @@ internal extension NSManagedObjectContext {
             
             CoreStore.log(
                 CoreStoreError(error),
-                "Failed to load existing \(typeName(object)) in context."
+                "Failed to load existing \(cs_typeName(object)) in context."
             )
             return nil
         }
@@ -341,7 +341,7 @@ internal extension NSManagedObjectContext {
         var fetchError: ErrorType?
         self.performBlockAndWait {
             
-            autoreleasepool {
+            cs_autoreleasepool {
                 
                 do {
                     

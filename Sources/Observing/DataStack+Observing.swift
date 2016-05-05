@@ -46,7 +46,7 @@ public extension DataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
+            "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         return ObjectMonitor(dataStack: self, object: object)
     }
@@ -76,7 +76,7 @@ public extension DataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
+            "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         CoreStore.assert(
             fetchClauses.contains { $0 is OrderBy },
@@ -116,7 +116,7 @@ public extension DataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
+            "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         CoreStore.assert(
             fetchClauses.contains { $0 is OrderBy },
@@ -161,7 +161,7 @@ public extension DataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
+            "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         CoreStore.assert(
             fetchClauses.contains { $0 is OrderBy },
@@ -204,7 +204,7 @@ public extension DataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to observe objects from \(typeName(self)) outside the main thread."
+            "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         CoreStore.assert(
             fetchClauses.contains { $0 is OrderBy },

@@ -81,7 +81,7 @@ internal extension NSPersistentStoreCoordinator {
             else {
                 
                 self.lock()
-                autoreleasepool {
+                cs_autoreleasepool {
                     
                     result = closure()
                 }
@@ -129,7 +129,7 @@ internal extension NSPersistentStoreCoordinator {
             else {
                 
                 self.lock()
-                autoreleasepool {
+                cs_autoreleasepool {
                     
                     do {
                         

@@ -118,7 +118,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.context.fetchOne(from, fetchClauses)
     }
@@ -148,7 +148,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.context.fetchAll(from, fetchClauses)
     }
@@ -178,7 +178,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
         
         return self.context.fetchCount(from, fetchClauses)
@@ -209,7 +209,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.context.fetchObjectID(from, fetchClauses)
     }
@@ -239,7 +239,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.context.fetchObjectIDs(from, fetchClauses)
     }
@@ -255,7 +255,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to delete from a \(typeName(self)) outside its designated queue."
+            "Attempted to delete from a \(cs_typeName(self)) outside its designated queue."
         )
         
         return self.context.deleteAll(from, deleteClauses)
@@ -272,7 +272,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to delete from a \(typeName(self)) outside its designated queue."
+            "Attempted to delete from a \(cs_typeName(self)) outside its designated queue."
         )
         
         return self.context.deleteAll(from, deleteClauses)
@@ -293,7 +293,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(typeName(self)) outside its designated queue."
+            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
         
         return self.context.queryValue(from, selectClause, queryClauses)
@@ -314,7 +314,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(typeName(self)) outside its designated queue."
+            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
         
         return self.context.queryValue(from, selectClause, queryClauses)
@@ -335,7 +335,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(typeName(self)) outside its designated queue."
+            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
         
         return self.context.queryAttributes(from, selectClause, queryClauses)
@@ -356,7 +356,7 @@ public extension BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(typeName(self)) outside its designated queue."
+            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
         
         return self.context.queryAttributes(from, selectClause, queryClauses)

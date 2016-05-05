@@ -34,6 +34,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     
     // MARK: Internal
     
+    @nonobjc
     internal convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
         self.init(
@@ -45,6 +46,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         )
     }
     
+    @nonobjc
     internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
         from?.applyToFetchRequest(fetchRequest, context: context, applyAffectedStores: false)
@@ -61,7 +63,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
             
             guard let from = (fetchRequest.entity.flatMap { $0.managedObjectClassName }).flatMap(NSClassFromString).flatMap(From.init) else {
                 
-                fatalError("Attempted to create an \(typeName(NSFetchedResultsController)) without a  From clause or an NSEntityDescription.")
+                fatalError("Attempted to create an \(cs_typeName(NSFetchedResultsController)) without a  From clause or an NSEntityDescription.")
             }
             
             self.reapplyAffectedStores = { fetchRequest, context in
@@ -78,13 +80,14 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         )
     }
     
+    @nonobjc
     internal func performFetchFromSpecifiedStores() throws {
         
         if !self.reapplyAffectedStores(fetchRequest: self.fetchRequest, context: self.managedObjectContext) {
             
             CoreStore.log(
                 .Warning,
-                message: "Attempted to perform a fetch on an \(typeName(NSFetchedResultsController)) but could not find any persistent store for the entity \(typeName(self.fetchRequest.entityName))"
+                message: "Attempted to perform a fetch on an \(cs_typeName(NSFetchedResultsController)) but could not find any persistent store for the entity \(cs_typeName(self.fetchRequest.entityName))"
             )
         }
         try self.performFetch()
@@ -98,5 +101,6 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     
     // MARK: Private
     
+    @nonobjc
     private let reapplyAffectedStores: (fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Bool
 }

@@ -46,11 +46,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to commit a \(typeName(self)) outside its designated queue."
+            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to commit a \(typeName(self)) more than once."
+            "Attempted to commit a \(cs_typeName(self)) more than once."
         )
         
         self.isCommitted = true
@@ -75,11 +75,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to begin a child transaction from a \(typeName(self)) outside its designated queue."
+            "Attempted to begin a child transaction from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to begin a child transaction from an already committed \(typeName(self))."
+            "Attempted to begin a child transaction from an already committed \(cs_typeName(self))."
         )
         
         return SynchronousDataTransaction(
@@ -101,7 +101,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to create an entity of type \(typeName(T)) from an already committed \(typeName(self))."
+            "Attempted to create an entity of type \(cs_typeName(T)) from an already committed \(cs_typeName(self))."
         )
         
         return super.create(into)
@@ -118,7 +118,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to update an entity of type \(typeName(object)) from an already committed \(typeName(self))."
+            "Attempted to update an entity of type \(cs_typeName(object)) from an already committed \(cs_typeName(self))."
         )
         
         return super.edit(object)
@@ -136,7 +136,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to update an entity of type \(typeName(T)) from an already committed \(typeName(self))."
+            "Attempted to update an entity of type \(cs_typeName(T)) from an already committed \(cs_typeName(self))."
         )
         
         return super.edit(into, objectID)
@@ -151,7 +151,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to delete an entity of type \(typeName(object)) from an already committed \(typeName(self))."
+            "Attempted to delete an entity of type \(cs_typeName(object)) from an already committed \(cs_typeName(self))."
         )
         
         super.delete(object)
@@ -168,7 +168,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to delete an entities from an already committed \(typeName(self))."
+            "Attempted to delete an entities from an already committed \(cs_typeName(self))."
         )
         
         super.delete(([object1, object2] + objects).flatMap { $0 })
@@ -183,7 +183,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to delete an entities from an already committed \(typeName(self))."
+            "Attempted to delete an entities from an already committed \(cs_typeName(self))."
         )
         
         super.delete(objects)
@@ -208,7 +208,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
                 
                 CoreStore.log(
                     .Warning,
-                    message: "The closure for the \(typeName(self)) completed without being committed. All changes made within the transaction were discarded."
+                    message: "The closure for the \(cs_typeName(self)) completed without being committed. All changes made within the transaction were discarded."
                 )
             }
         }
@@ -224,7 +224,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
                 
                 CoreStore.log(
                     .Warning,
-                    message: "The closure for the \(typeName(self)) completed without being committed. All changes made within the transaction were discarded."
+                    message: "The closure for the \(cs_typeName(self)) completed without being committed. All changes made within the transaction were discarded."
                 )
             }
         }
@@ -244,11 +244,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to rollback an already committed \(typeName(self))."
+            "Attempted to rollback an already committed \(cs_typeName(self))."
         )
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to rollback a \(typeName(self)) outside its designated queue."
+            "Attempted to rollback a \(cs_typeName(self)) outside its designated queue."
         )
         
         self.context.reset()

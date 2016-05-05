@@ -47,7 +47,7 @@ internal extension NSManagedObjectModel {
         guard let versionInfo = NSDictionary(contentsOfURL: versionInfoPlistURL),
             let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
                 
-                fatalError("Could not load \(typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\".")
+                fatalError("Could not load \(cs_typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\".")
         }
         
         let modelVersions = Set(versionHashes.keys)
@@ -106,7 +106,7 @@ internal extension NSManagedObjectModel {
                 return rootModel
         }
         
-        fatalError("Could not create an \(typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
+        fatalError("Could not create an \(cs_typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
     }
     
     @nonobjc
@@ -114,7 +114,7 @@ internal extension NSManagedObjectModel {
         
         get {
             
-            let value: NSString? = getAssociatedObjectForKey(
+            let value: NSString? = cs_getAssociatedObjectForKey(
                 &PropertyKeys.currentModelVersion,
                 inObject: self
             )
@@ -122,7 +122,7 @@ internal extension NSManagedObjectModel {
         }
         set {
             
-            setAssociatedCopiedObject(
+            cs_setAssociatedCopiedObject(
                 newValue == nil ? nil : (newValue! as NSString),
                 forKey: &PropertyKeys.currentModelVersion,
                 inObject: self
@@ -135,7 +135,7 @@ internal extension NSManagedObjectModel {
         
         get {
             
-            let value: NSSet? = getAssociatedObjectForKey(
+            let value: NSSet? = cs_getAssociatedObjectForKey(
                 &PropertyKeys.modelVersions,
                 inObject: self
             )
@@ -143,7 +143,7 @@ internal extension NSManagedObjectModel {
         }
         set {
             
-            setAssociatedCopiedObject(
+            cs_setAssociatedCopiedObject(
                 newValue == nil ? nil : (newValue! as NSSet),
                 forKey: &PropertyKeys.modelVersions,
                 inObject: self
@@ -235,7 +235,7 @@ internal extension NSManagedObjectModel {
         
         get {
             
-            let value: NSURL? = getAssociatedObjectForKey(
+            let value: NSURL? = cs_getAssociatedObjectForKey(
                 &PropertyKeys.modelVersionFileURL,
                 inObject: self
             )
@@ -243,7 +243,7 @@ internal extension NSManagedObjectModel {
         }
         set {
             
-            setAssociatedCopiedObject(
+            cs_setAssociatedCopiedObject(
                 newValue,
                 forKey: &PropertyKeys.modelVersionFileURL,
                 inObject: self
@@ -256,7 +256,7 @@ internal extension NSManagedObjectModel {
         
         get {
             
-            if let mapping: NSDictionary = getAssociatedObjectForKey(&PropertyKeys.entityNameMapping, inObject: self) {
+            if let mapping: NSDictionary = cs_getAssociatedObjectForKey(&PropertyKeys.entityNameMapping, inObject: self) {
                 
                 return mapping as! [String: String]
             }
@@ -272,7 +272,7 @@ internal extension NSManagedObjectModel {
                 let className = $0.managedObjectClassName
                 mapping[className] = entityName
             }
-            setAssociatedCopiedObject(
+            cs_setAssociatedCopiedObject(
                 mapping as NSDictionary,
                 forKey: &PropertyKeys.entityNameMapping,
                 inObject: self

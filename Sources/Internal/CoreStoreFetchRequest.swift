@@ -39,5 +39,6 @@ internal final class CoreStoreFetchRequest: NSFetchRequest {
         set { self.safeAffectedStores = newValue }
     }
     
+    @nonobjc
     private var safeAffectedStores: [NSPersistentStore]?
 }

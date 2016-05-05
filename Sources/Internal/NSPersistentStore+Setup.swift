@@ -38,7 +38,7 @@ internal extension NSPersistentStore {
         
         get {
             
-            let wrapper: StorageObject? = getAssociatedObjectForKey(
+            let wrapper: StorageObject? = cs_getAssociatedObjectForKey(
                 &PropertyKeys.storageInterface,
                 inObject: self
             )
@@ -46,7 +46,7 @@ internal extension NSPersistentStore {
         }
         set {
             
-            setAssociatedRetainedObject(
+            cs_setAssociatedRetainedObject(
                 StorageObject(newValue),
                 forKey: &PropertyKeys.storageInterface,
                 inObject: self
@@ -70,8 +70,10 @@ private class StorageObject: NSObject {
     
     // MARK: Private
     
+    @nonobjc
     private let storageInterface: StorageInterface?
     
+    @nonobjc
     private init(_ storage: StorageInterface?) {
         
         self.storageInterface = storage

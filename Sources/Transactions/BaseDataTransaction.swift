@@ -57,7 +57,7 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to create an entity of type \(typeName(T)) outside its designated queue."
+            "Attempted to create an entity of type \(cs_typeName(T)) outside its designated queue."
         )
         
         let context = self.context
@@ -72,10 +72,10 @@ public /*abstract*/ class BaseDataTransaction {
                 return object
                 
             case (nil, true):
-                fatalError("Attempted to create an entity of type \(typeName(entityClass)) with ambiguous destination persistent store, but the configuration name was not specified.")
+                fatalError("Attempted to create an entity of type \(cs_typeName(entityClass)) with ambiguous destination persistent store, but the configuration name was not specified.")
                 
             default:
-                fatalError("Attempted to create an entity of type \(typeName(entityClass)), but a destination persistent store containing the entity type could not be found.")
+                fatalError("Attempted to create an entity of type \(cs_typeName(entityClass)), but a destination persistent store containing the entity type could not be found.")
             }
         }
         else {
@@ -90,11 +90,11 @@ public /*abstract*/ class BaseDataTransaction {
             default:
                 if let configuration = into.configuration {
                     
-                    fatalError("Attempted to create an entity of type \(typeName(entityClass)) into the configuration \"\(configuration)\", which it doesn't belong to.")
+                    fatalError("Attempted to create an entity of type \(cs_typeName(entityClass)) into the configuration \"\(configuration)\", which it doesn't belong to.")
                 }
                 else {
                     
-                    fatalError("Attempted to create an entity of type \(typeName(entityClass)) into the default configuration, which it doesn't belong to.")
+                    fatalError("Attempted to create an entity of type \(cs_typeName(entityClass)) into the default configuration, which it doesn't belong to.")
                 }
             }
         }
@@ -111,7 +111,7 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to update an entity of type \(typeName(object)) outside its designated queue."
+            "Attempted to update an entity of type \(cs_typeName(object)) outside its designated queue."
         )
         guard let object = object else {
             
@@ -132,12 +132,12 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to update an entity of type \(typeName(T)) outside its designated queue."
+            "Attempted to update an entity of type \(cs_typeName(T)) outside its designated queue."
         )
         CoreStore.assert(
             into.inferStoreIfPossible
                 || (into.configuration ?? Into.defaultConfigurationName) == objectID.persistentStore?.configurationName,
-            "Attempted to update an entity of type \(typeName(T)) but the specified persistent store do not match the `NSManagedObjectID`."
+            "Attempted to update an entity of type \(cs_typeName(T)) but the specified persistent store do not match the `NSManagedObjectID`."
         )
         return self.fetchExisting(objectID) as? T
     }
@@ -214,11 +214,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access inserted objects from a \(typeName(self)) outside its designated queue."
+            "Attempted to access inserted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access inserted objects from an already committed \(typeName(self))."
+            "Attempted to access inserted objects from an already committed \(cs_typeName(self))."
         )
         
         return self.context.insertedObjects
@@ -235,11 +235,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access inserted objects from a \(typeName(self)) outside its designated queue."
+            "Attempted to access inserted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access inserted objects from an already committed \(typeName(self))."
+            "Attempted to access inserted objects from an already committed \(cs_typeName(self))."
         )
         
         return Set(self.context.insertedObjects.flatMap { $0 as? T })
@@ -255,11 +255,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access inserted object IDs from a \(typeName(self)) outside its designated queue."
+            "Attempted to access inserted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access inserted objects IDs from an already committed \(typeName(self))."
+            "Attempted to access inserted objects IDs from an already committed \(cs_typeName(self))."
         )
         
         return Set(self.context.insertedObjects.map { $0.objectID })
@@ -276,11 +276,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access inserted object IDs from a \(typeName(self)) outside its designated queue."
+            "Attempted to access inserted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access inserted objects IDs from an already committed \(typeName(self))."
+            "Attempted to access inserted objects IDs from an already committed \(cs_typeName(self))."
         )
         
         return Set(self.context.insertedObjects.filter { $0.isKindOfClass(entity) }.map { $0.objectID })
@@ -296,11 +296,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access updated objects from a \(typeName(self)) outside its designated queue."
+            "Attempted to access updated objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access updated objects from an already committed \(typeName(self))."
+            "Attempted to access updated objects from an already committed \(cs_typeName(self))."
         )
         
         return self.context.updatedObjects
@@ -317,11 +317,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access updated objects from a \(typeName(self)) outside its designated queue."
+            "Attempted to access updated objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access updated objects from an already committed \(typeName(self))."
+            "Attempted to access updated objects from an already committed \(cs_typeName(self))."
         )
         
         return Set(self.context.updatedObjects.filter { $0.isKindOfClass(entity) }.map { $0 as! T })
@@ -337,11 +337,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access updated object IDs from a \(typeName(self)) outside its designated queue."
+            "Attempted to access updated object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access updated object IDs from an already committed \(typeName(self))."
+            "Attempted to access updated object IDs from an already committed \(cs_typeName(self))."
         )
         
         return Set(self.context.updatedObjects.map { $0.objectID })
@@ -358,11 +358,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access updated object IDs from a \(typeName(self)) outside its designated queue."
+            "Attempted to access updated object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access updated object IDs from an already committed \(typeName(self))."
+            "Attempted to access updated object IDs from an already committed \(cs_typeName(self))."
         )
         
         return Set(self.context.updatedObjects.filter { $0.isKindOfClass(entity) }.map { $0.objectID })
@@ -378,11 +378,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access deleted objects from a \(typeName(self)) outside its designated queue."
+            "Attempted to access deleted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access deleted objects from an already committed \(typeName(self))."
+            "Attempted to access deleted objects from an already committed \(cs_typeName(self))."
         )
         
         return self.context.deletedObjects
@@ -399,11 +399,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access deleted objects from a \(typeName(self)) outside its designated queue."
+            "Attempted to access deleted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access deleted objects from an already committed \(typeName(self))."
+            "Attempted to access deleted objects from an already committed \(cs_typeName(self))."
         )
         
         return Set(self.context.deletedObjects.filter { $0.isKindOfClass(entity) }.map { $0 as! T })
@@ -420,11 +420,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access deleted object IDs from a \(typeName(self)) outside its designated queue."
+            "Attempted to access deleted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access deleted object IDs from an already committed \(typeName(self))."
+            "Attempted to access deleted object IDs from an already committed \(cs_typeName(self))."
         )
         
         return Set(self.context.deletedObjects.map { $0.objectID })
@@ -441,11 +441,11 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to access deleted object IDs from a \(typeName(self)) outside its designated queue."
+            "Attempted to access deleted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to access deleted object IDs from an already committed \(typeName(self))."
+            "Attempted to access deleted object IDs from an already committed \(cs_typeName(self))."
         )
         
         return Set(self.context.deletedObjects.filter { $0.isKindOfClass(entity) }.map { $0.objectID })

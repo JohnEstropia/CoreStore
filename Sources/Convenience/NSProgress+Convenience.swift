@@ -57,14 +57,14 @@ public extension NSProgress {
         
         get {
             
-            let object: ProgressObserver? = getAssociatedObjectForKey(&PropertyKeys.progressObserver, inObject: self)
+            let object: ProgressObserver? = cs_getAssociatedObjectForKey(&PropertyKeys.progressObserver, inObject: self)
             if let observer = object {
                 
                 return observer
             }
             
             let observer = ProgressObserver(self)
-            setAssociatedRetainedObject(
+            cs_setAssociatedRetainedObject(
                 observer,
                 forKey: &PropertyKeys.progressObserver,
                 inObject: self

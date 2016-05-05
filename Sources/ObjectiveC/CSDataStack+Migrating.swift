@@ -47,19 +47,14 @@ public extension CSDataStack {
      
      - parameter storage: the `CSInMemoryStore` instance
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously.
-     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
-     - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
     @objc
-    public func addInMemoryStorage(storage: CSInMemoryStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> NSProgress? {
+    public func addInMemoryStorage(storage: CSInMemoryStore, completion: (CSSetupResult) -> Void) {
         
-        return bridge(error) {
-            
-            try self.bridgeToSwift.addStorage(
-                storage.bridgeToSwift,
-                completion: { completion($0.bridgeToObjectiveC) }
-            )
-        }
+        self.bridgeToSwift.addStorage(
+            storage.bridgeToSwift,
+            completion: { completion($0.bridgeToObjectiveC) }
+        )
     }
     
     /**

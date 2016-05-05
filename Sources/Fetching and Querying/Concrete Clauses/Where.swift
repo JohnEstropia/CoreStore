@@ -146,7 +146,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
             
             CoreStore.log(
                 .Warning,
-                message: "An existing predicate for the \(typeName(NSFetchRequest)) was overwritten by \(typeName(self)) query clause."
+                message: "An existing predicate for the \(cs_typeName(NSFetchRequest)) was overwritten by \(cs_typeName(self)) query clause."
             )
         }
         

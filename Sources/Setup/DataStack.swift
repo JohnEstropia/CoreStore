@@ -64,7 +64,7 @@ public final class DataStack {
         
         CoreStore.assert(
             migrationChain.valid,
-            "Invalid migration chain passed to the \(typeName(DataStack)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
+            "Invalid migration chain passed to the \(cs_typeName(DataStack)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
         )
         
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
@@ -174,7 +174,7 @@ public final class DataStack {
             let storeError = CoreStoreError(error)
             CoreStore.log(
                 storeError,
-                "Failed to add \(typeName(storage)) to the stack."
+                "Failed to add \(cs_typeName(storage)) to the stack."
             )
             throw storeError
         }
@@ -212,7 +212,7 @@ public final class DataStack {
             let fileURL = storage.fileURL
             CoreStore.assert(
                 fileURL.fileURL,
-                "The specified store URL for the \"\(typeName(storage))\" is invalid: \"\(fileURL)\""
+                "The specified store URL for the \"\(cs_typeName(storage))\" is invalid: \"\(fileURL)\""
             )
             
             if let _ = self.persistentStoreForStorage(storage) {
@@ -231,7 +231,7 @@ public final class DataStack {
                 let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: fileURL)
                 CoreStore.log(
                     error,
-                    "Failed to add \(typeName(storage)) at \"\(fileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                    "Failed to add \(cs_typeName(storage)) at \"\(fileURL)\" because a different \(cs_typeName(NSPersistentStore)) at that URL already exists."
                 )
                 throw error
             }
@@ -278,7 +278,7 @@ public final class DataStack {
                 let storeError = CoreStoreError(error)
                 CoreStore.log(
                     storeError,
-                    "Failed to add \(typeName(storage)) to the stack."
+                    "Failed to add \(cs_typeName(storage)) to the stack."
                 )
                 throw storeError
             }
@@ -325,7 +325,7 @@ public final class DataStack {
                 let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: cacheFileURL)
                 CoreStore.log(
                     error,
-                    "Failed to add \(typeName(storage)) at \"\(cacheFileURL)\" because a different \(typeName(NSPersistentStore)) at that URL already exists."
+                    "Failed to add \(cs_typeName(storage)) at \"\(cacheFileURL)\" because a different \(cs_typeName(NSPersistentStore)) at that URL already exists."
                 )
                 throw error
             }
@@ -372,7 +372,7 @@ public final class DataStack {
                 let storeError = CoreStoreError(error)
                 CoreStore.log(
                     storeError,
-                    "Failed to add \(typeName(storage)) to the stack."
+                    "Failed to add \(cs_typeName(storage)) to the stack."
                 )
                 throw storeError
             }
@@ -489,7 +489,7 @@ public final class DataStack {
                 let managedObjectClassName = entityDescription.managedObjectClassName
                 CoreStore.assert(
                     NSClassFromString(managedObjectClassName) != nil,
-                    "The class \(typeName(managedObjectClassName)) for the entity \(typeName(entityDescription.name)) does not exist. Check if the subclass type and module name are properly configured."
+                    "The class \(cs_typeName(managedObjectClassName)) for the entity \(cs_typeName(entityDescription.name)) does not exist. Check if the subclass type and module name are properly configured."
                 )
                 
                 if self.entityConfigurationsMapping[managedObjectClassName] == nil {

@@ -44,7 +44,10 @@ class CoreStoreTests: XCTestCase {
     
     func testExample() {
         
-        let stack = DataStack(modelName: "Model", bundle: NSBundle(forClass: self.dynamicType))
+        let stack = DataStack(
+            modelName: "Model",
+            bundle: NSBundle(forClass: self.dynamicType)
+        )
         CoreStore.defaultStack = stack
         XCTAssert(CoreStore.defaultStack === stack, "CoreStore.defaultStack === stack")
         
@@ -200,7 +203,6 @@ class CoreStoreTests: XCTestCase {
                     Select("testString", .Count("testString", As: "count")),
                     GroupBy("testString")
                 )
-                print(counts)
                 
                 XCTAssertTrue(NSThread.isMainThread(), "NSThread.isMainThread()")
                 switch result {

@@ -43,7 +43,7 @@ internal extension NSManagedObjectContext {
                 return parentContext.parentStack
             }
             
-            return getAssociatedObjectForKey(&PropertyKeys.parentStack, inObject: self)
+            return cs_getAssociatedObjectForKey(&PropertyKeys.parentStack, inObject: self)
         }
         set {
             
@@ -52,7 +52,7 @@ internal extension NSManagedObjectContext {
                 return
             }
             
-            setAssociatedWeakObject(
+            cs_setAssociatedWeakObject(
                 newValue,
                 forKey: &PropertyKeys.parentStack,
                 inObject: self
@@ -129,14 +129,14 @@ internal extension NSManagedObjectContext {
         
         get {
             
-            return getAssociatedObjectForKey(
+            return cs_getAssociatedObjectForKey(
                 &PropertyKeys.observerForDidSaveNotification,
                 inObject: self
             )
         }
         set {
             
-            setAssociatedRetainedObject(
+            cs_setAssociatedRetainedObject(
                 newValue,
                 forKey: &PropertyKeys.observerForDidSaveNotification,
                 inObject: self
@@ -149,14 +149,14 @@ internal extension NSManagedObjectContext {
         
         get {
             
-            return getAssociatedObjectForKey(
+            return cs_getAssociatedObjectForKey(
                 &PropertyKeys.observerForDidImportUbiquitousContentChangesNotification,
                 inObject: self
             )
         }
         set {
             
-            setAssociatedRetainedObject(
+            cs_setAssociatedRetainedObject(
                 newValue,
                 forKey: &PropertyKeys.observerForDidImportUbiquitousContentChangesNotification,
                 inObject: self

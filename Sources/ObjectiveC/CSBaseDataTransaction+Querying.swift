@@ -110,7 +110,7 @@ public extension CSBaseDataTransaction {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.bridgeToSwift.context.fetchOne(from, fetchClauses)
     }
@@ -128,7 +128,7 @@ public extension CSBaseDataTransaction {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.bridgeToSwift.context.fetchAll(from, fetchClauses)
     }
@@ -146,7 +146,7 @@ public extension CSBaseDataTransaction {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.bridgeToSwift.context.fetchCount(from, fetchClauses)
     }
@@ -164,7 +164,7 @@ public extension CSBaseDataTransaction {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.bridgeToSwift.context.fetchObjectID(from, fetchClauses)
     }
@@ -185,7 +185,7 @@ public extension CSBaseDataTransaction {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
-            "Attempted to query from a \(typeName(self)) outside its designated queue."
+            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.bridgeToSwift.context.queryValue(from, selectClause, queryClauses)
     }
@@ -206,7 +206,7 @@ public extension CSBaseDataTransaction {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
-            "Attempted to query from a \(typeName(self)) outside its designated queue."
+            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.bridgeToSwift.context.queryAttributes(from, selectClause, queryClauses)
     }

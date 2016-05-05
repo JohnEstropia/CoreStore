@@ -110,7 +110,7 @@ public extension CSDataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+            "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchOne(from, fetchClauses)
     }
@@ -128,7 +128,7 @@ public extension CSDataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+            "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchAll(from, fetchClauses)
     }
@@ -146,7 +146,7 @@ public extension CSDataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+            "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchCount(from, fetchClauses)
     }
@@ -164,7 +164,7 @@ public extension CSDataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+            "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchObjectID(from, fetchClauses)
     }
@@ -182,7 +182,7 @@ public extension CSDataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to fetch from a \(typeName(self)) outside the main thread."
+            "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchObjectIDs(from, fetchClauses)
     }
@@ -203,7 +203,7 @@ public extension CSDataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to query from a \(typeName(self)) outside the main thread."
+            "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.queryValue(from, selectClause, queryClauses)
     }
@@ -224,7 +224,7 @@ public extension CSDataStack {
         
         CoreStore.assert(
             NSThread.isMainThread(),
-            "Attempted to query from a \(typeName(self)) outside the main thread."
+            "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.queryAttributes(from, selectClause, queryClauses)
     }

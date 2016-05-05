@@ -51,9 +51,13 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     
     // MARK: Internal
     
+    @nonobjc
     internal var enabled = true
     
+    @nonobjc
     internal weak var handler: FetchedResultsControllerHandler?
+    
+    @nonobjc
     internal weak var fetchedResultsController: NSFetchedResultsController? {
         
         didSet {
@@ -71,7 +75,8 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     
     // MARK: NSFetchedResultsControllerDelegate
     
-    @objc dynamic func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    @objc
+    dynamic func controllerWillChangeContent(controller: NSFetchedResultsController) {
         
         guard self.enabled else {
             
@@ -84,7 +89,8 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
         self.handler?.controllerWillChangeContent(controller)
     }
     
-    @objc dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    @objc
+    dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
         guard self.enabled else {
             
@@ -94,7 +100,8 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
         self.handler?.controllerDidChangeContent(controller)
     }
     
-    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    @objc
+    dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
         guard self.enabled else {
             
@@ -181,7 +188,8 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
         )
     }
     
-    @objc dynamic func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    @objc
+    dynamic func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         
         guard self.enabled else {
             
@@ -203,7 +211,8 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
         )
     }
     
-    @objc dynamic func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String) -> String? {
+    @objc
+    dynamic func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String) -> String? {
         
         return self.handler?.controller(
             controller,
@@ -214,6 +223,9 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     
     // MARK: Private
     
+    @nonobjc
     private var deletedSections = Set<Int>()
+    
+    @nonobjc
     private var insertedSections = Set<Int>()
 }
