@@ -248,31 +248,3 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     private let versionTree: [String: String]
 }
-
-
-// MARK: - MigrationChain: CustomDebugStringConvertible
-
-extension MigrationChain: CustomDebugStringConvertible {
-    
-    public var debugDescription: String {
-        
-        guard self.valid else {
-            
-            return "<invalid migration chain>"
-        }
-        
-        var paths = [String]()
-        for var version in self.rootVersions {
-            
-            var steps = [version]
-            while let nextVersion = self.nextVersionFrom(version) {
-                
-                steps.append(nextVersion)
-                version = nextVersion
-            }
-            paths.append(steps.joinWithSeparator(" → "))
-        }
-        
-        return "[" + paths.joinWithSeparator("], [") + "]"
-    }
-}

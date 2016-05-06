@@ -157,7 +157,7 @@ class MigrationsDemoViewController: UIViewController {
         )
         
         self.setEnabled(false)
-        let progress = try! dataStack.addStorage(
+        let progress = dataStack.addStorage(
             SQLiteStore(fileName: "MigrationDemo.sqlite"),
             completion: { [weak self] (result) -> Void in
                 

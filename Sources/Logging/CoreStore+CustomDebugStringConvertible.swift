@@ -26,6 +26,74 @@
 import Foundation
 
 
+// MARK: - AsynchronousDataTransaction
+
+extension AsynchronousDataTransaction: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpInfo: DumpInfo {
+        
+        return [
+            ("context", self.context),
+            ("supportsUndo", self.supportsUndo),
+            ("bypassesQueueing", self.bypassesQueueing),
+            ("isCommitted", self.isCommitted),
+            ("result", self.result)
+        ]
+    }
+}
+
+
+// MARK: - CloudStorageOptions
+
+extension CloudStorageOptions: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpValue: String {
+        
+        var flags = [String]()
+        if self.contains(.RecreateLocalStoreOnModelMismatch) {
+            
+            flags.append(".RecreateLocalStoreOnModelMismatch")
+        }
+        if self.contains(.AllowSynchronousLightweightMigration) {
+            
+            flags.append(".AllowSynchronousLightweightMigration")
+        }
+        switch flags.count {
+            
+        case 0:
+            return "[.None]"
+            
+        case 1:
+            return "[.\(flags[0])]"
+            
+        default:
+            let description = "[\n" + flags.joinWithSeparator(",\n")
+            return description.indent(1) + "\n]"
+        }
+    }
+}
+
+
 // MARK: - CoreStoreError
 
 extension CoreStoreError: CustomDebugStringConvertible, IndentableDebugStringConvertible {
@@ -55,8 +123,8 @@ extension CoreStoreError: CustomDebugStringConvertible, IndentableDebugStringCon
     private var cs_dumpInfo: DumpInfo {
         
         var info: DumpInfo = [
-            ("_domain", self._domain.cs_dump()),
-            ("_code", self._code.cs_dump()),
+            ("_domain", self._domain),
+            ("_code", self._code),
         ]
         switch self {
             
@@ -64,20 +132,74 @@ extension CoreStoreError: CustomDebugStringConvertible, IndentableDebugStringCon
             break
             
         case .DifferentStorageExistsAtURL(let existingPersistentStoreURL):
-            info.append(("existingPersistentStoreURL", existingPersistentStoreURL.cs_dump()))
+            info.append(("existingPersistentStoreURL", existingPersistentStoreURL))
             
         case .MappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
-            info.append(("localStoreURL", localStoreURL.cs_dump()))
-            info.append(("targetModel", targetModel.cs_dump()))
-            info.append(("targetModelVersion", targetModelVersion.cs_dump()))
+            info.append(("localStoreURL", localStoreURL))
+            info.append(("targetModel", targetModel))
+            info.append(("targetModelVersion", targetModelVersion))
             
         case .ProgressiveMigrationRequired(let localStoreURL):
-            info.append(("localStoreURL", localStoreURL.cs_dump()))
+            info.append(("localStoreURL", localStoreURL))
             
         case .InternalError(let NSError):
-            info.append(("NSError", NSError.cs_dump()))
+            info.append(("NSError", NSError))
         }
         return info
+    }
+}
+
+
+// MARK: - DataStack
+
+extension DataStack: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpInfo: DumpInfo {
+        
+        // TODO: print entities and persistentStores
+        return [
+            ("coordinator", self.coordinator),
+            ("rootSavingContext", self.rootSavingContext),
+            ("mainContext", self.mainContext),
+            ("model", self.model),
+            ("migrationChain", self.migrationChain)
+        ]
+    }
+}
+
+
+// MARK: - ICloudStore
+
+extension ICloudStore: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpInfo: DumpInfo {
+        
+        return [
+            ("configuration", self.configuration),
+            ("storeOptions", self.storeOptions),
+            ("cacheFileURL", self.cacheFileURL),
+            ("cloudStorageOptions", self.cloudStorageOptions)
+        ]
     }
 }
 
@@ -101,6 +223,58 @@ extension InMemoryStore: CustomDebugStringConvertible, IndentableDebugStringConv
         return [
             ("configuration", self.configuration),
             ("storeOptions", self.storeOptions)
+        ]
+    }
+}
+
+
+// MARK: - Into
+
+extension Into: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpInfo: DumpInfo {
+        
+        return [
+            ("entityClass", self.entityClass),
+            ("configuration", self.configuration),
+            ("inferStoreIfPossible", self.inferStoreIfPossible)
+        ]
+    }
+}
+
+
+// MARK: - LegacySQLiteStore
+
+extension LegacySQLiteStore: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpInfo: DumpInfo {
+        
+        return [
+            ("configuration", self.configuration),
+            ("storeOptions", self.storeOptions),
+            ("fileURL", self.fileURL),
+            ("mappingModelBundles", self.mappingModelBundles),
+            ("localStorageOptions", self.localStorageOptions)
         ]
     }
 }
@@ -151,6 +325,58 @@ extension LocalStorageOptions: CustomDebugStringConvertible, IndentableDebugStri
 }
 
 
+// MARK: - MigrationChain
+
+extension MigrationChain: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpValue: String {
+        
+        guard self.valid else {
+            
+            return "<invalid migration chain>"
+        }
+        
+        var paths = [String]()
+        for var version in self.rootVersions {
+            
+            var steps = [version]
+            while let nextVersion = self.nextVersionFrom(version) {
+                
+                steps.append(nextVersion)
+                version = nextVersion
+            }
+            paths.append(steps.joinWithSeparator(" → "))
+        }
+        switch paths.count {
+            
+        case 0:
+            return "[]"
+            
+        case 1:
+            return "[\(paths[0])]"
+            
+        default:
+            var dump = "["
+            paths.forEach {
+                
+                dump.appendContentsOf("\n\($0);")
+            }
+            return dump.indent(1) + "\n]"
+        }
+    }
+}
+
+
 // MARK: - SQLiteStore
 
 extension SQLiteStore: CustomDebugStringConvertible, IndentableDebugStringConvertible {
@@ -178,9 +404,9 @@ extension SQLiteStore: CustomDebugStringConvertible, IndentableDebugStringConver
 }
 
 
-// MARK: - LegacySQLiteStore
+// MARK: - SynchronousDataTransaction
 
-extension LegacySQLiteStore: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+extension SynchronousDataTransaction: CustomDebugStringConvertible, IndentableDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
     
@@ -195,19 +421,43 @@ extension LegacySQLiteStore: CustomDebugStringConvertible, IndentableDebugString
     private var cs_dumpInfo: DumpInfo {
         
         return [
-            ("configuration", self.configuration),
-            ("storeOptions", self.storeOptions),
-            ("fileURL", self.fileURL),
-            ("mappingModelBundles", self.mappingModelBundles),
-            ("localStorageOptions", self.localStorageOptions)
+            ("context", self.context),
+            ("supportsUndo", self.supportsUndo),
+            ("bypassesQueueing", self.bypassesQueueing),
+            ("isCommitted", self.isCommitted),
+            ("result", self.result)
         ]
     }
 }
 
 
-// MARK: - Private
+// MARK: - UnsafeDataTransaction
 
-private typealias DumpInfo = [(key: String, value: IndentableDebugStringConvertible)]
+extension UnsafeDataTransaction: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpInfo: DumpInfo {
+        
+        return [
+            ("context", self.context),
+            ("supportsUndo", self.supportsUndo)
+        ]
+    }
+}
+
+
+// MARK: - Private: Utilities
+
+private typealias DumpInfo = [(key: String, value: Any)]
 
 private func formattedValue(any: Any) -> String {
     
@@ -222,6 +472,41 @@ private func formattedValue(any: IndentableDebugStringConvertible) -> String {
     
     return any.cs_dumpValue
 }
+
+private extension String {
+    
+    private static func indention(level: Int = 1) -> String {
+        
+        return String(count: level * 4, repeatedValue: Character(" "))
+    }
+    
+    private func trimSwiftModuleName() -> String {
+        
+        if self.hasPrefix("Swift.") {
+            
+            return self.substringFromIndex("Swift.".endIndex)
+        }
+        return self
+    }
+    
+    private func indent(level: Int) -> String {
+        
+        return self.stringByReplacingOccurrencesOfString("\n", withString: "\n\(String.indention(level))")
+    }
+    
+    private mutating func appendDumpInfo(key: String, _ value: Any) {
+        
+        self.appendContentsOf("\n.\(key) = \(formattedValue(value));")
+    }
+    
+    private mutating func appendDumpInfo(key: String, _ value: IndentableDebugStringConvertible) {
+        
+        self.appendContentsOf("\n.\(key) = \(formattedValue(value));")
+    }
+}
+
+
+// MARK: - Private: IndentableDebugStringConvertible
 
 private protocol IndentableDebugStringConvertible {
     
@@ -267,70 +552,17 @@ private extension IndentableDebugStringConvertible {
         else {
             
             dump.appendContentsOf(" {")
-            for (key, value) in info {
+            info.forEach {
                 
-                dump.appendContentsOf("\n.\(key) = \(formattedValue(value))")
+                dump.appendDumpInfo($0, $1)
             }
             return dump.indent(1) + "\n}"
         }
     }
 }
 
-extension String: IndentableDebugStringConvertible {
-    
-    private var cs_dumpValue: String {
-        
-        return "\"\(self)\""
-    }
-}
 
-extension NSURL: IndentableDebugStringConvertible {
-    
-    private var cs_dumpValue: String {
-        
-        return "\"\(self)\""
-    }
-}
-
-extension Int: IndentableDebugStringConvertible {
-    
-    private var cs_dumpValue: String {
-        
-        return "\(self)"
-    }
-}
-
-extension NSManagedObjectModel: IndentableDebugStringConvertible {
-    
-    private var cs_dumpValue: String {
-        
-        return "\(self)"
-    }
-}
-
-extension NSMappingModel: IndentableDebugStringConvertible {
-    
-    private var cs_dumpValue: String {
-        
-        return "\(self)"
-    }
-}
-
-extension NSError: IndentableDebugStringConvertible {
-    
-    private var cs_dumpValue: String {
-        
-        return "\(self)"
-    }
-}
-
-extension NSBundle: IndentableDebugStringConvertible {
-    
-    private var cs_dumpValue: String {
-        
-        return "\(self.bundleURL.lastPathComponent ?? "<unknown bundle URL>") (\(self.bundleIdentifier ?? "<unknown bundle identifier>"))"
-    }
-}
+// MARK: -
 
 extension Array: IndentableDebugStringConvertible {
     
@@ -374,6 +606,172 @@ extension Dictionary: IndentableDebugStringConvertible {
     }
 }
 
+extension NSAttributeDescription: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        var string = "{"
+        
+        string.appendDumpInfo("attributeType", self.attributeType)
+        string.appendDumpInfo("attributeValueClassName", self.attributeValueClassName)
+        string.appendDumpInfo("defaultValue", self.defaultValue)
+        string.appendDumpInfo("valueTransformerName", self.valueTransformerName)
+        string.appendDumpInfo("allowsExternalBinaryDataStorage", self.allowsExternalBinaryDataStorage)
+        
+        string.appendDumpInfo("entity", self.entity.name)
+        string.appendDumpInfo("name", self.name)
+        string.appendDumpInfo("optional", self.optional)
+        string.appendDumpInfo("transient", self.transient)
+        string.appendDumpInfo("userInfo", self.userInfo)
+        string.appendDumpInfo("indexed", self.indexed)
+        string.appendDumpInfo("versionHash", self.versionHash)
+        string.appendDumpInfo("versionHashModifier", self.versionHashModifier)
+        string.appendDumpInfo("indexedBySpotlight", self.indexedBySpotlight)
+        string.appendDumpInfo("storedInExternalRecord", self.storedInExternalRecord)
+        string.appendDumpInfo("renamingIdentifier", self.renamingIdentifier)
+        
+        return string.indent(1) + "\n}"
+    }
+}
+
+extension NSAttributeType: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        switch self {
+            
+        case .UndefinedAttributeType:       return ".UndefinedAttributeType"
+        case .Integer16AttributeType:       return ".Integer16AttributeType"
+        case .Integer32AttributeType:       return ".Integer32AttributeType"
+        case .Integer64AttributeType:       return ".Integer64AttributeType"
+        case .DecimalAttributeType:         return ".DecimalAttributeType"
+        case .DoubleAttributeType:          return ".DoubleAttributeType"
+        case .FloatAttributeType:           return ".FloatAttributeType"
+        case .StringAttributeType:          return ".StringAttributeType"
+        case .BooleanAttributeType:         return ".BooleanAttributeType"
+        case .DateAttributeType:            return ".DateAttributeType"
+        case .BinaryDataAttributeType:      return ".BinaryDataAttributeType"
+        case .TransformableAttributeType:   return ".TransformableAttributeType"
+        case .ObjectIDAttributeType:        return ".ObjectIDAttributeType"
+        }
+    }
+}
+
+extension NSBundle: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        return "\(self.bundleIdentifier.flatMap({ "\"\($0)\"" }) ?? "<unknown bundle identifier>") (\(self.bundleURL.lastPathComponent ?? "<unknown bundle URL>"))"
+    }
+}
+
+extension NSDeleteRule: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        switch self {
+            
+        case .NoActionDeleteRule:   return ".NoActionDeleteRule"
+        case .NullifyDeleteRule:    return ".NullifyDeleteRule"
+        case .CascadeDeleteRule:    return ".CascadeDeleteRule"
+        case .DenyDeleteRule:       return ".DenyDeleteRule"
+        }
+    }
+}
+
+extension NSEntityDescription: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        var string = "{"
+        string.appendDumpInfo("managedObjectClassName", self.managedObjectClassName!)
+        string.appendDumpInfo("name", self.name)
+        string.appendDumpInfo("abstract", self.abstract)
+        string.appendDumpInfo("superentity", self.superentity?.name)
+        string.appendDumpInfo("subentities", self.subentities.map({ $0.name }))
+        string.appendDumpInfo("properties", self.properties)
+        string.appendDumpInfo("userInfo", self.userInfo)
+        string.appendDumpInfo("versionHash", self.versionHash)
+        string.appendDumpInfo("versionHashModifier", self.versionHashModifier)
+        string.appendDumpInfo("renamingIdentifier", self.renamingIdentifier)
+        string.appendDumpInfo("compoundIndexes", self.compoundIndexes)
+        if #available(iOS 9.0, *) {
+            
+            string.appendDumpInfo("uniquenessConstraints", self.uniquenessConstraints)
+        }
+        return string.indent(1) + "\n}"
+    }
+}
+
+extension NSError: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        var string = "{"
+        string.appendDumpInfo("domain", self.domain)
+        string.appendDumpInfo("code", self.code)
+        string.appendDumpInfo("userInfo", self.userInfo)
+        return string.indent(1) + "\n}"
+    }
+}
+
+extension NSManagedObjectModel: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        var string = "{"
+        string.appendDumpInfo("configurations", self.configurations)
+        string.appendDumpInfo("entities", self.entities)
+        return string.indent(1) + "\n}"
+    }
+}
+
+extension NSMappingModel: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        return "\(self)"
+    }
+}
+
+extension NSRelationshipDescription: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        var string = "{"
+        
+        string.appendDumpInfo("destinationEntity", self.destinationEntity?.name)
+        string.appendDumpInfo("inverseRelationship", self.inverseRelationship?.name)
+        string.appendDumpInfo("minCount", self.minCount)
+        string.appendDumpInfo("maxCount", self.maxCount)
+        string.appendDumpInfo("deleteRule", self.deleteRule)
+        string.appendDumpInfo("toMany", self.toMany)
+        string.appendDumpInfo("ordered", self.ordered)
+        
+        string.appendDumpInfo("entity", self.entity.name)
+        string.appendDumpInfo("name", self.name)
+        string.appendDumpInfo("optional", self.optional)
+        string.appendDumpInfo("transient", self.transient)
+        string.appendDumpInfo("userInfo", self.userInfo)
+        string.appendDumpInfo("indexed", self.indexed)
+        string.appendDumpInfo("versionHash", self.versionHash)
+        string.appendDumpInfo("versionHashModifier", self.versionHashModifier)
+        string.appendDumpInfo("indexedBySpotlight", self.indexedBySpotlight)
+        string.appendDumpInfo("storedInExternalRecord", self.storedInExternalRecord)
+        string.appendDumpInfo("renamingIdentifier", self.renamingIdentifier)
+        
+        return string.indent(1) + "\n}"
+    }
+}
+
+extension NSURL: IndentableDebugStringConvertible {
+    
+    private var cs_dumpValue: String {
+        
+        return "\"\(self)\""
+    }
+}
+
 extension Optional: IndentableDebugStringConvertible {
     
     private var cs_dumpValue: String {
@@ -386,24 +784,10 @@ extension Optional: IndentableDebugStringConvertible {
     }
 }
 
-private extension String {
+extension String: IndentableDebugStringConvertible {
     
-    private static func indention(level: Int = 1) -> String {
+    private var cs_dumpValue: String {
         
-        return String(count: level * 4, repeatedValue: Character(" "))
-    }
-    
-    private func trimSwiftModuleName() -> String {
-        
-        if self.hasPrefix("Swift.") {
-            
-            return self.substringFromIndex("Swift.".endIndex)
-        }
-        return self
-    }
-    
-    private func indent(level: Int) -> String {
-        
-        return self.stringByReplacingOccurrencesOfString("\n", withString: "\n\(String.indention(level))")
+        return "\"\(self)\""
     }
 }

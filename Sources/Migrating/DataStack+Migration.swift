@@ -845,27 +845,20 @@ public extension DataStack {
     @available(*, deprecated=2.0.0, message="Use addStorage(_:completion:) by passing a InMemoryStore instance.")
     public func addInMemoryStore(configuration configuration: String? = nil, completion: (PersistentStoreResult) -> Void) {
         
-        do {
-            
-            try self.addStorage(
-                InMemoryStore(configuration: configuration),
-                completion: { result in
+        self.addStorage(
+            InMemoryStore(configuration: configuration),
+            completion: { result in
+                
+                switch result {
                     
-                    switch result {
-                        
-                    case .Success(let storage):
-                        completion(PersistentStoreResult(self.persistentStoreForStorage(storage)!))
-                        
-                    case .Failure(let error):
-                        completion(PersistentStoreResult(error as NSError))
-                    }
+                case .Success(let storage):
+                    completion(PersistentStoreResult(self.persistentStoreForStorage(storage)!))
+                    
+                case .Failure(let error):
+                    completion(PersistentStoreResult(error as NSError))
                 }
-            )
-        }
-        catch {
-            
-            completion(PersistentStoreResult(error as NSError))
-        }
+            }
+        )
     }
     
     /**
@@ -876,7 +869,7 @@ public extension DataStack {
     @available(*, deprecated=2.0.0, message="Use addStorage(_:completion:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
     public func addSQLiteStore(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, resetStoreOnModelMismatch: Bool = false, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
         
-        return try self.addStorage(
+        return self.addStorage(
             LegacySQLiteStore(
                 fileName: fileName,
                 configuration: configuration,
@@ -905,7 +898,7 @@ public extension DataStack {
     @available(*, deprecated=2.0.0, message="Use addSQLiteStore(_:completion:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
     public func addSQLiteStore(fileURL fileURL: NSURL = LegacySQLiteStore.defaultFileURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
         
-        return try self.addStorage(
+        return self.addStorage(
             LegacySQLiteStore(
                 fileURL: fileURL,
                 configuration: configuration,

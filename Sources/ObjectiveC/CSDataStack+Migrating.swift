@@ -83,7 +83,7 @@ public extension CSDataStack {
         
         return bridge(error) {
             
-            try self.bridgeToSwift.addStorage(
+            self.bridgeToSwift.addStorage(
                 storage.bridgeToSwift,
                 completion: { completion($0.bridgeToObjectiveC) }
             )
