@@ -55,6 +55,26 @@ internal extension NSManagedObjectContext {
         }
     }
     
+    internal var isSavingSynchronously: Bool? {
+        
+        get {
+            
+            let value: NSNumber? = getAssociatedObjectForKey(
+                &PropertyKeys.isSavingSynchronously,
+                inObject: self
+            )
+            return value?.boolValue
+        }
+        set {
+            
+            setAssociatedWeakObject(
+                newValue.flatMap { NSNumber(bool: $0) },
+                forKey: &PropertyKeys.isSavingSynchronously,
+                inObject: self
+            )
+        }
+    }
+    
     internal func isRunningInAllowedQueue() -> Bool {
         
         guard let parentTransaction = self.parentTransaction else {
@@ -89,7 +109,9 @@ internal extension NSManagedObjectContext {
             
             do {
                 
+                self.isSavingSynchronously = true
                 try self.save()
+                self.isSavingSynchronously = nil
             }
             catch {
                 
@@ -137,7 +159,9 @@ internal extension NSManagedObjectContext {
             
             do {
                 
+                self.isSavingSynchronously = false
                 try self.save()
+                self.isSavingSynchronously = nil
             }
             catch {
                 
@@ -185,5 +209,6 @@ internal extension NSManagedObjectContext {
     private struct PropertyKeys {
         
         static var parentTransaction: Void?
+        static var isSavingSynchronously: Void?
     }
 }
