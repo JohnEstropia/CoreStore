@@ -66,9 +66,9 @@ public extension CoreStore {
     /**
      Refreshes all registered objects `NSManagedObject`s in the `DataStack`.
      */
-    public static func refreshAllObjectsAsFaults() {
+    public static func refreshAndMergeAllObjects() {
         
-        self.defaultStack.refreshAllObjectsAsFaults()
+        self.defaultStack.refreshAndMergeAllObjects()
     }
     
     @available(*, deprecated=1.3.1, renamed="beginUnsafe")

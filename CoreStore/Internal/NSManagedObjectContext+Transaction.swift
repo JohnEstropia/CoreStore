@@ -167,7 +167,7 @@ internal extension NSManagedObjectContext {
         }
     }
     
-    internal func refreshAllObjectsAsFaults() {
+    internal func refreshAndMergeAllObjects() {
         
         if #available(iOS 8.3, OSX 10.11, *) {
             
@@ -175,7 +175,7 @@ internal extension NSManagedObjectContext {
         }
         else {
             
-            self.registeredObjects.forEach { self.refreshObject($0, mergeChanges: false) }
+            self.registeredObjects.forEach { self.refreshObject($0, mergeChanges: true) }
         }
     }
     

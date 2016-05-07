@@ -83,14 +83,14 @@ public extension DataStack {
     /**
      Refreshes all registered objects `NSManagedObject`s in the `DataStack`.
      */
-    public func refreshAllObjectsAsFaults() {
+    public func refreshAndMergeAllObjects() {
         
         CoreStore.assert(
             NSThread.isMainThread(),
             "Attempted to refresh entities outside their designated queue."
         )
         
-        self.mainContext.refreshAllObjectsAsFaults()
+        self.mainContext.refreshAndMergeAllObjects()
     }
     
     @available(*, deprecated=1.3.1, renamed="beginUnsafe")
