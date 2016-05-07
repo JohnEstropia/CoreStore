@@ -57,6 +57,27 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
+    internal var isSavingSynchronously: Bool? {
+        
+        get {
+            
+            let value: NSNumber? = getAssociatedObjectForKey(
+                &PropertyKeys.isSavingSynchronously,
+                inObject: self
+            )
+            return value?.boolValue
+        }
+        set {
+            
+            setAssociatedWeakObject(
+                newValue.flatMap { NSNumber(bool: $0) },
+                forKey: &PropertyKeys.isSavingSynchronously,
+                inObject: self
+            )
+        }
+    }
+    
+    @nonobjc
     internal func isRunningInAllowedQueue() -> Bool {
         
         guard let parentTransaction = self.parentTransaction else {
@@ -93,7 +114,9 @@ internal extension NSManagedObjectContext {
             
             do {
                 
+                self.isSavingSynchronously = true
                 try self.save()
+                self.isSavingSynchronously = nil
             }
             catch {
                 
@@ -142,7 +165,9 @@ internal extension NSManagedObjectContext {
             
             do {
                 
+                self.isSavingSynchronously = false
                 try self.save()
+                self.isSavingSynchronously = nil
             }
             catch {
                 
@@ -173,7 +198,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func refreshAllObjectsAsFaults() {
+    internal func refreshAndMergeAllObjects() {
         
         if #available(iOS 8.3, OSX 10.11, *) {
             
@@ -181,7 +206,7 @@ internal extension NSManagedObjectContext {
         }
         else {
             
-            self.registeredObjects.forEach { self.refreshObject($0, mergeChanges: false) }
+            self.registeredObjects.forEach { self.refreshObject($0, mergeChanges: true) }
         }
     }
     
@@ -191,5 +216,6 @@ internal extension NSManagedObjectContext {
     private struct PropertyKeys {
         
         static var parentTransaction: Void?
+        static var isSavingSynchronously: Void?
     }
 }

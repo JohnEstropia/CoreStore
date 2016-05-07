@@ -191,14 +191,14 @@ public /*abstract*/ class BaseDataTransaction {
     /**
      Refreshes all registered objects `NSManagedObject`s in the transaction.
      */
-    public func refreshAllObjectsAsFaults() {
+    public func refreshAndMergeAllObjects() {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to refresh entities outside their designated queue."
         )
         
-        self.context.refreshAllObjectsAsFaults()
+        self.context.refreshAndMergeAllObjects()
     }
     
     
