@@ -87,7 +87,7 @@ public struct From<T: NSManagedObject> {
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      */
-    public init(_ configuration: String?, otherConfigurations: String?...) {
+    public init(_ configuration: String?, _ otherConfigurations: String?...) {
         
         self.init(entityClass: T.self, configurations: [configuration] + otherConfigurations)
     }
@@ -300,6 +300,9 @@ public struct From<T: NSManagedObject> {
     
     // MARK: Internal
     
+    internal let entityClass: AnyClass
+    internal let dumpInfo: (key: String, value: Any)?
+    
     internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext, applyAffectedStores: Bool = true) {
         
         fetchRequest.entity = context.entityDescriptionForEntityClass(self.entityClass)
@@ -320,6 +323,7 @@ public struct From<T: NSManagedObject> {
         
         return From<NSManagedObject>(
             entityClass: self.entityClass,
+            dumpInfo: self.dumpInfo,
             findPersistentStores: self.findPersistentStores
         )
     }
@@ -327,13 +331,13 @@ public struct From<T: NSManagedObject> {
     
     // MARK: Private
     
-    private let entityClass: AnyClass
     private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
     
     private init(entityClass: AnyClass) {
         
         self.init(
             entityClass: entityClass,
+            dumpInfo: nil,
             findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
                 return context.parentStack?.persistentStoresForEntityClass(entityClass)
@@ -346,6 +350,7 @@ public struct From<T: NSManagedObject> {
         let configurationsSet = Set(configurations.map { $0 ?? Into.defaultConfigurationName })
         self.init(
             entityClass: entityClass,
+            dumpInfo: ("configurations", configurations),
             findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
                 return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
@@ -361,6 +366,7 @@ public struct From<T: NSManagedObject> {
         let storeURLsSet = Set(storeURLs)
         self.init(
             entityClass: entityClass,
+            dumpInfo: ("storeURLs", storeURLs),
             findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
                 return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
@@ -376,6 +382,7 @@ public struct From<T: NSManagedObject> {
         let persistentStores = Set(persistentStores)
         self.init(
             entityClass: entityClass,
+            dumpInfo: ("persistentStores", persistentStores),
             findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
                 return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
@@ -386,9 +393,10 @@ public struct From<T: NSManagedObject> {
         )
     }
     
-    private init(entityClass: AnyClass, findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?) {
+    private init(entityClass: AnyClass, dumpInfo: (key: String, value: Any)?, findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?) {
         
         self.entityClass = entityClass
+        self.dumpInfo = dumpInfo
         self.findPersistentStores = findPersistentStores
     }
 }

@@ -87,8 +87,11 @@ extension CloudStorageOptions: CustomDebugStringConvertible, IndentableDebugStri
             return "[.\(flags[0])]"
             
         default:
-            let description = "[\n" + flags.joinWithSeparator(",\n")
-            return description.indent(1) + "\n]"
+            var string = "[\n"
+            string.appendContentsOf(flags.joinWithSeparator(",\n"))
+            string.indent(1)
+            string.appendContentsOf("\n")
+            return string
         }
     }
 }
@@ -174,6 +177,32 @@ extension DataStack: CustomDebugStringConvertible, IndentableDebugStringConverti
             ("model", self.model),
             ("migrationChain", self.migrationChain)
         ]
+    }
+}
+
+
+// MARK: - From
+
+extension From: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpInfo: DumpInfo {
+        
+        var dumpInfo: DumpInfo = [("entityClass", self.entityClass)]
+        if let extraInfo = self.dumpInfo {
+            
+            dumpInfo.append(extraInfo)
+        }
+        return dumpInfo
     }
 }
 
@@ -318,8 +347,11 @@ extension LocalStorageOptions: CustomDebugStringConvertible, IndentableDebugStri
             return "[.\(flags[0])]"
             
         default:
-            let description = "[\n" + flags.joinWithSeparator(",\n")
-            return description.indent(1) + "\n]"
+            var string = "[\n"
+            string.appendContentsOf(flags.joinWithSeparator(",\n"))
+            string.indent(1)
+            string.appendContentsOf("\n]")
+            return string
         }
     }
 }
@@ -366,13 +398,49 @@ extension MigrationChain: CustomDebugStringConvertible, IndentableDebugStringCon
             return "[\(paths[0])]"
             
         default:
-            var dump = "["
+            var string = "["
             paths.forEach {
                 
-                dump.appendContentsOf("\n\($0);")
+                string.appendContentsOf("\n\($0);")
             }
-            return dump.indent(1) + "\n]"
+            string.indent(1)
+            string.appendContentsOf("\n]")
+            return string
         }
+    }
+}
+
+
+// MARK: - SaveResult
+
+extension SaveResult: CustomDebugStringConvertible, IndentableDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return self.cs_dump()
+    }
+    
+    
+    // MARK: IndentableDebugStringConvertible
+    
+    private var cs_dumpValue: String {
+        
+        var string: String
+        switch self {
+            
+        case .Success(let hasChanges):
+            string = ".Success ("
+            string.appendDumpInfo("hasChanges", hasChanges)
+            
+        case .Failure(let error):
+            string = ".Failure ("
+            string.appendDumpInfo("error", error)
+        }
+        string.indent(1)
+        string.appendContentsOf("\n)")
+        return string
     }
 }
 
@@ -489,9 +557,9 @@ private extension String {
         return self
     }
     
-    private func indent(level: Int) -> String {
+    private mutating func indent(level: Int) {
         
-        return self.stringByReplacingOccurrencesOfString("\n", withString: "\n\(String.indention(level))")
+        self = self.stringByReplacingOccurrencesOfString("\n", withString: "\n\(String.indention(level))")
     }
     
     private mutating func appendDumpInfo(key: String, _ value: Any) {
@@ -540,23 +608,25 @@ private extension IndentableDebugStringConvertible {
         let value = self.cs_dumpValue
         let info = self.cs_dumpInfo
         
-        var dump = "(\(self.dynamicType.cs_typeString()))"
+        var string = "(\(self.dynamicType.cs_typeString()))"
         if !value.isEmpty {
             
-            dump.appendContentsOf(" \(value)")
+            string.appendContentsOf(" \(value)")
         }
         if info.isEmpty {
             
-            return dump
+            return string
         }
         else {
             
-            dump.appendContentsOf(" {")
+            string.appendContentsOf(" (")
             info.forEach {
                 
-                dump.appendDumpInfo($0, $1)
+                string.appendDumpInfo($0, $1)
             }
-            return dump.indent(1) + "\n}"
+            string.indent(1)
+            string.appendContentsOf("\n)")
+            return string
         }
     }
 }
@@ -580,7 +650,9 @@ extension Array: IndentableDebugStringConvertible {
                 
                 string.appendContentsOf("\n\(index) = \(formattedValue(item));")
             }
-            return string.indent(1) + "\n]"
+            string.indent(1)
+            string.appendContentsOf("\n]")
+            return string
         }
     }
 }
@@ -601,7 +673,9 @@ extension Dictionary: IndentableDebugStringConvertible {
                 
                 string.appendContentsOf("\n\(formattedValue(key)) = \(formattedValue(value));")
             }
-            return string.indent(1) + "\n]"
+            string.indent(1)
+            string.appendContentsOf("\n]")
+            return string
         }
     }
 }
@@ -610,7 +684,7 @@ extension NSAttributeDescription: IndentableDebugStringConvertible {
     
     private var cs_dumpValue: String {
         
-        var string = "{"
+        var string = "("
         
         string.appendDumpInfo("attributeType", self.attributeType)
         string.appendDumpInfo("attributeValueClassName", self.attributeValueClassName)
@@ -630,7 +704,9 @@ extension NSAttributeDescription: IndentableDebugStringConvertible {
         string.appendDumpInfo("storedInExternalRecord", self.storedInExternalRecord)
         string.appendDumpInfo("renamingIdentifier", self.renamingIdentifier)
         
-        return string.indent(1) + "\n}"
+        string.indent(1)
+        string.appendContentsOf("\n)")
+        return string
     }
 }
 
@@ -683,7 +759,7 @@ extension NSEntityDescription: IndentableDebugStringConvertible {
     
     private var cs_dumpValue: String {
         
-        var string = "{"
+        var string = "("
         string.appendDumpInfo("managedObjectClassName", self.managedObjectClassName!)
         string.appendDumpInfo("name", self.name)
         string.appendDumpInfo("abstract", self.abstract)
@@ -699,7 +775,9 @@ extension NSEntityDescription: IndentableDebugStringConvertible {
             
             string.appendDumpInfo("uniquenessConstraints", self.uniquenessConstraints)
         }
-        return string.indent(1) + "\n}"
+        string.indent(1)
+        string.appendContentsOf("\n)")
+        return string
     }
 }
 
@@ -707,22 +785,39 @@ extension NSError: IndentableDebugStringConvertible {
     
     private var cs_dumpValue: String {
         
-        var string = "{"
+        var string = "("
         string.appendDumpInfo("domain", self.domain)
         string.appendDumpInfo("code", self.code)
         string.appendDumpInfo("userInfo", self.userInfo)
-        return string.indent(1) + "\n}"
+        string.indent(1)
+        string.appendContentsOf("\n)")
+        return string
     }
 }
+
+//extension NSManagedObject: IndentableDebugStringConvertible {
+//    
+//    private var cs_dumpValue: String {
+//        
+//        // TODO:
+//        var string = "("
+//        //        string.appendDumpInfo("self", self)
+//        string.indent(1)
+//        string.appendContentsOf("\n)")
+//        return string
+//    }
+//}
 
 extension NSManagedObjectModel: IndentableDebugStringConvertible {
     
     private var cs_dumpValue: String {
         
-        var string = "{"
+        var string = "("
         string.appendDumpInfo("configurations", self.configurations)
         string.appendDumpInfo("entities", self.entities)
-        return string.indent(1) + "\n}"
+        string.indent(1)
+        string.appendContentsOf("\n)")
+        return string
     }
 }
 
@@ -738,7 +833,7 @@ extension NSRelationshipDescription: IndentableDebugStringConvertible {
     
     private var cs_dumpValue: String {
         
-        var string = "{"
+        var string = "("
         
         string.appendDumpInfo("destinationEntity", self.destinationEntity?.name)
         string.appendDumpInfo("inverseRelationship", self.inverseRelationship?.name)
@@ -760,7 +855,9 @@ extension NSRelationshipDescription: IndentableDebugStringConvertible {
         string.appendDumpInfo("storedInExternalRecord", self.storedInExternalRecord)
         string.appendDumpInfo("renamingIdentifier", self.renamingIdentifier)
         
-        return string.indent(1) + "\n}"
+        string.indent(1)
+        string.appendContentsOf("\n)")
+        return string
     }
 }
 

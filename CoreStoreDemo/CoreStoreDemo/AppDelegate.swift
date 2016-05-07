@@ -24,11 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         application.statusBarStyle = .LightContent
         
-        
-        print(CoreStoreError.MappingModelNotFound(localStoreURL: NSURL(string: "file://sample.db")!, targetModel: NSManagedObjectModel.mergedModelFromBundles(nil)!, targetModelVersion: "Sample-1.0.0"))
-        CoreStore.defaultStack = DataStack(migrationChain: ["Sample-1.0.0": "Sample-1.0.2", "Sample-1.0.1": "Sample-1.0.2"])
-        print(CoreStore.defaultStack)
-        print(CoreStore.beginUnsafe())
+        print(CoreStore.beginUnsafe().commitAndWait())
+        print(From<Palette>("Config1", "Config2"))
         
         return true
     }
