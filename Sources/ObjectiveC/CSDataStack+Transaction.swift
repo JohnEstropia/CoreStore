@@ -98,8 +98,8 @@ public extension CSDataStack {
      Refreshes all registered objects `NSManagedObject`s in the `DataStack`.
      */
     @objc
-    public func refreshAllObjectsAsFaults() {
+    public func refreshAndMergeAllObjects() {
         
-        self.bridgeToSwift.refreshAllObjectsAsFaults()
+        self.bridgeToSwift.refreshAndMergeAllObjects()
     }
 }

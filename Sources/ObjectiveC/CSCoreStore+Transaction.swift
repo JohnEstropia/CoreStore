@@ -98,8 +98,8 @@ public extension CSCoreStore {
      Refreshes all registered objects `NSManagedObject`s in the `defaultStack`.
      */
     @objc
-    public static func refreshAllObjectsAsFaults() {
+    public static func refreshAndMergeAllObjects() {
         
-        CoreStore.refreshAllObjectsAsFaults()
+        CoreStore.refreshAndMergeAllObjects()
     }
 }

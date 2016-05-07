@@ -61,7 +61,7 @@ internal extension NSManagedObjectContext {
         
         get {
             
-            let value: NSNumber? = getAssociatedObjectForKey(
+            let value: NSNumber? = cs_getAssociatedObjectForKey(
                 &PropertyKeys.isSavingSynchronously,
                 inObject: self
             )
@@ -69,7 +69,7 @@ internal extension NSManagedObjectContext {
         }
         set {
             
-            setAssociatedWeakObject(
+            cs_setAssociatedWeakObject(
                 newValue.flatMap { NSNumber(bool: $0) },
                 forKey: &PropertyKeys.isSavingSynchronously,
                 inObject: self

@@ -113,9 +113,9 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      Refreshes all registered objects `NSManagedObject`s in the transaction.
      */
     @objc
-    public func refreshAllObjectsAsFaults() {
+    public func refreshAndMergeAllObjects() {
         
-        self.bridgeToSwift.refreshAllObjectsAsFaults()
+        self.bridgeToSwift.refreshAndMergeAllObjects()
     }
     
     
