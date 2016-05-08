@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import CoreData
-import CoreStore
 
 
 // MARK: - AppDelegate
@@ -23,9 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         application.statusBarStyle = .LightContent
-        
-        print(CoreStore.beginUnsafe().commitAndWait())
-        print(From<Palette>("Config1", "Config2"))
         
         return true
     }

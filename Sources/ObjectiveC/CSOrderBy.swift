@@ -104,6 +104,11 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
         return self.bridgeToSwift == object.bridgeToSwift
     }
     
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
+    
     
     // MARK: CSFetchClause, CSQueryClause, CSDeleteClause
     

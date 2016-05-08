@@ -70,6 +70,14 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     }
     
     
+    // MARK: NSObject
+    
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
+    
+    
     // MARK: BaseDataTransaction
     
     /**

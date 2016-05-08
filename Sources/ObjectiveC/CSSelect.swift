@@ -364,6 +364,11 @@ public final class CSSelect: NSObject {
             && self.selectTerms == object.selectTerms
     }
     
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
+    
     
     // MARK: CoreStoreObjectiveCType
     
@@ -371,6 +376,7 @@ public final class CSSelect: NSObject {
         
         self.attributeType = T.attributeType
         self.selectTerms = swiftValue.selectTerms
+        self.bridgeToSwift = swiftValue
         super.init()
     }
     
@@ -378,6 +384,7 @@ public final class CSSelect: NSObject {
         
         self.attributeType = .UndefinedAttributeType
         self.selectTerms = swiftValue.selectTerms
+        self.bridgeToSwift = swiftValue
         super.init()
     }
     
@@ -386,6 +393,11 @@ public final class CSSelect: NSObject {
     
     internal let attributeType: NSAttributeType
     internal let selectTerms: [SelectTerm]
+    
+    
+    // MARK: Private
+    
+    private let bridgeToSwift: CoreStoreDebugStringConvertible
 }
 
 

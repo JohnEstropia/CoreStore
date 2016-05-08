@@ -56,7 +56,7 @@ public final class CSSetupResult: NSObject {
     }
     
     /**
-     A `CSStorageInterface` instance if the `commit` operation for the transaction succeeded. Returns `NO` otherwise.
+     A `CSStorageInterface` instance if the `commit` operation for the transaction succeeded. Returns `nil` otherwise.
      */
     @objc
     public let storage: CSStorageInterface?
@@ -143,6 +143,11 @@ public final class CSSetupResult: NSObject {
         return self.storage === object.storage
             && self.error == object.error
     }
+
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
     
     
     // MARK: CoreStoreObjectiveCType
@@ -159,8 +164,14 @@ public final class CSSetupResult: NSObject {
             self.storage = nil
             self.error = error.bridgeToObjectiveC
         }
+        self.bridgeToSwift = swiftValue
         super.init()
     }
+    
+    
+    // MARK: Private
+    
+    private let bridgeToSwift: CoreStoreDebugStringConvertible
 }
 
 

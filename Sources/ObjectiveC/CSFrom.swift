@@ -111,6 +111,14 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
     }
     
     
+    // MARK: NSObject
+    
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
+    
+    
     // MARK: CoreStoreObjectiveCType
     
     public let bridgeToSwift: From<NSManagedObject>

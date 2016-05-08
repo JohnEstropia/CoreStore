@@ -50,6 +50,14 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     }
     
     
+    // MARK: NSObject
+    
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
+    
+    
     // MARK: CSFetchClause, CSQueryClause, CSDeleteClause
     
     @objc

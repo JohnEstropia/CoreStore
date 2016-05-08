@@ -138,6 +138,14 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     }
     
     
+    // MARK: NSObject
+    
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
+    
+    
     // MARK: CoreStoreObjectiveCType
     
     internal typealias SwiftType = UnsafeDataTransaction

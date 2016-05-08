@@ -117,6 +117,11 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
         return self.bridgeToSwift == object.bridgeToSwift
     }
     
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
+    
     
     // MARK: CSFetchClause, CSQueryClause, CSDeleteClause
     

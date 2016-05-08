@@ -64,6 +64,14 @@ public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
     }
     
     
+    // MARK: NSObject
+    
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
+    
+    
     // MARK: CoreStoreObjectiveCType
     
     public let bridgeToSwift: SectionBy

@@ -1192,9 +1192,31 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
 // MARK: - ListMonitor: Equatable
 
 @available(OSX, unavailable)
-public func ==<T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+@warn_unused_result
+public func == <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
     
     return lhs === rhs
+}
+
+@available(OSX, unavailable)
+@warn_unused_result
+public func == <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+    
+    return lhs.fetchedResultsController === rhs.fetchedResultsController
+}
+
+@available(OSX, unavailable)
+@warn_unused_result
+public func ~= <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+    
+    return lhs === rhs
+}
+
+@available(OSX, unavailable)
+@warn_unused_result
+public func ~= <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+    
+    return lhs.fetchedResultsController === rhs.fetchedResultsController
 }
 
 @available(OSX, unavailable)
@@ -1306,15 +1328,6 @@ extension ListMonitor: FetchedResultsControllerHandler {
     
         return self.sectionIndexTransformer(sectionName: sectionName)
     }
-}
-
-
-// MARK: - ListMonitor: Equatable
-
-@warn_unused_result
-public func == <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
-    
-    return lhs.fetchedResultsController === rhs.fetchedResultsController
 }
 
 

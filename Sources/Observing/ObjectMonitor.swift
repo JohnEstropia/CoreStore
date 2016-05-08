@@ -301,7 +301,13 @@ public final class ObjectMonitor<T: NSManagedObject> {
 // MARK: - ObjectMonitor: Equatable
 
 @available(OSX, unavailable)
-public func ==<T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
+public func == <T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
+    
+    return lhs === rhs
+}
+
+@available(OSX, unavailable)
+public func ~= <T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
     
     return lhs === rhs
 }

@@ -253,6 +253,11 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         return self.bridgeToSwift === object.bridgeToSwift
     }
     
+    public override var description: String {
+        
+        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+    }
+    
     
     // MARK: CoreStoreObjectiveCType
     

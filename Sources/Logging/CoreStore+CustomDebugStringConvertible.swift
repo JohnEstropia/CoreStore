@@ -339,6 +339,46 @@ extension LegacySQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringC
 }
 
 
+// MARK: - ListMonitor
+
+private struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertible {
+    
+    let sectionInfo: NSFetchedResultsSectionInfo
+    
+    var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "\"\(self.sectionInfo.name)\" (", ")",
+            ("numberOfObjects", self.sectionInfo.numberOfObjects),
+            ("indexTitle", self.sectionInfo.indexTitle)
+        )
+    }
+}
+
+extension ListMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("isPendingRefetch", self.isPendingRefetch),
+            ("numberOfObjects", self.numberOfObjects()),
+            ("sections", self.sections().map(CoreStoreFetchedSectionInfoWrapper.init))
+        )
+    }
+}
+
+
 // MARK: - LocalStorageOptions
  
 extension LocalStorageOptions: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
@@ -441,6 +481,96 @@ extension MigrationChain: CustomDebugStringConvertible, CoreStoreDebugStringConv
 }
 
 
+// MARK: - MigrationType
+
+extension MigrationResult: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        switch self {
+            
+        case .Success(let migrationTypes):
+            return createFormattedString(
+                ".Success (", ")",
+                ("migrationTypes", migrationTypes)
+            )
+            
+        case .Failure(let error):
+            return createFormattedString(
+                ".Failure (", ")",
+                ("error", error)
+            )
+        }
+    }
+}
+
+
+// MARK: - MigrationType
+
+extension MigrationType: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        switch self {
+            
+        case .None(let version):
+            return ".None (\"\(version)\")"
+            
+        case .Lightweight(let sourceVersion, let destinationVersion):
+            return ".Lightweight (\"\(sourceVersion)\" → \"\(destinationVersion)\")"
+            
+        case .Heavyweight(let sourceVersion, let destinationVersion):
+            return ".Heavyweight (\"\(sourceVersion)\" → \"\(destinationVersion)\")"
+        }
+    }
+}
+
+
+// MARK: - ObjectMonitor
+
+extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("isObjectDeleted", self.isObjectDeleted),
+            ("object", self.object)
+        )
+    }
+}
+
+
 // MARK: - OrderBy
 
 extension OrderBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
@@ -495,6 +625,30 @@ extension SaveResult: CustomDebugStringConvertible, CoreStoreDebugStringConverti
                 ("error", error)
             )
         }
+    }
+}
+
+
+// MARK: - SectionBy
+
+extension SectionBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("sectionKeyPath", self.sectionKeyPath)
+        )
     }
 }
 
@@ -561,6 +715,40 @@ extension SelectTerm: CustomDebugStringConvertible, CoreStoreDebugStringConverti
                 ".Identity (", ")",
                 ("alias", alias),
                 ("nativeType", nativeType)
+            )
+        }
+    }
+}
+
+
+// MARK: - SetupResult
+
+extension SetupResult: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        switch self {
+            
+        case .Success(let storage):
+            return createFormattedString(
+                ".Success (", ")",
+                ("storage", storage)
+            )
+            
+        case .Failure(let error):
+            return createFormattedString(
+                ".Failure (", ")",
+                ("error", error)
             )
         }
     }
@@ -828,7 +1016,7 @@ extension NSAttributeDescription: CoreStoreDebugStringConvertible {
             ("defaultValue", self.defaultValue),
             ("valueTransformerName", self.valueTransformerName),
             ("allowsExternalBinaryDataStorage", self.allowsExternalBinaryDataStorage),
-            ("entity", self.entity.name),
+            ("entity.name", self.entity.name),
             ("name", self.name),
             ("optional", self.optional),
             ("transient", self.transient),
@@ -896,7 +1084,7 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
             ("managedObjectClassName", self.managedObjectClassName!),
             ("name", self.name),
             ("abstract", self.abstract),
-            ("superentity", self.superentity?.name),
+            ("superentity?.name", self.superentity?.name),
             ("subentities", self.subentities.map({ $0.name })),
             ("properties", self.properties),
             ("userInfo", self.userInfo),
@@ -929,19 +1117,6 @@ extension NSError: CoreStoreDebugStringConvertible {
     }
 }
 
-extension NSManagedObject: CoreStoreDebugStringConvertible {
-    
-    public var coreStoreDumpString: String {
-        
-        // TODO:
-        var string = "("
-        //        string.appendDumpInfo("self", self)
-        string.indent(1)
-        string.appendContentsOf("\n)")
-        return string
-    }
-}
-
 extension NSManagedObjectModel: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
@@ -950,6 +1125,19 @@ extension NSManagedObjectModel: CoreStoreDebugStringConvertible {
             "(", ")",
             ("configurations", self.configurations),
             ("entities", self.entities)
+        )
+    }
+}
+
+extension NSManagedObjectID: CoreStoreDebugStringConvertible {
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "\(self.URIRepresentation().coreStoreDumpString) (", ")",
+            ("entity.name", self.entity.name),
+            ("temporaryID", self.temporaryID),
+            ("persistentStore?.URL", self.persistentStore?.URL)
         )
     }
 }
@@ -976,14 +1164,14 @@ extension NSRelationshipDescription: CoreStoreDebugStringConvertible {
         
         return createFormattedString(
             "(", ")",
-            ("destinationEntity", self.destinationEntity?.name),
-            ("inverseRelationship", self.inverseRelationship?.name),
+            ("destinationEntity?.name", self.destinationEntity?.name),
+            ("inverseRelationship?.name", self.inverseRelationship?.name),
             ("minCount", self.minCount),
             ("maxCount", self.maxCount),
             ("deleteRule", self.deleteRule),
             ("toMany", self.toMany),
             ("ordered", self.ordered),
-            ("entity", self.entity.name),
+            ("entity.name", self.entity.name),
             ("name", self.name),
             ("optional", self.optional),
             ("transient", self.transient),
