@@ -55,7 +55,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
     @objc
-    public func createInto(into: CSInto) -> NSManagedObject {
+    public func createInto(into: CSInto) -> AnyObject {
         
         return self.bridgeToSwift.create(into.bridgeToSwift)
     }
@@ -68,7 +68,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func editObject(object: NSManagedObject?) -> NSManagedObject? {
+    public func editObject(object: NSManagedObject?) -> AnyObject? {
         
         return self.bridgeToSwift.edit(object)
     }
@@ -82,7 +82,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func editInto(into: CSInto, objectID: NSManagedObjectID) -> NSManagedObject? {
+    public func editInto(into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
         
         return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
     }

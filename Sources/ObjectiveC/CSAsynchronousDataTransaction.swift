@@ -87,7 +87,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
     @objc
-    public override func createInto(into: CSInto) -> NSManagedObject {
+    public override func createInto(into: CSInto) -> AnyObject {
         
         return self.bridgeToSwift.create(into.bridgeToSwift)
     }
@@ -100,7 +100,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public override func editObject(object: NSManagedObject?) -> NSManagedObject? {
+    public override func editObject(object: NSManagedObject?) -> AnyObject? {
         
         return self.bridgeToSwift.edit(object)
     }
@@ -114,7 +114,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public override func editInto(into: CSInto, objectID: NSManagedObjectID) -> NSManagedObject? {
+    public override func editInto(into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
         
         return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
     }

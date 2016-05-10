@@ -39,7 +39,7 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObject(object: NSManagedObject) -> NSManagedObject? {
+    public func fetchExistingObject(object: NSManagedObject) -> AnyObject? {
         
         do {
             
@@ -59,7 +59,7 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObjectWithID(objectID: NSManagedObjectID) -> NSManagedObject? {
+    public func fetchExistingObjectWithID(objectID: NSManagedObjectID) -> AnyObject? {
         
         do {
             
@@ -106,7 +106,7 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchOneFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObject? {
+    public func fetchOneFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
         
         CoreStore.assert(
             NSThread.isMainThread(),

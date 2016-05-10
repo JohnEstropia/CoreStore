@@ -41,7 +41,7 @@ public final class CSObjectMonitor: NSObject, CoreStoreObjectiveCType {
     /**
      Returns the `NSManagedObject` instance being observed, or `nil` if the object was already deleted.
      */
-    public var object: NSManagedObject? {
+    public var object: AnyObject? {
         
         return self.bridgeToSwift.object
     }

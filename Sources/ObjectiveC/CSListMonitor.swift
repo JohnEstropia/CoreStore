@@ -47,7 +47,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index
      */
     @objc
-    public subscript(index: Int) -> NSManagedObject {
+    public subscript(index: Int) -> AnyObject {
         
         return self.bridgeToSwift[index]
     }
@@ -59,7 +59,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index, or `nil` if out of bounds
      */
     @objc
-    public func objectAtSafeIndex(index: Int) -> NSManagedObject? {
+    public func objectAtSafeIndex(index: Int) -> AnyObject? {
         
         return self.bridgeToSwift[safeIndex: index]
     }
@@ -72,7 +72,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified section and item index
      */
     @objc
-    public func objectAtSectionIndex(sectionIndex: Int, itemIndex: Int) -> NSManagedObject {
+    public func objectAtSectionIndex(sectionIndex: Int, itemIndex: Int) -> AnyObject {
         
         return self.bridgeToSwift[sectionIndex, itemIndex]
     }
@@ -85,7 +85,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified section and item index, or `nil` if out of bounds
      */
     @objc
-    public func objectAtSafeSectionIndex(sectionIndex: Int, safeItemIndex itemIndex: Int) -> NSManagedObject? {
+    public func objectAtSafeSectionIndex(sectionIndex: Int, safeItemIndex itemIndex: Int) -> AnyObject? {
         
         return self.bridgeToSwift[safeSectionIndex: sectionIndex, safeItemIndex: itemIndex]
     }
@@ -97,7 +97,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index path
      */
     @objc
-    public func objectAtIndexPath(indexPath: NSIndexPath) -> NSManagedObject {
+    public func objectAtIndexPath(indexPath: NSIndexPath) -> AnyObject {
         
         return self.bridgeToSwift[indexPath]
     }
@@ -109,7 +109,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index path, or `nil` if out of bounds
      */
     @objc
-    public func objectAtSafeIndexPath(indexPath: NSIndexPath) -> NSManagedObject? {
+    public func objectAtSafeIndexPath(indexPath: NSIndexPath) -> AnyObject? {
         
         return self.bridgeToSwift[safeIndexPath: indexPath]
     }
