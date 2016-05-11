@@ -65,7 +65,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchExistingObjects(objects: [NSManagedObject]) -> [NSManagedObject] {
+    public static func fetchExistingObjects(objects: [NSManagedObject]) -> [AnyObject] {
         
         return self.defaultStack.fetchExistingObjects(objects)
     }
@@ -78,7 +78,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchExistingObjectsWithIDs(objectIDs: [NSManagedObjectID]) -> [NSManagedObject] {
+    public static func fetchExistingObjectsWithIDs(objectIDs: [NSManagedObjectID]) -> [AnyObject] {
         
         return self.defaultStack.fetchExistingObjectsWithIDs(objectIDs)
     }
@@ -106,7 +106,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchAllFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [NSManagedObject]? {
+    public static func fetchAllFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
         
         return self.defaultStack.fetchAllFrom(from, fetchClauses: fetchClauses)
     }

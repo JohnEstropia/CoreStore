@@ -79,7 +79,7 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObjects(objects: [NSManagedObject]) -> [NSManagedObject] {
+    public func fetchExistingObjects(objects: [NSManagedObject]) -> [AnyObject] {
         
         return objects.flatMap { try? self.bridgeToSwift.context.existingObjectWithID($0.objectID) }
     }
@@ -92,7 +92,7 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObjectsWithIDs(objectIDs: [NSManagedObjectID]) -> [NSManagedObject] {
+    public func fetchExistingObjectsWithIDs(objectIDs: [NSManagedObjectID]) -> [AnyObject] {
         
         return objectIDs.flatMap { try? self.bridgeToSwift.context.existingObjectWithID($0) }
     }
@@ -124,7 +124,7 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchAllFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [NSManagedObject]? {
+    public func fetchAllFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
