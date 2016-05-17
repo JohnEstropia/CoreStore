@@ -733,7 +733,7 @@ or multiple objects at once with the `importUniqueObjects(...)` method:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let jsonArray: [[String: AnyObject]] = // ...
-    try! transaction.importObjects(
+    try! transaction.importUniqueObjects(
         Into(MyPersonEntity),
         sourceArray: jsonArray
     )
