@@ -299,6 +299,12 @@
 		B5677D411CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */; };
 		B56964D41B22FFAD0075EE4A /* DataStack+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */; };
 		B56965241B356B820075EE4A /* MigrationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965231B356B820075EE4A /* MigrationResult.swift */; };
+		B580857A1CDF808C004C2EEB /* SetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58085741CDF7F00004C2EEB /* SetupTests.swift */; };
+		B580857B1CDF808D004C2EEB /* SetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58085741CDF7F00004C2EEB /* SetupTests.swift */; };
+		B580857C1CDF808F004C2EEB /* SetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58085741CDF7F00004C2EEB /* SetupTests.swift */; };
+		B580857E1CDF8149004C2EEB /* BaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B580857D1CDF8149004C2EEB /* BaseTestCase.swift */; };
+		B580857F1CDF8149004C2EEB /* BaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B580857D1CDF8149004C2EEB /* BaseTestCase.swift */; };
+		B58085801CDF8149004C2EEB /* BaseTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B580857D1CDF8149004C2EEB /* BaseTestCase.swift */; };
 		B58B22F51C93C1BA00521925 /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F03A53019C5C6DA005002A5 /* CoreStore.framework */; };
 		B59851491C90289D00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B598514A1C90289E00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
@@ -666,6 +672,8 @@
 		B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudStoreObserver.swift; sourceTree = "<group>"; };
 		B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+Migration.swift"; sourceTree = "<group>"; };
 		B56965231B356B820075EE4A /* MigrationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationResult.swift; sourceTree = "<group>"; };
+		B58085741CDF7F00004C2EEB /* SetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupTests.swift; sourceTree = "<group>"; };
+		B580857D1CDF8149004C2EEB /* BaseTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestCase.swift; sourceTree = "<group>"; };
 		B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+Setup.swift"; sourceTree = "<group>"; };
 		B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudStore.swift; sourceTree = "<group>"; };
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
@@ -895,6 +903,7 @@
 		2F03A53C19C5C6DA005002A5 /* CoreStoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				B58085741CDF7F00004C2EEB /* SetupTests.swift */,
 				2F03A53F19C5C6DA005002A5 /* CoreStoreTests.swift */,
 				B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */,
 				B5DBE2DD1C9939E100B5CEFA /* BridgingTests.h */,
@@ -904,6 +913,7 @@
 				B5D372851A39CDDB00F583D9 /* TestEntity1.swift */,
 				B5D5E0CE1A4D6AAB006468AF /* TestEntity2.swift */,
 				2F03A53D19C5C6DA005002A5 /* Supporting Files */,
+				B580857D1CDF8149004C2EEB /* BaseTestCase.swift */,
 			);
 			path = CoreStoreTests;
 			sourceTree = "<group>";
@@ -1676,9 +1686,11 @@
 			files = (
 				B5519A401CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				2F03A54019C5C6DA005002A5 /* CoreStoreTests.swift in Sources */,
+				B580857E1CDF8149004C2EEB /* BaseTestCase.swift in Sources */,
 				B5DC47C61C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B5D372861A39CDDB00F583D9 /* TestEntity1.swift in Sources */,
 				B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */,
+				B580857A1CDF808C004C2EEB /* SetupTests.swift in Sources */,
 				B5DBE2DF1C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B5D5E0CF1A4D6AAB006468AF /* TestEntity2.swift in Sources */,
 				B5DC47CA1C93D9C800FA3BF3 /* StorageInterfaceTests.swift in Sources */,
@@ -1807,9 +1819,11 @@
 			files = (
 				B5519A411CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				82BA18DA1C4BBD9700A0916E /* TestEntity1.swift in Sources */,
+				B580857F1CDF8149004C2EEB /* BaseTestCase.swift in Sources */,
 				B5DC47C71C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				82BA18DB1C4BBD9700A0916E /* TestEntity2.swift in Sources */,
 				B5DBE2E01C9939E100B5CEFA /* BridgingTests.m in Sources */,
+				B580857B1CDF808D004C2EEB /* SetupTests.swift in Sources */,
 				82BA18D91C4BBD9700A0916E /* CoreStoreTests.swift in Sources */,
 				82BA18DC1C4BBD9C00A0916E /* Model.xcdatamodeld in Sources */,
 				B5DC47CB1C93D9C800FA3BF3 /* StorageInterfaceTests.swift in Sources */,
@@ -1919,9 +1933,11 @@
 			files = (
 				B5519A421CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B52DD1CD1BE1F94D00949AFE /* TestEntity1.swift in Sources */,
+				B58085801CDF8149004C2EEB /* BaseTestCase.swift in Sources */,
 				B5DC47C81C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B52DD1CE1BE1F94D00949AFE /* TestEntity2.swift in Sources */,
 				B5DBE2E11C9939E100B5CEFA /* BridgingTests.m in Sources */,
+				B580857C1CDF808F004C2EEB /* SetupTests.swift in Sources */,
 				B52DD1CC1BE1F94D00949AFE /* CoreStoreTests.swift in Sources */,
 				B5598BCC1BE2093D0092EFCE /* Model.xcdatamodeld in Sources */,
 				B5DC47CC1C93D9C800FA3BF3 /* StorageInterfaceTests.swift in Sources */,

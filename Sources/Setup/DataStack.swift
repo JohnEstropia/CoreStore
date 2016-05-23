@@ -592,3 +592,14 @@ public final class DataStack {
         return self.persistentStoreForStorage(storage)!
     }
 }
+
+
+// MARK: - DataStack: Equatable
+
+@warn_unused_result
+public func == (lhs: DataStack, rhs: DataStack) -> Bool {
+    
+    return lhs === rhs
+}
+
+extension DataStack: Equatable {}

@@ -250,7 +250,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
             
             return false
         }
-        return self.bridgeToSwift === object.bridgeToSwift
+        return self.bridgeToSwift == object.bridgeToSwift
     }
     
     public override var description: String {
