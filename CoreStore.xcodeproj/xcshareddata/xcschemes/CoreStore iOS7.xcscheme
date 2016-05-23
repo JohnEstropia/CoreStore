@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B5D9E2ED1CA2C317007A9D52"
-               BuildableName = "CoreStore.framework"
+               BuildableName = "CoreStore_iOS7.framework"
                BlueprintName = "CoreStore iOS7"
                ReferencedContainer = "container:CoreStore.xcodeproj">
             </BuildableReference>
@@ -79,7 +79,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B5D9E2ED1CA2C317007A9D52"
-            BuildableName = "CoreStore.framework"
+            BuildableName = "CoreStore_iOS7.framework"
             BlueprintName = "CoreStore iOS7"
             ReferencedContainer = "container:CoreStore.xcodeproj">
          </BuildableReference>
