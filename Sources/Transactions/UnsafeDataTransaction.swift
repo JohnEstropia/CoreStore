@@ -88,6 +88,30 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     }
     
     /**
+     Immediately flushes all pending changes to the transaction's observers. This is useful in conjunction with `ListMonitor`s and `ObjectMonitor`s created from `UnsafeDataTransaction`s used to manage temporary "scratch" data.
+     
+     - Important: Note that unlike `commit()`, `flush()` does not propagate/save updates to the `DataStack` and the persistent store. However, the flushed changes will be seen by children transactions created further from the current transaction (i.e. through `transaction.beginUnsafe()`)
+     - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
+     */
+    public func flush() throws {
+        
+        try self.context.save()
+    }
+    
+    /**
+     Flushes all pending changes to the transaction's observers at the end of the `closure`'s execution. This is useful in conjunction with `ListMonitor`s and `ObjectMonitor`s created from `UnsafeDataTransaction`s used to manage temporary "scratch" data.
+     
+     - Important: Note that unlike `commit()`, `flush()` does not propagate/save updates to the `DataStack` and the persistent store. However, the flushed changes will be seen by children transactions created further from the current transaction (i.e. through `transaction.beginUnsafe()`)
+     - parameter closure: the closure where changes can be made prior to the flush
+     - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
+     */
+    public func flush(@noescape closure: () throws -> Void) throws {
+        
+        try closure()
+        try self.context.save()
+    }
+    
+    /**
      Redo's the last undone change to the transaction.
      */
     public func redo() {
@@ -118,7 +142,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     /**
      Returns the `NSManagedObjectContext` for this unsafe transaction. Use only for cases where external frameworks need an `NSManagedObjectContext` instance to work with.
      
-     - Note: It is the developer's responsibility to ensure the following:
+     - Important: It is the developer's responsibility to ensure the following:
      - that the `UnsafeDataTransaction` that owns this context should be strongly referenced and prevented from being deallocated during the context's lifetime
      - that all saves will be done either through the `UnsafeDataTransaction`'s `commit(...)` method, or by calling `save()` manually on the context, its parent, and all other ancestor contexts if there are any.
      */
