@@ -31,28 +31,105 @@ import CoreStore
 
 class SetupTests: BaseTestCase {
     
-    func testInMemoryStores() {
+    @objc
+    dynamic func test_ThatDataStacks_ConfigureCorrectly() {
+        
+        do {
+            
+            let model = NSManagedObjectModel.mergedModelFromBundles([NSBundle(forClass: self.dynamicType)])!
+            
+            let stack = DataStack(model: model, migrationChain: nil)
+            XCTAssertEqual(stack.model, model)
+            XCTAssertTrue(stack.migrationChain.valid)
+            XCTAssertTrue(stack.migrationChain.empty)
+            XCTAssertTrue(stack.migrationChain.rootVersions.isEmpty)
+            XCTAssertTrue(stack.migrationChain.leafVersions.isEmpty)
+            
+            CoreStore.defaultStack = stack
+            XCTAssertEqual(CoreStore.defaultStack, stack)
+        }
+        do {
+            
+            let migrationChain: MigrationChain = ["version1", "version2", "version3"]
+            
+            let stack = DataStack(
+                modelName: "Model",
+                bundle: NSBundle(forClass: self.dynamicType),
+                migrationChain: migrationChain
+            )
+            XCTAssertEqual(stack.modelVersion, "Model")
+            XCTAssertEqual(stack.migrationChain, migrationChain)
+            
+            CoreStore.defaultStack = stack
+            XCTAssertEqual(CoreStore.defaultStack, stack)
+        }
+    }
+    
+    @objc
+    dynamic func test_ThatInMemoryStores_SetupCorrectly() {
         
         let stack = DataStack(
             modelName: "Model",
             bundle: NSBundle(forClass: self.dynamicType)
         )
-        CoreStore.defaultStack = stack
-        XCTAssertEqual(CoreStore.defaultStack, stack)
-        XCTAssertEqual(stack.modelVersion, "Model")
-        XCTAssert(stack.migrationChain.valid)
-        XCTAssert(stack.migrationChain.empty)
-        XCTAssert(stack.migrationChain.rootVersions.isEmpty)
-        XCTAssert(stack.migrationChain.leafVersions.isEmpty)
+        do {
+            
+            let inMemoryStore = InMemoryStore()
+            do {
+                
+                try stack.addStorageAndWait(inMemoryStore)
+            }
+            catch let error as NSError {
+                
+                XCTFail(error.description)
+            }
+            let persistentStore = stack.persistentStoreForStorage(inMemoryStore)
+            XCTAssertNotNil(persistentStore)
+        }
+        do {
+            
+            let inMemoryStore = InMemoryStore(
+                configuration: "Config1"
+            )
+            do {
+                
+                try stack.addStorageAndWait(inMemoryStore)
+            }
+            catch let error as NSError {
+                
+                XCTFail(error.description)
+            }
+            let persistentStore = stack.persistentStoreForStorage(inMemoryStore)
+            XCTAssertNotNil(persistentStore)
+        }
+        do {
+            
+            let inMemoryStore = InMemoryStore(
+                configuration: "Config2"
+            )
+            do {
+                
+                try stack.addStorageAndWait(inMemoryStore)
+            }
+            catch let error as NSError {
+                
+                XCTFail(error.description)
+            }
+            let persistentStore = stack.persistentStoreForStorage(inMemoryStore)
+            XCTAssertNotNil(persistentStore)
+        }
+    }
+    
+    @objc
+    dynamic func test_ThatSQLiteStores_SetupCorrectly() {
         
+        let stack = DataStack(
+            modelName: "Model",
+            bundle: NSBundle(forClass: self.dynamicType)
+        )
         do {
             
             let sqliteStore = SQLiteStore()
-            XCTAssertEqual(sqliteStore.fileURL, SQLiteStore.defaultFileURL)
-            XCTAssertEqual(sqliteStore.configuration, nil)
-            XCTAssertEqual(sqliteStore.mappingModelBundles, NSBundle.allBundles())
-            XCTAssertEqual(sqliteStore.localStorageOptions, LocalStorageOptions.None)
-            
             do {
                 
                 try stack.addStorageAndWait(sqliteStore)
@@ -65,7 +142,6 @@ class SetupTests: BaseTestCase {
             XCTAssertNotNil(persistentStore)
             XCTAssert(sqliteStore.matchesPersistentStore(persistentStore!))
         }
-        
         do {
             
             let sqliteStore = SQLiteStore(
@@ -73,12 +149,6 @@ class SetupTests: BaseTestCase {
                 configuration: "Config1",
                 localStorageOptions: .RecreateStoreOnModelMismatch
             )
-            XCTAssertEqual(sqliteStore.fileURL, SQLiteStore.defaultRootDirectory
-                .URLByAppendingPathComponent("ConfigStore1.sqlite", isDirectory: false))
-            XCTAssertEqual(sqliteStore.configuration, "Config1")
-            XCTAssertEqual(sqliteStore.mappingModelBundles, NSBundle.allBundles())
-            XCTAssertEqual(sqliteStore.localStorageOptions, LocalStorageOptions.RecreateStoreOnModelMismatch)
-            
             do {
                 
                 try stack.addStorageAndWait(sqliteStore)
@@ -91,7 +161,6 @@ class SetupTests: BaseTestCase {
             XCTAssertNotNil(persistentStore)
             XCTAssert(sqliteStore.matchesPersistentStore(persistentStore!))
         }
-        
         do {
             
             let sqliteStore = SQLiteStore(
@@ -99,12 +168,6 @@ class SetupTests: BaseTestCase {
                 configuration: "Config2",
                 localStorageOptions: .RecreateStoreOnModelMismatch
             )
-            XCTAssertEqual(sqliteStore.fileURL, SQLiteStore.defaultRootDirectory
-                .URLByAppendingPathComponent("ConfigStore2.sqlite", isDirectory: false))
-            XCTAssertEqual(sqliteStore.configuration, "Config2")
-            XCTAssertEqual(sqliteStore.mappingModelBundles, NSBundle.allBundles())
-            XCTAssertEqual(sqliteStore.localStorageOptions, LocalStorageOptions.RecreateStoreOnModelMismatch)
-            
             do {
                 
                 try stack.addStorageAndWait(sqliteStore)
@@ -119,28 +182,16 @@ class SetupTests: BaseTestCase {
         }
     }
     
-    func testSQLiteStores() {
+    @objc
+    dynamic func test_ThatLegacySQLiteStores_SetupCorrectly() {
         
         let stack = DataStack(
             modelName: "Model",
             bundle: NSBundle(forClass: self.dynamicType)
         )
-        CoreStore.defaultStack = stack
-        XCTAssertEqual(CoreStore.defaultStack, stack)
-        XCTAssertEqual(stack.modelVersion, "Model")
-        XCTAssert(stack.migrationChain.valid)
-        XCTAssert(stack.migrationChain.empty)
-        XCTAssert(stack.migrationChain.rootVersions.isEmpty)
-        XCTAssert(stack.migrationChain.leafVersions.isEmpty)
-        
         do {
             
             let sqliteStore = SQLiteStore()
-            XCTAssertEqual(sqliteStore.fileURL, SQLiteStore.defaultFileURL)
-            XCTAssertEqual(sqliteStore.configuration, nil)
-            XCTAssertEqual(sqliteStore.mappingModelBundles, NSBundle.allBundles())
-            XCTAssertEqual(sqliteStore.localStorageOptions, LocalStorageOptions.None)
-            
             do {
                 
                 try stack.addStorageAndWait(sqliteStore)
@@ -153,7 +204,6 @@ class SetupTests: BaseTestCase {
             XCTAssertNotNil(persistentStore)
             XCTAssert(sqliteStore.matchesPersistentStore(persistentStore!))
         }
-        
         do {
             
             let sqliteStore = SQLiteStore(
@@ -161,12 +211,6 @@ class SetupTests: BaseTestCase {
                 configuration: "Config1",
                 localStorageOptions: .RecreateStoreOnModelMismatch
             )
-            XCTAssertEqual(sqliteStore.fileURL, SQLiteStore.defaultRootDirectory
-                .URLByAppendingPathComponent("ConfigStore1.sqlite", isDirectory: false))
-            XCTAssertEqual(sqliteStore.configuration, "Config1")
-            XCTAssertEqual(sqliteStore.mappingModelBundles, NSBundle.allBundles())
-            XCTAssertEqual(sqliteStore.localStorageOptions, LocalStorageOptions.RecreateStoreOnModelMismatch)
-            
             do {
                 
                 try stack.addStorageAndWait(sqliteStore)
@@ -179,7 +223,6 @@ class SetupTests: BaseTestCase {
             XCTAssertNotNil(persistentStore)
             XCTAssert(sqliteStore.matchesPersistentStore(persistentStore!))
         }
-        
         do {
             
             let sqliteStore = SQLiteStore(
@@ -187,12 +230,6 @@ class SetupTests: BaseTestCase {
                 configuration: "Config2",
                 localStorageOptions: .RecreateStoreOnModelMismatch
             )
-            XCTAssertEqual(sqliteStore.fileURL, SQLiteStore.defaultRootDirectory
-                .URLByAppendingPathComponent("ConfigStore2.sqlite", isDirectory: false))
-            XCTAssertEqual(sqliteStore.configuration, "Config2")
-            XCTAssertEqual(sqliteStore.mappingModelBundles, NSBundle.allBundles())
-            XCTAssertEqual(sqliteStore.localStorageOptions, LocalStorageOptions.RecreateStoreOnModelMismatch)
-            
             do {
                 
                 try stack.addStorageAndWait(sqliteStore)

@@ -60,7 +60,7 @@ import CoreData
  - a version appears twice as a key in a dictionary literal
  - a loop is found in any of the paths
  */
-public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, DictionaryLiteralConvertible, ArrayLiteralConvertible {
+public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, DictionaryLiteralConvertible, ArrayLiteralConvertible, Equatable {
     
     /**
      Initializes the `MigrationChain` with empty values, which instructs the `DataStack` to use the .xcdatamodel's current version as the final version, and to disable progressive migrations.
@@ -248,3 +248,16 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     private let versionTree: [String: String]
 }
+
+
+// MARK: - MigrationChain: Equatable
+
+@warn_unused_result
+public func == (lhs: MigrationChain, rhs: MigrationChain) -> Bool {
+    
+    return lhs.versionTree == rhs.versionTree
+        && lhs.rootVersions == rhs.rootVersions
+        && lhs.leafVersions == rhs.leafVersions
+        && lhs.valid == rhs.valid
+}
+

@@ -28,9 +28,13 @@ import XCTest
 @testable
 import CoreStore
 
-class StorageInterfaceTests: XCTestCase {
 
-    func testDefaultInMemoryStore() {
+//MARK: - StorageInterfaceTests
+
+final class StorageInterfaceTests: XCTestCase {
+    
+    @objc
+    dynamic func test_ThatDefaultInMemoryStores_ConfigureCorrectly() {
         
         let store = InMemoryStore()
         XCTAssertEqual(store.dynamicType.storeType, NSInMemoryStoreType)
@@ -38,7 +42,8 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertNil(store.storeOptions)
     }
     
-    func testInMemoryStoreConfiguration() {
+    @objc
+    dynamic func test_ThatCustomInMemoryStores_ConfigureCorrectly() {
         
         let store = InMemoryStore(configuration: "config1")
         XCTAssertEqual(store.dynamicType.storeType, NSInMemoryStoreType)
@@ -46,7 +51,8 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertNil(store.storeOptions)
     }
     
-    func testSQLiteStoreDefaultDirectories() {
+    @objc
+    dynamic func test_ThatSQLiteStoreDefaultDirectories_AreCorrect() {
         
         #if os(tvOS)
             let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
@@ -72,7 +78,8 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(SQLiteStore.defaultFileURL, defaultFileURL)
     }
     
-    func testDefaultSQLiteStore() {
+    @objc
+    dynamic func test_ThatDefaultSQLiteStores_ConfigureCorrectly() {
         
         let store = SQLiteStore()
         XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
@@ -84,7 +91,8 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.localStorageOptions, [.None])
     }
     
-    func testSQLiteStoreFileURL() {
+    @objc
+    dynamic func test_ThatFileURLSQLiteStores_ConfigureCorrectly() {
         
         let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
             .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)
@@ -106,7 +114,8 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.localStorageOptions, [.RecreateStoreOnModelMismatch])
     }
     
-    func testSQLiteStoreFileName() {
+    @objc
+    dynamic func test_ThatFileNameSQLiteStores_ConfigureCorrectly() {
         
         let fileName = NSUUID().UUIDString + ".db"
         let bundles = [NSBundle(forClass: self.dynamicType)]
@@ -127,7 +136,8 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.localStorageOptions, [.RecreateStoreOnModelMismatch])
     }
     
-    func testLegacySQLiteStoreDefaultDirectories() {
+    @objc
+    dynamic func test_ThatLegacySQLiteStoreDefaultDirectories_AreCorrect() {
         
         #if os(tvOS)
             let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
@@ -148,7 +158,8 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(LegacySQLiteStore.defaultFileURL, legacyDefaultFileURL)
     }
     
-    func testDefaultLegacySQLiteStore() {
+    @objc
+    dynamic func test_ThatDefaultLegacySQLiteStores_ConfigureCorrectly() {
         
         let store = LegacySQLiteStore()
         XCTAssertEqual(store.dynamicType.storeType, NSSQLiteStoreType)
@@ -160,7 +171,8 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.localStorageOptions, [.None])
     }
     
-    func testLegacySQLiteStoreFileURL() {
+    @objc
+    dynamic func test_ThatFileURLLegacySQLiteStores_ConfigureCorrectly() {
         
         let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
             .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)
@@ -182,7 +194,8 @@ class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.localStorageOptions, [.RecreateStoreOnModelMismatch])
     }
     
-    func testLegacySQLiteStoreFileName() {
+    @objc
+    dynamic func test_ThatFileNameLegacySQLiteStores_ConfigureCorrectly() {
         
         let fileName = NSUUID().UUIDString + ".db"
         let bundles = [NSBundle(forClass: self.dynamicType)]

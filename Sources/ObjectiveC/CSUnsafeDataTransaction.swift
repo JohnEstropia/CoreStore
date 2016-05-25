@@ -93,6 +93,38 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     }
     
     /**
+     Immediately flushes all pending changes to the transaction's observers. This is useful in conjunction with `ListMonitor`s and `ObjectMonitor`s created from `UnsafeDataTransaction`s used to manage temporary "scratch" data.
+     
+     - Important: Note that unlike `commit()`, `flush()` does not propagate/save updates to the `DataStack` and the persistent store. However, the flushed changes will be seen by children transactions created further from the current transaction (i.e. through `transaction.beginUnsafe()`)
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
+     */
+    @objc
+    public func flush(error error: NSErrorPointer) {
+        
+        bridge(error) {
+            
+            try self.bridgeToSwift.flush()
+        }
+    }
+    
+    /**
+     Flushes all pending changes to the transaction's observers at the end of the `closure`'s execution. This is useful in conjunction with `ListMonitor`s and `ObjectMonitor`s created from `UnsafeDataTransaction`s used to manage temporary "scratch" data.
+     
+     - Important: Note that unlike `commit()`, `flush()` does not propagate/save updates to the `DataStack` and the persistent store. However, the flushed changes will be seen by children transactions created further from the current transaction (i.e. through `transaction.beginUnsafe()`)
+     - parameter error: the `NSError` pointer that indicates the reason in case of an failure
+     - parameter closure: the closure where changes can be made prior to the flush
+     */
+    @objc
+    public func flush(error error: NSErrorPointer, block: () -> Void) throws {
+        
+        bridge(error) {
+            
+            block()
+            try self.bridgeToSwift.context.save()
+        }
+    }
+    
+    /**
      Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
      
      To support "undo" methods such as `-undo`, `-redo`, and `-rollback`, use the `-beginSafeWithSupportsUndo:` method passing `YES` to the argument. Without "undo" support, calling those methods will raise an exception.

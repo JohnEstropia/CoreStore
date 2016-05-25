@@ -28,9 +28,13 @@ import XCTest
 @testable
 import CoreStore
 
-class MigrationChainTests: XCTestCase {
+
+// MARK: - MigrationChainTests
+
+final class MigrationChainTests: XCTestCase {
     
-    @objc dynamic func testEmptyChain() {
+    @objc
+    dynamic func test_ThatNilMigrationChains_HaveNoVersions() {
         
         let chain: MigrationChain = nil
         XCTAssertTrue(chain.valid)
@@ -40,7 +44,8 @@ class MigrationChainTests: XCTestCase {
         XCTAssertNil(chain.nextVersionFrom("version1"))
     }
     
-    @objc dynamic func testSingleChain() {
+    @objc
+    dynamic func test_ThatStringMigrationChains_HaveOneVersion() {
         
         let chain: MigrationChain = "version1"
         XCTAssertTrue(chain.valid)
@@ -53,7 +58,8 @@ class MigrationChainTests: XCTestCase {
         XCTAssertNil(chain.nextVersionFrom("version2"))
     }
     
-    @objc dynamic func testLinearChain() {
+    @objc
+    dynamic func test_ThatArrayMigrationChains_HaveLinearVersions() {
         
         let chain: MigrationChain = ["version1", "version2", "version3", "version4"]
         XCTAssertTrue(chain.valid)
@@ -72,7 +78,8 @@ class MigrationChainTests: XCTestCase {
         XCTAssertNil(chain.nextVersionFrom("version5"))
     }
     
-    @objc dynamic func testTreeChain() {
+    @objc
+    dynamic func test_ThatDictionaryMigrationChains_HaveTreeVersions() {
         
         let chain: MigrationChain = [
             "version1": "version4",
@@ -94,17 +101,47 @@ class MigrationChainTests: XCTestCase {
         XCTAssertNil(chain.nextVersionFrom("version4"))
         XCTAssertNil(chain.nextVersionFrom("version5"))
         
-        // The cases below will trigger assertion failures internally
+// The cases below will trigger assertion failures internally
+
+//        let linearLoopChain: MigrationChain = ["version1", "version2", "version1", "version3", "version4"]
+//        XCTAssertFalse(linearLoopChain.valid, "linearLoopChain.valid")
+//
+//        let treeAmbiguousChain: MigrationChain = [
+//            "version1": "version4",
+//            "version2": "version3",
+//            "version1": "version2",
+//            "version3": "version4"
+//        ]
+//        XCTAssertFalse(treeAmbiguousChain.valid, "treeAmbiguousChain.valid")
+    }
+    
+    @objc
+    dynamic func test_ThatMigrationChains_AreEquatable() {
         
-        //        let linearLoopChain: MigrationChain = ["version1", "version2", "version1", "version3", "version4"]
-        //        XCTAssertFalse(linearLoopChain.valid, "linearLoopChain.valid")
-        //
-        //        let treeAmbiguousChain: MigrationChain = [
-        //            "version1": "version4",
-        //            "version2": "version3",
-        //            "version1": "version2",
-        //            "version3": "version4"
-        //        ]
-        //        XCTAssertFalse(treeAmbiguousChain.valid, "treeAmbiguousChain.valid")
+        do {
+            
+            let chain1: MigrationChain = nil
+            let chain2: MigrationChain = []
+            let chain3: MigrationChain = [:]
+            XCTAssertEqual(chain1, chain2)
+            XCTAssertEqual(chain2, chain3)
+            XCTAssertEqual(chain3, chain1)
+        }
+        do {
+            
+            let chain1: MigrationChain = "version1"
+            let chain2: MigrationChain = ["version1"]
+            XCTAssertEqual(chain1, chain2)
+        }
+        do {
+            
+            let chain1: MigrationChain = ["version1", "version2", "version3", "version4"]
+            let chain2: MigrationChain = [
+                "version1": "version2",
+                "version2": "version3",
+                "version3": "version4"
+            ]
+            XCTAssertEqual(chain1, chain2)
+        }
     }
 }
