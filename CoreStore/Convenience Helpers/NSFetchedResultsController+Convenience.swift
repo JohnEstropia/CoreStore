@@ -32,8 +32,170 @@ import CoreData
 public extension NSFetchedResultsController {
     
     /**
-     Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful to partially support Objective-C classes by passing an `NSFetchedResultsController` instance instead of a `ListMonitor`.
+     Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     
+     - parameter dataStack: the `DataStack` to observe objects from
+     - parameter from: a `From` clause indicating the entity type
+     - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: an `NSFetchedResultsController` that observes a `DataStack`
      */
+    @nonobjc
+    public static func createFor<T: NSManagedObject>(dataStack: DataStack, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: dataStack.mainContext,
+            fetchRequest: CoreStoreFetchRequest(),
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    /**
+     Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     
+     - parameter dataStack: the `DataStack` to observe objects from
+     - parameter from: a `From` clause indicating the entity type
+     - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: an `NSFetchedResultsController` that observes a `DataStack`
+     */
+    @nonobjc
+    public static func createFor<T: NSManagedObject>(dataStack: DataStack, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: dataStack.mainContext,
+            fetchRequest: CoreStoreFetchRequest(),
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    /**
+     Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     
+     - parameter dataStack: the `DataStack` to observe objects from
+     - parameter from: a `From` clause indicating the entity type
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: an `NSFetchedResultsController` that observes a `DataStack`
+     */
+    @nonobjc
+    public static func createFor<T: NSManagedObject>(dataStack: DataStack, _ from: From<T>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: dataStack.mainContext,
+            fetchRequest: CoreStoreFetchRequest(),
+            from: from,
+            sectionBy: nil,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    /**
+     Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     
+     - parameter dataStack: the `DataStack` to observe objects from
+     - parameter from: a `From` clause indicating the entity type
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: an `NSFetchedResultsController` that observes a `DataStack`
+     */
+    @nonobjc
+    public static func createFor<T: NSManagedObject>(dataStack: DataStack, _ from: From<T>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: dataStack.mainContext,
+            fetchRequest: CoreStoreFetchRequest(),
+            from: from,
+            sectionBy: nil,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    /**
+     Utility for creating an `NSFetchedResultsController` from an `UnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     
+     - parameter transaction: the `UnsafeDataTransaction` to observe objects from
+     - parameter from: a `From` clause indicating the entity type
+     - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: an `NSFetchedResultsController` that observes an `UnsafeDataTransaction`
+     */
+    @nonobjc
+    public static func createFor<T: NSManagedObject>(transaction: UnsafeDataTransaction, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: transaction.context,
+            fetchRequest: CoreStoreFetchRequest(),
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    /**
+     Utility for creating an `NSFetchedResultsController` from an `UnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     
+     - parameter transaction: the `UnsafeDataTransaction` to observe objects from
+     - parameter from: a `From` clause indicating the entity type
+     - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: an `NSFetchedResultsController` that observes an `UnsafeDataTransaction`
+     */
+    @nonobjc
+    public static func createFor<T: NSManagedObject>(transaction: UnsafeDataTransaction, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: transaction.context,
+            fetchRequest: CoreStoreFetchRequest(),
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    /**
+     Utility for creating an `NSFetchedResultsController` from an `UnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     
+     - parameter transaction: the `UnsafeDataTransaction` to observe objects from
+     - parameter from: a `From` clause indicating the entity type
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: an `NSFetchedResultsController` that observes an `UnsafeDataTransaction`
+     */
+    @nonobjc
+    public static func createFor<T: NSManagedObject>(transaction: UnsafeDataTransaction, _ from: From<T>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: transaction.context,
+            fetchRequest: CoreStoreFetchRequest(),
+            from: from,
+            sectionBy: nil,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    /**
+     Utility for creating an `NSFetchedResultsController` from an `UnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     
+     - parameter transaction: the `UnsafeDataTransaction` to observe objects from
+     - parameter from: a `From` clause indicating the entity type
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     */
+    @nonobjc
+    public static func createFor<T: NSManagedObject>(transaction: UnsafeDataTransaction, _ from: From<T>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController {
+        
+        return CoreStoreFetchedResultsController<T>(
+            context: transaction.context,
+            fetchRequest: CoreStoreFetchRequest(),
+            from: from,
+            sectionBy: nil,
+            fetchClauses: fetchClauses
+        )
+    }
+    
+    @available(*, deprecated=1.6.8, message="Use NSFetchedResultsController.createFor(_:_:_:_:)  instead.")
+    @nonobjc
     public static func createForStack<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController {
         
         return CoreStoreFetchedResultsController<T>(
@@ -45,7 +207,8 @@ public extension NSFetchedResultsController {
         )
     }
     
-    @available(*, deprecated=1.5.2, message="Use NSFetchedResultsController.createForStack(_:fetchRequest:from:sectionBy:fetchClauses:) to create NSFetchedResultsControllers directly")
+    @available(*, deprecated=1.5.2, message="Use NSFetchedResultsController.createFor(_:_:_:_:) to create NSFetchedResultsControllers directly")
+    @nonobjc
     public convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) {
         
         let context = dataStack.mainContext
