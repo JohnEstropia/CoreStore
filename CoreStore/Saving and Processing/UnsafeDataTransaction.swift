@@ -97,9 +97,9 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - Important: Note that unlike `commit()`, `flush()` does not propagate/save updates to the `DataStack` and the persistent store. However, the flushed changes will be seen by children transactions created further from the current transaction (i.e. through `transaction.beginUnsafe()`)
      - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
      */
-    public func flush() throws {
+    public func flush() {
         
-        try self.context.save()
+        self.context.processPendingChanges()
     }
     
     /**
@@ -109,10 +109,10 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - parameter closure: the closure where changes can be made prior to the flush
      - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
      */
-    public func flush(@noescape closure: () throws -> Void) throws {
+    public func flush(@noescape closure: () throws -> Void) rethrows {
         
         try closure()
-        try self.context.save()
+        self.context.processPendingChanges()
     }
     
     /**
