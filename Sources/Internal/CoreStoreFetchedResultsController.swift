@@ -49,6 +49,10 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     @nonobjc
     internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
+        CoreStore.assert(
+            fetchClauses.filter { $0 is OrderBy }.count > 0,
+            "An \(typeName(NSFetchedResultsController)) requires an OrderBy clause."
+        )
         from?.applyToFetchRequest(fetchRequest, context: context, applyAffectedStores: false)
         applyFetchClauses(fetchRequest: fetchRequest)
         
