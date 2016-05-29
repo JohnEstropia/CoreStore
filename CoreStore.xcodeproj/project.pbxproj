@@ -71,6 +71,11 @@
 		82BA18DD1C4BBE1400A0916E /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
 		82BA18DF1C4BBE2600A0916E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82BA18DE1C4BBE2600A0916E /* Foundation.framework */; };
 		82BA18E11C4BBE2C00A0916E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82BA18E01C4BBE2C00A0916E /* CoreData.framework */; };
+		906A24871CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906A24861CF857DA00B51588 /* BaseDataTransaction+Convenience.swift */; };
+		906A24881CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906A24861CF857DA00B51588 /* BaseDataTransaction+Convenience.swift */; };
+		906A24891CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906A24861CF857DA00B51588 /* BaseDataTransaction+Convenience.swift */; };
+		906A248A1CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906A24861CF857DA00B51588 /* BaseDataTransaction+Convenience.swift */; };
+		906A248B1CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906A24861CF857DA00B51588 /* BaseDataTransaction+Convenience.swift */; };
 		B501FDDD1CA8D05000BE22EF /* CSSectionBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501FDDC1CA8D05000BE22EF /* CSSectionBy.swift */; };
 		B501FDDE1CA8D05000BE22EF /* CSSectionBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501FDDC1CA8D05000BE22EF /* CSSectionBy.swift */; };
 		B501FDDF1CA8D05000BE22EF /* CSSectionBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501FDDC1CA8D05000BE22EF /* CSSectionBy.swift */; };
@@ -637,6 +642,7 @@
 		82BA18921C4BBCBA00A0916E /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BA18DE1C4BBE2600A0916E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		82BA18E01C4BBE2C00A0916E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
+		906A24861CF857DA00B51588 /* BaseDataTransaction+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+Convenience.swift"; sourceTree = "<group>"; };
 		B501FDDC1CA8D05000BE22EF /* CSSectionBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSectionBy.swift; sourceTree = "<group>"; };
 		B501FDE11CA8D1F500BE22EF /* CSListMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSListMonitor.swift; sourceTree = "<group>"; };
 		B501FDE61CA8D20500BE22EF /* CSListObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSListObserver.swift; sourceTree = "<group>"; };
@@ -1223,6 +1229,7 @@
 				B5E84F271AFF84920064E85B /* NSManagedObject+Convenience.swift */,
 				B5FAD6A81B50A4B300714891 /* NSProgress+Convenience.swift */,
 				B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */,
+				906A24861CF857DA00B51588 /* BaseDataTransaction+Convenience.swift */,
 			);
 			path = Convenience;
 			sourceTree = "<group>";
@@ -1611,6 +1618,7 @@
 				B54A6A551BA15F2A007870FD /* FetchedResultsControllerDelegate.swift in Sources */,
 				B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */,
 				B53FBA0B1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,
+				906A24881CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */,
 				B5E84F141AFF847B0064E85B /* DataStack+Querying.swift in Sources */,
 				B5D7A5B61CA3BF8F005C752B /* CSInto.swift in Sources */,
 				B56007141B3F6C2800A9A8F9 /* SectionBy.swift in Sources */,
@@ -1746,6 +1754,7 @@
 				B5FE4DAD1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
 				82BA18C51C4BBD5300A0916E /* ListObserver.swift in Sources */,
 				B53FBA0D1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,
+				906A24891CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */,
 				82BA18C21C4BBD5300A0916E /* ObjectMonitor.swift in Sources */,
 				B5D7A5B81CA3BF8F005C752B /* CSInto.swift in Sources */,
 				82BA18A51C4BBD2200A0916E /* CoreStore+Setup.swift in Sources */,
@@ -1931,6 +1940,7 @@
 				B52DD19F1BE1F92C00949AFE /* SynchronousDataTransaction.swift in Sources */,
 				B52DD1CB1BE1F94600949AFE /* WeakObject.swift in Sources */,
 				B52DD1C11BE1F94600949AFE /* Functions.swift in Sources */,
+				906A248B1CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */,
 				B53FBA0F1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,
 				B59FA0B21CCBACA8007C9BCA /* ICloudStore.swift in Sources */,
 				B52DD19A1BE1F92800949AFE /* CoreStore+Logging.swift in Sources */,
@@ -1997,6 +2007,7 @@
 				B563218C1BD65216006C9394 /* DataStack+Transaction.swift in Sources */,
 				B53FBA0E1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,
 				B563219E1BD65216006C9394 /* CoreStore+Observing.swift in Sources */,
+				906A248A1CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */,
 				B5D7A5B91CA3BF8F005C752B /* CSInto.swift in Sources */,
 				B56321891BD65216006C9394 /* AsynchronousDataTransaction.swift in Sources */,
 				B56321831BD65216006C9394 /* CoreStore+Setup.swift in Sources */,
@@ -2111,6 +2122,7 @@
 				B5E1B5A31CAA4365007FD580 /* CSCoreStore+Observing.swift in Sources */,
 				B5D9E2F11CA2C317007A9D52 /* ImportableUniqueObject.swift in Sources */,
 				B5D9E2F21CA2C317007A9D52 /* CoreStore+Setup.swift in Sources */,
+				906A24871CF857DA00B51588 /* BaseDataTransaction+Convenience.swift in Sources */,
 				B5D7A5B31CA3B738005C752B /* LegacySQLiteStore.swift in Sources */,
 				B5D7A5AF1CA3B738005C752B /* (null) in Sources */,
 				B5D7A5B11CA3B738005C752B /* InMemoryStore.swift in Sources */,
