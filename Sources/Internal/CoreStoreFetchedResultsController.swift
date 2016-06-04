@@ -52,6 +52,10 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         from?.applyToFetchRequest(fetchRequest, context: context, applyAffectedStores: false)
         applyFetchClauses(fetchRequest: fetchRequest)
         
+        CoreStore.assert(
+            fetchRequest.sortDescriptors?.isEmpty == false,
+            "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
+        )
         if let from = from {
             
             self.reapplyAffectedStores = { fetchRequest, context in
@@ -63,7 +67,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
             
             guard let from = (fetchRequest.entity.flatMap { $0.managedObjectClassName }).flatMap(NSClassFromString).flatMap(From.init) else {
                 
-                fatalError("Attempted to create an \(cs_typeName(NSFetchedResultsController)) without a  From clause or an NSEntityDescription.")
+                fatalError("Attempted to create an \(cs_typeName(NSFetchedResultsController)) without a \(cs_typeName(From)) clause or an \(cs_typeName(NSEntityDescription)).")
             }
             
             self.reapplyAffectedStores = { fetchRequest, context in

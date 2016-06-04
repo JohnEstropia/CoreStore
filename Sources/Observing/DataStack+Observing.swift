@@ -78,10 +78,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
-        CoreStore.assert(
-            fetchClauses.contains { $0 is OrderBy },
-            "A ListMonitor requires an OrderBy clause."
-        )
         return ListMonitor(
             dataStack: self,
             from: from,
@@ -117,10 +113,6 @@ public extension DataStack {
         CoreStore.assert(
             NSThread.isMainThread(),
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
-        )
-        CoreStore.assert(
-            fetchClauses.contains { $0 is OrderBy },
-            "A ListMonitor requires an OrderBy clause."
         )
         _ = ListMonitor(
             dataStack: self,
@@ -163,10 +155,6 @@ public extension DataStack {
             NSThread.isMainThread(),
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
-        CoreStore.assert(
-            fetchClauses.contains { $0 is OrderBy },
-            "A ListMonitor requires an OrderBy clause."
-        )
         
         return ListMonitor(
             dataStack: self,
@@ -205,10 +193,6 @@ public extension DataStack {
         CoreStore.assert(
             NSThread.isMainThread(),
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
-        )
-        CoreStore.assert(
-            fetchClauses.contains { $0 is OrderBy },
-            "A ListMonitor requires an OrderBy clause."
         )
         
         _ = ListMonitor(

@@ -75,6 +75,10 @@ public struct Into<T: NSManagedObject>: Hashable {
      */
     public init(_ entityClass: AnyClass) {
         
+        CoreStore.assert(
+            entityClass is T.Type,
+            "Attempted to create generic type \(cs_typeName(Into<T>)) with entity class \(cs_typeName(entityClass))"
+        )
         self.init(entityClass: entityClass, configuration: nil, inferStoreIfPossible: true)
     }
     
@@ -116,6 +120,10 @@ public struct Into<T: NSManagedObject>: Hashable {
      */
     public init(_ entityClass: AnyClass, _ configuration: String?) {
         
+        CoreStore.assert(
+            entityClass is T.Type,
+            "Attempted to create generic type \(cs_typeName(Into<T>)) with entity class \(cs_typeName(entityClass))"
+        )
         self.init(entityClass: entityClass, configuration: configuration, inferStoreIfPossible: false)
     }
     
@@ -166,6 +174,14 @@ public struct Into<T: NSManagedObject>: Hashable {
 
 @warn_unused_result
 public func == <T: NSManagedObject, U: NSManagedObject>(lhs: Into<T>, rhs: Into<U>) -> Bool {
+    
+    return lhs.entityClass == rhs.entityClass
+        && lhs.configuration == rhs.configuration
+        && lhs.inferStoreIfPossible == rhs.inferStoreIfPossible
+}
+
+@warn_unused_result
+public func != <T: NSManagedObject, U: NSManagedObject>(lhs: Into<T>, rhs: Into<U>) -> Bool {
     
     return lhs.entityClass == rhs.entityClass
         && lhs.configuration == rhs.configuration

@@ -36,7 +36,7 @@ class BaseTestCase: XCTestCase {
     // MARK: Internal
     
     @nonobjc
-    func prepareStack(configuration: String = "Config1", @noescape _ closure: (dataStack: DataStack) -> Void) {
+    func prepareStack(configurations configurations: [String?] = [nil], @noescape _ closure: (dataStack: DataStack) -> Void) {
         
         let stack = DataStack(
             modelName: "Model",
@@ -44,13 +44,16 @@ class BaseTestCase: XCTestCase {
         )
         do {
             
-            try stack.addStorageAndWait(
-                SQLiteStore(
-                    fileName: "\(self.dynamicType).sqlite",
-                    configuration: configuration,
-                    localStorageOptions: .RecreateStoreOnModelMismatch
+            try configurations.forEach {
+                
+                try stack.addStorageAndWait(
+                    SQLiteStore(
+                        fileName: "\(self.dynamicType)_\($0).sqlite",
+                        configuration: $0,
+                        localStorageOptions: .RecreateStoreOnModelMismatch
+                    )
                 )
-            )
+            }
         }
         catch let error as NSError {
             

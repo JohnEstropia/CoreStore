@@ -75,6 +75,10 @@ public struct From<T: NSManagedObject> {
      */
     public init(_ entityClass: AnyClass) {
         
+        CoreStore.assert(
+            entityClass is T.Type,
+            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+        )
         self.init(entityClass: entityClass)
     }
     
@@ -146,6 +150,10 @@ public struct From<T: NSManagedObject> {
      */
     public init(_ entityClass: AnyClass, _ configuration: String?, _ otherConfigurations: String?...) {
         
+        CoreStore.assert(
+            entityClass is T.Type,
+            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+        )
         self.init(entityClass: entityClass, configurations: [configuration] + otherConfigurations)
     }
     
@@ -160,141 +168,11 @@ public struct From<T: NSManagedObject> {
      */
     public init(_ entityClass: AnyClass, _ configurations: [String?]) {
         
+        CoreStore.assert(
+            entityClass is T.Type,
+            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+        )
         self.init(entityClass: entityClass, configurations: configurations)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified store URLs.
-     
-     - parameter storeURL: the persistent store URL to associate objects from.
-     - parameter otherStoreURLs: an optional list of other persistent store URLs to associate objects from (see `storeURL` parameter)
-     */
-    public init(_ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
-        
-        self.init(entityClass: T.self, storeURLs: [storeURL] + otherStoreURLs)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified store URLs.
-     
-     - parameter storeURLs: the persistent store URLs to associate objects from.
-     */
-    public init(_ storeURLs: [NSURL]) {
-        
-        self.init(entityClass: T.self, storeURLs: storeURLs)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified store URLs.
-     
-     - parameter entity: the associated `NSManagedObject` type
-     - parameter storeURL: the persistent store URL to associate objects from.
-     - parameter otherStoreURLs: an optional list of other persistent store URLs to associate objects from (see `storeURL` parameter)
-     */
-    public init(_ entity: T.Type, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
-        
-        self.init(entityClass: entity, storeURLs: [storeURL] + otherStoreURLs)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified store URLs.
-     
-     - parameter entity: the associated `NSManagedObject` type
-     - parameter storeURLs: the persistent store URLs to associate objects from.
-     */
-    public init(_ entity: T.Type, _ storeURLs: [NSURL]) {
-        
-        self.init(entityClass: entity, storeURLs: storeURLs)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified store URLs.
-     
-     - parameter entity: the associated `NSManagedObject` entity class
-     - parameter storeURL: the persistent store URL to associate objects from.
-     - parameter otherStoreURLs: an optional list of other persistent store URLs to associate objects from (see `storeURL` parameter)
-     */
-    public init(_ entityClass: AnyClass, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
-        
-        self.init(entityClass: entityClass, storeURLs: [storeURL] + otherStoreURLs)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified store URLs.
-     
-     - parameter entity: the associated `NSManagedObject` entity class
-     - parameter storeURLs: the persistent store URLs to associate objects from.
-     */
-    public init(_ entityClass: AnyClass, _ storeURLs: [NSURL]) {
-        
-        self.init(entityClass: entityClass, storeURLs: storeURLs)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified `NSPersistentStore`s.
-     
-     - parameter persistentStore: the `NSPersistentStore` to associate objects from.
-     - parameter otherPersistentStores: an optional list of other `NSPersistentStore`s to associate objects from (see `persistentStore` parameter)
-     */
-    public init(_ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
-        
-        self.init(entityClass: T.self, persistentStores: [persistentStore] + otherPersistentStores)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified `NSPersistentStore`s.
-     
-     - parameter persistentStores: the `NSPersistentStore`s to associate objects from.
-     */
-    public init(_ persistentStores: [NSPersistentStore]) {
-        
-        self.init(entityClass: T.self, persistentStores: persistentStores)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified `NSPersistentStore`s.
-     
-     - parameter entity: the associated `NSManagedObject` type
-     - parameter persistentStore: the `NSPersistentStore` to associate objects from.
-     - parameter otherPersistentStores: an optional list of other `NSPersistentStore`s to associate objects from (see `persistentStore` parameter)
-     */
-    public init(_ entity: T.Type, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
-        
-        self.init(entityClass: entity, persistentStores: [persistentStore] + otherPersistentStores)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified `NSPersistentStore`s.
-     
-     - parameter entity: the associated `NSManagedObject` type
-     - parameter persistentStores: the `NSPersistentStore`s to associate objects from.
-     */
-    public init(_ entity: T.Type, _ persistentStores: [NSPersistentStore]) {
-        
-        self.init(entityClass: entity, persistentStores: persistentStores)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified `NSPersistentStore`s.
-     
-     - parameter entity: the associated `NSManagedObject` entity class
-     - parameter persistentStore: the `NSPersistentStore` to associate objects from.
-     - parameter otherPersistentStores: an optional list of other `NSPersistentStore`s to associate objects from (see `persistentStore` parameter)
-     */
-    public init(_ entityClass: AnyClass, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
-        
-        self.init(entityClass: entityClass, persistentStores: [persistentStore] + otherPersistentStores)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified `NSPersistentStore`s.
-     
-     - parameter entity: the associated `NSManagedObject` entity class
-     - parameter persistentStores: the `NSPersistentStore`s to associate objects from.
-     */
-    public init(_ entityClass: AnyClass, _ persistentStores: [NSPersistentStore]) {
-        
-        self.init(entityClass: entityClass, persistentStores: persistentStores)
     }
     
     
@@ -398,5 +276,132 @@ public struct From<T: NSManagedObject> {
         self.entityClass = entityClass
         self.dumpInfo = dumpInfo
         self.findPersistentStores = findPersistentStores
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
+        
+        self.init(entityClass: T.self, storeURLs: [storeURL] + otherStoreURLs)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ storeURLs: [NSURL]) {
+        
+        self.init(entityClass: T.self, storeURLs: storeURLs)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ entity: T.Type, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
+        
+        self.init(entityClass: entity, storeURLs: [storeURL] + otherStoreURLs)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ entity: T.Type, _ storeURLs: [NSURL]) {
+        
+        self.init(entityClass: entity, storeURLs: storeURLs)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ entityClass: AnyClass, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
+        
+        CoreStore.assert(
+            entityClass is T.Type,
+            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+        )
+        self.init(entityClass: entityClass, storeURLs: [storeURL] + otherStoreURLs)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ entityClass: AnyClass, _ storeURLs: [NSURL]) {
+        
+        CoreStore.assert(
+            entityClass is T.Type,
+            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+        )
+        self.init(entityClass: entityClass, storeURLs: storeURLs)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
+        
+        self.init(entityClass: T.self, persistentStores: [persistentStore] + otherPersistentStores)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ persistentStores: [NSPersistentStore]) {
+        
+        self.init(entityClass: T.self, persistentStores: persistentStores)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ entity: T.Type, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
+        
+        self.init(entityClass: entity, persistentStores: [persistentStore] + otherPersistentStores)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ entity: T.Type, _ persistentStores: [NSPersistentStore]) {
+        
+        self.init(entityClass: entity, persistentStores: persistentStores)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ entityClass: AnyClass, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
+        
+        CoreStore.assert(
+            entityClass is T.Type,
+            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+        )
+        self.init(entityClass: entityClass, persistentStores: [persistentStore] + otherPersistentStores)
+    }
+    
+    /**
+     Deprecated. Use initializers that accept configuration names.
+     */
+    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    public init(_ entityClass: AnyClass, _ persistentStores: [NSPersistentStore]) {
+        
+        CoreStore.assert(
+            entityClass is T.Type,
+            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+        )
+        self.init(entityClass: entityClass, persistentStores: persistentStores)
     }
 }

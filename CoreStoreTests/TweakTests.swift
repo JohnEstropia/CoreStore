@@ -1,5 +1,5 @@
 //
-//  ClauseTests.swift
+//  TweakTests.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia
@@ -29,15 +29,25 @@ import XCTest
 import CoreStore
 
 
-//MARK: - ClauseTests
+//MARK: - TweakTests
 
-final class ClauseTests: XCTestCase {
-    
-    // MARK: Into
+final class TweakTests: XCTestCase {
     
     @objc
-    dynamic func test_IntoClauses_ConfigureCorrectly() {
+    dynamic func test_ThatTweakClauses_ApplyToFetchRequestsCorrectly() {
         
-        // TODO:
+        let predicate = NSPredicate(format: "%K == %@", "key", "value")
+        let tweak = Tweak {
+            
+            $0.fetchOffset = 100
+            $0.fetchLimit = 200
+            $0.predicate = predicate
+        }
+        let request = NSFetchRequest()
+        tweak.applyToFetchRequest(request)
+        XCTAssertEqual(request.fetchOffset, 100)
+        XCTAssertEqual(request.fetchLimit, 200)
+        XCTAssertNotNil(request.predicate)
+        XCTAssertEqual(request.predicate, predicate)
     }
 }
