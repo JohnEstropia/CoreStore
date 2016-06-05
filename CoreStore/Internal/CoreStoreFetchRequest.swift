@@ -33,11 +33,10 @@ import CoreData
 // http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
 internal final class CoreStoreFetchRequest: NSFetchRequest {
     
+    @objc
     override var affectedStores: [NSPersistentStore]? {
         
-        get { return self.safeAffectedStores }
-        set { self.safeAffectedStores = newValue }
+        get { return super.affectedStores }
+        set { super.affectedStores = newValue }
     }
-    
-    private var safeAffectedStores: [NSPersistentStore]?
 }
