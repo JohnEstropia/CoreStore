@@ -49,7 +49,11 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     @nonobjc
     internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
         
-        from?.applyToFetchRequest(fetchRequest, context: context, applyAffectedStores: false)
+        _ = from?.applyToFetchRequest(
+            fetchRequest,
+            context: context,
+            applyAffectedStores: false
+        )
         applyFetchClauses(fetchRequest: fetchRequest)
         
         CoreStore.assert(

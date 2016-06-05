@@ -48,7 +48,9 @@ class BaseTestCase: XCTestCase {
                 
                 try stack.addStorageAndWait(
                     SQLiteStore(
-                        fileName: "\(self.dynamicType)_\($0).sqlite",
+                        fileURL: SQLiteStore.defaultRootDirectory
+                            .URLByAppendingPathComponent(NSUUID().UUIDString)
+                            .URLByAppendingPathComponent("\(self.dynamicType)_\(($0 ?? "-null-")).sqlite"),
                         configuration: $0,
                         localStorageOptions: .RecreateStoreOnModelMismatch
                     )
@@ -80,8 +82,8 @@ class BaseTestCase: XCTestCase {
     
     // MARK: Private
     
-    private func deleteStores(directory: NSURL = SQLiteStore.defaultRootDirectory) {
+    private func deleteStores() {
         
-        _ = try? NSFileManager.defaultManager().removeItemAtURL(directory)
+        _ = try? NSFileManager.defaultManager().removeItemAtURL(SQLiteStore.defaultRootDirectory)
     }
 }

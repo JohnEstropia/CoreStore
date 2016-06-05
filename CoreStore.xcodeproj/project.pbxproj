@@ -117,6 +117,12 @@
 		B52557801D029D2500E51965 /* TweakTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B525577F1D029D2500E51965 /* TweakTests.swift */; };
 		B52557811D029D2500E51965 /* TweakTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B525577F1D029D2500E51965 /* TweakTests.swift */; };
 		B52557821D029D2500E51965 /* TweakTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B525577F1D029D2500E51965 /* TweakTests.swift */; };
+		B52557841D02A07400E51965 /* SectionByTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52557831D02A07400E51965 /* SectionByTests.swift */; };
+		B52557851D02A07400E51965 /* SectionByTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52557831D02A07400E51965 /* SectionByTests.swift */; };
+		B52557861D02A07400E51965 /* SectionByTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52557831D02A07400E51965 /* SectionByTests.swift */; };
+		B52557881D02DE8100E51965 /* FetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52557871D02DE8100E51965 /* FetchTests.swift */; };
+		B52557891D02DE8100E51965 /* FetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52557871D02DE8100E51965 /* FetchTests.swift */; };
+		B525578A1D02DE8100E51965 /* FetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52557871D02DE8100E51965 /* FetchTests.swift */; };
 		B52661401CADD585007B85D9 /* CoreStoreFetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B526613F1CADD585007B85D9 /* CoreStoreFetchRequest.swift */; };
 		B52661411CADD585007B85D9 /* CoreStoreFetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B526613F1CADD585007B85D9 /* CoreStoreFetchRequest.swift */; };
 		B52661421CADD585007B85D9 /* CoreStoreFetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B526613F1CADD585007B85D9 /* CoreStoreFetchRequest.swift */; };
@@ -670,6 +676,8 @@
 		B52557771D02826E00E51965 /* OrderByTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderByTests.swift; sourceTree = "<group>"; };
 		B525577B1D0291FE00E51965 /* GroupByTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupByTests.swift; sourceTree = "<group>"; };
 		B525577F1D029D2500E51965 /* TweakTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweakTests.swift; sourceTree = "<group>"; };
+		B52557831D02A07400E51965 /* SectionByTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionByTests.swift; sourceTree = "<group>"; };
+		B52557871D02DE8100E51965 /* FetchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchTests.swift; sourceTree = "<group>"; };
 		B526613F1CADD585007B85D9 /* CoreStoreFetchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreFetchRequest.swift; sourceTree = "<group>"; };
 		B529C2031CA4A2DB007E7EBD /* CSSaveResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSaveResult.swift; sourceTree = "<group>"; };
 		B52DD1741BE1F8CC00949AFE /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -940,11 +948,13 @@
 				B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */,
 				2F03A53F19C5C6DA005002A5 /* CoreStoreTests.swift */,
 				B5519A3F1CA1B17B002BEF78 /* ErrorTests.swift */,
+				B52557871D02DE8100E51965 /* FetchTests.swift */,
 				B5489F4F1CF603D5008B4978 /* FromTests.swift */,
 				B525577B1D0291FE00E51965 /* GroupByTests.swift */,
 				B525576B1CFAF18F00E51965 /* IntoTests.swift */,
 				B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */,
 				B52557771D02826E00E51965 /* OrderByTests.swift */,
+				B52557831D02A07400E51965 /* SectionByTests.swift */,
 				B525576F1D02561A00E51965 /* SelectTests.swift */,
 				B58085741CDF7F00004C2EEB /* SetupTests.swift */,
 				B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */,
@@ -1740,6 +1750,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B52557841D02A07400E51965 /* SectionByTests.swift in Sources */,
 				B5519A401CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B525577C1D0291FE00E51965 /* GroupByTests.swift in Sources */,
 				B52557741D02791400E51965 /* WhereTests.swift in Sources */,
@@ -1747,6 +1758,7 @@
 				B5DC47C61C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B525576C1CFAF18F00E51965 /* IntoTests.swift in Sources */,
 				B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */,
+				B52557881D02DE8100E51965 /* FetchTests.swift in Sources */,
 				B5489F501CF603D5008B4978 /* FromTests.swift in Sources */,
 				B52557781D02826E00E51965 /* OrderByTests.swift in Sources */,
 				B5489F421CF5EEBC008B4978 /* TestEntity2.swift in Sources */,
@@ -1881,6 +1893,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B52557851D02A07400E51965 /* SectionByTests.swift in Sources */,
 				B5519A411CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B525577D1D0291FE00E51965 /* GroupByTests.swift in Sources */,
 				B52557751D02791400E51965 /* WhereTests.swift in Sources */,
@@ -1888,6 +1901,7 @@
 				B5DBE2E01C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B525576D1CFAF18F00E51965 /* IntoTests.swift in Sources */,
 				B580857B1CDF808D004C2EEB /* SetupTests.swift in Sources */,
+				B52557891D02DE8100E51965 /* FetchTests.swift in Sources */,
 				B5489F511CF603D5008B4978 /* FromTests.swift in Sources */,
 				B52557791D02826E00E51965 /* OrderByTests.swift in Sources */,
 				B5489F431CF5EEBC008B4978 /* TestEntity2.swift in Sources */,
@@ -2003,6 +2017,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B52557861D02A07400E51965 /* SectionByTests.swift in Sources */,
 				B5519A421CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B525577E1D0291FE00E51965 /* GroupByTests.swift in Sources */,
 				B52557761D02791400E51965 /* WhereTests.swift in Sources */,
@@ -2010,6 +2025,7 @@
 				B5DBE2E11C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B525576E1CFAF18F00E51965 /* IntoTests.swift in Sources */,
 				B580857C1CDF808F004C2EEB /* SetupTests.swift in Sources */,
+				B525578A1D02DE8100E51965 /* FetchTests.swift in Sources */,
 				B5489F521CF603D5008B4978 /* FromTests.swift in Sources */,
 				B525577A1D02826E00E51965 /* OrderByTests.swift in Sources */,
 				B5489F441CF5EEBC008B4978 /* TestEntity2.swift in Sources */,

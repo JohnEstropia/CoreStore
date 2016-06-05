@@ -181,13 +181,23 @@ public struct From<T: NSManagedObject> {
     internal let entityClass: AnyClass
     internal let dumpInfo: (key: String, value: Any)?
     
-    internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext, applyAffectedStores: Bool = true) {
+    @warn_unused_result
+    internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext, applyAffectedStores: Bool = true) -> Bool {
         
         fetchRequest.entity = context.entityDescriptionForEntityClass(self.entityClass)
-        if applyAffectedStores {
+        guard applyAffectedStores else {
             
-            self.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
+            return true
         }
+        if self.applyAffectedStoresForFetchedRequest(fetchRequest, context: context) {
+            
+            return true
+        }
+        CoreStore.log(
+            .Warning,
+            message: "Attempted to perform a fetch but could not find any persistent store for the entity \(cs_typeName(fetchRequest.entityName))"
+        )
+        return false
     }
     
     internal func applyAffectedStoresForFetchedRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Bool {

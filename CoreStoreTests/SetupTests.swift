@@ -39,6 +39,10 @@ class SetupTests: BaseTestCase {
             let model = NSManagedObjectModel.mergedModelFromBundles([NSBundle(forClass: self.dynamicType)])!
             
             let stack = DataStack(model: model, migrationChain: nil)
+            XCTAssertEqual(stack.coordinator.managedObjectModel, model)
+            XCTAssertEqual(stack.rootSavingContext.persistentStoreCoordinator, stack.coordinator)
+            XCTAssertNil(stack.rootSavingContext.parentContext)
+            XCTAssertEqual(stack.mainContext.parentContext, stack.rootSavingContext)
             XCTAssertEqual(stack.model, model)
             XCTAssertTrue(stack.migrationChain.valid)
             XCTAssertTrue(stack.migrationChain.empty)

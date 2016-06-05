@@ -64,7 +64,11 @@ public /*abstract*/ class BaseDataTransaction {
         let entityClass = (into.entityClass as! NSManagedObject.Type)
         if into.inferStoreIfPossible {
             
-            switch context.parentStack!.persistentStoreForEntityClass(entityClass, configuration: nil, inferStoreIfPossible: true) {
+            switch context.parentStack!.persistentStoreForEntityClass(
+                entityClass,
+                configuration: nil,
+                inferStoreIfPossible: true
+            ) {
                 
             case (let persistentStore?, _):
                 let object = entityClass.createInContext(context) as! T
@@ -80,12 +84,20 @@ public /*abstract*/ class BaseDataTransaction {
         }
         else {
             
-            switch context.parentStack!.persistentStoreForEntityClass(entityClass, configuration: into.configuration, inferStoreIfPossible: false) {
+            switch context.parentStack!.persistentStoreForEntityClass(
+                entityClass,
+                configuration: into.configuration
+                    ?? into.dynamicType.defaultConfigurationName,
+                inferStoreIfPossible: false
+            ) {
                 
             case (let persistentStore?, _):
                 let object = entityClass.createInContext(context) as! T
                 context.assignObject(object, toPersistentStore: persistentStore)
                 return object
+                
+            case (nil, true):
+                fatalError("Attempted to create an entity of type \(cs_typeName(entityClass)) with ambiguous destination persistent store, but the configuration name was not specified.")
                 
             default:
                 if let configuration = into.configuration {

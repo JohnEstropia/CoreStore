@@ -84,32 +84,6 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
         return self.init(From(entityClass, configurations.map { $0 is NSNull ? nil : ($0 as! String) }))
     }
     
-    /**
-     Initializes a `CSFrom` clause with the specified store URLs.
-     
-     - parameter entity: the associated `NSManagedObject` entity class
-     - parameter storeURLs: the persistent store URLs to associate objects from.
-     - returns: a `CSFrom` clause with the specified store URLs
-     */
-    @objc
-    public static func entityClass(entityClass: AnyClass, storeURLs: [NSURL]) -> CSFrom {
-        
-        return self.init(From(entityClass, storeURLs))
-    }
-    
-    /**
-     Initializes a `CSFrom` clause with the specified `NSPersistentStore`s.
-     
-     - parameter entity: the associated `NSManagedObject` entity class
-     - parameter persistentStores: the `NSPersistentStore`s to associate objects from.
-     - returns: a `CSFrom` clause with the specified `NSPersistentStore`s
-     */
-    @objc
-    public static func entityClass(entityClass: AnyClass, persistentStores: [NSPersistentStore]) -> CSFrom {
-        
-        return self.init(From(entityClass, persistentStores))
-    }
-    
     
     // MARK: NSObject
     

@@ -37,12 +37,16 @@ internal extension NSManagedObjectContext {
     internal func fetchOne(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObject? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .ManagedObjectResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
+        guard storeFound else {
+            
+            return nil
+        }
         return self.fetchOne(fetchRequest)
     }
     
@@ -50,12 +54,16 @@ internal extension NSManagedObjectContext {
     internal func fetchAll(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [NSManagedObject]? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
+        guard storeFound else {
+            
+            return nil
+        }
         return self.fetchAll(fetchRequest)
     }
     
@@ -63,9 +71,13 @@ internal extension NSManagedObjectContext {
     internal func fetchCount(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> Int? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
+        guard storeFound else {
+            
+            return nil
+        }
         return self.fetchCount(fetchRequest)
     }
     
@@ -73,12 +85,16 @@ internal extension NSManagedObjectContext {
     internal func fetchObjectID(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .ManagedObjectIDResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
+        guard storeFound else {
+            
+            return nil
+        }
         return self.fetchObjectID(fetchRequest)
     }
     
@@ -86,12 +102,16 @@ internal extension NSManagedObjectContext {
     internal func fetchObjectIDs(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectIDResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
+        guard storeFound else {
+            
+            return nil
+        }
         return self.fetchObjectIDs(fetchRequest)
     }
     
@@ -99,7 +119,7 @@ internal extension NSManagedObjectContext {
     internal func deleteAll(from: CSFrom, _ deleteClauses: [CSDeleteClause]) -> Int? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .ManagedObjectResultType
@@ -107,6 +127,10 @@ internal extension NSManagedObjectContext {
         fetchRequest.includesPropertyValues = false
         deleteClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
+        guard storeFound else {
+            
+            return nil
+        }
         return self.deleteAll(fetchRequest)
     }
     
@@ -114,7 +138,7 @@ internal extension NSManagedObjectContext {
     internal func queryValue(from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> AnyObject? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
@@ -122,6 +146,10 @@ internal extension NSManagedObjectContext {
         selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
+        guard storeFound else {
+            
+            return nil
+        }
         return self.queryValue(selectTerms, fetchRequest: fetchRequest)
     }
     
@@ -129,13 +157,17 @@ internal extension NSManagedObjectContext {
     internal func queryAttributes(from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
         selectClause.selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
+        guard storeFound else {
+            
+            return nil
+        }
         return self.queryAttributes(fetchRequest)
     }
 }
