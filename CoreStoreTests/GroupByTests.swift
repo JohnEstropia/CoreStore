@@ -69,7 +69,7 @@ final class GroupByTests: BaseTestCase {
             let groupBy = GroupBy("testString")
             
             let request = NSFetchRequest()
-            From(TestEntity1).applyToFetchRequest(request, context: dataStack.mainContext)
+            _ = From(TestEntity1).applyToFetchRequest(request, context: dataStack.mainContext)
             groupBy.applyToFetchRequest(request)
             
             XCTAssertNotNil(request.propertiesToGroupBy)
