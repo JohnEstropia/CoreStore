@@ -56,10 +56,6 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         )
         applyFetchClauses(fetchRequest: fetchRequest)
         
-        CoreStore.assert(
-            fetchRequest.sortDescriptors?.isEmpty == false,
-            "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
-        )
         if let from = from {
             
             self.reapplyAffectedStores = { fetchRequest, context in

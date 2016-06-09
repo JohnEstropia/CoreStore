@@ -85,6 +85,11 @@ public extension DataStack {
             applyFetchClauses: { fetchRequest in
                 
                 fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+                
+                CoreStore.assert(
+                    fetchRequest.sortDescriptors?.isEmpty == false,
+                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
+                )
             }
         )
     }
@@ -121,6 +126,11 @@ public extension DataStack {
             applyFetchClauses: { fetchRequest in
                 
                 fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+                
+                CoreStore.assert(
+                    fetchRequest.sortDescriptors?.isEmpty == false,
+                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
+                )
             },
             createAsynchronously: createAsynchronously
         )
@@ -163,6 +173,11 @@ public extension DataStack {
             applyFetchClauses: { fetchRequest in
                 
                 fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+                
+                CoreStore.assert(
+                    fetchRequest.sortDescriptors?.isEmpty == false,
+                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
+                )
             }
         )
     }
@@ -202,6 +217,11 @@ public extension DataStack {
             applyFetchClauses: { fetchRequest in
                 
                 fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+                
+                CoreStore.assert(
+                    fetchRequest.sortDescriptors?.isEmpty == false,
+                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
+                )
             },
             createAsynchronously: createAsynchronously
         )
