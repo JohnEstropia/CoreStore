@@ -117,25 +117,15 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      */
     public subscript(safeSectionIndex sectionIndex: Int, safeItemIndex itemIndex: Int) -> T? {
         
-        CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
-            "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
-        )
-        guard sectionIndex >= 0 && itemIndex >= 0 else {
+        guard let section = self.sectionInfoAtIndex(safeSectionIndex: sectionIndex) else {
             
             return nil
         }
-        guard let sections = self.fetchedResultsController.sections
-            where sectionIndex < sections.count else {
-                
-                return nil
-        }
-        let section = sections[sectionIndex]
-        guard itemIndex < section.numberOfObjects else {
+        guard itemIndex >= 0 && itemIndex < section.numberOfObjects else {
             
             return nil
         }
-        return sections[sectionIndex].objects?[itemIndex] as? T
+        return section.objects?[itemIndex] as? T
     }
     
     /**
@@ -150,7 +140,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return self.fetchedResultsController.objectAtIndexPath(indexPath) as! T
     }
     
@@ -203,7 +192,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return (self.fetchedResultsController.fetchedObjects as? [T]) ?? []
     }
     
@@ -216,12 +204,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     @warn_unused_result
     public func objectsInSection(section: Int) -> [T] {
         
-        CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
-            "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
-        )
-        
-        return (self.fetchedResultsController.sections?[section].objects as? [T]) ?? []
+        return (self.sectionInfoAtIndex(section).objects as? [T]) ?? []
     }
     
     /**
@@ -233,12 +216,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     @warn_unused_result
     public func objectsInSection(safeSectionIndex section: Int) -> [T]? {
         
-        CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
-            "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
-        )
-        
-        return (self.fetchedResultsController.sections?[section].objects as? [T]) ?? []
+        return (self.sectionInfoAtIndex(safeSectionIndex: section)?.objects as? [T]) ?? []
     }
     
     /**
@@ -253,7 +231,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return self.fetchedResultsController.sections?.count ?? 0
     }
     
@@ -269,7 +246,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return self.fetchedResultsController.fetchedObjects?.count ?? 0
     }
     
@@ -310,7 +286,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return self.fetchedResultsController.sections![section]
     }
     
@@ -327,13 +302,15 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
+        guard section >= 0 else {
+            
+            return nil
+        }
         guard let sections = self.fetchedResultsController.sections
             where section < sections.count else {
                 
                 return nil
         }
-        
         return sections[section]
     }
     
@@ -349,7 +326,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return self.fetchedResultsController.sections ?? []
     }
     
@@ -367,7 +343,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return self.fetchedResultsController.sectionForSectionIndexTitle(title, atIndex: index)
     }
     
@@ -383,7 +358,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return self.fetchedResultsController.sectionIndexTitles
     }
     
@@ -400,7 +374,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return (self.fetchedResultsController.fetchedObjects as? [T] ?? []).indexOf(object)
     }
     
@@ -417,7 +390,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
         return self.fetchedResultsController.indexPathForObject(object)
     }
     
@@ -769,7 +741,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             NSThread.isMainThread(),
             "Attempted to add an observer of type \(cs_typeName(observer)) outside the main thread."
         )
-        
         self.registerChangeNotification(
             &self.willChangeListKey,
             name: ListMonitorWillChangeListNotification,
@@ -957,7 +928,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             NSThread.isMainThread(),
             "Attempted to remove an observer of type \(cs_typeName(observer)) outside the main thread."
         )
-        
         let nilValue: AnyObject? = nil
         cs_setAssociatedRetainedObject(nilValue, forKey: &self.willChangeListKey, inObject: observer)
         cs_setAssociatedRetainedObject(nilValue, forKey: &self.didChangeListKey, inObject: observer)
