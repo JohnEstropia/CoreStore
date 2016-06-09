@@ -121,13 +121,15 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || NSThread.isMainThread(),
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        
+        guard sectionIndex >= 0 && itemIndex >= 0 else {
+            
+            return nil
+        }
         guard let sections = self.fetchedResultsController.sections
             where sectionIndex < sections.count else {
                 
                 return nil
         }
-        
         let section = sections[sectionIndex]
         guard itemIndex < section.numberOfObjects else {
             
