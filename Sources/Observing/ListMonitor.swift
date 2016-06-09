@@ -125,7 +125,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             
             return nil
         }
-        return sections[sectionIndex].objects?[itemIndex] as? T
+        return section.objects?[itemIndex] as? T
     }
     
     /**
