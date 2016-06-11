@@ -35,4 +35,5 @@ class TestEntity2: NSManagedObject {
     @NSManaged var testBoolean: NSNumber?
     @NSManaged var testDecimal: NSDecimalNumber?
     @NSManaged var testData: NSData?
+    @NSManaged var testNil: String?
 }

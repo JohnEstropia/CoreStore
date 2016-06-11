@@ -1153,4 +1153,125 @@ class QueryTests: BaseTestDataTestCase {
             }
         }
     }
+    
+    @objc
+    dynamic func test_ThatDataStacks_CanQueryAttributes() {
+        
+        let configurations: [String?] = [nil]
+        self.prepareStack(configurations: configurations) { (stack) in
+            
+            self.prepareTestDataForStack(stack, configurations: configurations)
+            
+            let from = From<TestEntity1>(configurations)
+            let queryClauses: [QueryClause] = [
+                Where("%K > %@", "testNumber", 3),
+                OrderBy(.Ascending("testEntityID"))
+            ]
+            do {
+                
+                let values = stack.queryAttributes(
+                    from,
+                    Select(
+                        "testBoolean",
+                        "testNumber",
+                        "testDecimal",
+                        "testString",
+                        "testData",
+                        "testDate",
+                        "testNil"
+                    ),
+                    queryClauses
+                )
+                XCTAssertNotNil(values)
+                XCTAssertEqual(
+                    values!,
+                    [
+                        [
+                            "testBoolean": NSNumber(bool: false),
+                            "testNumber": NSNumber(integer: 4),
+                            "testDecimal": NSDecimalNumber(string: "4"),
+                            "testString": "nil:TestEntity1:4",
+                            "testData": ("nil:TestEntity1:4" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!,
+                            "testDate": self.dateFormatter.dateFromString("2000-01-04T00:00:00Z")!
+                        ],
+                        [
+                            "testBoolean": NSNumber(bool: true),
+                            "testNumber": NSNumber(integer: 5),
+                            "testDecimal": NSDecimalNumber(string: "5"),
+                            "testString": "nil:TestEntity1:5",
+                            "testData": ("nil:TestEntity1:5" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!,
+                            "testDate": self.dateFormatter.dateFromString("2000-01-05T00:00:00Z")!
+                        ]
+                    ]
+                )
+            }
+        }
+    }
+    
+    @objc
+    dynamic func test_ThatDataStacks_CanQueryAggregates() {
+        
+        let configurations: [String?] = [nil]
+        self.prepareStack(configurations: configurations) { (stack) in
+            
+            self.prepareTestDataForStack(stack, configurations: configurations)
+            
+            let from = From<TestEntity1>(configurations)
+            let queryClauses: [QueryClause] = []
+            do {
+                
+                let values = stack.queryAttributes(
+                    from,
+                    Select(
+                        .Sum("testBoolean"),
+                        .Count("testNumber"),
+                        .Maximum("testNumber"),
+                        .Minimum("testNumber"),
+                        .Average("testDecimal")
+                    ),
+                    queryClauses
+                )
+                XCTAssertNotNil(values)
+                XCTAssertEqual(
+                    values!,
+                    [
+                        [
+                            "sum(testBoolean)": 3,
+                            "count(testNumber)": 5,
+                            "max(testNumber)": 5,
+                            "min(testNumber)": 1,
+                            "average(testDecimal)": 3,
+                        ]
+                    ]
+                )
+            }
+            do {
+                
+                let values = stack.queryAttributes(
+                    from,
+                    Select(
+                        .Sum("testBoolean", As: "testSum"),
+                        .Count("testNumber", As: "testCount"),
+                        .Maximum("testNumber", As: "testMaximum"),
+                        .Minimum("testNumber", As: "testMinimum"),
+                        .Average("testDecimal", As: "testAverage")
+                    ),
+                    queryClauses
+                )
+                XCTAssertNotNil(values)
+                XCTAssertEqual(
+                    values!,
+                    [
+                        [
+                            "testSum": 3,
+                            "testCount": 5,
+                            "testMaximum": 5,
+                            "testMinimum": 1,
+                            "testAverage": 3,
+                        ]
+                    ]
+                )
+            }
+        }
+    }
 }

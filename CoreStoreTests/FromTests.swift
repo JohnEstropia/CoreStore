@@ -174,7 +174,10 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>()
                 
                 let request = NSFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
+                let storesFound = self.expectLogger([.LogWarning]) {
+                    
+                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.affectedStores)
@@ -189,7 +192,10 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config1")
                 
                 let request = NSFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
+                let storesFound = self.expectLogger([.LogWarning]) {
+                    
+                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.affectedStores)
@@ -204,7 +210,10 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config2")
                 
                 let request = NSFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
+                let storesFound = self.expectLogger([.LogWarning]) {
+                    
+                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.affectedStores)
@@ -290,7 +299,10 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config1")
                 
                 let request = NSFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
+                let storesFound = self.expectLogger([.LogWarning]) {
+                    
+                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.affectedStores)
@@ -305,7 +317,10 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config2")
                 
                 let request = NSFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
+                let storesFound = self.expectLogger([.LogWarning]) {
+                    
+                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.affectedStores)
@@ -391,7 +406,10 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config1")
                 
                 let request = NSFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
+                let storesFound = self.expectLogger([.LogWarning]) {
+                    
+                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.affectedStores)

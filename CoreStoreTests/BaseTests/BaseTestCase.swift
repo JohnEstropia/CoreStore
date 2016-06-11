@@ -71,7 +71,7 @@ class BaseTestCase: XCTestCase {
         defer {
             
             self.waitForExpectationsWithTimeout(0, handler: nil)
-            CoreStore.logger = DefaultLogger()
+            CoreStore.logger = TestLogger([:])
         }
         return closure()
     }

@@ -144,7 +144,10 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(object)
                     
-                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    let objectID = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchObjectID(from, fetchClauses)
+                    }
                     XCTAssertNil(objectID)
                 }
                 do {
@@ -153,10 +156,16 @@ final class FetchTests: BaseTestDataTestCase {
                         Where("%K < %@", "testNumber", 4),
                         OrderBy(.Descending("testEntityID"))
                     ]
-                    let object = stack.fetchOne(from, fetchClauses)
+                    let object = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchOne(from, fetchClauses)
+                    }
                     XCTAssertNil(object)
                     
-                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    let objectID = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchObjectID(from, fetchClauses)
+                    }
                     XCTAssertNil(objectID)
                 }
             }
@@ -318,7 +327,10 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(object)
                     
-                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    let objectID = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchObjectID(from, fetchClauses)
+                    }
                     XCTAssertNil(objectID)
                 }
                 do {
@@ -327,10 +339,16 @@ final class FetchTests: BaseTestDataTestCase {
                         Where("%K < %@", "testNumber", 4),
                         OrderBy(.Descending("testEntityID"))
                     ]
-                    let object = stack.fetchOne(from, fetchClauses)
+                    let object = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchOne(from, fetchClauses)
+                    }
                     XCTAssertNil(object)
                     
-                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    let objectID = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchObjectID(from, fetchClauses)
+                    }
                     XCTAssertNil(objectID)
                 }
             }
@@ -643,7 +661,10 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(objects)
                     
-                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    let objectIDs = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchObjectIDs(from, fetchClauses)
+                    }
                     XCTAssertNil(objectIDs)
                 }
                 do {
@@ -652,10 +673,16 @@ final class FetchTests: BaseTestDataTestCase {
                         Where("testNumber", isEqualTo: 0),
                         OrderBy(.Descending("testEntityID"))
                     ]
-                    let objects = stack.fetchAll(from, fetchClauses)
+                    let objects = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchAll(from, fetchClauses)
+                    }
                     XCTAssertNil(objects)
                     
-                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    let objectIDs = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchObjectIDs(from, fetchClauses)
+                    }
                     XCTAssertNil(objectIDs)
                 }
             }
@@ -884,7 +911,10 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(objects)
                     
-                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    let objectIDs = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchObjectIDs(from, fetchClauses)
+                    }
                     XCTAssertNil(objectIDs)
                 }
                 do {
@@ -892,10 +922,16 @@ final class FetchTests: BaseTestDataTestCase {
                     let fetchClauses: [FetchClause] = [
                         OrderBy(.Descending("testEntityID"))
                     ]
-                    let objects = stack.fetchAll(from, fetchClauses)
+                    let objects = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchAll(from, fetchClauses)
+                    }
                     XCTAssertNil(objects)
                     
-                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    let objectIDs = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchObjectIDs(from, fetchClauses)
+                    }
                     XCTAssertNil(objectIDs)
                 }
             }
@@ -1210,11 +1246,14 @@ final class FetchTests: BaseTestDataTestCase {
                 }
                 do {
                     
-                    let count = stack.fetchCount(
-                        from,
-                        Where("testNumber", isEqualTo: 0),
-                        OrderBy(.Descending("testEntityID"))
-                    )
+                    let count = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchCount(
+                            from,
+                            Where("testNumber", isEqualTo: 0),
+                            OrderBy(.Descending("testEntityID"))
+                        )
+                    }
                     XCTAssertNil(count)
                 }
             }
@@ -1354,11 +1393,14 @@ final class FetchTests: BaseTestDataTestCase {
                 }
                 do {
                     
-                    let count = stack.fetchCount(
-                        from,
-                        Where("testNumber", isEqualTo: 0),
-                        OrderBy(.Descending("testEntityID"))
-                    )
+                    let count = self.expectLogger([.LogWarning]) {
+                        
+                        stack.fetchCount(
+                            from,
+                            Where("testNumber", isEqualTo: 0),
+                            OrderBy(.Descending("testEntityID"))
+                        )
+                    }
                     XCTAssertNil(count)
                 }
             }
@@ -1595,7 +1637,10 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(object)
                     
-                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    let objectID = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchObjectID(from, fetchClauses)
+                    }
                     XCTAssertNil(objectID)
                 }
                 do {
@@ -1604,10 +1649,16 @@ final class FetchTests: BaseTestDataTestCase {
                         Where("%K < %@", "testNumber", 4),
                         OrderBy(.Descending("testEntityID"))
                     ]
-                    let object = transaction.fetchOne(from, fetchClauses)
+                    let object = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchOne(from, fetchClauses)
+                    }
                     XCTAssertNil(object)
                     
-                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    let objectID = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchObjectID(from, fetchClauses)
+                    }
                     XCTAssertNil(objectID)
                 }
             }
@@ -1769,7 +1820,10 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(object)
                     
-                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    let objectID = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchObjectID(from, fetchClauses)
+                    }
                     XCTAssertNil(objectID)
                 }
                 do {
@@ -1778,10 +1832,16 @@ final class FetchTests: BaseTestDataTestCase {
                         Where("%K < %@", "testNumber", 4),
                         OrderBy(.Descending("testEntityID"))
                     ]
-                    let object = transaction.fetchOne(from, fetchClauses)
+                    let object = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchOne(from, fetchClauses)
+                    }
                     XCTAssertNil(object)
                     
-                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    let objectID = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchObjectID(from, fetchClauses)
+                    }
                     XCTAssertNil(objectID)
                 }
             }
@@ -2094,7 +2154,10 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(objects)
                     
-                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    let objectIDs = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchObjectIDs(from, fetchClauses)
+                    }
                     XCTAssertNil(objectIDs)
                 }
                 do {
@@ -2103,10 +2166,16 @@ final class FetchTests: BaseTestDataTestCase {
                         Where("testNumber", isEqualTo: 0),
                         OrderBy(.Descending("testEntityID"))
                     ]
-                    let objects = transaction.fetchAll(from, fetchClauses)
+                    let objects = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchAll(from, fetchClauses)
+                    }
                     XCTAssertNil(objects)
                     
-                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    let objectIDs = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchObjectIDs(from, fetchClauses)
+                    }
                     XCTAssertNil(objectIDs)
                 }
             }
@@ -2335,7 +2404,10 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(objects)
                     
-                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    let objectIDs = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchObjectIDs(from, fetchClauses)
+                    }
                     XCTAssertNil(objectIDs)
                 }
                 do {
@@ -2343,10 +2415,16 @@ final class FetchTests: BaseTestDataTestCase {
                     let fetchClauses: [FetchClause] = [
                         OrderBy(.Descending("testEntityID"))
                     ]
-                    let objects = transaction.fetchAll(from, fetchClauses)
+                    let objects = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchAll(from, fetchClauses)
+                    }
                     XCTAssertNil(objects)
                     
-                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    let objectIDs = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchObjectIDs(from, fetchClauses)
+                    }
                     XCTAssertNil(objectIDs)
                 }
             }
@@ -2661,11 +2739,14 @@ final class FetchTests: BaseTestDataTestCase {
                 }
                 do {
                     
-                    let count = transaction.fetchCount(
-                        from,
-                        Where("testNumber", isEqualTo: 0),
-                        OrderBy(.Descending("testEntityID"))
-                    )
+                    let count = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchCount(
+                            from,
+                            Where("testNumber", isEqualTo: 0),
+                            OrderBy(.Descending("testEntityID"))
+                        )
+                    }
                     XCTAssertNil(count)
                 }
             }
@@ -2805,11 +2886,14 @@ final class FetchTests: BaseTestDataTestCase {
                 }
                 do {
                     
-                    let count = transaction.fetchCount(
-                        from,
-                        Where("testNumber", isEqualTo: 0),
-                        OrderBy(.Descending("testEntityID"))
-                    )
+                    let count = self.expectLogger([.LogWarning]) {
+                        
+                        transaction.fetchCount(
+                            from,
+                            Where("testNumber", isEqualTo: 0),
+                            OrderBy(.Descending("testEntityID"))
+                        )
+                    }
                     XCTAssertNil(count)
                 }
             }
