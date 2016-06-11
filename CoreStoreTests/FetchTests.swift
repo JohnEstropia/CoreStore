@@ -31,7 +31,7 @@ import CoreStore
 
 //MARK: - FetchTests
 
-final class FetchTests: BaseTestCase {
+final class FetchTests: BaseTestDataTestCase {
     
     @objc
     dynamic func test_ThatDataStacks_CanFetchOneFromDefaultConfiguration() {
@@ -39,73 +39,123 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             do {
                 
-                let object2 = stack.fetchOne(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "nil:TestEntity1:2")
-                
-                let object3 = stack.fetchOne(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "nil:TestEntity1:3")
-                
-                let nilObject = stack.fetchOne(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:2")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:3")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             do {
                 
-                let object2 = stack.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "nil:TestEntity1:2")
-                
-                let object3 = stack.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "nil:TestEntity1:3")
-                
-                let nilObject = stack.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:2")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:3")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             do {
                 
-                let nilObject1 = stack.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject1)
-                
-                let nilObject2 = stack.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilObject2)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
         }
     }
@@ -116,98 +166,167 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             do {
                 
-                let object2 = stack.fetchOne(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testNumber, 2) // configuration ambiguous
-                
-                let object3 = stack.fetchOne(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testNumber, 3) // configuration ambiguous
-                
-                let nilObject = stack.fetchOne(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testNumber, 2) // configuration ambiguous
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testNumber, 3) // configuration
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             do {
                 
-                let object2 = stack.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "nil:TestEntity1:2")
-                
-                let object3 = stack.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "nil:TestEntity1:3")
-                
-                let nilObject = stack.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:2")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:3")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             do {
                 
-                let object2 = stack.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "Config1:TestEntity1:2")
-                
-                let object3 = stack.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "Config1:TestEntity1:3")
-                
-                let nilObject = stack.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "Config1:TestEntity1:2")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "Config1:TestEntity1:3")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             do {
                 
-                let nilObject1 = stack.fetchOne(
-                    From<TestEntity1>("Config2"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject1)
-                
-                let nilObject2 = stack.fetchOne(
-                    From<TestEntity1>("Config2"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilObject2)
+                let from = From<TestEntity1>("Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
         }
     }
@@ -218,82 +337,139 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             do {
                 
-                let object2 = stack.fetchOne(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testNumber, 2) // configuration is ambiguous
-                
-                let object3 = stack.fetchOne(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testNumber, 3) // configuration is ambiguous
-                
-                let nilObject = stack.fetchOne(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>(nil, "Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testNumber, 2) // configuration is ambiguous
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testNumber, 3) // configuration is ambiguous
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             do {
                 
-                let object2 = stack.fetchOne(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "nil:TestEntity1:2")
-                
-                let object3 = stack.fetchOne(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "nil:TestEntity1:3")
-                
-                let nilObject = stack.fetchOne(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>(nil, "Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:2")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:3")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             do {
                 
-                let object2 = stack.fetchOne(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "Config1:TestEntity1:2")
-                
-                let object3 = stack.fetchOne(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "Config1:TestEntity1:3")
-                
-                let nilObject = stack.fetchOne(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>("Config1", "Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "Config1:TestEntity1:2")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "Config1:TestEntity1:3")
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = stack.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = stack.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
         }
     }
@@ -304,111 +480,175 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             do {
                 
-                let objects2to4 = stack.fetchAll(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to4)
-                XCTAssertEqual(objects2to4?.count, 3)
-                XCTAssertEqual(
-                    (objects2to4 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:2",
-                        "nil:TestEntity1:3",
-                        "nil:TestEntity1:4"
+                let from = From(TestEntity1)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects4to2 = stack.fetchAll(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 5),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to2)
-                XCTAssertEqual(objects4to2?.count, 3)
-                XCTAssertEqual(
-                    (objects4to2 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:4",
-                        "nil:TestEntity1:3",
-                        "nil:TestEntity1:2"
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:2",
+                            "nil:TestEntity1:3",
+                            "nil:TestEntity1:4"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 5),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = stack.fetchAll(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:4",
+                            "nil:TestEntity1:3",
+                            "nil:TestEntity1:2"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             do {
                 
-                let objects2to4 = stack.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to4)
-                XCTAssertEqual(objects2to4?.count, 3)
-                XCTAssertEqual(
-                    (objects2to4 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:2",
-                        "nil:TestEntity1:3",
-                        "nil:TestEntity1:4"
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects4to2 = stack.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 5),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to2)
-                XCTAssertEqual(objects4to2?.count, 3)
-                XCTAssertEqual(
-                    (objects4to2 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:4",
-                        "nil:TestEntity1:3",
-                        "nil:TestEntity1:2"
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:2",
+                            "nil:TestEntity1:3",
+                            "nil:TestEntity1:4"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 5),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = stack.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:4",
+                            "nil:TestEntity1:3",
+                            "nil:TestEntity1:2"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             do {
                 
-                let nilObject1 = stack.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject1)
-                
-                let nilObject2 = stack.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("testNumber", isEqualTo: 0),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilObject2)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNil(objectIDs)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("testNumber", isEqualTo: 0),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNil(objectIDs)
+                }
             }
         }
     }
@@ -419,141 +659,233 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             do {
                 
-                let objects4to5 = stack.fetchAll(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 3)
-                XCTAssertEqual(
-                    Set((objects4to5 ?? []).map { $0.testNumber!.integerValue }),
-                    [4, 5] as Set<Int>
-                ) // configuration is ambiguous
-                
-                let objects2to1 = stack.fetchAll(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 3)
-                XCTAssertEqual(
-                    Set((objects2to1 ?? []).map { $0.testNumber!.integerValue }),
-                    [1, 2] as Set<Int>
-                ) // configuration is ambiguous
-                
-                let emptyObjects = stack.fetchAll(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        Set((objects ?? []).map { $0.testNumber!.integerValue }),
+                        [4, 5] as Set<Int>
+                    ) // configuration is ambiguous
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        Set((objects ?? []).map { $0.testNumber!.integerValue }),
+                        [1, 2] as Set<Int>
+                    ) // configuration is ambiguous
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             do {
                 
-                let objects4to5 = stack.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 2)
-                XCTAssertEqual(
-                    (objects4to5 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:4",
-                        "nil:TestEntity1:5"
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects2to1 = stack.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 2)
-                XCTAssertEqual(
-                    (objects2to1 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:2",
-                        "nil:TestEntity1:1"
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:4",
+                            "nil:TestEntity1:5"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = stack.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:2",
+                            "nil:TestEntity1:1"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             do {
                 
-                let objects4to5 = stack.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 2)
-                XCTAssertEqual(
-                    (objects4to5 ?? []).map { $0.testString ?? "" },
-                    [
-                        "Config1:TestEntity1:4",
-                        "Config1:TestEntity1:5"
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects2to1 = stack.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 2)
-                XCTAssertEqual(
-                    (objects2to1 ?? []).map { $0.testString ?? "" },
-                    [
-                        "Config1:TestEntity1:2",
-                        "Config1:TestEntity1:1"
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "Config1:TestEntity1:4",
+                            "Config1:TestEntity1:5"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = stack.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "Config1:TestEntity1:2",
+                            "Config1:TestEntity1:1"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             do {
                 
-                let object1 = stack.fetchOne(
-                    From<TestEntity1>("Config2"),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(object1)
-                
-                let object5 = stack.fetchOne(
-                    From<TestEntity1>("Config2"),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(object5)
+                let from = From<TestEntity1>("Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNil(objectIDs)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNil(objectIDs)
+                }
             }
         }
     }
@@ -564,127 +896,207 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             do {
                 
-                let objects4to5 = stack.fetchAll(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 3)
-                XCTAssertEqual(
-                    Set((objects4to5 ?? []).map { $0.testNumber!.integerValue }),
-                    [4, 5] as Set<Int>
-                ) // configuration is ambiguous
-                
-                let objects2to1 = stack.fetchAll(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 3)
-                XCTAssertEqual(
-                    Set((objects2to1 ?? []).map { $0.testNumber!.integerValue }),
-                    [1, 2] as Set<Int>
-                ) // configuration is ambiguous
-                
-                let emptyObjects = stack.fetchAll(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                let from = From<TestEntity1>(nil, "Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        Set((objects ?? []).map { $0.testNumber!.integerValue }),
+                        [4, 5] as Set<Int>
+                    ) // configuration is ambiguous
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        Set((objects ?? []).map { $0.testNumber!.integerValue }),
+                        [1, 2] as Set<Int>
+                    ) // configuration is ambiguous
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             do {
                 
-                let objects4to5 = stack.fetchAll(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 2)
-                XCTAssertEqual(
-                    (objects4to5 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:4",
-                        "nil:TestEntity1:5"
+                let from = From<TestEntity1>(nil, "Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects2to1 = stack.fetchAll(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 2)
-                XCTAssertEqual(
-                    (objects2to1 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:2",
-                        "nil:TestEntity1:1"
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:4",
+                            "nil:TestEntity1:5"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = stack.fetchAll(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:2",
+                            "nil:TestEntity1:1"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             do {
                 
-                let objects4to5 = stack.fetchAll(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 2)
-                XCTAssertEqual(
-                    (objects4to5 ?? []).map { $0.testString ?? "" },
-                    [
-                        "Config1:TestEntity1:4",
-                        "Config1:TestEntity1:5"
+                let from = From<TestEntity1>("Config1", "Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects2to1 = stack.fetchAll(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 2)
-                XCTAssertEqual(
-                    (objects2to1 ?? []).map { $0.testString ?? "" },
-                    [
-                        "Config1:TestEntity1:2",
-                        "Config1:TestEntity1:1"
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "Config1:TestEntity1:4",
+                            "Config1:TestEntity1:5"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = stack.fetchAll(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "Config1:TestEntity1:2",
+                            "Config1:TestEntity1:1"
+                        ]
+                    )
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = stack.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = stack.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
         }
     }
@@ -695,79 +1107,101 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             do {
                 
-                let count2to4 = stack.fetchCount(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to4)
-                XCTAssertEqual(count2to4, 3)
-                
-                let count4to2 = stack.fetchCount(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 5),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to2)
-                XCTAssertEqual(count4to2, 3)
-                
-                let emptyCount = stack.fetchCount(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 5),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             do {
                 
-                let count2to4 = stack.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to4)
-                XCTAssertEqual(count2to4, 3)
-                
-                let count4to2 = stack.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 5),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to2)
-                XCTAssertEqual(count4to2, 3)
-                
-                let emptyCount = stack.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 5),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             do {
                 
-                let nilCount1 = stack.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilCount1)
-                
-                let nilCount2 = stack.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("testNumber", isEqualTo: 0),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilCount2)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNil(count)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("testNumber", isEqualTo: 0),
+                        OrderBy(.Descending("testEntityID"))
+                    )
+                    XCTAssertNil(count)
+                }
             }
         }
     }
@@ -778,107 +1212,137 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             do {
                 
-                let count4to5 = stack.fetchCount(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 3)
-                
-                let count2to1 = stack.fetchCount(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 3)
-                
-                let emptyCount = stack.fetchCount(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             do {
                 
-                let count4to5 = stack.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 2)
-                
-                let count2to1 = stack.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 2)
-                
-                let emptyCount = stack.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             do {
                 
-                let count4to5 = stack.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 2)
-                
-                let count2to1 = stack.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 2)
-                
-                let emptyCount = stack.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             do {
                 
-                let nilCount1 = stack.fetchCount(
-                    From<TestEntity1>("Config2"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilCount1)
-                
-                let nilCount2 = stack.fetchCount(
-                    From<TestEntity1>("Config2"),
-                    Where("testNumber", isEqualTo: 0),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilCount2)
+                let from = From<TestEntity1>("Config2")
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNil(count)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("testNumber", isEqualTo: 0),
+                        OrderBy(.Descending("testEntityID"))
+                    )
+                    XCTAssertNil(count)
+                }
             }
         }
     }
@@ -889,91 +1353,115 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             do {
                 
-                let count4to5 = stack.fetchCount(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 3)
-                
-                let count2to1 = stack.fetchCount(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 3)
-                
-                let emptyCount = stack.fetchCount(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>(nil, "Config1")
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             do {
                 
-                let count4to5 = stack.fetchCount(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 2)
-                
-                let count2to1 = stack.fetchCount(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 2)
-                
-                let emptyCount = stack.fetchCount(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>(nil, "Config2")
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             do {
                 
-                let count4to5 = stack.fetchCount(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 2)
-                
-                let count2to1 = stack.fetchCount(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 2)
-                
-                let emptyCount = stack.fetchCount(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>("Config1", "Config2")
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = stack.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
         }
     }
@@ -984,73 +1472,123 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             stack.beginSynchronous { (transaction) in
                 
-                let object2 = transaction.fetchOne(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "nil:TestEntity1:2")
-                
-                let object3 = transaction.fetchOne(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "nil:TestEntity1:3")
-                
-                let nilObject = transaction.fetchOne(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:2")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:3")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let object2 = transaction.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "nil:TestEntity1:2")
-                
-                let object3 = transaction.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "nil:TestEntity1:3")
-                
-                let nilObject = transaction.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:2")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:3")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let nilObject1 = transaction.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject1)
-                
-                let nilObject2 = transaction.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilObject2)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
         }
     }
@@ -1061,98 +1599,167 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             stack.beginSynchronous { (transaction) in
                 
-                let object2 = transaction.fetchOne(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testNumber, 2) // configuration ambiguous
-                
-                let object3 = transaction.fetchOne(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testNumber, 3) // configuration ambiguous
-                
-                let nilObject = transaction.fetchOne(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testNumber, 2) // configuration ambiguous
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testNumber, 3) // configuration
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let object2 = transaction.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "nil:TestEntity1:2")
-                
-                let object3 = transaction.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "nil:TestEntity1:3")
-                
-                let nilObject = transaction.fetchOne(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:2")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:3")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let object2 = transaction.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "Config1:TestEntity1:2")
-                
-                let object3 = transaction.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "Config1:TestEntity1:3")
-                
-                let nilObject = transaction.fetchOne(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "Config1:TestEntity1:2")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "Config1:TestEntity1:3")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let nilObject1 = transaction.fetchOne(
-                    From<TestEntity1>("Config2"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject1)
-                
-                let nilObject2 = transaction.fetchOne(
-                    From<TestEntity1>("Config2"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilObject2)
+                let from = From<TestEntity1>("Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
         }
     }
@@ -1163,82 +1770,139 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             stack.beginSynchronous { (transaction) in
                 
-                let object2 = transaction.fetchOne(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testNumber, 2) // configuration is ambiguous
-                
-                let object3 = transaction.fetchOne(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testNumber, 3) // configuration is ambiguous
-                
-                let nilObject = transaction.fetchOne(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>(nil, "Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testNumber, 2) // configuration is ambiguous
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testNumber, 3) // configuration is ambiguous
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let object2 = transaction.fetchOne(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "nil:TestEntity1:2")
-                
-                let object3 = transaction.fetchOne(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "nil:TestEntity1:3")
-                
-                let nilObject = transaction.fetchOne(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>(nil, "Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:2")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:3")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let object2 = transaction.fetchOne(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(object2)
-                XCTAssertEqual(object2?.testString, "Config1:TestEntity1:2")
-                
-                let object3 = transaction.fetchOne(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNotNil(object3)
-                XCTAssertEqual(object3?.testString, "Config1:TestEntity1:3")
-                
-                let nilObject = transaction.fetchOne(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject)
+                let from = From<TestEntity1>("Config1", "Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "Config1:TestEntity1:2")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.testString, "Config1:TestEntity1:3")
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNotNil(objectID)
+                    XCTAssertEqual(objectID, object?.objectID)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let object = transaction.fetchOne(from, fetchClauses)
+                    XCTAssertNil(object)
+                    
+                    let objectID = transaction.fetchObjectID(from, fetchClauses)
+                    XCTAssertNil(objectID)
+                }
             }
         }
     }
@@ -1249,111 +1913,175 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             stack.beginSynchronous { (transaction) in
                 
-                let objects2to4 = transaction.fetchAll(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to4)
-                XCTAssertEqual(objects2to4?.count, 3)
-                XCTAssertEqual(
-                    (objects2to4 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:2",
-                        "nil:TestEntity1:3",
-                        "nil:TestEntity1:4"
+                let from = From(TestEntity1)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects4to2 = transaction.fetchAll(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 5),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to2)
-                XCTAssertEqual(objects4to2?.count, 3)
-                XCTAssertEqual(
-                    (objects4to2 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:4",
-                        "nil:TestEntity1:3",
-                        "nil:TestEntity1:2"
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:2",
+                            "nil:TestEntity1:3",
+                            "nil:TestEntity1:4"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 5),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = transaction.fetchAll(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:4",
+                            "nil:TestEntity1:3",
+                            "nil:TestEntity1:2"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let objects2to4 = transaction.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to4)
-                XCTAssertEqual(objects2to4?.count, 3)
-                XCTAssertEqual(
-                    (objects2to4 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:2",
-                        "nil:TestEntity1:3",
-                        "nil:TestEntity1:4"
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects4to2 = transaction.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 5),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to2)
-                XCTAssertEqual(objects4to2?.count, 3)
-                XCTAssertEqual(
-                    (objects4to2 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:4",
-                        "nil:TestEntity1:3",
-                        "nil:TestEntity1:2"
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:2",
+                            "nil:TestEntity1:3",
+                            "nil:TestEntity1:4"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 5),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = transaction.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:4",
+                            "nil:TestEntity1:3",
+                            "nil:TestEntity1:2"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let nilObject1 = transaction.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilObject1)
-                
-                let nilObject2 = transaction.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("testNumber", isEqualTo: 0),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilObject2)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNil(objectIDs)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("testNumber", isEqualTo: 0),
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNil(objectIDs)
+                }
             }
         }
     }
@@ -1364,141 +2092,233 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             stack.beginSynchronous { (transaction) in
                 
-                let objects4to5 = transaction.fetchAll(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 3)
-                XCTAssertEqual(
-                    Set((objects4to5 ?? []).map { $0.testNumber!.integerValue }),
-                    [4, 5] as Set<Int>
-                ) // configuration is ambiguous
-                
-                let objects2to1 = transaction.fetchAll(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 3)
-                XCTAssertEqual(
-                    Set((objects2to1 ?? []).map { $0.testNumber!.integerValue }),
-                    [1, 2] as Set<Int>
-                ) // configuration is ambiguous
-                
-                let emptyObjects = transaction.fetchAll(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        Set((objects ?? []).map { $0.testNumber!.integerValue }),
+                        [4, 5] as Set<Int>
+                    ) // configuration is ambiguous
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        Set((objects ?? []).map { $0.testNumber!.integerValue }),
+                        [1, 2] as Set<Int>
+                    ) // configuration is ambiguous
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let objects4to5 = transaction.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 2)
-                XCTAssertEqual(
-                    (objects4to5 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:4",
-                        "nil:TestEntity1:5"
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects2to1 = transaction.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 2)
-                XCTAssertEqual(
-                    (objects2to1 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:2",
-                        "nil:TestEntity1:1"
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:4",
+                            "nil:TestEntity1:5"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = transaction.fetchAll(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:2",
+                            "nil:TestEntity1:1"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let objects4to5 = transaction.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 2)
-                XCTAssertEqual(
-                    (objects4to5 ?? []).map { $0.testString ?? "" },
-                    [
-                        "Config1:TestEntity1:4",
-                        "Config1:TestEntity1:5"
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects2to1 = transaction.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 2)
-                XCTAssertEqual(
-                    (objects2to1 ?? []).map { $0.testString ?? "" },
-                    [
-                        "Config1:TestEntity1:2",
-                        "Config1:TestEntity1:1"
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "Config1:TestEntity1:4",
+                            "Config1:TestEntity1:5"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = transaction.fetchAll(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "Config1:TestEntity1:2",
+                            "Config1:TestEntity1:1"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let object1 = transaction.fetchOne(
-                    From<TestEntity1>("Config2"),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(object1)
-                
-                let object5 = transaction.fetchOne(
-                    From<TestEntity1>("Config2"),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(object5)
+                let from = From<TestEntity1>("Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNil(objectIDs)
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        OrderBy(.Descending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNil(objectIDs)
+                }
             }
         }
     }
@@ -1509,127 +2329,207 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             stack.beginSynchronous { (transaction) in
                 
-                let objects4to5 = transaction.fetchAll(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 3)
-                XCTAssertEqual(
-                    Set((objects4to5 ?? []).map { $0.testNumber!.integerValue }),
-                    [4, 5] as Set<Int>
-                ) // configuration is ambiguous
-                
-                let objects2to1 = transaction.fetchAll(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 3)
-                XCTAssertEqual(
-                    Set((objects2to1 ?? []).map { $0.testNumber!.integerValue }),
-                    [1, 2] as Set<Int>
-                ) // configuration is ambiguous
-                
-                let emptyObjects = transaction.fetchAll(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                let from = From<TestEntity1>(nil, "Config1")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        Set((objects ?? []).map { $0.testNumber!.integerValue }),
+                        [4, 5] as Set<Int>
+                    ) // configuration is ambiguous
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 3)
+                    XCTAssertEqual(
+                        Set((objects ?? []).map { $0.testNumber!.integerValue }),
+                        [1, 2] as Set<Int>
+                    ) // configuration is ambiguous
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 3)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let objects4to5 = transaction.fetchAll(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 2)
-                XCTAssertEqual(
-                    (objects4to5 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:4",
-                        "nil:TestEntity1:5"
+                let from = From<TestEntity1>(nil, "Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects2to1 = transaction.fetchAll(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 2)
-                XCTAssertEqual(
-                    (objects2to1 ?? []).map { $0.testString ?? "" },
-                    [
-                        "nil:TestEntity1:2",
-                        "nil:TestEntity1:1"
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:4",
+                            "nil:TestEntity1:5"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = transaction.fetchAll(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "nil:TestEntity1:2",
+                            "nil:TestEntity1:1"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let objects4to5 = transaction.fetchAll(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects4to5)
-                XCTAssertEqual(objects4to5?.count, 2)
-                XCTAssertEqual(
-                    (objects4to5 ?? []).map { $0.testString ?? "" },
-                    [
-                        "Config1:TestEntity1:4",
-                        "Config1:TestEntity1:5"
+                let from = From<TestEntity1>("Config1", "Config2")
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let objects2to1 = transaction.fetchAll(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(objects2to1)
-                XCTAssertEqual(objects2to1?.count, 2)
-                XCTAssertEqual(
-                    (objects2to1 ?? []).map { $0.testString ?? "" },
-                    [
-                        "Config1:TestEntity1:2",
-                        "Config1:TestEntity1:1"
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "Config1:TestEntity1:4",
+                            "Config1:TestEntity1:5"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
                     ]
-                )
-                
-                let emptyObjects = transaction.fetchAll(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyObjects)
-                XCTAssertEqual(emptyObjects?.count, 0)
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 2)
+                    XCTAssertEqual(
+                        (objects ?? []).map { $0.testString ?? "" },
+                        [
+                            "Config1:TestEntity1:2",
+                            "Config1:TestEntity1:1"
+                        ]
+                    )
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 2)
+                    XCTAssertEqual(
+                        (objectIDs ?? []),
+                        (objects ?? []).map { $0.objectID }
+                    )
+                }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    ]
+                    let objects = transaction.fetchAll(from, fetchClauses)
+                    XCTAssertNotNil(objects)
+                    XCTAssertEqual(objects?.count, 0)
+                    
+                    let objectIDs = transaction.fetchObjectIDs(from, fetchClauses)
+                    XCTAssertNotNil(objectIDs)
+                    XCTAssertEqual(objectIDs?.count, 0)
+                }
             }
         }
     }
@@ -1640,79 +2540,101 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             stack.beginSynchronous { (transaction) in
                 
-                let count2to4 = transaction.fetchCount(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to4)
-                XCTAssertEqual(count2to4, 3)
-                
-                let count4to2 = transaction.fetchCount(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 5),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to2)
-                XCTAssertEqual(count4to2, 3)
-                
-                let emptyCount = transaction.fetchCount(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 5),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let count2to4 = transaction.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 1),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to4)
-                XCTAssertEqual(count2to4, 3)
-                
-                let count4to2 = transaction.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 5),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to2)
-                XCTAssertEqual(count4to2, 3)
-                
-                let emptyCount = transaction.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 1),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 5),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let nilCount1 = transaction.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilCount1)
-                
-                let nilCount2 = transaction.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("testNumber", isEqualTo: 0),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilCount2)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNil(count)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("testNumber", isEqualTo: 0),
+                        OrderBy(.Descending("testEntityID"))
+                    )
+                    XCTAssertNil(count)
+                }
             }
         }
     }
@@ -1723,107 +2645,137 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             stack.beginSynchronous { (transaction) in
                 
-                let count4to5 = transaction.fetchCount(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 3)
-                
-                let count2to1 = transaction.fetchCount(
-                    From(TestEntity1),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 3)
-                
-                let emptyCount = transaction.fetchCount(
-                    From(TestEntity1),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From(TestEntity1)
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let count4to5 = transaction.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 2)
-                
-                let count2to1 = transaction.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 2)
-                
-                let emptyCount = transaction.fetchCount(
-                    From<TestEntity1>(nil),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>(nil)
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let count4to5 = transaction.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 2)
-                
-                let count2to1 = transaction.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 2)
-                
-                let emptyCount = transaction.fetchCount(
-                    From<TestEntity1>("Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>("Config1")
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let nilCount1 = transaction.fetchCount(
-                    From<TestEntity1>("Config2"),
-                    Where("%K < %@", "testNumber", 4),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNil(nilCount1)
-                
-                let nilCount2 = transaction.fetchCount(
-                    From<TestEntity1>("Config2"),
-                    Where("testNumber", isEqualTo: 0),
-                    OrderBy(.Descending("testEntityID"))
-                )
-                XCTAssertNil(nilCount2)
+                let from = From<TestEntity1>("Config2")
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 4),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNil(count)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("testNumber", isEqualTo: 0),
+                        OrderBy(.Descending("testEntityID"))
+                    )
+                    XCTAssertNil(count)
+                }
             }
         }
     }
@@ -1834,140 +2786,116 @@ final class FetchTests: BaseTestCase {
         let configurations: [String?] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
-            self.prepareStubsForStack(stack, configurations: configurations)
+            self.prepareTestDataForStack(stack, configurations: configurations)
             
             stack.beginSynchronous { (transaction) in
                 
-                let count4to5 = transaction.fetchCount(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 3)
-                
-                let count2to1 = transaction.fetchCount(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 3)
-                
-                let emptyCount = transaction.fetchCount(
-                    From<TestEntity1>(nil, "Config1"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>(nil, "Config1")
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 3)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let count4to5 = transaction.fetchCount(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 2)
-                
-                let count2to1 = transaction.fetchCount(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 2)
-                
-                let emptyCount = transaction.fetchCount(
-                    From<TestEntity1>(nil, "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
+                let from = From<TestEntity1>(nil, "Config2")
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
+                }
             }
             stack.beginSynchronous { (transaction) in
                 
-                let count4to5 = transaction.fetchCount(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 3),
-                    OrderBy(.Ascending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count4to5)
-                XCTAssertEqual(count4to5, 2)
-                
-                let count2to1 = transaction.fetchCount(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K < %@", "testNumber", 3),
-                    OrderBy(.Descending("testEntityID")),
-                    Tweak { $0.fetchLimit = 3 }
-                )
-                XCTAssertNotNil(count2to1)
-                XCTAssertEqual(count2to1, 2)
-                
-                let emptyCount = transaction.fetchCount(
-                    From<TestEntity1>("Config1", "Config2"),
-                    Where("%K > %@", "testNumber", 5),
-                    OrderBy(.Ascending("testEntityID"))
-                )
-                XCTAssertNotNil(emptyCount)
-                XCTAssertEqual(emptyCount, 0)
-            }
-        }
-    }
-    
-    
-    // MARK: Private
-    
-    @nonobjc
-    private let dateFormatter: NSDateFormatter = {
-
-        let formatter = NSDateFormatter()
-        formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-        formatter.timeZone = NSTimeZone(name: "UTC")
-        formatter.calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-        formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZ"
-        return formatter
-    }()
-    
-    @nonobjc
-    private func prepareStubsForStack(stack: DataStack, configurations: [String?]) {
-        
-        stack.beginSynchronous { (transaction) in
-            
-            for (configurationIndex, configuration) in configurations.enumerate() {
-                
-                if configuration == nil || configuration == "Config1" {
+                let from = From<TestEntity1>("Config1", "Config2")
+                do {
                     
-                    for idIndex in 1 ... 5 {
-                        
-                        let object = transaction.create(Into<TestEntity1>(configuration))
-                        object.testEntityID = NSNumber(integer: (configurationIndex * 100) + idIndex)
-                        object.testString = "\(configuration ?? "nil"):TestEntity1:\(idIndex)"
-                        object.testNumber = idIndex
-                        object.testDate = self.dateFormatter.dateFromString("2000-\(configurationIndex)-\(idIndex)T00:00:00Z")
-                    }
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 3),
+                        OrderBy(.Ascending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
                 }
-                if configuration == nil || configuration == "Config2" {
+                do {
                     
-                    for idIndex in 1 ... 5 {
-                        
-                        let object = transaction.create(Into<TestEntity2>(configuration))
-                        object.testEntityID = NSNumber(integer: (configurationIndex * 200) + idIndex)
-                        object.testString = "\(configuration ?? "nil"):TestEntity2:\(idIndex)"
-                        object.testNumber = idIndex
-                        object.testDate = self.dateFormatter.dateFromString("2000-\(configurationIndex)-\(idIndex)T00:00:00Z")
-                    }
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K < %@", "testNumber", 3),
+                        OrderBy(.Descending("testEntityID")),
+                        Tweak { $0.fetchLimit = 3 }
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 2)
+                }
+                do {
+                    
+                    let count = transaction.fetchCount(
+                        from,
+                        Where("%K > %@", "testNumber", 5),
+                        OrderBy(.Ascending("testEntityID"))
+                    )
+                    XCTAssertNotNil(count)
+                    XCTAssertEqual(count, 0)
                 }
             }
-            transaction.commitAndWait()
         }
     }
 }

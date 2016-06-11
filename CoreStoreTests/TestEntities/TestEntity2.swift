@@ -32,6 +32,7 @@ class TestEntity2: NSManagedObject {
     @NSManaged var testString: String?
     @NSManaged var testNumber: NSNumber?
     @NSManaged var testDate: NSDate?
-    
-    var testProperty: NSNumber?
+    @NSManaged var testBoolean: NSNumber?
+    @NSManaged var testDecimal: NSDecimalNumber?
+    @NSManaged var testData: NSData?
 }
