@@ -36,7 +36,7 @@ class BaseTestCase: XCTestCase {
     // MARK: Internal
     
     @nonobjc
-    func prepareStack(configurations configurations: [String?] = [nil], @noescape _ closure: (dataStack: DataStack) -> Void) {
+    func prepareStack<T>(configurations configurations: [String?] = [nil], @noescape _ closure: (dataStack: DataStack) -> T) -> T {
         
         let stack = DataStack(
             modelName: "Model",
@@ -61,7 +61,36 @@ class BaseTestCase: XCTestCase {
             
             XCTFail(error.coreStoreDumpString)
         }
-        closure(dataStack: stack)
+        return closure(dataStack: stack)
+    }
+    
+    @nonobjc
+    func expectLogger<T>(expectations: [TestLogger.Expectation], @noescape closure: () -> T) -> T {
+        
+        CoreStore.logger = TestLogger(self.prepareLoggerExpectations(expectations))
+        defer {
+            
+            self.waitForExpectationsWithTimeout(0, handler: nil)
+            CoreStore.logger = DefaultLogger()
+        }
+        return closure()
+    }
+    
+    @nonobjc
+    func expectLogger(expectations: [TestLogger.Expectation: XCTestExpectation]) {
+        
+        CoreStore.logger = TestLogger(expectations)
+    }
+    
+    @nonobjc
+    func prepareLoggerExpectations(expectations: [TestLogger.Expectation]) -> [TestLogger.Expectation: XCTestExpectation] {
+        
+        var testExpectations: [TestLogger.Expectation: XCTestExpectation] = [:]
+        for expectation in expectations {
+            
+            testExpectations[expectation] = self.expectationWithDescription("Logger Expectation: \(expectation)")
+        }
+        return testExpectations
     }
     
     
@@ -71,10 +100,12 @@ class BaseTestCase: XCTestCase {
         
         super.setUp()
         self.deleteStores()
+        CoreStore.logger = TestLogger([:])
     }
     
     override func tearDown() {
         
+        CoreStore.logger = DefaultLogger()
         self.deleteStores()
         super.tearDown()
     }
@@ -85,5 +116,76 @@ class BaseTestCase: XCTestCase {
     private func deleteStores() {
         
         _ = try? NSFileManager.defaultManager().removeItemAtURL(SQLiteStore.defaultRootDirectory)
+    }
+}
+
+
+// MARK: - TestLogger
+
+class TestLogger: CoreStoreLogger {
+    
+    enum Expectation {
+        
+        case LogWarning
+        case LogFatal
+        case LogError
+        case AssertionFailure
+        case FatalError
+    }
+    
+    init(_ expectations: [Expectation: XCTestExpectation]) {
+        
+        self.expectations = expectations
+    }
+    
+    
+    // MARK: CoreStoreLogger
+    
+    func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        
+        switch level {
+            
+        case .Warning:  self.fulfill(.LogWarning)
+        case .Fatal:    self.fulfill(.LogFatal)
+        default:        break
+        }
+    }
+    
+    func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        
+        self.fulfill(.LogError)
+    }
+    
+    func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        
+        if condition() {
+            
+            return
+        }
+        self.fulfill(.AssertionFailure)
+    }
+    
+    @noreturn func fatalError(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        
+        self.fulfill(.FatalError)
+        Swift.fatalError()
+    }
+    
+    
+    // MARK: Private
+    
+    private var expectations: [Expectation: XCTestExpectation]
+    
+    private func fulfill(expectation: Expectation) {
+        
+        if let instance = self.expectations[expectation] {
+            
+            instance.fulfill()
+            self.expectations[expectation] = nil
+        }
+        else {
+            
+            XCTFail("Unexpected Logger Action: \(expectation)")
+        }
     }
 }

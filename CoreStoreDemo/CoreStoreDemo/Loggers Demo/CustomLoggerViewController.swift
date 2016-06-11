@@ -88,11 +88,6 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         }
     }
     
-    @noreturn func fatalError(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        
-        Swift.fatalError("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Abort] \(message)")
-    }
-    
     
     // MARK: Private
     

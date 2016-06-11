@@ -56,11 +56,14 @@ class SetupTests: BaseTestCase {
             
             let migrationChain: MigrationChain = ["version1", "version2", "version3"]
             
-            let stack = DataStack(
-                modelName: "Model",
-                bundle: NSBundle(forClass: self.dynamicType),
-                migrationChain: migrationChain
-            )
+            let stack = self.expectLogger([.LogWarning]) {
+                
+                DataStack(
+                    modelName: "Model",
+                    bundle: NSBundle(forClass: self.dynamicType),
+                    migrationChain: migrationChain
+                )
+            }
             XCTAssertEqual(stack.modelVersion, "Model")
             XCTAssertEqual(stack.migrationChain, migrationChain)
             
