@@ -38,7 +38,7 @@ internal extension NSManagedObjectModel {
         
         guard let modelFilePath = bundle.pathForResource(modelName, ofType: "momd") else {
             
-            fatalError("Could not find \"\(modelName).momd\" from the bundle. \(bundle)")
+            CoreStore.abort("Could not find \"\(modelName).momd\" from the bundle. \(bundle)")
         }
         
         let modelFileURL = NSURL(fileURLWithPath: modelFilePath)
@@ -47,7 +47,7 @@ internal extension NSManagedObjectModel {
         guard let versionInfo = NSDictionary(contentsOfURL: versionInfoPlistURL),
             let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
                 
-                fatalError("Could not load \(cs_typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\".")
+                CoreStore.abort("Could not load \(cs_typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\".")
         }
         
         let modelVersions = Set(versionHashes.keys)
@@ -77,7 +77,7 @@ internal extension NSManagedObjectModel {
         }
         else {
             
-            fatalError("No model files were found in URL \"\(modelFileURL)\".")
+            CoreStore.abort("No model files were found in URL \"\(modelFileURL)\".")
         }
         
         var modelVersionFileURL: NSURL?
@@ -106,7 +106,7 @@ internal extension NSManagedObjectModel {
                 return rootModel
         }
         
-        fatalError("Could not create an \(cs_typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
+        CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
     }
     
     @nonobjc

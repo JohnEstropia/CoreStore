@@ -24,6 +24,7 @@
 //
 
 import XCTest
+import GCDKit
 
 @testable
 import CoreStore
@@ -32,6 +33,195 @@ import CoreStore
 //MARK: - FetchTests
 
 final class FetchTests: BaseTestDataTestCase {
+    
+    @objc
+    dynamic func test_ThatDataStacksAndTransactions_CanFetchOneExisting() {
+        
+        let configurations: [String?] = ["Config1"]
+        self.prepareStack(configurations: configurations) { (stack) in
+            
+            self.prepareTestDataForStack(stack, configurations: configurations)
+            
+            let from = From(TestEntity1)
+            let fetchClauses: [FetchClause] = [
+                OrderBy(.Ascending("testEntityID"))
+            ]
+            let object = stack.fetchOne(from, fetchClauses)!
+            do {
+                
+                let existing = stack.fetchExisting(object)
+                XCTAssertNotNil(existing)
+                XCTAssertEqual(existing!.objectID, object.objectID)
+                XCTAssertEqual(existing!.managedObjectContext, stack.mainContext)
+            }
+            do {
+                
+                let transaction = stack.beginUnsafe()
+                
+                let existing1 = transaction.fetchExisting(object)
+                XCTAssertNotNil(existing1)
+                XCTAssertEqual(existing1!.objectID, object.objectID)
+                XCTAssertEqual(existing1!.managedObjectContext, transaction.context)
+                
+                let existing2 = stack.fetchExisting(existing1!)
+                XCTAssertNotNil(existing2)
+                XCTAssertEqual(existing2!.objectID, object.objectID)
+                XCTAssertEqual(existing2!.managedObjectContext, stack.mainContext)
+            }
+            do {
+                
+                let fetchExpectation = self.expectationWithDescription("fetch")
+                
+                var existing1: TestEntity1?
+                stack.beginSynchronous { (transaction) in
+                    
+                    existing1 = transaction.fetchExisting(object)
+                    XCTAssertNotNil(existing1)
+                    XCTAssertEqual(existing1!.objectID, object.objectID)
+                    XCTAssertEqual(existing1!.managedObjectContext, transaction.context)
+                    
+                    fetchExpectation.fulfill()
+                }
+                let existing2 = stack.fetchExisting(existing1!)
+                XCTAssertNotNil(existing2)
+                XCTAssertEqual(existing2!.objectID, object.objectID)
+                XCTAssertEqual(existing2!.managedObjectContext, stack.mainContext)
+            }
+            do {
+                
+                let fetchExpectation = self.expectationWithDescription("fetch")
+                stack.beginAsynchronous { (transaction) in
+                    
+                    let existing1 = transaction.fetchExisting(object)
+                    XCTAssertNotNil(existing1)
+                    XCTAssertEqual(existing1!.objectID, object.objectID)
+                    XCTAssertEqual(existing1!.managedObjectContext, transaction.context)
+                    
+                    GCDQueue.Main.async {
+                        
+                        let existing2 = stack.fetchExisting(existing1!)
+                        XCTAssertNotNil(existing2)
+                        XCTAssertEqual(existing2!.objectID, object.objectID)
+                        XCTAssertEqual(existing2!.managedObjectContext, stack.mainContext)
+                        
+                        fetchExpectation.fulfill()
+                    }
+                }
+            }
+        }
+        self.waitAndCheckExpectations()
+    }
+    
+    @objc
+    dynamic func test_ThatDataStacksAndTransactions_CanFetchAllExisting() {
+        
+        let configurations: [String?] = ["Config1"]
+        self.prepareStack(configurations: configurations) { (stack) in
+            
+            self.prepareTestDataForStack(stack, configurations: configurations)
+            
+            let from = From(TestEntity1)
+            let fetchClauses: [FetchClause] = [
+                OrderBy(.Ascending("testEntityID"))
+            ]
+            let objects = stack.fetchAll(from, fetchClauses)!
+            do {
+                
+                let existing = stack.fetchExisting(objects)
+                XCTAssertEqual(
+                    existing.map { $0.objectID },
+                    objects.map { $0.objectID }
+                )
+                for object in existing {
+                    
+                    XCTAssertEqual(object.managedObjectContext, stack.mainContext)
+                }
+            }
+            do {
+                
+                let transaction = stack.beginUnsafe()
+                
+                let existing1 = transaction.fetchExisting(objects)
+                XCTAssertEqual(
+                    existing1.map { $0.objectID },
+                    objects.map { $0.objectID }
+                )
+                for object in existing1 {
+                    
+                    XCTAssertEqual(object.managedObjectContext, transaction.context)
+                }
+                
+                let existing2 = stack.fetchExisting(existing1)
+                XCTAssertEqual(
+                    existing2.map { $0.objectID },
+                    objects.map { $0.objectID }
+                )
+                for object in existing2 {
+                    
+                    XCTAssertEqual(object.managedObjectContext, stack.mainContext)
+                }
+            }
+            do {
+                
+                let fetchExpectation = self.expectationWithDescription("fetch")
+                
+                var existing1 = [TestEntity1]()
+                stack.beginSynchronous { (transaction) in
+                    
+                    existing1 = transaction.fetchExisting(objects)
+                    XCTAssertEqual(
+                        existing1.map { $0.objectID },
+                        objects.map { $0.objectID }
+                    )
+                    for object in existing1 {
+                        
+                        XCTAssertEqual(object.managedObjectContext, transaction.context)
+                    }
+                    
+                    fetchExpectation.fulfill()
+                }
+                let existing2 = stack.fetchExisting(existing1)
+                XCTAssertEqual(
+                    existing2.map { $0.objectID },
+                    objects.map { $0.objectID }
+                )
+                for object in existing2 {
+                    
+                    XCTAssertEqual(object.managedObjectContext, stack.mainContext)
+                }
+            }
+            do {
+                
+                let fetchExpectation = self.expectationWithDescription("fetch")
+                stack.beginAsynchronous { (transaction) in
+                    
+                    let existing1 = transaction.fetchExisting(objects)
+                    XCTAssertEqual(
+                        existing1.map { $0.objectID },
+                        objects.map { $0.objectID }
+                    )
+                    for object in existing1 {
+                        
+                        XCTAssertEqual(object.managedObjectContext, transaction.context)
+                    }
+                    GCDQueue.Main.async {
+                        
+                        let existing2 = stack.fetchExisting(existing1)
+                        XCTAssertEqual(
+                            existing2.map { $0.objectID },
+                            objects.map { $0.objectID }
+                        )
+                        for object in existing2 {
+                            
+                            XCTAssertEqual(object.managedObjectContext, stack.mainContext)
+                        }
+                        fetchExpectation.fulfill()
+                    }
+                }
+            }
+        }
+        self.waitAndCheckExpectations()
+    }
     
     @objc
     dynamic func test_ThatDataStacks_CanFetchOneFromDefaultConfiguration() {

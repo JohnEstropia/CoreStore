@@ -208,7 +208,7 @@ public extension BaseDataTransaction {
                 mapping = try cs_autoreleasepool { try preProcess(mapping: mapping) }
                 
                 var objects = Dictionary<T.UniqueIDType, T>()
-                for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: mapping.keys)) ?? [] {
+                for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: sortedIDs)) ?? [] {
                     
                     try cs_autoreleasepool {
                         

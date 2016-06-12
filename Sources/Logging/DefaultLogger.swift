@@ -111,7 +111,22 @@ public final class DefaultLogger: CoreStoreLogger {
                 return
             }
             Swift.print("❗ [CoreStore: Assertion Failure] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message())\n")
-            Swift.fatalError()
+            Swift.fatalError(file: fileName, line: UInt(lineNumber))
         #endif
+    }
+    
+    /**
+     Handles fatal errors made throughout the `CoreStore` framework.
+     - Important: This method should be marked `@noreturn` and implementers should guarantee that the function doesn't, either by calling another `@noreturn` function such as `fatalError()` or `abort()`, or by raising an exception.
+     
+     - parameter message: the fatal error message
+     - parameter fileName: the source file name
+     - parameter lineNumber: the source line number
+     - parameter functionName: the source function name
+     */
+    public func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        
+        Swift.print("❗ [CoreStore: Fatal Error] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+        Swift.fatalError(file: fileName, line: UInt(lineNumber))
     }
 }

@@ -70,4 +70,16 @@ public extension CoreStore {
             functionName: functionName
         )
     }
+    
+    @noreturn
+    internal static func abort(message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
+        
+        self.logger.abort(
+            message,
+            fileName: fileName,
+            lineNumber: lineNumber,
+            functionName: functionName
+        )
+        Swift.fatalError(message, file: fileName, line: UInt(lineNumber))
+    }
 }

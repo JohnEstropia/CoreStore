@@ -70,7 +70,7 @@ class BaseTestCase: XCTestCase {
         CoreStore.logger = TestLogger(self.prepareLoggerExpectations(expectations))
         defer {
             
-            self.waitForExpectationsWithTimeout(0, handler: nil)
+            self.checkExpectationsImmediately()
             CoreStore.logger = TestLogger([:])
         }
         return closure()
@@ -93,6 +93,17 @@ class BaseTestCase: XCTestCase {
         return testExpectations
     }
     
+    @nonobjc
+    func checkExpectationsImmediately() {
+        
+        self.waitForExpectationsWithTimeout(0, handler: nil)
+    }
+    
+    @nonobjc
+    func waitAndCheckExpectations() {
+        
+        self.waitForExpectationsWithTimeout(10, handler: nil)
+    }
     
     // MARK: XCTestCase
     
@@ -165,10 +176,9 @@ class TestLogger: CoreStoreLogger {
         self.fulfill(.AssertionFailure)
     }
     
-    @noreturn func fatalError(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         self.fulfill(.FatalError)
-        Swift.fatalError()
     }
     
     

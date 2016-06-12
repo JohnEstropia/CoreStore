@@ -67,7 +67,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
             
             guard let from = (fetchRequest.entity.flatMap { $0.managedObjectClassName }).flatMap(NSClassFromString).flatMap(From.init) else {
                 
-                fatalError("Attempted to create an \(cs_typeName(NSFetchedResultsController)) without a \(cs_typeName(From)) clause or an \(cs_typeName(NSEntityDescription)).")
+                CoreStore.abort("Attempted to create an \(cs_typeName(NSFetchedResultsController)) without a \(cs_typeName(From)) clause or an \(cs_typeName(NSEntityDescription)).")
             }
             
             self.reapplyAffectedStores = { fetchRequest, context in

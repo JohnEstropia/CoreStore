@@ -80,6 +80,17 @@ public protocol CoreStoreLogger {
      */
     func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
+    /**
+     Handles fatal errors made throughout the `CoreStore` framework. The app wil terminate after this method is called.
+     - Important: Implementers may guarantee that the function doesn't return, either by calling another `@noreturn` function such as `fatalError()` or `abort()`, or by raising an exception. If the implementation does not terminate the app, CoreStore will call an internal `fatalError()` to do so.
+     
+     - parameter message: the fatal error message
+     - parameter fileName: the source file name
+     - parameter lineNumber: the source line number
+     - parameter functionName: the source function name
+     */
+    func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    
     
     // MARK: Deprecated
     
@@ -99,5 +110,10 @@ extension CoreStoreLogger {
     public func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
     
         self.log(error: error.bridgeToSwift, message: message, fileName: fileName, lineNumber: lineNumber, functionName: functionName)
+    }
+    
+    public func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+        
+        Swift.fatalError(message, file: fileName, line: UInt(lineNumber))
     }
 }
