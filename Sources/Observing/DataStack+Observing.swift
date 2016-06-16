@@ -30,9 +30,10 @@ import CoreData
 #endif
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - DataStack
 
-@available(OSX, unavailable)
 public extension DataStack {
     
     /**
@@ -227,3 +228,5 @@ public extension DataStack {
         )
     }
 }
+
+#endif

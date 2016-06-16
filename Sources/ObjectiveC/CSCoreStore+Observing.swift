@@ -27,9 +27,10 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - CSCoreStore
 
-@available(OSX, unavailable)
 public extension CSCoreStore {
     
     /**
@@ -114,3 +115,5 @@ public extension CSCoreStore {
         )
     }
 }
+
+#endif

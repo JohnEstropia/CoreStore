@@ -1171,6 +1171,8 @@ let person2 = self.monitor[1, 2]
     - Swift 2.2 (Xcode 7.3)
 - Dependencies:
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
+- Other notes:
+    - The `com.apple.CoreData.ConcurrencyDebug` debug argument should be turned off for the app. CoreStore already guarantees safety for you by making the main context read-only, and by only executing transactions serially.
 
 ### Install with CocoaPods (iOS 7 not supported)
 ```

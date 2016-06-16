@@ -68,6 +68,9 @@ internal extension NSManagedObjectContext {
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         context.undoManager = nil
         context.setupForCoreStoreWithContextName("com.corestore.rootcontext")
+        
+        #if os(iOS) || os(OSX)
+            
         context.observerForDidImportUbiquitousContentChangesNotification = NotificationObserver(
             notificationName: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
             object: coordinator,
@@ -84,6 +87,9 @@ internal extension NSManagedObjectContext {
                 }
             }
         )
+            
+        #endif
+        
         return context
     }
     

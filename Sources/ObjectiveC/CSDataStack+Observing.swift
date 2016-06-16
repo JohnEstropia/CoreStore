@@ -27,9 +27,10 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - CSDataStack
 
-@available(OSX, unavailable)
 public extension CSDataStack {
     
     /**
@@ -181,3 +182,5 @@ public extension CSDataStack {
         )
     }
 }
+
+#endif

@@ -27,6 +27,8 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - ObjectObserver
 
 /**
@@ -36,7 +38,6 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
-@available(OSX, unavailable)
 public protocol ObjectObserver: class {
     
     /**
@@ -73,7 +74,6 @@ public protocol ObjectObserver: class {
 
 // MARK: - ObjectObserver (Default Implementations)
 
-@available(OSX, unavailable)
 public extension ObjectObserver {
     
     /**
@@ -91,3 +91,5 @@ public extension ObjectObserver {
      */
     func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType) { }
 }
+
+#endif

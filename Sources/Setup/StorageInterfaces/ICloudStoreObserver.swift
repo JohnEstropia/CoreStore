@@ -26,6 +26,8 @@
 import Foundation
 
 
+#if os(iOS) || os(OSX)
+
 // MARK: - ICloudStoreObserver
 
 /**
@@ -120,3 +122,5 @@ public extension ICloudStoreObserver {
     
     public func iCloudStoreDidRemoveContent(storage storage: ICloudStore, dataStack: DataStack) {}
 }
+
+#endif

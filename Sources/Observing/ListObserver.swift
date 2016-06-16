@@ -27,6 +27,8 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - ListObserver
 
 /**
@@ -39,7 +41,6 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
-@available(OSX, unavailable)
 public protocol ListObserver: class {
     
     /**
@@ -79,7 +80,6 @@ public protocol ListObserver: class {
 
 // MARK: - ListObserver (Default Implementations)
 
-@available(OSX, unavailable)
 public extension ListObserver {
     
     /**
@@ -116,7 +116,6 @@ public extension ListObserver {
  monitor.addObserver(self)
  ```
  */
-@available(OSX, unavailable)
 public protocol ListObjectObserver: ListObserver {
     
     /**
@@ -160,7 +159,6 @@ public protocol ListObjectObserver: ListObserver {
 
 // MARK: - ListObjectObserver (Default Implementations)
 
-@available(OSX, unavailable)
 public extension ListObjectObserver {
     
     /**
@@ -198,7 +196,6 @@ public extension ListObjectObserver {
  monitor.addObserver(self)
  ```
  */
-@available(OSX, unavailable)
 public protocol ListSectionObserver: ListObjectObserver {
     
     /**
@@ -223,7 +220,6 @@ public protocol ListSectionObserver: ListObjectObserver {
 
 // MARK: - ListSectionObserver (Default Implementations)
 
-@available(OSX, unavailable)
 public extension ListSectionObserver {
     
     /**
@@ -236,3 +232,5 @@ public extension ListSectionObserver {
      */
     func listMonitor(monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) { }
 }
+
+#endif

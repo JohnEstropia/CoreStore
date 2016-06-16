@@ -207,7 +207,8 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", "testNumber", 1)
+                Where("%K > %@", "testNumber", 1),
+                OrderBy(.Ascending("testEntityID"))
             ]
             do {
                 

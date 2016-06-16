@@ -6,7 +6,7 @@
 //  Copyright © 2016 John Rommel Estropia. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 @testable
 import CoreStore

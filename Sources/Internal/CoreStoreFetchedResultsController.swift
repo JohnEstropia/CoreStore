@@ -27,9 +27,10 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - CoreStoreFetchedResultsController
 
-@available(OSX, unavailable)
 internal final class CoreStoreFetchedResultsController: NSFetchedResultsController {
     
     // MARK: Internal
@@ -108,3 +109,5 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     @nonobjc
     private let reapplyAffectedStores: (fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Bool
 }
+
+#endif

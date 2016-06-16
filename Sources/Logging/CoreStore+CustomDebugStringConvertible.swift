@@ -24,6 +24,7 @@
 //
 
 import Foundation
+import CoreData
 
 
 // MARK: - AsynchronousDataTransaction
@@ -233,6 +234,8 @@ extension GroupBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible
 }
 
 
+#if os(iOS) || os(OSX)
+
 // MARK: - ICloudStore
 
 extension ICloudStore: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
@@ -258,6 +261,8 @@ extension ICloudStore: CustomDebugStringConvertible, CoreStoreDebugStringConvert
         )
     }
 }
+    
+#endif
 
 
 // MARK: - InMemoryStore
@@ -339,6 +344,8 @@ extension LegacySQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringC
 }
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - ListMonitor
 
 private struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertible {
@@ -377,6 +384,7 @@ extension ListMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvert
         )
     }
 }
+#endif
 
 
 // MARK: - LocalStorageOptions
@@ -546,6 +554,8 @@ extension MigrationType: CustomDebugStringConvertible, CoreStoreDebugStringConve
 }
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - ObjectMonitor
 
 extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
@@ -569,7 +579,7 @@ extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConve
         )
     }
 }
-
+#endif
 
 // MARK: - OrderBy
 
@@ -629,6 +639,8 @@ extension SaveResult: CustomDebugStringConvertible, CoreStoreDebugStringConverti
 }
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - SectionBy
 
 extension SectionBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
@@ -651,6 +663,7 @@ extension SectionBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertib
         )
     }
 }
+#endif
 
 
 // MARK: - Select
@@ -1093,7 +1106,7 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
             ("renamingIdentifier", self.renamingIdentifier),
             ("compoundIndexes", self.compoundIndexes)
         ]
-        if #available(iOS 9.0, *) {
+        if #available(iOS 9.0, OSXApplicationExtension 10.11, *) {
             
             info.append(("uniquenessConstraints", self.uniquenessConstraints))
         }

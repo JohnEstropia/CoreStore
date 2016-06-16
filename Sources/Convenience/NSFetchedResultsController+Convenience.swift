@@ -27,6 +27,8 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - NSFetchedResultsController
 
 public extension NSFetchedResultsController {
@@ -217,3 +219,5 @@ public extension NSFetchedResultsController {
         )
     }
 }
+
+#endif

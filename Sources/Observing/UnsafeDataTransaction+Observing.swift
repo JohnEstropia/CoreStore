@@ -30,9 +30,10 @@ import CoreData
 #endif
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - UnsafeDataTransaction
 
-@available(OSX, unavailable)
 public extension UnsafeDataTransaction {
     
     /**
@@ -208,3 +209,5 @@ public extension UnsafeDataTransaction {
         )
     }
 }
+
+#endif

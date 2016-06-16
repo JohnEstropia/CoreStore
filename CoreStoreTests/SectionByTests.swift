@@ -29,6 +29,8 @@ import XCTest
 import CoreStore
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 //MARK: - SectionByTests
 
 final class SectionByTests: XCTestCase {
@@ -51,3 +53,5 @@ final class SectionByTests: XCTestCase {
         }
     }
 }
+
+#endif

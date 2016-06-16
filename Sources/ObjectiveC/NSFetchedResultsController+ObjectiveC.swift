@@ -27,9 +27,10 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - NSFetchedResultsController
 
-@available(OSX, unavailable)
 public extension NSFetchedResultsController {
     
     /**
@@ -61,3 +62,5 @@ public extension NSFetchedResultsController {
         )
     }
 }
+
+#endif

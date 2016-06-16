@@ -30,6 +30,8 @@ import CoreData
 #endif
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - ObjectMonitor
 
 /**
@@ -42,7 +44,6 @@ import CoreData
  
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
-@available(OSX, unavailable)
 public final class ObjectMonitor<T: NSManagedObject> {
     
     /**
@@ -300,25 +301,21 @@ public final class ObjectMonitor<T: NSManagedObject> {
 
 // MARK: - ObjectMonitor: Equatable
 
-@available(OSX, unavailable)
 public func == <T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
     
     return lhs === rhs
 }
 
-@available(OSX, unavailable)
 public func ~= <T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
     
     return lhs === rhs
 }
 
-@available(OSX, unavailable)
 extension ObjectMonitor: Equatable { }
 
 
 // MARK: - ObjectMonitor: FetchedResultsControllerHandler
 
-@available(OSX, unavailable)
 extension ObjectMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
@@ -371,3 +368,4 @@ private let ObjectMonitorDidUpdateObjectNotification = "ObjectMonitorDidUpdateOb
 
 private let UserInfoKeyObject = "UserInfoKeyObject"
 
+#endif

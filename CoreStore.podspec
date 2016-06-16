@@ -13,7 +13,6 @@ Pod::Spec.new do |s|
     s.tvos.deployment_target = "9.0"
 
     s.source_files = "Sources", "Sources/**/*.{swift}"
-    s.osx.exclude_files = "Sources/Observing/*.{swift}", "Sources/Internal/FetchedResultsControllerDelegate.swift", "Sources/Internal/CoreStoreFetchedResultsController.swift", "Sources/Convenience Helpers/NSFetchedResultsController+Convenience.swift"
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
     s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-D USE_FRAMEWORKS' }

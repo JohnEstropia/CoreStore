@@ -27,6 +27,8 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - CSListMonitor
 
 /**
@@ -34,7 +36,6 @@ import CoreData
  
  - SeeAlso: `ListMonitor`
  */
-@available(OSX, unavailable)
 @objc
 public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
     
@@ -568,3 +569,5 @@ extension ListMonitor: CoreStoreSwiftType {
         return CSListMonitor(self)
     }
 }
+
+#endif

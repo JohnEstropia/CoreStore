@@ -413,7 +413,17 @@ extension Bool: SelectValueResultType {
     
     public static func fromResultObject(result: AnyObject) -> Bool? {
         
-        return (result as? NSNumber)?.boolValue
+        switch result {
+            
+        case let decimal as NSDecimalNumber:
+            return NSNumber(double: decimal.doubleValue).boolValue
+            
+        case let number as NSNumber:
+            return number.boolValue
+            
+        default:
+            return nil
+        }
     }
 }
 

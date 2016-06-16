@@ -27,6 +27,8 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(OSX)
+
 // MARK: - ICloudStore
 
 /**
@@ -502,3 +504,5 @@ private let ICloudUbiquitousStoreWillRemoveContentNotification = "ICloudUbiquito
 private let ICloudUbiquitousStoreDidRemoveContentNotification = "ICloudUbiquitousStoreDidRemoveContentNotification"
 
 private let UserInfoKeyDataStack = "UserInfoKeyDataStack"
+
+#endif

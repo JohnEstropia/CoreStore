@@ -27,6 +27,8 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - CSListObserver
 
 /**
@@ -40,7 +42,6 @@ import CoreData
  
  - SeeAlso: `ListObserver`
  */
-@available(OSX, unavailable)
 @objc
 public protocol CSListObserver: class, AnyObject {
     
@@ -91,7 +92,6 @@ public protocol CSListObserver: class, AnyObject {
  
  - SeeAlso: `ListObjectObserver`
  */
-@available(OSX, unavailable)
 @objc
 public protocol CSListObjectObserver: CSListObserver {
     
@@ -152,7 +152,6 @@ public protocol CSListObjectObserver: CSListObserver {
  
  - SeeAlso: `ListSectionObserver`
  */
-@available(OSX, unavailable)
 @objc
 public protocol CSListSectionObserver: CSListObjectObserver {
     
@@ -176,3 +175,5 @@ public protocol CSListSectionObserver: CSListObjectObserver {
     @objc
     optional func listMonitor(monitor: CSListMonitor, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 }
+
+#endif

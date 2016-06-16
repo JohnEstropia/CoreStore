@@ -27,6 +27,8 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - CSSectionBy
 
 /**
@@ -34,7 +36,6 @@ import CoreData
  
  - SeeAlso: `SectionBy`
  */
-@available(OSX, unavailable)
 @objc
 public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
     
@@ -92,3 +93,5 @@ extension SectionBy: CoreStoreSwiftType {
     
     public typealias ObjectiveCType = CSSectionBy
 }
+
+#endif

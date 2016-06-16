@@ -27,9 +27,10 @@ import Foundation
 import CoreData
 
 
+#if os(iOS) || os(watchOS) || os(tvOS)
+
 // MARK: - CoreStore
 
-@available(OSX, unavailable)
 public extension CoreStore {
     
     /**
@@ -148,3 +149,5 @@ public extension CoreStore {
         self.defaultStack.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
 }
+
+#endif
