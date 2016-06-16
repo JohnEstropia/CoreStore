@@ -36,6 +36,7 @@ public extension BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter source: the object to import values from
+     - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
      - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
      */
     public func importObject<T where T: NSManagedObject, T: ImportableObject>(
@@ -65,6 +66,7 @@ public extension BaseDataTransaction {
      
      - parameter object: the `NSManagedObject` to update
      - parameter source: the object to import values from
+     - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
      */
     public func importObject<T where T: NSManagedObject, T: ImportableObject>(
         object: T,
@@ -91,6 +93,7 @@ public extension BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from
+     - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
      - returns: the array of created `ImportableObject` instances
      */
     public func importObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableObject, S.Generator.Element == T.ImportSource>(
@@ -126,6 +129,7 @@ public extension BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter source: the object to import values from
+     - throws: an `ErrorType` thrown from any of the `ImportableUniqueObject` methods
      - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
      */
     public func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
@@ -172,10 +176,12 @@ public extension BaseDataTransaction {
     
     /**
      Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources.
+     - Warning: While the array returned from `importUniqueObjects(...)` correctly maps to the order of `sourceArray`, the order of objects called with `ImportableUniqueObject` methods is arbitrary. Do not make assumptions that any particular object will be imported ahead or after another object.
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from
      - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
+     - throws: an `ErrorType` thrown from any of the `ImportableUniqueObject` methods
      - returns: the array of created/updated `ImportableUniqueObject` instances
      */
     public func importUniqueObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableUniqueObject, S.Generator.Element == T.ImportSource>(

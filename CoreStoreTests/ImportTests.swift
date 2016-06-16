@@ -740,7 +740,6 @@ class ImportTests: BaseTestDataTestCase {
                 catch _ as TestInsertError {
                     
                     errorExpectation.fulfill()
-                    XCTAssertEqual(transaction.fetchCount(From(TestEntity1)), 7)
                     
                     let object = transaction.fetchOne(From(TestEntity1), Where("testEntityID", isEqualTo: 106))
                     XCTAssertNotNil(object)
