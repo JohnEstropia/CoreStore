@@ -42,6 +42,17 @@ import CoreData
 public struct From<T: NSManagedObject> {
     
     /**
+     The associated `NSManagedObject` entity class
+     */
+    public let entityClass: AnyClass
+    
+    /**
+     The `NSPersistentStore` configuration names to associate objects from.
+     May contain `String`s to pertain to named configurations, or `nil` to pertain to the default configuration
+     */
+    public let configurations: [String?]?
+    
+    /**
      Initializes a `From` clause.
      ```
      let people = transaction.fetchAll(From<MyPersonEntity>())
@@ -49,7 +60,7 @@ public struct From<T: NSManagedObject> {
      */
     public init(){
         
-        self.init(entityClass: T.self)
+        self.init(entityClass: T.self, configurations: nil)
     }
     
     /**
@@ -58,11 +69,11 @@ public struct From<T: NSManagedObject> {
      let people = transaction.fetchAll(From<MyPersonEntity>())
      ```
      
-     - parameter entity: the `NSManagedObject` type to be created
+     - parameter entity: the associated `NSManagedObject` type
      */
     public init(_ entity: T.Type) {
         
-        self.init(entityClass: entity)
+        self.init(entityClass: entity, configurations: nil)
     }
     
     /**
@@ -71,7 +82,7 @@ public struct From<T: NSManagedObject> {
      let people = transaction.fetchAll(From<MyPersonEntity>())
      ```
      
-     - parameter entityClass: the `NSManagedObject` class type to be created
+     - parameter entityClass: the associated `NSManagedObject` entity class
      */
     public init(_ entityClass: AnyClass) {
         
@@ -79,7 +90,7 @@ public struct From<T: NSManagedObject> {
             entityClass is T.Type,
             "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
         )
-        self.init(entityClass: entityClass)
+        self.init(entityClass: entityClass, configurations: nil)
     }
     
     /**
@@ -178,9 +189,6 @@ public struct From<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal let entityClass: AnyClass
-    internal let dumpInfo: (key: String, value: Any)?
-    
     @warn_unused_result
     internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext, applyAffectedStores: Bool = true) -> Bool {
         
@@ -211,7 +219,7 @@ public struct From<T: NSManagedObject> {
         
         return From<NSManagedObject>(
             entityClass: self.entityClass,
-            dumpInfo: self.dumpInfo,
+            configurations: self.configurations,
             findPersistentStores: self.findPersistentStores
         )
     }
@@ -221,197 +229,145 @@ public struct From<T: NSManagedObject> {
     
     private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
     
-    private init(entityClass: AnyClass) {
+    private init(entityClass: AnyClass, configurations: [String?]?) {
         
-        self.init(
-            entityClass: entityClass,
-            dumpInfo: nil,
-            findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
-                
-                return context.parentStack?.persistentStoresForEntityClass(entityClass)
-            }
-        )
-    }
-    
-    private init(entityClass: AnyClass, configurations: [String?]) {
-        
-        let configurationsSet = Set(configurations.map { $0 ?? Into.defaultConfigurationName })
-        self.init(
-            entityClass: entityClass,
-            dumpInfo: ("configurations", configurations),
-            findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
+        self.entityClass = entityClass
+        self.configurations = configurations
+        if let configurations = configurations {
+            
+            let configurationsSet = Set(configurations.map { $0 ?? Into.defaultConfigurationName })
+            self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
                 return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
                     
                     return configurationsSet.contains($0.configurationName)
                 }
             }
-        )
-    }
-    
-    private init(entityClass: AnyClass, storeURLs: [NSURL]) {
-        
-        let storeURLsSet = Set(storeURLs)
-        self.init(
-            entityClass: entityClass,
-            dumpInfo: ("storeURLs", storeURLs),
-            findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
+        }
+        else {
+            
+            self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
-                return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
-                    
-                    return $0.URL != nil && storeURLsSet.contains($0.URL!)
-                }
+                return context.parentStack?.persistentStoresForEntityClass(entityClass)
             }
-        )
+        }
     }
     
-    private init(entityClass: AnyClass, persistentStores: [NSPersistentStore]) {
-        
-        let persistentStores = Set(persistentStores)
-        self.init(
-            entityClass: entityClass,
-            dumpInfo: ("persistentStores", persistentStores),
-            findPersistentStores: { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
-                
-                return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
-                    
-                    return persistentStores.contains($0)
-                }
-            }
-        )
-    }
-    
-    private init(entityClass: AnyClass, dumpInfo: (key: String, value: Any)?, findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?) {
+    private init(entityClass: AnyClass, configurations: [String?]?, findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?) {
         
         self.entityClass = entityClass
-        self.dumpInfo = dumpInfo
+        self.configurations = configurations
         self.findPersistentStores = findPersistentStores
     }
     
     
-    // MARK: Deprecated
+    // MARK: Obsolete
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
-        self.init(entityClass: T.self, storeURLs: [storeURL] + otherStoreURLs)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ storeURLs: [NSURL]) {
         
-        self.init(entityClass: T.self, storeURLs: storeURLs)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ entity: T.Type, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
-        self.init(entityClass: entity, storeURLs: [storeURL] + otherStoreURLs)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ entity: T.Type, _ storeURLs: [NSURL]) {
         
-        self.init(entityClass: entity, storeURLs: storeURLs)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ entityClass: AnyClass, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
         
-        CoreStore.assert(
-            entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
-        )
-        self.init(entityClass: entityClass, storeURLs: [storeURL] + otherStoreURLs)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ entityClass: AnyClass, _ storeURLs: [NSURL]) {
         
-        CoreStore.assert(
-            entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
-        )
-        self.init(entityClass: entityClass, storeURLs: storeURLs)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
-        self.init(entityClass: T.self, persistentStores: [persistentStore] + otherPersistentStores)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ persistentStores: [NSPersistentStore]) {
         
-        self.init(entityClass: T.self, persistentStores: persistentStores)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ entity: T.Type, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
-        self.init(entityClass: entity, persistentStores: [persistentStore] + otherPersistentStores)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ entity: T.Type, _ persistentStores: [NSPersistentStore]) {
         
-        self.init(entityClass: entity, persistentStores: persistentStores)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ entityClass: AnyClass, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
         
-        CoreStore.assert(
-            entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
-        )
-        self.init(entityClass: entityClass, persistentStores: [persistentStore] + otherPersistentStores)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
     
     /**
-     Deprecated. Use initializers that accept configuration names.
+     Obsolete. Use initializers that accept configuration names.
      */
-    @available(*, deprecated=2.0.0, message="Use initializers that accept configuration names.")
+    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
     public init(_ entityClass: AnyClass, _ persistentStores: [NSPersistentStore]) {
         
-        CoreStore.assert(
-            entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
-        )
-        self.init(entityClass: entityClass, persistentStores: persistentStores)
+        CoreStore.abort("Use initializers that accept configuration names.")
     }
 }

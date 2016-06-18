@@ -412,10 +412,11 @@ extension Bool: SelectValueResultType {
     }
     
     public static func fromResultObject(result: AnyObject) -> Bool? {
-        
         switch result {
             
         case let decimal as NSDecimalNumber:
+            // iOS: NSDecimalNumber(string: "0.5").boolValue // true
+            // OSX: NSDecimalNumber(string: "0.5").boolValue // false
             return NSNumber(double: decimal.doubleValue).boolValue
             
         case let number as NSNumber:

@@ -38,6 +38,32 @@ import CoreData
 public final class CSFrom: NSObject, CoreStoreObjectiveCType {
     
     /**
+     The associated `NSManagedObject` entity class
+     */
+    @objc
+    public var entityClass: AnyClass {
+        
+        return self.bridgeToSwift.entityClass
+    }
+    
+    /**
+     The `NSPersistentStore` configuration names to associate objects from.
+     May contain `NSString` instances to pertain to named configurations, or `NSNull` to pertain to the default configuration
+     */
+    @objc
+    public var configurations: [AnyObject]? {
+        
+        return self.bridgeToSwift.configurations?.map {
+            
+            switch $0 {
+                
+            case nil: return NSNull()
+            case let string as NSString: return string
+            }
+        }
+    }
+    
+    /**
      Initializes a `CSFrom` clause with the specified entity class.
      ```
      MyPersonEntity *people = [transaction fetchAllFrom:[CSFrom entityClass:[MyPersonEntity class]]];
@@ -58,14 +84,24 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      MyPersonEntity *people = [transaction fetchAllFrom:[CSFrom entityClass:[MyPersonEntity class] configuration:@"Configuration1"]];
      ```
      
-     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      - returns: a `CSFrom` clause with the specified configurations
      */
     @objc
-    public static func entityClass(entityClass: AnyClass, configuration: String?) -> CSFrom {
+    public static func entityClass(entityClass: AnyClass, configuration: AnyObject) -> CSFrom {
         
-        return self.init(From(entityClass, configuration))
+        switch configuration {
+            
+        case let string as String:
+            return self.init(From(entityClass, string))
+            
+        case is NSNull:
+            return self.init(From(entityClass, nil))
+            
+        default:
+            CoreStore.abort("The configuration argument only accepts NSString and NSNull values")
+        }
     }
     
     /**
@@ -81,7 +117,22 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
     @objc
     public static func entityClass(entityClass: AnyClass, configurations: [AnyObject]) -> CSFrom {
         
-        return self.init(From(entityClass, configurations.map { $0 is NSNull ? nil : ($0 as! String) }))
+        var arguments = [String?]()
+        for configuration in configurations {
+            
+            switch configuration {
+                
+            case let string as String:
+                arguments.append(string)
+                
+            case is NSNull:
+                arguments.append(nil)
+                
+            default:
+                CoreStore.abort("The configurations argument only accepts NSString and NSNull values")
+            }
+        }
+        return self.init(From(entityClass, arguments))
     }
     
     

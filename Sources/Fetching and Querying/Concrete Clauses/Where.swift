@@ -51,14 +51,9 @@ public prefix func !(clause: Where) -> Where {
 public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     
     /**
-     Initializes a `Where` clause with an `NSPredicate`
-     
-     - parameter predicate: the `NSPredicate` for the fetch or query
+     The `NSPredicate` for the fetch or query
      */
-    public init(_ predicate: NSPredicate) {
-        
-        self.predicate = predicate
-    }
+    public let predicate: NSPredicate
     
     /**
      Initializes a `Where` clause with a predicate that always evaluates to `true`
@@ -135,7 +130,15 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
         self.init(NSPredicate(format: "\(keyPath) IN %@", Array(list) as NSArray))
     }
     
-    public let predicate: NSPredicate
+    /**
+     Initializes a `Where` clause with an `NSPredicate`
+     
+     - parameter predicate: the `NSPredicate` for the fetch or query
+     */
+    public init(_ predicate: NSPredicate) {
+        
+        self.predicate = predicate
+    }
     
     
     // MARK: FetchClause, QueryClause, DeleteClause

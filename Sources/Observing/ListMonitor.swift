@@ -159,6 +159,17 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     }
     
     /**
+     Checks if the `ListMonitor` has at least one section
+     
+     - returns: `true` if at least one section exists, `false` otherwise
+     */
+    @warn_unused_result
+    public func hasSections() -> Bool {
+        
+        return self.sections().count > 0
+    }
+    
+    /**
      Checks if the `ListMonitor` has at least one object in any section.
      
      - returns: `true` if at least one object in any section exists, `false` otherwise

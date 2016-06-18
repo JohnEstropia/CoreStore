@@ -35,14 +35,9 @@ import CoreData
 public struct GroupBy: QueryClause, Hashable {
     
     /**
-     Initializes a `GroupBy` clause with a list of key path strings
-     
-     - parameter keyPaths: a list of key path strings to group results with
+     The list of key path strings to group results with
      */
-    public init(_ keyPaths: [KeyPath]) {
-        
-        self.keyPaths = keyPaths
-    }
+    public let keyPaths: [KeyPath]
     
     /**
      Initializes a `GroupBy` clause with an empty list of key path strings
@@ -55,6 +50,16 @@ public struct GroupBy: QueryClause, Hashable {
     /**
      Initializes a `GroupBy` clause with a list of key path strings
      
+     - parameter keyPaths: a list of key path strings to group results with
+     */
+    public init(_ keyPaths: [KeyPath]) {
+        
+        self.keyPaths = keyPaths
+    }
+    
+    /**
+     Initializes a `GroupBy` clause with a list of key path strings
+     
      - parameter keyPath: a key path string to group results with
      - parameter keyPaths: a series of key path strings to group results with
      */
@@ -62,8 +67,6 @@ public struct GroupBy: QueryClause, Hashable {
         
         self.init([keyPath] + keyPaths)
     }
-    
-    public let keyPaths: [KeyPath]
     
     
     // MARK: QueryClause

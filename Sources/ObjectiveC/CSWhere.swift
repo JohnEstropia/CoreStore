@@ -38,15 +38,12 @@ import CoreData
 public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
     
     /**
-     Initializes a `CSWhere` clause with an `NSPredicate`
-     
-     - parameter predicate: the `NSPredicate` for the fetch or query
-     - returns: a `CSWhere` clause with an `NSPredicate`
+     The internal `NSPredicate` instance for the `Where` clause
      */
     @objc
-    public static func predicate(predicate: NSPredicate) -> CSWhere {
+    public var predicate: NSPredicate {
         
-        return self.init(Where(predicate))
+        return self.bridgeToSwift.predicate
     }
 
     /**
@@ -98,6 +95,18 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     public static func keyPath(keyPath: KeyPath, isMemberOf list: [NSObject]) -> CSWhere {
         
         return self.init(Where(keyPath, isMemberOf: list))
+    }
+    
+    /**
+     Initializes a `CSWhere` clause with an `NSPredicate`
+     
+     - parameter predicate: the `NSPredicate` for the fetch or query
+     - returns: a `CSWhere` clause with an `NSPredicate`
+     */
+    @objc
+    public static func predicate(predicate: NSPredicate) -> CSWhere {
+        
+        return self.init(Where(predicate))
     }
     
     

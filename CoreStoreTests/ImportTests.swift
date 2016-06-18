@@ -349,7 +349,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            self.prepareTestDataForStack(stack, configurations: [nil])
+            self.prepareTestDataForStack(stack)
             
             stack.beginSynchronous { (transaction) in
                 
@@ -419,7 +419,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            self.prepareTestDataForStack(stack, configurations: [nil])
+            self.prepareTestDataForStack(stack)
             
             stack.beginSynchronous { (transaction) in
                 
@@ -519,7 +519,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            self.prepareTestDataForStack(stack, configurations: [nil])
+            self.prepareTestDataForStack(stack)
             
             stack.beginSynchronous { (transaction) in
                 
@@ -598,7 +598,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            self.prepareTestDataForStack(stack, configurations: [nil])
+            self.prepareTestDataForStack(stack)
             
             stack.beginSynchronous { (transaction) in
                 
@@ -656,7 +656,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            self.prepareTestDataForStack(stack, configurations: [nil])
+            self.prepareTestDataForStack(stack)
             
             stack.beginSynchronous { (transaction) in
                 
@@ -818,7 +818,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            self.prepareTestDataForStack(stack, configurations: [nil])
+            self.prepareTestDataForStack(stack)
             
             stack.beginSynchronous { (transaction) in
                 

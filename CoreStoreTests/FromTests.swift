@@ -40,45 +40,35 @@ final class FromTests: BaseTestCase {
             
             let from = From()
             XCTAssert(from.entityClass === NSManagedObject.self)
-            XCTAssertNil(from.dumpInfo)
+            XCTAssertNil(from.configurations)
         }
         do {
             
             let from = From<TestEntity1>()
             XCTAssert(from.entityClass === TestEntity1.self)
-            XCTAssertNil(from.dumpInfo)
+            XCTAssertNil(from.configurations)
         }
         do {
             
             let from = From<TestEntity1>("Config1")
             XCTAssert(from.entityClass === TestEntity1.self)
-            
-            let dumpInfo = from.dumpInfo
-            XCTAssertEqual(dumpInfo?.key, "configurations")
-            
-            let configurations = dumpInfo?.value as! [String?]
-            XCTAssertEqual(configurations.count, 1)
-            XCTAssertEqual(configurations[0], "Config1")
+            XCTAssertEqual(from.configurations?.count, 1)
+            XCTAssertEqual(from.configurations?[0], "Config1")
         }
         do {
             
             let from = From<TestEntity1>(nil, "Config1")
             XCTAssert(from.entityClass === TestEntity1.self)
-            
-            let dumpInfo = from.dumpInfo
-            XCTAssertEqual(dumpInfo?.key, "configurations")
-            
-            let configurations = dumpInfo?.value as! [String?]
-            XCTAssertEqual(configurations.count, 2)
-            XCTAssertEqual(configurations[0], nil)
-            XCTAssertEqual(configurations[1], "Config1")
+            XCTAssertEqual(from.configurations?.count, 2)
+            XCTAssertEqual(from.configurations?[0], nil)
+            XCTAssertEqual(from.configurations?[1], "Config1")
         }
     }
     
     @objc
     dynamic func test_ThatFromClauses_ApplyToFetchRequestsCorrectlyForDefaultConfigurations() {
         
-        self.prepareStack(configurations: [nil]) { (dataStack) in
+        self.prepareStack { (dataStack) in
             
             do {
                 

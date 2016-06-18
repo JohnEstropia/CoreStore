@@ -198,9 +198,9 @@ extension From: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     public var coreStoreDumpString: String {
         
         var info: DumpInfo = [("entityClass", self.entityClass)]
-        if let extraInfo = self.dumpInfo {
+        if let configurations = self.configurations {
             
-            info.append(extraInfo)
+            info.append(("configurations", configurations))
         }
         return createFormattedString(
             "(", ")",

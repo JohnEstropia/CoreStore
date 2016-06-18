@@ -24,14 +24,17 @@
 //
 
 #import "BridgingTests.h"
+#import <CoreStore/CoreStore.h>
 #import <CoreStore/CoreStore-Swift.h>
+#import "CoreStoreTests-Swift.h"
 
 @import CoreData;
 
+// MARK: - BridgingTests
 
 @implementation BridgingTests
 
-- (void)testFlags {
+- (void)test_ThatFlags_HaveCorrectValues {
     
     XCTAssertEqual(CSLocalStorageOptionsNone, 0);
     XCTAssertEqual(CSLocalStorageOptionsRecreateStoreOnModelMismatch, 1);
@@ -39,7 +42,48 @@
     XCTAssertEqual(CSLocalStorageOptionsAllowSynchronousLightweightMigration, 4);
 }
 
-- (void)testDataStack {
+- (void)test_ThatFromClauses_BridgeCorrectly {
+    
+    {
+        CSFrom *from = From([TestEntity1 class]);
+        XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
+        XCTAssertNil(from.configurations);
+    }
+    {
+        CSFrom *from = From([TestEntity1 class], @[[NSNull null], @"Config2"]);
+        XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
+        
+        NSArray *configurations = @[[NSNull null], @"Config2"];
+        XCTAssertEqualObjects(from.configurations, configurations);
+    }
+}
+
+- (void)test_ThatWhereClauses_BridgeCorrectly {
+    
+    {
+        CSWhere *where = Where(@"%K == %@", @"key", @"value");
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"key", @"value"];
+        XCTAssertEqualObjects(where.predicate, predicate);
+    }
+    {
+        CSWhere *where = Where(YES);
+        NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
+        XCTAssertEqualObjects(where.predicate, predicate);
+    }
+    {
+        CSWhere *where = Where([NSPredicate predicateWithFormat:@"%K == %@", @"key", @"value"]);
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"key", @"value"];
+        XCTAssertEqualObjects(where.predicate, predicate);
+    }
+}
+
+- (void)test_ThatGroupByClauses_BridgeCorrectly {
+    
+    CSGroupBy *groupBy = GroupBy(@[@"key"]);
+    XCTAssertEqualObjects(groupBy.keyPaths, @[@"key"]);
+}
+
+- (void)test_ThatDataStacks_BridgeCorrectly {
     
     CSDataStack *dataStack = [[CSDataStack alloc]
                               initWithModelName:@"Model"

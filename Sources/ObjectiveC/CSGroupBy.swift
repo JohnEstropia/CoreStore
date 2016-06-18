@@ -38,6 +38,14 @@ import CoreData
 public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
     
     /**
+     The list of key path strings to group results with
+     */
+    public var keyPaths: [KeyPath] {
+        
+        return self.bridgeToSwift.keyPaths
+    }
+    
+    /**
      Initializes a `CSGroupBy` clause with a list of key path strings
      
      - parameter keyPaths: a list of key path strings to group results with

@@ -40,7 +40,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            self.prepareTestDataForStack(stack, configurations: [nil])
+            self.prepareTestDataForStack(stack)
             
             guard let object = stack.fetchOne(
                 From(TestEntity1),
@@ -63,6 +63,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                 object: observer,
                 handler: { (note) -> Bool in
                     
+                    XCTAssertEqual(events, 0)
                     XCTAssertEqual(
                         (note.userInfo ?? [:]),
                         ["object": object] as NSDictionary
@@ -79,6 +80,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                 object: observer,
                 handler: { (note) -> Bool in
                     
+                    XCTAssertEqual(events, 1)
                     XCTAssertEqual(
                         (note.userInfo ?? [:]),
                         [
@@ -89,7 +91,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                                     "testString"
                                 ]
                             )
-                            ] as NSDictionary
+                        ] as NSDictionary
                     )
                     let object = note.userInfo?["object"] as? TestEntity1
                     XCTAssertEqual(object?.testNumber, NSNumber(integer: 10))
@@ -135,7 +137,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            self.prepareTestDataForStack(stack, configurations: [nil])
+            self.prepareTestDataForStack(stack)
             
             guard let object = stack.fetchOne(
                 From(TestEntity1),
@@ -158,6 +160,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                 object: observer,
                 handler: { (note) -> Bool in
                     
+                    XCTAssertEqual(events, 0)
                     XCTAssertEqual(
                         (note.userInfo ?? [:]),
                         ["object": object] as NSDictionary
