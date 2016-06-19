@@ -50,22 +50,22 @@ public struct GroupBy: QueryClause, Hashable {
     /**
      Initializes a `GroupBy` clause with a list of key path strings
      
-     - parameter keyPaths: a list of key path strings to group results with
-     */
-    public init(_ keyPaths: [KeyPath]) {
-        
-        self.keyPaths = keyPaths
-    }
-    
-    /**
-     Initializes a `GroupBy` clause with a list of key path strings
-     
      - parameter keyPath: a key path string to group results with
      - parameter keyPaths: a series of key path strings to group results with
      */
     public init(_ keyPath: KeyPath, _ keyPaths: KeyPath...) {
         
         self.init([keyPath] + keyPaths)
+    }
+    
+    /**
+     Initializes a `GroupBy` clause with a list of key path strings
+     
+     - parameter keyPaths: a list of key path strings to group results with
+     */
+    public init(_ keyPaths: [KeyPath]) {
+        
+        self.keyPaths = keyPaths
     }
     
     

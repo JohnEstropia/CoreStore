@@ -42,16 +42,16 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      ```
      NSString *fullName = [CSCoreStore
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
-         select:[CSSelect stringForTerm:[CSSelectTerm attribute:@"fullName"]]
+         select:CSSelectString(CSAttribute(@"fullname"))
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
      
      - parameter keyPath: the attribute name
-     - returns: a `CSSelectTerm` to a `CSSelect` clause for querying an entity attribute
      */
-    public static func attribute(keyPath: KeyPath) -> CSSelectTerm {
+    @objc
+    public convenience init(keyPath: KeyPath) {
 
-        return self.init(.Attribute(keyPath))
+        self.init(.Attribute(keyPath))
     }
 
     /**
@@ -66,6 +66,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - parameter `as`: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the average value of an attribute
      */
+    @objc
     public static func average(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
         
         return self.init(.Average(keyPath, As: alias))
@@ -83,6 +84,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for a count query
      */
+    @objc
     public static func count(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
         
         return self.init(.Count(keyPath, As: alias))
@@ -100,6 +102,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the maximum value for an attribute
      */
+    @objc
     public static func maximum(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
         
         return self.init(.Maximum(keyPath, As: alias))
@@ -117,6 +120,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the minimum value for an attribute
      */
+    @objc
     public static func minimum(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
         
         return self.init(.Minimum(keyPath, As: alias))
@@ -134,6 +138,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the sum value for an attribute
      */
+    @objc
     public static func sum(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
         
         return self.init(.Sum(keyPath, As: alias))
@@ -152,15 +157,12 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
      */
-    public static func objectIDAs(alias: KeyPath? = nil) -> SelectTerm {
+    @objc
+    public static func objectIDAs(alias: KeyPath? = nil) -> CSSelectTerm {
         
-        return ._Identity(
-            alias: alias ?? "objectID",
-            nativeType: .ObjectIDAttributeType
-        )
+        return self.init(.ObjectID(As: alias))
     }
 
-    
     
     // MARK: NSObject
     
@@ -214,100 +216,97 @@ public final class CSSelect: NSObject {
     /**
      Creates a `CSSelect` clause for querying `NSNumber` values.
      ```
-     NSNumber *maximumAge = [CSCoreStore
-         queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
-         select:[CSSelect numberForTerm:[CSSelectTerm maximum:@"age" as:nil]]];
+     NSNumber *maxAge = [CSCoreStore
+        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        select:CSSelectNumber(CSAggregateMax(@"age"))
+        // ...
      ```
      
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
-     - returns: a `CSSelect` clause for querying an entity attribute
      */
-    public static func numberForTerm(term: CSSelectTerm) -> CSSelect {
+    public convenience init(numberTerm: CSSelectTerm) {
         
-        return self.init(Select<NSNumber>(term.bridgeToSwift))
+        self.init(Select<NSNumber>(numberTerm.bridgeToSwift))
     }
     
     /**
      Creates a `CSSelect` clause for querying `NSDecimalNumber` values.
      ```
-     NSNumber *averageAge = [CSCoreStore
-         queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
-         select:[CSSelect decimalNumberForTerm:[CSSelectTerm average:@"age" as:nil]]];
+     NSDecimalNumber *averagePrice = [CSCoreStore
+        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        select:CSSelectDecimal(CSAggregateAverage(@"price"))
+        // ...
      ```
      
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
-     - returns: a `CSSelect` clause for querying an entity attribute
      */
-    public static func decimalNumberForTerm(term: CSSelectTerm) -> CSSelect {
+    public convenience init(decimalTerm: CSSelectTerm) {
         
-        return self.init(Select<NSDecimalNumber>(term.bridgeToSwift))
+        self.init(Select<NSDecimalNumber>(decimalTerm.bridgeToSwift))
     }
     
     /**
      Creates a `CSSelect` clause for querying `NSString` values.
      ```
-     NSString *fullName = [CSCoreStore
-         queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
-         select:[CSSelect stringForTerm:[CSSelectTerm attribute:@"fullName"]]
-         fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
+     NSString *fullname = [CSCoreStore
+        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        select:CSSelectString(CSAttribute(@"fullname"))
+        // ...
      ```
      
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
-     - returns: a `CSSelect` clause for querying an entity attribute
      */
-    public static func stringForTerm(term: CSSelectTerm) -> CSSelect {
+    public convenience init(stringTerm: CSSelectTerm) {
         
-        return self.init(Select<NSString>(term.bridgeToSwift))
+        self.init(Select<NSString>(stringTerm.bridgeToSwift))
     }
     
     /**
      Creates a `CSSelect` clause for querying `NSDate` values.
      ```
-     NSDate *lastUpdatedDate = [CSCoreStore
-         queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
-         select:[CSSelect dateForTerm:[CSSelectTerm maximum:@"updatedDate" as:nil]]];
+     NSDate *lastUpdate = [CSCoreStore
+        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        select:CSSelectDate(CSAggregateMax(@"updatedDate"))
+        // ...
      ```
      
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
-     - returns: a `CSSelect` clause for querying an entity attribute
      */
-    public static func dateForTerm(term: CSSelectTerm) -> CSSelect {
+    public convenience init(dateTerm: CSSelectTerm) {
         
-        return self.init(Select<NSDate>(term.bridgeToSwift))
+        self.init(Select<NSDate>(dateTerm.bridgeToSwift))
     }
     
     /**
      Creates a `CSSelect` clause for querying `NSData` values.
      ```
      NSData *imageData = [CSCoreStore
-         queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
-         select:[CSSelect dataForTerm:[CSSelectTerm attribute:@"imageData" as:nil]]
-         fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
+        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        select:CSSelectData(CSAttribute(@"imageData"))
+        // ...
      ```
      
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
-     - returns: a `CSSelect` clause for querying an entity attribute
      */
-    public static func dataForTerm(term: CSSelectTerm) -> CSSelect {
+    public convenience init(dataTerm: CSSelectTerm) {
         
-        return self.init(Select<NSData>(term.bridgeToSwift))
+        self.init(Select<NSData>(dataTerm.bridgeToSwift))
     }
     
     /**
      Creates a `CSSelect` clause for querying `NSManagedObjectID` values.
      ```
-     NSManagedObjectID *objectIDForOldest = [CSCoreStore
-         queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
-         select:[CSSelect objectID]
-         fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
+     NSManagedObjectID *objectID = [CSCoreStore
+        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        select:CSSelectObjectID()
+        // ...
      ```
      
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
-     - returns: a `CSSelect` clause for querying an entity attribute
      */
-    public static func objectID() -> CSSelect {
+    public convenience init(objectIDTerm: ()) {
         
-        return self.init(Select<NSManagedObjectID>(.ObjectID()))
+        self.init(Select<NSManagedObjectID>(.ObjectID()))
     }
     
     /**

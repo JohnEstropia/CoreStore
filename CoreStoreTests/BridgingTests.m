@@ -45,12 +45,26 @@
 - (void)test_ThatFromClauses_BridgeCorrectly {
     
     {
-        CSFrom *from = From([TestEntity1 class]);
+        CSFrom *from = CSFromCreate([TestEntity1 class]);
         XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
         XCTAssertNil(from.configurations);
     }
     {
-        CSFrom *from = From([TestEntity1 class], @[[NSNull null], @"Config2"]);
+        CSFrom *from = CSFromCreate([TestEntity1 class], [NSNull null]);
+        XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
+        
+        NSArray *configurations = @[[NSNull null]];
+        XCTAssertEqualObjects(from.configurations, configurations);
+    }
+    {
+        CSFrom *from = CSFromCreate([TestEntity1 class], @"Config1");
+        XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
+        
+        NSArray *configurations = @[@"Config1"];
+        XCTAssertEqualObjects(from.configurations, configurations);
+    }
+    {
+        CSFrom *from = CSFromCreate([TestEntity1 class], @[[NSNull null], @"Config2"]);
         XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
         
         NSArray *configurations = @[[NSNull null], @"Config2"];
@@ -61,26 +75,63 @@
 - (void)test_ThatWhereClauses_BridgeCorrectly {
     
     {
-        CSWhere *where = Where(@"%K == %@", @"key", @"value");
+        CSWhere *where = CSWhereFormat(@"%K == %@", @"key", @"value");
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"key", @"value"];
         XCTAssertEqualObjects(where.predicate, predicate);
     }
     {
-        CSWhere *where = Where(YES);
+        CSWhere *where = CSWhereValue(YES);
         NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
         XCTAssertEqualObjects(where.predicate, predicate);
     }
     {
-        CSWhere *where = Where([NSPredicate predicateWithFormat:@"%K == %@", @"key", @"value"]);
+        CSWhere *where = CSWherePredicate([NSPredicate predicateWithFormat:@"%K == %@", @"key", @"value"]);
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"key", @"value"];
         XCTAssertEqualObjects(where.predicate, predicate);
     }
 }
 
+- (void)test_ThatOrderByClauses_BridgeCorrectly {
+    
+    {
+        CSOrderBy *orderBy = CSOrderBySortKey(CSSortAscending(@"key"));
+        XCTAssertEqualObjects(orderBy.sortDescriptors, @[[NSSortDescriptor sortDescriptorWithKey:@"key" ascending:YES]]);
+    }
+    {
+        CSOrderBy *orderBy = CSOrderBySortKey(CSSortDescending(@"key"));
+        XCTAssertEqualObjects(orderBy.sortDescriptors, @[[NSSortDescriptor sortDescriptorWithKey:@"key" ascending:NO]]);
+    }
+    {
+        CSOrderBy *orderBy = CSOrderBySortKeys(CSSortAscending(@"key1"), CSSortDescending(@"key2"), nil);
+        NSArray *sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"key1" ascending:YES],
+                                     [NSSortDescriptor sortDescriptorWithKey:@"key2" ascending:NO]];
+        XCTAssertEqualObjects(orderBy.sortDescriptors, sortDescriptors);
+    }
+}
+
 - (void)test_ThatGroupByClauses_BridgeCorrectly {
     
-    CSGroupBy *groupBy = GroupBy(@[@"key"]);
-    XCTAssertEqualObjects(groupBy.keyPaths, @[@"key"]);
+    {
+        CSGroupBy *groupBy = CSGroupByKeyPath(@"key");
+        XCTAssertEqualObjects(groupBy.keyPaths, @[@"key"]);
+    }
+    {
+        CSGroupBy *groupBy = CSGroupByKeyPaths(@[@"key1", @"key2"]);
+        
+        NSArray *keyPaths = @[@"key1", @"key2"];
+        XCTAssertEqualObjects(groupBy.keyPaths, keyPaths);
+    }
+}
+
+- (void)test_ThatTweakClauses_BridgeCorrectly {
+    
+    CSTweak *tweak = CSTweakCreate(^(NSFetchRequest * _Nonnull fetchRequest) {
+        
+        fetchRequest.fetchLimit = 100;
+    });
+    NSFetchRequest *request = [NSFetchRequest new];
+    tweak.block(request);
+    XCTAssertEqual(request.fetchLimit, 100);
 }
 
 - (void)test_ThatDataStacks_BridgeCorrectly {
@@ -93,6 +144,9 @@
     
     [CSCoreStore setDefaultStack:dataStack];
     XCTAssertTrue([dataStack isEqual:[CSCoreStore defaultStack]]);
+}
+
+- (void)test_ThatStorages_BridgeCorrectly {
     
     NSError *memoryError;
     CSInMemoryStore *memoryStorage = [CSCoreStore

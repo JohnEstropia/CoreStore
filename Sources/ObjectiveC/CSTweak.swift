@@ -38,15 +38,24 @@ import CoreData
 public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
     
     /**
-     Initializes a `CSTweak` clause with a closure where the `NSFetchRequest` may be configured.
-     
-     - parameter customization: a list of key path strings to group results with
-     - returns: a `CSTweak` clause with a closure where the `NSFetchRequest` may be configured
+     The block to customize the `NSFetchRequest`
      */
     @objc
-    public static func customization(customization: (fetchRequest: NSFetchRequest) -> Void) -> CSTweak {
+    public var block: (fetchRequest: NSFetchRequest) -> Void {
         
-        return self.init(Tweak(customization))
+        return self.bridgeToSwift.closure
+    }
+    
+    /**
+     Initializes a `CSTweak` clause with a closure where the `NSFetchRequest` may be configured.
+     
+     - Important: `CSTweak`'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions. Also, some utilities (such as `CSListMonitor`s) may keep `CSFetchClause`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
+     - parameter block: the block to customize the `NSFetchRequest`
+     */
+    @objc
+    public convenience init(block: (fetchRequest: NSFetchRequest) -> Void) {
+        
+        self.init(Tweak(block))
     }
     
     

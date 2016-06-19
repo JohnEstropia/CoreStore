@@ -70,14 +70,9 @@ public enum SortKey {
 public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     
     /**
-     Initializes a `OrderBy` clause with a list of sort descriptors
-     
-     - parameter sortDescriptors: a series of `NSSortDescriptor`s
+     The list of sort descriptors
      */
-    public init(_ sortDescriptors: [NSSortDescriptor]) {
-        
-        self.sortDescriptors = sortDescriptors
-    }
+    public let sortDescriptors: [NSSortDescriptor]
     
     /**
      Initializes a `OrderBy` clause with an empty list of sort descriptors
@@ -95,6 +90,16 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     public init(_ sortDescriptor: NSSortDescriptor) {
         
         self.init([sortDescriptor])
+    }
+    
+    /**
+     Initializes a `OrderBy` clause with a list of sort descriptors
+     
+     - parameter sortDescriptors: a series of `NSSortDescriptor`s
+     */
+    public init(_ sortDescriptors: [NSSortDescriptor]) {
+        
+        self.sortDescriptors = sortDescriptors
     }
     
     /**
@@ -129,8 +134,6 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
         
         self.init([sortKey] + sortKeys)
     }
-    
-    public let sortDescriptors: [NSSortDescriptor]
     
     
     // MARK: FetchClause, QueryClause, DeleteClause

@@ -66,38 +66,36 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
     /**
      Initializes a `CSFrom` clause with the specified entity class.
      ```
-     MyPersonEntity *people = [transaction fetchAllFrom:[CSFrom entityClass:[MyPersonEntity class]]];
+     MyPersonEntity *people = [transaction fetchAllFrom:CSFromCreate([MyPersonEntity class])];
      ```
      
      - parameter entityClass: the `NSManagedObject` class type to be created
-     - returns: a `CSFrom` clause with the specified entity class
      */
     @objc
-    public static func entityClass(entityClass: AnyClass) -> CSFrom {
+    public convenience init(entityClass: AnyClass) {
         
-        return self.init(From(entityClass))
+        self.init(From(entityClass))
     }
     
     /**
      Initializes a `CSFrom` clause with the specified configurations.
      ```
-     MyPersonEntity *people = [transaction fetchAllFrom:[CSFrom entityClass:[MyPersonEntity class] configuration:@"Configuration1"]];
+     MyPersonEntity *people = [transaction fetchAllFrom:
+        CSFromCreate([MyPersonEntity class], @"Config1")];
      ```
      
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
-     - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
-     - returns: a `CSFrom` clause with the specified configurations
      */
     @objc
-    public static func entityClass(entityClass: AnyClass, configuration: AnyObject) -> CSFrom {
+    public convenience init(entityClass: AnyClass, configuration: AnyObject) {
         
         switch configuration {
             
         case let string as String:
-            return self.init(From(entityClass, string))
+            self.init(From(entityClass, string))
             
         case is NSNull:
-            return self.init(From(entityClass, nil))
+            self.init(From(entityClass, nil))
             
         default:
             CoreStore.abort("The configuration argument only accepts NSString and NSNull values")
@@ -107,15 +105,16 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
     /**
      Initializes a `CSFrom` clause with the specified configurations.
      ```
-     MyPersonEntity *people = [transaction fetchAllFrom:[CSFrom entityClass:[MyPersonEntity class] configurations:@[[NSNull null], @"Configuration1"]]];
+     MyPersonEntity *people = [transaction fetchAllFrom:
+        CSFromCreate([MyPersonEntity class],
+                     @[[NSNull null], @"Config1"])];
      ```
      
      - parameter entity: the associated `NSManagedObject` entity class
-     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
-     - returns: a `CSFrom` clause with the specified configurations
+     - parameter configurations: an array of the `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
      */
     @objc
-    public static func entityClass(entityClass: AnyClass, configurations: [AnyObject]) -> CSFrom {
+    public convenience init(entityClass: AnyClass, configurations: [AnyObject]) {
         
         var arguments = [String?]()
         for configuration in configurations {
@@ -132,7 +131,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
                 CoreStore.abort("The configurations argument only accepts NSString and NSNull values")
             }
         }
-        return self.init(From(entityClass, arguments))
+        self.init(From(entityClass, arguments))
     }
     
     

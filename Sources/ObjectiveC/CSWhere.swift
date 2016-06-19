@@ -48,27 +48,36 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
 
     /**
      Initializes a `CSWhere` clause with a predicate that always evaluates to the specified boolean value
+     ```
+     MyPersonEntity *people = [transaction
+        fetchAllFrom:CSFromCreate([MyPersonEntity class])
+        fetchClauses:@[CSWhereValue(YES)]]];
+     ```
      
      - parameter value: the boolean value for the predicate
-     - returns: a `CSWhere` clause with a predicate that always evaluates to the specified boolean value
      */
     @objc
-    public static func value(value: Bool) -> CSWhere {
+    public convenience init(value: Bool) {
         
-        return self.init(Where(value))
+        self.init(Where(value))
     }
     
     /**
      Initializes a `CSWhere` clause with a predicate using the specified string format and arguments
+     ```
+     NSPredicate *predicate = // ...
+     MyPersonEntity *people = [transaction
+        fetchAllFrom:CSFromCreate([MyPersonEntity class])
+        fetchClauses:@[CSWherePredicate(predicate)]];
+     ```
      
      - parameter format: the format string for the predicate
      - parameter argumentArray: the arguments for `format`
-     - returns: a `CSWhere` clause with a predicate using the specified string format and arguments
      */
     @objc
-    public static func format(format: String, argumentArray: [NSObject]?) -> CSWhere {
+    public convenience init(format: String, argumentArray: [NSObject]?) {
         
-        return self.init(Where(format, argumentArray: argumentArray))
+        self.init(Where(format, argumentArray: argumentArray))
     }
     
     /**
@@ -76,12 +85,11 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
-     - returns: a `CSWhere` clause that compares equality
      */
     @objc
-    public static func keyPath(keyPath: KeyPath, isEqualTo value: NSObject?) -> CSWhere {
+    public convenience init(keyPath: KeyPath, isEqualTo value: NSObject?) {
         
-        return self.init(Where(keyPath, isEqualTo: value))
+        self.init(Where(keyPath, isEqualTo: value))
     }
     
     /**
@@ -89,24 +97,22 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      
      - parameter keyPath: the keyPath to compare with
      - parameter list: the array to check membership of
-     - returns: a `CSWhere` clause that compares membership
      */
     @objc
-    public static func keyPath(keyPath: KeyPath, isMemberOf list: [NSObject]) -> CSWhere {
+    public convenience init(keyPath: KeyPath, isMemberOf list: [NSObject]) {
         
-        return self.init(Where(keyPath, isMemberOf: list))
+        self.init(Where(keyPath, isMemberOf: list))
     }
     
     /**
      Initializes a `CSWhere` clause with an `NSPredicate`
      
      - parameter predicate: the `NSPredicate` for the fetch or query
-     - returns: a `CSWhere` clause with an `NSPredicate`
      */
     @objc
-    public static func predicate(predicate: NSPredicate) -> CSWhere {
+    public convenience init(predicate: NSPredicate) {
         
-        return self.init(Where(predicate))
+        self.init(Where(predicate))
     }
     
     

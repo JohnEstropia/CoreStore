@@ -45,14 +45,19 @@ import CoreData
 public struct Tweak: FetchClause, QueryClause, DeleteClause {
     
     /**
+     The block to customize the `NSFetchRequest`
+     */
+    public let closure: (fetchRequest: NSFetchRequest) -> Void
+    
+    /**
      Initializes a `Tweak` clause with a closure where the `NSFetchRequest` may be configured.
      
      - Important: `Tweak`'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions. Also, some utilities (such as `ListMonitor`s) may keep `FetchClause`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
-     - parameter customization: a list of key path strings to group results with
+     - parameter closure: the block to customize the `NSFetchRequest`
      */
-    public init(_ customization: (fetchRequest: NSFetchRequest) -> Void) {
+    public init(_ closure: (fetchRequest: NSFetchRequest) -> Void) {
         
-        self.customization = customization
+        self.closure = closure
     }
     
     
@@ -60,11 +65,6 @@ public struct Tweak: FetchClause, QueryClause, DeleteClause {
     
     public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
         
-        self.customization(fetchRequest: fetchRequest)
+        self.closure(fetchRequest: fetchRequest)
     }
-    
-    
-    // MARK: Private
-    
-    private let customization: (fetchRequest: NSFetchRequest) -> Void
 }

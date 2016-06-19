@@ -27,32 +27,6 @@ import Foundation
 import CoreData
 
 
-// MARK: - CSSortKey
-
-/**
- The `CSSortKey` is a syntax-sugar class for `NSSortDescriptor` meant to be used with `CSOrderBy`.
- 
- - SeeAlso: `CSOrderBy`
- - SeeAlso: `SortKey`
- */
-@objc
-public final class CSSortKey: NSSortDescriptor {
-    
-    /**
-     Initializes a `CSSortKey` with a the specified key path and sort order
-     
-     - parameter keyPath: the property key to use when performing a comparison
-     - parameter ascending: `YES` if the receiver specifies sorting in ascending order, otherwise `NO`
-     - returns: a `CSSortKey` with a the specified key path and sort order
-     */
-    @objc
-    public static func withKeyPath(keyPath: KeyPath, ascending: Bool) -> CSSortKey {
-        
-        return self.init(key: keyPath, ascending: ascending)
-    }
-}
-
-
 // MARK: - CSOrderBy
 
 /**
@@ -64,27 +38,44 @@ public final class CSSortKey: NSSortDescriptor {
 public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
     
     /**
-     Initializes a `CSOrderBy` clause with a list of sort descriptors
-     
-     - parameter sortDescriptors: a series of `NSSortDescriptor`s
-     - returns: a `CSOrderBy` clause with a list of sort descriptors
+     The list of sort descriptors
      */
     @objc
-    public static func sortDescriptors(sortDescriptors: [NSSortDescriptor]) -> CSOrderBy {
+    public var sortDescriptors: [NSSortDescriptor] {
         
-        return self.init(OrderBy(sortDescriptors))
+        return self.bridgeToSwift.sortDescriptors
     }
     
     /**
      Initializes a `CSOrderBy` clause with a single sort descriptor
+     ```
+     MyPersonEntity *people = [transaction
+        fetchAllFrom:CSFromCreate([MyPersonEntity class])
+        fetchClauses:@[CSOrderBySortKey(CSSortAscending(@"fullname"))]]];
+     ```
      
      - parameter sortDescriptor: a `NSSortDescriptor`
-     - returns: a `CSOrderBy` clause with a single sort descriptor
      */
     @objc
-    public static func sortDescriptor(sortDescriptor: NSSortDescriptor) -> CSOrderBy {
+    public convenience init(sortDescriptor: NSSortDescriptor) {
         
-        return self.init(OrderBy(sortDescriptor))
+        self.init(OrderBy(sortDescriptor))
+    }
+    
+    /**
+     Initializes a `CSOrderBy` clause with a list of sort descriptors
+     ```
+     MyPersonEntity *people = [transaction
+        fetchAllFrom:CSFromCreate([MyPersonEntity class])
+        fetchClauses:@[CSOrderBySortKeys(CSSortAscending(@"fullname"), CSSortDescending(@"age"), nil))]]];
+     ```
+     
+     - parameter sortDescriptors: an array of `NSSortDescriptor`s
+     */
+    @objc
+    public convenience init(sortDescriptors: [NSSortDescriptor]) {
+        
+        self.init(OrderBy(sortDescriptors))
     }
     
     
