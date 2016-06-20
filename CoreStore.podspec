@@ -15,7 +15,8 @@ Pod::Spec.new do |s|
     s.source_files = "Sources", "Sources/**/*.{swift}"
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
-    s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-D USE_FRAMEWORKS' }
+    s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-D USE_FRAMEWORKS',
+                              'GCC_PREPROCESSOR_DEFINITIONS' => 'USE_FRAMEWORKS=1' }
     
     s.dependency "GCDKit", "1.2.5"
 end
