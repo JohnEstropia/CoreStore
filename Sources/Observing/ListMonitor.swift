@@ -83,7 +83,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      */
     public subscript(index: Int) -> T {
         
-        return self[0, index]
+        return self.objectsInAllSections()[index]
     }
     
     /**
@@ -94,7 +94,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      */
     public subscript(safeIndex index: Int) -> T? {
         
-        return self[safeSectionIndex: 0, safeItemIndex: index]
+        let objects = self.objectsInAllSections()
+        guard objects.indices.contains(index) else {
+            
+            return nil
+        }
+        return objects[index]
     }
     
     /**
