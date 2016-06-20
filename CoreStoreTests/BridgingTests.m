@@ -45,26 +45,26 @@
 - (void)test_ThatFromClauses_BridgeCorrectly {
     
     {
-        CSFrom *from = CSFromCreate([TestEntity1 class]);
+        CSFrom *from = CSFromClass([TestEntity1 class]);
         XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
         XCTAssertNil(from.configurations);
     }
     {
-        CSFrom *from = CSFromCreate([TestEntity1 class], [NSNull null]);
+        CSFrom *from = CSFromClass([TestEntity1 class], [NSNull null]);
         XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
         
         NSArray *configurations = @[[NSNull null]];
         XCTAssertEqualObjects(from.configurations, configurations);
     }
     {
-        CSFrom *from = CSFromCreate([TestEntity1 class], @"Config1");
+        CSFrom *from = CSFromClass([TestEntity1 class], @"Config1");
         XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
         
         NSArray *configurations = @[@"Config1"];
         XCTAssertEqualObjects(from.configurations, configurations);
     }
     {
-        CSFrom *from = CSFromCreate([TestEntity1 class], @[[NSNull null], @"Config2"]);
+        CSFrom *from = CSFromClass([TestEntity1 class], @[[NSNull null], @"Config2"]);
         XCTAssertEqualObjects(from.entityClass, [TestEntity1 class]);
         
         NSArray *configurations = @[[NSNull null], @"Config2"];

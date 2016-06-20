@@ -53,7 +53,7 @@
  
  @code
  MyPersonEntity *people = [transaction fetchAllFrom:
-    CSFromCreate([MyPersonEntity class])];
+    CSFromClass([MyPersonEntity class])];
  @endcode
  
  @param entityClass
@@ -63,7 +63,7 @@
  a <tt>CSFrom</tt> clause with the specified entity class
  */
 CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass) CS_OBJC_RETURNS_RETAINED;
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass) CS_OBJC_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -71,7 +71,7 @@ CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass) CS_OBJC_RETURNS_RETAIN
  
  @code
  MyPersonEntity *people = [transaction fetchAllFrom:
-    CSFromCreate([MyPersonEntity class], @"Configuration1")];
+    CSFromClass([MyPersonEntity class], @"Configuration1")];
  @endcode
  
  @param entityClass
@@ -84,7 +84,7 @@ CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass) CS_OBJC_RETURNS_RETAIN
  a <tt>CSFrom</tt> clause with the specified configuration
  */
 CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED;
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -92,7 +92,7 @@ CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSNull *_Nonnull confi
  
  @code
  MyPersonEntity *people = [transaction fetchAllFrom:
-    CSFromCreate([MyPersonEntity class], @"Configuration1")];
+    CSFromClass([MyPersonEntity class], @"Configuration1")];
  @endcode
  
  @param entityClass
@@ -105,7 +105,7 @@ CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSNull *_Nonnull confi
  a <tt>CSFrom</tt> clause with the specified configuration
  */
 CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSString *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED;
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -113,8 +113,8 @@ CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSString *_Nonnull con
  
  @code
  MyPersonEntity *people = [transaction fetchAllFrom:
-    CSFromCreate([MyPersonEntity class],
-                 @[[NSNull null], @"Configuration1"])];
+    CSFromClass([MyPersonEntity class],
+                @[[NSNull null], @"Configuration1"])];
  @endcode
  
  @param entityClass
@@ -127,7 +127,7 @@ CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSString *_Nonnull con
  a <tt>CSFrom</tt> clause with the specified configurations
  */
 CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CS_OBJC_RETURNS_RETAINED;
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CS_OBJC_RETURNS_RETAINED;
 
 
 // MARK: - Select
@@ -141,7 +141,7 @@ CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSArray<id> *_Nonnull 
  
  @code
  NSNumber *maxAge = [CSCoreStore
-    queryValueFrom:CSFromCreate([MyPersonEntity class])
+    queryValueFrom:CSFromClass([MyPersonEntity class])
     select:CSSelectNumber(CSAggregateMax(@"age"))
     // ...
  @endcode
@@ -161,7 +161,7 @@ CSSelect *_Nonnull CSSelectNumber(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RET
  
  @code
  NSDecimalNumber *averagePrice = [CSCoreStore
-    queryValueFrom:CSFromCreate([MyPersonEntity class])
+    queryValueFrom:CSFromClass([MyPersonEntity class])
     select:CSSelectDecimal(CSAggregateAverage(@"price"))
     // ...
  @endcode
@@ -181,7 +181,7 @@ CSSelect *_Nonnull CSSelectDecimal(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RE
  
  @code
  NSString *fullname = [CSCoreStore
-    queryValueFrom:CSFromCreate([MyPersonEntity class])
+    queryValueFrom:CSFromClass([MyPersonEntity class])
     select:CSSelectString(CSAttribute(@"fullname"))
     // ...
  @endcode
@@ -201,7 +201,7 @@ CSSelect *_Nonnull CSSelectString(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RET
  
  @code
  NSDate *lastUpdate = [CSCoreStore
-    queryValueFrom:CSFromCreate([MyPersonEntity class])
+    queryValueFrom:CSFromClass([MyPersonEntity class])
     select:CSSelectDate(CSAggregateMax(@"updatedDate"))
     // ...
  @endcode
@@ -221,7 +221,7 @@ CSSelect *_Nonnull CSSelectDate(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETUR
  
  @code
  NSData *imageData = [CSCoreStore
-    queryValueFrom:CSFromCreate([MyPersonEntity class])
+    queryValueFrom:CSFromClass([MyPersonEntity class])
     select:CSSelectData(CSAttribute(@"imageData"))
     // ...
  @endcode
@@ -241,7 +241,7 @@ CSSelect *_Nonnull CSSelectData(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETUR
  
  @code
  NSManagedObjectID *objectID = [CSCoreStore
-    queryValueFrom:CSFromCreate([MyPersonEntity class])
+    queryValueFrom:CSFromClass([MyPersonEntity class])
     select:CSSelectObjectID()
     // ...
  @endcode
@@ -266,7 +266,7 @@ CSSelect *_Nonnull CSSelectObjectID() CS_OBJC_RETURNS_RETAINED;
  
  @code
  MyPersonEntity *people = [transaction 
-    fetchAllFrom:CSFromCreate([MyPersonEntity class])
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
     fetchClauses:@[CSWhereValue(YES)]];
  @endcode
  
@@ -285,7 +285,7 @@ CSWhere *_Nonnull CSWhereValue(BOOL value) CS_OBJC_RETURNS_RETAINED;
  
  @code
  MyPersonEntity *people = [transaction
-    fetchAllFrom:CSFromCreate([MyPersonEntity class])
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
     fetchClauses:@[CSWhereFormat(@"%K == %@", @"key", @"value")]];
  @endcode
  
@@ -308,7 +308,7 @@ CSWhere *_Nonnull CSWhereFormat(NSString *_Nonnull format, ...) CS_OBJC_RETURNS_
  @code
  NSPredicate *predicate = // ...
  MyPersonEntity *people = [transaction
-    fetchAllFrom:CSFromCreate([MyPersonEntity class])
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
     fetchClauses:@[CSWherePredicate(predicate)]];
  @endcode
  
@@ -332,7 +332,7 @@ CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CS_OBJC_RETU
  
  @code
  MyPersonEntity *people = [CSCoreStore
-    fetchAllFrom:CSFromCreate([MyPersonEntity class])
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
     fetchClauses:@[CSOrderBySortKey(CSSortAscending(@"fullname"))]]];
  @endcode
  
@@ -351,7 +351,7 @@ NSSortDescriptor *_Nonnull CSSortAscending(NSString *_Nonnull key) CS_OBJC_RETUR
  
  @code
  MyPersonEntity *people = [CSCoreStore
-        fetchAllFrom:CSFromCreate([MyPersonEntity class])
+        fetchAllFrom:CSFromClass([MyPersonEntity class])
  fetchClauses:@[CSOrderBySortKey(CSSortDescending(@"fullname"))]]];
  @endcode
  
@@ -370,7 +370,7 @@ NSSortDescriptor *_Nonnull CSSortDescending(NSString *_Nonnull key)  CS_OBJC_RET
  
  @code
  MyPersonEntity *people = [transaction
-    fetchAllFrom:CSFromCreate([MyPersonEntity class])
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
     fetchClauses:@[CSOrderBySortKey(CSSortAscending(@"fullname"))]]];
  @endcode
  
@@ -389,7 +389,7 @@ CSOrderBy *_Nonnull CSOrderBySortKey(NSSortDescriptor *_Nonnull sortDescriptor) 
  
  @code
  MyPersonEntity *people = [transaction
-    fetchAllFrom:CSFromCreate([MyPersonEntity class])
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
     fetchClauses:@[CSOrderBySortKeys(CSSortAscending(@"fullname"), CSSortDescending(@"age"), nil))]]];
  @endcode
  
@@ -408,7 +408,7 @@ CSOrderBy *_Nonnull CSOrderBySortKeys(NSSortDescriptor *_Nonnull sortDescriptor,
  
  @code
  MyPersonEntity *people = [transaction
-    fetchAllFrom:CSFromCreate([MyPersonEntity class])
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
     fetchClauses:@[CSOrderBySortKeys(@[CSSortAscending(@"fullname"), CSSortDescending(@"age")]))]]];
  @endcode
  

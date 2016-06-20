@@ -50,7 +50,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      Initializes a `CSWhere` clause with a predicate that always evaluates to the specified boolean value
      ```
      MyPersonEntity *people = [transaction
-        fetchAllFrom:CSFromCreate([MyPersonEntity class])
+        fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSWhereValue(YES)]]];
      ```
      
@@ -67,7 +67,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      ```
      NSPredicate *predicate = // ...
      MyPersonEntity *people = [transaction
-        fetchAllFrom:CSFromCreate([MyPersonEntity class])
+        fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSWherePredicate(predicate)]];
      ```
      

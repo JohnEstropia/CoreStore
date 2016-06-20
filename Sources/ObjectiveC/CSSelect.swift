@@ -217,7 +217,7 @@ public final class CSSelect: NSObject {
      Creates a `CSSelect` clause for querying `NSNumber` values.
      ```
      NSNumber *maxAge = [CSCoreStore
-        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        queryValueFrom:CSFromClass([MyPersonEntity class])
         select:CSSelectNumber(CSAggregateMax(@"age"))
         // ...
      ```
@@ -233,7 +233,7 @@ public final class CSSelect: NSObject {
      Creates a `CSSelect` clause for querying `NSDecimalNumber` values.
      ```
      NSDecimalNumber *averagePrice = [CSCoreStore
-        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        queryValueFrom:CSFromClass([MyPersonEntity class])
         select:CSSelectDecimal(CSAggregateAverage(@"price"))
         // ...
      ```
@@ -249,7 +249,7 @@ public final class CSSelect: NSObject {
      Creates a `CSSelect` clause for querying `NSString` values.
      ```
      NSString *fullname = [CSCoreStore
-        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        queryValueFrom:CSFromClass([MyPersonEntity class])
         select:CSSelectString(CSAttribute(@"fullname"))
         // ...
      ```
@@ -265,7 +265,7 @@ public final class CSSelect: NSObject {
      Creates a `CSSelect` clause for querying `NSDate` values.
      ```
      NSDate *lastUpdate = [CSCoreStore
-        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        queryValueFrom:CSFromClass([MyPersonEntity class])
         select:CSSelectDate(CSAggregateMax(@"updatedDate"))
         // ...
      ```
@@ -281,7 +281,7 @@ public final class CSSelect: NSObject {
      Creates a `CSSelect` clause for querying `NSData` values.
      ```
      NSData *imageData = [CSCoreStore
-        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        queryValueFrom:CSFromClass([MyPersonEntity class])
         select:CSSelectData(CSAttribute(@"imageData"))
         // ...
      ```
@@ -297,7 +297,7 @@ public final class CSSelect: NSObject {
      Creates a `CSSelect` clause for querying `NSManagedObjectID` values.
      ```
      NSManagedObjectID *objectID = [CSCoreStore
-        queryValueFrom:CSFromCreate([MyPersonEntity class])
+        queryValueFrom:CSFromClass([MyPersonEntity class])
         select:CSSelectObjectID()
         // ...
      ```

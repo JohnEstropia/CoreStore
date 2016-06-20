@@ -28,25 +28,25 @@
 
 
 CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass) CS_OBJC_RETURNS_RETAINED {
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass) CS_OBJC_RETURNS_RETAINED {
     
     return [[CSFrom alloc] initWithEntityClass:entityClass];
 }
 
 CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED {
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED {
     
     return [[CSFrom alloc] initWithEntityClass:entityClass configuration:configuration];
 }
 
 CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSString *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED {
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED {
     
     return [[CSFrom alloc] initWithEntityClass:entityClass configuration:configuration];
 }
 
 CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromCreate(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CS_OBJC_RETURNS_RETAINED {
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CS_OBJC_RETURNS_RETAINED {
     
     return [[CSFrom alloc] initWithEntityClass:entityClass configurations:configurations];
 }

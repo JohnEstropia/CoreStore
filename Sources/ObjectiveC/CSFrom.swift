@@ -66,7 +66,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
     /**
      Initializes a `CSFrom` clause with the specified entity class.
      ```
-     MyPersonEntity *people = [transaction fetchAllFrom:CSFromCreate([MyPersonEntity class])];
+     MyPersonEntity *people = [transaction fetchAllFrom:CSFromClass([MyPersonEntity class])];
      ```
      
      - parameter entityClass: the `NSManagedObject` class type to be created
@@ -81,7 +81,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      Initializes a `CSFrom` clause with the specified configurations.
      ```
      MyPersonEntity *people = [transaction fetchAllFrom:
-        CSFromCreate([MyPersonEntity class], @"Config1")];
+        CSFromClass([MyPersonEntity class], @"Config1")];
      ```
      
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
@@ -106,7 +106,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      Initializes a `CSFrom` clause with the specified configurations.
      ```
      MyPersonEntity *people = [transaction fetchAllFrom:
-        CSFromCreate([MyPersonEntity class],
+        CSFromClass([MyPersonEntity class],
                      @[[NSNull null], @"Config1"])];
      ```
      

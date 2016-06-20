@@ -50,7 +50,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
      Initializes a `CSOrderBy` clause with a single sort descriptor
      ```
      MyPersonEntity *people = [transaction
-        fetchAllFrom:CSFromCreate([MyPersonEntity class])
+        fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSOrderBySortKey(CSSortAscending(@"fullname"))]]];
      ```
      
@@ -66,7 +66,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
      Initializes a `CSOrderBy` clause with a list of sort descriptors
      ```
      MyPersonEntity *people = [transaction
-        fetchAllFrom:CSFromCreate([MyPersonEntity class])
+        fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSOrderBySortKeys(CSSortAscending(@"fullname"), CSSortDescending(@"age"), nil))]]];
      ```
      
