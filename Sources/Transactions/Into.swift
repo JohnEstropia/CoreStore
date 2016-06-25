@@ -42,6 +42,17 @@ import CoreData
 public struct Into<T: NSManagedObject>: Hashable {
     
     /**
+     The associated `NSManagedObject` entity class
+     */
+    public let entityClass: AnyClass
+    
+    /**
+     The `NSPersistentStore` configuration name to associate objects from.
+     May contain a `String` to pertain to a named configuration, or `nil` to pertain to the default configuration
+     */
+    public let configuration: String?
+    
+    /**
      Initializes an `Into` clause.
      ```
      let person = transaction.create(Into<MyPersonEntity>())
@@ -145,8 +156,6 @@ public struct Into<T: NSManagedObject>: Hashable {
         return "PF_DEFAULT_CONFIGURATION_NAME"
     }
     
-    internal let entityClass: AnyClass
-    internal let configuration: String?
     internal let inferStoreIfPossible: Bool
     
     internal func upcast() -> Into<NSManagedObject> {

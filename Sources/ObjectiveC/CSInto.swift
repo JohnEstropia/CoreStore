@@ -38,34 +38,53 @@ import CoreData
 public final class CSInto: NSObject, CoreStoreObjectiveCType {
     
     /**
+     The associated `NSManagedObject` entity class
+     */
+    @objc
+    public var entityClass: AnyClass {
+        
+        return self.bridgeToSwift.entityClass
+    }
+    
+    /**
+     The `NSPersistentStore` configuration name to associate objects from.
+     May contain a `String` to pertain to a named configuration, or `nil` to pertain to the default configuration
+     */
+    @objc
+    public var configuration: String? {
+        
+        return self.bridgeToSwift.configuration
+    }
+    
+    /**
      Initializes a `CSInto` clause with the specified entity class.
      ```
-     MyPersonEntity *person = [transaction createInto:[CSInto entityClass:[MyPersonEntity class]]];
+     MyPersonEntity *person = [transaction createInto:
+        CSIntoClass([MyPersonEntity class])];
      ```
      
      - parameter entityClass: the `NSManagedObject` class type to be created
-     - returns: a `CSInto` clause with the specified entity class
      */
     @objc
-    public static func entityClass(entityClass: AnyClass) -> CSInto {
+    public convenience init(entityClass: AnyClass) {
         
-        return self.init(Into(entityClass))
+        self.init(Into(entityClass))
     }
     
     /**
      Initializes a `CSInto` clause with the specified configuration.
      ```
-     MyPersonEntity *person = [transaction createInto:[CSInto entityClass:[MyPersonEntity class]]];
+     MyPersonEntity *person = [transaction createInto:
+        CSIntoClass([MyPersonEntity class])];
      ```
      
      - parameter entityClass: the `NSManagedObject` class type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
-     - returns: a `CSInto` clause with the specified configuration
      */
     @objc
-    public static func entityClass(entityClass: AnyClass, configuration: String?) -> CSInto {
+    public convenience init(entityClass: AnyClass, configuration: String?) {
         
-        return self.init(Into(entityClass, configuration))
+        self.init(Into(entityClass, configuration))
     }
     
 

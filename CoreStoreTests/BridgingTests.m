@@ -94,15 +94,15 @@
 - (void)test_ThatOrderByClauses_BridgeCorrectly {
     
     {
-        CSOrderBy *orderBy = CSOrderBySortKey(CSSortAscending(@"key"));
+        CSOrderBy *orderBy = CSOrderByKey(CSSortAscending(@"key"));
         XCTAssertEqualObjects(orderBy.sortDescriptors, @[[NSSortDescriptor sortDescriptorWithKey:@"key" ascending:YES]]);
     }
     {
-        CSOrderBy *orderBy = CSOrderBySortKey(CSSortDescending(@"key"));
+        CSOrderBy *orderBy = CSOrderByKey(CSSortDescending(@"key"));
         XCTAssertEqualObjects(orderBy.sortDescriptors, @[[NSSortDescriptor sortDescriptorWithKey:@"key" ascending:NO]]);
     }
     {
-        CSOrderBy *orderBy = CSOrderBySortKeys(CSSortAscending(@"key1"), CSSortDescending(@"key2"), nil);
+        CSOrderBy *orderBy = CSOrderByKeys(CSSortAscending(@"key1"), CSSortDescending(@"key2"), nil);
         NSArray *sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"key1" ascending:YES],
                                      [NSSortDescriptor sortDescriptorWithKey:@"key2" ascending:NO]];
         XCTAssertEqualObjects(orderBy.sortDescriptors, sortDescriptors);
@@ -125,13 +125,31 @@
 
 - (void)test_ThatTweakClauses_BridgeCorrectly {
     
-    CSTweak *tweak = CSTweakCreate(^(NSFetchRequest * _Nonnull fetchRequest) {
+    CSTweak *tweak = CSTweakRequest(^(NSFetchRequest * _Nonnull fetchRequest) {
         
         fetchRequest.fetchLimit = 100;
     });
     NSFetchRequest *request = [NSFetchRequest new];
     tweak.block(request);
     XCTAssertEqual(request.fetchLimit, 100);
+}
+
+- (void)test_ThatIntoClauses_BridgeCorrectly {
+    
+    {
+        CSInto *into = CSIntoClass([TestEntity1 class]);
+        XCTAssertEqualObjects(into.entityClass, [TestEntity1 class]);
+    }
+    {
+        CSInto *into = CSIntoClass([TestEntity1 class], [NSNull null]);
+        XCTAssertEqualObjects(into.entityClass, [TestEntity1 class]);
+        XCTAssertNil(into.configuration);
+    }
+    {
+        CSInto *into = CSIntoClass([TestEntity1 class], @"Config1");
+        XCTAssertEqualObjects(into.entityClass, [TestEntity1 class]);
+        XCTAssertEqualObjects(into.configuration, @"Config1");
+    }
 }
 
 - (void)test_ThatDataStacks_BridgeCorrectly {

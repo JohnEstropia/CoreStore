@@ -37,13 +37,13 @@
 #error CoreStore Objective-C utilities can only be used on platforms that support C function overloading
 #endif
 
-#define CS_OBJC_EXTERN                      extern
-#define CS_OBJC_OVERLOADABLE                __attribute__((__overloadable__))
-#define CS_OBJC_REQUIRES_NIL_TERMINATION    __attribute__((sentinel(0, 1)))
-#define CS_OBJC_RETURNS_RETAINED            __attribute__((ns_returns_retained))
+#define CORESTORE_EXTERN                    extern
+#define CORESTORE_OVERLOADABLE              __attribute__((__overloadable__))
+#define CORESTORE_REQUIRES_NIL_TERMINATION  __attribute__((sentinel(0, 1)))
+#define CORESTORE_RETURNS_RETAINED          __attribute__((ns_returns_retained))
 
 
-// MARK: - From
+// MARK: - CSFrom
 
 @class CSFrom;
 
@@ -62,8 +62,8 @@
  @result
  a <tt>CSFrom</tt> clause with the specified entity class
  */
-CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -83,8 +83,8 @@ CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass) CS_OBJC_RETURNS_RETAINE
  @result
  a <tt>CSFrom</tt> clause with the specified configuration
  */
-CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -104,8 +104,8 @@ CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSNull *_Nonnull config
  @result
  a <tt>CSFrom</tt> clause with the specified configuration
  */
-CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -126,11 +126,220 @@ CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSString *_Nonnull conf
  @result
  a <tt>CSFrom</tt> clause with the specified configurations
  */
-CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CORESTORE_RETURNS_RETAINED;
 
 
-// MARK: - Select
+// MARK: - CSGroupBy
+
+@class CSGroupBy;
+
+/**
+ @abstract
+ Initializes a <tt>CSGroupBy</tt> clause with a key path string
+ 
+ @param keyPaths
+ a key path string to group results with
+ 
+ @result
+ a <tt>CSGroupBy</tt> clause with a key path string
+ */
+CORESTORE_EXTERN
+CSGroupBy *_Nonnull CSGroupByKeyPath(NSString *_Nonnull keyPath) CORESTORE_RETURNS_RETAINED;
+
+/**
+ @abstract
+ Initializes a <tt>CSGroupBy</tt> clause with a list of key path strings
+ 
+ @param keyPaths
+ a nil-terminated list of key path strings to group results with
+ 
+ @result
+ a <tt>CSGroupBy</tt> clause with a list of key path strings
+ */
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSGroupBy *_Nonnull CSGroupByKeyPaths(NSString *_Nonnull keyPath, ...) CORESTORE_RETURNS_RETAINED;
+
+/**
+ @abstract
+ Initializes a <tt>CSGroupBy</tt> clause with a list of key path strings
+ 
+ @param keyPaths
+ a list of key path strings to group results with
+ 
+ @result
+ a <tt>CSGroupBy</tt> clause with a list of key path strings
+ */
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSGroupBy *_Nonnull CSGroupByKeyPaths(NSArray<NSString *> *_Nonnull keyPaths) CORESTORE_RETURNS_RETAINED;
+
+
+// MARK: - CSInto
+
+@class CSInto;
+
+/**
+ @abstract
+ Initializes a <tt>CSInto</tt> clause with the specified entity class.
+ 
+ @code
+ MyPersonEntity *people = [transaction createInto:
+    CSIntoClass([MyPersonEntity class])];
+ @endcode
+ 
+ @param entityClass
+ the <tt>NSManagedObject</tt> class type to be created
+ 
+ @result
+ a <tt>CSInto</tt> clause with the specified entity class
+ */
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass) CORESTORE_RETURNS_RETAINED;
+
+/**
+ @abstract
+ Initializes a <tt>CSInto</tt> clause with the specified entity class.
+ 
+ @code
+ MyPersonEntity *people = [transaction createInto:
+    CSIntoClass([MyPersonEntity class], [NSNull null])];
+ @endcode
+ 
+ @param entityClass
+ the <tt>NSManagedObject</tt> class type to be created
+ 
+ @param configuration
+ an <tt>NSPersistentStore</tt> configuration name to associate objects from. This parameter is required if multiple configurations contain the created <tt>NSManagedObject</tt>'s entity type. Set to <tt>[NSNull null]</tt> to use the default configuration.
+ 
+ @result
+ a <tt>CSInto</tt> clause with the specified entity class
+ */
+CORESTORE_OVERLOADABLE
+CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CORESTORE_RETURNS_RETAINED;
+
+/**
+ @abstract
+ Initializes a <tt>CSInto</tt> clause with the specified entity class.
+ 
+ @code
+ MyPersonEntity *people = [transaction createInto:
+    CSIntoClass([MyPersonEntity class], @"Configuration1")];
+ @endcode
+ 
+ @param entityClass
+ the <tt>NSManagedObject</tt> class type to be created
+ 
+ @param configuration
+ an <tt>NSPersistentStore</tt> configuration name to associate objects from. This parameter is required if multiple configurations contain the created <tt>NSManagedObject</tt>'s entity type. Set to <tt>[NSNull null]</tt> to use the default configuration.
+ 
+ @result
+ a <tt>CSInto</tt> clause with the specified entity class
+ */
+CORESTORE_OVERLOADABLE
+CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CORESTORE_RETURNS_RETAINED;
+
+
+// MARK: - CSOrderBy
+
+@class CSOrderBy;
+
+/**
+ @abstract
+ Syntax sugar for initializing an ascending <tt>NSSortDescriptor</tt> for use with <tt>CSOrderBy</tt>
+ 
+ @code
+ MyPersonEntity *people = [CSCoreStore
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
+    fetchClauses:@[CSOrderByKey(CSSortAscending(@"fullname"))]]];
+ @endcode
+ 
+ @param key
+ the attribute key to sort with
+ 
+ @result
+ an <tt>NSSortDescriptor</tt> for use with <tt>CSOrderBy</tt>
+ */
+CORESTORE_EXTERN
+NSSortDescriptor *_Nonnull CSSortAscending(NSString *_Nonnull key) CORESTORE_RETURNS_RETAINED;
+
+/**
+ @abstract
+ Syntax sugar for initializing a descending <tt>NSSortDescriptor</tt> for use with <tt>CSOrderBy</tt>
+ 
+ @code
+ MyPersonEntity *people = [CSCoreStore
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
+    fetchClauses:@[CSOrderByKey(CSSortDescending(@"fullname"))]]];
+ @endcode
+ 
+ @param key
+ the attribute key to sort with
+ 
+ @result
+ an <tt>NSSortDescriptor</tt> for use with <tt>CSOrderBy</tt>
+ */
+CORESTORE_EXTERN
+NSSortDescriptor *_Nonnull CSSortDescending(NSString *_Nonnull key)  CORESTORE_RETURNS_RETAINED;
+
+/**
+ @abstract
+ Initializes a <tt>CSOrderBy</tt> clause with a single sort descriptor
+ 
+ @code
+ MyPersonEntity *people = [transaction
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
+    fetchClauses:@[CSOrderByKey(CSSortAscending(@"fullname"))]]];
+ @endcode
+ 
+ @param sortDescriptor
+ an <tt>NSSortDescriptor</tt>
+ 
+ @result
+ a <tt>CSOrderBy</tt> clause with a single sort descriptor
+ */
+CORESTORE_EXTERN
+CSOrderBy *_Nonnull CSOrderByKey(NSSortDescriptor *_Nonnull sortDescriptor) CORESTORE_RETURNS_RETAINED;
+
+/**
+ @abstract
+ Initializes a <tt>CSOrderBy</tt> clause with a list of sort descriptors
+ 
+ @code
+ MyPersonEntity *people = [transaction
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
+    fetchClauses:@[CSOrderByKeys(CSSortAscending(@"fullname"), CSSortDescending(@"age"), nil))]]];
+ @endcode
+ 
+ @param sortDescriptors
+ a nil-terminated array of <tt>NSSortDescriptor</tt>s
+ 
+ @result
+ a <tt>CSOrderBy</tt> clause with a list of sort descriptors
+ */
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSOrderBy *_Nonnull CSOrderByKeys(NSSortDescriptor *_Nonnull sortDescriptor, ...) CORESTORE_RETURNS_RETAINED CORESTORE_REQUIRES_NIL_TERMINATION;
+
+/**
+ @abstract
+ Initializes a <tt>CSOrderBy</tt> clause with a list of sort descriptors
+ 
+ @code
+ MyPersonEntity *people = [transaction
+    fetchAllFrom:CSFromClass([MyPersonEntity class])
+    fetchClauses:@[CSOrderByKeys(@[CSSortAscending(@"fullname"), CSSortDescending(@"age")]))]]];
+ @endcode
+ 
+ @param sortDescriptors
+ an array of <tt>NSSortDescriptor</tt>s
+ 
+ @result
+ a <tt>CSOrderBy</tt> clause with a list of sort descriptors
+ */
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSOrderBy *_Nonnull CSOrderByKeys(NSArray<NSSortDescriptor *> *_Nonnull sortDescriptors) CORESTORE_RETURNS_RETAINED;
+
+
+// MARK: - CSSelect
 
 @class CSSelect;
 @class CSSelectTerm;
@@ -152,8 +361,8 @@ CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull c
  @result
  a <tt>CSSelect</tt> clause for querying an <tt>NSNumber</tt> value
  */
-CS_OBJC_EXTERN
-CSSelect *_Nonnull CSSelectNumber(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN
+CSSelect *_Nonnull CSSelectNumber(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -172,8 +381,8 @@ CSSelect *_Nonnull CSSelectNumber(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RET
  @result
  a <tt>CSSelect</tt> clause for querying an <tt>NSDecimalNumber</tt> value
  */
-CS_OBJC_EXTERN
-CSSelect *_Nonnull CSSelectDecimal(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN
+CSSelect *_Nonnull CSSelectDecimal(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -192,8 +401,8 @@ CSSelect *_Nonnull CSSelectDecimal(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RE
  @result
  a <tt>CSSelect</tt> clause for querying an <tt>NSString</tt> value
  */
-CS_OBJC_EXTERN
-CSSelect *_Nonnull CSSelectString(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN
+CSSelect *_Nonnull CSSelectString(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -212,8 +421,8 @@ CSSelect *_Nonnull CSSelectString(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RET
  @result
  a <tt>CSSelect</tt> clause for querying an <tt>NSDate</tt> value
  */
-CS_OBJC_EXTERN
-CSSelect *_Nonnull CSSelectDate(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN
+CSSelect *_Nonnull CSSelectDate(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -232,8 +441,8 @@ CSSelect *_Nonnull CSSelectDate(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETUR
  @result
  a <tt>CSSelect</tt> clause for querying an <tt>NSData</tt> value
  */
-CS_OBJC_EXTERN
-CSSelect *_Nonnull CSSelectData(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN
+CSSelect *_Nonnull CSSelectData(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -252,11 +461,32 @@ CSSelect *_Nonnull CSSelectData(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETUR
  @result
  a <tt>CSSelect</tt> clause for querying an <tt>NSManagedObjectID</tt> value
  */
-CS_OBJC_EXTERN
-CSSelect *_Nonnull CSSelectObjectID() CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN
+CSSelect *_Nonnull CSSelectObjectID() CORESTORE_RETURNS_RETAINED;
 
 
-// MARK: - Where
+// MARK: - CSTweak
+
+@class CSTweak;
+
+/**
+ @abstract
+ Initializes a <tt>CSTweak</tt> clause with a block where the <tt>NSFetchRequest</tt> may be configured.
+ 
+ @important
+ <tt>CSTweak</tt>'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions. Also, some utilities (such as <tt>CSListMonitor</tt>s) may keep <tt>CSFetchClause</tt>s in memory and may thus introduce retain cycles if reference captures are not handled properly.
+ 
+ @param block
+ the block to customize the <tt>NSFetchRequest</tt>
+ 
+ @result
+ a <tt>CSTweak</tt> clause with the <tt>NSFetchRequest</tt> configuration block
+ */
+CORESTORE_EXTERN CORESTORE_OVERLOADABLE
+CSTweak *_Nonnull CSTweakRequest(void (^_Nonnull block)(NSFetchRequest *_Nonnull fetchRequest)) CORESTORE_RETURNS_RETAINED;
+
+
+// MARK: - CSWhere
 
 @class CSWhere;
 
@@ -276,8 +506,8 @@ CSSelect *_Nonnull CSSelectObjectID() CS_OBJC_RETURNS_RETAINED;
  @result
  a <tt>CSWhere</tt> clause with a predicate that always evaluates to the specified boolean value
  */
-CS_OBJC_EXTERN
-CSWhere *_Nonnull CSWhereValue(BOOL value) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN
+CSWhere *_Nonnull CSWhereValue(BOOL value) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -298,8 +528,8 @@ CSWhere *_Nonnull CSWhereValue(BOOL value) CS_OBJC_RETURNS_RETAINED;
  @result
  a <tt>CSWhere</tt> clause with a predicate using the specified string format and arguments
  */
-CS_OBJC_EXTERN
-CSWhere *_Nonnull CSWhereFormat(NSString *_Nonnull format, ...) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN
+CSWhere *_Nonnull CSWhereFormat(NSString *_Nonnull format, ...) CORESTORE_RETURNS_RETAINED;
 
 /**
  @abstract
@@ -318,173 +548,8 @@ CSWhere *_Nonnull CSWhereFormat(NSString *_Nonnull format, ...) CS_OBJC_RETURNS_
  @result
  a <tt>CSWhere</tt> clause with an <tt>NSPredicate</tt>
  */
-CS_OBJC_EXTERN
-CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CS_OBJC_RETURNS_RETAINED;
-
-
-// MARK: - OrderBy
-
-@class CSOrderBy;
-
-/**
- @abstract
- Syntax sugar for initializing an ascending <tt>NSSortDescriptor</tt> for use with <tt>CSOrderBy</tt>
- 
- @code
- MyPersonEntity *people = [CSCoreStore
-    fetchAllFrom:CSFromClass([MyPersonEntity class])
-    fetchClauses:@[CSOrderBySortKey(CSSortAscending(@"fullname"))]]];
- @endcode
- 
- @param key
- the attribute key to sort with
- 
- @result
- an <tt>NSSortDescriptor</tt> for use with <tt>CSOrderBy</tt>
- */
-CS_OBJC_EXTERN
-NSSortDescriptor *_Nonnull CSSortAscending(NSString *_Nonnull key) CS_OBJC_RETURNS_RETAINED;
-
-/**
- @abstract
- Syntax sugar for initializing a descending <tt>NSSortDescriptor</tt> for use with <tt>CSOrderBy</tt>
- 
- @code
- MyPersonEntity *people = [CSCoreStore
-        fetchAllFrom:CSFromClass([MyPersonEntity class])
- fetchClauses:@[CSOrderBySortKey(CSSortDescending(@"fullname"))]]];
- @endcode
- 
- @param key
- the attribute key to sort with
- 
- @result
- an <tt>NSSortDescriptor</tt> for use with <tt>CSOrderBy</tt>
- */
-CS_OBJC_EXTERN
-NSSortDescriptor *_Nonnull CSSortDescending(NSString *_Nonnull key)  CS_OBJC_RETURNS_RETAINED;
-
-/**
- @abstract
- Initializes a <tt>CSOrderBy</tt> clause with a single sort descriptor
- 
- @code
- MyPersonEntity *people = [transaction
-    fetchAllFrom:CSFromClass([MyPersonEntity class])
-    fetchClauses:@[CSOrderBySortKey(CSSortAscending(@"fullname"))]]];
- @endcode
- 
- @param sortDescriptor
- an <tt>NSSortDescriptor</tt>
- 
- @result
- a <tt>CSOrderBy</tt> clause with a single sort descriptor
- */
-CS_OBJC_EXTERN
-CSOrderBy *_Nonnull CSOrderBySortKey(NSSortDescriptor *_Nonnull sortDescriptor) CS_OBJC_RETURNS_RETAINED;
-
-/**
- @abstract
- Initializes a <tt>CSOrderBy</tt> clause with a list of sort descriptors
- 
- @code
- MyPersonEntity *people = [transaction
-    fetchAllFrom:CSFromClass([MyPersonEntity class])
-    fetchClauses:@[CSOrderBySortKeys(CSSortAscending(@"fullname"), CSSortDescending(@"age"), nil))]]];
- @endcode
- 
- @param sortDescriptors
- a nil-terminated array of <tt>NSSortDescriptor</tt>s
- 
- @result
- a <tt>CSOrderBy</tt> clause with a list of sort descriptors
- */
-CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSOrderBy *_Nonnull CSOrderBySortKeys(NSSortDescriptor *_Nonnull sortDescriptor, ...) CS_OBJC_RETURNS_RETAINED CS_OBJC_REQUIRES_NIL_TERMINATION;
-
-/**
- @abstract
- Initializes a <tt>CSOrderBy</tt> clause with a list of sort descriptors
- 
- @code
- MyPersonEntity *people = [transaction
-    fetchAllFrom:CSFromClass([MyPersonEntity class])
-    fetchClauses:@[CSOrderBySortKeys(@[CSSortAscending(@"fullname"), CSSortDescending(@"age")]))]]];
- @endcode
- 
- @param sortDescriptors
- an array of <tt>NSSortDescriptor</tt>s
- 
- @result
- a <tt>CSOrderBy</tt> clause with a list of sort descriptors
- */
-CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSOrderBy *_Nonnull CSOrderBySortKeys(NSArray<NSSortDescriptor *> *_Nonnull sortDescriptors) CS_OBJC_RETURNS_RETAINED;
-
-
-// MARK: - GroupBy
-
-@class CSGroupBy;
-
-/**
- @abstract
- Initializes a <tt>CSGroupBy</tt> clause with a key path string
- 
- @param keyPaths
- a key path string to group results with
- 
- @result
- a <tt>CSGroupBy</tt> clause with a key path string
- */
-CS_OBJC_EXTERN
-CSGroupBy *_Nonnull CSGroupByKeyPath(NSString *_Nonnull keyPath) CS_OBJC_RETURNS_RETAINED;
-
-/**
- @abstract
- Initializes a <tt>CSGroupBy</tt> clause with a list of key path strings
- 
- @param keyPaths
- a nil-terminated list of key path strings to group results with
- 
- @result
- a <tt>CSGroupBy</tt> clause with a list of key path strings
- */
-CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSGroupBy *_Nonnull CSGroupByKeyPaths(NSString *_Nonnull keyPath, ...) CS_OBJC_RETURNS_RETAINED;
-
-/**
- @abstract
- Initializes a <tt>CSGroupBy</tt> clause with a list of key path strings
- 
- @param keyPaths
- a list of key path strings to group results with
- 
- @result
- a <tt>CSGroupBy</tt> clause with a list of key path strings
- */
-CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSGroupBy *_Nonnull CSGroupByKeyPaths(NSArray<NSString *> *_Nonnull keyPaths) CS_OBJC_RETURNS_RETAINED;
-
-
-// MARK: - Tweak
-
-@class CSTweak;
-
-/**
- @abstract
- Initializes a <tt>CSTweak</tt> clause with a block where the <tt>NSFetchRequest</tt> may be configured.
- 
- @important
- <tt>CSTweak</tt>'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions. Also, some utilities (such as <tt>CSListMonitor</tt>s) may keep <tt>CSFetchClause</tt>s in memory and may thus introduce retain cycles if reference captures are not handled properly.
- 
- @param block
- the block to customize the <tt>NSFetchRequest</tt>
- 
- @result
- a <tt>CSTweak</tt> clause with the <tt>NSFetchRequest</tt> configuration block
- */
-CS_OBJC_EXTERN CS_OBJC_OVERLOADABLE
-CSTweak *_Nonnull CSTweakCreate(void (^_Nonnull block)(NSFetchRequest *_Nonnull fetchRequest)) CS_OBJC_RETURNS_RETAINED;
+CORESTORE_EXTERN
+CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CORESTORE_RETURNS_RETAINED;
 
 
 #endif /* CoreStoreBridge_h */

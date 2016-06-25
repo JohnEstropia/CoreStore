@@ -23,6 +23,7 @@
 //  SOFTWARE.
 //
 
+
 #import "CoreStoreBridge.h"
 
 #if USE_FRAMEWORKS
@@ -30,6 +31,9 @@
 
 #elif !defined(SWIFT_OBJC_INTERFACE_HEADER_NAME)
 #error Add "SWIFT_OBJC_INTERFACE_HEADER_NAME=$(SWIFT_OBJC_INTERFACE_HEADER_NAME)" to the project's GCC_PREPROCESSOR_DEFINITIONS settings
+
+#elif __has_include(SWIFT_OBJC_INTERFACE_HEADER_NAME)
+#import SWIFT_OBJC_INTERFACE_HEADER_NAME
 
 #else
 #define _STRINGIFY(x)    #x
@@ -39,145 +43,42 @@
 #endif
 
 
-CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass) CS_OBJC_RETURNS_RETAINED {
+// MARK: - CSFrom
+
+CORESTORE_OVERLOADABLE
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass) CORESTORE_RETURNS_RETAINED {
     
     return [[CSFrom alloc] initWithEntityClass:entityClass];
 }
 
-CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED {
+CORESTORE_OVERLOADABLE
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CORESTORE_RETURNS_RETAINED {
     
     return [[CSFrom alloc] initWithEntityClass:entityClass configuration:configuration];
 }
 
-CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CS_OBJC_RETURNS_RETAINED {
+CORESTORE_OVERLOADABLE
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CORESTORE_RETURNS_RETAINED {
     
     return [[CSFrom alloc] initWithEntityClass:entityClass configuration:configuration];
 }
 
-CS_OBJC_OVERLOADABLE
-CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CS_OBJC_RETURNS_RETAINED {
+CORESTORE_OVERLOADABLE
+CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CORESTORE_RETURNS_RETAINED {
     
     return [[CSFrom alloc] initWithEntityClass:entityClass configurations:configurations];
 }
 
 
-// MARK: - Select
+// MARK: - CSGroupBy
 
-//CSSelectTerm *_Nonnull CSAttribute(NSString *_Nonnull keyPath) CS_OBJC_RETURNS_RETAINED {
-//    
-//    return [[CSSelectTerm alloc] initWithKeyPath:keyPath];
-//}
-
-CSSelect *_Nonnull CSSelectNumber(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithNumberTerm:selectTerm];
-}
-
-CSSelect *_Nonnull CSSelectDecimal(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithDecimalTerm:selectTerm];
-}
-
-CSSelect *_Nonnull CSSelectString(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithStringTerm:selectTerm];
-}
-
-CSSelect *_Nonnull CSSelectDate(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithDateTerm:selectTerm];
-}
-
-CSSelect *_Nonnull CSSelectData(CSSelectTerm *_Nonnull selectTerm) CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithDataTerm:selectTerm];
-}
-
-CSSelect *_Nonnull CSSelectObjectID() CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSSelect alloc] initWithObjectIDTerm];
-}
-
-
-// MARK: - Where
-
-CSWhere *_Nonnull CSWhereValue(BOOL value) CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSWhere alloc] initWithValue:value];
-}
-
-CSWhere *_Nonnull CSWhereFormat(NSString *_Nonnull format, ...) CS_OBJC_RETURNS_RETAINED {
-    
-    CSWhere *where;
-    va_list args;
-    va_start(args, format);
-    where = [[CSWhere alloc] initWithPredicate:[NSPredicate predicateWithFormat:format arguments:args]];
-    va_end(args);
-    return where;
-}
-
-CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSWhere alloc] initWithPredicate:predicate];
-}
-
-
-// MARK: - OrderBy
-
-@class CSOrderBy;
-
-NSSortDescriptor *_Nonnull CSSortAscending(NSString *_Nonnull key) {
-    
-    return [[NSSortDescriptor alloc] initWithKey:key ascending:YES];
-}
-
-NSSortDescriptor *_Nonnull CSSortDescending(NSString *_Nonnull key) {
-    
-    return [[NSSortDescriptor alloc] initWithKey:key ascending:NO];
-}
-
-CSOrderBy *_Nonnull CSOrderBySortKey(NSSortDescriptor *_Nonnull sortDescriptor) CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSOrderBy alloc] initWithSortDescriptor:sortDescriptor];
-}
-
-CS_OBJC_OVERLOADABLE
-CSOrderBy *_Nonnull CSOrderBySortKeys(NSSortDescriptor *_Nonnull sortDescriptor, ...) CS_OBJC_RETURNS_RETAINED {
-    
-    va_list args;
-    va_start(args, sortDescriptor);
-    
-    NSMutableArray *sortDescriptors = [NSMutableArray new];
-    [sortDescriptors addObject:sortDescriptor];
-    
-    NSSortDescriptor *next;
-    while ((next = va_arg(args, NSSortDescriptor *)) != nil) {
-        
-        [sortDescriptors addObject:next];
-    }
-    va_end(args);
-    return [[CSOrderBy alloc] initWithSortDescriptors:sortDescriptors];
-}
-
-CS_OBJC_OVERLOADABLE
-CSOrderBy *_Nonnull CSOrderBySortKeys(NSArray<NSSortDescriptor *> *_Nonnull sortDescriptors) CS_OBJC_RETURNS_RETAINED {
-    
-    return [[CSOrderBy alloc] initWithSortDescriptors:sortDescriptors];
-}
-
-
-// MARK: - GroupBy
-
-CSGroupBy *_Nonnull CSGroupByKeyPath(NSString *_Nonnull keyPath) CS_OBJC_RETURNS_RETAINED {
+CSGroupBy *_Nonnull CSGroupByKeyPath(NSString *_Nonnull keyPath) CORESTORE_RETURNS_RETAINED {
     
     return [[CSGroupBy alloc] initWithKeyPath:keyPath];
 }
 
-CS_OBJC_OVERLOADABLE
-CSGroupBy *_Nonnull CSGroupByKeyPaths(NSString *_Nonnull keyPath, ...) CS_OBJC_RETURNS_RETAINED {
+CORESTORE_OVERLOADABLE
+CSGroupBy *_Nonnull CSGroupByKeyPaths(NSString *_Nonnull keyPath, ...) CORESTORE_RETURNS_RETAINED {
     
     va_list args;
     va_start(args, keyPath);
@@ -194,17 +95,138 @@ CSGroupBy *_Nonnull CSGroupByKeyPaths(NSString *_Nonnull keyPath, ...) CS_OBJC_R
     return [[CSGroupBy alloc] initWithKeyPaths:keyPaths];
 }
 
-CS_OBJC_OVERLOADABLE
-CSGroupBy *_Nonnull CSGroupByKeyPaths(NSArray<NSString *> *_Nonnull keyPaths) CS_OBJC_RETURNS_RETAINED {
- 
+CORESTORE_OVERLOADABLE
+CSGroupBy *_Nonnull CSGroupByKeyPaths(NSArray<NSString *> *_Nonnull keyPaths) CORESTORE_RETURNS_RETAINED {
+    
     return [[CSGroupBy alloc] initWithKeyPaths:keyPaths];
 }
 
 
-// MARK: - Tweak
+// MARK: - CSInto
 
-CS_OBJC_OVERLOADABLE
-CSTweak *_Nonnull CSTweakCreate(void (^_Nonnull block)(NSFetchRequest *_Nonnull fetchRequest)) CS_OBJC_RETURNS_RETAINED {
+CORESTORE_OVERLOADABLE
+CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSInto alloc] initWithEntityClass:entityClass];
+}
+
+CORESTORE_OVERLOADABLE
+CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass, NSNull *_Nonnull configuration) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSInto alloc] initWithEntityClass:entityClass configuration:nil];
+}
+
+CORESTORE_OVERLOADABLE
+CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSInto alloc] initWithEntityClass:entityClass configuration:configuration];
+}
+
+
+// MARK: - CSOrderBy
+
+@class CSOrderBy;
+
+NSSortDescriptor *_Nonnull CSSortAscending(NSString *_Nonnull key) {
+    
+    return [[NSSortDescriptor alloc] initWithKey:key ascending:YES];
+}
+
+NSSortDescriptor *_Nonnull CSSortDescending(NSString *_Nonnull key) {
+    
+    return [[NSSortDescriptor alloc] initWithKey:key ascending:NO];
+}
+
+CSOrderBy *_Nonnull CSOrderByKey(NSSortDescriptor *_Nonnull sortDescriptor) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSOrderBy alloc] initWithSortDescriptor:sortDescriptor];
+}
+
+CORESTORE_OVERLOADABLE
+CSOrderBy *_Nonnull CSOrderByKeys(NSSortDescriptor *_Nonnull sortDescriptor, ...) CORESTORE_RETURNS_RETAINED {
+    
+    va_list args;
+    va_start(args, sortDescriptor);
+    
+    NSMutableArray *sortDescriptors = [NSMutableArray new];
+    [sortDescriptors addObject:sortDescriptor];
+    
+    NSSortDescriptor *next;
+    while ((next = va_arg(args, NSSortDescriptor *)) != nil) {
+        
+        [sortDescriptors addObject:next];
+    }
+    va_end(args);
+    return [[CSOrderBy alloc] initWithSortDescriptors:sortDescriptors];
+}
+
+CORESTORE_OVERLOADABLE
+CSOrderBy *_Nonnull CSOrderByKeys(NSArray<NSSortDescriptor *> *_Nonnull sortDescriptors) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSOrderBy alloc] initWithSortDescriptors:sortDescriptors];
+}
+
+
+// MARK: - CSSelect
+
+CSSelect *_Nonnull CSSelectNumber(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSSelect alloc] initWithNumberTerm:selectTerm];
+}
+
+CSSelect *_Nonnull CSSelectDecimal(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSSelect alloc] initWithDecimalTerm:selectTerm];
+}
+
+CSSelect *_Nonnull CSSelectString(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSSelect alloc] initWithStringTerm:selectTerm];
+}
+
+CSSelect *_Nonnull CSSelectDate(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSSelect alloc] initWithDateTerm:selectTerm];
+}
+
+CSSelect *_Nonnull CSSelectData(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSSelect alloc] initWithDataTerm:selectTerm];
+}
+
+CSSelect *_Nonnull CSSelectObjectID() CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSSelect alloc] initWithObjectIDTerm];
+}
+
+
+// MARK: - CSTweak
+
+CORESTORE_OVERLOADABLE
+CSTweak *_Nonnull CSTweakRequest(void (^_Nonnull block)(NSFetchRequest *_Nonnull fetchRequest)) CORESTORE_RETURNS_RETAINED {
     
     return [[CSTweak alloc] initWithBlock:block];
+}
+
+
+// MARK: - CSWhere
+
+CSWhere *_Nonnull CSWhereValue(BOOL value) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSWhere alloc] initWithValue:value];
+}
+
+CSWhere *_Nonnull CSWhereFormat(NSString *_Nonnull format, ...) CORESTORE_RETURNS_RETAINED {
+    
+    CSWhere *where;
+    va_list args;
+    va_start(args, format);
+    where = [[CSWhere alloc] initWithPredicate:[NSPredicate predicateWithFormat:format arguments:args]];
+    va_end(args);
+    return where;
+}
+
+CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CORESTORE_RETURNS_RETAINED {
+    
+    return [[CSWhere alloc] initWithPredicate:predicate];
 }
