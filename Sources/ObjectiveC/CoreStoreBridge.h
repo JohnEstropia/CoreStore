@@ -43,7 +43,25 @@
 #define CORESTORE_RETURNS_RETAINED          __attribute__((ns_returns_retained))
 
 
-// MARK: - CSFrom
+#pragma mark - KeyPath Utilities
+
+#define CSKeyPath(type, property) ({ \
+    type *_je_keypath_dummy __attribute__((unused)); \
+    typeof(_je_keypath_dummy.property) _je_keypath_dummy_property __attribute__((unused)); \
+    @#property; \
+})
+
+#define CSKeyPathOperator(operator, type, property) ({ \
+    type *_je_keypath_dummy __attribute__((unused)); \
+    typeof(_je_keypath_dummy.property) _je_keypath_dummy_property __attribute__((unused)); \
+    @"@" #operator "." #property; \
+})
+
+
+#pragma mark - Clauses
+
+
+#pragma mark CSFrom
 
 @class CSFrom;
 
@@ -130,7 +148,7 @@ CORESTORE_EXTERN CORESTORE_OVERLOADABLE
 CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull configurations) CORESTORE_RETURNS_RETAINED;
 
 
-// MARK: - CSGroupBy
+#pragma mark CSGroupBy
 
 @class CSGroupBy;
 
@@ -174,7 +192,7 @@ CORESTORE_EXTERN CORESTORE_OVERLOADABLE
 CSGroupBy *_Nonnull CSGroupByKeyPaths(NSArray<NSString *> *_Nonnull keyPaths) CORESTORE_RETURNS_RETAINED;
 
 
-// MARK: - CSInto
+#pragma mark CSInto
 
 @class CSInto;
 
@@ -239,7 +257,7 @@ CORESTORE_OVERLOADABLE
 CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass, NSString *_Nonnull configuration) CORESTORE_RETURNS_RETAINED;
 
 
-// MARK: - CSOrderBy
+#pragma mark CSOrderBy
 
 @class CSOrderBy;
 
@@ -339,7 +357,7 @@ CORESTORE_EXTERN CORESTORE_OVERLOADABLE
 CSOrderBy *_Nonnull CSOrderByKeys(NSArray<NSSortDescriptor *> *_Nonnull sortDescriptors) CORESTORE_RETURNS_RETAINED;
 
 
-// MARK: - CSSelect
+#pragma mark CSSelect
 
 @class CSSelect;
 @class CSSelectTerm;
@@ -465,7 +483,7 @@ CORESTORE_EXTERN
 CSSelect *_Nonnull CSSelectObjectID() CORESTORE_RETURNS_RETAINED;
 
 
-// MARK: - CSTweak
+#pragma mark CSTweak
 
 @class CSTweak;
 
@@ -486,7 +504,7 @@ CORESTORE_EXTERN CORESTORE_OVERLOADABLE
 CSTweak *_Nonnull CSTweakRequest(void (^_Nonnull block)(NSFetchRequest *_Nonnull fetchRequest)) CORESTORE_RETURNS_RETAINED;
 
 
-// MARK: - CSWhere
+#pragma mark CSWhere
 
 @class CSWhere;
 

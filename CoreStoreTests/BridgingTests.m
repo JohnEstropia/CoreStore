@@ -42,6 +42,14 @@
     XCTAssertEqual(CSLocalStorageOptionsAllowSynchronousLightweightMigration, 4);
 }
 
+- (void)test_ThatKeyPaths_AreCorrect {
+    
+    XCTAssertEqualObjects(CSKeyPath(TestEntity1, testNumber), @"testNumber");
+    XCTAssertEqualObjects(CSKeyPath(TestEntity1, testString), @"testString");
+    XCTAssertEqualObjects(CSKeyPathOperator(count, TestEntity1, testString), @"@count.testString");
+    XCTAssertEqualObjects(CSKeyPathOperator(max, TestEntity1, testNumber), @"@max.testNumber");
+}
+
 - (void)test_ThatFromClauses_BridgeCorrectly {
     
     {

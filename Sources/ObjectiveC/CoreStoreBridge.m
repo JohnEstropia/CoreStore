@@ -43,7 +43,10 @@
 #endif
 
 
-// MARK: - CSFrom
+
+#pragma mark - Clauses
+
+#pragma mark CSFrom
 
 CORESTORE_OVERLOADABLE
 CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass) CORESTORE_RETURNS_RETAINED {
@@ -70,7 +73,7 @@ CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull c
 }
 
 
-// MARK: - CSGroupBy
+#pragma mark CSGroupBy
 
 CSGroupBy *_Nonnull CSGroupByKeyPath(NSString *_Nonnull keyPath) CORESTORE_RETURNS_RETAINED {
     
@@ -102,7 +105,7 @@ CSGroupBy *_Nonnull CSGroupByKeyPaths(NSArray<NSString *> *_Nonnull keyPaths) CO
 }
 
 
-// MARK: - CSInto
+#pragma mark CSInto
 
 CORESTORE_OVERLOADABLE
 CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass) CORESTORE_RETURNS_RETAINED {
@@ -123,7 +126,7 @@ CSInto *_Nonnull CSIntoClass(Class _Nonnull entityClass, NSString *_Nonnull conf
 }
 
 
-// MARK: - CSOrderBy
+#pragma mark CSOrderBy
 
 @class CSOrderBy;
 
@@ -167,7 +170,7 @@ CSOrderBy *_Nonnull CSOrderByKeys(NSArray<NSSortDescriptor *> *_Nonnull sortDesc
 }
 
 
-// MARK: - CSSelect
+#pragma mark CSSelect
 
 CSSelect *_Nonnull CSSelectNumber(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RETURNS_RETAINED {
     
@@ -200,7 +203,7 @@ CSSelect *_Nonnull CSSelectObjectID() CORESTORE_RETURNS_RETAINED {
 }
 
 
-// MARK: - CSTweak
+#pragma mark CSTweak
 
 CORESTORE_OVERLOADABLE
 CSTweak *_Nonnull CSTweakRequest(void (^_Nonnull block)(NSFetchRequest *_Nonnull fetchRequest)) CORESTORE_RETURNS_RETAINED {
@@ -209,7 +212,7 @@ CSTweak *_Nonnull CSTweakRequest(void (^_Nonnull block)(NSFetchRequest *_Nonnull
 }
 
 
-// MARK: - CSWhere
+#pragma mark CSWhere
 
 CSWhere *_Nonnull CSWhereValue(BOOL value) CORESTORE_RETURNS_RETAINED {
     
