@@ -15,25 +15,30 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 </p>
 * Swift 2.2 (Xcode 7.3)
 * iOS 7+ / OSX 10.10+ / watchOS 2.0+ / tvOS 9.0+
+* **New in CoreStore 2.0:** Objective-C support! All CoreStore types now have their corresponding Objective-C "bridging classes". Perfect for projects transitioning from Objective-C to Swift!
 
 
+## Why use CoreStore?
+I was [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)'s heavy user back then, but I took the promising opportunity to create CoreStore when Swift came around. Part of the inspiration is to address the trend of developers [avoiding](http://inessential.com/2010/02/26/on_switching_away_from_core_data) [Core Data](http://bsktapp.com/blog/why-is-realm-great-and-why-are-we-not-using-it/) [for](https://www.quora.com/Why-would-you-use-Realm-over-Core-Data) [perplexing](http://sebastiandobrincu.com/blog/5-reasons-why-you-should-choose-realm-over-coredata) [reasons](https://medium.com/the-way-north/ditching-core-data-865c1bb5564c#.a5h8ou6ri). 
 
-## What CoreStore does better:
+CoreStore was (and is) heavily shaped by real-world needs of developing data-dependent apps. It enforces safe and convenient Core Data usage while letting you take advantage of the industry's encouraged best practices.
 
-- **Heavily supports multiple persistent stores per data stack**, just the way *.xcdatamodeld* files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
-- **Progressive Migrations!** Just tell the data stack the sequence of model versions and CoreStore will automatically use progressive migrations if needed on stores added to that stack.
-- Ability to **plug-in your own logging framework**
-- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you are **free to name entities and their class names independently**.
-- Provides type-safe, easy to configure **observers to replace `NSFetchedResultsController` and KVO**
-- Exposes **API not just for fetching, but also for querying aggregates and property values**
-- Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into **safer, higher-level abstractions** without sacrificing flexibility and customizability.
-- Exposes clean and convenient API designed around **Swift’s code elegance and type safety**.
-- **Documentation!** No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.
-- **Efficient importing utilities!**
+### Features
+- **Heavy support for multiple persistent stores per data stack.** CoreStore lets you manage separate stores in a single `DataStack`, just the way *.xcdatamodeld* configurations are designed to. CoreStore will also manage one stack by default, but you can create and manage as many as you need. *(See [Setting up](#setting-up))*
+- **Progressive migrations.** No need to think how to migrate from all previous model versions to your latest model. Just tell the `DataStack` the sequence of version strings (`MigrationChain`s) and CoreStore will automatically use progressive migrations when needed. *(See [Migrations](#migrations))*
+- **Plug-in your own logging framework.** Although a default logger is built-in, all logging, asserting, and error reporting can be funneled to `CoreStoreLogger` protocol implementations. *(See [Logging and error reporting](#logging-and-error-reporting))*
+- **Free to name entities and their class names independently.** CoreStore gets around a restriction with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you can assign different names for the entities and their class names.
+- **Type-safe, easy to configure observers.** You don't have to deal with the burden of setting up `NSFetchedResultsController`s and KVO. As an added bonus, `ListMonitor`s and `ObjectMonitor`s can have multiple observers. This means you can have multiple view controllers efficiently share a single resource! *(See [Observing changes and notifications](#observing-changes-and-notifications))*
+- **Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (min, max, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
+- **Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*
+- **Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
+- **New in CoreStore 2.0: Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore 2.0 is the answer to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types now have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
+- **New in CoreStore 2.0: iCloud storage (beta) support.** CoreStore now allows creation of iCloud persistent stores, as well as observing of iCloud-related events through the `iCloudStoreObserver`. *(See [iCloud storage](#icloud-storages))*
+- **Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
+- **Full Documentation.** No magic here; all public classes, functions, properties, etc. have detailed *Apple Docs*. This *README* also introduces a lot of concepts and explains a lot of CoreStore's behavior.
+- **New in CoreStore 2.0: More extensive Unit Tests.** Extending CoreStore is now safer without having to worry about breaking old behavior.
 
-**[Vote for the next feature!](http://goo.gl/RIiHMP)**
-
-
+*Have ideas that may benefit other Core Data users? [Feature Request](https://github.com/JohnEstropia/CoreStore/issues)s are welcome!*
 
 ## Contents
 
@@ -41,6 +46,8 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 - [Architecture](#architecture)
 - CoreStore Tutorials (All of these have demos in the **CoreStoreDemo** app project!)
     - [Setting up](#setting-up)
+        - [Local storage](#local-storage)
+        - [iCloud storage](#icloud-storages)
     - [Migrations](#migrations)
         - [Progressive migrations](#progressive-migrations)
         - [Forecasting migrations](#forecasting-migrations)
@@ -63,10 +70,11 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
         - [Querying](#querying)
             - [`Select<T>` clause](#selectt-clause)
             - [`GroupBy` clause](#groupby-clause)
-    - [Logging and error handling](#logging-and-error-handling)
+    - [Logging and error reporting](#logging-and-error-reporting)
     - [Observing changes and notifications](#observing-changes-and-notifications) (unavailable on OSX)
         - [Observe a single object](#observe-a-single-object)
         - [Observe a list of objects](#observe-a-list-of-objects)
+    - [Objective-C support](#objective-c-support)
 - [Roadmap](#roadmap)
 - [Installation](#installation)
 - [Changesets](#changesets)
@@ -999,7 +1007,7 @@ this returns dictionaries that shows the count for each `"age"`:
 ]
 ```
 
-## Logging and error handling
+## Logging and error reporting
 One unfortunate thing when using some third-party libraries is that they usually pollute the console with their own logging mechanisms. CoreStore provides its own default logging class, but you can plug-in your own favorite logger by implementing the `CoreStoreLogger` protocol.
 ```swift
 final class MyLogger: CoreStoreLogger {
