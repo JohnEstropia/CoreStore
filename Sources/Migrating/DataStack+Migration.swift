@@ -295,15 +295,19 @@ public extension DataStack {
     /**
      Asynchronously adds a `CloudStorage` to the stack. Migrations are also initiated by default.
      ```
+     guard let storage = ICloudStore(
+         ubiquitousContentName: "MyAppCloudData",
+         ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
+         ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
+         ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
+         configuration: "Config1",
+         cloudStorageOptions: .RecreateLocalStoreOnModelMismatch
+     ) else {
+         // iCloud is not available on the device
+         return
+     }
      dataStack.addStorage(
-         ICloudStore(
-             ubiquitousContentName: "MyAppCloudData",
-             ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
-             ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
-             ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
-             configuration: "Config1",
-             cloudStorageOptions: .AllowSynchronousLightweightMigration
-         ),
+         storage,
          completion: { result in
              switch result {
              case .Success(let storage): // ...

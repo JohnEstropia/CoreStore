@@ -134,16 +134,18 @@ public extension CoreStore {
     /**
      Adds a `CloudStorage` to the `defaultStack` and blocks until completion.
      ```
-     try CoreStore.addStorageAndWait(
-         ICloudStore(
-             ubiquitousContentName: "MyAppCloudData",
-             ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
-             ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
-             ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
-             configuration: "Config1",
-             cloudStorageOptions: .AllowSynchronousLightweightMigration
-         )
-     )
+     guard let storage = ICloudStore(
+         ubiquitousContentName: "MyAppCloudData",
+         ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
+         ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
+         ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
+         configuration: "Config1",
+         cloudStorageOptions: .RecreateLocalStoreOnModelMismatch
+     ) else {
+         // iCloud is not available on the device
+         return
+     }
+     try CoreStore.addStorageAndWait(storage)
      ```
      
      - parameter storage: the local storage

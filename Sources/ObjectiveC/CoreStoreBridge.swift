@@ -1,5 +1,5 @@
 //
-//  CoreStoreObjectiveCType.swift
+//  CoreStoreBridge.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia

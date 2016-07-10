@@ -39,15 +39,19 @@ public class ICloudStore: CloudStorage {
     /**
      Initializes an iCloud store interface from the given ubiquitous store information. Returns `nil` if the container could not be located or if iCloud storage is unavailable for the current user or device
      ```
-     try CoreStore.addStorage(
-         ICloudStore(
-             ubiquitousContentName: "MyAppCloudData",
-             ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
-             ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
-             ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
-             configuration: "Config1",
-             cloudStorageOptions: .AllowSynchronousLightweightMigration
-         )
+     guard let storage = ICloudStore(
+         ubiquitousContentName: "MyAppCloudData",
+         ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
+         ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
+         ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
+         configuration: "Config1",
+         cloudStorageOptions: .RecreateLocalStoreOnModelMismatch
+     ) else {
+         // iCloud is not available on the device
+         return
+     }
+     CoreStore.addStorage(
+         storage,
          completion: { result in
              // ...
          }

@@ -288,16 +288,18 @@ public final class DataStack {
     /**
      Adds a `CloudStorage` to the stack and blocks until completion.
      ```
-     try dataStack.addStorageAndWait(
-         ICloudStore(
-             ubiquitousContentName: "MyAppCloudData",
-             ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
-             ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
-             ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
-             configuration: "Config1",
-             cloudStorageOptions: .AllowSynchronousLightweightMigration
-         )
-     )
+     guard let storage = ICloudStore(
+         ubiquitousContentName: "MyAppCloudData",
+         ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
+         ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
+         ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
+         configuration: "Config1",
+         cloudStorageOptions: .RecreateLocalStoreOnModelMismatch
+     ) else {
+         // iCloud is not available on the device
+         return
+     }
+     try dataStack.addStorageAndWait(storage)
      ```
      
      - parameter storage: the local storage

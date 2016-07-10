@@ -141,7 +141,7 @@ public protocol LocalStorage: StorageInterface {
     var fileURL: NSURL { get }
     
     /**
-     The `NSBundle`s from which to search mapping models for migrations
+     The `NSBundle`s from which to search mapping models (*.xcmappingmodel) for migrations
      */
     var mappingModelBundles: [NSBundle] { get }
     

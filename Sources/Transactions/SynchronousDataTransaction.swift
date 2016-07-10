@@ -234,7 +234,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         self.context.reset()
     }
     
-    @available(*, deprecated=1.5.2, renamed="commitAndWait")
+    @available(*, deprecated=1.5.2, obsoleted=2.0.0, renamed="commitAndWait")
     public func commit() {
         
         self.commitAndWait()
