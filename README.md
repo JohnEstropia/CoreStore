@@ -1143,14 +1143,16 @@ Take special care when implementing `CoreStoreLogger`'s `assert(...)` and `abort
 - `abort(...)`: This method is *the* last-chance for your app to *synchronously* log a fatal error within CoreStore. The app will be terminated right after this function is called (CoreStore calls `fatalError()` internally)
 
 Starting CoreStore 2.0, all CoreStore types now have very useful (and pretty formatted!) `print(...)` outputs. 
-A couples of examples; `ListMonitor`:
+
+A couple of examples, `ListMonitor`:
 
 <img width="369" alt="screen shot 2016-07-10 at 22 56 44" src="https://cloud.githubusercontent.com/assets/3029684/16713994/ae06e702-46f1-11e6-83a8-dee48b480bab.png" />
 
-`CoreStoreError.MappingModelNotFoundError`
+`CoreStoreError.MappingModelNotFoundError`:
 
 <img width="506" alt="MappingModelNotFoundError" src="https://cloud.githubusercontent.com/assets/3029684/16713962/e021f548-46f0-11e6-8100-f9b5ea6b4a08.png" />
 
+These are all implemented with `CustomDebugStringConvertible.debugDescription`, so they work with lldb's `po` command as well.
 
 ## Observing changes and notifications (unavailable on macOS)
 CoreStore provides type-safe wrappers for observing managed objects:
@@ -1285,12 +1287,139 @@ let person2 = self.monitor[1, 2]
 ```
 
 ## Objective-C support
-    <WIP>
+CoreStore 2.0 was a big move to address the large number of apps starting to convert from Objective-C to Swift. The basic problem is this: The cost of converting all code base to Swift is very big, so most apps are forced to do undergo a *transitional* ObjC-Swift hybrid phase. This used to mean that these apps could not use the Swifty-est libraries out there yet, or that they may have to write their own bridging methods just to make new code usable in their old Objective-C code.
+
+With 2.0, all CoreStore types are still written in pure Swift, but they now have Objective-C "bridging classes" that are visible to Objective-C code. To show a couple of usage examples:
+
+<table>
+<tr><th>Swift</th><th>Objective-C</th></tr>
+<tr>
+<td><pre lang=swift>
+try CoreStore.addStorageAndWait(SQLiteStore)
+</pre></td>
+<td><pre lang=objc>
+NSError *error
+[CSCoreStore addSQLiteStorageAndWait:[CSSQLiteStore new] error:&error]
+</pre></td>
+</tr>
+<tr>
+<td><pre lang=swift>
+CoreStore.beginAsynchronous { (transaction) in
+    // ...
+    transaction.commit { (result) in
+        switch result {
+        case .Success(let hasChanges): print(hasChanges)
+        case .Failure(let error): print(error)
+        }
+    }
+}
+</pre></td>
+<td><pre lang=objc>
+[CSCoreStore beginAsynchronous:^(CSAsynchronousDataTransaction *transaction) {
+    // ...
+    [transaction commitWithCompletion:^(CSSaveResult *result) {
+        if (result.isSuccess) {
+            NSLog(@"hasChanges: %d", result.hasChanges);
+        }
+        else if (result.isFailure) {
+            NSLog(@"error: %@", result.error);
+        }
+    }];
+}];
+</pre></td>
+</tr>
+</table>
+
+All of these `CS`-prefixed bridging classes have very similar usage to the existing CoreStore APIs, and ironically *none of them are written in Objective-C*. The secret is all in *CoreStoreBridge.swift*, where we see the signature of these bridging classes, the `CoreStoreObjectiveCType` protocol:
+```swift
+public protocol CoreStoreObjectiveCType: class, AnyObject {
+    associatedtype SwiftType
+    var bridgeToSwift: SwiftType { get }
+    init(_ swiftValue: SwiftType)
+}
+```
+Notice that these bridging classes all hold a reference to their corresponding `SwiftType`.
+
+Conversely, CoreStore original types implement the `CoreStoreSwiftType` protocol:
+```swift
+public protocol CoreStoreSwiftType {
+    associatedtype ObjectiveCType
+    var bridgeToObjectiveC: ObjectiveCType { get }
+}
+```
+These two protocols let CoreStore types free to bridge instances between Objective-C and Swift.
+
+This is very different to the common approach where apps and libraries write Objective-C APIs just to support both Objective-C and Swift. The advantage with CoreStore's approach is that your Swift codebase can already use the purely-Swift API without further changes in the future, but your "hybrid" codebase can still bridge instances back and forth from Objective-C to Swift.
+
+For example, you may have a new, modern Swift class that holds a `ListMonitor`:
+```swift
+class MyViewController: UIViewController {
+    let monitor = CoreStore.monitorList(From(MyEntity), ...)
+    // ...
+}
+```
+Now let's say you have a legacy Objective-C class that previously uses `NSFetchedResultsController`. It's easy to switch from `NSFetchedResultsController` to `CSListMonitor`, but converting the rest of this huge class is impractical. You end up with 
+```objc
+@interface MYOldViewController: UIViewController 
+@property (nonatomic, readonly, strong) CSListMonitor* monitor;
+- (instancetype)initWithMonitor:(CSListMonitor *)monitor;
+@end
+```
+When you need to instantiate this class from Swift, you just call `bridgeToObjectiveC`:
+```swift
+class MyViewController: UIViewController {
+    let monitor = CoreStore.monitorList(From(MyEntity), ...)
+    func showOldController() {
+        let controller = MYOldViewController(monitor: self.monitor.bridgeToObjectiveC)
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
+}
+```
+Note that the `CSListMonitor` holds the exact same `ListMonitor` instance, which means that no copies and no extra fetching occur.
+
+### Objective-C syntax sugars
+Objective-C tends to be verbose, so some method calls are long and unreadable. For example, fetching looks like this:
+```objc
+NSArray<MYPerson *> *objects = 
+[CSCoreStore
+ fetchAllFrom:[[CSFrom alloc] initWithEntityClass:[MYPerson class]]
+ fetchClauses:@[[[CSWhere alloc] initWithFormat:@"%K == %@", @"isHidden", @NO],
+                [[CSOrderBy alloc] initWithSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES],
+                                                             [NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]]]];
+```
+Although it works, it looks terrible. For this, CoreStore provides *CoreStoreBridge.h* where these Objective-C calls are wrapped in readable, convenient macros and global functions. The call above becomes
+```objc
+NSArray<MYPerson *> *objects = 
+[CSCoreStore
+ fetchAllFrom:CSFromClass([MYPerson class])
+ fetchClauses:@[CSWhereFormat(@"%K == %@", @"isHidden", @NO),
+                CSOrderByKeys(CSSortAscending(@"lastName"),
+                              CSSortAscending(@"firstName"), nil)]];
+```
+That's much shorter now. But we can still do better. Notice that we have strings being used as key paths. The `CSKeyPath(...)` macro gives us compile-time checking so keys that don't exist in a class will generate errors. Our key-safe code now looks like this:
+```objc
+NSArray<MYPerson *> *objects = 
+[CSCoreStore
+ fetchAllFrom:CSFromClass([MYPerson class])
+ fetchClauses:@[CSWhereFormat(@"%K == %@", CSKeyPath(MYPerson, isHidden), @NO),
+                CSOrderByKeys(CSSortAscending(CSKeyPath(MYPerson, lastName)),
+                              CSSortAscending(CSKeyPath(MYPerson, firstName)), nil)]];
+```
+
+To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C source files. For projects that support iOS 7 (and thus cannot build CoreStore as a module), you will need to add 
+```
+SWIFT_OBJC_INTERFACE_HEADER_NAME=$(SWIFT_OBJC_INTERFACE_HEADER_NAME)
+```
+to your target's `GCC_PREPROCESSOR_DEFINITIONS` build setting.
+
+<img width="797" alt="GCC_PREPROCESSOR_DEFINITIONS" src="https://cloud.githubusercontent.com/assets/3029684/16714547/92497fc4-4701-11e6-81db-6b1a11743cc5.png" />
 
 
 # Roadmap
-- Support iCloud stores
-- CoreSpotlight auto-indexing (experimental)
+- Built-in "singleton objects" support
+- Built-in "readonly" stores
+- CoreSpotlight auto-indexing (experimenting, still some roadblocks ahead)
+- Synching
 
 
 # Installation
@@ -1311,8 +1440,8 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 1.6.0
-github "JohnEstropia/GCDKit" >= 1.2.2
+github "JohnEstropia/CoreStore" >= 2.0.0
+github "JohnEstropia/GCDKit" >= 1.2.5
 ```
 and run 
 ```
@@ -1331,6 +1460,18 @@ Drag and drop **CoreStore.xcodeproj** to your project.
 #### To include directly in your app module:
 Add all *.swift* files to your project.
 
+
+### Objective-C support
+
+To use the Objective-C syntax sugars, import *CoreStoreBridge.h* in your *.m* source files.
+
+For projects that support iOS 7 (and thus cannot build CoreStore as a module), you will need to add 
+```
+SWIFT_OBJC_INTERFACE_HEADER_NAME=$(SWIFT_OBJC_INTERFACE_HEADER_NAME)
+```
+to your target's `GCC_PREPROCESSOR_DEFINITIONS` build setting:
+
+<img width="797" alt="GCC_PREPROCESSOR_DEFINITIONS" src="https://cloud.githubusercontent.com/assets/3029684/16714547/92497fc4-4701-11e6-81db-6b1a11743cc5.png" />
 
 
 # Changesets
