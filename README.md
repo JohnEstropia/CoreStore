@@ -21,6 +21,8 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 * iOS 7+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
 * **New in CoreStore 2.0:** Objective-C support! All CoreStore types now have their corresponding Objective-C "bridging classes". Perfect for projects transitioning from Objective-C to Swift!
 
+Upgrading from CoreStore 1.x to 2.x? [Read the migration guide here.](#upgrading-from-1xx-to-2xx)
+
 
 ## Why use CoreStore?
 I was [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)'s heavy user back then, but I took the promising opportunity to create CoreStore when Swift came around. Part of the inspiration is to address the trend of developers [avoiding](http://inessential.com/2010/02/26/on_switching_away_from_core_data) [Core Data](http://bsktapp.com/blog/why-is-realm-great-and-why-are-we-not-using-it/) [for](https://www.quora.com/Why-would-you-use-Realm-over-Core-Data) [perplexing](http://sebastiandobrincu.com/blog/5-reasons-why-you-should-choose-realm-over-coredata) [reasons](https://medium.com/the-way-north/ditching-core-data-865c1bb5564c#.a5h8ou6ri). 
@@ -83,7 +85,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 - [Roadmap](#roadmap)
 - [Installation](#installation)
 - [Changesets](#changesets)
-    - [Upgrading from v0.2.0 to 1.0.0](#upgrading-from-v020-to-100)
+    - [Upgrading from 1.x.x to 2.x.x](#upgrading-from-1xx-to-2xx)
 - [Contact](#contact)
 - [Who uses CoreStore?](#who-uses-corestore)
 - [License](#license)
@@ -1476,23 +1478,33 @@ to your target's `GCC_PREPROCESSOR_DEFINITIONS` build setting:
 
 # Changesets
 ### Upgrading from 1.x.x to 2.x.x
-- Renamed some classes/protocols to shorter, more relevant, easier to remember names:
-- `ManagedObjectController` to `ObjectMonitor`
-- `ManagedObjectObserver` to `ObjectObserver`
-- `ManagedObjectListController` to `ListMonitor`
-- `ManagedObjectListChangeObserver` to `ListObserver`
-- `ManagedObjectListObjectObserver` to `ListObjectObserver`
-- `ManagedObjectListSectionObserver` to `ListSectionObserver`
-- `SectionedBy` to `SectionBy` (match tense with `OrderBy` and `GroupBy`)
-The protocols above had their methods renamed as well, to retain the natural language semantics.
-- Several methods now `throw` errors insted of returning a result `enum`.
-- New migration utilities! (README still pending) Check out *DataStack+Migration.swift* and *CoreStore+Migration.swift* for the new methods, as well as *DataStack.swift* for its new initializer.
+**Obsoleted**
+- `AsynchronousDataTransaction.rollback()` was removed. Undo and rollback functionality are now only allowed on `UnsafeDataTransaction`s
+- `DetachedDataTransaction` was renamed to `UnsafeDataTransaction`
+- `beginDetached()` was renamed to `beginUnsafe()`
+- `PersistentStoreResult` was removed in favor of `SetupResult<T>`
+- `SynchronousDataTransaction.commit()` was renamed to `SynchronousDataTransaction.commitAndWait()`
+- `From` initializers that accepted `NSURL`s and `NSPersistentStore` were removed.
+
+**Deprecated**
+The following methods are still available, but will be removed in a future update.
+- `add*Store(...)` method variants. It is strongly recommended to convert to the new API. Refer to [Local store](#local-store)) usage then use `LegacySQLiteStore` instead of `SQLiteStore` to maintain the old default file names and directory values
+    - `addInMemoryStoreAndWait(...)` → `addStorageAndWait(InMemoryStore(...))`
+    - `addSQLiteStoreAndWait(...)` → `addStorageAndWait(LegacySQLiteStore(...))`
+    - `addInMemoryStore(...)` → `addStorage(InMemoryStore(...), ...)`
+    - `addSQLiteStore(...)` → `addStorage(LegacySQLiteStore(...), ...)`
+    - `requiredMigrationsForSQLiteStore(...)` → `requiredMigrationsForStorage(...)`
+    - `upgradeSQLiteStoreIfNeeded(...)` → `upgradeStorageIfNeeded(...)`
+    - The `resetStoreOnModelMismatch: Bool` argument for the methods above are now provided to the `LegacySQLiteStore` and `SQLiteStore` initializers as a `LocalStorageOptions` option set
+- `NSError` used to have a `coreStoreErrorCode` property that returns `CoreStoreErrorCode` enum, but all CoreStore errors are now guaranteed to be `CoreStoreError` enum type in swift, and `CSError` type on Objective-C.
+- `CoreStoreLogger.handleError(...)` was deprecated in favor of `CoreStoreLogger.log(error:...)`. `CoreStoreLogger` may also implement `CoreStoreLogger.abort(...)`, which is called just before CoreStore executes `fatalError()` due to critical runtime errors.
 
 
 # Contact
 Questions? Suggestions?
 
 Reach me on Twitter [@JohnEstropia](https://twitter.com/JohnEstropia)
+
 or join our Slack team at [swift-corestore.slack.com](http://swift-corestore-slack.herokuapp.com/)
 
 日本語の対応も可能なので是非！
