@@ -1123,27 +1123,34 @@ this returns dictionaries that shows the count for each `"age"`:
 ## Logging and error reporting
 One unfortunate thing when using some third-party libraries is that they usually pollute the console with their own logging mechanisms. CoreStore provides its own default logging class, but you can plug-in your own favorite logger by implementing the `CoreStoreLogger` protocol.
 ```swift
-final class MyLogger: CoreStoreLogger {
-    func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        // pass to your logger
-    }
-    
-    func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        // pass to your logger
-    }
-    
-    func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        // pass to your logger
-    }
+public protocol CoreStoreLogger {
+    func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
 }
 ```
-Then pass an instance of this class to `CoreStore`:
+Implement this protocol with your custom class then pass the instance to `CoreStore.logger`:
 ```swift
 CoreStore.logger = MyLogger()
 ```
 Doing so channels all logging calls to your logger.
 
 Note that to keep the call stack information intact, all calls to these methods are **NOT** thread-managed. Therefore you have to make sure that your logger is thread-safe or you may otherwise have to dispatch your logging implementation to a serial queue.
+
+Take special care when implementing `CoreStoreLogger`'s `assert(...)` and `abort(...)` functions:
+- `assert(...)`: The behavior between `DEBUG` and release builds, or `-O` and `-Onone`, are all left to the implementers' responsibility. CoreStore calls `CoreStoreLogger.assert(...)` only for invalid but usually recoverable errors (for example, early validation failures that may cause an error thrown and handled somewhere else)
+- `abort(...)`: This method is *the* last-chance for your app to *synchronously* log a fatal error within CoreStore. The app will be terminated right after this function is called (CoreStore calls `fatalError()` internally)
+
+Starting CoreStore 2.0, all CoreStore types now have very useful (and pretty formatted!) `print(...)` outputs. 
+A couples of examples; `ListMonitor`:
+
+<img width="369" alt="screen shot 2016-07-10 at 22 56 44" src="https://cloud.githubusercontent.com/assets/3029684/16713994/ae06e702-46f1-11e6-83a8-dee48b480bab.png" />
+
+`CoreStoreError.MappingModelNotFoundError`
+
+<img width="506" alt="MappingModelNotFoundError" src="https://cloud.githubusercontent.com/assets/3029684/16713962/e021f548-46f0-11e6-8100-f9b5ea6b4a08.png" />
+
 
 ## Observing changes and notifications (unavailable on macOS)
 CoreStore provides type-safe wrappers for observing managed objects:
@@ -1198,23 +1205,20 @@ Including `ListObserver`, there are 3 observer protocols you can implement depen
 - `ListObserver`: lets you handle these callback methods:
 ```swift
     func listMonitorWillChange(monitor: ListMonitor<MyPersonEntity>)
-
     func listMonitorDidChange(monitor: ListMonitor<MyPersonEntity>)
+    func listMonitorWillRefetch(monitor: ListMonitor<MyPersonEntity>)
+    func listMonitorDidRefetch(monitor: ListMonitor<MyPersonEntity>)
 ```
 - `ListObjectObserver`: in addition to `ListObserver` methods, also lets you handle object inserts, updates, and deletes:
 ```swift
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didInsertObject object: MyPersonEntity, toIndexPath indexPath: NSIndexPath)
-
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didDeleteObject object: MyPersonEntity, fromIndexPath indexPath: NSIndexPath)
-
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didUpdateObject object: MyPersonEntity, atIndexPath indexPath: NSIndexPath)
-
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didMoveObject object: MyPersonEntity, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
 ```
 - `ListSectionObserver`: in addition to `ListObjectObserver` methods, also lets you handle section inserts and deletes:
 ```swift
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
-
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 ```
 
@@ -1279,6 +1283,9 @@ let person1 = self.monitor[indexPath]
 let person2 = self.monitor[1, 2]
 // person1 and person2 are the same object
 ```
+
+## Objective-C support
+    <WIP>
 
 
 # Roadmap
