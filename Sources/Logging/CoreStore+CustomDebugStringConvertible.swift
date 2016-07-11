@@ -1106,7 +1106,7 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
             ("renamingIdentifier", self.renamingIdentifier),
             ("compoundIndexes", self.compoundIndexes)
         ]
-        if #available(iOS 9.0, OSXApplicationExtension 10.11, *) {
+        if #available(iOS 9.0, OSXApplicationExtension 10.11, OSX 10.11, *) {
             
             info.append(("uniquenessConstraints", self.uniquenessConstraints))
         }
