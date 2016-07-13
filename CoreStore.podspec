@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = "CoreStore"
-    s.version = "1.6.10"
+    s.version = "2.0.0"
     s.license = "MIT"
     s.summary = "Unleashing the real power of Core Data with the elegance and safety of Swift"
     s.homepage = "https://github.com/JohnEstropia/CoreStore"
@@ -12,11 +12,12 @@ Pod::Spec.new do |s|
     s.watchos.deployment_target = "2.0"
     s.tvos.deployment_target = "9.0"
 
-    s.source_files = "CoreStore", "CoreStore/**/*.{swift}"
-    s.osx.exclude_files = "CoreStore/Observing/*.{swift}", "CoreStore/Internal/FetchedResultsControllerDelegate.swift", "CoreStore/Internal/CoreStoreFetchedResultsController.swift", "CoreStore/Convenience Helpers/NSFetchedResultsController+Convenience.swift"
+    s.source_files = "Sources", "Sources/**/*.{swift,h,m}"
+    s.public_header_files = "Sources/**/*.h"
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
-    s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-D USE_FRAMEWORKS' }
+    s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-D USE_FRAMEWORKS',
+                              'GCC_PREPROCESSOR_DEFINITIONS' => 'USE_FRAMEWORKS=1' }
     
     s.dependency "GCDKit", "1.2.5"
 end

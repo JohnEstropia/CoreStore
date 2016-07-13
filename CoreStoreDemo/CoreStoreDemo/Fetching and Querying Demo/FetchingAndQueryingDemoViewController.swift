@@ -15,10 +15,12 @@ private struct Static {
     static let timeZonesStack: DataStack = {
         
         let dataStack = DataStack()
-        try! dataStack.addSQLiteStoreAndWait(
-            fileName: "TimeZoneDemo.sqlite",
-            configuration: "FetchingAndQueryingDemo",
-            resetStoreOnModelMismatch: true
+        try! dataStack.addStorageAndWait(
+            SQLiteStore(
+                fileName: "TimeZoneDemo.sqlite",
+                configuration: "FetchingAndQueryingDemo",
+                localStorageOptions: .RecreateStoreOnModelMismatch
+            )
         )
     
         dataStack.beginSynchronous { (transaction) -> Void in
@@ -97,6 +99,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
     // MARK: UITableViewDataSource
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         switch self.segmentedControl?.selectedSegmentIndex {
             
         case Section.Fetching.rawValue?:

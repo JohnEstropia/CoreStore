@@ -49,10 +49,12 @@ private struct Static {
     
     static let palettes: ListMonitor<Palette> = {
         
-        try! CoreStore.addSQLiteStoreAndWait(
-            fileName: "ColorsDemo.sqlite",
-            configuration: "ObservingDemo",
-            resetStoreOnModelMismatch: true
+        try! CoreStore.addStorageAndWait(
+            SQLiteStore(
+                fileName: "ColorsDemo.sqlite",
+                configuration: "ObservingDemo",
+                localStorageOptions: .RecreateStoreOnModelMismatch
+            )
         )
         
         return CoreStore.monitorSectionedList(

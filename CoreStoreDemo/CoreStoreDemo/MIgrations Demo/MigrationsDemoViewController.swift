@@ -50,22 +50,21 @@ class MigrationsDemoViewController: UIViewController {
             (dataStack: DataStack) -> ModelMetadata in
             
             let models = self.models
-            do {
+            let migrations = try! dataStack.requiredMigrationsForStorage(
+                SQLiteStore(fileName: "MigrationDemo.sqlite")
+            )
+            
+            guard let storeVersion = migrations.first?.sourceVersion else {
+            
+                return models.first!
+            }
+            for model in models {
                 
-                let migrations = try dataStack.requiredMigrationsForSQLiteStore(
-                    fileName: "MigrationDemo.sqlite"
-                )
-                
-                let storeVersion = migrations.first?.sourceVersion ?? dataStack.modelVersion
-                for model in models {
+                if model.version == storeVersion {
                     
-                    if model.version == storeVersion {
-                        
-                        return model
-                    }
+                    return model
                 }
             }
-            catch _ { }
             
             return models.first!
         }
@@ -158,8 +157,8 @@ class MigrationsDemoViewController: UIViewController {
         )
         
         self.setEnabled(false)
-        let progress = try! dataStack.addSQLiteStore(
-            fileName: "MigrationDemo.sqlite",
+        let progress = dataStack.addStorage(
+            SQLiteStore(fileName: "MigrationDemo.sqlite"),
             completion: { [weak self] (result) -> Void in
                 
                 guard let `self` = self else {
@@ -266,8 +265,8 @@ class MigrationsDemoViewController: UIViewController {
         else {
            
             self.segmentedControl?.selectedSegmentIndex = UISegmentedControlNoSegment
-            self._dataStack = nil
             self._listMonitor = nil
+            self._dataStack = nil
         }
         
         self.updateDisplay(reloadData: true, scrollToSelection: scrollToSelection, animated: false)
@@ -365,16 +364,16 @@ extension MigrationsDemoViewController: UITableViewDataSource, UITableViewDelega
         cell.dnaLabel?.text = "DNA: \(dna)"
         cell.mutateButtonHandler = { [weak self] _ -> Void in
             
-            guard let strongSelf = self,
-                let dataStack = strongSelf.dataStack,
-                let organism = strongSelf.listMonitor?[indexPath] else {
+            guard let `self` = self,
+                let dataStack = self.dataStack,
+                let organism = self.listMonitor?[indexPath] else {
                     
                     return
             }
             
-            strongSelf.setSelectedIndexPath(indexPath, scrollToSelection: false)
-            strongSelf.setEnabled(false)
-            dataStack.beginAsynchronous { (transaction) -> Void in
+            self.setSelectedIndexPath(indexPath, scrollToSelection: false)
+            self.setEnabled(false)
+            dataStack.beginAsynchronous { [weak self] (transaction) -> Void in
                 
                 let organism = transaction.edit(organism) as! OrganismProtocol
                 organism.mutate()

@@ -30,7 +30,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         
         super.viewDidLoad()
         
-        try! self.dataStack.addSQLiteStoreAndWait(fileName: "emptyStore.sqlite")
+        try! self.dataStack.addStorageAndWait(SQLiteStore(fileName: "emptyStore.sqlite"))
         CoreStore.logger = self
     }
     
@@ -66,7 +66,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         }
     }
     
-    func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         GCDQueue.Main.async { [weak self] in
             
@@ -74,22 +74,18 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         }
     }
     
-    func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         if condition() {
             
             return
         }
         
+        let messageString = message()
         GCDQueue.Main.async { [weak self] in
             
-            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(message)\n\n")
+            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(messageString)\n\n")
         }
-    }
-    
-    @noreturn func fatalError(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        
-        Swift.fatalError("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Abort] \(message)")
     }
     
     
@@ -109,11 +105,12 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
             }
             
         case 1?:
-            do {
-                
-                try self.dataStack.addSQLiteStoreAndWait(fileName: "emptyStore.sqlite", configuration: "invalidStore")
-            }
-            catch _ { }
+            _ = try? dataStack.addStorageAndWait(
+                SQLiteStore(
+                    fileName: "emptyStore.sqlite",
+                    configuration: "invalidStore"
+                )
+            )
             
         case 2?:
             self.dataStack.beginAsynchronous { (transaction) -> Void in

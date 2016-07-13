@@ -18,10 +18,12 @@ private struct Static {
     
     static let placeController: ObjectMonitor<Place> = {
         
-        try! CoreStore.addSQLiteStoreAndWait(
-            fileName: "PlaceDemo.sqlite",
-            configuration: "TransactionsDemo",
-            resetStoreOnModelMismatch: true
+        try! CoreStore.addStorageAndWait(
+            SQLiteStore(
+                fileName: "PlaceDemo.sqlite",
+                configuration: "TransactionsDemo",
+                localStorageOptions: .RecreateStoreOnModelMismatch
+            )
         )
         
         var place = CoreStore.fetchOne(From(Place))
@@ -60,7 +62,10 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         
         super.viewDidLoad()
         
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(self.longPressGestureRecognized(_:)))
+        let longPressGesture = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(self.longPressGestureRecognized(_:))
+        )
         self.mapView?.addGestureRecognizer(longPressGesture)
         
         Static.placeController.addObserver(self)

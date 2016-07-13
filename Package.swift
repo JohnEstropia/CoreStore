@@ -25,6 +25,27 @@
 
 import PackageDescription
 
+let targets: [Target]
+#if os(iOS)
+targets = [Target(name: "CoreStore iOS")]
+#elseif os(OSX)
+targets = [Target(name: "CoreStore OSX")]
+#elseif os(watchOS)
+targets = [Target(name: "CoreStore watchOS")]
+#elseif os(tvOS)
+targets = [Target(name: "CoreStore tvOS")]
+#else
+targets = []
+#endif
+
 let package = Package(
-    name: "CoreStore"
+    name: "CoreStore",
+    targets: targets,
+    dependencies: [
+        .Package(
+            url: "https://github.com/JohnEstropia/GCDKit.git",
+            majorVersion: 1, minor: 2
+        )
+    ],
+    exclude: ["Carthage", "CoreStoreDemo", "Sources/libA/images"]
 )

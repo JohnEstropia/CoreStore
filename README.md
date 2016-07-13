@@ -6,33 +6,48 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 <br />
 <a href="https://travis-ci.org/JohnEstropia/CoreStore"><img alt="Build Status" src="https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg?style=flat" /></a>
-<a href="http://cocoadocs.org/docsets/CoreStore"><img alt="Version" src="https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat" /></a>
 <a href="http://cocoadocs.org/docsets/CoreStore"><img alt="Platform" src="https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat" /></a>
 <a href="https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE"><img alt="License" src="https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat" /></a>
-<a href="https://github.com/Carthage/Carthage"><img alt="Carthage compatible" src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" /></a>
+<br /><br />Dependency managers<br />
+<a href="https://cocoapods.org/pods/CoreStore"><img alt="Cocoapods compatible" src="https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat&label=Cocoapods" /></a>
+<a href="https://github.com/Carthage/Carthage"><img alt="Carthage compatible" src="https://img.shields.io/badge/Carthage-compatible-16a085.svg?style=flat" /></a>
+<a href="https://swiftpkgs.ng.bluemix.net/package/JohnEstropia/CoreStore"><img alt="Swift Package Manager compatible" src="https://img.shields.io/badge/Swift_Package_Manager-compatible-orange.svg?style=flat" /></a>
+<br /><br />Contact<br />
+<a href="http://swift-corestore-slack.herokuapp.com/"><img alt="Join us on Slack!" src="http://swift-corestore-slack.herokuapp.com/badge.svg" /></a>
+<a href="https://twitter.com/JohnEstropia"><img alt="Reach me on Twitter!" src="https://img.shields.io/badge/twitter-%40JohnEstropia-3498db.svg" /></a>
 <br />
 </p>
 * Swift 2.2 (Xcode 7.3)
-* iOS 7+ / OSX 10.10+ / watchOS 2.0+ / tvOS 9.0+
+* iOS 7+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
+* **New in CoreStore 2.0:** Objective-C support! All CoreStore types now have their corresponding Objective-C "bridging classes". Perfect for projects transitioning from Objective-C to Swift!
+
+Upgrading from CoreStore 1.x to 2.x? Check out the [new features](#new-in-corestore-20) and make sure to read the [Migration guide](#upgrading-from-1xx-to-2xx).
 
 
+## Why use CoreStore?
+I was [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)'s heavy user back then, but I took the promising opportunity to create CoreStore when Swift came around. Part of the inspiration is to address the trend of developers [avoiding](http://inessential.com/2010/02/26/on_switching_away_from_core_data) [Core Data](http://bsktapp.com/blog/why-is-realm-great-and-why-are-we-not-using-it/) [for](https://www.quora.com/Why-would-you-use-Realm-over-Core-Data) [perplexing](http://sebastiandobrincu.com/blog/5-reasons-why-you-should-choose-realm-over-coredata) [reasons](https://medium.com/the-way-north/ditching-core-data-865c1bb5564c#.a5h8ou6ri). 
 
-## What CoreStore does better:
+CoreStore was (and is) heavily shaped by real-world needs of developing data-dependent apps. It enforces safe and convenient Core Data usage while letting you take advantage of the industry's encouraged best practices. And with Core Data and Swift continuously being improved by Apple, CoreStore will just get better and better!
 
-- **Heavily supports multiple persistent stores per data stack**, just the way *.xcdatamodeld* files are designed to. CoreStore will also manage one data stack by default, but you can create and manage as many as you need.
-- **Progressive Migrations!** Just tell the data stack the sequence of model versions and CoreStore will automatically use progressive migrations if needed on stores added to that stack.
-- Ability to **plug-in your own logging framework**
-- Gets around a limitation with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you are **free to name entities and their class names independently**.
-- Provides type-safe, easy to configure **observers to replace `NSFetchedResultsController` and KVO**
-- Exposes **API not just for fetching, but also for querying aggregates and property values**
-- Makes it hard to fall into common concurrency mistakes. All `NSManagedObjectContext` tasks are encapsulated into **safer, higher-level abstractions** without sacrificing flexibility and customizability.
-- Exposes clean and convenient API designed around **Swift’s code elegance and type safety**.
-- **Documentation!** No magic here; all public classes, functions, properties, etc. have detailed Apple Docs. This README also introduces a lot of concepts and explains a lot of CoreStore's behavior.
-- **Efficient importing utilities!**
+### Features
+- **Heavy support for multiple persistent stores per data stack.** CoreStore lets you manage separate stores in a single `DataStack`, just the way *.xcdatamodeld* configurations are designed to. CoreStore will also manage one stack by default, but you can create and manage as many as you need. *(See [Setting up](#setting-up))*
+- **Progressive migrations.** No need to think how to migrate from all previous model versions to your latest model. Just tell the `DataStack` the sequence of version strings (`MigrationChain`s) and CoreStore will automatically use progressive migrations when needed. *(See [Migrations](#migrations))*
+- **Plug-in your own logging framework.** Although a default logger is built-in, all logging, asserting, and error reporting can be funneled to `CoreStoreLogger` protocol implementations. *(See [Logging and error reporting](#logging-and-error-reporting))*
+- **Free to name entities and their class names independently.** CoreStore gets around a restriction with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you can assign different names for the entities and their class names.
+- **Type-safe, easy to configure observers.** You don't have to deal with the burden of setting up `NSFetchedResultsController`s and KVO. As an added bonus, `ListMonitor`s and `ObjectMonitor`s can have multiple observers. This means you can have multiple view controllers efficiently share a single resource! *(See [Observing changes and notifications](#observing-changes-and-notifications))*
+- **Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (min, max, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
+- **Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*
+- **Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
+- **Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
+- **Full Documentation.** No magic here; all public classes, functions, properties, etc. have detailed *Apple Docs*. This *README* also introduces a lot of concepts and explains a lot of CoreStore's behavior.
 
-**[Vote for the next feature!](http://goo.gl/RIiHMP)**
+### New in CoreStore 2.0
+- **Informative (and pretty) logs.** All CoreStore and Core Data-related types now have very informative and pretty print outputs! *(See [Logging and error reporting](#logging-and-error-reporting))*
+- **Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore 2.0 is the answer to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types now have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
+- **iCloud storage (beta) support.** CoreStore now allows creation of iCloud persistent stores, as well as observing of iCloud-related events through the `ICloudStoreObserver`. *(See [iCloud storage](#icloud-storages))*
+- **More extensive Unit Tests.** Extending CoreStore is now safer without having to worry about breaking old behavior.
 
-
+*Have ideas that may benefit other Core Data users? [Feature Request](https://github.com/JohnEstropia/CoreStore/issues)s are welcome!*
 
 ## Contents
 
@@ -40,6 +55,9 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 - [Architecture](#architecture)
 - CoreStore Tutorials (All of these have demos in the **CoreStoreDemo** app project!)
     - [Setting up](#setting-up)
+        - [In-memory store](#in-memory-store)
+        - [Local store](#local-store)
+        - [iCloud store](#icloud-store)
     - [Migrations](#migrations)
         - [Progressive migrations](#progressive-migrations)
         - [Forecasting migrations](#forecasting-migrations)
@@ -62,14 +80,15 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
         - [Querying](#querying)
             - [`Select<T>` clause](#selectt-clause)
             - [`GroupBy` clause](#groupby-clause)
-    - [Logging and error handling](#logging-and-error-handling)
-    - [Observing changes and notifications](#observing-changes-and-notifications) (unavailable on OSX)
+    - [Logging and error reporting](#logging-and-error-reporting)
+    - [Observing changes and notifications](#observing-changes-and-notifications) (unavailable on macOS)
         - [Observe a single object](#observe-a-single-object)
         - [Observe a list of objects](#observe-a-list-of-objects)
+    - [Objective-C support](#objective-c-support)
 - [Roadmap](#roadmap)
 - [Installation](#installation)
 - [Changesets](#changesets)
-    - [Upgrading from v0.2.0 to 1.0.0](#upgrading-from-v020-to-100)
+    - [Upgrading from 1.x.x to 2.x.x](#upgrading-from-1xx-to-2xx)
 - [Contact](#contact)
 - [Who uses CoreStore?](#who-uses-corestore)
 - [License](#license)
@@ -88,8 +107,8 @@ CoreStore.defaultStack = DataStack(
 
 Adding a store:
 ```swift
-try CoreStore.addSQLiteStore(
-    fileName: "MyStore.sqlite",
+CoreStore.addStorage(
+    SQLiteStore(fileName: "MyStore.sqlite"),
     completion: { (result) -> Void in
         // ...
     }
@@ -112,10 +131,12 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 }
 ```
 
-Fetching objects:
+Fetching objects (simple):
 ```swift
 let people = CoreStore.fetchAll(From(MyPersonEntity))
 ```
+
+Fetching objects (complex):
 ```swift
 let people = CoreStore.fetchAll(
     From(MyPersonEntity),
@@ -135,7 +156,7 @@ let maxAge = CoreStore.queryValue(
 )
 ```
 
-But really, there's a reason I wrote this huge README. Read up on the details!
+But really, there's a reason I wrote this huge *README*. Read up on the details!
 
 Check out the **CoreStoreDemo** app project for sample codes as well!
 
@@ -149,16 +170,16 @@ If you are already familiar with the inner workings of CoreData, here is a mappi
 | *Core Data* | *CoreStore* |
 | --- | --- |
 | `NSManagedObjectModel` / `NSPersistentStoreCoordinator`<br />(.xcdatamodeld file) | `DataStack` |
-| `NSPersistentStore`<br />("Configuration"s in the .xcdatamodeld file) | `DataStack` configuration<br />(multiple sqlite / in-memory stores per stack) |
+| `NSPersistentStore`<br />("Configuration"s in the .xcdatamodeld file) | `StorageInterface` implementations<br />(`InMemoryStore`, `SQLiteStore`, `ICloudStore`) |
 | `NSManagedObjectContext` | `BaseDataTransaction` subclasses<br />(`SynchronousDataTransaction`, `AsynchronousDataTransaction`, `UnsafeDataTransaction`) |
 
-Popular libraries [RestKit](https://github.com/RestKit/RestKit) and [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) set up their `NSManagedObjectContext`s this way:
+A lot of Core Data wrapper libraries set up their `NSManagedObjectContext`s this way:
 
-<img src="https://cloud.githubusercontent.com/assets/3029684/6734049/40579660-ce99-11e4-9d38-829877386afb.png" alt="nested contexts" height=271 />
+<img src="https://cloud.githubusercontent.com/assets/3029684/16707160/984ef25c-4600-11e6-869f-8db7d2c63668.png" alt="nested contexts" height=380 />
 
-Nesting context saves from child context to the root context ensures maximum data integrity between contexts without blocking the main queue. But as <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">Florian Kugler's investigation</a> found out, merging contexts is still by far faster than saving nested contexts. CoreStore's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context, and only allows changes to be made within *transactions* on the child context:
+Nesting saves from child context to the root context ensures maximum data integrity between contexts without blocking the main queue. But <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">in reality</a>, merging contexts is still by far faster than saving contexts. CoreStore's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context, and only allows changes to be made within *transactions* on the child context:
 
-<img src="https://cloud.githubusercontent.com/assets/3029684/6734050/4078b642-ce99-11e4-95ea-c0c1d24fbe80.png" alt="nested contexts and merge hybrid" height=212 />
+<img src="https://cloud.githubusercontent.com/assets/3029684/16707161/9adeb962-4600-11e6-8bc8-4ec85764dba4.png" alt="nested contexts and merge hybrid" height=292 />
 
 This allows for a butter-smooth main thread, while still taking advantage of safe nested contexts.
 
@@ -167,53 +188,35 @@ This allows for a butter-smooth main thread, while still taking advantage of saf
 ## Setting up
 The simplest way to initialize CoreStore is to add a default store to the default stack:
 ```swift
-do {
-    try CoreStore.addSQLiteStoreAndWait()
-}
-catch {
-    // ...
-}
+try CoreStore.addStorageAndWait()
 ```
 This one-liner does the following:
 - Triggers the lazy-initialization of `CoreStore.defaultStack` with a default `DataStack`
 - Sets up the stack's `NSPersistentStoreCoordinator`, the root saving `NSManagedObjectContext`, and the read-only main `NSManagedObjectContext`
-- Adds an SQLite store in the *"Application Support"* directory (or the *"Caches"* directory on tvOS) with the file name *"[App bundle name].sqlite"*
+- Adds an `SQLiteStore` in the *"Application Support/<bundle id>"* directory (or the *"Caches/<bundle id>"* directory on tvOS) with the file name *"[App bundle name].sqlite"*
 - Creates and returns the `NSPersistentStore` instance on success, or an `NSError` on failure
 
-For most cases, this configuration is usable as it is. But for more hardcore settings, refer to this extensive example:
+For most cases, this configuration is enough as it is. But for more hardcore settings, refer to this extensive example:
 ```swift
 let dataStack = DataStack(
     modelName: "MyModel", // loads from the "MyModel.xcdatamodeld" file
     migrationChain: ["MyStore", "MyStoreV2", "MyStoreV3"] // model versions for progressive migrations
 )
-
-do {
-    // creates an in-memory store with entities from the "Config1" configuration in the .xcdatamodeld file
-    let persistentStore = try dataStack.addInMemoryStoreAndWait(configuration: "Config1") // persistentStore is an NSPersistentStore instance
-    print("Successfully created an in-memory store: \(persistentStore)"
-}
-catch {
-    print("Failed creating an in-memory store with error: \(error as NSError)"
-}
-
-do {
-    try dataStack.addSQLiteStore(
+let migrationProgress = dataStack.addStorage(
+    SQLiteStore(
         fileURL: sqliteFileURL, // set the target file URL for the sqlite file
         configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
-        resetStoreOnModelMismatch: true,
-        completion: { (result) -> Void in
-            switch result {
-            case .Success(let persistentStore):
-                print("Successfully added sqlite store: \(persistentStore)"
-            case .Failure(let error):
-                print("Failed adding sqlite store with error: \(error)"
-            }
+        localStorageOptions: .RecreateStoreOnModelMismatch // if migration paths cannot be resolved, recreate the sqlite file
+    ),
+    completion: { (result) -> Void in
+        switch result {
+        case .Success(let storage):
+            print("Successfully added sqlite store: \(storage)"
+        case .Failure(let error):
+            print("Failed adding sqlite store with error: \(error)"
         }
-    )
-}
-catch {
-    print("Failed adding sqlite store with error: \(error as NSError)"
-}
+    }
+)
 
 CoreStore.defaultStack = dataStack // pass the dataStack to CoreStore for easier access later on
 ```
@@ -224,11 +227,11 @@ CoreStore.defaultStack = dataStack // pass the dataStack to CoreStore for easier
 In our sample code above, note that you don't need to do the `CoreStore.defaultStack = dataStack` line. You can just as well hold a reference to the `DataStack` like below and call all its instance methods directly:
 ```swift
 class MyViewController: UIViewController {
-    let dataStack = DataStack(modelName: "MyModel")
+    let dataStack = DataStack(modelName: "MyModel") // keep reference to the stack
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
-            try self.dataStack.addSQLiteStoreAndWait()
+            try self.dataStack.addStorageAndWait(SQLiteStore)
         }
         catch { // ...
         }
@@ -242,10 +245,11 @@ class MyViewController: UIViewController {
 The difference is when you set the stack as the `CoreStore.defaultStack`, you can call the stack's methods directly from `CoreStore` itself:
 ```swift
 class MyViewController: UIViewController {
+    // elsewhere: CoreStore.defaultStack = DataStack(modelName: "MyModel")
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
-            try CoreStore.addSQLiteStoreAndWait()
+            try CoreStore.addStorageAndWait(SQLiteStore)
         }
         catch { // ...
         }
@@ -257,41 +261,159 @@ class MyViewController: UIViewController {
 }
 ```
 
+Notice that in our previous examples, `addStorageAndWait(_:)` and `addStorage(_:completion:)` both accept either `InMemoryStore`, `SQLiteStore`, or `ICloudStore`. These implement the `StorageInterface` protocol.
 
-## Migrations
-So far we have only seen `addSQLiteStoreAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests, this method blocks so it should not do long tasks such as store migrations (in fact CoreStore won't even attempt to, and any model mismatch will be reported as an error). If migrations are expected, the asynchronous variant `addSQLiteStore(... completion:)` method should be used instead:
+### In-memory store
+The most basic `StorageInterface` concrete type is the `InMemoryStore`, which just stores objects in memory. Since `InMemoryStore`s always start with a fresh empty data, they do not need any migration information.
 ```swift
-do {
-    let progress: NSProgress? = try dataStack.addSQLiteStore(
-        fileName: "MyStore.sqlite",
-        configuration: "Config2",
-        completion: { (result) -> Void in
-            switch result {
-            case .Success(let persistentStore):
-                print("Successfully added sqlite store: \(persistentStore)")
-            case .Failure(let error):
-                print("Failed adding sqlite store with error: \(error)")
-            }
-        }
+try CoreStore.addStorageAndWait(
+    InMemoryStore(
+        configuration: "Config2" // optional. Use entities from the "Config2" configuration in the .xcdatamodeld file
     )
-}
-catch {
-    print("Failed adding sqlite store with error: \(error as NSError)"
+)
+```
+`InMemoryStore`s also implement the `DefaultInitializableStore` sugar protocol which tells CoreStore that this store can initialize without any arguments (`init()`). This lets us provide just the type instead of an instance:
+```swift
+try CoreStore.addStorageAndWait(InMemoryStore)
+```
+
+### Local Store
+The most common `StorageInterface` you will probably use is the `SQLiteStore`, which saves data in a local SQLite file.
+```swift
+let migrationProgress = CoreStore.addStorage(
+    SQLiteStore(
+        fileName: "MyStore.sqlite",
+        configuration: "Config2", // optional. Use entities from the "Config2" configuration in the .xcdatamodeld file
+        mappingModelBundles: [NSBundle.mainBundle()], // optional. The bundles that contain required .xcmappingmodel files, if any
+        localStorageOptions: .RecreateStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
+    ),
+    completion: { /* ... */ }
+)
+```
+Refer to the *SQLiteStore.swift* source documentation for detailed explanations for each of the default values.
+
+CoreStore can decide the default values for these properties, so `SQLiteStore`s also implement the `DefaultInitializableStore` sugar protocol which lets us write:
+```swift
+try CoreStore.addStorageAndWait(SQLiteStore)
+```
+or
+```swift
+let migrationProgress = CoreStore.addStorage(SQLiteStore.self, completion: { /* ... */ })
+```
+
+The file-related properties above are actually requirements of another protocol that `SQLiteStore` implements, the `LocalStorage` protocol:
+```swift
+public protocol LocalStorage: StorageInterface {
+    var fileURL: NSURL { get }
+    var mappingModelBundles: [NSBundle] { get }
+    var localStorageOptions: LocalStorageOptions { get }
+    func storeOptionsForOptions(options: LocalStorageOptions) -> [String: AnyObject]?
+    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws
 }
 ```
-The `completion` block reports a `PersistentStoreResult` that indicates success or failure.
+If you have custom `NSIncrementalStore` or `NSAtomicStore` subclasses, you can implement this protocol and use it similarly to `SQLiteStore`.
 
-`addSQLiteStore(...)` throws an error if the store at the specified URL conflicts with an existing store in the `DataStack`, or if an existing sqlite file could not be read. If an error is thrown, the `completion` block will not be executed.
+### iCloud Store
+> The iCloud Store is currently in beta. Please use with caution. If you have any concerns please do send me a message on [Twitter](https://twitter.com/JohnEstropia) or on the [CoreStore Slack Team](http://swift-corestore-slack.herokuapp.com/)
 
-Notice that this method also returns an optional `NSProgress`. If `nil`, no migrations are needed, thus progress reporting is unnecessary as well. If not `nil`, you can use this to track migration progress by using standard KVO on the "fractionCompleted" key, or by using a closure-based utility exposed in *NSProgress+Convenience.swift*:
+As a counterpart to `LocalStorage`, the `CloudStorage` protocol abstracts stores managed in the cloud. CoreStore currently provides the concrete class `ICloudStore`. Unlike `InMemoryStore` and `SQLiteStore` though, the `ICloudStore`'s initializer may return `nil` if the iCloud container could not be located or if iCloud is not available on the device:
 ```swift
-progress?.setProgressHandler { [weak self] (progress) -> Void in
+guard let storage = ICloudStore(
+    ubiquitousContentName: "MyAppCloudData", // the name of the store in iCloud
+    ubiquitousContentTransactionLogsSubdirectory: "logs/config1", // optional. Subdirectory path for the transaction logs
+    ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername", // optional. The container if your app has multiple ubiquity container identifiers in its entitlements
+    ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0", // optional. A per-application salt to allow multiple apps on the same device to share a Core Data store integrated with iCloud
+    configuration: "Config1", // optional. Use entities from the "Config1" configuration in the .xcdatamodeld file
+    cloudStorageOptions: .RecreateLocalStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
+) else {
+    // The iCloud container could not be located or if iCloud is not available on the device.
+    // Handle appropriately
+    return    
+}
+CoreStore.addStorage(,
+    storage,
+    completion: { result in
+        switch result {
+        case .Success(let storage): // ...
+        case .Failure(let error): // ...
+        }
+    }
+)
+```
+
+If your app is using iCloud stores, you may want to be notified of particular iCloud events. The `ICloudStoreObserver` functions are all optional, so you may implement only the ones your app is interested in:
+```swift
+public protocol ICloudStoreObserver: class {
+    func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreDidFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreWillAddAccount(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreDidAddAccount(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreWillRemoveAccount(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreDidRemoveAccount(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreWillRemoveContent(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreDidRemoveContent(storage storage: ICloudStore, dataStack: DataStack)
+}
+```
+To register your `ICloudStoreObserver`, call `addObserver(_:)` on the `ICloudStore` instance:
+
+```swift
+guard let storage = ICloudStore(/* ... */) else {
+    return    
+}
+storage.addObserver(self) // assuming self implements ICloudStoreObserver
+CoreStore.addStorage(,
+    storage,
+    completion: { result in
+        switch result {
+        case .Success(let storage): // ... You may also call storage.addObserver(_:) here
+        case .Failure(let error): // ...
+        }
+    }
+)
+```
+The `ICloudStore` only keeps weak references of the registered observers. You may call `removeObserver(_:)` for precise deregistration, but `ICloudStore` automatically removes deallocated observers.
+
+
+## Migrations
+We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests though, this method blocks so it should not do long tasks such as store migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.AllowSynchronousLightweightMigration` option:
+```swift
+try dataStack.addStorageAndWait(
+    SQLiteStore(
+        fileURL: sqliteFileURL,
+        localStorageOptions: .AllowSynchronousLightweightMigration
+    )
+}
+```
+if you do so, any model mismatch will be thrown as an error. 
+
+In general though, if migrations are expected the asynchronous variant `addStorage(_:completion:)` method is recommended instead:
+```swift
+let migrationProgress: NSProgress? = try dataStack.addStorage(
+    SQLiteStore(
+        fileName: "MyStore.sqlite",
+        configuration: "Config2"
+    ),
+    completion: { (result) -> Void in
+        switch result {
+        case .Success(let storage):
+            print("Successfully added sqlite store: \(storage)")
+        case .Failure(let error):
+            print("Failed adding sqlite store with error: \(error)")
+        }
+    }
+)
+```
+The `completion` block reports a `SetupResult` that indicates success or failure.
+
+Notice that this method also returns an optional `NSProgress`. If `nil`, no migrations are needed, thus progress reporting is unnecessary as well. If not `nil`, you can use this to track migration progress by using standard KVO on the `"fractionCompleted"` key, or by using a closure-based utility exposed in *NSProgress+Convenience.swift*:
+```swift
+migrationProgress?.setProgressHandler { [weak self] (progress) -> Void in
     self?.progressView?.setProgress(Float(progress.fractionCompleted), animated: true)
     self?.percentLabel?.text = progress.localizedDescription // "50% completed"
     self?.stepLabel?.text = progress.localizedAdditionalDescription // "0 of 2"
 }
 ```
-This closure is executed on the main thread so UIKit calls can be done safely.
+This closure is executed on the main thread so UIKit and AppKit calls can be done safely.
 
 
 ### Progressive migrations
@@ -304,7 +426,7 @@ let dataStack = DataStack(migrationChain:
 ```
 The most common usage is to pass in the *.xcdatamodeld* version names in increasing order as above.
 
-For more complex migration paths, you can also pass in a version tree that maps the key-values to the source-destination versions:
+For more complex, non-linear migration paths, you can also pass in a version tree that maps the key-values to the source-destination versions:
 ```swift
 let dataStack = DataStack(migrationChain: [
     "MyAppModel": "MyAppModelV3",
@@ -332,28 +454,28 @@ One important thing to remember is that **if a `MigrationChain` is specified, th
 
 ### Forecasting migrations
 
-Sometimes migrations are huge and you may want prior information so your app could display a loading screen, or to display a confirmation dialog to the user. For this, CoreStore provides a `requiredMigrationsForSQLiteStore(...)` method you can use to inspect a persistent store before you actually call `addSQLiteStore(...)`:
+Sometimes migrations are huge and you may want prior information so your app could display a loading screen, or to display a confirmation dialog to the user. For this, CoreStore provides a `requiredMigrationsForStorage(_:)` method you can use to inspect a persistent store before you actually call `addStorageAndWait(_:)` or `addStorage(_:completion:)`:
 ```swift
 do {
-    let migrationTypes: [MigrationType] = CoreStore.requiredMigrationsForSQLiteStore(fileName: "MyStore.sqlite")
+    let storage = SQLiteStorage(fileName: "MyStore.sqlite")
+    let migrationTypes: [MigrationType] = try CoreStore.requiredMigrationsForStorage(storage)
     if migrationTypes.count > 1
         || (migrationTypes.filter { $0.isHeavyweightMigration }.count) > 0 {
-        // ... Show special waiting screen
+        // ... will migrate more than once. Show special waiting screen
     }
     else if migrationTypes.count > 0 {
-        // ... Show simple activity indicator
+        // ... will migrate just once. Show simple activity indicator
     }
     else {
         // ... Do nothing
     }
-
-    CoreStore.addSQLiteStore(/* ... */)
+    CoreStore.addStorage(storage, completion: { /* ... */ })
 }
 catch {
-    // ...
+    // ... either inspection of the store failed, or if no mapping model was found/inferred
 }
 ```
-`requiredMigrationsForSQLiteStore(...)` returns an array of `MigrationType`s, where each item in the array may be either of the following values:
+`requiredMigrationsForStorage(_:)` returns an array of `MigrationType`s, where each item in the array may be either of the following values:
 ```swift
 case Lightweight(sourceVersion: String, destinationVersion: String)
 case Heavyweight(sourceVersion: String, destinationVersion: String)
@@ -1003,24 +1125,17 @@ this returns dictionaries that shows the count for each `"age"`:
 ]
 ```
 
-## Logging and error handling
+## Logging and error reporting
 One unfortunate thing when using some third-party libraries is that they usually pollute the console with their own logging mechanisms. CoreStore provides its own default logging class, but you can plug-in your own favorite logger by implementing the `CoreStoreLogger` protocol.
 ```swift
-final class MyLogger: CoreStoreLogger {
-    func log(#level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        // pass to your logger
-    }
-    
-    func handleError(#error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        // pass to your logger
-    }
-    
-    func assert(@autoclosure condition: () -> Bool, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-        // pass to your logger
-    }
+public protocol CoreStoreLogger {
+    func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
 }
 ```
-Then pass an instance of this class to `CoreStore`:
+Implement this protocol with your custom class then pass the instance to `CoreStore.logger`:
 ```swift
 CoreStore.logger = MyLogger()
 ```
@@ -1028,7 +1143,23 @@ Doing so channels all logging calls to your logger.
 
 Note that to keep the call stack information intact, all calls to these methods are **NOT** thread-managed. Therefore you have to make sure that your logger is thread-safe or you may otherwise have to dispatch your logging implementation to a serial queue.
 
-## Observing changes and notifications (unavailable on OSX)
+Take special care when implementing `CoreStoreLogger`'s `assert(...)` and `abort(...)` functions:
+- `assert(...)`: The behavior between `DEBUG` and release builds, or `-O` and `-Onone`, are all left to the implementers' responsibility. CoreStore calls `CoreStoreLogger.assert(...)` only for invalid but usually recoverable errors (for example, early validation failures that may cause an error thrown and handled somewhere else)
+- `abort(...)`: This method is *the* last-chance for your app to *synchronously* log a fatal error within CoreStore. The app will be terminated right after this function is called (CoreStore calls `fatalError()` internally)
+
+Starting CoreStore 2.0, all CoreStore types now have very useful (and pretty formatted!) `print(...)` outputs. 
+
+A couple of examples, `ListMonitor`:
+
+<img width="369" alt="screen shot 2016-07-10 at 22 56 44" src="https://cloud.githubusercontent.com/assets/3029684/16713994/ae06e702-46f1-11e6-83a8-dee48b480bab.png" />
+
+`CoreStoreError.MappingModelNotFoundError`:
+
+<img width="506" alt="MappingModelNotFoundError" src="https://cloud.githubusercontent.com/assets/3029684/16713962/e021f548-46f0-11e6-8100-f9b5ea6b4a08.png" />
+
+These are all implemented with `CustomDebugStringConvertible.debugDescription`, so they work with lldb's `po` command as well.
+
+## Observing changes and notifications (unavailable on macOS)
 CoreStore provides type-safe wrappers for observing managed objects:
 
 - `ObjectMonitor`: use to monitor changes to a single `NSManagedObject` instance (instead of Key-Value Observing)
@@ -1081,23 +1212,20 @@ Including `ListObserver`, there are 3 observer protocols you can implement depen
 - `ListObserver`: lets you handle these callback methods:
 ```swift
     func listMonitorWillChange(monitor: ListMonitor<MyPersonEntity>)
-
     func listMonitorDidChange(monitor: ListMonitor<MyPersonEntity>)
+    func listMonitorWillRefetch(monitor: ListMonitor<MyPersonEntity>)
+    func listMonitorDidRefetch(monitor: ListMonitor<MyPersonEntity>)
 ```
 - `ListObjectObserver`: in addition to `ListObserver` methods, also lets you handle object inserts, updates, and deletes:
 ```swift
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didInsertObject object: MyPersonEntity, toIndexPath indexPath: NSIndexPath)
-
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didDeleteObject object: MyPersonEntity, fromIndexPath indexPath: NSIndexPath)
-
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didUpdateObject object: MyPersonEntity, atIndexPath indexPath: NSIndexPath)
-
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didMoveObject object: MyPersonEntity, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
 ```
 - `ListSectionObserver`: in addition to `ListObjectObserver` methods, also lets you handle section inserts and deletes:
 ```swift
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
-
     func listMonitor(monitor: ListMonitor<MyPersonEntity>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 ```
 
@@ -1163,10 +1291,140 @@ let person2 = self.monitor[1, 2]
 // person1 and person2 are the same object
 ```
 
+## Objective-C support
+CoreStore 2.0 was a big move to address the large number of apps starting to convert from Objective-C to Swift. The basic problem is this: The cost of converting all code base to Swift is very big, so most apps are forced to do undergo a *transitional* ObjC-Swift hybrid phase. This used to mean that these apps could not use the Swifty-est libraries out there yet, or that they may have to write their own bridging methods just to make new code usable in their old Objective-C code.
+
+With 2.0, all CoreStore types are still written in pure Swift, but they now have Objective-C "bridging classes" that are visible to Objective-C code. To show a couple of usage examples:
+
+<table>
+<tr><th>Swift</th><th>Objective-C</th></tr>
+<tr>
+<td><pre lang=swift>
+try CoreStore.addStorageAndWait(SQLiteStore)
+</pre></td>
+<td><pre lang=objc>
+NSError *error
+[CSCoreStore addSQLiteStorageAndWait:[CSSQLiteStore new] error:&error]
+</pre></td>
+</tr>
+<tr>
+<td><pre lang=swift>
+CoreStore.beginAsynchronous { (transaction) in
+    // ...
+    transaction.commit { (result) in
+        switch result {
+        case .Success(let hasChanges): print(hasChanges)
+        case .Failure(let error): print(error)
+        }
+    }
+}
+</pre></td>
+<td><pre lang=objc>
+[CSCoreStore beginAsynchronous:^(CSAsynchronousDataTransaction *transaction) {
+    // ...
+    [transaction commitWithCompletion:^(CSSaveResult *result) {
+        if (result.isSuccess) {
+            NSLog(@"hasChanges: %d", result.hasChanges);
+        }
+        else if (result.isFailure) {
+            NSLog(@"error: %@", result.error);
+        }
+    }];
+}];
+</pre></td>
+</tr>
+</table>
+
+All of these `CS`-prefixed bridging classes have very similar usage to the existing CoreStore APIs, and ironically *none of them are written in Objective-C*. The secret is all in *CoreStoreBridge.swift*, where we see the signature of these bridging classes, the `CoreStoreObjectiveCType` protocol:
+```swift
+public protocol CoreStoreObjectiveCType: class, AnyObject {
+    associatedtype SwiftType
+    var bridgeToSwift: SwiftType { get }
+    init(_ swiftValue: SwiftType)
+}
+```
+Notice that these bridging classes all hold a reference to their corresponding `SwiftType`.
+
+Conversely, CoreStore original types implement the `CoreStoreSwiftType` protocol:
+```swift
+public protocol CoreStoreSwiftType {
+    associatedtype ObjectiveCType
+    var bridgeToObjectiveC: ObjectiveCType { get }
+}
+```
+These two protocols let CoreStore types free to bridge instances between Objective-C and Swift.
+
+This is very different to the common approach where apps and libraries write Objective-C APIs just to support both Objective-C and Swift. The advantage with CoreStore's approach is that your Swift codebase can already use the purely-Swift API without further changes in the future, but your "hybrid" codebase can still bridge instances back and forth from Objective-C to Swift.
+
+For example, you may have a new, modern Swift class that holds a `ListMonitor`:
+```swift
+class MyViewController: UIViewController {
+    let monitor = CoreStore.monitorList(From(MyEntity), ...)
+    // ...
+}
+```
+Now let's say you have a legacy Objective-C class that previously uses `NSFetchedResultsController`. It's easy to switch from `NSFetchedResultsController` to `CSListMonitor`, but converting the rest of this huge class is impractical. You end up with 
+```objc
+@interface MYOldViewController: UIViewController 
+@property (nonatomic, readonly, strong) CSListMonitor* monitor;
+- (instancetype)initWithMonitor:(CSListMonitor *)monitor;
+@end
+```
+When you need to instantiate this class from Swift, you just call `bridgeToObjectiveC`:
+```swift
+class MyViewController: UIViewController {
+    let monitor = CoreStore.monitorList(From(MyEntity), ...)
+    func showOldController() {
+        let controller = MYOldViewController(monitor: self.monitor.bridgeToObjectiveC)
+        self.presentViewController(controller, animated: true, completion: nil)
+    }
+}
+```
+Note that the `CSListMonitor` holds the exact same `ListMonitor` instance, which means that no copies and no extra fetching occur.
+
+### Objective-C syntax sugars
+Objective-C tends to be verbose, so some method calls are long and unreadable. For example, fetching looks like this:
+```objc
+NSArray<MYPerson *> *objects = 
+[CSCoreStore
+ fetchAllFrom:[[CSFrom alloc] initWithEntityClass:[MYPerson class]]
+ fetchClauses:@[[[CSWhere alloc] initWithFormat:@"%K == %@", @"isHidden", @NO],
+                [[CSOrderBy alloc] initWithSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastName" ascending:YES],
+                                                             [NSSortDescriptor sortDescriptorWithKey:@"firstName" ascending:YES]]]]];
+```
+Although it works, it looks terrible. For this, CoreStore provides *CoreStoreBridge.h* where these Objective-C calls are wrapped in readable, convenient macros and global functions. The call above becomes
+```objc
+NSArray<MYPerson *> *objects = 
+[CSCoreStore
+ fetchAllFrom:CSFromClass([MYPerson class])
+ fetchClauses:@[CSWhereFormat(@"%K == %@", @"isHidden", @NO),
+                CSOrderByKeys(CSSortAscending(@"lastName"),
+                              CSSortAscending(@"firstName"), nil)]];
+```
+That's much shorter now. But we can still do better. Notice that we have strings being used as key paths. The `CSKeyPath(...)` macro gives us compile-time checking so keys that don't exist in a class will generate errors. Our key-safe code now looks like this:
+```objc
+NSArray<MYPerson *> *objects = 
+[CSCoreStore
+ fetchAllFrom:CSFromClass([MYPerson class])
+ fetchClauses:@[CSWhereFormat(@"%K == %@", CSKeyPath(MYPerson, isHidden), @NO),
+                CSOrderByKeys(CSSortAscending(CSKeyPath(MYPerson, lastName)),
+                              CSSortAscending(CSKeyPath(MYPerson, firstName)), nil)]];
+```
+
+To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C source files. For projects that support iOS 7 (and thus cannot build CoreStore as a module), you will need to add 
+```
+SWIFT_OBJC_INTERFACE_HEADER_NAME=$(SWIFT_OBJC_INTERFACE_HEADER_NAME)
+```
+to your target's `GCC_PREPROCESSOR_DEFINITIONS` build setting.
+
+<img width="797" alt="GCC_PREPROCESSOR_DEFINITIONS" src="https://cloud.githubusercontent.com/assets/3029684/16714547/92497fc4-4701-11e6-81db-6b1a11743cc5.png" />
+
 
 # Roadmap
-- Support iCloud stores
-- CoreSpotlight auto-indexing (experimental)
+- Built-in "singleton objects" support
+- Built-in "readonly" stores
+- CoreSpotlight auto-indexing (experimenting, still some roadblocks ahead)
+- Synching
 
 
 # Installation
@@ -1175,6 +1433,8 @@ let person2 = self.monitor[1, 2]
     - Swift 2.2 (Xcode 7.3)
 - Dependencies:
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
+- Other notes:
+    - The `com.apple.CoreData.ConcurrencyDebug` debug argument should be turned off for the app. CoreStore already guarantees safety for you by making the main context read-only, and by only executing transactions serially.
 
 ### Install with CocoaPods (iOS 7 not supported)
 ```
@@ -1185,8 +1445,8 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 1.6.0
-github "JohnEstropia/GCDKit" >= 1.2.2
+github "JohnEstropia/CoreStore" >= 2.0.0
+github "JohnEstropia/GCDKit" >= 1.2.5
 ```
 and run 
 ```
@@ -1206,20 +1466,41 @@ Drag and drop **CoreStore.xcodeproj** to your project.
 Add all *.swift* files to your project.
 
 
+### Objective-C support
+
+To use the Objective-C syntax sugars, import *CoreStoreBridge.h* in your *.m* source files.
+
+For projects that support iOS 7 (and thus cannot build CoreStore as a module), you will need to add 
+```
+SWIFT_OBJC_INTERFACE_HEADER_NAME=$(SWIFT_OBJC_INTERFACE_HEADER_NAME)
+```
+to your target's `GCC_PREPROCESSOR_DEFINITIONS` build setting:
+
+<img width="797" alt="GCC_PREPROCESSOR_DEFINITIONS" src="https://cloud.githubusercontent.com/assets/3029684/16714547/92497fc4-4701-11e6-81db-6b1a11743cc5.png" />
+
 
 # Changesets
-### Upgrading from v0.2.0 to 1.0.0
-- Renamed some classes/protocols to shorter, more relevant, easier to remember names:
-- `ManagedObjectController` to `ObjectMonitor`
-- `ManagedObjectObserver` to `ObjectObserver`
-- `ManagedObjectListController` to `ListMonitor`
-- `ManagedObjectListChangeObserver` to `ListObserver`
-- `ManagedObjectListObjectObserver` to `ListObjectObserver`
-- `ManagedObjectListSectionObserver` to `ListSectionObserver`
-- `SectionedBy` to `SectionBy` (match tense with `OrderBy` and `GroupBy`)
-The protocols above had their methods renamed as well, to retain the natural language semantics.
-- Several methods now `throw` errors insted of returning a result `enum`.
-- New migration utilities! (README still pending) Check out *DataStack+Migration.swift* and *CoreStore+Migration.swift* for the new methods, as well as *DataStack.swift* for its new initializer.
+### Upgrading from 1.x.x to 2.x.x
+**Obsoleted**
+- `AsynchronousDataTransaction.rollback()` was removed. Undo and rollback functionality are now only allowed on `UnsafeDataTransaction`s
+- `DetachedDataTransaction` was renamed to `UnsafeDataTransaction`
+- `beginDetached()` was renamed to `beginUnsafe()`
+- `PersistentStoreResult` was removed in favor of `SetupResult<T>`
+- `SynchronousDataTransaction.commit()` was renamed to `SynchronousDataTransaction.commitAndWait()`
+- `From` initializers that accepted `NSURL`s and `NSPersistentStore` were removed.
+
+**Deprecated**
+The following methods are still available, but will be removed in a future update.
+- `add*Store(...)` method variants. It is strongly recommended to convert to the new API. Refer to [Local store](#local-store)) usage then use `LegacySQLiteStore` instead of `SQLiteStore` to maintain the old default file names and directory values
+    - `addInMemoryStoreAndWait(...)` → `addStorageAndWait(InMemoryStore(...))`
+    - `addSQLiteStoreAndWait(...)` → `addStorageAndWait(LegacySQLiteStore(...))`
+    - `addInMemoryStore(...)` → `addStorage(InMemoryStore(...), ...)`
+    - `addSQLiteStore(...)` → `addStorage(LegacySQLiteStore(...), ...)`
+    - `requiredMigrationsForSQLiteStore(...)` → `requiredMigrationsForStorage(...)`
+    - `upgradeSQLiteStoreIfNeeded(...)` → `upgradeStorageIfNeeded(...)`
+    - The `resetStoreOnModelMismatch: Bool` argument for the methods above are now provided to the `LegacySQLiteStore` and `SQLiteStore` initializers as a `LocalStorageOptions` option set
+- `NSError` used to have a `coreStoreErrorCode` property that returns `CoreStoreErrorCode` enum, but all CoreStore errors are now guaranteed to be `CoreStoreError` enum type in swift, and `CSError` type on Objective-C.
+- `CoreStoreLogger.handleError(...)` was deprecated in favor of `CoreStoreLogger.log(error:...)`. `CoreStoreLogger` may also implement `CoreStoreLogger.abort(...)`, which is called just before CoreStore executes `fatalError()` due to critical runtime errors.
 
 
 # Contact
@@ -1227,7 +1508,7 @@ Questions? Suggestions?
 
 Reach me on Twitter [@JohnEstropia](https://twitter.com/JohnEstropia)
 
-or tag your Stackoverflow question with **corestore**
+or join our Slack team at [swift-corestore.slack.com](http://swift-corestore-slack.herokuapp.com/)
 
 日本語の対応も可能なので是非！
 
@@ -1237,5 +1518,5 @@ I'd love to hear about apps using CoreStore. Send me a message and I'll feature 
 
 
 # License
-CoreStore is released under an MIT license. See the LICENSE file for more information
+CoreStore is released under an MIT license. See the [LICENSE](https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE) file for more information
 
