@@ -44,7 +44,7 @@ let package = Package(
     dependencies: [
         .Package(
             url: "https://github.com/JohnEstropia/GCDKit.git",
-            majorVersion: 1, minor: 2
+            "1.2.6"
         )
     ],
     exclude: ["Carthage", "CoreStoreDemo", "Sources/libA/images"]
