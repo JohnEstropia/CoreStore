@@ -49,7 +49,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Attribute(let key):
+            case ._attribute(let key):
                 XCTAssertEqual(key, "attribute")
                 
             default:
@@ -68,7 +68,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Attribute(let key):
+            case ._attribute(let key):
                 XCTAssertEqual(key, "attribute")
                 
             default:
@@ -94,7 +94,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "average:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "average(attribute)")
@@ -118,7 +118,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "average:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
@@ -147,7 +147,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "count:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "count(attribute)")
@@ -171,7 +171,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "count:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
@@ -200,7 +200,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "max:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "max(attribute)")
@@ -224,7 +224,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "max:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
@@ -253,7 +253,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "min:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "min(attribute)")
@@ -277,7 +277,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "min:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
@@ -306,7 +306,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "sum:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "sum(attribute)")
@@ -330,7 +330,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.ObjectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "sum:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
@@ -358,7 +358,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
             switch term {
                 
-            case ._Identity(let alias, let nativeType):
+            case ._identity(let alias, let nativeType):
                 XCTAssertEqual(alias, "objectID")
                 XCTAssertTrue(nativeType == .ObjectIDAttributeType)
                 
@@ -380,7 +380,7 @@ final class SelectTests: XCTestCase {
             XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
             switch term {
                 
-            case ._Identity(let alias, let nativeType):
+            case ._identity(let alias, let nativeType):
                 XCTAssertEqual(alias, "alias")
                 XCTAssertTrue(nativeType == .ObjectIDAttributeType)
                 

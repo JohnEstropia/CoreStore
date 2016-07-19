@@ -51,30 +51,30 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
             let icon: String
             let levelString: String
             switch level {
                 
-            case .Trace:
+            case .trace:
                 icon = "🔹"
                 levelString = "Trace"
                 
-            case .Notice:
+            case .notice:
                 icon = "🔸"
                 levelString = "Notice"
                 
-            case .Warning:
+            case .warning:
                 icon = "⚠️"
                 levelString = "Warning"
                 
-            case .Fatal:
+            case .fatal:
                 icon = "❗"
                 levelString = "Fatal"
             }
-            Swift.print("\(icon) [CoreStore: \(levelString)] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+            Swift.print("\(icon) [CoreStore: \(levelString)] \((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         #endif
     }
     
@@ -87,10 +87,10 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.print("⚠️ [CoreStore: Error] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
+            Swift.print("⚠️ [CoreStore: Error] \((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
         #endif
     }
     
@@ -103,14 +103,14 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func assert(_ condition: @autoclosure () -> Bool, message: @autoclosure () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
             if condition() {
                 
                 return
             }
-            Swift.print("❗ [CoreStore: Assertion Failure] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message())\n")
+            Swift.print("❗ [CoreStore: Assertion Failure] \((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message())\n")
             Swift.fatalError(file: fileName, line: UInt(lineNumber))
         #endif
     }
@@ -124,9 +124,9 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        Swift.print("❗ [CoreStore: Fatal Error] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+        Swift.print("❗ [CoreStore: Fatal Error] \((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         Swift.fatalError(file: fileName, line: UInt(lineNumber))
     }
 }

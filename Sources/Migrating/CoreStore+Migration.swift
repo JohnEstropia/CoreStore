@@ -51,7 +51,7 @@ public extension CoreStore {
      - parameter storeType: the storage type
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public static func addStorage<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) {
+    public static func addStorage<T: StorageInterface where T: DefaultInitializableStore>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) {
         
         self.defaultStack.addStorage(storeType.init(), completion: completion)
     }
@@ -73,7 +73,7 @@ public extension CoreStore {
      - parameter storage: the storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public static func addStorage<T: StorageInterface>(storage: T, completion: (SetupResult<T>) -> Void) {
+    public static func addStorage<T: StorageInterface>(_ storage: T, completion: (SetupResult<T>) -> Void) {
         
         self.defaultStack.addStorage(storage, completion: completion)
     }
@@ -96,7 +96,7 @@ public extension CoreStore {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public static func addStorage<T: LocalStorage where T: DefaultInitializableStore>(storeType: T.Type, completion: (SetupResult<T>) -> Void) -> NSProgress? {
+    public static func addStorage<T: LocalStorage where T: DefaultInitializableStore>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) -> Progress? {
         
         return self.defaultStack.addStorage(storeType.init(), completion: completion)
     }
@@ -119,7 +119,7 @@ public extension CoreStore {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public static func addStorage<T: LocalStorage>(storage: T, completion: (SetupResult<T>) -> Void) -> NSProgress? {
+    public static func addStorage<T: LocalStorage>(_ storage: T, completion: (SetupResult<T>) -> Void) -> Progress? {
         
         return self.defaultStack.addStorage(storage, completion: completion)
     }
@@ -133,7 +133,7 @@ public extension CoreStore {
          ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
          ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
          configuration: "Config1",
-         cloudStorageOptions: .RecreateLocalStoreOnModelMismatch
+         cloudStorageOptions: .recreateLocalStoreOnModelMismatch
      ) else {
          // iCloud is not available on the device
          return
@@ -152,7 +152,7 @@ public extension CoreStore {
      - parameter storage: the cloud storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `CloudStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
-    public static func addStorage<T: CloudStorage>(storage: T, completion: (SetupResult<T>) -> Void) {
+    public static func addStorage<T: CloudStorage>(_ storage: T, completion: (SetupResult<T>) -> Void) {
         
         self.defaultStack.addStorage(storage, completion: completion)
     }
@@ -165,7 +165,7 @@ public extension CoreStore {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
-    public static func upgradeStorageIfNeeded<T: LocalStorage>(storage: T, completion: (MigrationResult) -> Void) throws -> NSProgress? {
+    public static func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, completion: (MigrationResult) -> Void) throws -> Progress? {
         
         return try self.defaultStack.upgradeStorageIfNeeded(storage, completion: completion)
     }
@@ -178,109 +178,8 @@ public extension CoreStore {
      - returns: a `MigrationType` array indicating the migration steps required for the store, or an empty array if the file does not exist yet. Otherwise, an error is thrown if either inspection of the store failed, or if no mapping model was found/inferred.
      */
     @warn_unused_result
-    public static func requiredMigrationsForStorage<T: LocalStorage>(storage: T) throws -> [MigrationType] {
+    public static func requiredMigrationsForStorage<T: LocalStorage>(_ storage: T) throws -> [MigrationType] {
         
         return try self.defaultStack.requiredMigrationsForStorage(storage)
-    }
-    
-    
-    // MARK: Deprecated
-    
-    /**
-     Deprecated. Use `addSQLiteStore(_:completion:)` by passing a `LegacySQLiteStore` instance.
-     
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use addSQLiteStore(_:completion:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    public static func addSQLiteStore(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, resetStoreOnModelMismatch: Bool = false, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
-        
-        return try self.defaultStack.addSQLiteStore(
-            fileName: fileName,
-            configuration: configuration,
-            mappingModelBundles: mappingModelBundles,
-            resetStoreOnModelMismatch: resetStoreOnModelMismatch,
-            completion: completion
-        )
-    }
-    
-    /**
-     Deprecated. Use `addSQLiteStore(_:completion:)` by passing a `LegacySQLiteStore` instance.
-     
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use addSQLiteStore(_:completion:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    public static func addSQLiteStore(fileURL fileURL: NSURL = LegacySQLiteStore.defaultFileURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = NSBundle.allBundles(), resetStoreOnModelMismatch: Bool = false, completion: (PersistentStoreResult) -> Void) throws -> NSProgress? {
-        
-        return try self.defaultStack.addSQLiteStore(
-            fileURL: fileURL,
-            configuration: configuration,
-            mappingModelBundles: mappingModelBundles,
-            resetStoreOnModelMismatch: resetStoreOnModelMismatch,
-            completion: completion
-        )
-    }
-    
-    /**
-     Deprecated. Use `upgradeStorageIfNeeded(_:completion:)` by passing a `LegacySQLiteStore` instance.
-     
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use upgradeStorageIfNeeded(_:completion:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    public static func upgradeSQLiteStoreIfNeeded(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, completion: (MigrationResult) -> Void) throws -> NSProgress? {
-        
-        return try self.defaultStack.upgradeSQLiteStoreIfNeeded(
-            fileName: fileName,
-            configuration: configuration,
-            mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
-            completion: completion
-        )
-    }
-    
-    /**
-     Deprecated. Use `upgradeStorageIfNeeded(_:completion:)` by passing a `LegacySQLiteStore` instance.
-     
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use upgradeStorageIfNeeded(_:completion:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    public static func upgradeSQLiteStoreIfNeeded(fileURL fileURL: NSURL = LegacySQLiteStore.defaultFileURL, configuration: String? = nil, mappingModelBundles: [NSBundle]? = nil, completion: (MigrationResult) -> Void) throws -> NSProgress? {
-        
-        return try self.defaultStack.upgradeSQLiteStoreIfNeeded(
-            fileURL: fileURL,
-            configuration: configuration,
-            mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
-            completion: completion
-        )
-    }
-    
-    /**
-     Deprecated. Use `requiredMigrationsForStorage(_:)` by passing a `LegacySQLiteStore` instance.
-     
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use requiredMigrationsForStorage(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    @warn_unused_result
-    public static func requiredMigrationsForSQLiteStore(fileName fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as [NSBundle]) throws -> [MigrationType] {
-        
-        return try self.defaultStack.requiredMigrationsForSQLiteStore(
-            fileName: fileName,
-            configuration: configuration,
-            mappingModelBundles: mappingModelBundles
-        )
-    }
-    
-    /**
-     Deprecated. Use `requiredMigrationsForStorage(_:)` by passing a `LegacySQLiteStore` instance.
-     
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use requiredMigrationsForStorage(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    @warn_unused_result
-    public static func requiredMigrationsForSQLiteStore(fileURL fileURL: NSURL = LegacySQLiteStore.defaultFileURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles() as [NSBundle]) throws -> [MigrationType] {
-        
-        return try self.defaultStack.requiredMigrationsForSQLiteStore(
-            fileURL: fileURL,
-            configuration: configuration,
-            mappingModelBundles: mappingModelBundles
-        )
     }
 }

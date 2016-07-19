@@ -651,7 +651,7 @@ final class TransactionTests: BaseTestCase {
                     
                     transaction.delete(object)
                     
-                    GCDQueue.Main.async {
+                    GCDQueue.main.async {
                         
                         XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
                         

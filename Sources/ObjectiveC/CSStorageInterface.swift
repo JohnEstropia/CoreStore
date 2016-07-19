@@ -70,22 +70,22 @@ public enum CSLocalStorageOptions: Int {
     /**
      Tells the `DataStack` that the store should not be migrated or recreated, and should simply fail on model mismatch
      */
-    case None = 0
+    case none = 0
     
     /**
      Tells the `DataStack` to delete and recreate the store on model mismatch, otherwise exceptions will be thrown on failure instead
      */
-    case RecreateStoreOnModelMismatch = 1
+    case recreateStoreOnModelMismatch = 1
     
     /**
      Tells the `DataStack` to prevent progressive migrations for the store
      */
-    case PreventProgressiveMigration = 2
+    case preventProgressiveMigration = 2
     
     /**
      Tells the `DataStack` to allow lightweight migration for the store when added synchronously
      */
-    case AllowSynchronousLightweightMigration = 4
+    case allowSynchronousLightweightMigration = 4
 }
 
 
@@ -103,13 +103,13 @@ public protocol CSLocalStorage: CSStorageInterface {
      The `NSURL` that points to the store file
      */
     @objc
-    var fileURL: NSURL { get }
+    var fileURL: URL { get }
     
     /**
      The `NSBundle`s from which to search mapping models for migrations
      */
     @objc
-    var mappingModelBundles: [NSBundle] { get }
+    var mappingModelBundles: [Bundle] { get }
     
     /**
      Options that tell the `CSDataStack` how to setup the persistent store
@@ -121,5 +121,5 @@ public protocol CSLocalStorage: CSStorageInterface {
      Called by the `CSDataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
      */
     @objc
-    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel, error: NSErrorPointer) -> Bool
+    func eraseStorageAndWait(soureModel: NSManagedObjectModel, error: NSErrorPointer) -> Bool
 }

@@ -44,7 +44,7 @@ public final class DataStack {
      - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    public convenience init(modelName: String = DataStack.applicationName, bundle: NSBundle = NSBundle.mainBundle(), migrationChain: MigrationChain = nil) {
+    public convenience init(modelName: String = DataStack.applicationName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
         
         let model = NSManagedObjectModel.fromBundle(
             bundle,
@@ -64,7 +64,7 @@ public final class DataStack {
         
         CoreStore.assert(
             migrationChain.valid,
-            "Invalid migration chain passed to the \(cs_typeName(DataStack)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
+            "Invalid migration chain passed to the \(cs_typeName(DataStack.self)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
         )
         
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
@@ -95,20 +95,20 @@ public final class DataStack {
     /**
      Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass.
      */
-    public func entityDescriptionForType(type: NSManagedObject.Type) -> NSEntityDescription? {
+    public func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return NSEntityDescription.entityForName(
-            self.model.entityNameForClass(type),
-            inManagedObjectContext: self.mainContext
+        return NSEntityDescription.entity(
+            forEntityName: self.model.entityNameForClass(type),
+            in: self.mainContext
         )
     }
     
     /**
      Returns the `NSManagedObjectID` for the specified object URI if it exists in the persistent store.
      */
-    public func objectIDForURIRepresentation(url: NSURL) -> NSManagedObjectID? {
+    public func objectIDForURIRepresentation(_ url: URL) -> NSManagedObjectID? {
         
-        return self.coordinator.managedObjectIDForURIRepresentation(url)
+        return self.coordinator.managedObjectID(forURIRepresentation: url)
     }
     
     /**
@@ -122,20 +122,20 @@ public final class DataStack {
      */
     public func addStorageAndWait() throws -> SQLiteStore {
         
-        return try self.addStorageAndWait(SQLiteStore)
+        return try self.addStorageAndWait(SQLiteStore.self)
     }
     
     /**
      Creates a `StorageInterface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
      ```
-     try dataStack.addStorageAndWait(InMemoryStore)
+     try dataStack.addStorageAndWait(InMemoryStore.self)
      ```
      
      - parameter storeType: the `StorageInterface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the stack
      */
-    public func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
+    public func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(_ storeType: T.Type) throws -> T {
         
         return try self.addStorageAndWait(storeType.init())
     }
@@ -150,7 +150,7 @@ public final class DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the stack
      */
-    public func addStorageAndWait<T: StorageInterface>(storage: T) throws -> T {
+    public func addStorageAndWait<T: StorageInterface>(_ storage: T) throws -> T {
         
         do {
             
@@ -160,8 +160,7 @@ public final class DataStack {
                     
                     return storage
                 }
-                
-                try self.createPersistentStoreFromStorage(
+                _ = try self.createPersistentStoreFromStorage(
                     storage,
                     finalURL: nil,
                     finalStoreOptions: storage.storeOptions
@@ -183,14 +182,14 @@ public final class DataStack {
     /**
      Creates a `LocalStorageface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
      ```
-     try dataStack.addStorageAndWait(SQLiteStore)
+     try dataStack.addStorageAndWait(SQLiteStore.self)
      ```
      
      - parameter storeType: the `LocalStorageface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the stack
      */
-    public func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(storageType: T.Type) throws -> T {
+    public func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(_ storageType: T.Type) throws -> T {
         
         return try self.addStorageAndWait(storageType.init())
     }
@@ -205,13 +204,13 @@ public final class DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      */
-    public func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {
+    public func addStorageAndWait<T: LocalStorage>(_ storage: T) throws -> T {
         
         return try self.coordinator.performSynchronously {
             
             let fileURL = storage.fileURL
             CoreStore.assert(
-                fileURL.fileURL,
+                fileURL.isFileURL,
                 "The specified store URL for the \"\(cs_typeName(storage))\" is invalid: \"\(fileURL)\""
             )
             
@@ -220,7 +219,7 @@ public final class DataStack {
                 return storage
             }
             
-            if let persistentStore = self.coordinator.persistentStoreForURL(fileURL) {
+            if let persistentStore = self.coordinator.persistentStore(for: fileURL as URL) {
                 
                 if let existingStorage = persistentStore.storageInterface as? T
                     where storage.matchesPersistentStore(persistentStore) {
@@ -228,10 +227,10 @@ public final class DataStack {
                     return existingStorage
                 }
                 
-                let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: fileURL)
+                let error = CoreStoreError.differentStorageExistsAtURL(existingPersistentStoreURL: fileURL)
                 CoreStore.log(
                     error,
-                    "Failed to add \(cs_typeName(storage)) at \"\(fileURL)\" because a different \(cs_typeName(NSPersistentStore)) at that URL already exists."
+                    "Failed to add \(cs_typeName(storage)) at \"\(fileURL)\" because a different \(cs_typeName(NSPersistentStore.self)) at that URL already exists."
                 )
                 throw error
             }
@@ -239,33 +238,32 @@ public final class DataStack {
             do {
                 
                 var localStorageOptions = storage.localStorageOptions
-                localStorageOptions.remove(.RecreateStoreOnModelMismatch)
+                localStorageOptions.remove(.recreateStoreOnModelMismatch)
                 
                 let storeOptions = storage.storeOptionsForOptions(localStorageOptions)
                 do {
                     
-                    try NSFileManager.defaultManager().createDirectoryAtURL(
-                        fileURL.URLByDeletingLastPathComponent!,
+                    try FileManager.default.createDirectory(
+                        at: try fileURL.deletingLastPathComponent(),
                         withIntermediateDirectories: true,
                         attributes: nil
                     )
-                    try self.createPersistentStoreFromStorage(
+                    _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: fileURL,
                         finalStoreOptions: storeOptions
                     )
                     return storage
                 }
-                catch let error as NSError where storage.localStorageOptions.contains(.RecreateStoreOnModelMismatch) && error.isCoreDataMigrationError {
+                catch let error as NSError where storage.localStorageOptions.contains(.recreateStoreOnModelMismatch) && error.isCoreDataMigrationError {
                     
-                    let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
-                        storage.dynamicType.storeType,
-                        URL: fileURL,
+                    let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
+                        ofType: storage.dynamicType.storeType,
+                        at: fileURL,
                         options: storeOptions
                     )
-                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
-                    
-                    try self.createPersistentStoreFromStorage(
+                    _ = try self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                    _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: fileURL,
                         finalStoreOptions: storeOptions
@@ -294,7 +292,7 @@ public final class DataStack {
          ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
          ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
          configuration: "Config1",
-         cloudStorageOptions: .RecreateLocalStoreOnModelMismatch
+         cloudStorageOptions: .recreateLocalStoreOnModelMismatch
      ) else {
          // iCloud is not available on the device
          return
@@ -306,7 +304,7 @@ public final class DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the cloud storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
-    public func addStorageAndWait<T: CloudStorage>(storage: T) throws -> T {
+    public func addStorageAndWait<T: CloudStorage>(_ storage: T) throws -> T {
         
         return try self.coordinator.performSynchronously {
             
@@ -316,7 +314,7 @@ public final class DataStack {
             }
             
             let cacheFileURL = storage.cacheFileURL
-            if let persistentStore = self.coordinator.persistentStoreForURL(cacheFileURL) {
+            if let persistentStore = self.coordinator.persistentStore(for: cacheFileURL as URL) {
                 
                 if let existingStorage = persistentStore.storageInterface as? T
                     where storage.matchesPersistentStore(persistentStore) {
@@ -324,10 +322,10 @@ public final class DataStack {
                     return existingStorage
                 }
                 
-                let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: cacheFileURL)
+                let error = CoreStoreError.differentStorageExistsAtURL(existingPersistentStoreURL: cacheFileURL)
                 CoreStore.log(
                     error,
-                    "Failed to add \(cs_typeName(storage)) at \"\(cacheFileURL)\" because a different \(cs_typeName(NSPersistentStore)) at that URL already exists."
+                    "Failed to add \(cs_typeName(storage)) at \"\(cacheFileURL)\" because a different \(cs_typeName(NSPersistentStore.self)) at that URL already exists."
                 )
                 throw error
             }
@@ -335,33 +333,32 @@ public final class DataStack {
             do {
                 
                 var cloudStorageOptions = storage.cloudStorageOptions
-                cloudStorageOptions.remove(.RecreateLocalStoreOnModelMismatch)
+                cloudStorageOptions.remove(.recreateLocalStoreOnModelMismatch)
                 
                 let storeOptions = storage.storeOptionsForOptions(cloudStorageOptions)
                 do {
                     
-                    try NSFileManager.defaultManager().createDirectoryAtURL(
-                        cacheFileURL.URLByDeletingLastPathComponent!,
+                    try FileManager.default.createDirectory(
+                        at: try cacheFileURL.deletingLastPathComponent(),
                         withIntermediateDirectories: true,
                         attributes: nil
                     )
-                    try self.createPersistentStoreFromStorage(
+                    _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,
                         finalStoreOptions: storeOptions
                     )
                     return storage
                 }
-                catch let error as NSError where storage.cloudStorageOptions.contains(.RecreateLocalStoreOnModelMismatch) && error.isCoreDataMigrationError {
+                catch let error as NSError where storage.cloudStorageOptions.contains(.recreateLocalStoreOnModelMismatch) && error.isCoreDataMigrationError {
                     
-                    let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(
-                        storage.dynamicType.storeType,
-                        URL: cacheFileURL,
+                    let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
+                        ofType: storage.dynamicType.storeType,
+                        at: cacheFileURL,
                         options: storeOptions
                     )
-                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
-                    
-                    try self.createPersistentStoreFromStorage(
+                    _ = try self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                    _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,
                         finalStoreOptions: storeOptions
@@ -384,7 +381,7 @@ public final class DataStack {
     
     // MARK: Internal
     
-    internal static let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
+    internal static let applicationName = (Bundle.main.objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
     
     internal let coordinator: NSPersistentStoreCoordinator
     internal let rootSavingContext: NSManagedObjectContext
@@ -393,39 +390,32 @@ public final class DataStack {
     internal let migrationChain: MigrationChain
     internal let childTransactionQueue: GCDQueue = .createSerial("com.coreStore.dataStack.childTransactionQueue")
     internal let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.coreStore.persistentStoreBarrierQueue")
-    internal let migrationQueue: NSOperationQueue = {
+    internal let migrationQueue: OperationQueue = {
         
-        let migrationQueue = NSOperationQueue()
+        let migrationQueue = OperationQueue()
         migrationQueue.maxConcurrentOperationCount = 1
         migrationQueue.name = "com.coreStore.migrationOperationQueue"
-        #if USE_FRAMEWORKS
-            
-            migrationQueue.qualityOfService = .Utility
-            migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
-        #else
-            
-            if #available(iOS 8.0, *) {
-                
-                migrationQueue.qualityOfService = .Utility
-                migrationQueue.underlyingQueue = dispatch_queue_create("com.coreStore.migrationQueue", DISPATCH_QUEUE_SERIAL)
-            }
-        #endif
+        migrationQueue.qualityOfService = .utility
+        migrationQueue.underlyingQueue = DispatchQueue(
+            label: "com.coreStore.migrationQueue",
+            attributes: .serial
+        )
         return migrationQueue
     }()
     
-    internal func persistentStoreForStorage(storage: StorageInterface) -> NSPersistentStore? {
+    internal func persistentStoreForStorage(_ storage: StorageInterface) -> NSPersistentStore? {
         
         return self.coordinator.persistentStores
             .filter { $0.storageInterface === storage }
             .first
     }
     
-    internal func entityNameForEntityClass(entityClass: AnyClass) -> String? {
+    internal func entityNameForEntityClass(_ entityClass: AnyClass) -> String? {
         
         return self.model.entityNameForClass(entityClass)
     }
     
-    internal func persistentStoresForEntityClass(entityClass: AnyClass) -> [NSPersistentStore]? {
+    internal func persistentStoresForEntityClass(_ entityClass: AnyClass) -> [NSPersistentStore]? {
         
         var returnValue: [NSPersistentStore]? = nil
         self.storeMetadataUpdateQueue.barrierSync {
@@ -438,7 +428,7 @@ public final class DataStack {
         return returnValue
     }
     
-    internal func persistentStoreForEntityClass(entityClass: AnyClass, configuration: String?, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
+    internal func persistentStoreForEntityClass(_ entityClass: AnyClass, configuration: String?, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
         
         var returnValue: (store: NSPersistentStore?, isAmbiguous: Bool) = (store: nil, isAmbiguous: false)
         self.storeMetadataUpdateQueue.barrierSync {
@@ -472,12 +462,12 @@ public final class DataStack {
         return returnValue
     }
     
-    internal func createPersistentStoreFromStorage(storage: StorageInterface, finalURL: NSURL?, finalStoreOptions: [String: AnyObject]?) throws -> NSPersistentStore {
+    internal func createPersistentStoreFromStorage(_ storage: StorageInterface, finalURL: URL?, finalStoreOptions: [String: AnyObject]?) throws -> NSPersistentStore {
         
-        let persistentStore = try self.coordinator.addPersistentStoreWithType(
-            storage.dynamicType.storeType,
-            configuration: storage.configuration,
-            URL: finalURL,
+        let persistentStore = try self.coordinator.addPersistentStore(
+            ofType: storage.dynamicType.storeType,
+            configurationName: storage.configuration,
+            at: finalURL,
             options: finalStoreOptions
         )
         persistentStore.storageInterface = storage
@@ -486,9 +476,9 @@ public final class DataStack {
             
             let configurationName = persistentStore.configurationName
             self.configurationStoreMapping[configurationName] = persistentStore
-            for entityDescription in (self.coordinator.managedObjectModel.entitiesForConfiguration(configurationName) ?? []) {
+            for entityDescription in (self.coordinator.managedObjectModel.entities(forConfigurationName: configurationName) ?? []) {
                 
-                let managedObjectClassName = entityDescription.managedObjectClassName
+                let managedObjectClassName = entityDescription.managedObjectClassName!
                 CoreStore.assert(
                     NSClassFromString(managedObjectClassName) != nil,
                     "The class \(cs_typeName(managedObjectClassName)) for the entity \(cs_typeName(entityDescription.name)) does not exist. Check if the subclass type and module name are properly configured."
@@ -520,78 +510,10 @@ public final class DataStack {
                 
                 coordinator.persistentStores.forEach {
                     
-                    _ = try? coordinator.removePersistentStore($0)
+                    _ = try? coordinator.remove($0)
                 }
             }
         }
-    }
-    
-    
-    // MARK: Deprecated
-    
-    /**
-     Deprecated. Use `addStorageAndWait(_:)` by passing a `InMemoryStore` instance.
-     ```
-     try dataStack.addStorage(InMemoryStore(configuration: configuration))
-     ```
-     */
-    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing an InMemoryStore instance.")
-    public func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
-        
-        let storage = try self.addStorageAndWait(InMemoryStore(configuration: configuration))
-        return self.persistentStoreForStorage(storage)!
-    }
-    
-    /**
-     Deprecated. Use `addStorageAndWait(_:)` by passing a `LegacySQLiteStore` instance.
-     ```
-     try dataStack.addStorage(
-         LegacySQLiteStore(
-             fileName: fileName,
-             configuration: configuration,
-             localStorageOptions: .RecreateStoreOnModelMismatch
-         )
-     )
-     ```
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    public func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
-        
-        let storage = try self.addStorageAndWait(
-            LegacySQLiteStore(
-                fileName: fileName,
-                configuration: configuration,
-                localStorageOptions: resetStoreOnModelMismatch ? .RecreateStoreOnModelMismatch : .None
-            )
-        )
-        return self.persistentStoreForStorage(storage)!
-    }
-    
-    /**
-     Deprecated. Use `addStorageAndWait(_:)` by passing a `LegacySQLiteStore` instance.
-     ```
-     try dataStack.addStorage(
-         LegacySQLiteStore(
-             fileURL: fileURL,
-             configuration: configuration,
-             localStorageOptions: .RecreateStoreOnModelMismatch
-         )
-     )
-     ```
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    public func addSQLiteStoreAndWait(fileURL fileURL: NSURL = LegacySQLiteStore.defaultFileURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
-        
-        let storage = try self.addStorageAndWait(
-            LegacySQLiteStore(
-                fileURL: fileURL,
-                configuration: configuration,
-                localStorageOptions: resetStoreOnModelMismatch ? .RecreateStoreOnModelMismatch : .None
-            )
-        )
-        return self.persistentStoreForStorage(storage)!
     }
 }
 

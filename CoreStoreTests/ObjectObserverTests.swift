@@ -208,10 +208,10 @@ class TestObjectObserver: ObjectObserver {
     
     typealias ObjectEntityType = TestEntity1
     
-    func objectMonitor(monitor: ObjectMonitor<TestEntity1>, willUpdateObject object: TestEntity1) {
+    func objectMonitor(_ monitor: ObjectMonitor<TestEntity1>, willUpdateObject object: TestEntity1) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "objectMonitor:willUpdateObject:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "objectMonitor:willUpdateObject:"),
             object: self,
             userInfo: [
                 "object": object
@@ -219,9 +219,9 @@ class TestObjectObserver: ObjectObserver {
         )
     }
     
-    func objectMonitor(monitor: ObjectMonitor<TestEntity1>, didUpdateObject object: TestEntity1, changedPersistentKeys: Set<KeyPath>) {
+    func objectMonitor(_ monitor: ObjectMonitor<TestEntity1>, didUpdateObject object: TestEntity1, changedPersistentKeys: Set<KeyPath>) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
+        NotificationCenter.defaultCenter().postNotificationName(
             "objectMonitor:didUpdateObject:changedPersistentKeys:",
             object: self,
             userInfo: [
@@ -231,10 +231,10 @@ class TestObjectObserver: ObjectObserver {
         )
     }
     
-    func objectMonitor(monitor: ObjectMonitor<TestEntity1>, didDeleteObject object: TestEntity1) {
+    func objectMonitor(_ monitor: ObjectMonitor<TestEntity1>, didDeleteObject object: TestEntity1) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "objectMonitor:didDeleteObject:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "objectMonitor:didDeleteObject:"),
             object: self,
             userInfo: [
                 "object": object

@@ -57,17 +57,17 @@ import Foundation
  }
  ```
  */
-public enum MigrationResult: BooleanType, Hashable {
+public enum MigrationResult: Boolean, Hashable {
     
     /**
      `MigrationResult.Success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
      */
-    case Success([MigrationType])
+    case success([MigrationType])
     
     /**
      `SaveResult.Failure` indicates that the migration failed. The associated object for this value is the a `CoreStoreError` enum value.
      */
-    case Failure(CoreStoreError)
+    case failure(CoreStoreError)
     
     
     // MARK: BooleanType
@@ -76,8 +76,8 @@ public enum MigrationResult: BooleanType, Hashable {
         
         switch self {
             
-        case .Success: return true
-        case .Failure: return false
+        case .success: return true
+        case .failure: return false
         }
     }
     
@@ -88,11 +88,11 @@ public enum MigrationResult: BooleanType, Hashable {
         
         switch self {
             
-        case .Success(let migrationTypes):
+        case .success(let migrationTypes):
             return self.boolValue.hashValue
                 ^ migrationTypes.map { $0.hashValue }.reduce(0, combine: ^).hashValue
             
-        case .Failure(let error):
+        case .failure(let error):
             return self.boolValue.hashValue ^ error.hashValue
         }
     }
@@ -102,17 +102,17 @@ public enum MigrationResult: BooleanType, Hashable {
     
     internal init(_ migrationTypes: [MigrationType]) {
         
-        self = .Success(migrationTypes)
+        self = .success(migrationTypes)
     }
     
     internal init(_ error: CoreStoreError) {
         
-        self = .Failure(error)
+        self = .failure(error)
     }
     
-    internal init(_ error: ErrorType) {
+    internal init(_ error: ErrorProtocol) {
         
-        self = .Failure(CoreStoreError(error))
+        self = .failure(CoreStoreError(error))
     }
 }
 
@@ -124,10 +124,10 @@ public func == (lhs: MigrationResult, rhs: MigrationResult) -> Bool {
     
     switch (lhs, rhs) {
         
-    case (.Success(let migrationTypes1), .Success(let migrationTypes2)):
+    case (.success(let migrationTypes1), .success(let migrationTypes2)):
         return migrationTypes1 == migrationTypes2
         
-    case (.Failure(let error1), .Failure(let error2)):
+    case (.failure(let error1), .failure(let error2)):
         return error1 == error2
         
     default:

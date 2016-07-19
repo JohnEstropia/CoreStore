@@ -41,18 +41,18 @@ final class WhereTests: XCTestCase {
             let whereClause = Where()
             XCTAssertEqual(whereClause, Where(true))
             XCTAssertNotEqual(whereClause, Where(false))
-            XCTAssertEqual(whereClause.predicate, NSPredicate(value: true))
+            XCTAssertEqual(whereClause.predicate, Predicate(value: true))
         }
         do {
             
             let whereClause = Where(true)
             XCTAssertEqual(whereClause, Where())
             XCTAssertNotEqual(whereClause, Where(false))
-            XCTAssertEqual(whereClause.predicate, NSPredicate(value: true))
+            XCTAssertEqual(whereClause.predicate, Predicate(value: true))
         }
         do {
             
-            let predicate = NSPredicate(format: "%K == %@", "key", "value")
+            let predicate = Predicate(format: "%K == %@", "key", "value")
             let whereClause = Where(predicate)
             XCTAssertEqual(whereClause, Where(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
@@ -60,28 +60,28 @@ final class WhereTests: XCTestCase {
         do {
             
             let whereClause = Where("%K == %@", "key", "value")
-            let predicate = NSPredicate(format: "%K == %@", "key", "value")
+            let predicate = Predicate(format: "%K == %@", "key", "value")
             XCTAssertEqual(whereClause, Where(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
         }
         do {
             
             let whereClause = Where("%K == %@", argumentArray: ["key", "value"])
-            let predicate = NSPredicate(format: "%K == %@", "key", "value")
+            let predicate = Predicate(format: "%K == %@", "key", "value")
             XCTAssertEqual(whereClause, Where(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
         }
         do {
             
             let whereClause = Where("key", isEqualTo: "value")
-            let predicate = NSPredicate(format: "%K == %@", "key", "value")
+            let predicate = Predicate(format: "%K == %@", "key", "value")
             XCTAssertEqual(whereClause, Where(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
         }
         do {
             
             let whereClause = Where("key", isMemberOf: ["value1", "value2", "value3"])
-            let predicate = NSPredicate(format: "%K IN %@", "key", ["value1", "value2", "value3"])
+            let predicate = Predicate(format: "%K IN %@", "key", ["value1", "value2", "value3"])
             XCTAssertEqual(whereClause, Where(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
         }
@@ -97,7 +97,7 @@ final class WhereTests: XCTestCase {
         do {
             
             let notWhere = !whereClause1
-            let notPredicate = NSCompoundPredicate(
+            let notPredicate = CompoundPredicate(
                 type: .NotPredicateType,
                 subpredicates: [whereClause1.predicate]
             )
@@ -107,10 +107,10 @@ final class WhereTests: XCTestCase {
         do {
             
             let andWhere = whereClause1 && whereClause2 && whereClause3
-            let andPredicate = NSCompoundPredicate(
+            let andPredicate = CompoundPredicate(
                 type: .AndPredicateType,
                 subpredicates: [
-                    NSCompoundPredicate(
+                    CompoundPredicate(
                         type: .AndPredicateType,
                         subpredicates: [whereClause1.predicate, whereClause2.predicate]
                     ),
@@ -123,10 +123,10 @@ final class WhereTests: XCTestCase {
         do {
             
             let orWhere = whereClause1 || whereClause2 || whereClause3
-            let orPredicate = NSCompoundPredicate(
+            let orPredicate = CompoundPredicate(
                 type: .OrPredicateType,
                 subpredicates: [
-                    NSCompoundPredicate(
+                    CompoundPredicate(
                         type: .OrPredicateType,
                         subpredicates: [whereClause1.predicate, whereClause2.predicate]
                     ),

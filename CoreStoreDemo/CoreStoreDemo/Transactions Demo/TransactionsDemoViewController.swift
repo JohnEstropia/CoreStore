@@ -22,7 +22,7 @@ private struct Static {
             SQLiteStore(
                 fileName: "PlaceDemo.sqlite",
                 configuration: "TransactionsDemo",
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         

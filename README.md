@@ -206,7 +206,7 @@ let migrationProgress = dataStack.addStorage(
     SQLiteStore(
         fileURL: sqliteFileURL, // set the target file URL for the sqlite file
         configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
-        localStorageOptions: .RecreateStoreOnModelMismatch // if migration paths cannot be resolved, recreate the sqlite file
+        localStorageOptions: .recreateStoreOnModelMismatch // if migration paths cannot be resolved, recreate the sqlite file
     ),
     completion: { (result) -> Void in
         switch result {
@@ -231,7 +231,7 @@ class MyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
-            try self.dataStack.addStorageAndWait(SQLiteStore)
+            try self.dataStack.addStorageAndWait(SQLiteStore.self)
         }
         catch { // ...
         }
@@ -249,7 +249,7 @@ class MyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
-            try CoreStore.addStorageAndWait(SQLiteStore)
+            try CoreStore.addStorageAndWait(SQLiteStore.self)
         }
         catch { // ...
         }
@@ -274,7 +274,7 @@ try CoreStore.addStorageAndWait(
 ```
 `InMemoryStore`s also implement the `DefaultInitializableStore` sugar protocol which tells CoreStore that this store can initialize without any arguments (`init()`). This lets us provide just the type instead of an instance:
 ```swift
-try CoreStore.addStorageAndWait(InMemoryStore)
+try CoreStore.addStorageAndWait(InMemoryStore.self)
 ```
 
 ### Local Store
@@ -285,7 +285,7 @@ let migrationProgress = CoreStore.addStorage(
         fileName: "MyStore.sqlite",
         configuration: "Config2", // optional. Use entities from the "Config2" configuration in the .xcdatamodeld file
         mappingModelBundles: [NSBundle.mainBundle()], // optional. The bundles that contain required .xcmappingmodel files, if any
-        localStorageOptions: .RecreateStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
+        localStorageOptions: .recreateStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
     ),
     completion: { /* ... */ }
 )
@@ -294,7 +294,7 @@ Refer to the *SQLiteStore.swift* source documentation for detailed explanations 
 
 CoreStore can decide the default values for these properties, so `SQLiteStore`s also implement the `DefaultInitializableStore` sugar protocol which lets us write:
 ```swift
-try CoreStore.addStorageAndWait(SQLiteStore)
+try CoreStore.addStorageAndWait(SQLiteStore.self)
 ```
 or
 ```swift
@@ -324,7 +324,7 @@ guard let storage = ICloudStore(
     ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername", // optional. The container if your app has multiple ubiquity container identifiers in its entitlements
     ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0", // optional. A per-application salt to allow multiple apps on the same device to share a Core Data store integrated with iCloud
     configuration: "Config1", // optional. Use entities from the "Config1" configuration in the .xcdatamodeld file
-    cloudStorageOptions: .RecreateLocalStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
+    cloudStorageOptions: .recreateLocalStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
 ) else {
     // The iCloud container could not be located or if iCloud is not available on the device.
     // Handle appropriately
@@ -1300,7 +1300,7 @@ With 2.0, all CoreStore types are still written in pure Swift, but they now have
 <tr><th>Swift</th><th>Objective-C</th></tr>
 <tr>
 <td><pre lang=swift>
-try CoreStore.addStorageAndWait(SQLiteStore)
+try CoreStore.addStorageAndWait(SQLiteStore.self)
 </pre></td>
 <td><pre lang=objc>
 NSError *error

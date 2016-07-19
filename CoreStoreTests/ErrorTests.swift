@@ -58,7 +58,7 @@ final class ErrorTests: XCTestCase {
     @objc
     dynamic func test_ThatDifferentStorageExistsAtURLErrors_BridgeCorrectly() {
         
-        let dummyURL = NSURL(string: "file:///test1/test2.sqlite")!
+        let dummyURL = URL(string: "file:///test1/test2.sqlite")!
         
         let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: dummyURL)
         XCTAssertEqual((error as NSError).domain, CoreStoreErrorDomain)
@@ -83,9 +83,9 @@ final class ErrorTests: XCTestCase {
     @objc
     dynamic func test_ThatMappingModelNotFoundErrors_BridgeCorrectly() {
         
-        let dummyURL = NSURL(string: "file:///test1/test2.sqlite")!
+        let dummyURL = URL(string: "file:///test1/test2.sqlite")!
         
-        let model = NSManagedObjectModel.fromBundle(NSBundle(forClass: self.dynamicType), modelName: "Model")
+        let model = NSManagedObjectModel.fromBundle(Bundle(forClass: self.dynamicType), modelName: "Model")
         let version = "1.0.0"
         
         let error = CoreStoreError.MappingModelNotFound(localStoreURL: dummyURL, targetModel: model, targetModelVersion: version)
@@ -113,7 +113,7 @@ final class ErrorTests: XCTestCase {
     @objc
     dynamic func test_ThatProgressiveMigrationRequiredErrors_BridgeCorrectly() {
         
-        let dummyURL = NSURL(string: "file:///test1/test2.sqlite")!
+        let dummyURL = URL(string: "file:///test1/test2.sqlite")!
         
         let error = CoreStoreError.ProgressiveMigrationRequired(localStoreURL: dummyURL)
         XCTAssertEqual((error as NSError).domain, CoreStoreErrorDomain)
@@ -144,7 +144,7 @@ final class ErrorTests: XCTestCase {
             userInfo: [
                 "key1": "value1",
                 "key2": 2,
-                "key3": NSDate()
+                "key3": Date()
             ]
         )
         let error = CoreStoreError.InternalError(NSError: internalError)

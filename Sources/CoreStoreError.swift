@@ -32,32 +32,32 @@ import CoreData
 /**
  All errors thrown from CoreStore are expressed in `CoreStoreError` enum values.
  */
-public enum CoreStoreError: ErrorType, Hashable {
+public enum CoreStoreError: ErrorProtocol, Hashable {
     
     /**
      A failure occured because of an unknown error.
      */
-    case Unknown
+    case unknown
     
     /**
      The `NSPersistentStore` could not be initialized because another store existed at the specified `NSURL`.
      */
-    case DifferentStorageExistsAtURL(existingPersistentStoreURL: NSURL)
+    case differentStorageExistsAtURL(existingPersistentStoreURL: URL)
     
     /**
      An `NSMappingModel` could not be found for a specific source and destination model versions.
      */
-    case MappingModelNotFound(localStoreURL: NSURL, targetModel: NSManagedObjectModel, targetModelVersion: String)
+    case mappingModelNotFound(localStoreURL: URL, targetModel: NSManagedObjectModel, targetModelVersion: String)
     
     /**
      Progressive migrations are disabled for a store, but an `NSMappingModel` could not be found for a specific source and destination model versions.
      */
-    case ProgressiveMigrationRequired(localStoreURL: NSURL)
+    case progressiveMigrationRequired(localStoreURL: URL)
     
     /**
      An internal SDK call failed with the specified `NSError`.
      */
-    case InternalError(NSError: NSError)
+    case internalError(NSError: NSError)
     
     
     // MARK: ErrorType
@@ -71,20 +71,20 @@ public enum CoreStoreError: ErrorType, Hashable {
     
         switch self {
             
-        case .Unknown:
-            return CoreStoreErrorCode.UnknownError.rawValue
+        case .unknown:
+            return CoreStoreErrorCode.unknownError.rawValue
             
-        case .DifferentStorageExistsAtURL:
-            return CoreStoreErrorCode.DifferentPersistentStoreExistsAtURL.rawValue
+        case .differentStorageExistsAtURL:
+            return CoreStoreErrorCode.differentPersistentStoreExistsAtURL.rawValue
             
-        case .MappingModelNotFound:
-            return CoreStoreErrorCode.MappingModelNotFound.rawValue
+        case .mappingModelNotFound:
+            return CoreStoreErrorCode.mappingModelNotFound.rawValue
             
-        case .ProgressiveMigrationRequired:
-            return CoreStoreErrorCode.ProgressiveMigrationRequired.rawValue
+        case .progressiveMigrationRequired:
+            return CoreStoreErrorCode.progressiveMigrationRequired.rawValue
             
-        case .InternalError:
-            return CoreStoreErrorCode.InternalError.rawValue
+        case .internalError:
+            return CoreStoreErrorCode.internalError.rawValue
         }
     }
     
@@ -96,19 +96,19 @@ public enum CoreStoreError: ErrorType, Hashable {
         let code = self._code
         switch self {
             
-        case .Unknown:
+        case .unknown:
             return code.hashValue
             
-        case .DifferentStorageExistsAtURL(let existingPersistentStoreURL):
+        case .differentStorageExistsAtURL(let existingPersistentStoreURL):
             return code.hashValue ^ existingPersistentStoreURL.hashValue
             
-        case .MappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
+        case .mappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
             return code.hashValue ^ localStoreURL.hashValue ^ targetModel.hashValue ^ targetModelVersion.hashValue
             
-        case .ProgressiveMigrationRequired(let localStoreURL):
+        case .progressiveMigrationRequired(let localStoreURL):
             return code.hashValue ^ localStoreURL.hashValue
             
-        case .InternalError(let NSError):
+        case .internalError(let NSError):
             return code.hashValue ^ NSError.hashValue
         }
     }
@@ -116,33 +116,32 @@ public enum CoreStoreError: ErrorType, Hashable {
     
     // MARK: Internal
     
-    internal init(_ error: ErrorType?) {
+    internal init(_ error: ErrorProtocol?) {
         
-        self = error.flatMap { $0.bridgeToSwift } ?? .Unknown
+        self = error.flatMap { $0.bridgeToSwift } ?? .unknown
     }
 }
 
 
 // MARK: - CoreStoreError: Equatable
 
-@warn_unused_result
 public func == (lhs: CoreStoreError, rhs: CoreStoreError) -> Bool {
     
     switch (lhs, rhs) {
         
-    case (.Unknown, .Unknown):
+    case (.unknown, .unknown):
         return true
         
-    case (.DifferentStorageExistsAtURL(let url1), .DifferentStorageExistsAtURL(let url2)):
+    case (.differentStorageExistsAtURL(let url1), .differentStorageExistsAtURL(let url2)):
         return url1 == url2
         
-    case (.MappingModelNotFound(let url1, let model1, let version1), .MappingModelNotFound(let url2, let model2, let version2)):
+    case (.mappingModelNotFound(let url1, let model1, let version1), .mappingModelNotFound(let url2, let model2, let version2)):
         return url1 == url2 && model1 == model2 && version1 == version2
         
-    case (.ProgressiveMigrationRequired(let url1), .ProgressiveMigrationRequired(let url2)):
+    case (.progressiveMigrationRequired(let url1), .progressiveMigrationRequired(let url2)):
         return url1 == url2
         
-    case (.InternalError(let NSError1), .InternalError(let NSError2)):
+    case (.internalError(let NSError1), .internalError(let NSError2)):
         return NSError1 == NSError2
         
     default:
@@ -170,27 +169,27 @@ public enum CoreStoreErrorCode: Int {
     /**
      A failure occured because of an unknown error.
      */
-    case UnknownError
+    case unknownError
     
     /**
      The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
      */
-    case DifferentPersistentStoreExistsAtURL
+    case differentPersistentStoreExistsAtURL
     
     /**
      An `NSMappingModel` could not be found for a specific source and destination model versions.
      */
-    case MappingModelNotFound
+    case mappingModelNotFound
     
     /**
      Progressive migrations are disabled for a store, but an `NSMappingModel` could not be found for a specific source and destination model versions.
      */
-    case ProgressiveMigrationRequired
+    case progressiveMigrationRequired
     
     /**
      An internal SDK call failed with the specified "NSError" userInfo key.
      */
-    case InternalError
+    case internalError
 }
 
 
@@ -207,21 +206,5 @@ public extension NSError {
             || code == NSMigrationMissingSourceModelError
             || code == NSMigrationError)
             && self.domain == NSCocoaErrorDomain
-    }
-    
-    
-    // MARK: Deprecated
-
-    /**
-     Deprecated. Use `CoreStoreError` enum values instead.
-     
-     If the error's domain is equal to `CoreStoreErrorDomain`, returns the associated `CoreStoreErrorCode`. For other domains, returns `nil`.
-     */
-    @available(*, deprecated=2.0.0, message="Use CoreStoreError enum values instead.")
-    public var coreStoreErrorCode: CoreStoreErrorCode? {
-        
-        return (self.domain == CoreStoreErrorDomain
-            ? CoreStoreErrorCode(rawValue: self.code)
-            : nil)
     }
 }

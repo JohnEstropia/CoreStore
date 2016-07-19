@@ -51,7 +51,7 @@ public protocol ObjectObserver: class {
      - parameter monitor: the `ObjectMonitor` monitoring the object being observed
      - parameter object: the `NSManagedObject` instance being observed
      */
-    func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType)
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType)
     
     /**
      Handles processing right after a change to the observed `object` occurs
@@ -60,7 +60,7 @@ public protocol ObjectObserver: class {
      - parameter object: the `NSManagedObject` instance being observed
      - parameter changedPersistentKeys: a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
      */
-    func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>)
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>)
     
     /**
      Handles processing right after `object` is deleted
@@ -68,7 +68,7 @@ public protocol ObjectObserver: class {
      - parameter monitor: the `ObjectMonitor` monitoring the object being observed
      - parameter object: the `NSManagedObject` instance being observed
      */
-    func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType)
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType)
 }
 
 
@@ -79,17 +79,17 @@ public extension ObjectObserver {
     /**
      The default implementation does nothing.
      */
-    func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) { }
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) { }
     
     /**
      The default implementation does nothing.
      */
-    func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>) { }
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>) { }
     
     /**
      The default implementation does nothing.
      */
-    func objectMonitor(monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType) { }
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType) { }
 }
 
 #endif

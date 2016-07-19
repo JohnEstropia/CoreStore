@@ -60,7 +60,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index, or `nil` if out of bounds
      */
     @objc
-    public func objectAtSafeIndex(index: Int) -> AnyObject? {
+    public func objectAtSafeIndex(_ index: Int) -> AnyObject? {
         
         return self.bridgeToSwift[safeIndex: index]
     }
@@ -73,7 +73,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified section and item index
      */
     @objc
-    public func objectAtSectionIndex(sectionIndex: Int, itemIndex: Int) -> AnyObject {
+    public func objectAtSectionIndex(_ sectionIndex: Int, itemIndex: Int) -> AnyObject {
         
         return self.bridgeToSwift[sectionIndex, itemIndex]
     }
@@ -86,7 +86,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified section and item index, or `nil` if out of bounds
      */
     @objc
-    public func objectAtSafeSectionIndex(sectionIndex: Int, safeItemIndex itemIndex: Int) -> AnyObject? {
+    public func objectAtSafeSectionIndex(_ sectionIndex: Int, safeItemIndex itemIndex: Int) -> AnyObject? {
         
         return self.bridgeToSwift[safeSectionIndex: sectionIndex, safeItemIndex: itemIndex]
     }
@@ -98,7 +98,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index path
      */
     @objc
-    public func objectAtIndexPath(indexPath: NSIndexPath) -> AnyObject {
+    public func objectAtIndexPath(_ indexPath: IndexPath) -> AnyObject {
         
         return self.bridgeToSwift[indexPath]
     }
@@ -110,7 +110,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index path, or `nil` if out of bounds
      */
     @objc
-    public func objectAtSafeIndexPath(indexPath: NSIndexPath) -> AnyObject? {
+    public func objectAtSafeIndexPath(_ indexPath: IndexPath) -> AnyObject? {
         
         return self.bridgeToSwift[safeIndexPath: indexPath]
     }
@@ -135,7 +135,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func hasObjectsInSection(section: Int) -> Bool {
+    public func hasObjectsInSection(_ section: Int) -> Bool {
         
         return self.bridgeToSwift.hasObjectsInSection(section)
     }
@@ -160,7 +160,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func objectsInSection(section: Int) -> [NSManagedObject] {
+    public func objectsInSection(_ section: Int) -> [NSManagedObject] {
         
         return self.bridgeToSwift.objectsInSection(section)
     }
@@ -210,7 +210,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func numberOfObjectsInSection(section: Int) -> Int {
+    public func numberOfObjectsInSection(_ section: Int) -> Int {
         
         return self.bridgeToSwift.numberOfObjectsInSection(section)
     }
@@ -236,7 +236,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func sectionInfoAtIndex(section: Int) -> NSFetchedResultsSectionInfo {
+    public func sectionInfoAtIndex(_ section: Int) -> NSFetchedResultsSectionInfo {
         
         return self.bridgeToSwift.sectionInfoAtIndex(section)
     }
@@ -275,7 +275,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func targetSectionForSectionIndexTitle(title title: String, index: Int) -> Int {
+    public func targetSectionForSectionIndexTitle(title: String, index: Int) -> Int {
         
         return self.bridgeToSwift.targetSectionForSectionIndex(title: title, index: index)
     }
@@ -300,7 +300,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func indexOf(object: NSManagedObject) -> NSNumber? {
+    public func indexOf(_ object: NSManagedObject) -> NSNumber? {
         
         return self.bridgeToSwift.indexOf(object)
     }
@@ -313,7 +313,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func indexPathOf(object: NSManagedObject) -> NSIndexPath? {
+    public func indexPathOf(_ object: NSManagedObject) -> IndexPath? {
         
         return self.bridgeToSwift.indexPathOf(object)
     }
@@ -333,7 +333,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - parameter observer: a `CSListObserver` to send change notifications to
      */
     @objc
-    public func addListObserver(observer: CSListObserver) {
+    public func addListObserver(_ observer: CSListObserver) {
         
         let swift = self.bridgeToSwift
         swift.unregisterObserver(observer)
@@ -369,7 +369,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      
      - parameter observer: a `CSListObjectObserver` to send change notifications to
      */
-    public func addListObjectObserver(observer: CSListObjectObserver) {
+    public func addListObjectObserver(_ observer: CSListObjectObserver) {
         
         let swift = self.bridgeToSwift
         swift.unregisterObserver(observer)
@@ -425,7 +425,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - parameter observer: a `CSListSectionObserver` to send change notifications to
      */
     @objc
-    public func addListSectionObserver(observer: CSListSectionObserver) {
+    public func addListSectionObserver(_ observer: CSListSectionObserver) {
         
         let swift = self.bridgeToSwift
         swift.unregisterObserver(observer)
@@ -488,7 +488,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - parameter observer: a `CSListObserver` to unregister notifications to
      */
     @objc
-    public func removeListObserver(observer: CSListObserver) {
+    public func removeListObserver(_ observer: CSListObserver) {
         
         self.bridgeToSwift.unregisterObserver(observer)
     }
@@ -513,11 +513,11 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Note that only specified clauses will be changed; unspecified clauses will use previous values.
      */
     @objc
-    public func refetch(fetchClauses: [CSFetchClause]) {
+    public func refetch(_ fetchClauses: [CSFetchClause]) {
         
-        self.bridgeToSwift.refetch { (fetchRequest) in
+        self.bridgeToSwift.refetch { (fetchRequest: NSFetchRequest<NSManagedObject>) in
             
-            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest.cs_dynamicCast()) }
         }
     }
     
@@ -529,7 +529,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: AnyObject?) -> Bool {
         
         guard let object = object as? CSListMonitor else {
             

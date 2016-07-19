@@ -19,7 +19,7 @@ private struct Static {
             SQLiteStore(
                 fileName: "TimeZoneDemo.sqlite",
                 configuration: "FetchingAndQueryingDemo",
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
     

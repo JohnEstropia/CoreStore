@@ -883,17 +883,17 @@ class ImportTests: BaseTestDataTestCase {
 
 // MARK: - TestInsertError
 
-private struct TestInsertError: ErrorType {}
+private struct TestInsertError: ErrorProtocol {}
 
 
 // MARK: - TestUpdateError
 
-private struct TestUpdateError: ErrorType {}
+private struct TestUpdateError: ErrorProtocol {}
 
 
 // MARK: - TestIDError
 
-private struct TestIDError: ErrorType {}
+private struct TestIDError: ErrorProtocol {}
 
 
 // MARK: - TestEntity1
@@ -904,12 +904,12 @@ extension TestEntity1: ImportableUniqueObject {
     
     typealias ImportSource = [String: AnyObject]
     
-    static func shouldInsertFromImportSource(source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) -> Bool {
+    static func shouldInsertFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return source["skip_insert"] == nil
     }
     
-    func didInsertFromImportSource(source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) throws {
+    func didInsertFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) throws {
         
         if let _ = source["throw_on_insert"] {
             
@@ -919,8 +919,8 @@ extension TestEntity1: ImportableUniqueObject {
         self.testNumber = source["testNumber"] as? NSNumber
         self.testDecimal = source["testDecimal"] as? NSDecimalNumber
         self.testString = source["testString"] as? String
-        self.testData = source["testData"] as? NSData
-        self.testDate = source["testDate"] as? NSDate
+        self.testData = source["testData"] as? Data
+        self.testDate = source["testDate"] as? Date
         self.testNil = nil
     }
     
@@ -951,12 +951,12 @@ extension TestEntity1: ImportableUniqueObject {
         }
     }
     
-    static func shouldUpdateFromImportSource(source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) -> Bool {
+    static func shouldUpdateFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return source["skip_update"] == nil
     }
     
-    static func uniqueIDFromImportSource(source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) throws -> NSNumber? {
+    static func uniqueIDFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) throws -> NSNumber? {
         
         if let _ = source["throw_on_id"] {
             
@@ -965,7 +965,7 @@ extension TestEntity1: ImportableUniqueObject {
         return source["testEntityID"] as? NSNumber
     }
     
-    func updateFromImportSource(source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) throws {
+    func updateFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) throws {
         
         if let _ = source["throw_on_update"] {
             
@@ -975,8 +975,8 @@ extension TestEntity1: ImportableUniqueObject {
         self.testNumber = source["testNumber"] as? NSNumber
         self.testDecimal = source["testDecimal"] as? NSDecimalNumber
         self.testString = source["testString"] as? String
-        self.testData = source["testData"] as? NSData
-        self.testDate = source["testDate"] as? NSDate
+        self.testData = source["testData"] as? Data
+        self.testDate = source["testDate"] as? Date
         self.testNil = nil
     }
 }

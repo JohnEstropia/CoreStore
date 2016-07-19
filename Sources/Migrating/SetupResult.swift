@@ -60,17 +60,17 @@ import CoreData
  )
  ```
  */
-public enum SetupResult<T: StorageInterface>: BooleanType, Hashable {
+public enum SetupResult<T: StorageInterface>: Boolean, Hashable {
     
     /**
      `SetupResult.Success` indicates that the storage setup succeeded. The associated object for this `enum` value is the related `StorageInterface` instance.
      */
-    case Success(T)
+    case success(T)
     
     /**
      `SetupResult.Failure` indicates that the storage setup failed. The associated object for this value is the related `CoreStoreError` enum value.
      */
-    case Failure(CoreStoreError)
+    case failure(CoreStoreError)
     
     
     // MARK: BooleanType
@@ -79,8 +79,8 @@ public enum SetupResult<T: StorageInterface>: BooleanType, Hashable {
         
         switch self {
             
-        case .Success: return true
-        case .Failure: return false
+        case .success: return true
+        case .failure: return false
         }
     }
     
@@ -91,10 +91,10 @@ public enum SetupResult<T: StorageInterface>: BooleanType, Hashable {
         
         switch self {
             
-        case .Success(let storage):
+        case .success(let storage):
             return self.boolValue.hashValue ^ ObjectIdentifier(storage).hashValue
             
-        case .Failure(let error):
+        case .failure(let error):
             return self.boolValue.hashValue ^ error.hashValue
         }
     }
@@ -104,17 +104,17 @@ public enum SetupResult<T: StorageInterface>: BooleanType, Hashable {
     
     internal init(_ storage: T) {
         
-        self = .Success(storage)
+        self = .success(storage)
     }
     
     internal init(_ error: CoreStoreError) {
         
-        self = .Failure(error)
+        self = .failure(error)
     }
     
-    internal init(_ error: ErrorType) {
+    internal init(_ error: ErrorProtocol) {
         
-        self = .Failure(CoreStoreError(error))
+        self = .failure(CoreStoreError(error))
     }
 }
 
@@ -126,10 +126,10 @@ public func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, r
     
     switch (lhs, rhs) {
         
-    case (.Success(let storage1), .Success(let storage2)):
+    case (.success(let storage1), .success(let storage2)):
         return storage1 === storage2
         
-    case (.Failure(let error1), .Failure(let error2)):
+    case (.failure(let error1), .failure(let error2)):
         return error1 == error2
         
     default:
@@ -143,18 +143,18 @@ public func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, r
 /**
  Deprecated. Replaced by `SetupResult<T>` when using the new `addStorage(_:completion:)` method variants.
  */
-@available(*, deprecated=2.0.0, message="Replaced by SetupResult by using the new addStorage(_:completion:) method variants.")
-public enum PersistentStoreResult: BooleanType {
+@available(*, deprecated: 2.0.0, message: "Replaced by SetupResult by using the new addStorage(_:completion:) method variants.")
+public enum PersistentStoreResult: Boolean {
     
     /**
      Deprecated. Replaced by `SetupResult.Success` when using the new `addStorage(_:completion:)` method variants.
      */
-    case Success(NSPersistentStore)
+    case success(NSPersistentStore)
     
     /**
      Deprecated. Replaced by `SetupResult.Failure` when using the new `addStorage(_:completion:)` method variants.
      */
-    case Failure(NSError)
+    case failure(NSError)
     
     
     // MARK: BooleanType
@@ -163,8 +163,8 @@ public enum PersistentStoreResult: BooleanType {
         
         switch self {
             
-        case .Success: return true
-        case .Failure: return false
+        case .success: return true
+        case .failure: return false
         }
     }
     
@@ -173,11 +173,11 @@ public enum PersistentStoreResult: BooleanType {
     
     internal init(_ store: NSPersistentStore) {
         
-        self = .Success(store)
+        self = .success(store)
     }
     
     internal init(_ error: NSError) {
         
-        self = .Failure(error)
+        self = .failure(error)
     }
 }

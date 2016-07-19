@@ -87,9 +87,9 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     /**
      Initializes the `MigrationChain` with a linear order of versions, which becomes the order of the `DataStack`'s progressive migrations.
      */
-    public init<T: CollectionType where T.Generator.Element == String, T.Index: BidirectionalIndexType>(_ elements: T) {
+    public init<T: Collection where T.Iterator.Element == String, T.SubSequence.Iterator.Element == String, T.Index: Comparable>(_ elements: T) {
         
-        CoreStore.assert(Set(elements).count == Array(elements).count, "\(cs_typeName(MigrationChain))'s migration chain could not be created due to duplicate version strings.")
+        CoreStore.assert(Set(elements).count == Array(elements).count, "\(cs_typeName(MigrationChain.self))'s migration chain could not be created due to duplicate version strings.")
         
         var lastVersion: String?
         var versionTree = [String: String]()
@@ -105,8 +105,8 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         }
         
         self.versionTree = versionTree
-        self.rootVersions = Set([elements.first].flatMap { $0 == nil ? [] : [$0!] })
-        self.leafVersions = Set([elements.last].flatMap { $0 == nil ? [] : [$0!] })
+        self.rootVersions = Set(elements.prefix(1))
+        self.leafVersions = Set(elements.suffix(1))
         self.valid = valid
     }
     
@@ -124,7 +124,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
                 return
             }
             
-            CoreStore.assert(false, "\(cs_typeName(MigrationChain))'s migration chain could not be created due to ambiguous version paths.")
+            CoreStore.assert(false, "\(cs_typeName(MigrationChain.self))'s migration chain could not be created due to ambiguous version paths.")
             
             valid = false
         }
@@ -142,7 +142,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
                 
                 if checklist.contains(nextVersion) {
                     
-                    CoreStore.assert(false, "\(cs_typeName(MigrationChain))'s migration chain could not be created due to looping version paths.")
+                    CoreStore.assert(false, "\(cs_typeName(MigrationChain.self))'s migration chain could not be created due to looping version paths.")
                     
                     return true
                 }
@@ -154,7 +154,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         }
         
         self.versionTree = versionTree
-        self.rootVersions = Set(versionTree.keys).subtract(versionTree.values)
+        self.rootVersions = Set(versionTree.keys).subtracting(versionTree.values)
         self.leafVersions = leafVersions
         self.valid = valid && Set(versionTree.keys).union(versionTree.values).filter { isVersionAmbiguous($0) }.count <= 0
     }
@@ -227,14 +227,14 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
         return self.versionTree.count <= 0
     }
     
-    internal func contains(version: String) -> Bool {
+    internal func contains(_ version: String) -> Bool {
         
         return self.rootVersions.contains(version)
             || self.leafVersions.contains(version)
             || self.versionTree[version] != nil
     }
     
-    internal func nextVersionFrom(version: String) -> String? {
+    internal func nextVersionFrom(_ version: String) -> String? {
         
         guard let nextVersion = self.versionTree[version] where nextVersion != version else {
             

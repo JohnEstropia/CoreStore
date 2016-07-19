@@ -41,7 +41,7 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      The block to customize the `NSFetchRequest`
      */
     @objc
-    public var block: (fetchRequest: NSFetchRequest) -> Void {
+    public var block: (fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void {
         
         return self.bridgeToSwift.closure
     }
@@ -53,7 +53,7 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - parameter block: the block to customize the `NSFetchRequest`
      */
     @objc
-    public convenience init(block: (fetchRequest: NSFetchRequest) -> Void) {
+    public convenience init(block: (fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void) {
         
         self.init(Tweak(block))
     }
@@ -70,7 +70,7 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     // MARK: CSFetchClause, CSQueryClause, CSDeleteClause
     
     @objc
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+    public func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
         
         self.bridgeToSwift.applyToFetchRequest(fetchRequest)
     }

@@ -97,7 +97,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(existing1!.objectID, object.objectID)
                     XCTAssertEqual(existing1!.managedObjectContext, transaction.context)
                     
-                    GCDQueue.Main.async {
+                    GCDQueue.main.async {
                         
                         let existing2 = stack.fetchExisting(existing1!)
                         XCTAssertNotNil(existing2)
@@ -204,7 +204,7 @@ final class FetchTests: BaseTestDataTestCase {
                         
                         XCTAssertEqual(object.managedObjectContext, transaction.context)
                     }
-                    GCDQueue.Main.async {
+                    GCDQueue.main.async {
                         
                         let existing2 = stack.fetchExisting(existing1)
                         XCTAssertEqual(

@@ -39,7 +39,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchExistingObject(object: NSManagedObject) -> AnyObject? {
+    public static func fetchExistingObject(_ object: NSManagedObject) -> AnyObject? {
         
         return self.defaultStack.fetchExistingObject(object)
     }
@@ -52,7 +52,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchExistingObjectWithID(objectID: NSManagedObjectID) -> AnyObject? {
+    public static func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> AnyObject? {
         
         return self.defaultStack.fetchExistingObjectWithID(objectID)
     }
@@ -65,7 +65,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchExistingObjects(objects: [NSManagedObject]) -> [AnyObject] {
+    public static func fetchExistingObjects(_ objects: [NSManagedObject]) -> [AnyObject] {
         
         return self.defaultStack.fetchExistingObjects(objects)
     }
@@ -78,7 +78,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchExistingObjectsWithIDs(objectIDs: [NSManagedObjectID]) -> [AnyObject] {
+    public static func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [AnyObject] {
         
         return self.defaultStack.fetchExistingObjectsWithIDs(objectIDs)
     }
@@ -92,7 +92,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchOneFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
+    public static func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
         
         return self.defaultStack.fetchOneFrom(from, fetchClauses: fetchClauses)
     }
@@ -106,7 +106,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchAllFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
+    public static func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
         
         return self.defaultStack.fetchAllFrom(from, fetchClauses: fetchClauses)
     }
@@ -120,7 +120,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchCountFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> NSNumber? {
+    public static func fetchCountFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSNumber? {
         
         return self.defaultStack.fetchCountFrom(from, fetchClauses: fetchClauses)
     }
@@ -134,7 +134,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchObjectIDFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
+    public static func fetchObjectIDFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
         
         return self.defaultStack.fetchObjectIDFrom(from, fetchClauses: fetchClauses)
     }
@@ -148,7 +148,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func fetchObjectIDsFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
+    public static func fetchObjectIDsFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
         
         return self.defaultStack.fetchObjectIDsFrom(from, fetchClauses: fetchClauses)
     }
@@ -165,7 +165,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func queryValueFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
+    public static func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
         
         return self.defaultStack.queryValueFrom(from, selectClause: selectClause, queryClauses: queryClauses)
     }
@@ -182,7 +182,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func queryAttributesFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
+    public static func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
         
         return self.defaultStack.queryAttributesFrom(from, selectClause: selectClause, queryClauses: queryClauses)
     }

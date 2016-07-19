@@ -31,7 +31,7 @@ import Foundation
 
 // MARK: - NSProgress
 
-public extension NSProgress {
+public extension Progress {
     
     /**
      Sets a closure that the `NSProgress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
@@ -39,7 +39,7 @@ public extension NSProgress {
      - parameter closure: the closure to execute on progress change
      */
     @nonobjc
-    public func setProgressHandler(closure: ((progress: NSProgress) -> Void)?) {
+    public func setProgressHandler(_ closure: ((progress: Progress) -> Void)?) {
         
         self.progressObserver.progressHandler = closure
     }
@@ -81,8 +81,8 @@ public extension NSProgress {
 @objc
 private final class ProgressObserver: NSObject {
     
-    private unowned let progress: NSProgress
-    private var progressHandler: ((progress: NSProgress) -> Void)? {
+    private unowned let progress: Progress
+    private var progressHandler: ((progress: Progress) -> Void)? {
         
         didSet {
             
@@ -97,7 +97,7 @@ private final class ProgressObserver: NSObject {
                 self.progress.addObserver(
                     self,
                     forKeyPath: "fractionCompleted",
-                    options: [.Initial, .New],
+                    options: [.initial, .new],
                     context: nil
                 )
             }
@@ -108,7 +108,7 @@ private final class ProgressObserver: NSObject {
         }
     }
     
-    private init(_ progress: NSProgress) {
+    private init(_ progress: Progress) {
         
         self.progress = progress
         super.init()
@@ -123,14 +123,14 @@ private final class ProgressObserver: NSObject {
         }
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: AnyObject?, change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
         
-        guard let progress = object as? NSProgress where progress == self.progress && keyPath == "fractionCompleted" else {
+        guard let progress = object as? Progress where progress == self.progress && keyPath == "fractionCompleted" else {
             
             return
         }
         
-        GCDQueue.Main.async { [weak self] () -> Void in
+        GCDQueue.main.async { [weak self] () -> Void in
             
             self?.progressHandler?(progress: progress)
         }

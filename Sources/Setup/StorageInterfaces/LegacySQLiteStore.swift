@@ -44,7 +44,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public init(fileURL: NSURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), localStorageOptions: LocalStorageOptions = nil) {
+    public init(fileURL: URL, configuration: String? = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
         
         self.fileURL = fileURL
         self.configuration = configuration
@@ -61,9 +61,9 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public init(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), localStorageOptions: LocalStorageOptions = nil) {
+    public init(fileName: String, configuration: String? = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
         
-        self.fileURL = LegacySQLiteStore.defaultRootDirectory.URLByAppendingPathComponent(
+        self.fileURL = try! LegacySQLiteStore.defaultRootDirectory.appendingPathComponent(
             fileName,
             isDirectory: false
         )
@@ -84,7 +84,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
         
         self.fileURL = LegacySQLiteStore.defaultFileURL
         self.configuration = nil
-        self.mappingModelBundles = NSBundle.allBundles()
+        self.mappingModelBundles = Bundle.allBundles
         self.localStorageOptions = nil
     }
     
@@ -99,15 +99,15 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      The options dictionary for the specified `LocalStorageOptions`
      */
-    public func storeOptionsForOptions(options: LocalStorageOptions) -> [String: AnyObject]? {
+    public func storeOptionsForOptions(_ options: LocalStorageOptions) -> [String: AnyObject]? {
         
-        if options == .None {
+        if options == .none {
             
             return self.storeOptions
         }
         
         var storeOptions = self.storeOptions ?? [:]
-        if options.contains(.AllowSynchronousLightweightMigration) {
+        if options.contains(.allowSynchronousLightweightMigration) {
             
             storeOptions[NSMigratePersistentStoresAutomaticallyOption] = true
             storeOptions[NSInferMappingModelAutomaticallyOption] = true
@@ -131,7 +131,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didAddToDataStack(dataStack: DataStack) {
+    public func didAddToDataStack(_ dataStack: DataStack) {
         
         self.dataStack = dataStack
     }
@@ -139,7 +139,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didRemoveFromDataStack(dataStack: DataStack) {
+    public func didRemoveFromDataStack(_ dataStack: DataStack) {
         
         self.dataStack = nil
     }
@@ -150,12 +150,12 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      The `NSURL` that points to the SQLite file
      */
-    public let fileURL: NSURL
+    public let fileURL: URL
     
     /**
      The `NSBundle`s from which to search mapping models for migrations
      */
-    public let mappingModelBundles: [NSBundle]
+    public let mappingModelBundles: [Bundle]
     
     /**
      Options that tell the `DataStack` how to setup the persistent store
@@ -165,7 +165,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
-    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws {
+    public func eraseStorageAndWait(soureModel: NSManagedObjectModel) throws {
         
         // TODO: check if attached to persistent store
         
@@ -173,37 +173,37 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
         try cs_autoreleasepool {
             
             let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
-            let store = try journalUpdatingCoordinator.addPersistentStoreWithType(
-                self.dynamicType.storeType,
-                configuration: self.configuration,
-                URL: fileURL,
+            let store = try journalUpdatingCoordinator.addPersistentStore(
+                ofType: self.dynamicType.storeType,
+                configurationName: self.configuration,
+                at: fileURL,
                 options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
             )
-            try journalUpdatingCoordinator.removePersistentStore(store)
-            try NSFileManager.defaultManager().removeItemAtURL(fileURL)
+            try journalUpdatingCoordinator.remove(store)
+            try FileManager.default.removeItem(at: fileURL)
         }
     }
     
     
     // MARK: Internal
     
-    internal static let defaultRootDirectory: NSURL = {
+    internal static let defaultRootDirectory: URL = {
         
         #if os(tvOS)
             let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
         #else
-            let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
+            let systemDirectorySearchPath = FileManager.SearchPathDirectory.applicationSupportDirectory
         #endif
         
-        return NSFileManager.defaultManager().URLsForDirectory(
+        return FileManager.default.urlsForDirectory(
             systemDirectorySearchPath,
-            inDomains: .UserDomainMask
+            inDomains: .userDomainMask
             ).first!
     }()
     
-    internal static let defaultFileURL = LegacySQLiteStore.defaultRootDirectory
-        .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
-        .URLByAppendingPathExtension("sqlite")
+    internal static let defaultFileURL = try! LegacySQLiteStore.defaultRootDirectory
+        .appendingPathComponent(DataStack.applicationName, isDirectory: false)
+        .appendingPathExtension("sqlite")
     
     
     // MARK: Private

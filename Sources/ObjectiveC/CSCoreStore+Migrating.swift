@@ -48,7 +48,7 @@ public extension CSCoreStore {
      - parameter storage: the `CSInMemoryStore` instance
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously.
      */
-    public static func addInMemoryStorage(storage: CSInMemoryStore, completion: (CSSetupResult) -> Void) {
+    public static func addInMemoryStorage(_ storage: CSInMemoryStore, completion: (CSSetupResult) -> Void) {
         
         self.defaultStack.addInMemoryStorage(storage, completion: completion)
     }
@@ -74,7 +74,7 @@ public extension CSCoreStore {
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
-    public static func addSQLiteStorage(storage: CSSQLiteStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> NSProgress? {
+    public static func addSQLiteStorage(_ storage: CSSQLiteStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> Progress? {
         
         return self.defaultStack.addSQLiteStorage(storage, completion: completion, error: error)
     }
@@ -88,7 +88,7 @@ public extension CSCoreStore {
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
     @objc
-    public static func upgradeStorageIfNeeded(storage: CSSQLiteStore, completion: (CSMigrationResult) -> Void, error: NSErrorPointer) -> NSProgress? {
+    public static func upgradeStorageIfNeeded(_ storage: CSSQLiteStore, completion: (CSMigrationResult) -> Void, error: NSErrorPointer) -> Progress? {
         
         return self.defaultStack.upgradeStorageIfNeeded(storage, completion: completion, error: error)
     }
@@ -102,7 +102,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func requiredMigrationsForSQLiteStore(storage: CSSQLiteStore, error: NSErrorPointer) -> [CSMigrationType]? {
+    public static func requiredMigrationsForSQLiteStore(_ storage: CSSQLiteStore, error: NSErrorPointer) -> [CSMigrationType]? {
         
         return self.defaultStack.requiredMigrationsForSQLiteStore(storage, error: error)
     }

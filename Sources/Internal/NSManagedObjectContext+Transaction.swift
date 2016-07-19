@@ -70,7 +70,7 @@ internal extension NSManagedObjectContext {
         set {
             
             cs_setAssociatedWeakObject(
-                newValue.flatMap { NSNumber(bool: $0) },
+                newValue.flatMap { NSNumber(value: $0) },
                 forKey: &PropertyKeys.isSavingSynchronously,
                 inObject: self
             )
@@ -88,10 +88,10 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func temporaryContextInTransactionWithConcurrencyType(concurrencyType: NSManagedObjectContextConcurrencyType) -> NSManagedObjectContext {
+    internal func temporaryContextInTransactionWithConcurrencyType(_ concurrencyType: NSManagedObjectContextConcurrencyType) -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: concurrencyType)
-        context.parentContext = self
+        context.parent = self
         context.parentStack = self.parentStack
         context.setupForCoreStoreWithContextName("com.corestore.temporarycontext")
         context.shouldCascadeSavesToParent = (self.parentStack?.rootSavingContext == self)
@@ -105,7 +105,7 @@ internal extension NSManagedObjectContext {
         
         var result = SaveResult(hasChanges: false)
         
-        self.performBlockAndWait {
+        self.performAndWait {
             
             guard self.hasChanges else {
                 
@@ -123,20 +123,20 @@ internal extension NSManagedObjectContext {
                 let saveError = CoreStoreError(error)
                 CoreStore.log(
                     saveError,
-                    "Failed to save \(cs_typeName(NSManagedObjectContext))."
+                    "Failed to save \(cs_typeName(NSManagedObjectContext.self))."
                 )
                 result = SaveResult(saveError)
                 return
             }
             
-            if let parentContext = self.parentContext where self.shouldCascadeSavesToParent {
+            if let parentContext = self.parent where self.shouldCascadeSavesToParent {
                 
                 switch parentContext.saveSynchronously() {
                     
-                case .Success:
+                case .success:
                     result = SaveResult(hasChanges: true)
                     
-                case .Failure(let error):
+                case .failure(let error):
                     result = SaveResult(error)
                 }
             }
@@ -150,13 +150,13 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func saveAsynchronouslyWithCompletion(completion: ((result: SaveResult) -> Void) = { _ in }) {
+    internal func saveAsynchronouslyWithCompletion(_ completion: ((result: SaveResult) -> Void) = { _ in }) {
         
-        self.performBlock {
+        self.perform {
             
             guard self.hasChanges else {
                 
-                GCDQueue.Main.async {
+                GCDQueue.main.async {
                     
                     completion(result: SaveResult(hasChanges: false))
                 }
@@ -174,22 +174,22 @@ internal extension NSManagedObjectContext {
                 let saveError = CoreStoreError(error)
                 CoreStore.log(
                     saveError,
-                    "Failed to save \(cs_typeName(NSManagedObjectContext))."
+                    "Failed to save \(cs_typeName(NSManagedObjectContext.self))."
                 )
-                GCDQueue.Main.async {
+                GCDQueue.main.async {
                     
                     completion(result: SaveResult(saveError))
                 }
                 return
             }
             
-            if let parentContext = self.parentContext where self.shouldCascadeSavesToParent {
+            if let parentContext = self.parent where self.shouldCascadeSavesToParent {
                 
                 parentContext.saveAsynchronouslyWithCompletion(completion)
             }
             else {
                 
-                GCDQueue.Main.async {
+                GCDQueue.main.async {
                     
                     completion(result: SaveResult(hasChanges: true))
                 }
@@ -206,7 +206,7 @@ internal extension NSManagedObjectContext {
         }
         else {
             
-            self.registeredObjects.forEach { self.refreshObject($0, mergeChanges: true) }
+            self.registeredObjects.forEach { self.refresh($0, mergeChanges: true) }
         }
     }
     

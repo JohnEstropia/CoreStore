@@ -38,7 +38,7 @@ internal extension NSManagedObjectContext {
         
         get {
             
-            if let parentContext = self.parentContext {
+            if let parentContext = self.parent {
                 
                 return parentContext.parentStack
             }
@@ -47,7 +47,7 @@ internal extension NSManagedObjectContext {
         }
         set {
             
-            guard self.parentContext == nil else {
+            guard self.parent == nil else {
                 
                 return
             }
@@ -61,9 +61,9 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal static func rootSavingContextForCoordinator(coordinator: NSPersistentStoreCoordinator) -> NSManagedObjectContext {
+    internal static func rootSavingContextForCoordinator(_ coordinator: NSPersistentStoreCoordinator) -> NSManagedObjectContext {
         
-        let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         context.persistentStoreCoordinator = coordinator
         context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         context.undoManager = nil
@@ -72,18 +72,18 @@ internal extension NSManagedObjectContext {
         #if os(iOS) || os(OSX)
             
         context.observerForDidImportUbiquitousContentChangesNotification = NotificationObserver(
-            notificationName: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
+            notificationName: NSNotification.Name.NSPersistentStoreDidImportUbiquitousContentChanges.rawValue,
             object: coordinator,
             closure: { [weak context] (note) -> Void in
                 
-                context?.performBlock { () -> Void in
+                context?.perform { () -> Void in
                     
-                    let updatedObjectIDs = (note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObjectID>) ?? []
+                    let updatedObjectIDs = ((note as NSNotification).userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObjectID>) ?? []
                     for objectID in updatedObjectIDs {
                         
-                        context?.objectWithID(objectID).willAccessValueForKey(nil)
+                        context?.object(with: objectID).willAccessValue(forKey: nil)
                     }
-                    context?.mergeChangesFromContextDidSaveNotification(note)
+                    context?.mergeChanges(fromContextDidSave: note)
                 }
             }
         )
@@ -94,15 +94,15 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal static func mainContextForRootContext(rootContext: NSManagedObjectContext) -> NSManagedObjectContext {
+    internal static func mainContextForRootContext(_ rootContext: NSManagedObjectContext) -> NSManagedObjectContext {
         
-        let context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        context.parentContext = rootContext
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.parent = rootContext
         context.mergePolicy = NSRollbackMergePolicy
         context.undoManager = nil
         context.setupForCoreStoreWithContextName("com.corestore.maincontext")
         context.observerForDidSaveNotification = NotificationObserver(
-            notificationName: NSManagedObjectContextDidSaveNotification,
+            notificationName: NSNotification.Name.NSManagedObjectContextDidSave.rawValue,
             object: rootContext,
             closure: { [weak context] (note) -> Void in
                 
@@ -113,21 +113,21 @@ internal extension NSManagedObjectContext {
                 }
                 let mergeChanges = { () -> Void in
                     
-                    let updatedObjects = (note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>) ?? []
+                    let updatedObjects = ((note as NSNotification).userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>) ?? []
                     for object in updatedObjects {
                         
-                        context.objectWithID(object.objectID).willAccessValueForKey(nil)
+                        context.object(with: object.objectID).willAccessValue(forKey: nil)
                     }
-                    context.mergeChangesFromContextDidSaveNotification(note)
+                    context.mergeChanges(fromContextDidSave: note)
                 }
                 
                 if rootContext.isSavingSynchronously == true {
                     
-                    context.performBlockAndWait(mergeChanges)
+                    context.performAndWait(mergeChanges)
                 }
                 else {
                     
-                    context.performBlock(mergeChanges)
+                    context.perform(mergeChanges)
                 }
             }
         )

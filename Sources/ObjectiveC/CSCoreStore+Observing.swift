@@ -41,7 +41,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func monitorObject(object: NSManagedObject) -> CSObjectMonitor {
+    public static func monitorObject(_ object: NSManagedObject) -> CSObjectMonitor {
         
         return self.defaultStack.monitorObject(object)
     }
@@ -55,7 +55,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func monitorListFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> CSListMonitor {
+    public static func monitorListFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
         return self.defaultStack.monitorListFrom(from, fetchClauses: fetchClauses)
     }
@@ -68,7 +68,7 @@ public extension CSCoreStore {
      - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      */
     @objc
-    public static func monitorListByCreatingAsynchronously(createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, fetchClauses: [CSFetchClause])  {
+    public static func monitorListByCreatingAsynchronously(_ createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, fetchClauses: [CSFetchClause])  {
         
         return self.defaultStack.monitorListByCreatingAsynchronously(
             createAsynchronously,
@@ -87,7 +87,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func monitorSectionedListFrom(from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> CSListMonitor {
+    public static func monitorSectionedListFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
         return self.defaultStack.monitorSectionedListFrom(
             from,
@@ -105,7 +105,7 @@ public extension CSCoreStore {
      - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      */
     @objc
-    public static func monitorSectionedListByCreatingAsynchronously(createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) {
+    public static func monitorSectionedListByCreatingAsynchronously(_ createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) {
         
         self.defaultStack.monitorSectionedListByCreatingAsynchronously(
             createAsynchronously,

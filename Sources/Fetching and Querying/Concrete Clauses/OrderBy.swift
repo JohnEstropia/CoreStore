@@ -32,7 +32,7 @@ public func +(left: OrderBy, right: OrderBy) -> OrderBy {
     return OrderBy(left.sortDescriptors + right.sortDescriptors)
 }
 
-public func +=(inout left: OrderBy, right: OrderBy) {
+public func +=(left: inout OrderBy, right: OrderBy) {
     
     left = left + right
 }
@@ -53,12 +53,12 @@ public enum SortKey {
     /**
      Indicates that the `KeyPath` should be sorted in ascending order
      */
-    case Ascending(KeyPath)
+    case ascending(KeyPath)
     
     /**
      Indicates that the `KeyPath` should be sorted in descending order
      */
-    case Descending(KeyPath)
+    case descending(KeyPath)
 }
 
 
@@ -72,14 +72,14 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     /**
      The list of sort descriptors
      */
-    public let sortDescriptors: [NSSortDescriptor]
+    public let sortDescriptors: [SortDescriptor]
     
     /**
      Initializes a `OrderBy` clause with an empty list of sort descriptors
      */
     public init() {
         
-        self.init([NSSortDescriptor]())
+        self.init([SortDescriptor]())
     }
     
     /**
@@ -87,7 +87,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
      
      - parameter sortDescriptor: a `NSSortDescriptor`
      */
-    public init(_ sortDescriptor: NSSortDescriptor) {
+    public init(_ sortDescriptor: SortDescriptor) {
         
         self.init([sortDescriptor])
     }
@@ -97,7 +97,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
      
      - parameter sortDescriptors: a series of `NSSortDescriptor`s
      */
-    public init(_ sortDescriptors: [NSSortDescriptor]) {
+    public init(_ sortDescriptors: [SortDescriptor]) {
         
         self.sortDescriptors = sortDescriptors
     }
@@ -110,15 +110,15 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     public init(_ sortKey: [SortKey]) {
         
         self.init(
-            sortKey.map { sortKey -> NSSortDescriptor in
+            sortKey.map { sortKey -> SortDescriptor in
                 
                 switch sortKey {
                     
-                case .Ascending(let keyPath):
-                    return NSSortDescriptor(key: keyPath, ascending: true)
+                case .ascending(let keyPath):
+                    return SortDescriptor(key: keyPath, ascending: true)
                     
-                case .Descending(let keyPath):
-                    return NSSortDescriptor(key: keyPath, ascending: false)
+                case .descending(let keyPath):
+                    return SortDescriptor(key: keyPath, ascending: false)
                 }
             }
         )
@@ -138,13 +138,13 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     
     // MARK: FetchClause, QueryClause, DeleteClause
     
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+    public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
         if let sortDescriptors = fetchRequest.sortDescriptors where sortDescriptors != self.sortDescriptors {
             
             CoreStore.log(
-                .Warning,
-                message: "Existing sortDescriptors for the \(cs_typeName(NSFetchRequest)) was overwritten by \(cs_typeName(self)) query clause."
+                .warning,
+                message: "Existing sortDescriptors for the \(cs_typeName(fetchRequest)) was overwritten by \(cs_typeName(self)) query clause."
             )
         }
         

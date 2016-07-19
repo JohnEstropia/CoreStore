@@ -74,7 +74,7 @@ public final class InMemoryStore: StorageInterface, DefaultInitializableStore {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didAddToDataStack(dataStack: DataStack) {
+    public func didAddToDataStack(_ dataStack: DataStack) {
         
         self.dataStack = dataStack
     }
@@ -82,7 +82,7 @@ public final class InMemoryStore: StorageInterface, DefaultInitializableStore {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didRemoveFromDataStack(dataStack: DataStack) {
+    public func didRemoveFromDataStack(_ dataStack: DataStack) {
         
         self.dataStack = nil
     }

@@ -36,7 +36,7 @@ class SetupTests: BaseTestCase {
         
         do {
             
-            let model = NSManagedObjectModel.mergedModelFromBundles([NSBundle(forClass: self.dynamicType)])!
+            let model = NSManagedObjectModel.mergedModelFromBundles([Bundle(forClass: self.dynamicType)])!
             
             let stack = DataStack(model: model, migrationChain: nil)
             XCTAssertEqual(stack.coordinator.managedObjectModel, model)
@@ -60,7 +60,7 @@ class SetupTests: BaseTestCase {
                 
                 DataStack(
                     modelName: "Model",
-                    bundle: NSBundle(forClass: self.dynamicType),
+                    bundle: Bundle(forClass: self.dynamicType),
                     migrationChain: migrationChain
                 )
             }
@@ -77,7 +77,7 @@ class SetupTests: BaseTestCase {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: NSBundle(forClass: self.dynamicType)
+            bundle: Bundle(forClass: self.dynamicType)
         )
         do {
             
@@ -132,7 +132,7 @@ class SetupTests: BaseTestCase {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: NSBundle(forClass: self.dynamicType)
+            bundle: Bundle(forClass: self.dynamicType)
         )
         do {
             
@@ -154,7 +154,7 @@ class SetupTests: BaseTestCase {
             let sqliteStore = SQLiteStore(
                 fileName: "ConfigStore1.sqlite",
                 configuration: "Config1",
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
             do {
                 
@@ -173,7 +173,7 @@ class SetupTests: BaseTestCase {
             let sqliteStore = SQLiteStore(
                 fileName: "ConfigStore2.sqlite",
                 configuration: "Config2",
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
             do {
                 
@@ -194,7 +194,7 @@ class SetupTests: BaseTestCase {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: NSBundle(forClass: self.dynamicType)
+            bundle: Bundle(forClass: self.dynamicType)
         )
         do {
             
@@ -216,7 +216,7 @@ class SetupTests: BaseTestCase {
             let sqliteStore = SQLiteStore(
                 fileName: "ConfigStore1.sqlite",
                 configuration: "Config1",
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
             do {
                 
@@ -235,7 +235,7 @@ class SetupTests: BaseTestCase {
             let sqliteStore = SQLiteStore(
                 fileName: "ConfigStore2.sqlite",
                 configuration: "Config2",
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
             do {
                 

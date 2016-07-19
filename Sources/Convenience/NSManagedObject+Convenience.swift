@@ -39,11 +39,11 @@ public extension NSManagedObject {
      */
     @nonobjc
     @warn_unused_result
-    public func accessValueForKVCKey(KVCKey: KeyPath) -> AnyObject? {
+    public func accessValueForKVCKey(_ KVCKey: KeyPath) -> AnyObject? {
         
-        self.willAccessValueForKey(KVCKey)
-        let primitiveValue: AnyObject? = self.primitiveValueForKey(KVCKey)
-        self.didAccessValueForKey(KVCKey)
+        self.willAccessValue(forKey: KVCKey)
+        let primitiveValue: AnyObject? = self.primitiveValue(forKey: KVCKey)
+        self.didAccessValue(forKey: KVCKey)
         
         return primitiveValue
     }
@@ -55,11 +55,11 @@ public extension NSManagedObject {
      - parameter KVCKey: the KVC key
      */
     @nonobjc
-    public func setValue(value: AnyObject?, forKVCKey KVCKey: KeyPath) {
+    public func setValue(_ value: AnyObject?, forKVCKey KVCKey: KeyPath) {
         
-        self.willChangeValueForKey(KVCKey)
+        self.willChangeValue(forKey: KVCKey)
         self.setPrimitiveValue(value, forKey: KVCKey)
-        self.didChangeValueForKey(KVCKey)
+        self.didChangeValue(forKey: KVCKey)
     }
     
     /**
@@ -68,7 +68,7 @@ public extension NSManagedObject {
     @nonobjc
     public func refreshAsFault() {
         
-        self.managedObjectContext?.refreshObject(self, mergeChanges: false)
+        self.managedObjectContext?.refresh(self, mergeChanges: false)
     }
     
     /**
@@ -77,6 +77,6 @@ public extension NSManagedObject {
     @nonobjc
     public func refreshAndMerge() {
         
-        self.managedObjectContext?.refreshObject(self, mergeChanges: true)
+        self.managedObjectContext?.refresh(self, mergeChanges: true)
     }
 }

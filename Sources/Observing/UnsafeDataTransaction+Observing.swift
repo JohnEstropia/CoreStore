@@ -43,7 +43,7 @@ public extension UnsafeDataTransaction {
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
     @warn_unused_result
-    public func monitorObject<T: NSManagedObject>(object: T) -> ObjectMonitor<T> {
+    public func monitorObject<T: NSManagedObject>(_ object: T) -> ObjectMonitor<T> {
         
         return ObjectMonitor(
             unsafeTransaction: self,
@@ -59,7 +59,7 @@ public extension UnsafeDataTransaction {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public func monitorList<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorList<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.monitorList(from, fetchClauses)
     }
@@ -72,7 +72,7 @@ public extension UnsafeDataTransaction {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public func monitorList<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorList<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy }.count > 0,
@@ -97,7 +97,7 @@ public extension UnsafeDataTransaction {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
+    public func monitorList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
         
         self.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -109,7 +109,7 @@ public extension UnsafeDataTransaction {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
+    public func monitorList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
         
         CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy }.count > 0,
@@ -137,7 +137,7 @@ public extension UnsafeDataTransaction {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorSectionedList<T: NSManagedObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -151,7 +151,7 @@ public extension UnsafeDataTransaction {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorSectionedList<T: NSManagedObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy }.count > 0,
@@ -177,7 +177,7 @@ public extension UnsafeDataTransaction {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
+    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
         
         self.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -190,7 +190,7 @@ public extension UnsafeDataTransaction {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
+    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
         
         CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy }.count > 0,

@@ -53,7 +53,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: AnyObject?) -> Bool {
         
         guard let object = object as? CSError else {
             
@@ -77,53 +77,53 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
             return swift
         }
         
-        func createSwiftObject(error: CSError) -> CoreStoreError {
+        func createSwiftObject(_ error: CSError) -> CoreStoreError {
             
             guard error.domain == CoreStoreErrorDomain else {
                 
-                return .InternalError(NSError: self)
+                return .internalError(NSError: self)
             }
             
             guard let code = CoreStoreErrorCode(rawValue: error.code) else {
                 
-                return .Unknown
+                return .unknown
             }
             
             let info = error.userInfo
             switch code {
                 
-            case .UnknownError:
-                return .Unknown
+            case .unknownError:
+                return .unknown
                 
-            case .DifferentPersistentStoreExistsAtURL:
-                guard case let existingPersistentStoreURL as NSURL = info["existingPersistentStoreURL"] else {
+            case .differentPersistentStoreExistsAtURL:
+                guard case let existingPersistentStoreURL as URL = info["existingPersistentStoreURL"] else {
                     
-                    return .Unknown
+                    return .unknown
                 }
-                return .DifferentStorageExistsAtURL(existingPersistentStoreURL: existingPersistentStoreURL)
+                return .differentStorageExistsAtURL(existingPersistentStoreURL: existingPersistentStoreURL)
                 
-            case .MappingModelNotFound:
-                guard let localStoreURL = info["localStoreURL"] as? NSURL,
+            case .mappingModelNotFound:
+                guard let localStoreURL = info["localStoreURL"] as? URL,
                     let targetModel = info["targetModel"] as? NSManagedObjectModel,
                     let targetModelVersion = info["targetModelVersion"] as? String else {
                         
-                        return .Unknown
+                        return .unknown
                 }
-                return .MappingModelNotFound(localStoreURL: localStoreURL, targetModel: targetModel, targetModelVersion: targetModelVersion)
+                return .mappingModelNotFound(localStoreURL: localStoreURL, targetModel: targetModel, targetModelVersion: targetModelVersion)
                 
-            case .ProgressiveMigrationRequired:
-                guard let localStoreURL = info["localStoreURL"] as? NSURL else {
+            case .progressiveMigrationRequired:
+                guard let localStoreURL = info["localStoreURL"] as? URL else {
                     
-                    return .Unknown
+                    return .unknown
                 }
-                return .ProgressiveMigrationRequired(localStoreURL: localStoreURL)
+                return .progressiveMigrationRequired(localStoreURL: localStoreURL)
                 
-            case .InternalError:
+            case .internalError:
                 guard case let NSError as NSError = info["NSError"] else {
                     
-                    return .Unknown
+                    return .unknown
                 }
-                return .InternalError(NSError: NSError)
+                return .internalError(NSError: NSError)
             }
         }
         
@@ -143,32 +143,32 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
         let info: [NSObject: AnyObject]
         switch swiftValue {
             
-        case .Unknown:
-            code = .UnknownError
+        case .unknown:
+            code = .unknownError
             info = [:]
             
-        case .DifferentStorageExistsAtURL(let existingPersistentStoreURL):
-            code = .DifferentPersistentStoreExistsAtURL
+        case .differentStorageExistsAtURL(let existingPersistentStoreURL):
+            code = .differentPersistentStoreExistsAtURL
             info = [
                 "existingPersistentStoreURL": existingPersistentStoreURL
             ]
             
-        case .MappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
-            code = .MappingModelNotFound
+        case .mappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
+            code = .mappingModelNotFound
             info = [
                 "localStoreURL": localStoreURL,
                 "targetModel": targetModel,
                 "targetModelVersion": targetModelVersion
             ]
             
-        case .ProgressiveMigrationRequired(let localStoreURL):
-            code = .ProgressiveMigrationRequired
+        case .progressiveMigrationRequired(let localStoreURL):
+            code = .progressiveMigrationRequired
             info = [
                 "localStoreURL": localStoreURL
             ]
             
-        case .InternalError(let NSError):
-            code = .InternalError
+        case .internalError(let NSError):
+            code = .internalError
             info = [
                 "NSError": NSError
             ]
@@ -203,27 +203,27 @@ public enum CSErrorCode: Int {
     /**
      A failure occured because of an unknown error.
      */
-    case UnknownError
+    case unknownError
     
     /**
      The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
      */
-    case DifferentPersistentStoreExistsAtURL
+    case differentPersistentStoreExistsAtURL
     
     /**
      An `NSMappingModel` could not be found for a specific source and destination model versions.
      */
-    case MappingModelNotFound
+    case mappingModelNotFound
     
     /**
      Progressive migrations are disabled for a store, but an `NSMappingModel` could not be found for a specific source and destination model versions.
      */
-    case ProgressiveMigrationRequired
+    case progressiveMigrationRequired
     
     /**
      An internal SDK call failed with the specified "NSError" userInfo key.
      */
-    case InternalError
+    case internalError
 }
 
 
@@ -242,7 +242,7 @@ extension CoreStoreError: CoreStoreSwiftType {
 
 // MARK: Internal
 
-internal extension ErrorType {
+internal extension ErrorProtocol {
     
     internal var bridgeToSwift: CoreStoreError {
         
@@ -250,7 +250,7 @@ internal extension ErrorType {
             
         case let error as CoreStoreError:   return error
         case let error as CSError:          return error.bridgeToSwift
-        default:                            return .Unknown
+        default:                            return .unknown
         }
     }
     

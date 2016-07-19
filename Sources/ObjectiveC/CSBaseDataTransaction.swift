@@ -55,7 +55,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
     @objc
-    public func createInto(into: CSInto) -> AnyObject {
+    public func createInto(_ into: CSInto) -> AnyObject {
         
         return self.bridgeToSwift.create(into.bridgeToSwift)
     }
@@ -68,7 +68,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func editObject(object: NSManagedObject?) -> AnyObject? {
+    public func editObject(_ object: NSManagedObject?) -> AnyObject? {
         
         return self.bridgeToSwift.edit(object)
     }
@@ -82,7 +82,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func editInto(into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
+    public func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
         
         return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
     }
@@ -93,7 +93,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - parameter object: the `NSManagedObject` to be deleted
      */
     @objc
-    public func deleteObject(object: NSManagedObject?) {
+    public func deleteObject(_ object: NSManagedObject?) {
         
         self.bridgeToSwift.delete(object)
     }
@@ -104,7 +104,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - parameter objects: the `NSManagedObject`s to be deleted
      */
     @objc
-    public func deleteObjects(objects: [NSManagedObject]) {
+    public func deleteObjects(_ objects: [NSManagedObject]) {
         
         self.bridgeToSwift.delete(objects)
     }
@@ -141,7 +141,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func insertedObjectsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObject> {
+    public func insertedObjectsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObject> {
         
         return self.bridgeToSwift.insertedObjects(entity)
     }
@@ -166,7 +166,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func insertedObjectIDsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
+    public func insertedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.insertedObjectIDs(entity)
     }
@@ -191,7 +191,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func updatedObjectsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObject> {
+    public func updatedObjectsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObject> {
         
         return self.bridgeToSwift.updatedObjects(entity)
     }
@@ -216,7 +216,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func updatedObjectIDsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
+    public func updatedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.updatedObjectIDs(entity)
     }
@@ -241,7 +241,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func deletedObjectsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObject> {
+    public func deletedObjectsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObject> {
         
         return self.bridgeToSwift.deletedObjects(entity)
     }
@@ -267,7 +267,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      */
     @objc
     @warn_unused_result
-    public func deletedObjectIDsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
+    public func deletedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.deletedObjectIDs(entity)
     }
@@ -280,7 +280,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
         return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: AnyObject?) -> Bool {
         
         guard let object = object as? CSBaseDataTransaction else {
             

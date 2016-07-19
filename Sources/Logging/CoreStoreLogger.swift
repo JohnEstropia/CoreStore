@@ -33,10 +33,10 @@ import Foundation
  */
 public enum LogLevel {
     
-    case Trace
-    case Notice
-    case Warning
-    case Fatal
+    case trace
+    case notice
+    case warning
+    case fatal
 }
 
 
@@ -56,7 +56,7 @@ public protocol CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
      Handles errors sent by the `CoreStore` framework.
@@ -67,7 +67,7 @@ public protocol CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
      Handles assertions made throughout the `CoreStore` framework.
@@ -78,7 +78,7 @@ public protocol CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func assert(_ condition: @autoclosure () -> Bool, message: @autoclosure () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
     
     /**
      Handles fatal errors made throughout the `CoreStore` framework. The app wil terminate after this method is called.
@@ -89,30 +89,12 @@ public protocol CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
-    
-    
-    // MARK: Deprecated
-    
-    /**
-     Deprecated. Use `log(error:message:fileName:lineNumber:functionName:)` instead.
-     */
-    @available(*, deprecated=2.0.0, message="Use log(error:message:fileName:lineNumber:functionName:) instead.")
-    func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
+    func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString)
 }
 
 extension CoreStoreLogger {
     
-    /**
-     Deprecated. Use `log(error:message:fileName:lineNumber:functionName:)` instead.
-     */
-    @available(*, deprecated=2.0.0, message="Use log(error:message:fileName:lineNumber:functionName:) instead.")
-    public func handleError(error error: NSError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
-    
-        self.log(error: error.bridgeToSwift, message: message, fileName: fileName, lineNumber: lineNumber, functionName: functionName)
-    }
-    
-    public func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         Swift.fatalError(message, file: fileName, line: UInt(lineNumber))
     }

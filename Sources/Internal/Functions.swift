@@ -28,12 +28,12 @@ import Foundation
 
 // MARK: - Custom AutoreleasePool
 
-internal func cs_autoreleasepool(@noescape closure: () -> Void) {
+internal func cs_autoreleasepool(@noescape _ closure: () -> Void) {
     
     autoreleasepool(closure)
 }
 
-internal func cs_autoreleasepool<T>(@noescape closure: () -> T) -> T {
+internal func cs_autoreleasepool<T>(@noescape _ closure: () -> T) -> T {
     
     var closureValue: T!
     autoreleasepool {
@@ -44,10 +44,10 @@ internal func cs_autoreleasepool<T>(@noescape closure: () -> T) -> T {
     return closureValue
 }
 
-internal func cs_autoreleasepool<T>(@noescape closure: () throws -> T) throws -> T {
+internal func cs_autoreleasepool<T>(@noescape _ closure: () throws -> T) throws -> T {
     
     var closureValue: T!
-    var closureError: ErrorType?
+    var closureError: ErrorProtocol?
     autoreleasepool {
         
         do {
@@ -67,9 +67,9 @@ internal func cs_autoreleasepool<T>(@noescape closure: () throws -> T) throws ->
     return closureValue
 }
 
-internal func cs_autoreleasepool(@noescape closure: () throws -> Void) throws {
+internal func cs_autoreleasepool(@noescape _ closure: () throws -> Void) throws {
     
-    var closureError: ErrorType?
+    var closureError: ErrorProtocol?
     autoreleasepool {
         
         do {
@@ -88,7 +88,7 @@ internal func cs_autoreleasepool(@noescape closure: () throws -> Void) throws {
     }
 }
 
-internal func cs_getAssociatedObjectForKey<T: AnyObject>(key: UnsafePointer<Void>, inObject object: AnyObject) -> T? {
+internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafePointer<Void>, inObject object: AnyObject) -> T? {
     
     switch objc_getAssociatedObject(object, key) {
         
@@ -103,17 +103,17 @@ internal func cs_getAssociatedObjectForKey<T: AnyObject>(key: UnsafePointer<Void
     }
 }
 
-internal func cs_setAssociatedRetainedObject<T: AnyObject>(associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
+internal func cs_setAssociatedRetainedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
     
     objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 }
 
-internal func cs_setAssociatedCopiedObject<T: AnyObject>(associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
+internal func cs_setAssociatedCopiedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
     
     objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_COPY_NONATOMIC)
 }
 
-internal func cs_setAssociatedWeakObject<T: AnyObject>(associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
+internal func cs_setAssociatedWeakObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
     
     if let associatedObject = associatedObject {
         
@@ -128,22 +128,22 @@ internal func cs_setAssociatedWeakObject<T: AnyObject>(associatedObject: T?, for
 
 // MARK: Printing Utilities
 
-internal func cs_typeName<T>(value: T) -> String {
+internal func cs_typeName<T>(_ value: T) -> String {
     
     return "'\(String(reflecting: value.dynamicType))'"
 }
 
-internal func cs_typeName<T>(value: T.Type) -> String {
+internal func cs_typeName<T>(_ value: T.Type) -> String {
     
     return "'\(value)'"
 }
 
-internal func cs_typeName(value: AnyClass) -> String {
+internal func cs_typeName(_ value: AnyClass) -> String {
     
     return "'\(value)'"
 }
 
-internal func cs_typeName(name: String?) -> String {
+internal func cs_typeName(_ name: String?) -> String {
     
     return "<\(name ?? "unknown")>"
 }

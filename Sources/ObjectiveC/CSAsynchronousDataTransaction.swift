@@ -43,7 +43,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
      */
     @objc
-    public func commitWithCompletion(completion: ((result: CSSaveResult) -> Void)?) {
+    public func commitWithCompletion(_ completion: ((result: CSSaveResult) -> Void)?) {
         
         self.bridgeToSwift.commit { (result) in
             
@@ -58,7 +58,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @objc
-    public func beginSynchronous(closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    public func beginSynchronous(_ closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {
             
@@ -87,7 +87,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
     @objc
-    public override func createInto(into: CSInto) -> AnyObject {
+    public override func createInto(_ into: CSInto) -> AnyObject {
         
         return self.bridgeToSwift.create(into.bridgeToSwift)
     }
@@ -100,7 +100,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public override func editObject(object: NSManagedObject?) -> AnyObject? {
+    public override func editObject(_ object: NSManagedObject?) -> AnyObject? {
         
         return self.bridgeToSwift.edit(object)
     }
@@ -114,7 +114,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public override func editInto(into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
+    public override func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
         
         return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
     }
@@ -125,7 +125,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - parameter object: the `NSManagedObject` type to be deleted
      */
     @objc
-    public override func deleteObject(object: NSManagedObject?) {
+    public override func deleteObject(_ object: NSManagedObject?) {
         
         self.bridgeToSwift.delete(object)
     }
@@ -136,7 +136,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - parameter objects: the `NSManagedObject`s type to be deleted
      */
     @objc
-    public override func deleteObjects(objects: [NSManagedObject]) {
+    public override func deleteObjects(_ objects: [NSManagedObject]) {
         
         self.bridgeToSwift.delete(objects)
     }

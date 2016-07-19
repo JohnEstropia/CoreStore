@@ -41,7 +41,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
      The list of sort descriptors
      */
     @objc
-    public var sortDescriptors: [NSSortDescriptor] {
+    public var sortDescriptors: [SortDescriptor] {
         
         return self.bridgeToSwift.sortDescriptors
     }
@@ -57,7 +57,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
      - parameter sortDescriptor: a `NSSortDescriptor`
      */
     @objc
-    public convenience init(sortDescriptor: NSSortDescriptor) {
+    public convenience init(sortDescriptor: SortDescriptor) {
         
         self.init(OrderBy(sortDescriptor))
     }
@@ -73,7 +73,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
      - parameter sortDescriptors: an array of `NSSortDescriptor`s
      */
     @objc
-    public convenience init(sortDescriptors: [NSSortDescriptor]) {
+    public convenience init(sortDescriptors: [SortDescriptor]) {
         
         self.init(OrderBy(sortDescriptors))
     }
@@ -86,7 +86,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: AnyObject?) -> Bool {
         
         guard let object = object as? CSOrderBy else {
             
@@ -104,7 +104,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
     // MARK: CSFetchClause, CSQueryClause, CSDeleteClause
     
     @objc
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+    public func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
         
         self.bridgeToSwift.applyToFetchRequest(fetchRequest)
     }

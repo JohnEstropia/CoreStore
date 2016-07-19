@@ -17,18 +17,18 @@ import CoreStore
 class BaseTestDataTestCase: BaseTestCase {
     
     @nonobjc
-    let dateFormatter: NSDateFormatter = {
+    let dateFormatter: DateFormatter = {
         
-        let formatter = NSDateFormatter()
-        formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-        formatter.timeZone = NSTimeZone(name: "UTC")
-        formatter.calendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
+        let formatter = DateFormatter()
+        formatter.locale = Locale(localeIdentifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(name: "UTC")
+        formatter.calendar = Calendar(identifier: Calendar.Identifier.gregorian)
         formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZ"
         return formatter
     }()
     
     @nonobjc
-    func prepareTestDataForStack(stack: DataStack, configurations: [String?] = [nil]) {
+    func prepareTestDataForStack(_ stack: DataStack, configurations: [String?] = [nil]) {
         
         stack.beginSynchronous { (transaction) in
             

@@ -36,7 +36,7 @@ public extension CSDataStack {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
     @objc
-    public func beginAsynchronous(closure: (transaction: CSAsynchronousDataTransaction) -> Void) {
+    public func beginAsynchronous(_ closure: (transaction: CSAsynchronousDataTransaction) -> Void) {
         
         return self.bridgeToSwift.beginAsynchronous { (transaction) in
             
@@ -51,7 +51,7 @@ public extension CSDataStack {
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @objc
-    public func beginSynchronous(closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    public func beginSynchronous(_ closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {
             
@@ -86,7 +86,7 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func beginUnsafeWithSupportsUndo(supportsUndo: Bool) -> CSUnsafeDataTransaction {
+    public func beginUnsafeWithSupportsUndo(_ supportsUndo: Bool) -> CSUnsafeDataTransaction {
         
         return bridge {
             

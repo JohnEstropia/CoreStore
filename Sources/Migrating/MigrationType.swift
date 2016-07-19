@@ -31,22 +31,22 @@ import Foundation
 /**
  The `MigrationType` specifies the type of migration required for a store.
  */
-public enum MigrationType: BooleanType, Hashable {
+public enum MigrationType: Boolean, Hashable {
     
     /**
      Indicates that the persistent store matches the latest model version and no migration is needed
      */
-    case None(version: String)
+    case none(version: String)
     
     /**
      Indicates that the persistent store does not match the latest model version but Core Data can infer the mapping model, so a lightweight migration is needed
      */
-    case Lightweight(sourceVersion: String, destinationVersion: String)
+    case lightweight(sourceVersion: String, destinationVersion: String)
     
     /**
      Indicates that the persistent store does not match the latest model version and Core Data could not infer a mapping model, so a custom migration is needed
      */
-    case Heavyweight(sourceVersion: String, destinationVersion: String)
+    case heavyweight(sourceVersion: String, destinationVersion: String)
     
     /**
      Returns the source model version for the migration type. If no migration is required, `sourceVersion` will be equal to the `destinationVersion`.
@@ -55,13 +55,13 @@ public enum MigrationType: BooleanType, Hashable {
         
         switch self {
             
-        case .None(let version):
+        case .none(let version):
             return version
             
-        case .Lightweight(let sourceVersion, _):
+        case .lightweight(let sourceVersion, _):
             return sourceVersion
             
-        case .Heavyweight(let sourceVersion, _):
+        case .heavyweight(let sourceVersion, _):
             return sourceVersion
         }
     }
@@ -73,13 +73,13 @@ public enum MigrationType: BooleanType, Hashable {
         
         switch self {
             
-        case .None(let version):
+        case .none(let version):
             return version
             
-        case .Lightweight(_, let destinationVersion):
+        case .lightweight(_, let destinationVersion):
             return destinationVersion
             
-        case .Heavyweight(_, let destinationVersion):
+        case .heavyweight(_, let destinationVersion):
             return destinationVersion
         }
     }
@@ -89,7 +89,7 @@ public enum MigrationType: BooleanType, Hashable {
      */
     public var isLightweightMigration: Bool {
         
-        if case .Lightweight = self {
+        if case .lightweight = self {
             
             return true
         }
@@ -101,7 +101,7 @@ public enum MigrationType: BooleanType, Hashable {
      */
     public var isHeavyweightMigration: Bool {
         
-        if case .Heavyweight = self {
+        if case .heavyweight = self {
             
             return true
         }
@@ -115,9 +115,9 @@ public enum MigrationType: BooleanType, Hashable {
         
         switch self {
             
-        case .None:         return false
-        case .Lightweight:  return true
-        case .Heavyweight:  return true
+        case .none:         return false
+        case .lightweight:  return true
+        case .heavyweight:  return true
         }
     }
     
@@ -129,13 +129,13 @@ public enum MigrationType: BooleanType, Hashable {
         let preHash = self.boolValue.hashValue ^ self.isHeavyweightMigration.hashValue
         switch self {
             
-        case .None(let version):
+        case .none(let version):
             return preHash ^ version.hashValue
             
-        case .Lightweight(let sourceVersion, let destinationVersion):
+        case .lightweight(let sourceVersion, let destinationVersion):
             return preHash ^ sourceVersion.hashValue ^ destinationVersion.hashValue
             
-        case .Heavyweight(let sourceVersion, let destinationVersion):
+        case .heavyweight(let sourceVersion, let destinationVersion):
             return preHash ^ sourceVersion.hashValue ^ destinationVersion.hashValue
         }
     }
@@ -149,13 +149,13 @@ public func == (lhs: MigrationType, rhs: MigrationType) -> Bool {
     
     switch (lhs, rhs) {
         
-    case (.None(let version1), .None(let version2)):
+    case (.none(let version1), .none(let version2)):
         return version1 == version2
         
-    case (.Lightweight(let source1, let destination1), .Lightweight(let source2, let destination2)):
+    case (.lightweight(let source1, let destination1), .lightweight(let source2, let destination2)):
         return source1 == source2 && destination1 == destination2
         
-    case (.Heavyweight(let source1, let destination1), .Heavyweight(let source2, let destination2)):
+    case (.heavyweight(let source1, let destination1), .heavyweight(let source2, let destination2)):
         return source1 == source2 && destination1 == destination2
         
     default:

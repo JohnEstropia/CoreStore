@@ -48,17 +48,17 @@ public extension NSManagedObject {
     // MARK: Internal
     
     @nonobjc
-    internal class func createInContext(context: NSManagedObjectContext) -> Self {
+    internal class func createInContext(_ context: NSManagedObjectContext) -> Self {
         
-        return self.init(
+        return self.`init`(entity:insertInto:)(
             entity: context.entityDescriptionForEntityType(self)!,
-            insertIntoManagedObjectContext: context
+            insertInto: context
         )
     }
     
     @nonobjc
     internal func deleteFromContext() {
         
-        self.managedObjectContext?.deleteObject(self)
+        self.managedObjectContext?.delete(self)
     }
 }

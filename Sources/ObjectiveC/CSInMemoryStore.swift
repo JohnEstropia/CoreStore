@@ -92,7 +92,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
         return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: AnyObject?) -> Bool {
         
         guard let object = object as? CSInMemoryStore else {
             

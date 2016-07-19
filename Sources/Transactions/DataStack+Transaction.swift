@@ -39,7 +39,7 @@ public extension DataStack {
      
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
-    public func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
+    public func beginAsynchronous(_ closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
         AsynchronousDataTransaction(
             mainContext: self.rootSavingContext,
@@ -53,7 +53,7 @@ public extension DataStack {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
-    public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    public func beginSynchronous(_ closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         return SynchronousDataTransaction(
             mainContext: self.rootSavingContext,
@@ -68,13 +68,13 @@ public extension DataStack {
      - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @warn_unused_result
-    public func beginUnsafe(supportsUndo supportsUndo: Bool = false) -> UnsafeDataTransaction {
+    public func beginUnsafe(supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
         return UnsafeDataTransaction(
             mainContext: self.rootSavingContext,
             queue: .createSerial(
                 "com.coreStore.dataStack.unsafeTransactionQueue",
-                targetQueue: .UserInitiated
+                targetQueue: .userInitiated
             ),
             supportsUndo: supportsUndo
         )
@@ -86,20 +86,10 @@ public extension DataStack {
     public func refreshAndMergeAllObjects() {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to refresh entities outside their designated queue."
         )
         
         self.mainContext.refreshAndMergeAllObjects()
-    }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="beginUnsafe")
-    @warn_unused_result
-    public func beginDetached() -> UnsafeDataTransaction {
-        
-        return self.beginUnsafe()
     }
 }

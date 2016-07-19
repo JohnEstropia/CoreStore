@@ -79,17 +79,17 @@ public extension CoreStoreSwiftType where ObjectiveCType: CoreStoreObjectiveCTyp
 
 // MARK: - Internal
 
-internal func bridge<T: CoreStoreSwiftType where T.ObjectiveCType: CoreStoreObjectiveCType, T == T.ObjectiveCType.SwiftType>(@noescape closure: () -> T) -> T.ObjectiveCType {
+internal func bridge<T: CoreStoreSwiftType where T.ObjectiveCType: CoreStoreObjectiveCType, T == T.ObjectiveCType.SwiftType>(@noescape _ closure: () -> T) -> T.ObjectiveCType {
     
     return closure().bridgeToObjectiveC
 }
 
-internal func bridge<T: CoreStoreSwiftType where T.ObjectiveCType: CoreStoreObjectiveCType, T == T.ObjectiveCType.SwiftType>(@noescape closure: () -> T?) -> T.ObjectiveCType? {
+internal func bridge<T: CoreStoreSwiftType where T.ObjectiveCType: CoreStoreObjectiveCType, T == T.ObjectiveCType.SwiftType>(@noescape _ closure: () -> T?) -> T.ObjectiveCType? {
     
     return closure()?.bridgeToObjectiveC
 }
 
-internal func bridge<T: CoreStoreSwiftType where T.ObjectiveCType: CoreStoreObjectiveCType, T == T.ObjectiveCType.SwiftType>(@noescape closure: () throws -> T) throws -> T.ObjectiveCType {
+internal func bridge<T: CoreStoreSwiftType where T.ObjectiveCType: CoreStoreObjectiveCType, T == T.ObjectiveCType.SwiftType>(@noescape _ closure: () throws -> T) throws -> T.ObjectiveCType {
     
     do {
         
@@ -101,7 +101,7 @@ internal func bridge<T: CoreStoreSwiftType where T.ObjectiveCType: CoreStoreObje
     }
 }
 
-internal func bridge(@noescape closure: () throws -> Void) throws {
+internal func bridge(@noescape _ closure: () throws -> Void) throws {
     
     do {
         
@@ -113,62 +113,62 @@ internal func bridge(@noescape closure: () throws -> Void) throws {
     }
 }
 
-internal func bridge<T: CoreStoreSwiftType>(error: NSErrorPointer, @noescape _ closure: () throws -> T) -> T.ObjectiveCType? {
+internal func bridge<T: CoreStoreSwiftType>(_ error: NSErrorPointer, @noescape _ closure: () throws -> T) -> T.ObjectiveCType? {
     
     do {
         
         let result = try closure()
-        error.memory = nil
+        error?.pointee = nil
         return result.bridgeToObjectiveC
     }
     catch let swiftError {
         
-        error.memory = swiftError.bridgeToObjectiveC
+        error?.pointee = swiftError.bridgeToObjectiveC
         return nil
     }
 }
 
-internal func bridge(error: NSErrorPointer, @noescape _ closure: () throws -> Void) -> Bool {
+internal func bridge(_ error: NSErrorPointer, @noescape _ closure: () throws -> Void) -> Bool {
     
     do {
         
         try closure()
-        error.memory = nil
+        error?.pointee = nil
         return true
     }
     catch let swiftError {
         
-        error.memory = swiftError.bridgeToObjectiveC
+        error?.pointee = swiftError.bridgeToObjectiveC
         return false
     }
 }
 
-internal func bridge<T>(error: NSErrorPointer, @noescape _ closure: () throws -> T?) -> T? {
+internal func bridge<T>(_ error: NSErrorPointer, @noescape _ closure: () throws -> T?) -> T? {
     
     do {
         
         let result = try closure()
-        error.memory = nil
+        error?.pointee = nil
         return result
     }
     catch let swiftError {
         
-        error.memory = swiftError.bridgeToObjectiveC
+        error?.pointee = swiftError.bridgeToObjectiveC
         return nil
     }
 }
 
-internal func bridge<T: CoreStoreSwiftType>(error: NSErrorPointer, @noescape _ closure: () throws -> [T]) -> [T.ObjectiveCType]? {
+internal func bridge<T: CoreStoreSwiftType>(_ error: NSErrorPointer, @noescape _ closure: () throws -> [T]) -> [T.ObjectiveCType]? {
     
     do {
         
         let result = try closure()
-        error.memory = nil
+        error?.pointee = nil
         return result.map { $0.bridgeToObjectiveC }
     }
     catch let swiftError {
         
-        error.memory = swiftError.bridgeToObjectiveC
+        error?.pointee = swiftError.bridgeToObjectiveC
         return nil
     }
 }

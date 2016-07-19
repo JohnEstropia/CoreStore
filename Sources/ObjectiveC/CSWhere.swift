@@ -41,7 +41,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      The internal `NSPredicate` instance for the `Where` clause
      */
     @objc
-    public var predicate: NSPredicate {
+    public var predicate: Predicate {
         
         return self.bridgeToSwift.predicate
     }
@@ -110,7 +110,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - parameter predicate: the `NSPredicate` for the fetch or query
      */
     @objc
-    public convenience init(predicate: NSPredicate) {
+    public convenience init(predicate: Predicate) {
         
         self.init(Where(predicate))
     }
@@ -123,7 +123,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: AnyObject?) -> Bool {
         
         guard let object = object as? CSWhere else {
             
@@ -141,7 +141,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     // MARK: CSFetchClause, CSQueryClause, CSDeleteClause
     
     @objc
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+    public func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
         
         self.bridgeToSwift.applyToFetchRequest(fetchRequest)
     }

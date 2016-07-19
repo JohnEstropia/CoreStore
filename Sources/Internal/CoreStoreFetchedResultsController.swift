@@ -31,12 +31,12 @@ import CoreData
 
 // MARK: - CoreStoreFetchedResultsController
 
-internal final class CoreStoreFetchedResultsController: NSFetchedResultsController {
+internal final class CoreStoreFetchedResultsController: NSFetchedResultsController<NSManagedObject> {
     
     // MARK: Internal
     
     @nonobjc
-    internal convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
+    internal convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -48,14 +48,14 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     }
     
     @nonobjc
-    internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
+    internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         _ = from?.applyToFetchRequest(
             fetchRequest,
             context: context,
             applyAffectedStores: false
         )
-        applyFetchClauses(fetchRequest: fetchRequest)
+        applyFetchClauses(fetchRequest: fetchRequest.cs_dynamicCast())
         
         if let from = from {
             
@@ -68,7 +68,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
             
             guard let from = (fetchRequest.entity.flatMap { $0.managedObjectClassName }).flatMap(NSClassFromString).flatMap(From.init) else {
                 
-                CoreStore.abort("Attempted to create an \(cs_typeName(NSFetchedResultsController)) without a \(cs_typeName(From)) clause or an \(cs_typeName(NSEntityDescription)).")
+                CoreStore.abort("Attempted to create a \(CoreStoreFetchedResultsController.self) without a \(cs_typeName(From<T>.self)) clause or an \(cs_typeName(NSEntityDescription.self)).")
             }
             
             self.reapplyAffectedStores = { fetchRequest, context in
@@ -91,11 +91,17 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         if !self.reapplyAffectedStores(fetchRequest: self.fetchRequest, context: self.managedObjectContext) {
             
             CoreStore.log(
-                .Warning,
-                message: "Attempted to perform a fetch on an \(cs_typeName(NSFetchedResultsController)) but could not find any persistent store for the entity \(cs_typeName(self.fetchRequest.entityName))"
+                .warning,
+                message: "Attempted to perform a fetch on an \(cs_typeName(self)) but could not find any persistent store for the entity \(cs_typeName(self.fetchRequest.entityName))"
             )
         }
         try self.performFetch()
+    }
+    
+    @nonobjc
+    internal func dynamicCast<U: NSFetchRequestResult>() -> NSFetchedResultsController<U> {
+        
+        return unsafeBitCast(self, to: NSFetchedResultsController<U>.self)
     }
     
     deinit {
@@ -107,7 +113,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     // MARK: Private
     
     @nonobjc
-    private let reapplyAffectedStores: (fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Bool
+    private let reapplyAffectedStores: (fetchRequest: NSFetchRequest<NSManagedObject>, context: NSManagedObjectContext) -> Bool
 }
 
 #endif

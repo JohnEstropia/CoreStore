@@ -39,11 +39,11 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObject(object: NSManagedObject) -> AnyObject? {
+    public func fetchExistingObject(_ object: NSManagedObject) -> AnyObject? {
         
         do {
             
-            return try self.bridgeToSwift.mainContext.existingObjectWithID(object.objectID)
+            return try self.bridgeToSwift.mainContext.existingObject(with: object.objectID)
         }
         catch _ {
             
@@ -59,11 +59,11 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObjectWithID(objectID: NSManagedObjectID) -> AnyObject? {
+    public func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> AnyObject? {
         
         do {
             
-            return try self.bridgeToSwift.mainContext.existingObjectWithID(objectID)
+            return try self.bridgeToSwift.mainContext.existingObject(with: objectID)
         }
         catch _ {
             
@@ -79,9 +79,9 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObjects(objects: [NSManagedObject]) -> [AnyObject] {
+    public func fetchExistingObjects(_ objects: [NSManagedObject]) -> [AnyObject] {
         
-        return objects.flatMap { try? self.bridgeToSwift.mainContext.existingObjectWithID($0.objectID) }
+        return objects.flatMap { try? self.bridgeToSwift.mainContext.existingObject(with: $0.objectID) }
     }
     
     /**
@@ -92,9 +92,9 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObjectsWithIDs(objectIDs: [NSManagedObjectID]) -> [AnyObject] {
+    public func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [AnyObject] {
         
-        return objectIDs.flatMap { try? self.bridgeToSwift.mainContext.existingObjectWithID($0) }
+        return objectIDs.flatMap { try? self.bridgeToSwift.mainContext.existingObject(with: $0) }
     }
     
     /**
@@ -106,10 +106,10 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchOneFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
+    public func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchOne(from, fetchClauses)
@@ -124,10 +124,10 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchAllFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
+    public func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchAll(from, fetchClauses)
@@ -142,10 +142,10 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchCountFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> NSNumber? {
+    public func fetchCountFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSNumber? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchCount(from, fetchClauses)
@@ -160,10 +160,10 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchObjectIDFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectIDFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchObjectID(from, fetchClauses)
@@ -178,10 +178,10 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func fetchObjectIDsFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
+    public func fetchObjectIDsFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.fetchObjectIDs(from, fetchClauses)
@@ -199,10 +199,10 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func queryValueFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
+    public func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.queryValue(from, selectClause, queryClauses)
@@ -220,10 +220,10 @@ public extension CSDataStack {
      */
     @objc
     @warn_unused_result
-    public func queryAttributesFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
+    public func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
         return self.bridgeToSwift.mainContext.queryAttributes(from, selectClause, queryClauses)

@@ -39,11 +39,11 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObject(object: NSManagedObject) -> AnyObject? {
+    public func fetchExistingObject(_ object: NSManagedObject) -> AnyObject? {
         
         do {
             
-            return try self.bridgeToSwift.context.existingObjectWithID(object.objectID)
+            return try self.bridgeToSwift.context.existingObject(with: object.objectID)
         }
         catch _ {
             
@@ -59,11 +59,11 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObjectWithID(objectID: NSManagedObjectID) -> AnyObject? {
+    public func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> AnyObject? {
         
         do {
             
-            return try self.bridgeToSwift.context.existingObjectWithID(objectID)
+            return try self.bridgeToSwift.context.existingObject(with: objectID)
         }
         catch _ {
             
@@ -79,9 +79,9 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObjects(objects: [NSManagedObject]) -> [AnyObject] {
+    public func fetchExistingObjects(_ objects: [NSManagedObject]) -> [AnyObject] {
         
-        return objects.flatMap { try? self.bridgeToSwift.context.existingObjectWithID($0.objectID) }
+        return objects.flatMap { try? self.bridgeToSwift.context.existingObject(with: $0.objectID) }
     }
     
     /**
@@ -92,9 +92,9 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchExistingObjectsWithIDs(objectIDs: [NSManagedObjectID]) -> [AnyObject] {
+    public func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [AnyObject] {
         
-        return objectIDs.flatMap { try? self.bridgeToSwift.context.existingObjectWithID($0) }
+        return objectIDs.flatMap { try? self.bridgeToSwift.context.existingObject(with: $0) }
     }
     
     /**
@@ -106,7 +106,7 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchOneFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
+    public func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
@@ -124,7 +124,7 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchAllFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
+    public func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
@@ -142,7 +142,7 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchCountFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> NSNumber? {
+    public func fetchCountFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSNumber? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
@@ -160,7 +160,7 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func fetchObjectIDFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectIDFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
@@ -181,7 +181,7 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func queryValueFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
+    public func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
@@ -202,7 +202,7 @@ public extension CSBaseDataTransaction {
      */
     @objc
     @warn_unused_result
-    public func queryAttributesFrom(from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
+    public func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),

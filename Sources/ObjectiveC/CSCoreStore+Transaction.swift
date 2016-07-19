@@ -36,7 +36,7 @@ public extension CSCoreStore {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
     @objc
-    public static func beginAsynchronous(closure: (transaction: CSAsynchronousDataTransaction) -> Void) {
+    public static func beginAsynchronous(_ closure: (transaction: CSAsynchronousDataTransaction) -> Void) {
         
         return CoreStore.beginAsynchronous { (transaction) in
             
@@ -51,7 +51,7 @@ public extension CSCoreStore {
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @objc
-    public static func beginSynchronous(closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    public static func beginSynchronous(_ closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {
             
@@ -86,7 +86,7 @@ public extension CSCoreStore {
      */
     @objc
     @warn_unused_result
-    public static func beginUnsafeWithSupportsUndo(supportsUndo: Bool) -> CSUnsafeDataTransaction {
+    public static func beginUnsafeWithSupportsUndo(_ supportsUndo: Bool) -> CSUnsafeDataTransaction {
         
         return bridge {
             

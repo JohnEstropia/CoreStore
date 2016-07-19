@@ -43,10 +43,10 @@ public extension DataStack {
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
     @warn_unused_result
-    public func monitorObject<T: NSManagedObject>(object: T) -> ObjectMonitor<T> {
+    public func monitorObject<T: NSManagedObject>(_ object: T) -> ObjectMonitor<T> {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         return ObjectMonitor(dataStack: self, object: object)
@@ -60,7 +60,7 @@ public extension DataStack {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public func monitorList<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorList<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.monitorList(from, fetchClauses)
     }
@@ -73,10 +73,10 @@ public extension DataStack {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public func monitorList<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorList<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         return ListMonitor(
@@ -89,7 +89,7 @@ public extension DataStack {
                 
                 CoreStore.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
+                    "An \(cs_typeName(ListMonitor<T>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )
@@ -102,7 +102,7 @@ public extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
+    public func monitorList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
         
         self.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -114,10 +114,10 @@ public extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
+    public func monitorList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         _ = ListMonitor(
@@ -130,7 +130,7 @@ public extension DataStack {
                 
                 CoreStore.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
+                    "An \(cs_typeName(ListMonitor<T>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             },
             createAsynchronously: createAsynchronously
@@ -146,7 +146,7 @@ public extension DataStack {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorSectionedList<T: NSManagedObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -160,10 +160,10 @@ public extension DataStack {
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
     @warn_unused_result
-    public func monitorSectionedList<T: NSManagedObject>(from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorSectionedList<T: NSManagedObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         
@@ -177,7 +177,7 @@ public extension DataStack {
                 
                 CoreStore.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
+                    "An \(cs_typeName(ListMonitor<T>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )
@@ -191,7 +191,7 @@ public extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
+    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
         
         self.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -204,10 +204,10 @@ public extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
+    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         
@@ -221,7 +221,7 @@ public extension DataStack {
                 
                 CoreStore.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(OrderBy)) clause or any custom \(cs_typeName(FetchClause)) that provides a sort descriptor."
+                    "An \(cs_typeName(ListMonitor<T>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             },
             createAsynchronously: createAsynchronously

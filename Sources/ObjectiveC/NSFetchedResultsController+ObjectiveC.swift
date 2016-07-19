@@ -27,40 +27,40 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
-// MARK: - NSFetchedResultsController
-
-public extension NSFetchedResultsController {
-    
-    /**
-     Utility for creating an `NSFetchedResultsController` from a `CSDataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstractio
-     
-     - parameter dataStack: the `CSDataStack` to observe objects from
-     - parameter fetchRequest: the `NSFetchRequest` instance to use with the `NSFetchedResultsController`
-     - parameter from: an optional `CSFrom` clause indicating the entity type. If not specified, the `fetchRequest` argument's `entity` property should already be set.
-     - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
-     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
-     */
-    @objc
-    public static func cs_createForStack(dataStack: CSDataStack, fetchRequest: NSFetchRequest, from: CSFrom?, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController {
-        
-        return CoreStoreFetchedResultsController(
-            context: dataStack.bridgeToSwift.mainContext,
-            fetchRequest: fetchRequest,
-            from: from?.bridgeToSwift,
-            sectionBy: sectionBy?.bridgeToSwift,
-            applyFetchClauses: { fetchRequest in
-                
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-
-                CoreStore.assert(
-                    fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(CSOrderBy)) clause or any custom \(cs_typeName(CSFetchClause)) that provides a sort descriptor."
-                )
-            }
-        )
-    }
-}
-
-#endif
+//#if os(iOS) || os(watchOS) || os(tvOS)
+//
+//// MARK: - NSFetchedResultsController
+//
+//public extension NSFetchedResultsController {
+//    
+//    /**
+//     Utility for creating an `NSFetchedResultsController` from a `CSDataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstractio
+//     
+//     - parameter dataStack: the `CSDataStack` to observe objects from
+//     - parameter fetchRequest: the `NSFetchRequest` instance to use with the `NSFetchedResultsController`
+//     - parameter from: an optional `CSFrom` clause indicating the entity type. If not specified, the `fetchRequest` argument's `entity` property should already be set.
+//     - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+//     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
+//     */
+//    @objc
+//    public static func cs_createForStack(_ dataStack: CSDataStack, fetchRequest: NSFetchRequest<NSFetchRequestResult>, from: CSFrom?, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController {
+//        
+//        return CoreStoreFetchedResultsController(
+//            context: dataStack.bridgeToSwift.mainContext,
+//            fetchRequest: fetchRequest,
+//            from: from?.bridgeToSwift,
+//            sectionBy: sectionBy?.bridgeToSwift,
+//            applyFetchClauses: { fetchRequest in
+//                
+//                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+//
+//                CoreStore.assert(
+//                    fetchRequest.sortDescriptors?.isEmpty == false,
+//                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(CSOrderBy)) clause or any custom \(cs_typeName(CSFetchClause)) that provides a sort descriptor."
+//                )
+//            }
+//        )
+//    }
+//}
+//
+//#endif

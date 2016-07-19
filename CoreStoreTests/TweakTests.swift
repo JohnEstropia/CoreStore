@@ -36,7 +36,7 @@ final class TweakTests: XCTestCase {
     @objc
     dynamic func test_ThatTweakClauses_ApplyToFetchRequestsCorrectly() {
         
-        let predicate = NSPredicate(format: "%K == %@", "key", "value")
+        let predicate = Predicate(format: "%K == %@", "key", "value")
         let tweak = Tweak {
             
             $0.fetchOffset = 100

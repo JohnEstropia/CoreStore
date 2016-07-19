@@ -40,7 +40,7 @@ public extension BaseDataTransaction {
      - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
      */
     public func importObject<T where T: NSManagedObject, T: ImportableObject>(
-        into: Into<T>,
+        _ into: Into<T>,
         source: T.ImportSource) throws -> T? {
             
             CoreStore.assert(
@@ -69,7 +69,7 @@ public extension BaseDataTransaction {
      - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
      */
     public func importObject<T where T: NSManagedObject, T: ImportableObject>(
-        object: T,
+        _ object: T,
         source: T.ImportSource) throws {
             
             CoreStore.assert(
@@ -96,8 +96,8 @@ public extension BaseDataTransaction {
      - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
      - returns: the array of created `ImportableObject` instances
      */
-    public func importObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableObject, S.Generator.Element == T.ImportSource>(
-        into: Into<T>,
+    public func importObjects<T, S: Sequence where T: NSManagedObject, T: ImportableObject, S.Iterator.Element == T.ImportSource>(
+        _ into: Into<T>,
         sourceArray: S) throws -> [T] {
             
             CoreStore.assert(
@@ -133,7 +133,7 @@ public extension BaseDataTransaction {
      - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
      */
     public func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
-        into: Into<T>,
+        _ into: Into<T>,
         source: T.ImportSource) throws -> T?  {
             
             CoreStore.assert(
@@ -184,8 +184,8 @@ public extension BaseDataTransaction {
      - throws: an `ErrorType` thrown from any of the `ImportableUniqueObject` methods
      - returns: the array of created/updated `ImportableUniqueObject` instances
      */
-    public func importUniqueObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableUniqueObject, S.Generator.Element == T.ImportSource>(
-        into: Into<T>,
+    public func importUniqueObjects<T, S: Sequence where T: NSManagedObject, T: ImportableUniqueObject, S.Iterator.Element == T.ImportSource>(
+        _ into: Into<T>,
         sourceArray: S,
         @noescape preProcess: (mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] {
             
@@ -220,7 +220,7 @@ public extension BaseDataTransaction {
                         
                         let uniqueIDValue = object.uniqueIDValue
                         
-                        guard let source = mapping.removeValueForKey(uniqueIDValue)
+                        guard let source = mapping.removeValue(forKey: uniqueIDValue)
                             where T.shouldUpdateFromImportSource(source, inTransaction: self) else {
                                 
                                 return

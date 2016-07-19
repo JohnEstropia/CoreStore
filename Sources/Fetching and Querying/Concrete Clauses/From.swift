@@ -58,7 +58,7 @@ public struct From<T: NSManagedObject> {
      let people = transaction.fetchAll(From<MyPersonEntity>())
      ```
      */
-    public init(){
+    public init() {
         
         self.init(entityClass: T.self, configurations: nil)
     }
@@ -190,7 +190,7 @@ public struct From<T: NSManagedObject> {
     // MARK: Internal
     
     @warn_unused_result
-    internal func applyToFetchRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext, applyAffectedStores: Bool = true) -> Bool {
+    internal func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) -> Bool {
         
         fetchRequest.entity = context.entityDescriptionForEntityClass(self.entityClass)
         guard applyAffectedStores else {
@@ -202,13 +202,13 @@ public struct From<T: NSManagedObject> {
             return true
         }
         CoreStore.log(
-            .Warning,
+            .warning,
             message: "Attempted to perform a fetch but could not find any persistent store for the entity \(cs_typeName(fetchRequest.entityName))"
         )
         return false
     }
     
-    internal func applyAffectedStoresForFetchedRequest(fetchRequest: NSFetchRequest, context: NSManagedObjectContext) -> Bool {
+    internal func applyAffectedStoresForFetchedRequest<U: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<U>, context: NSManagedObjectContext) -> Bool {
         
         let stores = self.findPersistentStores(context: context)
         fetchRequest.affectedStores = stores
@@ -258,116 +258,5 @@ public struct From<T: NSManagedObject> {
         self.entityClass = entityClass
         self.configurations = configurations
         self.findPersistentStores = findPersistentStores
-    }
-    
-    
-    // MARK: Obsolete
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ storeURLs: [NSURL]) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ entity: T.Type, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ entity: T.Type, _ storeURLs: [NSURL]) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ entityClass: AnyClass, _ storeURL: NSURL, _ otherStoreURLs: NSURL...) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ entityClass: AnyClass, _ storeURLs: [NSURL]) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ persistentStores: [NSPersistentStore]) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ entity: T.Type, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ entity: T.Type, _ persistentStores: [NSPersistentStore]) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ entityClass: AnyClass, _ persistentStore: NSPersistentStore, _ otherPersistentStores: NSPersistentStore...) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
-    }
-    
-    /**
-     Obsolete. Use initializers that accept configuration names.
-     */
-    @available(*, obsoleted=2.0.0, message="Use initializers that accept configuration names.")
-    public init(_ entityClass: AnyClass, _ persistentStores: [NSPersistentStore]) {
-        
-        CoreStore.abort("Use initializers that accept configuration names.")
     }
 }

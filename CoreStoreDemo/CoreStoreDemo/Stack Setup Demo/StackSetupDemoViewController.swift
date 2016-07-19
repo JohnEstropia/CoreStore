@@ -22,14 +22,14 @@ private struct Static {
             SQLiteStore(
                 fileName: "AccountsDemo_FB_Male.sqlite",
                 configuration: maleConfiguration,
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         try! dataStack.addStorageAndWait(
             SQLiteStore(
                 fileName: "AccountsDemo_FB_Female.sqlite",
                 configuration: femaleConfiguration,
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         
@@ -60,14 +60,14 @@ private struct Static {
             SQLiteStore(
                 fileName: "AccountsDemo_TW_Male.sqlite",
                 configuration: maleConfiguration,
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         try! dataStack.addStorageAndWait(
             SQLiteStore(
                 fileName: "AccountsDemo_TW_Female.sqlite",
                 configuration: femaleConfiguration,
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         

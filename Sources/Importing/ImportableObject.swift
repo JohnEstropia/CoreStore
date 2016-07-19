@@ -62,7 +62,7 @@ public protocol ImportableObject: class {
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      - returns: `true` if an object should be created from `source`. Return `false` to ignore.
      */
-    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
+    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
     
     /**
      Implements the actual importing of data from `source`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importObjects(:sourceArray:)` call to be cancelled.
@@ -70,7 +70,7 @@ public protocol ImportableObject: class {
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
     */
-    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+    func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
 }
 
 
@@ -78,7 +78,7 @@ public protocol ImportableObject: class {
 
 public extension ImportableObject {
     
-    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return true
     }

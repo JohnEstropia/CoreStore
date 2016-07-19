@@ -66,7 +66,7 @@ public final class CSObjectMonitor: NSObject, CoreStoreObjectiveCType {
      
      - parameter observer: an `CSObjectObserver` to send change notifications to
      */
-    public func addObjectObserver(observer: CSObjectObserver) {
+    public func addObjectObserver(_ observer: CSObjectObserver) {
         
         let swift = self.bridgeToSwift
         swift.unregisterObserver(observer)
@@ -94,7 +94,7 @@ public final class CSObjectMonitor: NSObject, CoreStoreObjectiveCType {
      
      - parameter observer: an `CSObjectObserver` to unregister notifications to
      */
-    public func removeObjectObserver(observer: CSObjectObserver) {
+    public func removeObjectObserver(_ observer: CSObjectObserver) {
         
         self.bridgeToSwift.unregisterObserver(observer)
     }
@@ -107,7 +107,7 @@ public final class CSObjectMonitor: NSObject, CoreStoreObjectiveCType {
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: AnyObject?) -> Bool {
         
         guard let object = object as? CSObjectMonitor else {
             

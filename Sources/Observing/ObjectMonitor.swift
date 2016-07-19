@@ -44,14 +44,14 @@ import CoreData
  
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
-public final class ObjectMonitor<T: NSManagedObject> {
+public final class ObjectMonitor<EntityType: NSManagedObject> {
     
     /**
      Returns the `NSManagedObject` instance being observed, or `nil` if the object was already deleted.
      */
-    public var object: T? {
+    public var object: EntityType? {
         
-        return self.fetchedResultsController.fetchedObjects?.first as? T
+        return self.fetchedResultsController.fetchedObjects?.first as? EntityType
     }
     
     /**
@@ -73,7 +73,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
      
      - parameter observer: an `ObjectObserver` to send change notifications to
      */
-    public func addObserver<U: ObjectObserver where U.ObjectEntityType == T>(observer: U) {
+    public func addObserver<U: ObjectObserver where U.ObjectEntityType == EntityType>(_ observer: U) {
         
         self.unregisterObserver(observer)
         self.registerObserver(
@@ -100,7 +100,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
      
      - parameter observer: an `ObjectObserver` to unregister notifications to
      */
-    public func removeObserver<U: ObjectObserver where U.ObjectEntityType == T>(observer: U) {
+    public func removeObserver<U: ObjectObserver where U.ObjectEntityType == EntityType>(_ observer: U) {
         
         self.unregisterObserver(observer)
     }
@@ -116,21 +116,21 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     // MARK: Internal
     
-    internal convenience init(dataStack: DataStack, object: T) {
+    internal convenience init(dataStack: DataStack, object: EntityType) {
         
         self.init(context: dataStack.mainContext, object: object)
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, object: T) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, object: EntityType) {
         
         self.init(context: unsafeTransaction.context, object: object)
     }
     
-    internal func registerObserver<U: AnyObject>(observer: U, willChangeObject: (observer: U, monitor: ObjectMonitor<T>, object: T) -> Void, didDeleteObject: (observer: U, monitor: ObjectMonitor<T>, object: T) -> Void, didUpdateObject: (observer: U, monitor: ObjectMonitor<T>, object: T, changedPersistentKeys: Set<String>) -> Void) {
+    internal func registerObserver<U: AnyObject>(_ observer: U, willChangeObject: (observer: U, monitor: ObjectMonitor<EntityType>, object: EntityType) -> Void, didDeleteObject: (observer: U, monitor: ObjectMonitor<EntityType>, object: EntityType) -> Void, didUpdateObject: (observer: U, monitor: ObjectMonitor<EntityType>, object: EntityType, changedPersistentKeys: Set<String>) -> Void) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
-            "Attempted to add an observer of type \(cs_typeName(observer)) outside the main thread."
+            Thread.isMainThread,
+            "Attempted to add an observer of type \(cs_typeName(observer as AnyObject)) outside the main thread."
         )
         self.registerChangeNotification(
             &self.willChangeObjectKey,
@@ -170,7 +170,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
                 }
                 
                 let previousCommitedAttributes = self.lastCommittedAttributes
-                let currentCommitedAttributes = object.committedValuesForKeys(nil) as! [String: NSObject]
+                let currentCommitedAttributes = object.committedValues(forKeys: nil) as! [String: NSObject]
                 
                 var changedKeys = Set<String>()
                 for key in currentCommitedAttributes.keys {
@@ -192,10 +192,10 @@ public final class ObjectMonitor<T: NSManagedObject> {
         )
     }
     
-    internal func unregisterObserver(observer: AnyObject) {
+    internal func unregisterObserver(_ observer: AnyObject) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to remove an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         
@@ -207,7 +207,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
     
     internal func upcast() -> ObjectMonitor<NSManagedObject> {
         
-        return unsafeBitCast(self, ObjectMonitor<NSManagedObject>.self)
+        return unsafeBitCast(self, to: ObjectMonitor<NSManagedObject>.self)
     }
     
     deinit {
@@ -219,19 +219,19 @@ public final class ObjectMonitor<T: NSManagedObject> {
     // MARK: Private
     
     private let fetchedResultsController: CoreStoreFetchedResultsController
-    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
+    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate<EntityType>
     private var lastCommittedAttributes = [String: NSObject]()
     
     private var willChangeObjectKey: Void?
     private var didDeleteObjectKey: Void?
     private var didUpdateObjectKey: Void?
     
-    private init(context: NSManagedObjectContext, object: T) {
+    private init(context: NSManagedObjectContext, object: EntityType) {
         
-        let fetchRequest = CoreStoreFetchRequest()
+        let fetchRequest = CoreStoreFetchRequest<EntityType>()
         fetchRequest.entity = object.entity
         fetchRequest.fetchLimit = 0
-        fetchRequest.resultType = .ManagedObjectResultType
+        fetchRequest.resultType = .managedObjectResultType
         fetchRequest.sortDescriptors = []
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
@@ -239,11 +239,11 @@ public final class ObjectMonitor<T: NSManagedObject> {
         let objectID = object.objectID
         let fetchedResultsController = CoreStoreFetchedResultsController(
             context: context,
-            fetchRequest: fetchRequest,
+            fetchRequest: fetchRequest.dynamicCast(),
             applyFetchClauses: Where("SELF", isEqualTo: objectID).applyToFetchRequest
         )
         
-        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
+        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate<EntityType>()
         
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
@@ -252,10 +252,10 @@ public final class ObjectMonitor<T: NSManagedObject> {
         fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
         try! fetchedResultsController.performFetchFromSpecifiedStores()
         
-        self.lastCommittedAttributes = (self.object?.committedValuesForKeys(nil) as? [String: NSObject]) ?? [:]
+        self.lastCommittedAttributes = (self.object?.committedValues(forKeys: nil) as? [String: NSObject]) ?? [:]
     }
     
-    private func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<T>) -> Void) {
+    private func registerChangeNotification(_ notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<EntityType>) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -275,7 +275,7 @@ public final class ObjectMonitor<T: NSManagedObject> {
         )
     }
     
-    private func registerObjectNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<T>, object: T) -> Void) {
+    private func registerObjectNotification(_ notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<EntityType>, object: EntityType) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -284,8 +284,8 @@ public final class ObjectMonitor<T: NSManagedObject> {
                 closure: { [weak self] (note) -> Void in
                     
                     guard let `self` = self,
-                        let userInfo = note.userInfo,
-                        let object = userInfo[UserInfoKeyObject] as? T else {
+                        let userInfo = (note as NSNotification).userInfo,
+                        let object = userInfo[UserInfoKeyObject] as? EntityType else {
                             
                             return
                     }
@@ -320,30 +320,30 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
     
-    internal func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    internal func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            ObjectMonitorWillChangeObjectNotification,
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: ObjectMonitorWillChangeObjectNotification),
             object: self
         )
     }
     
-    internal func controllerDidChangeContent(controller: NSFetchedResultsController) { }
+    internal func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) { }
     
-    internal func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: AnyObject, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         switch type {
             
-        case .Delete:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ObjectMonitorDidDeleteObjectNotification,
+        case .delete:
+            NotificationCenter.default.post(
+                name: Notification.Name(rawValue: ObjectMonitorDidDeleteObjectNotification),
                 object: self,
                 userInfo: [UserInfoKeyObject: anObject]
             )
             
-        case .Update:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ObjectMonitorDidUpdateObjectNotification,
+        case .update:
+            NotificationCenter.default.post(
+                name: Notification.Name(rawValue: ObjectMonitorDidUpdateObjectNotification),
                 object: self,
                 userInfo: [UserInfoKeyObject: anObject]
             )
@@ -353,9 +353,9 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
         }
     }
     
-    internal func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) { }
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) { }
     
-    internal func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
         
         return sectionName
     }

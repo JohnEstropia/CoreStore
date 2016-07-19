@@ -38,7 +38,7 @@ import CoreData
 public protocol CSFetchClause {
     
     @objc
-    func applyToFetchRequest(fetchRequest: NSFetchRequest)
+    func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>)
 }
 
 
@@ -53,7 +53,7 @@ public protocol CSFetchClause {
 public protocol CSQueryClause {
     
     @objc
-    func applyToFetchRequest(fetchRequest: NSFetchRequest)
+    func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>)
 }
 
 
@@ -68,5 +68,5 @@ public protocol CSQueryClause {
 public protocol CSDeleteClause {
     
     @objc
-    func applyToFetchRequest(fetchRequest: NSFetchRequest)
+    func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>)
 }

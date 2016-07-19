@@ -52,15 +52,15 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
     
     func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        GCDQueue.Main.async { [weak self] in
+        GCDQueue.main.async { [weak self] in
             
             let levelString: String
             switch level {
                 
-            case .Trace: levelString = "Trace"
-            case .Notice: levelString = "Notice"
-            case .Warning: levelString = "Warning"
-            case .Fatal: levelString = "Fatal"
+            case .trace: levelString = "Trace"
+            case .notice: levelString = "Notice"
+            case .warning: levelString = "Warning"
+            case .fatal: levelString = "Fatal"
             }
             self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Log:\(levelString)] \(message)\n\n")
         }
@@ -68,7 +68,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
     
     func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        GCDQueue.Main.async { [weak self] in
+        GCDQueue.main.async { [weak self] in
             
             self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Error] \(message): \(error)\n\n")
         }
@@ -82,7 +82,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         }
         
         let messageString = message()
-        GCDQueue.Main.async { [weak self] in
+        GCDQueue.main.async { [weak self] in
             
             self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(messageString)\n\n")
         }

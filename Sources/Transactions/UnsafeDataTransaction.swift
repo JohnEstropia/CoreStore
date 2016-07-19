@@ -42,7 +42,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
      */
-    public func commit(completion: (result: SaveResult) -> Void) {
+    public func commit(_ completion: (result: SaveResult) -> Void) {
         
         self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             
@@ -105,7 +105,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - parameter closure: the closure where changes can be made prior to the flush
      - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
      */
-    public func flush(@noescape closure: () throws -> Void) rethrows {
+    public func flush(closure: @noescape () throws -> Void) rethrows {
         
         try closure()
         self.context.processPendingChanges()
@@ -130,7 +130,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - returns: an `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @warn_unused_result
-    public func beginUnsafe(supportsUndo supportsUndo: Bool = false) -> UnsafeDataTransaction {
+    public func beginUnsafe(supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
         return UnsafeDataTransaction(
             mainContext: self.context,
@@ -158,20 +158,4 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         
         super.init(mainContext: mainContext, queue: queue, supportsUndo: supportsUndo, bypassesQueueing: true)
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="beginUnsafe")
-    @warn_unused_result
-    public func beginDetached() -> UnsafeDataTransaction {
-        
-        return self.beginUnsafe()
-    }
 }
-
-
-// MARK: Deprecated
-
-@available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="UnsafeDataTransaction")
-public typealias DetachedDataTransaction = UnsafeDataTransaction

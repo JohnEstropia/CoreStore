@@ -35,7 +35,7 @@ public extension CoreStore {
      
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
-    public static func beginAsynchronous(closure: (transaction: AsynchronousDataTransaction) -> Void) {
+    public static func beginAsynchronous(_ closure: (transaction: AsynchronousDataTransaction) -> Void) {
         
         self.defaultStack.beginAsynchronous(closure)
     }
@@ -46,7 +46,7 @@ public extension CoreStore {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
-    public static func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    public static func beginSynchronous(_ closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         return self.defaultStack.beginSynchronous(closure)
     }
@@ -58,7 +58,7 @@ public extension CoreStore {
      - returns: a `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @warn_unused_result
-    public static func beginUnsafe(supportsUndo supportsUndo: Bool = false) -> UnsafeDataTransaction {
+    public static func beginUnsafe(supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
         return self.defaultStack.beginUnsafe(supportsUndo: supportsUndo)
     }
@@ -69,15 +69,5 @@ public extension CoreStore {
     public static func refreshAndMergeAllObjects() {
         
         self.defaultStack.refreshAndMergeAllObjects()
-    }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="beginUnsafe")
-    @warn_unused_result
-    public static func beginDetached() -> UnsafeDataTransaction {
-        
-        return self.beginUnsafe()
     }
 }

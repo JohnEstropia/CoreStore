@@ -562,37 +562,37 @@ class TestListObserver: ListSectionObserver {
     
     typealias ListEntityType = TestEntity1
     
-    func listMonitorWillChange(monitor: ListMonitor<TestEntity1>) {
+    func listMonitorWillChange(_ monitor: ListMonitor<TestEntity1>) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "listMonitorWillChange:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitorWillChange:"),
             object: self,
             userInfo: [:]
         )
     }
     
-    func listMonitorDidChange(monitor: ListMonitor<TestEntity1>) {
+    func listMonitorDidChange(_ monitor: ListMonitor<TestEntity1>) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "listMonitorDidChange:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitorDidChange:"),
             object: self,
             userInfo: [:]
         )
     }
     
-    func listMonitorWillRefetch(monitor: ListMonitor<TestEntity1>) {
+    func listMonitorWillRefetch(_ monitor: ListMonitor<TestEntity1>) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "listMonitorWillRefetch:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitorWillRefetch:"),
             object: self,
             userInfo: [:]
         )
     }
     
-    func listMonitorDidRefetch(monitor: ListMonitor<TestEntity1>) {
+    func listMonitorDidRefetch(_ monitor: ListMonitor<TestEntity1>) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "listMonitorDidRefetch:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitorDidRefetch:"),
             object: self,
             userInfo: [:]
         )
@@ -601,10 +601,10 @@ class TestListObserver: ListSectionObserver {
     
     // MARK: ListObjectObserver
     
-    func listMonitor(monitor: ListMonitor<TestEntity1>, didInsertObject object: TestEntity1, toIndexPath indexPath: NSIndexPath) {
+    func listMonitor(_ monitor: ListMonitor<TestEntity1>, didInsertObject object: TestEntity1, toIndexPath indexPath: IndexPath) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "listMonitor:didInsertObject:toIndexPath:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitor:didInsertObject:toIndexPath:"),
             object: self,
             userInfo: [
                 "object": object,
@@ -613,10 +613,10 @@ class TestListObserver: ListSectionObserver {
         )
     }
     
-    func listMonitor(monitor: ListMonitor<TestEntity1>, didDeleteObject object: TestEntity1, fromIndexPath indexPath: NSIndexPath) {
+    func listMonitor(_ monitor: ListMonitor<TestEntity1>, didDeleteObject object: TestEntity1, fromIndexPath indexPath: IndexPath) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "listMonitor:didDeleteObject:fromIndexPath:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitor:didDeleteObject:fromIndexPath:"),
             object: self,
             userInfo: [
                 "object": object,
@@ -625,10 +625,10 @@ class TestListObserver: ListSectionObserver {
         )
     }
     
-    func listMonitor(monitor: ListMonitor<TestEntity1>, didUpdateObject object: TestEntity1, atIndexPath indexPath: NSIndexPath) {
+    func listMonitor(_ monitor: ListMonitor<TestEntity1>, didUpdateObject object: TestEntity1, atIndexPath indexPath: IndexPath) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "listMonitor:didUpdateObject:atIndexPath:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitor:didUpdateObject:atIndexPath:"),
             object: self,
             userInfo: [
                 "object": object,
@@ -638,10 +638,10 @@ class TestListObserver: ListSectionObserver {
     }
     
     
-    func listMonitor(monitor: ListMonitor<TestEntity1>, didMoveObject object: TestEntity1, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
+    func listMonitor(_ monitor: ListMonitor<TestEntity1>, didMoveObject object: TestEntity1, fromIndexPath: IndexPath, toIndexPath: IndexPath) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            "listMonitor:didMoveObject:fromIndexPath:toIndexPath:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitor:didMoveObject:fromIndexPath:toIndexPath:"),
             object: self,
             userInfo: [
                 "object": object,
@@ -654,9 +654,9 @@ class TestListObserver: ListSectionObserver {
     
     // MARK: ListSectionObserver
     
-    func listMonitor(monitor: ListMonitor<TestEntity1>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) {
+    func listMonitor(_ monitor: ListMonitor<TestEntity1>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
+        NotificationCenter.defaultCenter().postNotificationName(
             "listMonitor:didInsertSection:toSectionIndex:",
             object: self,
             userInfo: [
@@ -666,9 +666,9 @@ class TestListObserver: ListSectionObserver {
         )
     }
     
-    func listMonitor(monitor: ListMonitor<TestEntity1>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) {
+    func listMonitor(_ monitor: ListMonitor<TestEntity1>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
+        NotificationCenter.defaultCenter().postNotificationName(
             "listMonitor:didDeleteSection:fromSectionIndex:",
             object: self,
             userInfo: [

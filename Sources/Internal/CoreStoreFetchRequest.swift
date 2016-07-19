@@ -31,7 +31,18 @@ import CoreData
 
 // Bugfix for NSFetchRequest messing up memory management for `affectedStores`
 // http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
-internal final class CoreStoreFetchRequest: NSFetchRequest {
+internal final class CoreStoreFetchRequest<T: NSFetchRequestResult>: NSFetchRequest<NSFetchRequestResult> {
+    
+    // MARK: Internal
+    
+    @nonobjc
+    internal func dynamicCast<U: NSFetchRequestResult>() -> NSFetchRequest<U> {
+        
+        return unsafeBitCast(self, to: NSFetchRequest<U>.self)
+    }
+    
+    
+    // MARK: NSFetchRequest
     
     @objc
     override var affectedStores: [NSPersistentStore]? {

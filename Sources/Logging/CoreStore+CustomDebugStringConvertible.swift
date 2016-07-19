@@ -72,27 +72,27 @@ extension CloudStorageOptions: CustomDebugStringConvertible, CoreStoreDebugStrin
     public var coreStoreDumpString: String {
         
         var flags = [String]()
-        if self.contains(.RecreateLocalStoreOnModelMismatch) {
+        if self.contains(.recreateLocalStoreOnModelMismatch) {
             
-            flags.append(".RecreateLocalStoreOnModelMismatch")
+            flags.append(".recreateLocalStoreOnModelMismatch")
         }
-        if self.contains(.AllowSynchronousLightweightMigration) {
+        if self.contains(.allowSynchronousLightweightMigration) {
             
-            flags.append(".AllowSynchronousLightweightMigration")
+            flags.append(".allowSynchronousLightweightMigration")
         }
         switch flags.count {
             
         case 0:
-            return "[.None]"
+            return "[.none]"
             
         case 1:
             return "[.\(flags[0])]"
             
         default:
             var string = "[\n"
-            string.appendContentsOf(flags.joinWithSeparator(",\n"))
+            string.append(flags.joined(separator: ",\n"))
             string.indent(1)
-            string.appendContentsOf("\n]")
+            string.append("\n]")
             return string
         }
     }
@@ -122,25 +122,25 @@ extension CoreStoreError: CustomDebugStringConvertible, CoreStoreDebugStringConv
         ]
         switch self {
             
-        case .Unknown:
-            firstLine = ".Unknown"
+        case .unknown:
+            firstLine = ".unknown"
             
-        case .DifferentStorageExistsAtURL(let existingPersistentStoreURL):
-            firstLine = ".DifferentStorageExistsAtURL"
+        case .differentStorageExistsAtURL(let existingPersistentStoreURL):
+            firstLine = ".differentStorageExistsAtURL"
             info.append(("existingPersistentStoreURL", existingPersistentStoreURL))
             
-        case .MappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
-            firstLine = ".MappingModelNotFound"
+        case .mappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
+            firstLine = ".mappingModelNotFound"
             info.append(("localStoreURL", localStoreURL))
             info.append(("targetModel", targetModel))
             info.append(("targetModelVersion", targetModelVersion))
             
-        case .ProgressiveMigrationRequired(let localStoreURL):
-            firstLine = ".ProgressiveMigrationRequired"
+        case .progressiveMigrationRequired(let localStoreURL):
+            firstLine = ".progressiveMigrationRequired"
             info.append(("localStoreURL", localStoreURL))
             
-        case .InternalError(let NSError):
-            firstLine = ".InternalError"
+        case .internalError(let NSError):
+            firstLine = ".internalError"
             info.append(("NSError", NSError))
         }
         
@@ -404,31 +404,31 @@ extension LocalStorageOptions: CustomDebugStringConvertible, CoreStoreDebugStrin
     public var coreStoreDumpString: String {
      
         var flags = [String]()
-        if self.contains(.RecreateStoreOnModelMismatch) {
+        if self.contains(.recreateStoreOnModelMismatch) {
             
-            flags.append(".RecreateStoreOnModelMismatch")
+            flags.append(".recreateStoreOnModelMismatch")
         }
-        if self.contains(.PreventProgressiveMigration) {
+        if self.contains(.preventProgressiveMigration) {
             
-            flags.append(".PreventProgressiveMigration")
+            flags.append(".preventProgressiveMigration")
         }
-        if self.contains(.AllowSynchronousLightweightMigration) {
+        if self.contains(.allowSynchronousLightweightMigration) {
             
-            flags.append(".AllowSynchronousLightweightMigration")
+            flags.append(".allowSynchronousLightweightMigration")
         }
         switch flags.count {
             
         case 0:
-            return "[.None]"
+            return "[.none]"
             
         case 1:
             return "[.\(flags[0])]"
             
         default:
             var string = "[\n"
-            string.appendContentsOf(flags.joinWithSeparator(",\n"))
+            string.append(flags.joined(separator: ",\n"))
             string.indent(1)
-            string.appendContentsOf("\n]")
+            string.append("\n]")
             return string
         }
     }
@@ -465,7 +465,7 @@ extension MigrationChain: CustomDebugStringConvertible, CoreStoreDebugStringConv
                 steps.append(nextVersion)
                 version = nextVersion
             }
-            paths.append(steps.joinWithSeparator(" → "))
+            paths.append(steps.joined(separator: " → "))
         }
         switch paths.count {
             
@@ -479,10 +479,10 @@ extension MigrationChain: CustomDebugStringConvertible, CoreStoreDebugStringConv
             var string = "["
             paths.forEach {
                 
-                string.appendContentsOf("\n\($0);")
+                string.append("\n\($0);")
             }
             string.indent(1)
-            string.appendContentsOf("\n]")
+            string.append("\n]")
             return string
         }
     }
@@ -507,15 +507,15 @@ extension MigrationResult: CustomDebugStringConvertible, CoreStoreDebugStringCon
         
         switch self {
             
-        case .Success(let migrationTypes):
+        case .success(let migrationTypes):
             return createFormattedString(
-                ".Success (", ")",
+                ".success (", ")",
                 ("migrationTypes", migrationTypes)
             )
             
-        case .Failure(let error):
+        case .failure(let error):
             return createFormattedString(
-                ".Failure (", ")",
+                ".failure (", ")",
                 ("error", error)
             )
         }
@@ -541,14 +541,14 @@ extension MigrationType: CustomDebugStringConvertible, CoreStoreDebugStringConve
         
         switch self {
             
-        case .None(let version):
-            return ".None (\"\(version)\")"
+        case .none(let version):
+            return ".none (\"\(version)\")"
             
-        case .Lightweight(let sourceVersion, let destinationVersion):
-            return ".Lightweight (\"\(sourceVersion)\" → \"\(destinationVersion)\")"
+        case .lightweight(let sourceVersion, let destinationVersion):
+            return ".lightweight (\"\(sourceVersion)\" → \"\(destinationVersion)\")"
             
-        case .Heavyweight(let sourceVersion, let destinationVersion):
-            return ".Heavyweight (\"\(sourceVersion)\" → \"\(destinationVersion)\")"
+        case .heavyweight(let sourceVersion, let destinationVersion):
+            return ".heavyweight (\"\(sourceVersion)\" → \"\(destinationVersion)\")"
         }
     }
 }
@@ -623,15 +623,15 @@ extension SaveResult: CustomDebugStringConvertible, CoreStoreDebugStringConverti
         
         switch self {
             
-        case .Success(let hasChanges):
+        case .success(let hasChanges):
             return createFormattedString(
-                ".Success (", ")",
+                ".success (", ")",
                 ("hasChanges", hasChanges)
             )
             
-        case .Failure(let error):
+        case .failure(let error):
             return createFormattedString(
-                ".Failure (", ")",
+                ".failure (", ")",
                 ("error", error)
             )
         }
@@ -708,24 +708,24 @@ extension SelectTerm: CustomDebugStringConvertible, CoreStoreDebugStringConverti
         
         switch self {
             
-        case ._Attribute(let keyPath):
+        case ._attribute(let keyPath):
             return createFormattedString(
                 ".Attribute (", ")",
                 ("keyPath", keyPath)
             )
             
-        case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+        case ._aggregate(let function, let keyPath, let alias, let nativeType):
             return createFormattedString(
-                ".Aggregate (", ")",
+                ".aggregate (", ")",
                 ("function", function),
                 ("keyPath", keyPath),
                 ("alias", alias),
                 ("nativeType", nativeType)
             )
             
-        case ._Identity(let alias, let nativeType):
+        case ._identity(let alias, let nativeType):
             return createFormattedString(
-                ".Identity (", ")",
+                ".identity (", ")",
                 ("alias", alias),
                 ("nativeType", nativeType)
             )
@@ -752,15 +752,15 @@ extension SetupResult: CustomDebugStringConvertible, CoreStoreDebugStringConvert
         
         switch self {
             
-        case .Success(let storage):
+        case .success(let storage):
             return createFormattedString(
-                ".Success (", ")",
+                ".success (", ")",
                 ("storage", storage)
             )
             
-        case .Failure(let error):
+        case .failure(let error):
             return createFormattedString(
-                ".Failure (", ")",
+                ".failure (", ")",
                 ("error", error)
             )
         }
@@ -898,7 +898,7 @@ extension Where: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
 
 private typealias DumpInfo = [(key: String, value: Any)]
 
-private func formattedValue(any: Any) -> String {
+private func formattedValue(_ any: Any) -> String {
     
     switch any {
         
@@ -910,19 +910,19 @@ private func formattedValue(any: Any) -> String {
     }
 }
 
-private func formattedDebugDescription(any: Any) -> String {
+private func formattedDebugDescription(_ any: Any) -> String {
     
     var string = "(\(String(reflecting: any.dynamicType))) "
-    string.appendContentsOf(formattedValue(any))
+    string.append(formattedValue(any))
     return string
 }
 
-private func createFormattedString(firstLine: String, _ lastLine: String, _ info: (key: String, value: Any)...) -> String {
+private func createFormattedString(_ firstLine: String, _ lastLine: String, _ info: (key: String, value: Any)...) -> String {
     
     return createFormattedString(firstLine, lastLine, info)
 }
 
-private func createFormattedString(firstLine: String, _ lastLine: String, _ info: [(key: String, value: Any)]) -> String {
+private func createFormattedString(_ firstLine: String, _ lastLine: String, _ info: [(key: String, value: Any)]) -> String {
     
     var string = firstLine
     for (key, value) in info {
@@ -930,34 +930,34 @@ private func createFormattedString(firstLine: String, _ lastLine: String, _ info
         string.appendDumpInfo(key, value)
     }
     string.indent(1)
-    string.appendContentsOf("\n\(lastLine)")
+    string.append("\n\(lastLine)")
     return string
 }
 
 private extension String {
     
-    private static func indention(level: Int = 1) -> String {
+    private static func indention(_ level: Int = 1) -> String {
         
-        return String(count: level * 4, repeatedValue: Character(" "))
+        return String(repeating: Character(" "), count: level * 4)
     }
     
     private func trimSwiftModuleName() -> String {
         
         if self.hasPrefix("Swift.") {
             
-            return self.substringFromIndex("Swift.".endIndex)
+            return self.substring(from: "Swift.".endIndex)
         }
         return self
     }
     
-    private mutating func indent(level: Int) {
+    private mutating func indent(_ level: Int) {
         
-        self = self.stringByReplacingOccurrencesOfString("\n", withString: "\n\(String.indention(level))")
+        self = self.replacingOccurrences(of: "\n", with: "\n\(String.indention(level))")
     }
     
-    private mutating func appendDumpInfo(key: String, _ value: Any) {
+    private mutating func appendDumpInfo(_ key: String, _ value: Any) {
         
-        self.appendContentsOf("\n.\(key) = \(formattedValue(value));")
+        self.append("\n.\(key) = \(formattedValue(value));")
     }
 }
 
@@ -979,17 +979,17 @@ extension Array: CoreStoreDebugStringConvertible {
         var string = "\(self.count) item(s) ["
         if self.isEmpty {
             
-            string.appendContentsOf("]")
+            string.append("]")
             return string
         }
         else {
             
-            for (index, item) in self.enumerate() {
+            for (index, item) in self.enumerated() {
                 
-                string.appendContentsOf("\n\(index) = \(formattedValue(item));")
+                string.append("\n\(index) = \(formattedValue(item));")
             }
             string.indent(1)
-            string.appendContentsOf("\n]")
+            string.append("\n]")
             return string
         }
     }
@@ -1002,17 +1002,17 @@ extension Dictionary: CoreStoreDebugStringConvertible {
         var string = "\(self.count) key-value(s) ["
         if self.isEmpty {
             
-            string.appendContentsOf("]")
+            string.append("]")
             return string
         }
         else {
             
             for (key, value) in self {
                 
-                string.appendContentsOf("\n\(formattedValue(key)) = \(formattedValue(value));")
+                string.append("\n\(formattedValue(key)) = \(formattedValue(value));")
             }
             string.indent(1)
-            string.appendContentsOf("\n]")
+            string.append("\n]")
             return string
         }
     }
@@ -1031,14 +1031,14 @@ extension NSAttributeDescription: CoreStoreDebugStringConvertible {
             ("allowsExternalBinaryDataStorage", self.allowsExternalBinaryDataStorage),
             ("entity.name", self.entity.name),
             ("name", self.name),
-            ("optional", self.optional),
-            ("transient", self.transient),
+            ("isOptional", self.isOptional),
+            ("isTransient", self.isTransient),
             ("userInfo", self.userInfo),
-            ("indexed", self.indexed),
+            ("isIndexed", self.isIndexed),
             ("versionHash", self.versionHash),
             ("versionHashModifier", self.versionHashModifier),
-            ("indexedBySpotlight", self.indexedBySpotlight),
-            ("storedInExternalRecord", self.storedInExternalRecord),
+            ("isIndexedBySpotlight", self.isIndexedBySpotlight),
+            ("isStoredInExternalRecord", self.isStoredInExternalRecord),
             ("renamingIdentifier", self.renamingIdentifier)
         )
     }
@@ -1050,24 +1050,24 @@ extension NSAttributeType: CoreStoreDebugStringConvertible {
         
         switch self {
             
-        case .UndefinedAttributeType:       return ".UndefinedAttributeType"
-        case .Integer16AttributeType:       return ".Integer16AttributeType"
-        case .Integer32AttributeType:       return ".Integer32AttributeType"
-        case .Integer64AttributeType:       return ".Integer64AttributeType"
-        case .DecimalAttributeType:         return ".DecimalAttributeType"
-        case .DoubleAttributeType:          return ".DoubleAttributeType"
-        case .FloatAttributeType:           return ".FloatAttributeType"
-        case .StringAttributeType:          return ".StringAttributeType"
-        case .BooleanAttributeType:         return ".BooleanAttributeType"
-        case .DateAttributeType:            return ".DateAttributeType"
-        case .BinaryDataAttributeType:      return ".BinaryDataAttributeType"
-        case .TransformableAttributeType:   return ".TransformableAttributeType"
-        case .ObjectIDAttributeType:        return ".ObjectIDAttributeType"
+        case .undefinedAttributeType:       return ".undefinedAttributeType"
+        case .integer16AttributeType:       return ".integer16AttributeType"
+        case .integer32AttributeType:       return ".integer32AttributeType"
+        case .integer64AttributeType:       return ".integer64AttributeType"
+        case .decimalAttributeType:         return ".decimalAttributeType"
+        case .doubleAttributeType:          return ".doubleAttributeType"
+        case .floatAttributeType:           return ".floatAttributeType"
+        case .stringAttributeType:          return ".stringAttributeType"
+        case .booleanAttributeType:         return ".booleanAttributeType"
+        case .dateAttributeType:            return ".dateAttributeType"
+        case .binaryDataAttributeType:      return ".binaryDataAttributeType"
+        case .transformableAttributeType:   return ".transformableAttributeType"
+        case .objectIDAttributeType:        return ".objectIDAttributeType"
         }
     }
 }
 
-extension NSBundle: CoreStoreDebugStringConvertible {
+extension Bundle: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         
@@ -1081,10 +1081,10 @@ extension NSDeleteRule: CoreStoreDebugStringConvertible {
         
         switch self {
             
-        case .NoActionDeleteRule:   return ".NoActionDeleteRule"
-        case .NullifyDeleteRule:    return ".NullifyDeleteRule"
-        case .CascadeDeleteRule:    return ".CascadeDeleteRule"
-        case .DenyDeleteRule:       return ".DenyDeleteRule"
+        case .noActionDeleteRule:   return ".noActionDeleteRule"
+        case .nullifyDeleteRule:    return ".nullifyDeleteRule"
+        case .cascadeDeleteRule:    return ".cascadeDeleteRule"
+        case .denyDeleteRule:       return ".denyDeleteRule"
         }
     }
 }
@@ -1096,7 +1096,7 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
         var info: DumpInfo = [
             ("managedObjectClassName", self.managedObjectClassName!),
             ("name", self.name),
-            ("abstract", self.abstract),
+            ("isAbstract", self.isAbstract),
             ("superentity?.name", self.superentity?.name),
             ("subentities", self.subentities.map({ $0.name })),
             ("properties", self.properties),
@@ -1147,10 +1147,10 @@ extension NSManagedObjectID: CoreStoreDebugStringConvertible {
     public var coreStoreDumpString: String {
         
         return createFormattedString(
-            "\(self.URIRepresentation().coreStoreDumpString) (", ")",
+            "\(self.uriRepresentation().coreStoreDumpString) (", ")",
             ("entity.name", self.entity.name),
-            ("temporaryID", self.temporaryID),
-            ("persistentStore?.URL", self.persistentStore?.URL)
+            ("isTemporaryID", self.isTemporaryID),
+            ("persistentStore?.url", self.persistentStore?.url)
         )
     }
 }
@@ -1163,7 +1163,7 @@ extension NSMappingModel: CoreStoreDebugStringConvertible {
     }
 }
 
-extension NSPredicate: CoreStoreDebugStringConvertible {
+extension Predicate: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         
@@ -1182,24 +1182,24 @@ extension NSRelationshipDescription: CoreStoreDebugStringConvertible {
             ("minCount", self.minCount),
             ("maxCount", self.maxCount),
             ("deleteRule", self.deleteRule),
-            ("toMany", self.toMany),
-            ("ordered", self.ordered),
+            ("isToMany", self.isToMany),
+            ("isOrdered", self.isOrdered),
             ("entity.name", self.entity.name),
             ("name", self.name),
-            ("optional", self.optional),
-            ("transient", self.transient),
+            ("isOptional", self.isOptional),
+            ("isTransient", self.isTransient),
             ("userInfo", self.userInfo),
-            ("indexed", self.indexed),
+            ("isIndexed", self.isIndexed),
             ("versionHash", self.versionHash),
             ("versionHashModifier", self.versionHashModifier),
-            ("indexedBySpotlight", self.indexedBySpotlight),
-            ("storedInExternalRecord", self.storedInExternalRecord),
+            ("isIndexedBySpotlight", self.isIndexedBySpotlight),
+            ("isStoredInExternalRecord", self.isStoredInExternalRecord),
             ("renamingIdentifier", self.renamingIdentifier)
         )
     }
 }
 
-extension NSSortDescriptor: CoreStoreDebugStringConvertible {
+extension SortDescriptor: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         
@@ -1212,7 +1212,7 @@ extension NSSortDescriptor: CoreStoreDebugStringConvertible {
     }
 }
 
-extension NSURL: CoreStoreDebugStringConvertible {
+extension URL: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         
@@ -1236,7 +1236,7 @@ extension Selector: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         
-        return self == nil ? "nil" : "\"\(self)\""
+        return "\"\(self)\""
     }
 }
 

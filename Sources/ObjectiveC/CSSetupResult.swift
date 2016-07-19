@@ -76,7 +76,7 @@ public final class CSSetupResult: NSObject {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleSuccess(@noescape success: (storage: CSStorageInterface) -> Void, @noescape failure: (error: NSError) -> Void) {
+    public func handleSuccess(@noescape _ success: (storage: CSStorageInterface) -> Void, @noescape failure: (error: NSError) -> Void) {
         
         if let storage = self.storage {
             
@@ -96,7 +96,7 @@ public final class CSSetupResult: NSObject {
      - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
      */
     @objc
-    public func handleSuccess(@noescape success: (storage: CSStorageInterface) -> Void) {
+    public func handleSuccess(@noescape _ success: (storage: CSStorageInterface) -> Void) {
         
         guard let storage = self.storage else {
             
@@ -113,7 +113,7 @@ public final class CSSetupResult: NSObject {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleFailure(@noescape failure: (error: NSError) -> Void) {
+    public func handleFailure(@noescape _ failure: (error: NSError) -> Void) {
         
         guard let error = self.error else {
             
@@ -134,7 +134,7 @@ public final class CSSetupResult: NSObject {
         return self.isSuccess.hashValue ^ self.error!.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: AnyObject?) -> Bool {
         
         guard let object = object as? CSSetupResult else {
             
@@ -156,11 +156,11 @@ public final class CSSetupResult: NSObject {
         
         switch swiftValue {
             
-        case .Success(let storage):
+        case .success(let storage):
             self.storage = storage.bridgeToObjectiveC
             self.error = nil
             
-        case .Failure(let error):
+        case .failure(let error):
             self.storage = nil
             self.error = error.bridgeToObjectiveC
         }
