@@ -55,7 +55,7 @@ final class StorageInterfaceTests: XCTestCase {
     dynamic func test_ThatSQLiteStoreDefaultDirectories_AreCorrect() {
         
         #if os(tvOS)
-            let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
+            let systemDirectorySearchPath = FileManager.SearchPathDirectory.cachesDirectory
         #else
             let systemDirectorySearchPath = FileManager.SearchPathDirectory.applicationSupportDirectory
         #endif
@@ -139,7 +139,7 @@ final class StorageInterfaceTests: XCTestCase {
     dynamic func test_ThatLegacySQLiteStoreDefaultDirectories_AreCorrect() {
         
         #if os(tvOS)
-            let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
+            let systemDirectorySearchPath = FileManager.SearchPathDirectory.cachesDirectory
         #else
             let systemDirectorySearchPath = FileManager.SearchPathDirectory.applicationSupportDirectory
         #endif
