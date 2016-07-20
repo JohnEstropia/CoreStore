@@ -42,9 +42,9 @@ class ListObserverTests: BaseTestDataTestCase {
             
             let observer = TestListObserver()
             let monitor = stack.monitorSectionedList(
-                From(TestEntity1),
+                From<TestEntity1>(),
                 SectionBy("testBoolean"),
-                OrderBy(.Ascending("testBoolean"), .Ascending("testEntityID"))
+                OrderBy(.ascending("testBoolean"), .ascending("testEntityID"))
             )
             monitor.addObserver(observer)
             
@@ -54,13 +54,13 @@ class ListObserverTests: BaseTestDataTestCase {
             
             var events = 0
             
-            let willChangeExpectation = self.expectationForNotification(
-                "listMonitorWillChange:",
+            let willChangeExpectation = self.expectation(
+                forNotification: "listMonitorWillChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 0)
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
                     defer {
                         
                         events += 1
@@ -68,14 +68,14 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 0
                 }
             )
-            let didInsertSectionExpectation = self.expectationForNotification(
-                "listMonitor:didInsertSection:toSectionIndex:",
+            let didInsertSectionExpectation = self.expectation(
+                forNotification: "listMonitor:didInsertSection:toSectionIndex:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 1)
                     XCTAssertEqual(
-                        (note.userInfo ?? [:]),
+                        ((note as NSNotification).userInfo ?? [:]),
                         [
                             "sectionInfo": monitor.sectionInfoAtIndex(0),
                             "sectionIndex": 0
@@ -88,14 +88,14 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 1
                 }
             )
-            let didInsertObjectExpectation = self.expectationForNotification(
-                "listMonitor:didInsertObject:toIndexPath:",
+            let didInsertObjectExpectation = self.expectation(
+                forNotification: "listMonitor:didInsertObject:toIndexPath:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 2)
                     
-                    let userInfo = note.userInfo
+                    let userInfo = (note as NSNotification).userInfo
                     XCTAssertNotNil(userInfo)
                     XCTAssertEqual(
                         Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
@@ -107,12 +107,12 @@ class ListObserverTests: BaseTestDataTestCase {
                     XCTAssertEqual(indexPath?.row, 0)
                     
                     let object = userInfo?["object"] as? TestEntity1
-                    XCTAssertEqual(object?.testBoolean, NSNumber(bool: true))
-                    XCTAssertEqual(object?.testNumber, NSNumber(integer: 1))
+                    XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
+                    XCTAssertEqual(object?.testNumber, NSNumber(value: 1))
                     XCTAssertEqual(object?.testDecimal, NSDecimalNumber(string: "1"))
                     XCTAssertEqual(object?.testString, "nil:TestEntity1:1")
-                    XCTAssertEqual(object?.testData, ("nil:TestEntity1:1" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!)
-                    XCTAssertEqual(object?.testDate, self.dateFormatter.dateFromString("2000-01-01T00:00:00Z")!)
+                    XCTAssertEqual(object?.testData, ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!)
+                    XCTAssertEqual(object?.testDate, self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!)
                     defer {
                         
                         events += 1
@@ -120,12 +120,12 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 2
                 }
             )
-            let didChangeExpectation = self.expectationForNotification(
-                "listMonitorDidChange:",
+            let didChangeExpectation = self.expectation(
+                forNotification: "listMonitorDidChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
                     defer {
                         
                         events += 1
@@ -133,26 +133,26 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 3
                 }
             )
-            let saveExpectation = self.expectationWithDescription("save")
+            let saveExpectation = self.expectation(withDescription: "save")
             stack.beginAsynchronous { (transaction) in
                 
-                let object = transaction.create(Into(TestEntity1))
-                object.testBoolean = NSNumber(bool: true)
-                object.testNumber = NSNumber(integer: 1)
+                let object = transaction.create(Into<TestEntity1>())
+                object.testBoolean = NSNumber(value: true)
+                object.testNumber = NSNumber(value: 1)
                 object.testDecimal = NSDecimalNumber(string: "1")
                 object.testString = "nil:TestEntity1:1"
-                object.testData = ("nil:TestEntity1:1" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!
-                object.testDate = self.dateFormatter.dateFromString("2000-01-01T00:00:00Z")!
+                object.testData = ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!
+                object.testDate = self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!
                 
                 transaction.commit { (result) in
                     
                     switch result {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         saveExpectation.fulfill()
                         
-                    case .Failure:
+                    case .failure:
                         XCTFail()
                     }
                 }
@@ -170,9 +170,9 @@ class ListObserverTests: BaseTestDataTestCase {
             
             let observer = TestListObserver()
             let monitor = stack.monitorSectionedList(
-                From(TestEntity1),
+                From<TestEntity1>(),
                 SectionBy("testBoolean"),
-                OrderBy(.Ascending("testBoolean"), .Ascending("testEntityID"))
+                OrderBy(.ascending("testBoolean"), .ascending("testEntityID"))
             )
             monitor.addObserver(observer)
             
@@ -185,13 +185,13 @@ class ListObserverTests: BaseTestDataTestCase {
             
             var events = 0
             
-            let willChangeExpectation = self.expectationForNotification(
-                "listMonitorWillChange:",
+            let willChangeExpectation = self.expectation(
+                forNotification: "listMonitorWillChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 0)
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
                     defer {
                         
                         events += 1
@@ -201,14 +201,14 @@ class ListObserverTests: BaseTestDataTestCase {
             )
             for _ in 1 ... 2 {
                 
-                let didUpdateObjectExpectation = self.expectationForNotification(
-                    "listMonitor:didUpdateObject:atIndexPath:",
+                let didUpdateObjectExpectation = self.expectation(
+                    forNotification: "listMonitor:didUpdateObject:atIndexPath:",
                     object: observer,
                     handler: { (note) -> Bool in
                         
                         XCTAssert(events == 1 || events == 2)
                         
-                        let userInfo = note.userInfo
+                        let userInfo = (note as NSNotification).userInfo
                         XCTAssertNotNil(userInfo)
                         XCTAssertEqual(
                             Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
@@ -220,27 +220,27 @@ class ListObserverTests: BaseTestDataTestCase {
                         
                         switch object?.testEntityID {
                             
-                        case NSNumber(integer: 101)?:
+                        case NSNumber(value: 101)?:
                             XCTAssertEqual(indexPath?.section, 1)
                             XCTAssertEqual(indexPath?.row, 0)
                             
-                            XCTAssertEqual(object?.testBoolean, NSNumber(bool: true))
-                            XCTAssertEqual(object?.testNumber, NSNumber(integer: 11))
+                            XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
+                            XCTAssertEqual(object?.testNumber, NSNumber(value: 11))
                             XCTAssertEqual(object?.testDecimal, NSDecimalNumber(string: "11"))
                             XCTAssertEqual(object?.testString, "nil:TestEntity1:11")
-                            XCTAssertEqual(object?.testData, ("nil:TestEntity1:11" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!)
-                            XCTAssertEqual(object?.testDate, self.dateFormatter.dateFromString("2000-01-11T00:00:00Z")!)
+                            XCTAssertEqual(object?.testData, ("nil:TestEntity1:11" as NSString).data(using: String.Encoding.utf8.rawValue)!)
+                            XCTAssertEqual(object?.testDate, self.dateFormatter.date(from: "2000-01-11T00:00:00Z")!)
                             
-                        case NSNumber(integer: 102)?:
+                        case NSNumber(value: 102)?:
                             XCTAssertEqual(indexPath?.section, 0)
                             XCTAssertEqual(indexPath?.row, 0)
                             
-                            XCTAssertEqual(object?.testBoolean, NSNumber(bool: false))
-                            XCTAssertEqual(object?.testNumber, NSNumber(integer: 22))
+                            XCTAssertEqual(object?.testBoolean, NSNumber(value: false))
+                            XCTAssertEqual(object?.testNumber, NSNumber(value: 22))
                             XCTAssertEqual(object?.testDecimal, NSDecimalNumber(string: "22"))
                             XCTAssertEqual(object?.testString, "nil:TestEntity1:22")
-                            XCTAssertEqual(object?.testData, ("nil:TestEntity1:22" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!)
-                            XCTAssertEqual(object?.testDate, self.dateFormatter.dateFromString("2000-01-22T00:00:00Z")!)
+                            XCTAssertEqual(object?.testData, ("nil:TestEntity1:22" as NSString).data(using: String.Encoding.utf8.rawValue)!)
+                            XCTAssertEqual(object?.testDate, self.dateFormatter.date(from: "2000-01-22T00:00:00Z")!)
                             
                         default:
                             XCTFail()
@@ -253,13 +253,13 @@ class ListObserverTests: BaseTestDataTestCase {
                     }
                 )
             }
-            let didChangeExpectation = self.expectationForNotification(
-                "listMonitorDidChange:",
+            let didChangeExpectation = self.expectation(
+                forNotification: "listMonitorDidChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 3)
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
                     defer {
                         
                         events += 1
@@ -267,32 +267,32 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 3
                 }
             )
-            let saveExpectation = self.expectationWithDescription("save")
+            let saveExpectation = self.expectation(withDescription: "save")
             stack.beginAsynchronous { (transaction) in
                 
                 if let object = transaction.fetchOne(
-                    From(TestEntity1),
+                    From<TestEntity1>(),
                     Where("testEntityID", isEqualTo: 101)) {
                     
-                    object.testNumber = NSNumber(integer: 11)
+                    object.testNumber = NSNumber(value: 11)
                     object.testDecimal = NSDecimalNumber(string: "11")
                     object.testString = "nil:TestEntity1:11"
-                    object.testData = ("nil:TestEntity1:11" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!
-                    object.testDate = self.dateFormatter.dateFromString("2000-01-11T00:00:00Z")!
+                    object.testData = ("nil:TestEntity1:11" as NSString).data(using: String.Encoding.utf8.rawValue)!
+                    object.testDate = self.dateFormatter.date(from: "2000-01-11T00:00:00Z")!
                 }
                 else {
                     
                     XCTFail()
                 }
                 if let object = transaction.fetchOne(
-                    From(TestEntity1),
+                    From<TestEntity1>(),
                     Where("testEntityID", isEqualTo: 102)) {
                     
-                    object.testNumber = NSNumber(integer: 22)
+                    object.testNumber = NSNumber(value: 22)
                     object.testDecimal = NSDecimalNumber(string: "22")
                     object.testString = "nil:TestEntity1:22"
-                    object.testData = ("nil:TestEntity1:22" as NSString).dataUsingEncoding(NSUTF8StringEncoding)!
-                    object.testDate = self.dateFormatter.dateFromString("2000-01-22T00:00:00Z")!
+                    object.testData = ("nil:TestEntity1:22" as NSString).data(using: String.Encoding.utf8.rawValue)!
+                    object.testDate = self.dateFormatter.date(from: "2000-01-22T00:00:00Z")!
                 }
                 else {
                     
@@ -302,11 +302,11 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     switch result {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         saveExpectation.fulfill()
                         
-                    case .Failure:
+                    case .failure:
                         XCTFail()
                     }
                 }
@@ -324,21 +324,21 @@ class ListObserverTests: BaseTestDataTestCase {
             
             let observer = TestListObserver()
             let monitor = stack.monitorSectionedList(
-                From(TestEntity1),
+                From<TestEntity1>(),
                 SectionBy("testBoolean"),
-                OrderBy(.Ascending("testBoolean"), .Ascending("testEntityID"))
+                OrderBy(.ascending("testBoolean"), .ascending("testEntityID"))
             )
             monitor.addObserver(observer)
             
             var events = 0
             
-            let willChangeExpectation = self.expectationForNotification(
-                "listMonitorWillChange:",
+            let willChangeExpectation = self.expectation(
+                forNotification: "listMonitorWillChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 0)
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
                     defer {
                         
                         events += 1
@@ -346,14 +346,14 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 0
                 }
             )
-            let didMoveObjectExpectation = self.expectationForNotification(
-                "listMonitor:didMoveObject:fromIndexPath:toIndexPath:",
+            let didMoveObjectExpectation = self.expectation(
+                forNotification: "listMonitor:didMoveObject:fromIndexPath:toIndexPath:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 1)
                     
-                    let userInfo = note.userInfo
+                    let userInfo = (note as NSNotification).userInfo
                     XCTAssertNotNil(userInfo)
                     XCTAssertEqual(
                         Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
@@ -369,8 +369,8 @@ class ListObserverTests: BaseTestDataTestCase {
                     XCTAssertEqual(toIndexPath?.row, 1)
                     
                     let object = userInfo?["object"] as? TestEntity1
-                    XCTAssertEqual(object?.testEntityID, NSNumber(integer: 102))
-                    XCTAssertEqual(object?.testBoolean, NSNumber(bool: true))
+                    XCTAssertEqual(object?.testEntityID, NSNumber(value: 102))
+                    XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
                     
                     defer {
                         
@@ -379,13 +379,13 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 1
                 }
             )
-            let didChangeExpectation = self.expectationForNotification(
-                "listMonitorDidChange:",
+            let didChangeExpectation = self.expectation(
+                forNotification: "listMonitorDidChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 2)
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
                     defer {
                         
                         events += 1
@@ -393,14 +393,14 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 2
                 }
             )
-            let saveExpectation = self.expectationWithDescription("save")
+            let saveExpectation = self.expectation(withDescription: "save")
             stack.beginAsynchronous { (transaction) in
                 
                 if let object = transaction.fetchOne(
-                    From(TestEntity1),
+                    From<TestEntity1>(),
                     Where("testEntityID", isEqualTo: 102)) {
                     
-                    object.testBoolean = NSNumber(bool: true)
+                    object.testBoolean = NSNumber(value: true)
                 }
                 else {
                     
@@ -410,11 +410,11 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     switch result {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         saveExpectation.fulfill()
                         
-                    case .Failure:
+                    case .failure:
                         XCTFail()
                     }
                 }
@@ -432,21 +432,21 @@ class ListObserverTests: BaseTestDataTestCase {
             
             let observer = TestListObserver()
             let monitor = stack.monitorSectionedList(
-                From(TestEntity1),
+                From<TestEntity1>(),
                 SectionBy("testBoolean"),
-                OrderBy(.Ascending("testBoolean"), .Ascending("testEntityID"))
+                OrderBy(.ascending("testBoolean"), .ascending("testEntityID"))
             )
             monitor.addObserver(observer)
             
             var events = 0
             
-            let willChangeExpectation = self.expectationForNotification(
-                "listMonitorWillChange:",
+            let willChangeExpectation = self.expectation(
+                forNotification: "listMonitorWillChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 0)
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
                     defer {
                         
                         events += 1
@@ -456,14 +456,14 @@ class ListObserverTests: BaseTestDataTestCase {
             )
             for _ in 1 ... 2 {
                 
-                let didUpdateObjectExpectation = self.expectationForNotification(
-                    "listMonitor:didDeleteObject:fromIndexPath:",
+                let didUpdateObjectExpectation = self.expectation(
+                    forNotification: "listMonitor:didDeleteObject:fromIndexPath:",
                     object: observer,
                     handler: { (note) -> Bool in
                         
                         XCTAssert(events == 1 || events == 2)
                         
-                        let userInfo = note.userInfo
+                        let userInfo = (note as NSNotification).userInfo
                         XCTAssertNotNil(userInfo)
                         XCTAssertEqual(
                             Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
@@ -476,7 +476,7 @@ class ListObserverTests: BaseTestDataTestCase {
                         XCTAssert(indexPath?.row == 0 || indexPath?.row == 1)
                         
                         let object = userInfo?["object"] as? TestEntity1
-                        XCTAssertEqual(object?.deleted, true)
+                        XCTAssertEqual(object?.isDeleted, true)
                         
                         defer {
                             
@@ -486,14 +486,14 @@ class ListObserverTests: BaseTestDataTestCase {
                     }
                 )
             }
-            let didDeleteSectionExpectation = self.expectationForNotification(
-                "listMonitor:didDeleteSection:fromSectionIndex:",
+            let didDeleteSectionExpectation = self.expectation(
+                forNotification: "listMonitor:didDeleteSection:fromSectionIndex:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 3)
                     
-                    let userInfo = note.userInfo
+                    let userInfo = (note as NSNotification).userInfo
                     XCTAssertNotNil(userInfo)
                     XCTAssertEqual(
                         Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
@@ -505,7 +505,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     XCTAssertEqual(sectionInfo?.name, "0")
                     
                     let sectionIndex = userInfo?["sectionIndex"]
-                    XCTAssertEqual(sectionIndex as? NSNumber, NSNumber(integer: 0))
+                    XCTAssertEqual(sectionIndex as? NSNumber, NSNumber(value: 0))
                     
                     defer {
                         
@@ -514,13 +514,13 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 3
                 }
             )
-            let didChangeExpectation = self.expectationForNotification(
-                "listMonitorDidChange:",
+            let didChangeExpectation = self.expectation(
+                forNotification: "listMonitorDidChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 4)
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
                     defer {
                         
                         events += 1
@@ -528,22 +528,22 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 4
                 }
             )
-            let saveExpectation = self.expectationWithDescription("save")
+            let saveExpectation = self.expectation(withDescription: "save")
             stack.beginAsynchronous { (transaction) in
                 
                 transaction.deleteAll(
-                    From(TestEntity1),
+                    From<TestEntity1>(),
                     Where("testBoolean", isEqualTo: false)
                 )
                 transaction.commit { (result) in
                     
                     switch result {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         saveExpectation.fulfill()
                         
-                    case .Failure:
+                    case .failure:
                         XCTFail()
                     }
                 }
@@ -656,8 +656,8 @@ class TestListObserver: ListSectionObserver {
     
     func listMonitor(_ monitor: ListMonitor<TestEntity1>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) {
         
-        NotificationCenter.defaultCenter().postNotificationName(
-            "listMonitor:didInsertSection:toSectionIndex:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitor:didInsertSection:toSectionIndex:"),
             object: self,
             userInfo: [
                 "sectionInfo": sectionInfo,
@@ -668,8 +668,8 @@ class TestListObserver: ListSectionObserver {
     
     func listMonitor(_ monitor: ListMonitor<TestEntity1>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) {
         
-        NotificationCenter.defaultCenter().postNotificationName(
-            "listMonitor:didDeleteSection:fromSectionIndex:",
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "listMonitor:didDeleteSection:fromSectionIndex:"),
             object: self,
             userInfo: [
                 "sectionInfo": sectionInfo,

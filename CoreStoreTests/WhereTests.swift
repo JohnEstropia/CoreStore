@@ -98,7 +98,7 @@ final class WhereTests: XCTestCase {
             
             let notWhere = !whereClause1
             let notPredicate = CompoundPredicate(
-                type: .NotPredicateType,
+                type: .not,
                 subpredicates: [whereClause1.predicate]
             )
             XCTAssertEqual(notWhere.predicate, notPredicate)
@@ -108,10 +108,10 @@ final class WhereTests: XCTestCase {
             
             let andWhere = whereClause1 && whereClause2 && whereClause3
             let andPredicate = CompoundPredicate(
-                type: .AndPredicateType,
+                type: .and,
                 subpredicates: [
                     CompoundPredicate(
-                        type: .AndPredicateType,
+                        type: .and,
                         subpredicates: [whereClause1.predicate, whereClause2.predicate]
                     ),
                     whereClause3.predicate
@@ -124,10 +124,10 @@ final class WhereTests: XCTestCase {
             
             let orWhere = whereClause1 || whereClause2 || whereClause3
             let orPredicate = CompoundPredicate(
-                type: .OrPredicateType,
+                type: .or,
                 subpredicates: [
                     CompoundPredicate(
-                        type: .OrPredicateType,
+                        type: .or,
                         subpredicates: [whereClause1.predicate, whereClause2.predicate]
                     ),
                     whereClause3.predicate
@@ -142,7 +142,7 @@ final class WhereTests: XCTestCase {
     dynamic func test_ThatWhereClauses_ApplyToFetchRequestsCorrectly() {
         
         let whereClause = Where("key", isEqualTo: "value")
-        let request = NSFetchRequest()
+        let request = NSFetchRequest<NSFetchRequestResult>()
         whereClause.applyToFetchRequest(request)
         XCTAssertNotNil(request.predicate)
         XCTAssertEqual(request.predicate, whereClause.predicate)

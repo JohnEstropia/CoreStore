@@ -144,7 +144,6 @@ public enum MigrationType: Boolean, Hashable {
 
 // MARK: - MigrationType: Equatable
 
-@warn_unused_result
 public func == (lhs: MigrationType, rhs: MigrationType) -> Bool {
     
     switch (lhs, rhs) {

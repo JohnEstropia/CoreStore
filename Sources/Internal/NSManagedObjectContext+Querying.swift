@@ -199,7 +199,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func fetchCount<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> Int? {
+    internal func fetchCount(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Int? {
         
         var count = 0
         var countError: ErrorProtocol?
@@ -366,7 +366,7 @@ internal extension NSManagedObjectContext {
         var fetchError: ErrorProtocol?
         self.performAndWait {
             
-            cs_autoreleasepool {
+            autoreleasepool {
                 
                 do {
                     

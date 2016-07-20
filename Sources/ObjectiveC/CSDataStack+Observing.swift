@@ -74,9 +74,9 @@ public extension CSDataStack {
                 dataStack: self.bridgeToSwift,
                 from: from.bridgeToSwift,
                 sectionBy: nil,
-                applyFetchClauses: { fetchRequest in
+                applyFetchClauses: { (fetchRequest) in
                     
-                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest.cs_dynamicCast()) }
+                    fetchClauses.forEach { $0.applyToFetchRequest(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self)) }
                 }
             )
         }
@@ -104,9 +104,9 @@ public extension CSDataStack {
             dataStack: self.bridgeToSwift,
             from: from.bridgeToSwift,
             sectionBy: nil,
-            applyFetchClauses: { fetchRequest in
+            applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest.cs_dynamicCast()) }
+                fetchClauses.forEach { $0.applyToFetchRequest(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self)) }
             },
             createAsynchronously: {
                 
@@ -141,9 +141,9 @@ public extension CSDataStack {
                 dataStack: self.bridgeToSwift,
                 from: from.bridgeToSwift,
                 sectionBy: sectionBy.bridgeToSwift,
-                applyFetchClauses: { fetchRequest in
+                applyFetchClauses: { (fetchRequest) in
                     
-                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest.cs_dynamicCast()) }
+                    fetchClauses.forEach { $0.applyToFetchRequest(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self)) }
                 }
             )
         }
@@ -171,9 +171,9 @@ public extension CSDataStack {
             dataStack: self.bridgeToSwift,
             from: from.bridgeToSwift,
             sectionBy: sectionBy.bridgeToSwift,
-            applyFetchClauses: { fetchRequest in
+            applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest.cs_dynamicCast()) }
+                fetchClauses.forEach { $0.applyToFetchRequest(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self)) }
             },
             createAsynchronously: {
                 

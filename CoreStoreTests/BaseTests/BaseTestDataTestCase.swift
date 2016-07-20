@@ -30,9 +30,9 @@ class BaseTestDataTestCase: BaseTestCase {
     @nonobjc
     func prepareTestDataForStack(_ stack: DataStack, configurations: [String?] = [nil]) {
         
-        stack.beginSynchronous { (transaction) in
+        _ = stack.beginSynchronous { (transaction) in
             
-            for (configurationIndex, configuration) in configurations.enumerate() {
+            for (configurationIndex, configuration) in configurations.enumerated() {
                 
                 let configurationOrdinal = configurationIndex + 1
                 if configuration == nil || configuration == "Config1" {
@@ -40,16 +40,16 @@ class BaseTestDataTestCase: BaseTestCase {
                     for idIndex in 1 ... 5 {
                         
                         let object = transaction.create(Into<TestEntity1>(configuration))
-                        object.testEntityID = NSNumber(integer: (configurationOrdinal * 100) + idIndex)
+                        object.testEntityID = NSNumber(value: (configurationOrdinal * 100) + idIndex)
                         
                         object.testNumber = idIndex
-                        object.testDate = self.dateFormatter.dateFromString("2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
+                        object.testDate = self.dateFormatter.date(from: "2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
                         object.testBoolean = (idIndex % 2) == 1
                         object.testDecimal = NSDecimalNumber(string: "\(idIndex)")
                         
                         let string = "\(configuration ?? "nil"):TestEntity1:\(idIndex)"
                         object.testString = string
-                        object.testData = (string as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+                        object.testData = (string as NSString).data(using: String.Encoding.utf8.rawValue)
                     }
                 }
                 if configuration == nil || configuration == "Config2" {
@@ -57,16 +57,16 @@ class BaseTestDataTestCase: BaseTestCase {
                     for idIndex in 1 ... 5 {
                         
                         let object = transaction.create(Into<TestEntity2>(configuration))
-                        object.testEntityID = NSNumber(integer: (configurationOrdinal * 200) + idIndex)
+                        object.testEntityID = NSNumber(value: (configurationOrdinal * 200) + idIndex)
                         
                         object.testNumber = idIndex
-                        object.testDate = self.dateFormatter.dateFromString("2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
+                        object.testDate = self.dateFormatter.date(from: "2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
                         object.testBoolean = (idIndex % 2) == 1
                         object.testDecimal = NSDecimalNumber(string: "\(idIndex)")
                         
                         let string = "\(configuration ?? "nil"):TestEntity2:\(idIndex)"
                         object.testString = string
-                        object.testData = (string as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+                        object.testData = (string as NSString).data(using: String.Encoding.utf8.rawValue)
                     }
                 }
             }

@@ -34,7 +34,7 @@ import CoreData
  Sample usage:
  ```
  let employees = transaction.fetchAll(
-     From(MyPersonEntity),
+     From<MyPersonEntity>(),
      Tweak { (fetchRequest) -> Void in
          fetchRequest.includesPendingChanges = false
          fetchRequest.fetchLimit = 5

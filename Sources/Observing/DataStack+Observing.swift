@@ -42,7 +42,6 @@ public extension DataStack {
      - parameter object: the `NSManagedObject` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
-    @warn_unused_result
     public func monitorObject<T: NSManagedObject>(_ object: T) -> ObjectMonitor<T> {
         
         CoreStore.assert(
@@ -59,7 +58,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    @warn_unused_result
     public func monitorList<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.monitorList(from, fetchClauses)
@@ -72,7 +70,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    @warn_unused_result
     public func monitorList<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(
@@ -145,7 +142,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    @warn_unused_result
     public func monitorSectionedList<T: NSManagedObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
@@ -159,7 +155,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    @warn_unused_result
     public func monitorSectionedList<T: NSManagedObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(

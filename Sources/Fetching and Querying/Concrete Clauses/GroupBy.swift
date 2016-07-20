@@ -96,7 +96,6 @@ public struct GroupBy: QueryClause, Hashable {
 
 // MARK: - GroupBy: Equatable
 
-@warn_unused_result
 public func == (lhs: GroupBy, rhs: GroupBy) -> Bool {
     
     return lhs.keyPaths == rhs.keyPaths

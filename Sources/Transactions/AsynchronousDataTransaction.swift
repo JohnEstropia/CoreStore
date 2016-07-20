@@ -101,7 +101,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to create an entity of type \(cs_typeName(T)) from an already committed \(cs_typeName(self))."
+            "Attempted to create an entity of type \(cs_typeName(T.self)) from an already committed \(cs_typeName(self))."
         )
         
         return super.create(into)
@@ -113,7 +113,6 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - parameter object: the `NSManagedObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    @warn_unused_result
     public override func edit<T: NSManagedObject>(_ object: T?) -> T? {
         
         CoreStore.assert(
@@ -131,12 +130,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    @warn_unused_result
     public override func edit<T: NSManagedObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to update an entity of type \(cs_typeName(T)) from an already committed \(cs_typeName(self))."
+            "Attempted to update an entity of type \(cs_typeName(T.self)) from an already committed \(cs_typeName(self))."
         )
         
         return super.edit(into, objectID)

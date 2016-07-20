@@ -72,16 +72,18 @@ internal extension NSManagedObjectContext {
         #if os(iOS) || os(OSX)
             
         context.observerForDidImportUbiquitousContentChangesNotification = NotificationObserver(
-            notificationName: NSNotification.Name.NSPersistentStoreDidImportUbiquitousContentChanges.rawValue,
+            notificationName: NSNotification.Name.NSPersistentStoreDidImportUbiquitousContentChanges,
             object: coordinator,
             closure: { [weak context] (note) -> Void in
                 
                 context?.perform { () -> Void in
                     
-                    let updatedObjectIDs = ((note as NSNotification).userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObjectID>) ?? []
-                    for objectID in updatedObjectIDs {
+                    if let updatedObjectIDs = (note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObjectID>) {
                         
-                        context?.object(with: objectID).willAccessValue(forKey: nil)
+                        for objectID in updatedObjectIDs {
+                            
+                            context?.object(with: objectID).willAccessValue(forKey: nil)
+                        }
                     }
                     context?.mergeChanges(fromContextDidSave: note)
                 }
@@ -102,7 +104,7 @@ internal extension NSManagedObjectContext {
         context.undoManager = nil
         context.setupForCoreStoreWithContextName("com.corestore.maincontext")
         context.observerForDidSaveNotification = NotificationObserver(
-            notificationName: NSNotification.Name.NSManagedObjectContextDidSave.rawValue,
+            notificationName: NSNotification.Name.NSManagedObjectContextDidSave,
             object: rootContext,
             closure: { [weak context] (note) -> Void in
                 
@@ -113,10 +115,12 @@ internal extension NSManagedObjectContext {
                 }
                 let mergeChanges = { () -> Void in
                     
-                    let updatedObjects = ((note as NSNotification).userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>) ?? []
-                    for object in updatedObjects {
+                    if let updatedObjects = (note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>) {
                         
-                        context.object(with: object.objectID).willAccessValue(forKey: nil)
+                        for object in updatedObjects {
+                            
+                            context.object(with: object.objectID).willAccessValue(forKey: nil)
+                        }
                     }
                     context.mergeChanges(fromContextDidSave: note)
                 }

@@ -40,7 +40,6 @@ public extension DataStack {
      - parameter object: a reference to the object created/fetched outside the `DataStack`
      - returns: the `NSManagedObject` instance if the object exists in the `DataStack`, or `nil` if not found.
      */
-    @warn_unused_result
     public func fetchExisting<T: NSManagedObject>(_ object: T) -> T? {
         
         do {
@@ -59,7 +58,6 @@ public extension DataStack {
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `NSManagedObject` instance if the object exists in the `DataStack`, or `nil` if not found.
      */
-    @warn_unused_result
     public func fetchExisting<T: NSManagedObject>(_ objectID: NSManagedObjectID) -> T? {
         
         do {
@@ -78,7 +76,6 @@ public extension DataStack {
      - parameter objects: an array of `NSManagedObject`s created/fetched outside the `DataStack`
      - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
      */
-    @warn_unused_result
     public func fetchExisting<T: NSManagedObject, S: Sequence where S.Iterator.Element == T>(_ objects: S) -> [T] {
         
         return objects.flatMap { (try? self.mainContext.existingObject(with: $0.objectID)) as? T }
@@ -90,7 +87,6 @@ public extension DataStack {
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
      */
-    @warn_unused_result
     public func fetchExisting<T: NSManagedObject, S: Sequence where S.Iterator.Element == NSManagedObjectID>(_ objectIDs: S) -> [T] {
         
         return objectIDs.flatMap { (try? self.mainContext.existingObject(with: $0)) as? T }
@@ -103,7 +99,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         CoreStore.assert(
@@ -120,7 +115,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         CoreStore.assert(
@@ -137,7 +131,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
         CoreStore.assert(
@@ -154,7 +147,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         CoreStore.assert(
@@ -171,7 +163,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
         CoreStore.assert(
@@ -188,7 +179,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         CoreStore.assert(
@@ -205,7 +195,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
         CoreStore.assert(
@@ -222,7 +211,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         CoreStore.assert(
@@ -239,7 +227,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
@@ -256,7 +243,6 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
@@ -276,7 +262,6 @@ public extension DataStack {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         CoreStore.assert(
@@ -296,7 +281,6 @@ public extension DataStack {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         CoreStore.assert(
@@ -316,7 +300,6 @@ public extension DataStack {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
     public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(
@@ -336,7 +319,6 @@ public extension DataStack {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
     public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(

@@ -121,7 +121,7 @@ public class ICloudStore: CloudStorage {
         
         self.registerNotification(
             &self.willFinishInitialImportKey,
-            name: ICloudUbiquitousStoreWillFinishInitialImportNotification,
+            name: Notification.Name.iCloudUbiquitousStoreWillFinishInitialImport,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -130,7 +130,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.didFinishInitialImportKey,
-            name: ICloudUbiquitousStoreDidFinishInitialImportNotification,
+            name: Notification.Name.iCloudUbiquitousStoreDidFinishInitialImport,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -139,7 +139,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.willAddAccountKey,
-            name: ICloudUbiquitousStoreWillAddAccountNotification,
+            name: Notification.Name.iCloudUbiquitousStoreWillAddAccount,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -148,7 +148,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.didAddAccountKey,
-            name: ICloudUbiquitousStoreDidAddAccountNotification,
+            name: Notification.Name.iCloudUbiquitousStoreDidAddAccount,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -157,7 +157,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.willRemoveAccountKey,
-            name: ICloudUbiquitousStoreWillRemoveAccountNotification,
+            name: Notification.Name.iCloudUbiquitousStoreWillRemoveAccount,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -166,7 +166,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.didRemoveAccountKey,
-            name: ICloudUbiquitousStoreDidRemoveAccountNotification,
+            name: Notification.Name.iCloudUbiquitousStoreDidRemoveAccount,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -175,7 +175,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.willRemoveContentKey,
-            name: ICloudUbiquitousStoreWillRemoveContentNotification,
+            name: Notification.Name.iCloudUbiquitousStoreWillRemoveContent,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
             
@@ -184,7 +184,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.didRemoveContentKey,
-            name: ICloudUbiquitousStoreDidRemoveContentNotification,
+            name: Notification.Name.iCloudUbiquitousStoreDidRemoveContent,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -280,40 +280,40 @@ public class ICloudStore: CloudStorage {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
-                notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresWillChange.rawValue,
+                notificationName: Notification.Name.NSPersistentStoreCoordinatorStoresWillChange,
                 object: coordinator,
                 closure: { [weak self, weak dataStack] (note) -> Void in
                     
                     guard let `self` = self,
                         let dataStack = dataStack,
-                        let userInfo = (note as NSNotification).userInfo,
+                        let userInfo = note.userInfo,
                         let transitionType = userInfo[NSPersistentStoreUbiquitousTransitionTypeKey] as? NSNumber else {
                             
                             return
                     }
                     
-                    let notification: String
+                    let notification: Notification.Name
                     switch NSPersistentStoreUbiquitousTransitionType(rawValue: transitionType.uintValue) {
                         
                     case .initialImportCompleted?:
-                        notification = ICloudUbiquitousStoreWillFinishInitialImportNotification
+                        notification = Notification.Name.iCloudUbiquitousStoreWillFinishInitialImport
                         
                     case .accountAdded?:
-                        notification = ICloudUbiquitousStoreWillAddAccountNotification
+                        notification = Notification.Name.iCloudUbiquitousStoreWillAddAccount
                         
                     case .accountRemoved?:
-                        notification = ICloudUbiquitousStoreWillRemoveAccountNotification
+                        notification = Notification.Name.iCloudUbiquitousStoreWillRemoveAccount
                         
                     case .contentRemoved?:
-                        notification = ICloudUbiquitousStoreWillRemoveContentNotification
+                        notification = Notification.Name.iCloudUbiquitousStoreWillRemoveContent
                         
                     default:
                         return
                     }
                     NotificationCenter.default.post(
-                        name: Notification.Name(rawValue: notification),
+                        name: notification,
                         object: self,
-                        userInfo: [UserInfoKeyDataStack: dataStack]
+                        userInfo: [String(DataStack.self): dataStack]
                     )
                 }
             ),
@@ -322,40 +322,40 @@ public class ICloudStore: CloudStorage {
         )
         cs_setAssociatedRetainedObject(
             NotificationObserver(
-                notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresDidChange.rawValue,
+                notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresDidChange,
                 object: coordinator,
                 closure: { [weak self, weak dataStack] (note) -> Void in
                     
                     guard let `self` = self,
                         let dataStack = dataStack,
-                        let userInfo = (note as NSNotification).userInfo,
+                        let userInfo = note.userInfo,
                         let transitionType = userInfo[NSPersistentStoreUbiquitousTransitionTypeKey] as? NSNumber else {
                             
                             return
                     }
                     
-                    let notification: String
+                    let notification: Notification.Name
                     switch NSPersistentStoreUbiquitousTransitionType(rawValue: transitionType.uintValue) {
                         
                     case .initialImportCompleted?:
-                        notification = ICloudUbiquitousStoreDidFinishInitialImportNotification
+                        notification = Notification.Name.iCloudUbiquitousStoreDidFinishInitialImport
                         
                     case .accountAdded?:
-                        notification = ICloudUbiquitousStoreDidAddAccountNotification
+                        notification = Notification.Name.iCloudUbiquitousStoreDidAddAccount
                         
                     case .accountRemoved?:
-                        notification = ICloudUbiquitousStoreDidRemoveAccountNotification
+                        notification = Notification.Name.iCloudUbiquitousStoreDidRemoveAccount
                         
                     case .contentRemoved?:
-                        notification = ICloudUbiquitousStoreDidRemoveContentNotification
+                        notification = Notification.Name.iCloudUbiquitousStoreDidRemoveContent
                         
                     default:
                         return
                     }
                     NotificationCenter.default.post(
-                        name: Notification.Name(rawValue: notification),
+                        name: notification,
                         object: self,
-                        userInfo: [UserInfoKeyDataStack: dataStack]
+                        userInfo: [String(DataStack.self): dataStack]
                     )
                 }
             ),
@@ -429,7 +429,7 @@ public class ICloudStore: CloudStorage {
         // TODO: check if attached to persistent store
         
         let cacheFileURL = self.cacheFileURL
-        try cs_autoreleasepool {
+        try autoreleasepool {
             
             let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
             let options = [
@@ -471,7 +471,7 @@ public class ICloudStore: CloudStorage {
     
     private weak var dataStack: DataStack?
     
-    private func registerNotification<T: ICloudStoreObserver>(_ notificationKey: UnsafePointer<Void>, name: String, toObserver observer: T, callback: (observer: T, storage: ICloudStore, dataStack: DataStack) -> Void) {
+    private func registerNotification<T: ICloudStoreObserver>(_ notificationKey: UnsafePointer<Void>, name: Notification.Name, toObserver observer: T, callback: (observer: T, storage: ICloudStore, dataStack: DataStack) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -481,7 +481,7 @@ public class ICloudStore: CloudStorage {
                     
                     guard let `self` = self,
                         let observer = observer,
-                        let dataStack = (note as NSNotification).userInfo?[UserInfoKeyDataStack] as? DataStack
+                        let dataStack = note.userInfo?[String(DataStack.self)] as? DataStack
                         where self.dataStack === dataStack else {
                             
                             return
@@ -497,16 +497,17 @@ public class ICloudStore: CloudStorage {
 
 
 // MARK: - Notification Keys
-
-private let ICloudUbiquitousStoreWillFinishInitialImportNotification = "ICloudUbiquitousStoreWillFinishInitialImportNotification"
-private let ICloudUbiquitousStoreDidFinishInitialImportNotification = "ICloudUbiquitousStoreDidFinishInitialImportNotification"
-private let ICloudUbiquitousStoreWillAddAccountNotification = "ICloudUbiquitousStoreWillAddAccountNotification"
-private let ICloudUbiquitousStoreDidAddAccountNotification = "ICloudUbiquitousStoreDidAddAccountNotification"
-private let ICloudUbiquitousStoreWillRemoveAccountNotification = "ICloudUbiquitousStoreWillRemoveAccountNotification"
-private let ICloudUbiquitousStoreDidRemoveAccountNotification = "ICloudUbiquitousStoreDidRemoveAccountNotification"
-private let ICloudUbiquitousStoreWillRemoveContentNotification = "ICloudUbiquitousStoreWillRemoveContentNotification"
-private let ICloudUbiquitousStoreDidRemoveContentNotification = "ICloudUbiquitousStoreDidRemoveContentNotification"
-
-private let UserInfoKeyDataStack = "UserInfoKeyDataStack"
+    
+private extension Notification.Name {
+    
+    private static let iCloudUbiquitousStoreWillFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreWillFinishInitialImport")
+    private static let iCloudUbiquitousStoreDidFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreDidFinishInitialImport")
+    private static let iCloudUbiquitousStoreWillAddAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreWillAddAccount")
+    private static let iCloudUbiquitousStoreDidAddAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreDidAddAccount")
+    private static let iCloudUbiquitousStoreWillRemoveAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreWillRemoveAccount")
+    private static let iCloudUbiquitousStoreDidRemoveAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreDidRemoveAccount")
+    private static let iCloudUbiquitousStoreWillRemoveContent = Notification.Name(rawValue: "iCloudUbiquitousStoreWillRemoveContent")
+    private static let iCloudUbiquitousStoreDidRemoveContent = Notification.Name(rawValue: "iCloudUbiquitousStoreDidRemoveContent")
+}
 
 #endif

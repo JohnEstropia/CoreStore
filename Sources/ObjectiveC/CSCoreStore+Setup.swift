@@ -80,6 +80,7 @@ public extension CSCoreStore {
      - returns: the `CSInMemoryStore` added to the `defaultStack`
      */
     @objc
+    @discardableResult
     public static func addInMemoryStorageAndWaitAndReturnError(_ error: NSErrorPointer) -> CSInMemoryStore? {
         
         return self.defaultStack.addInMemoryStorageAndWaitAndReturnError(error)
@@ -95,6 +96,7 @@ public extension CSCoreStore {
      - returns: the `CSSQLiteStore` added to the `defaultStack`
      */
     @objc
+    @discardableResult
     public static func addSQLiteStorageAndWaitAndReturnError(_ error: NSErrorPointer) -> CSSQLiteStore? {
         
         return self.defaultStack.addSQLiteStorageAndWaitAndReturnError(error)
@@ -114,6 +116,7 @@ public extension CSCoreStore {
      - returns: the `CSInMemoryStore` added to the `defaultStack`
      */
     @objc
+    @discardableResult
     public static func addInMemoryStorageAndWait(_ storage: CSInMemoryStore, error: NSErrorPointer) -> CSInMemoryStore? {
         
         return self.defaultStack.addInMemoryStorageAndWait(storage, error: error)
@@ -133,6 +136,7 @@ public extension CSCoreStore {
      - returns: the `CSSQLiteStore` added to the `defaultStack`
      */
     @objc
+    @discardableResult
     public static func addSQLiteStorageAndWait(_ storage: CSSQLiteStore, error: NSErrorPointer) -> CSSQLiteStore? {
         
         return self.defaultStack.addSQLiteStorageAndWait(storage, error: error)

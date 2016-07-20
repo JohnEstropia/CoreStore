@@ -49,9 +49,9 @@ import Foundation
      // ...
      let result = transaction.commit()
      switch result {
-     case .Success(let hasChanges):
+     case .success(let hasChanges):
         // hasChanges indicates if there were changes or not
-     case .Failure(let error):
+     case .failure(let error):
         // error is a CoreStoreError enum value
      }
  }
@@ -60,12 +60,12 @@ import Foundation
 public enum SaveResult: Hashable {
     
     /**
-     `SaveResult.Success` indicates that the `commit()` for the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated value `hasChanges` indicates if there were saved changes or not.
+     `SaveResult.success` indicates that the `commit()` for the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated value `hasChanges` indicates if there were saved changes or not.
      */
     case success(hasChanges: Bool)
     
     /**
-     `SaveResult.Failure` indicates that the `commit()` for the transaction failed. The associated object for this value is a `CoreStoreError` enum value.
+     `SaveResult.failure` indicates that the `commit()` for the transaction failed. The associated object for this value is a `CoreStoreError` enum value.
      */
     case failure(CoreStoreError)
     
@@ -116,7 +116,6 @@ extension SaveResult: Boolean {
 
 // MARK: - SaveResult: Equatable
 
-@warn_unused_result
 public func == (lhs: SaveResult, rhs: SaveResult) -> Bool {
     
     switch (lhs, rhs) {

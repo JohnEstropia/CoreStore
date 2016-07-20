@@ -47,8 +47,8 @@ public extension BaseDataTransaction {
                 self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
             )
-            
-            return try cs_autoreleasepool {
+        
+            return try autoreleasepool {
                 
                 guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
                     
@@ -77,7 +77,7 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(cs_typeName(object)) outside the transaction's designated queue."
             )
             
-            try cs_autoreleasepool {
+            try autoreleasepool {
                 
                 guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
                     
@@ -105,7 +105,7 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            return try cs_autoreleasepool {
+            return try autoreleasepool {
                 
                 return try sourceArray.flatMap { (source) -> T? in
                     
@@ -114,7 +114,7 @@ public extension BaseDataTransaction {
                         return nil
                     }
                     
-                    return try cs_autoreleasepool {
+                    return try autoreleasepool {
                         
                         let object = self.create(into)
                         try object.didInsertFromImportSource(source, inTransaction: self)
@@ -141,7 +141,7 @@ public extension BaseDataTransaction {
                 "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            return try cs_autoreleasepool {
+            return try autoreleasepool {
                 
                 let uniqueIDKeyPath = T.uniqueIDKeyPath
                 guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
@@ -149,7 +149,7 @@ public extension BaseDataTransaction {
                     return nil
                 }
                 
-                if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
+                if let object = self.fetchOne(From<T>(), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
                     guard T.shouldUpdateFromImportSource(source, inTransaction: self) else {
                         
@@ -187,17 +187,17 @@ public extension BaseDataTransaction {
     public func importUniqueObjects<T, S: Sequence where T: NSManagedObject, T: ImportableUniqueObject, S.Iterator.Element == T.ImportSource>(
         _ into: Into<T>,
         sourceArray: S,
-        @noescape preProcess: (mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] {
+        preProcess: @noescape (mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            return try cs_autoreleasepool {
+            return try autoreleasepool {
                 
                 var mapping = Dictionary<T.UniqueIDType, T.ImportSource>()
-                let sortedIDs = try cs_autoreleasepool {
+                let sortedIDs = try autoreleasepool {
                     
                     return try sourceArray.flatMap { (source) -> T.UniqueIDType? in
                         
@@ -211,12 +211,12 @@ public extension BaseDataTransaction {
                     }
                 }
                 
-                mapping = try cs_autoreleasepool { try preProcess(mapping: mapping) }
+                mapping = try autoreleasepool { try preProcess(mapping: mapping) }
                 
                 var objects = Dictionary<T.UniqueIDType, T>()
-                for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: sortedIDs)) ?? [] {
+                for object in self.fetchAll(From<T>(), Where(T.uniqueIDKeyPath, isMemberOf: sortedIDs)) ?? [] {
                     
-                    try cs_autoreleasepool {
+                    try autoreleasepool {
                         
                         let uniqueIDValue = object.uniqueIDValue
                         
@@ -233,7 +233,7 @@ public extension BaseDataTransaction {
                 
                 for (uniqueIDValue, source) in mapping {
                     
-                    try cs_autoreleasepool {
+                    try autoreleasepool {
                         
                         guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
                             

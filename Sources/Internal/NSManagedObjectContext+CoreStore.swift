@@ -78,20 +78,10 @@ internal extension NSManagedObjectContext {
     
     @nonobjc
     internal func setupForCoreStoreWithContextName(_ contextName: String) {
-
-        #if USE_FRAMEWORKS
-            
-            self.name = contextName
-        #else
-            
-            if #available(iOS 8.0, *) {
-                
-                self.name = contextName
-            }
-        #endif
         
+        self.name = contextName
         self.observerForWillSaveNotification = NotificationObserver(
-            notificationName: NSNotification.Name.NSManagedObjectContextWillSave.rawValue,
+            notificationName: NSNotification.Name.NSManagedObjectContextWillSave,
             object: self,
             closure: { (note) -> Void in
                 

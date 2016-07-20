@@ -710,7 +710,7 @@ extension SelectTerm: CustomDebugStringConvertible, CoreStoreDebugStringConverti
             
         case ._attribute(let keyPath):
             return createFormattedString(
-                ".Attribute (", ")",
+                ".attribute (", ")",
                 ("keyPath", keyPath)
             )
             

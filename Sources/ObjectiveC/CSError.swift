@@ -95,7 +95,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
             case .unknownError:
                 return .unknown
                 
-            case .differentPersistentStoreExistsAtURL:
+            case .differentStorageExistsAtURL:
                 guard case let existingPersistentStoreURL as URL = info["existingPersistentStoreURL"] else {
                     
                     return .unknown
@@ -148,7 +148,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
             info = [:]
             
         case .differentStorageExistsAtURL(let existingPersistentStoreURL):
-            code = .differentPersistentStoreExistsAtURL
+            code = .differentStorageExistsAtURL
             info = [
                 "existingPersistentStoreURL": existingPersistentStoreURL
             ]
@@ -208,7 +208,7 @@ public enum CSErrorCode: Int {
     /**
      The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
      */
-    case differentPersistentStoreExistsAtURL
+    case differentStorageExistsAtURL
     
     /**
      An `NSMappingModel` could not be found for a specific source and destination model versions.

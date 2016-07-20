@@ -41,15 +41,15 @@ public extension DataStack {
          InMemoryStore.self,
          completion: { result in
              switch result {
-             case .Success(let storage): // ...
-             case .Failure(let error): // ...
+             case .success(let storage): // ...
+             case .failure(let error): // ...
              }
          }
      )
      ```
      
      - parameter storeType: the storage type
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
     public func addStorage<T: StorageInterface where T: DefaultInitializableStore>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) {
         
@@ -63,15 +63,15 @@ public extension DataStack {
          InMemoryStore(configuration: "Config1"),
          completion: { result in
              switch result {
-             case .Success(let storage): // ...
-             case .Failure(let error): // ...
+             case .success(let storage): // ...
+             case .failure(let error): // ...
              }
          }
      )
      ```
      
      - parameter storage: the storage
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
     public func addStorage<T: StorageInterface>(_ storage: T, completion: (SetupResult<T>) -> Void) {
         
@@ -88,7 +88,7 @@ public extension DataStack {
             
             do {
                 
-                try self.createPersistentStoreFromStorage(
+                _ = try self.createPersistentStoreFromStorage(
                     storage,
                     finalURL: nil,
                     finalStoreOptions: storage.storeOptions
@@ -121,15 +121,15 @@ public extension DataStack {
          SQLiteStore.self,
          completion: { result in
              switch result {
-             case .Success(let storage): // ...
-             case .Failure(let error): // ...
+             case .success(let storage): // ...
+             case .failure(let error): // ...
              }
          }
      )
      ```
      
      - parameter storeType: the local storage type
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
     public func addStorage<T: LocalStorage where T: DefaultInitializableStore>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) -> Progress? {
@@ -144,15 +144,15 @@ public extension DataStack {
          SQLiteStore(fileName: "core_data.sqlite", configuration: "Config1"),
          completion: { result in
              switch result {
-             case .Success(let storage): // ...
-             case .Failure(let error): // ...
+             case .success(let storage): // ...
+             case .failure(let error): // ...
              }
          }
      )
      ```
      
      - parameter storage: the local storage
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
     public func addStorage<T: LocalStorage>(_ storage: T, completion: (SetupResult<T>) -> Void) -> Progress? {
@@ -310,15 +310,15 @@ public extension DataStack {
          storage,
          completion: { result in
              switch result {
-             case .Success(let storage): // ...
-             case .Failure(let error): // ...
+             case .success(let storage): // ...
+             case .failure(let error): // ...
              }
          }
      )
      ```
      
      - parameter storage: the cloud storage
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `CloudStorage` associated to the `SetupResult.Success` may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
+     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `CloudStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
     public func addStorage<T: CloudStorage>(_ storage: T, completion: (SetupResult<T>) -> Void)  {
         
@@ -421,7 +421,7 @@ public extension DataStack {
                 let storeError = CoreStoreError(error)
                 CoreStore.log(
                     storeError,
-                    "Failed to load \(cs_typeName(NSPersistentStore)) metadata."
+                    "Failed to load \(cs_typeName(NSPersistentStore.self)) metadata."
                 )
                 GCDQueue.main.async {
                     
@@ -481,7 +481,6 @@ public extension DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: a `MigrationType` array indicating the migration steps required for the store, or an empty array if the file does not exist yet. Otherwise, an error is thrown if either inspection of the store failed, or if no mapping model was found/inferred.
      */
-    @warn_unused_result
     public func requiredMigrationsForStorage<T: LocalStorage>(_ storage: T) throws -> [MigrationType] {
         
         return try self.coordinator.performSynchronously {
@@ -614,7 +613,7 @@ public extension DataStack {
                         return
                     }
                     
-                    cs_autoreleasepool {
+                    autoreleasepool {
                         
                         do {
                             
@@ -644,16 +643,7 @@ public extension DataStack {
         }
         
         let migrationOperation = BlockOperation()
-        #if USE_FRAMEWORKS
-            
-            migrationOperation.qualityOfService = .utility
-        #else
-            
-            if #available(iOS 8.0, *) {
-                
-                migrationOperation.qualityOfService = .utility
-            }
-        #endif
+        migrationOperation.qualityOfService = .utility
         operations.forEach { migrationOperation.addDependency($0) }
         migrationOperation.addExecutionBlock { () -> Void in
             

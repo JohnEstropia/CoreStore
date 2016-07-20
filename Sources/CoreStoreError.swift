@@ -75,7 +75,7 @@ public enum CoreStoreError: ErrorProtocol, Hashable {
             return CoreStoreErrorCode.unknownError.rawValue
             
         case .differentStorageExistsAtURL:
-            return CoreStoreErrorCode.differentPersistentStoreExistsAtURL.rawValue
+            return CoreStoreErrorCode.differentStorageExistsAtURL.rawValue
             
         case .mappingModelNotFound:
             return CoreStoreErrorCode.mappingModelNotFound.rawValue
@@ -174,7 +174,7 @@ public enum CoreStoreErrorCode: Int {
     /**
      The `NSPersistentStore` could note be initialized because another store existed at the specified `NSURL`.
      */
-    case differentPersistentStoreExistsAtURL
+    case differentStorageExistsAtURL
     
     /**
      An `NSMappingModel` could not be found for a specific source and destination model versions.

@@ -50,7 +50,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     required init?(coder aDecoder: NSCoder) {
         
-        if let palette = CoreStore.fetchOne(From(Palette), OrderBy(.Ascending("hue"))) {
+        if let palette = CoreStore.fetchOne(From(Palette), OrderBy(.ascending("hue"))) {
             
             self.monitor = CoreStore.monitorObject(palette)
         }
@@ -64,7 +64,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
                 transaction.commitAndWait()
             }
             
-            let palette = CoreStore.fetchOne(From(Palette), OrderBy(.Ascending("hue")))!
+            let palette = CoreStore.fetchOne(From(Palette), OrderBy(.ascending("hue")))!
             self.monitor = CoreStore.monitorObject(palette)
         }
         

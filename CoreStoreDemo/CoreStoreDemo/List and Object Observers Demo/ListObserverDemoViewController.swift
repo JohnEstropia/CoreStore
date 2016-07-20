@@ -60,7 +60,7 @@ private struct Static {
         return CoreStore.monitorSectionedList(
             From(Palette),
             SectionBy("colorName"),
-            OrderBy(.Ascending("hue"))
+            OrderBy(.ascending("hue"))
         )
     }()
 }

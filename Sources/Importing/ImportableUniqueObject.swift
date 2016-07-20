@@ -41,7 +41,7 @@ import CoreData
  CoreStore.beginAsynchronous { (transaction) -> Void in
      let json: NSDictionary = // ...
      let person = try! transaction.importUniqueObject(
-         Into(MyPersonEntity),
+         Into<MyPersonEntity>(),
          source: json
      )
      // ...

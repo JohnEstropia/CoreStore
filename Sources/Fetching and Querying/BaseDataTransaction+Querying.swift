@@ -37,7 +37,6 @@ public extension BaseDataTransaction {
      - parameter object: a reference to the object created/fetched outside the transaction
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
-    @warn_unused_result
     public func fetchExisting<T: NSManagedObject>(_ object: T) -> T? {
         
         do {
@@ -56,7 +55,6 @@ public extension BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
-    @warn_unused_result
     public func fetchExisting<T: NSManagedObject>(_ objectID: NSManagedObjectID) -> T? {
         
         do {
@@ -75,7 +73,6 @@ public extension BaseDataTransaction {
      - parameter objects: an array of `NSManagedObject`s created/fetched outside the transaction
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
-    @warn_unused_result
     public func fetchExisting<T: NSManagedObject, S: Sequence where S.Iterator.Element == T>(_ objects: S) -> [T] {
         
         return objects.flatMap { (try? self.context.existingObject(with: $0.objectID)) as? T }
@@ -87,7 +84,6 @@ public extension BaseDataTransaction {
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
-    @warn_unused_result
     public func fetchExisting<T: NSManagedObject, S: Sequence where S.Iterator.Element == NSManagedObjectID>(_ objectIDs: S) -> [T] {
         
         return objectIDs.flatMap { (try? self.context.existingObject(with: $0)) as? T }
@@ -100,7 +96,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         return self.fetchOne(from, fetchClauses)
@@ -113,7 +108,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         CoreStore.assert(
@@ -130,7 +124,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
         return self.fetchAll(from, fetchClauses)
@@ -143,7 +136,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         CoreStore.assert(
@@ -160,7 +152,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
         return self.fetchCount(from, fetchClauses)
@@ -173,7 +164,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         CoreStore.assert(
@@ -191,7 +181,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
         return self.fetchObjectID(from, fetchClauses)
@@ -204,7 +193,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         CoreStore.assert(
@@ -221,7 +209,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         return self.fetchObjectIDs(from, fetchClauses)
@@ -234,7 +221,6 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
     public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
@@ -251,6 +237,7 @@ public extension BaseDataTransaction {
      - parameter deleteClauses: a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number of `NSManagedObject`s deleted
      */
+    @discardableResult
     public func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
         
         CoreStore.assert(
@@ -268,6 +255,7 @@ public extension BaseDataTransaction {
      - parameter deleteClauses: a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number of `NSManagedObject`s deleted
      */
+    @discardableResult
     public func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
         
         CoreStore.assert(
@@ -288,7 +276,6 @@ public extension BaseDataTransaction {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         CoreStore.assert(
@@ -309,7 +296,6 @@ public extension BaseDataTransaction {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
     public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         CoreStore.assert(
@@ -330,7 +316,6 @@ public extension BaseDataTransaction {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
     public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(
@@ -351,7 +336,6 @@ public extension BaseDataTransaction {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
     public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(

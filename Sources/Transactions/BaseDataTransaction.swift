@@ -57,7 +57,7 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to create an entity of type \(cs_typeName(T)) outside its designated queue."
+            "Attempted to create an entity of type \(cs_typeName(T.self)) outside its designated queue."
         )
         
         let context = self.context
@@ -118,7 +118,6 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object: the `NSManagedObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    @warn_unused_result
     public func edit<T: NSManagedObject>(_ object: T?) -> T? {
         
         CoreStore.assert(
@@ -139,17 +138,16 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    @warn_unused_result
     public func edit<T: NSManagedObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to update an entity of type \(cs_typeName(T)) outside its designated queue."
+            "Attempted to update an entity of type \(cs_typeName(T.self)) outside its designated queue."
         )
         CoreStore.assert(
             into.inferStoreIfPossible
                 || (into.configuration ?? Into.defaultConfigurationName) == objectID.persistentStore?.configurationName,
-            "Attempted to update an entity of type \(cs_typeName(T)) but the specified persistent store do not match the `NSManagedObjectID`."
+            "Attempted to update an entity of type \(cs_typeName(T.self)) but the specified persistent store do not match the `NSManagedObjectID`."
         )
         return self.fetchExisting(objectID) as? T
     }
@@ -221,7 +219,6 @@ public /*abstract*/ class BaseDataTransaction {
     
     - returns: a `Set` of pending `NSManagedObject`s that were inserted to the transaction.
      */
-    @warn_unused_result
     public func insertedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(
@@ -242,7 +239,6 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObject`s of the specified type that were inserted to the transaction.
      */
-    @warn_unused_result
     public func insertedObjects<T: NSManagedObject>(_ entity: T.Type) -> Set<T> {
         
         CoreStore.assert(
@@ -262,7 +258,6 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObjectID`s that were inserted to the transaction.
      */
-    @warn_unused_result
     public func insertedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -283,7 +278,6 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were inserted to the transaction.
      */
-    @warn_unused_result
     public func insertedObjectIDs<T: NSManagedObject>(_ entity: T.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -303,7 +297,6 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObject`s that were updated to the transaction.
      */
-    @warn_unused_result
     public func updatedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(
@@ -324,7 +317,6 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObject`s of the specified type that were updated in the transaction.
      */
-    @warn_unused_result
     public func updatedObjects<T: NSManagedObject>(_ entity: T.Type) -> Set<T> {
         
         CoreStore.assert(
@@ -344,7 +336,6 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObjectID`s that were updated in the transaction.
      */
-    @warn_unused_result
     public func updatedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -365,7 +356,6 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were updated in the transaction.
      */
-    @warn_unused_result
     public func updatedObjectIDs<T: NSManagedObject>(_ entity: T.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -385,7 +375,6 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObject`s that were deleted from the transaction.
      */
-    @warn_unused_result
     public func deletedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(
@@ -406,7 +395,6 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObject`s of the specified type that were deleted from the transaction.
      */
-    @warn_unused_result
     public func deletedObjects<T: NSManagedObject>(_ entity: T.Type) -> Set<T> {
         
         CoreStore.assert(
@@ -427,7 +415,6 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
-    @warn_unused_result
     public func deletedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -448,7 +435,6 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
-    @warn_unused_result
     public func deletedObjectIDs<T: NSManagedObject>(_ entity: T.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
@@ -468,7 +454,7 @@ public /*abstract*/ class BaseDataTransaction {
     
     internal let context: NSManagedObjectContext
     internal let transactionQueue: GCDQueue
-    internal let childTransactionQueue: GCDQueue = .createSerial("com.corestore.datastack.childtransactionqueue")
+    internal let childTransactionQueue = GCDQueue.createSerial("com.corestore.datastack.childtransactionqueue")
     internal let supportsUndo: Bool
     internal let bypassesQueueing: Bool
     

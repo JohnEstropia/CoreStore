@@ -32,16 +32,16 @@ internal final class NotificationObserver {
     
     // MARK: Public
     
-    let notificationName: String
+    let notificationName: Notification.Name
     let object: AnyObject?
     let observer: NSObjectProtocol
     
-    init(notificationName: String, object: AnyObject?, queue: OperationQueue? = nil, closure: (note: Notification) -> Void) {
+    init(notificationName: Notification.Name, object: AnyObject?, queue: OperationQueue? = nil, closure: (note: Notification) -> Void) {
         
         self.notificationName = notificationName
         self.object = object
         self.observer = NotificationCenter.default.addObserver(
-            forName: NSNotification.Name(rawValue: notificationName),
+            forName: notificationName,
             object: object,
             queue: queue,
             using: closure
@@ -52,7 +52,7 @@ internal final class NotificationObserver {
         
         NotificationCenter.default.removeObserver(
             self.observer,
-            name: NSNotification.Name(rawValue: self.notificationName),
+            name: self.notificationName,
             object: self.object
         )
     }

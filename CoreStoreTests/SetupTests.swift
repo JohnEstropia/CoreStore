@@ -36,13 +36,13 @@ class SetupTests: BaseTestCase {
         
         do {
             
-            let model = NSManagedObjectModel.mergedModelFromBundles([Bundle(forClass: self.dynamicType)])!
+            let model = NSManagedObjectModel.mergedModel(from: [Bundle(for: self.dynamicType)])!
             
             let stack = DataStack(model: model, migrationChain: nil)
             XCTAssertEqual(stack.coordinator.managedObjectModel, model)
             XCTAssertEqual(stack.rootSavingContext.persistentStoreCoordinator, stack.coordinator)
-            XCTAssertNil(stack.rootSavingContext.parentContext)
-            XCTAssertEqual(stack.mainContext.parentContext, stack.rootSavingContext)
+            XCTAssertNil(stack.rootSavingContext.parent)
+            XCTAssertEqual(stack.mainContext.parent, stack.rootSavingContext)
             XCTAssertEqual(stack.model, model)
             XCTAssertTrue(stack.migrationChain.valid)
             XCTAssertTrue(stack.migrationChain.empty)
@@ -56,11 +56,11 @@ class SetupTests: BaseTestCase {
             
             let migrationChain: MigrationChain = ["version1", "version2", "version3"]
             
-            let stack = self.expectLogger([.LogWarning]) {
+            let stack = self.expectLogger([.logWarning]) {
                 
                 DataStack(
                     modelName: "Model",
-                    bundle: Bundle(forClass: self.dynamicType),
+                    bundle: Bundle(for: self.dynamicType),
                     migrationChain: migrationChain
                 )
             }
@@ -77,7 +77,7 @@ class SetupTests: BaseTestCase {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: Bundle(forClass: self.dynamicType)
+            bundle: Bundle(for: self.dynamicType)
         )
         do {
             
@@ -132,7 +132,7 @@ class SetupTests: BaseTestCase {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: Bundle(forClass: self.dynamicType)
+            bundle: Bundle(for: self.dynamicType)
         )
         do {
             
@@ -194,7 +194,7 @@ class SetupTests: BaseTestCase {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: Bundle(forClass: self.dynamicType)
+            bundle: Bundle(for: self.dynamicType)
         )
         do {
             

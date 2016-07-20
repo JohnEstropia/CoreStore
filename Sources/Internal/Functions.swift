@@ -25,68 +25,7 @@
 
 import Foundation
 
-
-// MARK: - Custom AutoreleasePool
-
-internal func cs_autoreleasepool(@noescape _ closure: () -> Void) {
-    
-    autoreleasepool(closure)
-}
-
-internal func cs_autoreleasepool<T>(@noescape _ closure: () -> T) -> T {
-    
-    var closureValue: T!
-    autoreleasepool {
-        
-        closureValue = closure()
-    }
-    
-    return closureValue
-}
-
-internal func cs_autoreleasepool<T>(@noescape _ closure: () throws -> T) throws -> T {
-    
-    var closureValue: T!
-    var closureError: ErrorProtocol?
-    autoreleasepool {
-        
-        do {
-            
-            closureValue = try closure()
-        }
-        catch {
-            
-            closureError = error
-        }
-    }
-    
-    if let closureError = closureError {
-        
-        throw closureError
-    }
-    return closureValue
-}
-
-internal func cs_autoreleasepool(@noescape _ closure: () throws -> Void) throws {
-    
-    var closureError: ErrorProtocol?
-    autoreleasepool {
-        
-        do {
-            
-            try closure()
-        }
-        catch {
-            
-            closureError = error
-        }
-    }
-    
-    if let closureError = closureError {
-        
-        throw closureError
-    }
-}
+// MARK: Associated Objects
 
 internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafePointer<Void>, inObject object: AnyObject) -> T? {
     

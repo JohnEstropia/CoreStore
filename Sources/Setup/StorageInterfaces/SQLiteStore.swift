@@ -167,7 +167,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
         // TODO: check if attached to persistent store
         
         let fileURL = self.fileURL
-        try cs_autoreleasepool {
+        try autoreleasepool {
             
             let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
             let store = try journalUpdatingCoordinator.addPersistentStore(
@@ -187,7 +187,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     internal static let defaultRootDirectory: URL = {
         
         #if os(tvOS)
-            let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
+            let systemDirectorySearchPath = FileManager.SearchPathDirectory.cachesDirectory
         #else
             let systemDirectorySearchPath = FileManager.SearchPathDirectory.applicationSupportDirectory
         #endif

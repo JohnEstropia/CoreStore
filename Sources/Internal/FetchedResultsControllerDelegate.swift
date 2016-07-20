@@ -47,7 +47,7 @@ internal protocol FetchedResultsControllerHandler: class {
 
 // MARK: - FetchedResultsControllerDelegate
 
-    internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
+internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Internal
     

@@ -49,9 +49,9 @@ import Foundation
      // ...
      let result = transaction.commit()
      switch result {
-     case .Success(let hasChanges):
+     case .success(let hasChanges):
          // hasChanges indicates if there were changes or not
-     case .Failure(let error):
+     case .failure(let error):
          // error is a CoreStoreError enum value
      }
  }
@@ -60,12 +60,12 @@ import Foundation
 public enum MigrationResult: Boolean, Hashable {
     
     /**
-     `MigrationResult.Success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
+     `MigrationResult.success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
      */
     case success([MigrationType])
     
     /**
-     `SaveResult.Failure` indicates that the migration failed. The associated object for this value is the a `CoreStoreError` enum value.
+     `SaveResult.failure` indicates that the migration failed. The associated object for this value is the a `CoreStoreError` enum value.
      */
     case failure(CoreStoreError)
     
@@ -119,7 +119,6 @@ public enum MigrationResult: Boolean, Hashable {
 
 // MARK: - SetupResult: Equatable
 
-@warn_unused_result
 public func == (lhs: MigrationResult, rhs: MigrationResult) -> Bool {
     
     switch (lhs, rhs) {

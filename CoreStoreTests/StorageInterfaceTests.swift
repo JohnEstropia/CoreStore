@@ -86,8 +86,8 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
         XCTAssertEqual(store.fileURL, SQLiteStore.defaultFileURL)
-        XCTAssertEqual(store.mappingModelBundles, Bundle.allBundles())
-        XCTAssertEqual(store.localStorageOptions, [.None])
+        XCTAssertEqual(store.mappingModelBundles, Bundle.allBundles)
+        XCTAssertEqual(store.localStorageOptions, .none)
     }
     
     @objc
@@ -129,7 +129,7 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.configuration, "config1")
         XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        XCTAssertEqual(store.fileURL.URLByDeletingLastPathComponent, SQLiteStore.defaultRootDirectory)
+        XCTAssertEqual(try! store.fileURL.deletingLastPathComponent(), SQLiteStore.defaultRootDirectory)
         XCTAssertEqual(store.fileURL.lastPathComponent, fileName)
         XCTAssertEqual(store.mappingModelBundles, bundles)
         XCTAssertEqual(store.localStorageOptions, [.recreateStoreOnModelMismatch])
@@ -149,9 +149,9 @@ final class StorageInterfaceTests: XCTestCase {
             inDomains: .userDomainMask
             ).first!
         
-        let legacyDefaultFileURL = legacyDefaultRootDirectory
-            .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
-            .URLByAppendingPathExtension("sqlite")
+        let legacyDefaultFileURL = try! legacyDefaultRootDirectory
+            .appendingPathComponent(DataStack.applicationName, isDirectory: false)
+            .appendingPathExtension("sqlite")
         
         XCTAssertEqual(LegacySQLiteStore.defaultRootDirectory, legacyDefaultRootDirectory)
         XCTAssertEqual(LegacySQLiteStore.defaultFileURL, legacyDefaultFileURL)
@@ -166,8 +166,8 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
         XCTAssertEqual(store.fileURL, LegacySQLiteStore.defaultFileURL)
-        XCTAssertEqual(store.mappingModelBundles, Bundle.allBundles())
-        XCTAssertEqual(store.localStorageOptions, [.None])
+        XCTAssertEqual(store.mappingModelBundles, Bundle.allBundles)
+        XCTAssertEqual(store.localStorageOptions, .none)
     }
     
     @objc
@@ -209,7 +209,7 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.configuration, "config1")
         XCTAssertEqual(store.storeOptions, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        XCTAssertEqual(store.fileURL.URLByDeletingLastPathComponent, LegacySQLiteStore.defaultRootDirectory)
+        XCTAssertEqual(try! store.fileURL.deletingLastPathComponent(), LegacySQLiteStore.defaultRootDirectory)
         XCTAssertEqual(store.fileURL.lastPathComponent, fileName)
         XCTAssertEqual(store.mappingModelBundles, bundles)
         XCTAssertEqual(store.localStorageOptions, [.recreateStoreOnModelMismatch])

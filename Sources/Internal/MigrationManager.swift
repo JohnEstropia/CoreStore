@@ -56,7 +56,7 @@ internal final class MigrationManager: NSMigrationManager, ProgressReporting {
     }
     
 
-    // MARK: NSProgressReporting
+    // MARK: ProgressReporting
     
     let progress: Progress
 }

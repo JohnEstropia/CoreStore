@@ -27,17 +27,17 @@ import Foundation
 import CoreData
 
 
-public func &&(left: Where, right: Where) -> Where {
+public func && (left: Where, right: Where) -> Where {
     
     return Where(CompoundPredicate(type: .and, subpredicates: [left.predicate, right.predicate]))
 }
 
-public func ||(left: Where, right: Where) -> Where {
+public func || (left: Where, right: Where) -> Where {
     
     return Where(CompoundPredicate(type: .or, subpredicates: [left.predicate, right.predicate]))
 }
 
-public prefix func !(clause: Where) -> Where {
+public prefix func ! (clause: Where) -> Where {
     
     return Where(CompoundPredicate(type: .not, subpredicates: [clause.predicate]))
 }
@@ -168,7 +168,6 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
 
 // MARK: - Where: Equatable
 
-@warn_unused_result
 public func == (lhs: Where, rhs: Where) -> Bool {
     
     return lhs.predicate == rhs.predicate

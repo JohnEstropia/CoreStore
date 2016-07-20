@@ -134,7 +134,7 @@ public final class ObjectMonitor<EntityType: NSManagedObject> {
         )
         self.registerChangeNotification(
             &self.willChangeObjectKey,
-            name: ObjectMonitorWillChangeObjectNotification,
+            name: Notification.Name.objectMonitorWillChangeObject,
             toObserver: observer,
             callback: { [weak observer] (monitor) -> Void in
                 
@@ -147,7 +147,7 @@ public final class ObjectMonitor<EntityType: NSManagedObject> {
         )
         self.registerObjectNotification(
             &self.didDeleteObjectKey,
-            name: ObjectMonitorDidDeleteObjectNotification,
+            name: Notification.Name.objectMonitorDidDeleteObject,
             toObserver: observer,
             callback: { [weak observer] (monitor, object) -> Void in
                 
@@ -160,7 +160,7 @@ public final class ObjectMonitor<EntityType: NSManagedObject> {
         )
         self.registerObjectNotification(
             &self.didUpdateObjectKey,
-            name: ObjectMonitorDidUpdateObjectNotification,
+            name: Notification.Name.objectMonitorDidUpdateObject,
             toObserver: observer,
             callback: { [weak self, weak observer] (monitor, object) -> Void in
                 
@@ -255,7 +255,7 @@ public final class ObjectMonitor<EntityType: NSManagedObject> {
         self.lastCommittedAttributes = (self.object?.committedValues(forKeys: nil) as? [String: NSObject]) ?? [:]
     }
     
-    private func registerChangeNotification(_ notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<EntityType>) -> Void) {
+    private func registerChangeNotification(_ notificationKey: UnsafePointer<Void>, name: Notification.Name, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<EntityType>) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -275,7 +275,7 @@ public final class ObjectMonitor<EntityType: NSManagedObject> {
         )
     }
     
-    private func registerObjectNotification(_ notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<EntityType>, object: EntityType) -> Void) {
+    private func registerObjectNotification(_ notificationKey: UnsafePointer<Void>, name: Notification.Name, toObserver observer: AnyObject, callback: (monitor: ObjectMonitor<EntityType>, object: EntityType) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -284,8 +284,8 @@ public final class ObjectMonitor<EntityType: NSManagedObject> {
                 closure: { [weak self] (note) -> Void in
                     
                     guard let `self` = self,
-                        let userInfo = (note as NSNotification).userInfo,
-                        let object = userInfo[UserInfoKeyObject] as? EntityType else {
+                        let userInfo = note.userInfo,
+                        let object = userInfo[String(NSManagedObject.self)] as? EntityType else {
                             
                             return
                     }
@@ -323,7 +323,7 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
     internal func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
         NotificationCenter.default.post(
-            name: Notification.Name(rawValue: ObjectMonitorWillChangeObjectNotification),
+            name: Notification.Name.objectMonitorWillChangeObject,
             object: self
         )
     }
@@ -336,16 +336,16 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
             
         case .delete:
             NotificationCenter.default.post(
-                name: Notification.Name(rawValue: ObjectMonitorDidDeleteObjectNotification),
+                name: Notification.Name.objectMonitorDidDeleteObject,
                 object: self,
-                userInfo: [UserInfoKeyObject: anObject]
+                userInfo: [String(NSManagedObject.self): anObject]
             )
             
         case .update:
             NotificationCenter.default.post(
-                name: Notification.Name(rawValue: ObjectMonitorDidUpdateObjectNotification),
+                name: Notification.Name.objectMonitorDidUpdateObject,
                 object: self,
-                userInfo: [UserInfoKeyObject: anObject]
+                userInfo: [String(NSManagedObject.self): anObject]
             )
             
         default:
@@ -360,12 +360,15 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
         return sectionName
     }
 }
+    
+    
+// MARK: - Notification.Name
 
-
-private let ObjectMonitorWillChangeObjectNotification = "ObjectMonitorWillChangeObjectNotification"
-private let ObjectMonitorDidDeleteObjectNotification = "ObjectMonitorDidDeleteObjectNotification"
-private let ObjectMonitorDidUpdateObjectNotification = "ObjectMonitorDidUpdateObjectNotification"
-
-private let UserInfoKeyObject = "UserInfoKeyObject"
+private extension Notification.Name {
+    
+    private static let objectMonitorWillChangeObject = Notification.Name(rawValue: "objectMonitorWillChangeObject")
+    private static let objectMonitorDidDeleteObject = Notification.Name(rawValue: "objectMonitorWillChangeObject")
+    private static let objectMonitorDidUpdateObject = Notification.Name(rawValue: "objectMonitorWillChangeObject")
+}
 
 #endif

@@ -166,7 +166,7 @@ class MigrationsDemoViewController: UIViewController {
                     return
                 }
                 
-                guard case .Success = result else {
+                guard case .success = result else {
                     
                     self.setEnabled(true)
                     return
@@ -250,7 +250,7 @@ class MigrationsDemoViewController: UIViewController {
             self.segmentedControl?.selectedSegmentIndex = self.models.map { $0.version }.indexOf(model.version)!
             
             self._dataStack = dataStack
-            let listMonitor = dataStack.monitorList(From(model.entityType), OrderBy(.Descending("dna")))
+            let listMonitor = dataStack.monitorList(From(model.entityType), OrderBy(.descending("dna")))
             listMonitor.addObserver(self)
             self._listMonitor = listMonitor
             

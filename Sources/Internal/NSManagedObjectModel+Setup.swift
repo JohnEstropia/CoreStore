@@ -47,7 +47,7 @@ internal extension NSManagedObjectModel {
         guard let versionInfo = NSDictionary(contentsOf: versionInfoPlistURL),
             let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
                 
-                CoreStore.abort("Could not load \(cs_typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\".")
+                CoreStore.abort("Could not load \(cs_typeName(NSManagedObjectModel.self)) metadata from path \"\(versionInfoPlistURL)\".")
         }
         
         let modelVersions = Set(versionHashes.keys)
@@ -106,7 +106,7 @@ internal extension NSManagedObjectModel {
                 return rootModel
         }
         
-        CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
+        CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel.self)) from the model at URL \"\(modelFileURL)\".")
     }
     
     @nonobjc

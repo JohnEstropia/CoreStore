@@ -58,7 +58,7 @@ final class IntoTests: XCTestCase {
         }
         do {
             
-            let into = Into(TestEntity1)
+            let into = Into<TestEntity1>()
             XCTAssert(into.entityClass === TestEntity1.self)
             XCTAssertNil(into.configuration)
             XCTAssertTrue(into.inferStoreIfPossible)
@@ -108,14 +108,14 @@ final class IntoTests: XCTestCase {
         do {
             
             let into = Into<TestEntity1>()
-            XCTAssertEqual(into, Into(TestEntity1))
+            XCTAssertEqual(into, Into<TestEntity1>())
             XCTAssertEqual(into, Into(TestEntity1.self as AnyClass))
             XCTAssertFalse(into == Into<TestEntity2>())
             XCTAssertNotEqual(into, Into<TestEntity1>("Config1"))
         }
         do {
             
-            let into = Into(TestEntity1)
+            let into = Into<TestEntity1>()
             XCTAssertEqual(into, Into<TestEntity1>())
             XCTAssertEqual(into, Into(TestEntity1.self as AnyClass))
             XCTAssertFalse(into == Into<TestEntity2>())
@@ -125,7 +125,7 @@ final class IntoTests: XCTestCase {
             
             let into = Into(TestEntity1.self as AnyClass)
             XCTAssert(into == Into<TestEntity1>())
-            XCTAssertEqual(into, Into(TestEntity1))
+            XCTAssertEqual(into, Into(TestEntity1.self))
             XCTAssertFalse(into == Into<TestEntity2>())
             XCTAssertFalse(into == Into<TestEntity1>("Config1"))
         }

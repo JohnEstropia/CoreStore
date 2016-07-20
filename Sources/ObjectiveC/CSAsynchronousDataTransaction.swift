@@ -99,7 +99,6 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    @warn_unused_result
     public override func editObject(_ object: NSManagedObject?) -> AnyObject? {
         
         return self.bridgeToSwift.edit(object)
@@ -113,7 +112,6 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    @warn_unused_result
     public override func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
         
         return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)

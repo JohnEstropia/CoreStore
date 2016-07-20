@@ -36,11 +36,12 @@ class BaseTestCase: XCTestCase {
     // MARK: Internal
     
     @nonobjc
-    func prepareStack<T>(_ configurations: [String?] = [nil], @noescape _ closure: (dataStack: DataStack) -> T) -> T {
+    @discardableResult
+    func prepareStack<T>(configurations: [String?] = [nil], _ closure: @noescape (dataStack: DataStack) -> T) -> T {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: Bundle(forClass: self.dynamicType)
+            bundle: Bundle(for: self.dynamicType)
         )
         do {
             
@@ -48,9 +49,9 @@ class BaseTestCase: XCTestCase {
                 
                 try stack.addStorageAndWait(
                     SQLiteStore(
-                        fileURL: SQLiteStore.defaultRootDirectory
-                            .URLByAppendingPathComponent(UUID().UUIDString)
-                            .URLByAppendingPathComponent("\(self.dynamicType)_\(($0 ?? "-null-")).sqlite"),
+                        fileURL: try SQLiteStore.defaultRootDirectory
+                            .appendingPathComponent(UUID().uuidString)
+                            .appendingPathComponent("\(self.dynamicType)_\(($0 ?? "-null-")).sqlite"),
                         configuration: $0,
                         localStorageOptions: .recreateStoreOnModelMismatch
                     )
@@ -65,7 +66,7 @@ class BaseTestCase: XCTestCase {
     }
     
     @nonobjc
-    func expectLogger<T>(_ expectations: [TestLogger.Expectation], @noescape closure: () -> T) -> T {
+    func expectLogger<T>(_ expectations: [TestLogger.Expectation], closure: @noescape () -> T) -> T {
         
         CoreStore.logger = TestLogger(self.prepareLoggerExpectations(expectations))
         defer {
@@ -126,7 +127,7 @@ class BaseTestCase: XCTestCase {
     
     private func deleteStores() {
         
-        _ = try? FileManager.defaultManager().removeItemAtURL(SQLiteStore.defaultRootDirectory)
+        _ = try? FileManager.default.removeItem(at: SQLiteStore.defaultRootDirectory)
     }
 }
 
@@ -152,7 +153,7 @@ class TestLogger: CoreStoreLogger {
     
     // MARK: CoreStoreLogger
     
-    func log(_ level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         switch level {
             
@@ -162,12 +163,12 @@ class TestLogger: CoreStoreLogger {
         }
     }
     
-    func log(_ error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         self.fulfill(.logError)
     }
     
-    func assert(@autoclosure _ condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func assert(_ condition: @autoclosure () -> Bool, message: @autoclosure () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         if condition() {
             

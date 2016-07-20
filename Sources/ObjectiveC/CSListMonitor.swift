@@ -515,9 +515,9 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
     @objc
     public func refetch(_ fetchClauses: [CSFetchClause]) {
         
-        self.bridgeToSwift.refetch { (fetchRequest: NSFetchRequest<NSManagedObject>) in
+        self.bridgeToSwift.refetch { (fetchRequest) in
             
-            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest.cs_dynamicCast()) }
+            fetchClauses.forEach { $0.applyToFetchRequest(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self)) }
         }
     }
     

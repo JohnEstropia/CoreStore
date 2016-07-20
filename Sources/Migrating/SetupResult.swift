@@ -51,9 +51,9 @@ import CoreData
      SQLiteStore(),
      completion: { (result: SetupResult) -> Void in
          switch result {
-         case .Success(let storage):
+         case .success(let storage):
              // storage is the related StorageInterface instance
-         case .Failure(let error):
+         case .failure(let error):
              // error is the CoreStoreError enum value for the failure
          }
      }
@@ -63,12 +63,12 @@ import CoreData
 public enum SetupResult<T: StorageInterface>: Boolean, Hashable {
     
     /**
-     `SetupResult.Success` indicates that the storage setup succeeded. The associated object for this `enum` value is the related `StorageInterface` instance.
+     `SetupResult.success` indicates that the storage setup succeeded. The associated object for this `enum` value is the related `StorageInterface` instance.
      */
     case success(T)
     
     /**
-     `SetupResult.Failure` indicates that the storage setup failed. The associated object for this value is the related `CoreStoreError` enum value.
+     `SetupResult.failure` indicates that the storage setup failed. The associated object for this value is the related `CoreStoreError` enum value.
      */
     case failure(CoreStoreError)
     
@@ -121,7 +121,6 @@ public enum SetupResult<T: StorageInterface>: Boolean, Hashable {
 
 // MARK: - SetupResult: Equatable
 
-@warn_unused_result
 public func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, rhs: SetupResult<U>) -> Bool {
     
     switch (lhs, rhs) {
@@ -147,12 +146,12 @@ public func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, r
 public enum PersistentStoreResult: Boolean {
     
     /**
-     Deprecated. Replaced by `SetupResult.Success` when using the new `addStorage(_:completion:)` method variants.
+     Deprecated. Replaced by `SetupResult.success` when using the new `addStorage(_:completion:)` method variants.
      */
     case success(NSPersistentStore)
     
     /**
-     Deprecated. Replaced by `SetupResult.Failure` when using the new `addStorage(_:completion:)` method variants.
+     Deprecated. Replaced by `SetupResult.failure` when using the new `addStorage(_:completion:)` method variants.
      */
     case failure(NSError)
     

@@ -120,6 +120,7 @@ public final class DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local SQLite storage added to the stack
      */
+    @discardableResult
     public func addStorageAndWait() throws -> SQLiteStore {
         
         return try self.addStorageAndWait(SQLiteStore.self)
@@ -135,6 +136,7 @@ public final class DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the stack
      */
+    @discardableResult
     public func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(_ storeType: T.Type) throws -> T {
         
         return try self.addStorageAndWait(storeType.init())
@@ -150,6 +152,7 @@ public final class DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the stack
      */
+    @discardableResult
     public func addStorageAndWait<T: StorageInterface>(_ storage: T) throws -> T {
         
         do {
@@ -189,6 +192,7 @@ public final class DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the stack
      */
+    @discardableResult
     public func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(_ storageType: T.Type) throws -> T {
         
         return try self.addStorageAndWait(storageType.init())
@@ -204,6 +208,7 @@ public final class DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      */
+    @discardableResult
     public func addStorageAndWait<T: LocalStorage>(_ storage: T) throws -> T {
         
         return try self.coordinator.performSynchronously {
@@ -304,6 +309,7 @@ public final class DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the cloud storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
+    @discardableResult
     public func addStorageAndWait<T: CloudStorage>(_ storage: T) throws -> T {
         
         return try self.coordinator.performSynchronously {
@@ -388,7 +394,7 @@ public final class DataStack {
     internal let mainContext: NSManagedObjectContext
     internal let model: NSManagedObjectModel
     internal let migrationChain: MigrationChain
-    internal let childTransactionQueue: GCDQueue = .createSerial("com.coreStore.dataStack.childTransactionQueue")
+    internal let childTransactionQueue = GCDQueue.createSerial("com.coreStore.dataStack.childTransactionQueue")
     internal let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.coreStore.persistentStoreBarrierQueue")
     internal let migrationQueue: OperationQueue = {
         
@@ -396,10 +402,7 @@ public final class DataStack {
         migrationQueue.maxConcurrentOperationCount = 1
         migrationQueue.name = "com.coreStore.migrationOperationQueue"
         migrationQueue.qualityOfService = .utility
-        migrationQueue.underlyingQueue = DispatchQueue(
-            label: "com.coreStore.migrationQueue",
-            attributes: .serial
-        )
+        migrationQueue.underlyingQueue = GCDQueue.createSerial("com.coreStore.migrationQueue").dispatchQueue()
         return migrationQueue
     }()
     

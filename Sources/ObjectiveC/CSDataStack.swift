@@ -166,6 +166,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - returns: the `CSInMemoryStore` added to the stack
      */
     @objc
+    @discardableResult
     public func addInMemoryStorageAndWaitAndReturnError(_ error: NSErrorPointer) -> CSInMemoryStore? {
         
         return bridge(error) {
@@ -184,6 +185,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - returns: the `CSSQLiteStore` added to the stack
      */
     @objc
+    @discardableResult
     public func addSQLiteStorageAndWaitAndReturnError(_ error: NSErrorPointer) -> CSSQLiteStore? {
         
         return bridge(error) {
@@ -206,6 +208,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - returns: the `CSInMemoryStore` added to the stack
      */
     @objc
+    @discardableResult
     public func addInMemoryStorageAndWait(_ storage: CSInMemoryStore, error: NSErrorPointer) -> CSInMemoryStore? {
         
         return bridge(error) {
@@ -228,6 +231,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - returns: the `CSSQLiteStore` added to the stack
      */
     @objc
+    @discardableResult
     public func addSQLiteStorageAndWait(_ storage: CSSQLiteStore, error: NSErrorPointer) -> CSSQLiteStore? {
         
         return bridge(error) {

@@ -70,15 +70,15 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
      Provides a `SelectTerm` to a `Select` clause for querying an entity attribute. A shorter way to do the same is to assign from the string keypath directly:
      ```
      let fullName = CoreStore.queryValue(
-         From(MyPersonEntity),
-         Select<String>(.Attribute("fullName")),
+         From<MyPersonEntity>(),
+         Select<String>(.attribute("fullName")),
          Where("employeeID", isEqualTo: 1111)
      )
      ```
      is equivalent to:
      ```
      let fullName = CoreStore.queryValue(
-         From(MyPersonEntity),
+         From<MyPersonEntity>(),
          Select<String>("fullName"),
          Where("employeeID", isEqualTo: 1111)
      )
@@ -96,8 +96,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
      Provides a `SelectTerm` to a `Select` clause for querying the average value of an attribute.
      ```
      let averageAge = CoreStore.queryValue(
-         From(MyPersonEntity),
-         Select<Int>(.Average("age"))
+         From<MyPersonEntity>(),
+         Select<Int>(.average("age"))
      )
      ```
      
@@ -119,8 +119,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
      Provides a `SelectTerm` to a `Select` clause for a count query.
      ```
      let numberOfEmployees = CoreStore.queryValue(
-         From(MyPersonEntity),
-         Select<Int>(.Count("employeeID"))
+         From<MyPersonEntity>(),
+         Select<Int>(.count("employeeID"))
      )
      ```
      
@@ -142,8 +142,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
      Provides a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute.
      ```
      let maximumAge = CoreStore.queryValue(
-         From(MyPersonEntity),
-         Select<Int>(.Maximum("age"))
+         From<MyPersonEntity>(),
+         Select<Int>(.maximum("age"))
      )
      ```
      
@@ -165,8 +165,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
      Provides a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute.
      ```
      let minimumAge = CoreStore.queryValue(
-         From(MyPersonEntity),
-         Select<Int>(.Minimum("age"))
+         From<MyPersonEntity>(),
+         Select<Int>(.minimum("age"))
      )
      ```
      
@@ -188,8 +188,8 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
      Provides a `SelectTerm` to a `Select` clause for querying the sum value for an attribute.
      ```
      let totalAge = CoreStore.queryValue(
-         From(MyPersonEntity),
-         Select<Int>(.Sum("age"))
+         From<MyPersonEntity>(),
+         Select<Int>(.sum("age"))
      )
      ```
      
@@ -211,7 +211,7 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
      Provides a `SelectTerm` to a `Select` clause for querying the `NSManagedObjectID`.
      ```
      let objectID = CoreStore.queryValue(
-         From(MyPersonEntity),
+         From<MyPersonEntity>(),
          Select<NSManagedObjectID>(),
          Where("employeeID", isEqualTo: 1111)
      )
@@ -276,7 +276,6 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
 
 // MARK: - SelectTerm: Equatable
 
-@warn_unused_result
 public func == (lhs: SelectTerm, rhs: SelectTerm) -> Bool {
     
     switch (lhs, rhs) {
@@ -308,15 +307,15 @@ public func == (lhs: SelectTerm, rhs: SelectTerm) -> Bool {
  You can bind the return type by specializing the initializer:
  ```
  let maximumAge = CoreStore.queryValue(
-     From(MyPersonEntity),
-     Select<Int>(.Maximum("age"))
+     From<MyPersonEntity>(),
+     Select<Int>(.maximum("age"))
  )
  ```
  or by casting the type of the return value:
  ```
  let maximumAge: Int = CoreStore.queryValue(
-     From(MyPersonEntity),
-     Select(.Maximum("age"))
+     From<MyPersonEntity>(),
+     Select(.maximum("age"))
  )
  ```
  Valid return types depend on the query:
@@ -395,7 +394,6 @@ public extension Select where T: NSManagedObjectID {
 
 // MARK: - Select: Equatable
 
-@warn_unused_result
 public func == <T: SelectResultType, U: SelectResultType>(lhs: Select<T>, rhs: Select<U>) -> Bool {
     
     return lhs.selectTerms == rhs.selectTerms
@@ -573,6 +571,38 @@ extension String: SelectValueResultType {
 }
 
 
+// MARK: - Date: SelectValueResultType
+
+extension Date: SelectValueResultType {
+    
+    public static var attributeType: NSAttributeType {
+        
+        return .dateAttributeType
+    }
+    
+    public static func fromResultObject(_ result: AnyObject) -> Date? {
+        
+        return result as? Date
+    }
+}
+
+
+// MARK: - Data: SelectValueResultType
+
+extension Data: SelectValueResultType {
+    
+    public static var attributeType: NSAttributeType {
+        
+        return .binaryDataAttributeType
+    }
+    
+    public static func fromResultObject(_ result: AnyObject) -> Data? {
+        
+        return result as? Data
+    }
+}
+
+
 // MARK: - NSNumber: SelectValueResultType
 
 extension NSNumber: SelectValueResultType {
@@ -635,32 +665,40 @@ extension NSDecimalNumber {
 
 // MARK: - NSDate: SelectValueResultType
 
-extension Date: SelectValueResultType {
+extension NSDate: SelectValueResultType {
     
     public static var attributeType: NSAttributeType {
         
         return .dateAttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Date? {
+    public class func fromResultObject(_ result: AnyObject) -> Self? {
         
-        return result as? Date
+        func forceCast<T: NSDate>(_ object: AnyObject) -> T? {
+            
+            return (object as? T)
+        }
+        return forceCast(result)
     }
 }
 
 
 // MARK: - NSData: SelectValueResultType
 
-extension Data: SelectValueResultType {
+extension NSData: SelectValueResultType {
     
     public static var attributeType: NSAttributeType {
         
         return .binaryDataAttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Data? {
+    public class func fromResultObject(_ result: AnyObject) -> Self? {
         
-        return result as? Data
+        func forceCast<T: NSData>(_ object: AnyObject) -> T? {
+            
+            return (object as? T)
+        }
+        return forceCast(result)
     }
 }
 

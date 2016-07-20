@@ -35,8 +35,8 @@ import CoreData
  Implement the `ListObserver` protocol to observe changes to a list of `NSManagedObject`s. `ListObserver`s may register themselves to a `ListMonitor`'s `addObserver(_:)` method:
  ```
  let monitor = CoreStore.monitorList(
-     From(MyPersonEntity),
-     OrderBy(.Ascending("lastName"))
+     From<MyPersonEntity>(),
+     OrderBy(.ascending("lastName"))
  )
  monitor.addObserver(self)
  ```
@@ -110,8 +110,8 @@ public extension ListObserver {
  Implement the `ListObjectObserver` protocol to observe detailed changes to a list's object. `ListObjectObserver`s may register themselves to a `ListMonitor`'s `addObserver(_:)` method:
  ```
  let monitor = CoreStore.monitorList(
-     From(MyPersonEntity),
-     OrderBy(.Ascending("lastName"))
+     From<MyPersonEntity>(),
+     OrderBy(.ascending("lastName"))
  )
  monitor.addObserver(self)
  ```
@@ -189,9 +189,9 @@ public extension ListObjectObserver {
  Implement the `ListSectionObserver` protocol to observe changes to a list's section info. `ListSectionObserver`s may register themselves to a `ListMonitor`'s `addObserver(_:)` method:
  ```
  let monitor = CoreStore.monitorSectionedList(
-     From(MyPersonEntity),
+     From<MyPersonEntity>(),
      SectionBy("age") { "Age \($0)" },
-     OrderBy(.Ascending("lastName"))
+     OrderBy(.ascending("lastName"))
  )
  monitor.addObserver(self)
  ```

@@ -129,7 +129,6 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - prameter supportsUndo: `undo()`, `redo()`, and `rollback()` methods are only available when this parameter is `true`, otherwise those method will raise an exception. Defaults to `false`. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
      - returns: an `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
-    @warn_unused_result
     public func beginUnsafe(supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
         return UnsafeDataTransaction(

@@ -32,7 +32,7 @@ import CoreData
 /**
  A `From` clause specifies the source entity and source persistent store for fetch and query methods. A common usage is to just indicate the entity:
  ```
- let person = transaction.fetchOne(From(MyPersonEntity))
+ let person = transaction.fetchOne(From<MyPersonEntity>())
  ```
  For cases where multiple `NSPersistentStore`s contain the same entity, the source configuration's name needs to be specified as well:
  ```
@@ -88,7 +88,7 @@ public struct From<T: NSManagedObject> {
         
         CoreStore.assert(
             entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+            "Attempted to create generic type \(cs_typeName(From<T>.self)) with entity class \(cs_typeName(entityClass))"
         )
         self.init(entityClass: entityClass, configurations: nil)
     }
@@ -163,7 +163,7 @@ public struct From<T: NSManagedObject> {
         
         CoreStore.assert(
             entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+            "Attempted to create generic type \(cs_typeName(From<T>.self)) with entity class \(cs_typeName(entityClass))"
         )
         self.init(entityClass: entityClass, configurations: [configuration] + otherConfigurations)
     }
@@ -181,7 +181,7 @@ public struct From<T: NSManagedObject> {
         
         CoreStore.assert(
             entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>)) with entity class \(cs_typeName(entityClass))"
+            "Attempted to create generic type \(cs_typeName(From<T>.self)) with entity class \(cs_typeName(entityClass))"
         )
         self.init(entityClass: entityClass, configurations: configurations)
     }
@@ -189,7 +189,6 @@ public struct From<T: NSManagedObject> {
     
     // MARK: Internal
     
-    @warn_unused_result
     internal func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) -> Bool {
         
         fetchRequest.entity = context.entityDescriptionForEntityClass(self.entityClass)

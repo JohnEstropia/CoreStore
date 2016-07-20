@@ -30,10 +30,6 @@ import Foundation
 
 /**
  The `DefaultLogger` is a basic implementation of the `CoreStoreLogger` protocol.
- 
- - The `log(...)` method calls `print(...)` to print the level, source file name, line number, function name, and the log message.
- - The `handleError(...)` method calls `print(...)` to print the source file name, line number, function name, and the error message.
- - The `assert(...)` method calls `assert(...)` on the arguments.
  */
 public final class DefaultLogger: CoreStoreLogger {
     

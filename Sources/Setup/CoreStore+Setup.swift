@@ -98,6 +98,7 @@ public extension CoreStore {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the `defaultStack`
      */
+    @discardableResult
     public static func addStorageAndWait<T: StorageInterface>(_ storage: T) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storage)
@@ -113,6 +114,7 @@ public extension CoreStore {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the `defaultStack`
      */
+    @discardableResult
     public static func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(_ storageType: T.Type) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storageType.init())
@@ -128,6 +130,7 @@ public extension CoreStore {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the `defaultStack`. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      */
+    @discardableResult
     public static func addStorageAndWait<T: LocalStorage>(_ storage: T) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storage)
@@ -154,6 +157,7 @@ public extension CoreStore {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the cloud storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
+    @discardableResult
     public static func addStorageAndWait<T: CloudStorage>(_ storage: T) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storage)

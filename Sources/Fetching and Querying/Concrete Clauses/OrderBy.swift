@@ -27,12 +27,12 @@ import Foundation
 import CoreData
 
 
-public func +(left: OrderBy, right: OrderBy) -> OrderBy {
+public func + (left: OrderBy, right: OrderBy) -> OrderBy {
     
     return OrderBy(left.sortDescriptors + right.sortDescriptors)
 }
 
-public func +=(left: inout OrderBy, right: OrderBy) {
+public func += (left: inout OrderBy, right: OrderBy) {
     
     left = left + right
 }
@@ -163,7 +163,6 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
 
 // MARK: - OrderBy: Equatable
 
-@warn_unused_result
 public func == (lhs: OrderBy, rhs: OrderBy) -> Bool {
     
     return lhs.sortDescriptors == rhs.sortDescriptors

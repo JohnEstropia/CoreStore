@@ -118,14 +118,14 @@ CoreStore.addStorage(
 Starting transactions:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    let person = transaction.create(Into(MyPersonEntity))
+    let person = transaction.create(Into<MyPersonEntity>())
     person.name = "John Smith"
     person.age = 42
 
     transaction.commit { (result) -> Void in
         switch result {
-            case .Success(let hasChanges): print("success!")
-            case .Failure(let error): print(error)
+            case .success(let hasChanges): print("success!")
+            case .failure(let error): print(error)
         }
     }
 }
@@ -133,15 +133,15 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 
 Fetching objects (simple):
 ```swift
-let people = CoreStore.fetchAll(From(MyPersonEntity))
+let people = CoreStore.fetchAll(From<MyPersonEntity>())
 ```
 
 Fetching objects (complex):
 ```swift
 let people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("age > 30"),
-    OrderBy(.Ascending("name"), .Descending("age")),
+    OrderBy(.ascending("name"), .descending("age")),
     Tweak { (fetchRequest) -> Void in
         fetchRequest.includesPendingChanges = false
     }
@@ -151,8 +151,8 @@ let people = CoreStore.fetchAll(
 Querying values:
 ```swift
 let maxAge = CoreStore.queryValue(
-    From(MyPersonEntity),
-    Select<Int>(.Maximum("age"))
+    From<MyPersonEntity>(),
+    Select<Int>(.maximum("age"))
 )
 ```
 
@@ -210,9 +210,9 @@ let migrationProgress = dataStack.addStorage(
     ),
     completion: { (result) -> Void in
         switch result {
-        case .Success(let storage):
+        case .success(let storage):
             print("Successfully added sqlite store: \(storage)"
-        case .Failure(let error):
+        case .failure(let error):
             print("Failed adding sqlite store with error: \(error)"
         }
     }
@@ -334,8 +334,8 @@ CoreStore.addStorage(,
     storage,
     completion: { result in
         switch result {
-        case .Success(let storage): // ...
-        case .Failure(let error): // ...
+        case .success(let storage): // ...
+        case .failure(let error): // ...
         }
     }
 )
@@ -365,8 +365,8 @@ CoreStore.addStorage(,
     storage,
     completion: { result in
         switch result {
-        case .Success(let storage): // ... You may also call storage.addObserver(_:) here
-        case .Failure(let error): // ...
+        case .success(let storage): // ... You may also call storage.addObserver(_:) here
+        case .failure(let error): // ...
         }
     }
 )
@@ -395,9 +395,9 @@ let migrationProgress: NSProgress? = try dataStack.addStorage(
     ),
     completion: { (result) -> Void in
         switch result {
-        case .Success(let storage):
+        case .success(let storage):
             print("Successfully added sqlite store: \(storage)")
-        case .Failure(let error):
+        case .failure(let error):
             print("Failed adding sqlite store with error: \(error)")
         }
     }
@@ -555,7 +555,7 @@ You've seen how to create transactions, but we have yet to see how to make *crea
 
 The `create(...)` method accepts an `Into` clause which specifies the entity for the object you want to create:
 ```swift
-let person = transaction.create(Into(MyPersonEntity))
+let person = transaction.create(Into<MyPersonEntity>())
 ```
 While the syntax is straightforward, CoreStore does not just naively insert a new object. This single line does the following:
 - Checks that the entity type exists in any of the transaction's parent persistent store
@@ -578,7 +578,7 @@ Note that if you do explicitly specify the configuration name, CoreStore will on
 After creating an object from the transaction, you can simply update its properties as normal:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    let person = transaction.create(Into(MyPersonEntity))
+    let person = transaction.create(Into<MyPersonEntity>())
     person.name = "John Smith"
     person.age = 30
     transaction.commit()
@@ -588,7 +588,7 @@ To update an existing object, fetch the object's instance from the transaction:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let person = transaction.fetchOne(
-        From(MyPersonEntity),
+        From<MyPersonEntity>(),
         Where("name", isEqualTo: "Jane Smith")
     )
     person.age = person.age + 1
@@ -650,7 +650,7 @@ If you do not have references yet to the objects to be deleted, transactions hav
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     transaction.deleteAll(
-        From(MyPersonEntity)
+        From<MyPersonEntity>(),
         Where("age > 30")
     )
     transaction.commit()
@@ -688,7 +688,7 @@ var peopleIDs: [NSManagedObjectID] = // ...
 
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let jane = transaction.fetchOne(
-        From(MyPersonEntity),
+        From<MyPersonEntity>(),
         Where("name", isEqualTo: "Jane Smith")
     )
     jane.friends = NSSet(array: transaction.fetchExisting(peopleIDs)!)
@@ -710,7 +710,7 @@ If you have many attributes, you don't want to keep repeating this mapping every
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let json: [String: AnyObject] = // ...
     try! transaction.importObject(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         source: json
     )
     transaction.commit()
@@ -750,7 +750,7 @@ This lets us call `importObject(_:source:)` with any `[String: AnyObject]` type 
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let json: [String: AnyObject] = // ...
     try! transaction.importObject(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         source: json
     )
     // ...
@@ -769,7 +769,7 @@ Transactions also let you import multiple objects at once using the `importObjec
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let jsonArray: [[String: AnyObject]] = // ...
     try! transaction.importObjects(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         sourceArray: jsonArray
     )
     // ...
@@ -794,7 +794,7 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
     let jsonArray: [[String: AnyObject]] = // ...
     do {
         try transaction.importObjects(
-            Into(MyPersonEntity),
+            Into<MyPersonEntity>(),
             sourceArray: jsonArray
         )
     }
@@ -844,7 +844,7 @@ You can then create/update an object by calling a transaction's `importUniqueObj
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let json: [String: AnyObject] = // ...
     try! transaction.importUniqueObject(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         source: json
     )
     // ...
@@ -856,7 +856,7 @@ or multiple objects at once with the `importUniqueObjects(...)` method:
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let jsonArray: [[String: AnyObject]] = // ...
     try! transaction.importUniqueObjects(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         sourceArray: jsonArray
     )
     // ...
@@ -880,10 +880,10 @@ Before we dive in, be aware that CoreStore distinguishes between *fetching* and 
 #### `From` clause
 The search conditions for fetches and queries are specified using *clauses*. All fetches and queries require a `From` clause that indicates the target entity type:
 ```swift
-let people = CoreStore.fetchAll(From(MyPersonEntity))
+let people = CoreStore.fetchAll(From<MyPersonEntity>())
 // CoreStore.fetchAll(From<MyPersonEntity>()) works as well
 ```
-`people` in the example above will be of type `[MyPersonEntity]`. The `From(MyPersonEntity)` clause indicates a fetch to all persistent stores that `MyPersonEntity` belong to.
+`people` in the example above will be of type `[MyPersonEntity]`. The `From<MyPersonEntity>()` clause indicates a fetch to all persistent stores that `MyPersonEntity` belong to.
 
 If the entity exists in multiple configurations and you need to only search from a particular configuration, indicate in the `From` clause the configuration name for the destination persistent store:
 ```swift
@@ -912,11 +912,11 @@ Each method's purpose is straightforward, but we need to understand how to set t
 The `Where` clause is CoreStore's `NSPredicate` wrapper. It specifies the search filter to use when fetching (or querying). It implements all initializers that `NSPredicate` does (except for `-predicateWithBlock:`, which Core Data does not support):
 ```swift
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("%K > %d", "age", 30) // string format initializer
 )
 people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where(true) // boolean initializer
 )
 ```
@@ -924,14 +924,14 @@ If you do have an existing `NSPredicate` instance already, you can pass that to 
 ```swift
 let predicate = NSPredicate(...)
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where(predicate) // predicate initializer
 )
 ```
 `Where` clauses also implement the `&&`, `||`, and `!` logic operators, so you can provide logical conditions without writing too much `AND`, `OR`, and `NOT` strings:
 ```swift
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("age > %d", 30) && Where("gender == %@", "M")
 )
 ```
@@ -942,20 +942,20 @@ If you do not provide a `Where` clause, all objects that belong to the specified
 The `OrderBy` clause is CoreStore's `NSSortDescriptor` wrapper. Use it to specify attribute keys in which to sort the fetch (or query) results with.
 ```swift
 var mostValuablePeople = CoreStore.fetchAll(
-    From(MyPersonEntity),
-    OrderBy(.Descending("rating"), .Ascending("surname"))
+    From<MyPersonEntity>(),
+    OrderBy(.descending("rating"), .ascending("surname"))
 )
 ```
-As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.Ascending` or `.Descending`.
+As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.ascending` or `.descending`.
 
 You can use the `+` and `+=` operator to append `OrderBy`s together. This is useful when sorting conditionally:
 ```swift
-var orderBy = OrderBy(.Descending("rating"))
+var orderBy = OrderBy(.descending("rating"))
 if sortFromYoungest {
-    orderBy += OrderBy(.Ascending("age"))
+    orderBy += OrderBy(.ascending("age"))
 }
 var mostValuablePeople = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     orderBy
 )
 ```
@@ -965,9 +965,9 @@ var mostValuablePeople = CoreStore.fetchAll(
 The `Tweak` clause lets you, uh, *tweak* the fetch (or query). `Tweak` exposes the `NSFetchRequest` in a closure where you can make changes to its properties:
 ```swift
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("age > %d", 30),
-    OrderBy(.Ascending("surname")),
+    OrderBy(.ascending("surname")),
     Tweak { (fetchRequest) -> Void in
         fetchRequest.includesPendingChanges = false
         fetchRequest.returnsObjectsAsFaults = false
@@ -996,7 +996,7 @@ Setting up the `From`, `Where`, `OrderBy`, and `Tweak` clauses is similar to how
 The `Select<T>` clause specifies the target attribute/aggregate key, as well as the expected return type: 
 ```swift
 let johnsAge = CoreStore.queryValue(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Select<Int>("age"),
     Where("name == %@", "John Smith")
 )
@@ -1021,29 +1021,29 @@ The example above queries the "age" property for the first object that matches t
 For `queryAttributes(...)`, only `NSDictionary` is valid for `Select`, thus you are allowed to omit the generic type:
 ```swift
 let allAges = CoreStore.queryAttributes(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Select("age")
 )
 ```
 
 If you only need a value for a particular attribute, you can just specify the key name (like we did with `Select<Int>("age")`), but several aggregate functions can also be used as parameter to `Select`:
-- `.Average(...)`
-- `.Count(...)`
-- `.Maximum(...)`
-- `.Minimum(...)`
-- `.Sum(...)`
+- `.average(...)`
+- `.count(...)`
+- `.maximum(...)`
+- `.minimum(...)`
+- `.sum(...)`
 
 ```swift
 let oldestAge = CoreStore.queryValue(
-    From(MyPersonEntity),
-    Select<Int>(.Maximum("age"))
+    From<MyPersonEntity>(),
+    Select<Int>(.maximum("age"))
 )
 ```
 
 For `queryAttributes(...)` which returns an array of dictionaries, you can specify multiple attributes/aggregates to `Select`:
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Select("name", "age")
 )
 ```
@@ -1063,8 +1063,8 @@ let personJSON = CoreStore.queryAttributes(
 You can also include an aggregate as well:
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("name", .Count("friends"))
+    From<MyPersonEntity>(),
+    Select("name", .count("friends"))
 )
 ```
 which returns:
@@ -1083,8 +1083,8 @@ which returns:
 The `"count(friends)"` key name was automatically used by CoreStore, but you can specify your own key alias if you need:
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("name", .Count("friends", As: "friendsCount"))
+    From<MyPersonEntity>(),
+    Select("name", .count("friends", As: "friendsCount"))
 )
 ```
 which now returns:
@@ -1106,8 +1106,8 @@ which now returns:
 The `GroupBy` clause lets you group results by a specified attribute/aggregate. This is useful only for `queryAttributes(...)` since `queryValue(...)` just returns the first value.
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("age", .Count("age", As: "count")),
+    From<MyPersonEntity>(),
+    Select("age", .count("age", As: "count")),
     GroupBy("age")
 )
 ```
@@ -1232,9 +1232,9 @@ Including `ListObserver`, there are 3 observer protocols you can implement depen
 We then need to create a `ListMonitor` instance and register our `ListObserver` as an observer:
 ```swift
 self.monitor = CoreStore.monitorList(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("age > 30"),
-    OrderBy(.Ascending("name")),
+    OrderBy(.ascending("name")),
     Tweak { (fetchRequest) -> Void in
         fetchRequest.fetchBatchSize = 20
     }
@@ -1253,10 +1253,10 @@ let firstPerson = self.monitor[0]
 If the list needs to be grouped into sections, create the `ListMonitor` instance with the `monitorSectionedList(...)` method and a `SectionBy` clause:
 ```swift
 self.monitor = CoreStore.monitorSectionedList(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     SectionBy("age"),
     Where("gender", isEqualTo: "M"),
-    OrderBy(.Ascending("age"), .Ascending("name")),
+    OrderBy(.ascending("age"), .ascending("name")),
     Tweak { (fetchRequest) -> Void in
         fetchRequest.fetchBatchSize = 20
     }
@@ -1267,11 +1267,11 @@ A list controller created this way will group the objects by the attribute key i
 The `SectionBy` clause can also be passed a closure to transform the section name into a displayable string:
 ```swift
 self.monitor = CoreStore.monitorSectionedList(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     SectionBy("age") { (sectionName) -> String? in
         "\(sectionName) years old"
     },
-    OrderBy(.Ascending("age"), .Ascending("name"))
+    OrderBy(.ascending("age"), .ascending("name"))
 )
 ```
 This is useful when implementing a `UITableViewDelegate`'s section header:
@@ -1313,8 +1313,8 @@ CoreStore.beginAsynchronous { (transaction) in
     // ...
     transaction.commit { (result) in
         switch result {
-        case .Success(let hasChanges): print(hasChanges)
-        case .Failure(let error): print(error)
+        case .success(let hasChanges): print(hasChanges)
+        case .failure(let error): print(error)
         }
     }
 }
