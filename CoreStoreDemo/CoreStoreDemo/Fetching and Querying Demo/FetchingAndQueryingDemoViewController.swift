@@ -23,23 +23,23 @@ private struct Static {
             )
         )
     
-        dataStack.beginSynchronous { (transaction) -> Void in
+        _ = dataStack.beginSynchronous { (transaction) -> Void in
             
-            transaction.deleteAll(From(TimeZone))
+            transaction.deleteAll(From<TimeZone>())
             
-            for name in NSTimeZone.knownTimeZoneNames() {
+            for name in Foundation.TimeZone.knownTimeZoneNames {
                 
-                let rawTimeZone = NSTimeZone(name: name)!
-                let cachedTimeZone = transaction.create(Into(TimeZone))
+                let rawTimeZone = Foundation.TimeZone(name: name)!
+                let cachedTimeZone = transaction.create(Into<TimeZone>())
                 
                 cachedTimeZone.name = rawTimeZone.name
                 cachedTimeZone.abbreviation = rawTimeZone.abbreviation ?? ""
                 cachedTimeZone.secondsFromGMT = Int32(rawTimeZone.secondsFromGMT)
-                cachedTimeZone.hasDaylightSavingTime = rawTimeZone.daylightSavingTime
+                cachedTimeZone.hasDaylightSavingTime = rawTimeZone.isDaylightSavingTime
                 cachedTimeZone.daylightSavingTimeOffset = rawTimeZone.daylightSavingTimeOffset
             }
             
-            transaction.commitAndWait()
+            _ = transaction.commitAndWait()
         }
         
         return dataStack
@@ -53,7 +53,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
     
     // MARK: UIViewController
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
         
@@ -67,27 +67,27 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         let alert = UIAlertController(
             title: "Fetch and Query Demo",
             message: "This demo shows how to execute fetches and queries.\n\nEach menu item executes and displays a preconfigured fetch/query.",
-            preferredStyle: .Alert
+            preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        super.prepareForSegue(segue, sender: sender)
+        super.prepare(for: segue, sender: sender)
         
-        if let indexPath = sender as? NSIndexPath {
+        if let indexPath = sender as? IndexPath {
             
             switch segue.destinationViewController {
                 
             case let controller as FetchingResultsViewController:
                 let item = self.fetchingItems[indexPath.row]
-                controller.setTimeZones(item.fetch(), title: item.title)
+                controller.set(timeZones: item.fetch(), title: item.title)
                 
             case let controller as QueryingResultsViewController:
                 let item = self.queryingItems[indexPath.row]
-                controller.setValue(item.query(), title: item.title)
+                controller.set(value: item.query(), title: item.title)
                 
             default:
                 break
@@ -98,7 +98,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
     
     // MARK: UITableViewDataSource
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
@@ -113,9 +113,9 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         }
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell")!
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
@@ -135,17 +135,17 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
     
     // MARK: UITableViewDelegate
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
         case Section.Fetching.rawValue?:
-            self.performSegueWithIdentifier("FetchingResultsViewController", sender: indexPath)
+            self.performSegue(withIdentifier: "FetchingResultsViewController", sender: indexPath)
             
         case Section.Querying.rawValue?:
-            self.performSegueWithIdentifier("QueryingResultsViewController", sender: indexPath)
+            self.performSegue(withIdentifier: "QueryingResultsViewController", sender: indexPath)
             
         default:
             break
@@ -167,7 +167,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             fetch: { () -> [TimeZone] in
                 
                 return Static.timeZonesStack.fetchAll(
-                    From(TimeZone),
+                    From<TimeZone>(),
                     OrderBy(.ascending("name"))
                 )!
             }
@@ -177,7 +177,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             fetch: { () -> [TimeZone] in
                 
                 return Static.timeZonesStack.fetchAll(
-                    From(TimeZone),
+                    From<TimeZone>(),
                     Where("%K BEGINSWITH[c] %@", "name", "Asia"),
                     OrderBy(.ascending("secondsFromGMT"))
                 )!
@@ -188,7 +188,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             fetch: { () -> [TimeZone] in
                 
                 return Static.timeZonesStack.fetchAll(
-                    From(TimeZone),
+                    From<TimeZone>(),
                     Where("%K BEGINSWITH[c] %@", "name", "America")
                         || Where("%K BEGINSWITH[c] %@", "name", "Europe"),
                     OrderBy(.ascending("secondsFromGMT"))
@@ -200,7 +200,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             fetch: { () -> [TimeZone] in
                 
                 return Static.timeZonesStack.fetchAll(
-                    From(TimeZone),
+                    From<TimeZone>(),
                     !Where("%K BEGINSWITH[c] %@", "name", "America"),
                     OrderBy(.ascending("secondsFromGMT"))
                     )!
@@ -211,7 +211,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             fetch: { () -> [TimeZone] in
                 
                 return Static.timeZonesStack.fetchAll(
-                    From(TimeZone),
+                    From<TimeZone>(),
                     Where("hasDaylightSavingTime", isEqualTo: true),
                     OrderBy(.ascending("name"))
                 )!
@@ -225,8 +225,8 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             query: { () -> AnyObject in
                 
                 return Static.timeZonesStack.queryValue(
-                    From(TimeZone),
-                    Select<NSNumber>(.Count("name"))
+                    From<TimeZone>(),
+                    Select<NSNumber>(.count("name"))
                 )!
             }
         ),
@@ -235,7 +235,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             query: { () -> AnyObject in
                 
                 return Static.timeZonesStack.queryValue(
-                    From(TimeZone),
+                    From<TimeZone>(),
                     Select<String>("abbreviation"),
                     Where("%K ENDSWITH[c] %@", "name", "Tokyo")
                 )!
@@ -246,7 +246,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             query: { () -> AnyObject in
                 
                 return Static.timeZonesStack.queryAttributes(
-                    From(TimeZone),
+                    From<TimeZone>(),
                     Select<NSDictionary>("name", "abbreviation"),
                     OrderBy(.ascending("name"))
                 )!
@@ -257,8 +257,8 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             query: { () -> AnyObject in
                 
                 return Static.timeZonesStack.queryAttributes(
-                    From(TimeZone),
-                    Select<NSDictionary>(.Count("abbreviation"), "abbreviation"),
+                    From<TimeZone>(),
+                    Select<NSDictionary>(.count("abbreviation"), "abbreviation"),
                     GroupBy("abbreviation"),
                     OrderBy(.ascending("secondsFromGMT"), .ascending("name"))
                 )!
@@ -269,9 +269,9 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             query: { () -> AnyObject in
                 
                 return Static.timeZonesStack.queryAttributes(
-                    From(TimeZone),
+                    From<TimeZone>(),
                     Select<NSDictionary>(
-                        .Count("hasDaylightSavingTime", As: "numberOfCountries"),
+                        .count("hasDaylightSavingTime", As: "numberOfCountries"),
                         "hasDaylightSavingTime"
                     ),
                     GroupBy("hasDaylightSavingTime"),

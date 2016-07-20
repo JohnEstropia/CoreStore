@@ -50,7 +50,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     required init?(coder aDecoder: NSCoder) {
         
-        if let palette = CoreStore.fetchOne(From(Palette), OrderBy(.ascending("hue"))) {
+        if let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending("hue"))) {
             
             self.monitor = CoreStore.monitorObject(palette)
         }
@@ -64,7 +64,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
                 transaction.commitAndWait()
             }
             
-            let palette = CoreStore.fetchOne(From(Palette), OrderBy(.ascending("hue")))!
+            let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending("hue")))!
             self.monitor = CoreStore.monitorObject(palette)
         }
         
@@ -85,24 +85,24 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     // MARK: ObjectObserver
     
-    func objectMonitor(monitor: ObjectMonitor<Palette>, didUpdateObject object: Palette, changedPersistentKeys: Set<KeyPath>) {
+    func objectMonitor(_ monitor: ObjectMonitor<Palette>, didUpdateObject object: Palette, changedPersistentKeys: Set<KeyPath>) {
         
         self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
     }
     
-    func objectMonitor(monitor: ObjectMonitor<Palette>, didDeleteObject object: Palette) {
+    func objectMonitor(_ monitor: ObjectMonitor<Palette>, didDeleteObject object: Palette) {
         
-        self.navigationItem.rightBarButtonItem?.enabled = false
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         self.colorNameLabel?.alpha = 0.3
         self.colorView?.alpha = 0.3
         
         self.hsbLabel?.text = "Deleted"
-        self.hsbLabel?.textColor = UIColor.redColor()
+        self.hsbLabel?.textColor = UIColor.red()
         
-        self.hueSlider?.enabled = false
-        self.saturationSlider?.enabled = false
-        self.brightnessSlider?.enabled = false
+        self.hueSlider?.isEnabled = false
+        self.saturationSlider?.isEnabled = false
+        self.brightnessSlider?.isEnabled = false
     }
 
     
@@ -166,7 +166,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         }
     }
     
-    func reloadPaletteInfo(palette: Palette, changedKeys: Set<String>?) {
+    func reloadPaletteInfo(_ palette: Palette, changedKeys: Set<String>?) {
         
         self.colorNameLabel?.text = palette.colorName
         

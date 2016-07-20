@@ -34,23 +34,23 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         CoreStore.logger = self
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
         
         let alert = UIAlertController(
             title: "Logger Demo",
             message: "This demo shows how to plug-in any logging framework to CoreStore.\n\nThe view controller implements CoreStoreLogger and appends all logs to the text view.",
-            preferredStyle: .Alert
+            preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
     
     // MARK: CoreStoreLogger
     
-    func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         GCDQueue.main.async { [weak self] in
             
@@ -62,19 +62,19 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
             case .warning: levelString = "Warning"
             case .fatal: levelString = "Fatal"
             }
-            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Log:\(levelString)] \(message)\n\n")
+            self?.textView?.insertText("\((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Log:\(levelString)] \(message)\n\n")
         }
     }
     
-    func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         GCDQueue.main.async { [weak self] in
             
-            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Error] \(message): \(error)\n\n")
+            self?.textView?.insertText("\((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Error] \(message): \(error)\n\n")
         }
     }
     
-    func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func assert(_ condition: @autoclosure () -> Bool, message: @autoclosure () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         if condition() {
             
@@ -84,7 +84,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         let messageString = message()
         GCDQueue.main.async { [weak self] in
             
-            self?.textView?.insertText("\((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(messageString)\n\n")
+            self?.textView?.insertText("\((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(messageString)\n\n")
         }
     }
     
@@ -101,7 +101,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         case 0?:
             self.dataStack.beginAsynchronous { (transaction) -> Void in
                 
-                transaction.create(Into(Palette))
+                _ = transaction.create(Into<Palette>())
             }
             
         case 1?:

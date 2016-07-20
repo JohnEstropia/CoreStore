@@ -12,7 +12,7 @@ class QueryingResultsViewController: UITableViewController {
     
     // MARK: Public
     
-    func setValue(value: AnyObject?, title: String) {
+    func set(value: AnyObject?, title: String) {
         
         switch value {
             
@@ -55,14 +55,14 @@ class QueryingResultsViewController: UITableViewController {
     
     // MARK: UITableViewDataSource
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.values.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell", for: indexPath)
         
         let value = self.values[indexPath.row]
         
@@ -75,7 +75,7 @@ class QueryingResultsViewController: UITableViewController {
     
     // MARK: UITableViewDelegate
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
         return self.sectionTitle
     }
