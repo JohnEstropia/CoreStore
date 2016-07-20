@@ -94,7 +94,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
     @IBOutlet dynamic weak var textView: UITextView?
     @IBOutlet dynamic weak var segmentedControl: UISegmentedControl?
     
-    @IBAction dynamic func segmentedControlValueChanged(sender: AnyObject?) {
+    @IBAction dynamic func segmentedControlValueChanged(_ sender: AnyObject?) {
         
         switch self.segmentedControl?.selectedSegmentIndex {
             

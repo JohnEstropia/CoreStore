@@ -15,7 +15,7 @@ class OrganismTableViewCell: UITableViewCell {
     
     var mutateButtonHandler: (() -> Void)?
 
-    @IBAction dynamic func mutateButtonTouchUpInside(sender: UIButton?) {
+    @IBAction dynamic func mutateButtonTouchUpInside(_ sender: UIButton?) {
      
         self.mutateButtonHandler?()
     }

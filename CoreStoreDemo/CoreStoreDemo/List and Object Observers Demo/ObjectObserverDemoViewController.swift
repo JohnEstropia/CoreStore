@@ -118,7 +118,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     @IBOutlet weak var saturationSlider: UISlider?
     @IBOutlet weak var brightnessSlider: UISlider?
     
-    @IBAction dynamic func hueSliderValueDidChange(sender: AnyObject?) {
+    @IBAction dynamic func hueSliderValueDidChange(_ sender: AnyObject?) {
         
         let hue = self.hueSlider?.value ?? 0
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
@@ -131,7 +131,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         }
     }
     
-    @IBAction dynamic func saturationSliderValueDidChange(sender: AnyObject?) {
+    @IBAction dynamic func saturationSliderValueDidChange(_ sender: AnyObject?) {
         
         let saturation = self.saturationSlider?.value ?? 0
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
@@ -144,7 +144,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         }
     }
     
-    @IBAction dynamic func brightnessSliderValueDidChange(sender: AnyObject?) {
+    @IBAction dynamic func brightnessSliderValueDidChange(_ sender: AnyObject?) {
         
         let brightness = self.brightnessSlider?.value ?? 0
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
@@ -157,7 +157,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         }
     }
     
-    @IBAction dynamic func deleteBarButtonTapped(sender: AnyObject?) {
+    @IBAction dynamic func deleteBarButtonTapped(_ sender: AnyObject?) {
         
         CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
             

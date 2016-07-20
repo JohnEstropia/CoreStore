@@ -286,7 +286,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
     @IBOutlet dynamic weak var segmentedControl: UISegmentedControl?
     @IBOutlet dynamic weak var tableView: UITableView?
     
-    @IBAction dynamic func segmentedControlValueChanged(sender: AnyObject?) {
+    @IBAction dynamic func segmentedControlValueChanged(_ sender: AnyObject?) {
         
         self.tableView?.reloadData()
     }
