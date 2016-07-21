@@ -715,9 +715,28 @@ internal extension CollectionType where Generator.Element == SelectTerm {
         fetchRequest.includesPendingChanges = false
         fetchRequest.resultType = .DictionaryResultType
         
-        let entityDescription = fetchRequest.entity!
-        let propertiesByName = entityDescription.propertiesByName
-        let attributesByName = entityDescription.attributesByName
+        func attributeDescriptionForKeyPath(keyPath: String, inEntity entity: NSEntityDescription) -> NSAttributeDescription? {
+            
+            let components = keyPath.componentsSeparatedByString(".")
+            switch components.count {
+                
+            case 0:
+                return nil
+                
+            case 1:
+                return entity.attributesByName[components[0]]
+                
+            default:
+                guard let relationship = entity.relationshipsByName[components[0]] else {
+                    
+                    return nil
+                }
+                return attributeDescriptionForKeyPath(
+                    components.dropFirst().joinWithSeparator("."),
+                    inEntity: relationship.entity
+                )
+            }
+        }
         
         var propertiesToFetch = [AnyObject]()
         for term in self {
@@ -725,20 +744,22 @@ internal extension CollectionType where Generator.Element == SelectTerm {
             switch term {
                 
             case ._Attribute(let keyPath):
-                if let propertyDescription = propertiesByName[keyPath] {
+                let entityDescription = fetchRequest.entity!
+                if let attributeDescription = attributeDescriptionForKeyPath(keyPath, inEntity: entityDescription) {
                     
-                    propertiesToFetch.append(propertyDescription)
+                    propertiesToFetch.append(attributeDescription)
                 }
                 else {
                     
                     CoreStore.log(
                         .Warning,
-                        message: "The property \"\(keyPath)\" does not exist in entity \(cs_typeName(entityDescription.managedObjectClassName)) and will be ignored by \(cs_typeName(owner)) query clause."
+                        message: "The key path \"\(keyPath)\" could not be resolved in entity \(cs_typeName(entityDescription.managedObjectClassName)) as an attribute and will be ignored by \(cs_typeName(owner)) query clause."
                     )
                 }
                 
             case ._Aggregate(let function, let keyPath, let alias, let nativeType):
-                if let attributeDescription = attributesByName[keyPath] {
+                let entityDescription = fetchRequest.entity!
+                if let attributeDescription = attributeDescriptionForKeyPath(keyPath, inEntity: entityDescription) {
                     
                     let expressionDescription = NSExpressionDescription()
                     expressionDescription.name = alias
@@ -754,14 +775,13 @@ internal extension CollectionType where Generator.Element == SelectTerm {
                         forFunction: function,
                         arguments: [NSExpression(forKeyPath: keyPath)]
                     )
-                    
                     propertiesToFetch.append(expressionDescription)
                 }
                 else {
                     
                     CoreStore.log(
                         .Warning,
-                        message: "The attribute \"\(keyPath)\" does not exist in entity \(cs_typeName(entityDescription.managedObjectClassName)) and will be ignored by \(cs_typeName(owner)) query clause."
+                        message: "The key path \"\(keyPath)\" could not be resolved in entity \(cs_typeName(entityDescription.managedObjectClassName)) as an attribute and will be ignored by \(cs_typeName(owner)) query clause."
                     )
                 }
                 
