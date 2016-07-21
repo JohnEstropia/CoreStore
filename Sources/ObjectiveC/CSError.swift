@@ -248,9 +248,17 @@ internal extension ErrorProtocol {
         
         switch self {
             
-        case let error as CoreStoreError:   return error
-        case let error as CSError:          return error.bridgeToSwift
-        default:                            return .unknown
+        case let error as CoreStoreError:
+            return error
+            
+        case let error as CSError:
+            return error.bridgeToSwift
+            
+        case let error as NSError where self.dynamicType is NSError.Type:
+            return .internalError(NSError: error)
+            
+        default:
+            return .unknown
         }
     }
     
@@ -258,9 +266,14 @@ internal extension ErrorProtocol {
         
         switch self {
             
-        case let error as CoreStoreError:   return error.bridgeToObjectiveC
-        case let error as CSError:          return error
-        default:                            return self as NSError
+        case let error as CoreStoreError:
+            return error.bridgeToObjectiveC
+            
+        case let error as CSError:
+            return error
+            
+        default:
+            return self as NSError
         }
     }
 }

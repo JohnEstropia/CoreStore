@@ -147,7 +147,7 @@ final class ErrorTests: XCTestCase {
                 "key3": Date()
             ]
         )
-        let error = CoreStoreError.internalError(NSError: internalError)
+        let error = CoreStoreError(internalError)
         XCTAssertEqual((error as NSError).domain, CoreStoreErrorDomain)
         XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.internalError.rawValue)
         
