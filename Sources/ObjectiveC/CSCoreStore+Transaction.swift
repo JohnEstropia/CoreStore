@@ -51,6 +51,7 @@ public extension CSCoreStore {
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @objc
+    @discardableResult
     public static func beginSynchronous(_ closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {

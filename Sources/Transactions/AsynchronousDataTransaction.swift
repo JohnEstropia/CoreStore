@@ -71,6 +71,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
+    @discardableResult
     public func beginSynchronous(_ closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         CoreStore.assert(

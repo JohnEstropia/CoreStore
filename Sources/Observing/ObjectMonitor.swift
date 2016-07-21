@@ -367,8 +367,8 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
 private extension Notification.Name {
     
     private static let objectMonitorWillChangeObject = Notification.Name(rawValue: "objectMonitorWillChangeObject")
-    private static let objectMonitorDidDeleteObject = Notification.Name(rawValue: "objectMonitorWillChangeObject")
-    private static let objectMonitorDidUpdateObject = Notification.Name(rawValue: "objectMonitorWillChangeObject")
+    private static let objectMonitorDidDeleteObject = Notification.Name(rawValue: "objectMonitorDidDeleteObject")
+    private static let objectMonitorDidUpdateObject = Notification.Name(rawValue: "objectMonitorDidUpdateObject")
 }
 
 #endif

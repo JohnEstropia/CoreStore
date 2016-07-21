@@ -30,7 +30,7 @@ class BaseTestDataTestCase: BaseTestCase {
     @nonobjc
     func prepareTestDataForStack(_ stack: DataStack, configurations: [String?] = [nil]) {
         
-        _ = stack.beginSynchronous { (transaction) in
+        stack.beginSynchronous { (transaction) in
             
             for (configurationIndex, configuration) in configurations.enumerated() {
                 

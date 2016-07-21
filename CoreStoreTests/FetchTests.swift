@@ -73,7 +73,7 @@ final class FetchTests: BaseTestDataTestCase {
                 let fetchExpectation = self.expectation(withDescription: "fetch")
                 
                 var existing1: TestEntity1?
-                _ = _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     existing1 = transaction.fetchExisting(object)
                     XCTAssertNotNil(existing1)
@@ -166,7 +166,7 @@ final class FetchTests: BaseTestDataTestCase {
                 let fetchExpectation = self.expectation(withDescription: "fetch")
                 
                 var existing1 = [TestEntity1]()
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     existing1 = transaction.fetchExisting(objects)
                     XCTAssertEqual(
@@ -1724,7 +1724,7 @@ final class FetchTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack, configurations: configurations)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>()
                 do {
@@ -1768,7 +1768,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertNil(objectID)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil)
                 do {
@@ -1812,7 +1812,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertNil(objectID)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config1")
                 do {
@@ -1863,7 +1863,7 @@ final class FetchTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack, configurations: configurations)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>()
                 do {
@@ -1907,7 +1907,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertNil(objectID)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil)
                 do {
@@ -1951,7 +1951,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertNil(objectID)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config1")
                 do {
@@ -1995,7 +1995,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertNil(objectID)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config2")
                 do {
@@ -2046,7 +2046,7 @@ final class FetchTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack, configurations: configurations)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil, "Config1")
                 do {
@@ -2090,7 +2090,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertNil(objectID)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil, "Config2")
                 do {
@@ -2134,7 +2134,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertNil(objectID)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config1", "Config2")
                 do {
@@ -2189,7 +2189,7 @@ final class FetchTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack, configurations: configurations)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>()
                 do {
@@ -2259,7 +2259,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(objectIDs?.count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil)
                 do {
@@ -2329,7 +2329,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(objectIDs?.count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config1")
                 do {
@@ -2380,7 +2380,7 @@ final class FetchTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack, configurations: configurations)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>()
                 do {
@@ -2444,7 +2444,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(objectIDs?.count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil)
                 do {
@@ -2512,7 +2512,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(objectIDs?.count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config1")
                 do {
@@ -2580,7 +2580,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(objectIDs?.count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config2")
                 do {
@@ -2629,7 +2629,7 @@ final class FetchTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack, configurations: configurations)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil, "Config1")
                 do {
@@ -2693,7 +2693,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(objectIDs?.count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil, "Config2")
                 do {
@@ -2761,7 +2761,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(objectIDs?.count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config1", "Config2")
                 do {
@@ -2840,7 +2840,7 @@ final class FetchTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack, configurations: configurations)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>()
                 do {
@@ -2876,7 +2876,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil)
                 do {
@@ -2912,7 +2912,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config1")
                 do {
@@ -2951,7 +2951,7 @@ final class FetchTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack, configurations: configurations)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>()
                 do {
@@ -2987,7 +2987,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil)
                 do {
@@ -3023,7 +3023,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config1")
                 do {
@@ -3059,7 +3059,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config2")
                 do {
@@ -3098,7 +3098,7 @@ final class FetchTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack, configurations: configurations)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil, "Config1")
                 do {
@@ -3134,7 +3134,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>(nil, "Config2")
                 do {
@@ -3170,7 +3170,7 @@ final class FetchTests: BaseTestDataTestCase {
                     XCTAssertEqual(count, 0)
                 }
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let from = From<TestEntity1>("Config1", "Config2")
                 do {

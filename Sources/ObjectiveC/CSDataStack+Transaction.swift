@@ -51,6 +51,7 @@ public extension CSDataStack {
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @objc
+    @discardableResult
     public func beginSynchronous(_ closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {

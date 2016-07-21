@@ -38,7 +38,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 do {
                     
@@ -70,7 +70,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let errorExpectation = self.expectation(withDescription: "error")
                 do {
@@ -119,7 +119,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 do {
                     
@@ -178,7 +178,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 do {
                     
@@ -232,7 +232,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let errorExpectation = self.expectation(withDescription: "error")
                 do {
@@ -292,7 +292,7 @@ class ImportTests: BaseTestDataTestCase {
         
         self.prepareStack { (stack) in
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 do {
                     
@@ -351,7 +351,7 @@ class ImportTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 do {
                     
@@ -421,7 +421,7 @@ class ImportTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 do {
                     
@@ -521,7 +521,7 @@ class ImportTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 do {
                     
@@ -600,7 +600,7 @@ class ImportTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 do {
                     
@@ -658,7 +658,7 @@ class ImportTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let errorExpectation = self.expectation(withDescription: "error")
                 do {
@@ -705,7 +705,7 @@ class ImportTests: BaseTestDataTestCase {
                 self.checkExpectationsImmediately()
                 transaction.context.reset()
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let errorExpectation = self.expectation(withDescription: "error")
                 do {
@@ -758,7 +758,7 @@ class ImportTests: BaseTestDataTestCase {
                 self.checkExpectationsImmediately()
                 transaction.context.reset()
             }
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 let errorExpectation = self.expectation(withDescription: "error")
                 do {
@@ -820,7 +820,7 @@ class ImportTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack)
             
-            _ = stack.beginSynchronous { (transaction) in
+            stack.beginSynchronous { (transaction) in
                 
                 do {
                     

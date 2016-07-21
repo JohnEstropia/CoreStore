@@ -43,7 +43,7 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let createExpectation = self.expectation(withDescription: "create")
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>())
                     object.testEntityID = NSNumber(value: 1)
@@ -75,7 +75,7 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let updateExpectation = self.expectation(withDescription: "update")
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                         
@@ -110,7 +110,7 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let deleteExpectation = self.expectation(withDescription: "delete")
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.fetchOne(From<TestEntity1>())
                     transaction.delete(object)
@@ -144,7 +144,7 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let createExpectation = self.expectation(withDescription: "create")
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>("Config1"))
                     object.testEntityID = NSNumber(value: 1)
@@ -177,7 +177,7 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let updateExpectation = self.expectation(withDescription: "update")
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>("Config1")) else {
                         
@@ -213,7 +213,7 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let deleteExpectation = self.expectation(withDescription: "delete")
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.fetchOne(From<TestEntity1>("Config1"))
                     transaction.delete(object)
@@ -245,7 +245,7 @@ final class TransactionTests: BaseTestCase {
                 
                 let createDiscardExpectation = self.expectation(withDescription: "create-discard")
                 let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>())
                     object.testEntityID = NSNumber(value: 1)
@@ -267,7 +267,7 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let createExpectation = self.expectation(withDescription: "create")
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>())
                     object.testEntityID = NSNumber(value: 1)
@@ -290,7 +290,7 @@ final class TransactionTests: BaseTestCase {
                 
                 let updateDiscardExpectation = self.expectation(withDescription: "update-discard")
                 let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                         
@@ -319,7 +319,7 @@ final class TransactionTests: BaseTestCase {
                 
                 let deleteDiscardExpectation = self.expectation(withDescription: "delete-discard")
                 let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
-                _ = stack.beginSynchronous { (transaction) in
+                stack.beginSynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                         

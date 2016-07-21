@@ -76,7 +76,7 @@ internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObjec
     // MARK: NSFetchedResultsControllerDelegate
     
     @objc
-        dynamic func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    dynamic func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
         guard self.enabled else {
             
