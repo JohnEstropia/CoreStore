@@ -102,10 +102,10 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
-        case Section.Fetching.rawValue?:
+        case Section.fetching.rawValue?:
             return self.fetchingItems.count
             
-        case Section.Querying.rawValue?:
+        case Section.querying.rawValue?:
             return self.queryingItems.count
             
         default:
@@ -119,10 +119,10 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
-        case Section.Fetching.rawValue?:
+        case Section.fetching.rawValue?:
             cell.textLabel?.text = self.fetchingItems[indexPath.row].title
             
-        case Section.Querying.rawValue?:
+        case Section.querying.rawValue?:
             cell.textLabel?.text = self.queryingItems[indexPath.row].title
             
         default:
@@ -141,10 +141,10 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         
         switch self.segmentedControl?.selectedSegmentIndex {
             
-        case Section.Fetching.rawValue?:
+        case Section.fetching.rawValue?:
             self.performSegue(withIdentifier: "FetchingResultsViewController", sender: indexPath)
             
-        case Section.Querying.rawValue?:
+        case Section.querying.rawValue?:
             self.performSegue(withIdentifier: "QueryingResultsViewController", sender: indexPath)
             
         default:
@@ -157,8 +157,8 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
     
     private enum Section: Int {
         
-        case Fetching
-        case Querying
+        case fetching
+        case querying
     }
     
     private let fetchingItems = [

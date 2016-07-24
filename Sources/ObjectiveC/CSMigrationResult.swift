@@ -90,7 +90,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleSuccess(@noescape _ success: (migrationTypes: [CSMigrationType]) -> Void, @noescape failure: (error: NSError) -> Void) {
+    public func handleSuccess(_ success: @noescape (migrationTypes: [CSMigrationType]) -> Void, failure: @noescape (error: NSError) -> Void) {
         
         switch self.bridgeToSwift {
             
@@ -110,7 +110,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
      - parameter success: the block to execute on success. The block passes an array of `CSMigrationType`s that indicates the migration steps completed.
      */
     @objc
-    public func handleSuccess(@noescape _ success: (migrationTypes: [CSMigrationType]) -> Void) {
+    public func handleSuccess(_ success: @noescape (migrationTypes: [CSMigrationType]) -> Void) {
         
         guard case .success(let migrationTypes) = self.bridgeToSwift else {
             
@@ -127,7 +127,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleFailure(@noescape _ failure: (error: NSError) -> Void) {
+    public func handleFailure(_ failure: @noescape (error: NSError) -> Void) {
         
         guard case .failure(let error) = self.bridgeToSwift else {
             

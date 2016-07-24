@@ -38,7 +38,6 @@ public extension CSDataStack {
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
     @objc
-    @warn_unused_result
     public func fetchExistingObject(_ object: NSManagedObject) -> AnyObject? {
         
         do {
@@ -58,7 +57,6 @@ public extension CSDataStack {
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
     @objc
-    @warn_unused_result
     public func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> AnyObject? {
         
         do {
@@ -78,7 +76,6 @@ public extension CSDataStack {
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
     @objc
-    @warn_unused_result
     public func fetchExistingObjects(_ objects: [NSManagedObject]) -> [AnyObject] {
         
         return objects.flatMap { try? self.bridgeToSwift.mainContext.existingObject(with: $0.objectID) }
@@ -91,7 +88,6 @@ public extension CSDataStack {
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
     @objc
-    @warn_unused_result
     public func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [AnyObject] {
         
         return objectIDs.flatMap { try? self.bridgeToSwift.mainContext.existingObject(with: $0) }
@@ -105,7 +101,6 @@ public extension CSDataStack {
      - returns: the first `NSManagedObject` instance that satisfies the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
         
         CoreStore.assert(
@@ -123,7 +118,6 @@ public extension CSDataStack {
      - returns: all `NSManagedObject` instances that satisfy the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
         
         CoreStore.assert(
@@ -141,7 +135,6 @@ public extension CSDataStack {
      - returns: the number `NSManagedObject`s that satisfy the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public func fetchCountFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSNumber? {
         
         CoreStore.assert(
@@ -159,7 +152,6 @@ public extension CSDataStack {
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public func fetchObjectIDFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
         
         CoreStore.assert(
@@ -177,7 +169,6 @@ public extension CSDataStack {
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public func fetchObjectIDsFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
@@ -198,7 +189,6 @@ public extension CSDataStack {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    @warn_unused_result
     public func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
         
         CoreStore.assert(
@@ -219,7 +209,6 @@ public extension CSDataStack {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    @warn_unused_result
     public func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
         
         CoreStore.assert(

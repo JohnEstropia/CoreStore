@@ -105,7 +105,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
     
     // MARK: MKMapViewDelegate
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let identifier = "MKAnnotationView"
         var annotationView: MKPinAnnotationView! = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
@@ -162,7 +162,9 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
     
     @IBAction dynamic func longPressGestureRecognized(_ sender: AnyObject?) {
         
-        if let mapView = self.mapView, let gesture = sender as? UILongPressGestureRecognizer where gesture.state == .began {
+        if let mapView = self.mapView,
+            let gesture = sender as? UILongPressGestureRecognizer,
+            gesture.state == .began {
             
             let coordinate = mapView.convert(
                 gesture.location(in: mapView),

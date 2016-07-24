@@ -120,6 +120,24 @@ internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObjec
         // http://stackoverflow.com/questions/31383760/ios-9-attempt-to-delete-and-reload-the-same-index-path/31384014#31384014
         // https://forums.developer.apple.com/message/9998#9998
         // https://forums.developer.apple.com/message/31849#31849
+
+        if #available(iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
+         
+            // iOS 10 is better, but still not perfect...
+            if case .update = actualType,
+                let indexPath = indexPath,
+                let newIndexPath = newIndexPath {
+                
+                self.handler?.controller(
+                    controller,
+                    didChangeObject: anObject,
+                    atIndexPath: indexPath,
+                    forChangeType: .move,
+                    newIndexPath: newIndexPath
+                )
+                return
+            }
+        }
         
         switch actualType {
             

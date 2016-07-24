@@ -96,14 +96,14 @@ private final class ProgressObserver: NSObject {
                 
                 self.progress.addObserver(
                     self,
-                    forKeyPath: "fractionCompleted",
+                    forKeyPath: #keyPath(Progress.fractionCompleted),
                     options: [.initial, .new],
                     context: nil
                 )
             }
             else {
                 
-                self.progress.removeObserver(self, forKeyPath: "fractionCompleted")
+                self.progress.removeObserver(self, forKeyPath: #keyPath(Progress.fractionCompleted))
             }
         }
     }
@@ -119,15 +119,17 @@ private final class ProgressObserver: NSObject {
         if let _ = self.progressHandler {
             
             self.progressHandler = nil
-            self.progress.removeObserver(self, forKeyPath: "fractionCompleted")
+            self.progress.removeObserver(self, forKeyPath: #keyPath(Progress.fractionCompleted))
         }
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: AnyObject?, change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
         
-        guard let progress = object as? Progress where progress == self.progress && keyPath == "fractionCompleted" else {
-            
-            return
+        guard let progress = object as? Progress,
+            progress == self.progress,
+            keyPath == #keyPath(Progress.fractionCompleted) else {
+                
+                return
         }
         
         GCDQueue.main.async { [weak self] () -> Void in

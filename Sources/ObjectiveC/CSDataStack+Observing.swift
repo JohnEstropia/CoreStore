@@ -40,7 +40,6 @@ public extension CSDataStack {
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
     @objc
-    @warn_unused_result
     public func monitorObject(_ object: NSManagedObject) -> CSObjectMonitor {
         
         return bridge {
@@ -57,7 +56,6 @@ public extension CSDataStack {
      - returns: a `CSListMonitor` instance that monitors changes to the list
      */
     @objc
-    @warn_unused_result
     public func monitorListFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
         CoreStore.assert(
@@ -124,7 +122,6 @@ public extension CSDataStack {
      - returns: a `CSListMonitor` instance that monitors changes to the list
      */
     @objc
-    @warn_unused_result
     public func monitorSectionedListFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
         CoreStore.assert(

@@ -83,7 +83,6 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Where("employeeID", isEqualTo: 1111)
      )
      ```
-     
      - parameter keyPath: the attribute name
      - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
      */
@@ -100,7 +99,6 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.average("age"))
      )
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
@@ -123,7 +121,6 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.count("employeeID"))
      )
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for a count query
@@ -146,7 +143,6 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.maximum("age"))
      )
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
@@ -169,7 +165,6 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.minimum("age"))
      )
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
@@ -192,7 +187,6 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Select<Int>(.sum("age"))
      )
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
@@ -216,7 +210,6 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
          Where("employeeID", isEqualTo: 1111)
      )
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
@@ -745,9 +738,9 @@ internal extension Collection where Iterator.Element == SelectTerm {
         fetchRequest.includesPendingChanges = false
         fetchRequest.resultType = .dictionaryResultType
         
-        func attributeDescriptionForKeyPath(keyPath: String, inEntity entity: NSEntityDescription) -> NSAttributeDescription? {
+        func attributeDescription(for keyPath: String, in entity: NSEntityDescription) -> NSAttributeDescription? {
             
-            let components = keyPath.componentsSeparatedByString(".")
+            let components = keyPath.components(separatedBy: ".")
             switch components.count {
                 
             case 0:
@@ -761,9 +754,9 @@ internal extension Collection where Iterator.Element == SelectTerm {
                     
                     return nil
                 }
-                return attributeDescriptionForKeyPath(
-                    components.dropFirst().joinWithSeparator("."),
-                    inEntity: relationship.entity
+                return attributeDescription(
+                    for: components.dropFirst().joined(separator: "."),
+                    in: relationship.entity
                 )
             }
         }
@@ -775,7 +768,7 @@ internal extension Collection where Iterator.Element == SelectTerm {
                 
             case ._attribute(let keyPath):
                 let entityDescription = fetchRequest.entity!
-                if let attributeDescription = attributeDescriptionForKeyPath(keyPath, inEntity: entityDescription) {
+                if let attributeDescription = attributeDescription(for: keyPath, in: entityDescription) {
                     
                     propertiesToFetch.append(attributeDescription)
                 }
@@ -789,7 +782,7 @@ internal extension Collection where Iterator.Element == SelectTerm {
                 
             case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 let entityDescription = fetchRequest.entity!
-                if let attributeDescription = attributeDescriptionForKeyPath(keyPath, inEntity: entityDescription) {
+                if let attributeDescription = attributeDescription(for: keyPath, in: entityDescription) {
                     
                     let expressionDescription = NSExpressionDescription()
                     expressionDescription.name = alias

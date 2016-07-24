@@ -311,10 +311,9 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             
             return nil
         }
-        guard let sections = self.fetchedResultsController.sections
-            where section < sections.count else {
-                
-                return nil
+        guard let sections = self.fetchedResultsController.sections, section < sections.count else {
+            
+            return nil
         }
         return sections[section]
     }
@@ -1105,8 +1104,8 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                 
                 self.isPersistentStoreChanging = true
                 
-                guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init)
-                    where !Set(self.fetchedResultsController.fetchRequest.affectedStores ?? []).intersection(removedStores).isEmpty else {
+                guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init),
+                    !Set(self.fetchedResultsController.fetchRequest.affectedStores ?? []).intersection(removedStores).isEmpty else {
                         
                         return
                 }

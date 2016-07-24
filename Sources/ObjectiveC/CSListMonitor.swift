@@ -121,7 +121,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: `YES` if at least one object in any section exists, `NO` otherwise
      */
     @objc
-    @warn_unused_result
     public func hasObjects() -> Bool {
         
         return self.bridgeToSwift.hasObjects()
@@ -134,7 +133,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: `YES` if at least one object in the specified section exists, `NO` otherwise
      */
     @objc
-    @warn_unused_result
     public func hasObjectsInSection(_ section: Int) -> Bool {
         
         return self.bridgeToSwift.hasObjectsInSection(section)
@@ -146,7 +144,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: all objects in all sections
      */
     @objc
-    @warn_unused_result
     public func objectsInAllSections() -> [NSManagedObject] {
         
         return self.bridgeToSwift.objectsInAllSections()
@@ -159,7 +156,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: all objects in the specified section
      */
     @objc
-    @warn_unused_result
     public func objectsInSection(_ section: Int) -> [NSManagedObject] {
         
         return self.bridgeToSwift.objectsInSection(section)
@@ -172,7 +168,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: all objects in the specified section, or `nil` if out of bounds
      */
     @objc
-    @warn_unused_result
     public func objectsInSafeSection(safeSectionIndex section: Int) -> [NSManagedObject]? {
         
         return self.bridgeToSwift.objectsInSection(safeSectionIndex: section)
@@ -184,7 +179,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the number of sections
      */
     @objc
-    @warn_unused_result
     public func numberOfSections() -> Int {
         
         return self.bridgeToSwift.numberOfSections()
@@ -196,7 +190,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the number of objects in all sections
      */
     @objc
-    @warn_unused_result
     public func numberOfObjects() -> Int {
         
         return self.bridgeToSwift.numberOfObjects()
@@ -209,7 +202,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the number of objects in the specified section
      */
     @objc
-    @warn_unused_result
     public func numberOfObjectsInSection(_ section: Int) -> Int {
         
         return self.bridgeToSwift.numberOfObjectsInSection(section)
@@ -222,7 +214,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the number of objects in the specified section, or `nil` if out of bounds
      */
     @objc
-    @warn_unused_result
     public func numberOfObjectsInSafeSection(safeSectionIndex section: Int) -> NSNumber? {
         
         return self.bridgeToSwift.numberOfObjectsInSection(safeSectionIndex: section)
@@ -235,7 +226,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSFetchedResultsSectionInfo` for the specified section
      */
     @objc
-    @warn_unused_result
     public func sectionInfoAtIndex(_ section: Int) -> NSFetchedResultsSectionInfo {
         
         return self.bridgeToSwift.sectionInfoAtIndex(section)
@@ -248,7 +238,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSFetchedResultsSectionInfo` for the specified section, or `nil` if the section index is out of bounds.
      */
     @objc
-    @warn_unused_result
     public func sectionInfoAtSafeSectionIndex(safeSectionIndex section: Int) -> NSFetchedResultsSectionInfo? {
         
         return self.bridgeToSwift.sectionInfoAtIndex(safeSectionIndex: section)
@@ -260,7 +249,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSFetchedResultsSectionInfo`s for all sections
      */
     @objc
-    @warn_unused_result
     public func sections() -> [NSFetchedResultsSectionInfo] {
         
         return self.bridgeToSwift.sections()
@@ -274,7 +262,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the target section for the specified "Section Index" title and index.
      */
     @objc
-    @warn_unused_result
     public func targetSectionForSectionIndexTitle(title: String, index: Int) -> Int {
         
         return self.bridgeToSwift.targetSectionForSectionIndex(title: title, index: index)
@@ -286,7 +273,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the section index titles for all sections
      */
     @objc
-    @warn_unused_result
     public func sectionIndexTitles() -> [String] {
         
         return self.bridgeToSwift.sectionIndexTitles()
@@ -299,7 +285,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the index of the `NSManagedObject` if it exists in the `CSListMonitor`'s fetched objects, or `nil` if not found.
      */
     @objc
-    @warn_unused_result
     public func indexOf(_ object: NSManagedObject) -> NSNumber? {
         
         return self.bridgeToSwift.indexOf(object)
@@ -312,7 +297,6 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSIndexPath` of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
      */
     @objc
-    @warn_unused_result
     public func indexPathOf(_ object: NSManagedObject) -> IndexPath? {
         
         return self.bridgeToSwift.indexPathOf(object)

@@ -73,7 +73,7 @@ public struct GroupBy: QueryClause, Hashable {
     
     public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
-        if let keyPaths = fetchRequest.propertiesToGroupBy as? [String] where keyPaths != self.keyPaths {
+        if let keyPaths = fetchRequest.propertiesToGroupBy as? [String], keyPaths != self.keyPaths {
             
             CoreStore.log(
                 .warning,

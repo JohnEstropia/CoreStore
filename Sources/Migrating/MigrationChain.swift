@@ -138,7 +138,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
             
             var checklist: Set<String> = [start]
             var version = start
-            while let nextVersion = versionTree[version] where nextVersion != version {
+            while let nextVersion = versionTree[version], nextVersion != version {
                 
                 if checklist.contains(nextVersion) {
                     
@@ -236,7 +236,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     
     internal func nextVersionFrom(_ version: String) -> String? {
         
-        guard let nextVersion = self.versionTree[version] where nextVersion != version else {
+        guard let nextVersion = self.versionTree[version], nextVersion != version else {
             
             return nil
         }
@@ -252,7 +252,6 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
 
 // MARK: - MigrationChain: Equatable
 
-@warn_unused_result
 public func == (lhs: MigrationChain, rhs: MigrationChain) -> Bool {
     
     return lhs.versionTree == rhs.versionTree

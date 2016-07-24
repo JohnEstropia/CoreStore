@@ -52,7 +52,8 @@ internal extension NSManagedObjectModel {
         
         let modelVersions = Set(versionHashes.keys)
         let currentModelVersion: String
-        if let plistModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String where modelVersionHints.isEmpty || modelVersionHints.contains(plistModelVersion) {
+        if let plistModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String,
+            modelVersionHints.isEmpty || modelVersionHints.contains(plistModelVersion) {
             
             currentModelVersion = plistModelVersion
         }
@@ -183,8 +184,8 @@ internal extension NSManagedObjectModel {
         }
         
         guard let modelFileURL = self.modelFileURL,
-            let modelVersions = self.modelVersions
-            where modelVersions.contains(modelVersion) else {
+            let modelVersions = self.modelVersions,
+            modelVersions.contains(modelVersion) else {
                 
                 return nil
         }
@@ -210,7 +211,7 @@ internal extension NSManagedObjectModel {
         }
         for modelVersion in self.modelVersions ?? [] {
             
-            if let versionModel = self[modelVersion] where modelHashes == versionModel.entityVersionHashesByName {
+            if let versionModel = self[modelVersion], modelHashes == versionModel.entityVersionHashesByName {
                 
                 return versionModel
             }

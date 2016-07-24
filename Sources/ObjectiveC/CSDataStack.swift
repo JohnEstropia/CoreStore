@@ -153,7 +153,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     @objc
     public func entityDescriptionForClass(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return self.bridgeToSwift.entityDescriptionForType(type)
+        return self.bridgeToSwift.entityDescription(for: type)
     }
     
     /**
@@ -161,7 +161,6 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      ```
      CSSQLiteStore *storage = [dataStack addInMemoryStorageAndWaitAndReturnError:&error];
      ```
-     
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSInMemoryStore` added to the stack
      */
@@ -180,7 +179,6 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      ```
      CSSQLiteStore *storage = [dataStack addSQLiteStorageAndWaitAndReturnError:&error];
      ```
-     
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSSQLiteStore` added to the stack
      */
@@ -202,7 +200,6 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
          addStorageAndWait: [[CSInMemoryStore alloc] initWithConfiguration: @"Config1"]
          error: &error];
      ```
-     
      - parameter storage: the `CSInMemoryStore`
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSInMemoryStore` added to the stack
@@ -225,7 +222,6 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
          addStorageAndWait: [[CSSQLiteStore alloc] initWithConfiguration: @"Config1"]
          error: &error];
      ```
-     
      - parameter storage: the `CSSQLiteStore`
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSSQLiteStore` added to the stack

@@ -24,6 +24,9 @@
 //
 
 import CoreData
+#if USE_FRAMEWORKS
+    import GCDKit
+#endif
 
 
 // MARK: - SQLiteStore
@@ -177,7 +180,29 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
                 options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
             )
             try journalUpdatingCoordinator.remove(store)
-            try FileManager.default.removeItem(at: fileURL)
+            
+            let fileManager = FileManager.default
+            do {
+                
+                let temporaryFile = try URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
+                    .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack", isDirectory: true)
+                    .appendingPathComponent("trash", isDirectory: true)
+                    .appendingPathComponent(UUID().uuidString, isDirectory: false)
+                try fileManager.createDirectory(
+                    at: try temporaryFile.deletingLastPathComponent(),
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
+                try fileManager.moveItem(at: fileURL, to: temporaryFile)
+                GCDQueue.background.async {
+                    
+                    _ = try? fileManager.removeItem(at: temporaryFile)
+                }
+            }
+            catch {
+                
+                try fileManager.removeItem(at: fileURL)
+            }
         }
     }
     

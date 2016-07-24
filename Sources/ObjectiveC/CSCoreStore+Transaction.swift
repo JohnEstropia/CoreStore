@@ -70,7 +70,6 @@ public extension CSCoreStore {
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    @warn_unused_result
     public static func beginUnsafe() -> CSUnsafeDataTransaction {
         
         return bridge {
@@ -86,7 +85,6 @@ public extension CSCoreStore {
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    @warn_unused_result
     public static func beginUnsafeWithSupportsUndo(_ supportsUndo: Bool) -> CSUnsafeDataTransaction {
         
         return bridge {

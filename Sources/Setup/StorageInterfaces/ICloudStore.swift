@@ -57,7 +57,6 @@ public class ICloudStore: CloudStorage {
          }
      )
      ```
-     
      - parameter ubiquitousContentName: the name of the store in iCloud. This is required and should not be empty, and should not contain periods (`.`).
      - parameter ubiquitousContentTransactionLogsSubdirectory: an optional subdirectory path for the transaction logs
      - parameter ubiquitousContainerID: a container if your app has multiple ubiquity container identifiers in its entitlements
@@ -481,8 +480,8 @@ public class ICloudStore: CloudStorage {
                     
                     guard let `self` = self,
                         let observer = observer,
-                        let dataStack = note.userInfo?[String(DataStack.self)] as? DataStack
-                        where self.dataStack === dataStack else {
+                        let dataStack = note.userInfo?[String(DataStack.self)] as? DataStack,
+                        self.dataStack === dataStack else {
                             
                             return
                     }

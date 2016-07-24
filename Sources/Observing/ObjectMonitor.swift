@@ -341,7 +341,8 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
                 userInfo: [String(NSManagedObject.self): anObject]
             )
             
-        case .update:
+        case .update,
+             .move where indexPath == newIndexPath:
             NotificationCenter.default.post(
                 name: Notification.Name.objectMonitorDidUpdateObject,
                 object: self,

@@ -70,7 +70,6 @@ public extension CSDataStack {
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    @warn_unused_result
     public func beginUnsafe() -> CSUnsafeDataTransaction {
         
         return bridge {
@@ -86,7 +85,6 @@ public extension CSDataStack {
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    @warn_unused_result
     public func beginUnsafeWithSupportsUndo(_ supportsUndo: Bool) -> CSUnsafeDataTransaction {
         
         return bridge {

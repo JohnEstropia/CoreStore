@@ -220,8 +220,8 @@ public extension BaseDataTransaction {
                         
                         let uniqueIDValue = object.uniqueIDValue
                         
-                        guard let source = mapping.removeValue(forKey: uniqueIDValue)
-                            where T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                        guard let source = mapping.removeValue(forKey: uniqueIDValue),
+                            T.shouldUpdateFromImportSource(source, inTransaction: self) else {
                                 
                                 return
                         }

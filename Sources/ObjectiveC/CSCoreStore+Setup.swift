@@ -67,7 +67,7 @@ public extension CSCoreStore {
     @objc
     public static func entityDescriptionForClass(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return CoreStore.entityDescriptionForType(type)
+        return CoreStore.entityDescription(for: type)
     }
     
     /**
@@ -75,7 +75,6 @@ public extension CSCoreStore {
      ```
      CSSQLiteStore *storage = [CSCoreStore addInMemoryStorageAndWaitAndReturnError:&error];
      ```
-     
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSInMemoryStore` added to the `defaultStack`
      */
@@ -91,7 +90,6 @@ public extension CSCoreStore {
      ```
      CSSQLiteStore *storage = [CSCoreStore addSQLiteStorageAndWaitAndReturnError:&error];
      ```
-     
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSSQLiteStore` added to the `defaultStack`
      */
@@ -110,7 +108,6 @@ public extension CSCoreStore {
          addStorageAndWait: [[CSInMemoryStore alloc] initWithConfiguration: @"Config1"]
          error: &error];
      ```
-     
      - parameter storage: the `CSInMemoryStore`
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSInMemoryStore` added to the `defaultStack`
@@ -130,7 +127,6 @@ public extension CSCoreStore {
          addStorageAndWait: [[CSSQLiteStore alloc] initWithConfiguration: @"Config1"]
          error: &error];
      ```
-     
      - parameter storage: the `CSSQLiteStore`
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSSQLiteStore` added to the `defaultStack`

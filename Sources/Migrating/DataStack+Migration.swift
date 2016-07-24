@@ -47,7 +47,6 @@ public extension DataStack {
          }
      )
      ```
-     
      - parameter storeType: the storage type
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
@@ -69,7 +68,6 @@ public extension DataStack {
          }
      )
      ```
-     
      - parameter storage: the storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
@@ -127,7 +125,6 @@ public extension DataStack {
          }
      )
      ```
-     
      - parameter storeType: the local storage type
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
@@ -150,7 +147,6 @@ public extension DataStack {
          }
      )
      ```
-     
      - parameter storage: the local storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
@@ -176,8 +172,8 @@ public extension DataStack {
             
             if let persistentStore = self.coordinator.persistentStore(for: fileURL as URL) {
                 
-                if let existingStorage = persistentStore.storageInterface as? T
-                    where storage.matchesPersistentStore(persistentStore) {
+                if let existingStorage = persistentStore.storageInterface as? T,
+                    storage.matchesPersistentStore(persistentStore) {
                     
                     GCDQueue.main.async {
                         
@@ -316,7 +312,6 @@ public extension DataStack {
          }
      )
      ```
-     
      - parameter storage: the cloud storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `CloudStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
@@ -336,8 +331,8 @@ public extension DataStack {
             
             if let persistentStore = self.coordinator.persistentStore(for: cacheFileURL as URL) {
                 
-                if let existingStorage = persistentStore.storageInterface as? T
-                    where storage.matchesPersistentStore(persistentStore) {
+                if let existingStorage = persistentStore.storageInterface as? T,
+                    storage.matchesPersistentStore(persistentStore) {
                     
                     GCDQueue.main.async {
                         
@@ -608,7 +603,7 @@ public extension DataStack {
             operations.append(
                 BlockOperation { [weak self] in
                     
-                    guard let `self` = self where !cancelled else {
+                    guard let `self` = self, !cancelled else {
                         
                         return
                     }
@@ -684,7 +679,8 @@ public extension DataStack {
         
         while let nextVersion = migrationChain.nextVersionFrom(currentVersion),
             let sourceModel = model[currentVersion],
-            let destinationModel = model[nextVersion] where sourceModel != model {
+            sourceModel != model,
+            let destinationModel = model[nextVersion] {
                 
                 if let mappingModel = NSMappingModel(
                     from: storage.mappingModelBundles,

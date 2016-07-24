@@ -53,7 +53,6 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
         fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSWhereValue(YES)]]];
      ```
-     
      - parameter value: the boolean value for the predicate
      */
     @objc
@@ -70,7 +69,6 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
         fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSWherePredicate(predicate)]];
      ```
-     
      - parameter format: the format string for the predicate
      - parameter argumentArray: the arguments for `format`
      */

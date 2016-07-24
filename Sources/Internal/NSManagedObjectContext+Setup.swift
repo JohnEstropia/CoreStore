@@ -124,7 +124,6 @@ internal extension NSManagedObjectContext {
                     }
                     context.mergeChanges(fromContextDidSave: note)
                 }
-                
                 if rootContext.isSavingSynchronously == true {
                     
                     context.performAndWait(mergeChanges)

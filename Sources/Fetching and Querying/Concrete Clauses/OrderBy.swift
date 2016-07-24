@@ -140,7 +140,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     
     public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
-        if let sortDescriptors = fetchRequest.sortDescriptors where sortDescriptors != self.sortDescriptors {
+        if let sortDescriptors = fetchRequest.sortDescriptors, sortDescriptors != self.sortDescriptors {
             
             CoreStore.log(
                 .warning,

@@ -40,7 +40,6 @@ public extension CSCoreStore {
      - returns: a `CSObjectMonitor` that monitors changes to `object`
      */
     @objc
-    @warn_unused_result
     public static func monitorObject(_ object: NSManagedObject) -> CSObjectMonitor {
         
         return self.defaultStack.monitorObject(object)
@@ -54,7 +53,6 @@ public extension CSCoreStore {
      - returns: a `CSListMonitor` instance that monitors changes to the list
      */
     @objc
-    @warn_unused_result
     public static func monitorListFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
         return self.defaultStack.monitorListFrom(from, fetchClauses: fetchClauses)
@@ -86,7 +84,6 @@ public extension CSCoreStore {
      - returns: a `CSListMonitor` instance that monitors changes to the list
      */
     @objc
-    @warn_unused_result
     public static func monitorSectionedListFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
         return self.defaultStack.monitorSectionedListFrom(

@@ -38,7 +38,6 @@ public extension NSManagedObject {
      - returns: the primitive value for the KVC key
      */
     @objc
-    @warn_unused_result
     public func cs_accessValueForKVCKey(_ KVCKey: KeyPath) -> AnyObject? {
         
         return self.accessValueForKVCKey(KVCKey)

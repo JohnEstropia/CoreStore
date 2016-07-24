@@ -90,7 +90,7 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleSuccess(@noescape _ success: (hasChanges: Bool) -> Void, @noescape failure: (error: NSError) -> Void) {
+    public func handleSuccess(_ success: @noescape (hasChanges: Bool) -> Void, failure: @noescape (error: NSError) -> Void) {
         
         switch self.bridgeToSwift {
             
@@ -110,7 +110,7 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
      - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
      */
     @objc
-    public func handleSuccess(@noescape _ success: (hasChanges: Bool) -> Void) {
+    public func handleSuccess(_ success: @noescape (hasChanges: Bool) -> Void) {
         
         guard case .success(let hasChanges) = self.bridgeToSwift else {
             
@@ -127,7 +127,7 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleFailure(@noescape _ failure: (error: NSError) -> Void) {
+    public func handleFailure(_ failure: @noescape (error: NSError) -> Void) {
         
         guard case .failure(let error) = self.bridgeToSwift else {
                 

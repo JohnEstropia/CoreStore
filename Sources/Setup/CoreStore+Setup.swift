@@ -53,9 +53,9 @@ public extension CoreStore {
     /**
      Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from `defaultStack`'s model.
      */
-    public static func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
+    public static func entityDescription(for type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return self.defaultStack.entityDescriptionForType(type)
+        return self.defaultStack.entityDescription(for: type)
     }
     
     /**
@@ -63,7 +63,6 @@ public extension CoreStore {
      ```
      try CoreStore.addStorageAndWait()
      ```
-     
      - returns: the local SQLite storage added to the `defaultStack`
      */
     @discardableResult
@@ -77,7 +76,6 @@ public extension CoreStore {
      ```
      try CoreStore.addStorageAndWait(InMemoryStore.self)
      ```
-     
      - parameter storeType: the `StorageInterface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the `defaultStack`
@@ -93,7 +91,6 @@ public extension CoreStore {
      ```
      try CoreStore.addStorageAndWait(InMemoryStore(configuration: "Config1"))
      ```
-     
      - parameter storage: the `StorageInterface`
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the `defaultStack`
@@ -109,7 +106,6 @@ public extension CoreStore {
      ```
      try CoreStore.addStorageAndWait(SQLiteStore.self)
      ```
-     
      - parameter storeType: the `LocalStorageface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the `defaultStack`
@@ -125,7 +121,6 @@ public extension CoreStore {
      ```
      try CoreStore.addStorageAndWait(SQLiteStore(configuration: "Config1"))
      ```
-     
      - parameter storage: the local storage
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the `defaultStack`. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
@@ -152,7 +147,6 @@ public extension CoreStore {
      }
      try CoreStore.addStorageAndWait(storage)
      ```
-     
      - parameter storage: the local storage
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the cloud storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
@@ -161,5 +155,17 @@ public extension CoreStore {
     public static func addStorageAndWait<T: CloudStorage>(_ storage: T) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storage)
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from `defaultStack`'s model.
+     */
+    @available(*, deprecated: 3.0.0, renamed: "entityDescription(for:)")
+    public static func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
+        
+        return self.entityDescription(for: type)
     }
 }

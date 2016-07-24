@@ -38,7 +38,6 @@ public extension CSCoreStore {
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
     @objc
-    @warn_unused_result
     public static func fetchExistingObject(_ object: NSManagedObject) -> AnyObject? {
         
         return self.defaultStack.fetchExistingObject(object)
@@ -51,7 +50,6 @@ public extension CSCoreStore {
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
     @objc
-    @warn_unused_result
     public static func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> AnyObject? {
         
         return self.defaultStack.fetchExistingObjectWithID(objectID)
@@ -64,7 +62,6 @@ public extension CSCoreStore {
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
     @objc
-    @warn_unused_result
     public static func fetchExistingObjects(_ objects: [NSManagedObject]) -> [AnyObject] {
         
         return self.defaultStack.fetchExistingObjects(objects)
@@ -77,7 +74,6 @@ public extension CSCoreStore {
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
     @objc
-    @warn_unused_result
     public static func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [AnyObject] {
         
         return self.defaultStack.fetchExistingObjectsWithIDs(objectIDs)
@@ -91,7 +87,6 @@ public extension CSCoreStore {
      - returns: the first `NSManagedObject` instance that satisfies the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public static func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
         
         return self.defaultStack.fetchOneFrom(from, fetchClauses: fetchClauses)
@@ -105,7 +100,6 @@ public extension CSCoreStore {
      - returns: all `NSManagedObject` instances that satisfy the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public static func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
         
         return self.defaultStack.fetchAllFrom(from, fetchClauses: fetchClauses)
@@ -119,7 +113,6 @@ public extension CSCoreStore {
      - returns: the number `NSManagedObject`s that satisfy the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public static func fetchCountFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSNumber? {
         
         return self.defaultStack.fetchCountFrom(from, fetchClauses: fetchClauses)
@@ -133,7 +126,6 @@ public extension CSCoreStore {
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public static func fetchObjectIDFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
         
         return self.defaultStack.fetchObjectIDFrom(from, fetchClauses: fetchClauses)
@@ -147,7 +139,6 @@ public extension CSCoreStore {
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `CSFetchClause`s
      */
     @objc
-    @warn_unused_result
     public static func fetchObjectIDsFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
         
         return self.defaultStack.fetchObjectIDsFrom(from, fetchClauses: fetchClauses)
@@ -164,7 +155,6 @@ public extension CSCoreStore {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    @warn_unused_result
     public static func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
         
         return self.defaultStack.queryValueFrom(from, selectClause: selectClause, queryClauses: queryClauses)
@@ -181,7 +171,6 @@ public extension CSCoreStore {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    @warn_unused_result
     public static func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
         
         return self.defaultStack.queryAttributesFrom(from, selectClause: selectClause, queryClauses: queryClauses)

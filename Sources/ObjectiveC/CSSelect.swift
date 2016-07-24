@@ -45,7 +45,6 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          select:CSSelectString(CSAttribute(@"fullname"))
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
-     
      - parameter keyPath: the attribute name
      */
     @objc
@@ -61,7 +60,6 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm average:@"age" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter `as`: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the average value of an attribute
@@ -79,7 +77,6 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm count:@"employeeID" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for a count query
@@ -97,7 +94,6 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm maximum:@"age" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the maximum value for an attribute
@@ -115,7 +111,6 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm minimum:@"age" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the minimum value for an attribute
@@ -133,7 +128,6 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm sum:@"age" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the sum value for an attribute
@@ -152,7 +146,6 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          select:[CSSelect objectIDForTerm:[CSSelectTerm objectIDAs:nil]]
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
@@ -221,7 +214,6 @@ public final class CSSelect: NSObject {
         select:CSSelectNumber(CSAggregateMax(@"age"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(numberTerm: CSSelectTerm) {
@@ -237,7 +229,6 @@ public final class CSSelect: NSObject {
         select:CSSelectDecimal(CSAggregateAverage(@"price"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(decimalTerm: CSSelectTerm) {
@@ -253,7 +244,6 @@ public final class CSSelect: NSObject {
         select:CSSelectString(CSAttribute(@"fullname"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(stringTerm: CSSelectTerm) {
@@ -269,7 +259,6 @@ public final class CSSelect: NSObject {
         select:CSSelectDate(CSAggregateMax(@"updatedDate"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(dateTerm: CSSelectTerm) {
@@ -285,7 +274,6 @@ public final class CSSelect: NSObject {
         select:CSSelectData(CSAttribute(@"imageData"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(dataTerm: CSSelectTerm) {
@@ -301,7 +289,6 @@ public final class CSSelect: NSObject {
         select:CSSelectObjectID()
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(objectIDTerm: ()) {
@@ -316,7 +303,6 @@ public final class CSSelect: NSObject {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect dictionaryForTerm:[CSSelectTerm maximum:@"age" as:nil]]];
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
@@ -335,7 +321,6 @@ public final class CSSelect: NSObject {
              [CSSelectTerm attribute:@"age" as:nil]
          ]]];
      ```
-     
      - parameter terms: the `CSSelectTerm`s specifying the attribute/aggregate values to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */

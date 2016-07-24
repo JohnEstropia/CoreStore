@@ -62,7 +62,6 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
      MyPersonEntity *person = [transaction createInto:
         CSIntoClass([MyPersonEntity class])];
      ```
-     
      - parameter entityClass: the `NSManagedObject` class type to be created
      */
     @objc
@@ -77,7 +76,6 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
      MyPersonEntity *person = [transaction createInto:
         CSIntoClass([MyPersonEntity class])];
      ```
-     
      - parameter entityClass: the `NSManagedObject` class type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */

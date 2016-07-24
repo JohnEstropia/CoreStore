@@ -95,7 +95,7 @@ public final class DataStack {
     /**
      Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass.
      */
-    public func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
+    public func entityDescription(for type: NSManagedObject.Type) -> NSEntityDescription? {
         
         return NSEntityDescription.entity(
             forEntityName: self.model.entityNameForClass(type),
@@ -116,7 +116,6 @@ public final class DataStack {
      ```
      try dataStack.addStorageAndWait()
      ```
-     
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local SQLite storage added to the stack
      */
@@ -131,7 +130,6 @@ public final class DataStack {
      ```
      try dataStack.addStorageAndWait(InMemoryStore.self)
      ```
-     
      - parameter storeType: the `StorageInterface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the stack
@@ -147,7 +145,6 @@ public final class DataStack {
      ```
      try dataStack.addStorageAndWait(InMemoryStore(configuration: "Config1"))
      ```
-     
      - parameter storage: the `StorageInterface`
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the stack
@@ -187,7 +184,6 @@ public final class DataStack {
      ```
      try dataStack.addStorageAndWait(SQLiteStore.self)
      ```
-     
      - parameter storeType: the `LocalStorageface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the stack
@@ -203,7 +199,6 @@ public final class DataStack {
      ```
      try dataStack.addStorageAndWait(SQLiteStore(configuration: "Config1"))
      ```
-     
      - parameter storage: the local storage
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
@@ -226,8 +221,8 @@ public final class DataStack {
             
             if let persistentStore = self.coordinator.persistentStore(for: fileURL as URL) {
                 
-                if let existingStorage = persistentStore.storageInterface as? T
-                    where storage.matchesPersistentStore(persistentStore) {
+                if let existingStorage = persistentStore.storageInterface as? T,
+                    storage.matchesPersistentStore(persistentStore) {
                     
                     return existingStorage
                 }
@@ -304,7 +299,6 @@ public final class DataStack {
      }
      try dataStack.addStorageAndWait(storage)
      ```
-     
      - parameter storage: the local storage
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the cloud storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
@@ -322,8 +316,8 @@ public final class DataStack {
             let cacheFileURL = storage.cacheFileURL
             if let persistentStore = self.coordinator.persistentStore(for: cacheFileURL as URL) {
                 
-                if let existingStorage = persistentStore.storageInterface as? T
-                    where storage.matchesPersistentStore(persistentStore) {
+                if let existingStorage = persistentStore.storageInterface as? T,
+                    storage.matchesPersistentStore(persistentStore) {
                     
                     return existingStorage
                 }
@@ -518,12 +512,20 @@ public final class DataStack {
             }
         }
     }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated: 3.0.0, renamed: "entityDescription(for:)")
+    public func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
+        
+        return self.entityDescription(for: type)
+    }
 }
 
 
 // MARK: - DataStack: Equatable
 
-@warn_unused_result
 public func == (lhs: DataStack, rhs: DataStack) -> Bool {
     
     return lhs === rhs

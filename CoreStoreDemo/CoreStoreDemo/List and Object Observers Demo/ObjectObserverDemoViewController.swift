@@ -58,10 +58,10 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
             
             CoreStore.beginSynchronous { (transaction) -> Void in
                 
-                let palette = transaction.create(Into(Palette))
+                let palette = transaction.create(Into(Palette.self))
                 palette.setInitialValues()
                 
-                transaction.commitAndWait()
+                _ = transaction.commitAndWait()
             }
             
             let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending("hue")))!

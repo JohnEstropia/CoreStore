@@ -100,8 +100,8 @@ private struct Static {
 class StackSetupDemoViewController: UITableViewController {
     
     let accounts = [
-        Static.facebookStack.fetchAll(From(UserAccount)) ?? [],
-        Static.twitterStack.fetchAll(From(UserAccount)) ?? []
+        Static.facebookStack.fetchAll(From(UserAccount.self)) ?? [],
+        Static.twitterStack.fetchAll(From(UserAccount.self)) ?? []
     ]
     
     

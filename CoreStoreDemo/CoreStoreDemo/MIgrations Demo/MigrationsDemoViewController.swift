@@ -132,7 +132,7 @@ class MigrationsDemoViewController: UIViewController {
     @IBOutlet private dynamic weak var progressView: UIProgressView?
     @IBOutlet private dynamic weak var tableView: UITableView?
     
-    @IBAction private dynamic func segmentedControlValueChanged(sender: AnyObject?) {
+    @IBAction private dynamic func segmentedControlValueChanged(_ sender: AnyObject?) {
         
         guard let index = self.segmentedControl?.selectedSegmentIndex else {
             
@@ -275,8 +275,8 @@ class MigrationsDemoViewController: UIViewController {
     private func reloadTableHeaderWithProgress(_ progress: Progress) {
         
         self.progressView?.setProgress(Float(progress.fractionCompleted), animated: true)
-        self.titleLabel?.text = "Migrating: \(progress.localizedDescription)"
-        self.organismLabel?.text = "Progressive step \(progress.localizedAdditionalDescription)"
+        self.titleLabel?.text = "Migrating: \(progress.localizedDescription ?? "")"
+        self.organismLabel?.text = "Progressive step \(progress.localizedAdditionalDescription ?? "")"
     }
     
     private func updateDisplay(reloadData: Bool, scrollToSelection: Bool, animated: Bool) {
@@ -311,7 +311,8 @@ class MigrationsDemoViewController: UIViewController {
         
         tableView.layoutIfNeeded()
         
-        if let indexPath = self.lastSelectedIndexPath where indexPath.row < tableView.numberOfRows(inSection: 0) {
+        if let indexPath = self.lastSelectedIndexPath,
+            indexPath.row < tableView.numberOfRows(inSection: 0) {
             
             tableView.selectRow(at: indexPath,
                 animated: scrollToSelection && animated,

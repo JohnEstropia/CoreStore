@@ -145,7 +145,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     
     public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
-        if let predicate = fetchRequest.predicate where predicate != self.predicate {
+        if let predicate = fetchRequest.predicate, predicate != self.predicate {
             
             CoreStore.log(
                 .warning,

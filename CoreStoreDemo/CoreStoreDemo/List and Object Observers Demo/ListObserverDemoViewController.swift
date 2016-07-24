@@ -201,12 +201,12 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         self.tableView.endUpdates()
     }
     
-    func listMonitorWillRefetch(monitor: ListMonitor<Palette>) {
+    func listMonitorWillRefetch(_ monitor: ListMonitor<Palette>) {
         
         self.setTable(enabled: false)
     }
     
-    func listMonitorDidRefetch(monitor: ListMonitor<Palette>) {
+    func listMonitorDidRefetch(_ monitor: ListMonitor<Palette>) {
         
         self.filterBarButton?.title = Static.filter.rawValue
         self.tableView.reloadData()

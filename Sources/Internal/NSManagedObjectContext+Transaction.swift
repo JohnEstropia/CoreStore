@@ -129,7 +129,7 @@ internal extension NSManagedObjectContext {
                 return
             }
             
-            if let parentContext = self.parent where self.shouldCascadeSavesToParent {
+            if let parentContext = self.parent, self.shouldCascadeSavesToParent {
                 
                 switch parentContext.saveSynchronously() {
                     
@@ -183,7 +183,7 @@ internal extension NSManagedObjectContext {
                 return
             }
             
-            if let parentContext = self.parent where self.shouldCascadeSavesToParent {
+            if self.shouldCascadeSavesToParent, let parentContext = self.parent {
                 
                 parentContext.saveAsynchronouslyWithCompletion(completion)
             }
