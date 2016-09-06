@@ -53,7 +53,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(_ object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSError else {
             
@@ -64,7 +64,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     
@@ -150,27 +150,27 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
         case .differentStorageExistsAtURL(let existingPersistentStoreURL):
             code = .differentStorageExistsAtURL
             info = [
-                "existingPersistentStoreURL": existingPersistentStoreURL
+                "existingPersistentStoreURL" as NSObject: existingPersistentStoreURL as AnyObject
             ]
             
         case .mappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
             code = .mappingModelNotFound
             info = [
-                "localStoreURL": localStoreURL,
-                "targetModel": targetModel,
-                "targetModelVersion": targetModelVersion
+                "localStoreURL" as NSObject: localStoreURL as AnyObject,
+                "targetModel" as NSObject: targetModel,
+                "targetModelVersion" as NSObject: targetModelVersion as AnyObject
             ]
             
         case .progressiveMigrationRequired(let localStoreURL):
             code = .progressiveMigrationRequired
             info = [
-                "localStoreURL": localStoreURL
+                "localStoreURL" as NSObject: localStoreURL as AnyObject
             ]
             
         case .internalError(let NSError):
             code = .internalError
             info = [
-                "NSError": NSError
+                "NSError" as NSObject: NSError
             ]
         }
         
@@ -242,7 +242,7 @@ extension CoreStoreError: CoreStoreSwiftType {
 
 // MARK: Internal
 
-internal extension ErrorProtocol {
+internal extension Error {
     
     internal var bridgeToSwift: CoreStoreError {
         
@@ -254,7 +254,7 @@ internal extension ErrorProtocol {
         case let error as CSError:
             return error.bridgeToSwift
             
-        case let error as NSError where self.dynamicType is NSError.Type:
+        case let error as NSError where type(of: self) is NSError.Type:
             return .internalError(NSError: error)
             
         default:

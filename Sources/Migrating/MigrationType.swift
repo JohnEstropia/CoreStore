@@ -31,7 +31,7 @@ import Foundation
 /**
  The `MigrationType` specifies the type of migration required for a store.
  */
-public enum MigrationType: Boolean, Hashable {
+public enum MigrationType: Hashable {
     
     /**
      Indicates that the persistent store matches the latest model version and no migration is needed
@@ -108,10 +108,10 @@ public enum MigrationType: Boolean, Hashable {
         return false
     }
     
-    
-    // MARK: BooleanType
-    
-    public var boolValue: Bool {
+    /**
+     Returns `true` if the `MigrationType` is either a lightweight or a heavyweight migration. Returns `false` if no migrations specified.
+     */
+    public var hasMigration: Bool {
         
         switch self {
             

@@ -41,7 +41,7 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      The block to customize the `NSFetchRequest`
      */
     @objc
-    public var block: (fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void {
+    public var block: (_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void {
         
         return self.bridgeToSwift.closure
     }
@@ -53,7 +53,7 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - parameter block: the block to customize the `NSFetchRequest`
      */
     @objc
-    public convenience init(block: (fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void) {
+    public convenience init(block: (_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void) {
         
         self.init(Tweak(block))
     }
@@ -63,7 +63,7 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

@@ -72,14 +72,14 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     /**
      The list of sort descriptors
      */
-    public let sortDescriptors: [SortDescriptor]
+    public let sortDescriptors: [NSSortDescriptor]
     
     /**
      Initializes a `OrderBy` clause with an empty list of sort descriptors
      */
     public init() {
         
-        self.init([SortDescriptor]())
+        self.init([NSSortDescriptor]())
     }
     
     /**
@@ -87,7 +87,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
      
      - parameter sortDescriptor: a `NSSortDescriptor`
      */
-    public init(_ sortDescriptor: SortDescriptor) {
+    public init(_ sortDescriptor: NSSortDescriptor) {
         
         self.init([sortDescriptor])
     }
@@ -97,7 +97,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
      
      - parameter sortDescriptors: a series of `NSSortDescriptor`s
      */
-    public init(_ sortDescriptors: [SortDescriptor]) {
+    public init(_ sortDescriptors: [NSSortDescriptor]) {
         
         self.sortDescriptors = sortDescriptors
     }
@@ -110,7 +110,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     public init(_ sortKey: [SortKey]) {
         
         self.init(
-            sortKey.map { sortKey -> SortDescriptor in
+            sortKey.map { sortKey -> NSSortDescriptor in
                 
                 switch sortKey {
                     

@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - DataStack
@@ -135,7 +132,7 @@ public final class DataStack {
      - returns: the `StorageInterface` added to the stack
      */
     @discardableResult
-    public func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(_ storeType: T.Type) throws -> T {
+    public func addStorageAndWait<T: StorageInterface>(_ storeType: T.Type) throws -> T where T: DefaultInitializableStore {
         
         return try self.addStorageAndWait(storeType.init())
     }
@@ -189,7 +186,7 @@ public final class DataStack {
      - returns: the local storage added to the stack
      */
     @discardableResult
-    public func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(_ storageType: T.Type) throws -> T {
+    public func addStorageAndWait<T: LocalStorage>(_ storageType: T.Type) throws -> T where T: DefaultInitializableStore {
         
         return try self.addStorageAndWait(storageType.init())
     }
@@ -258,7 +255,7 @@ public final class DataStack {
                 catch let error as NSError where storage.localStorageOptions.contains(.recreateStoreOnModelMismatch) && error.isCoreDataMigrationError {
                     
                     let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
-                        ofType: storage.dynamicType.storeType,
+                        ofType: type(of: storage).storeType,
                         at: fileURL,
                         options: storeOptions
                     )
@@ -353,7 +350,7 @@ public final class DataStack {
                 catch let error as NSError where storage.cloudStorageOptions.contains(.recreateLocalStoreOnModelMismatch) && error.isCoreDataMigrationError {
                     
                     let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
-                        ofType: storage.dynamicType.storeType,
+                        ofType: type(of: storage).storeType,
                         at: cacheFileURL,
                         options: storeOptions
                     )
@@ -381,22 +378,28 @@ public final class DataStack {
     
     // MARK: Internal
     
-    internal static let applicationName = (Bundle.main.objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
+    internal static let applicationName = (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData"
     
     internal let coordinator: NSPersistentStoreCoordinator
     internal let rootSavingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
     internal let model: NSManagedObjectModel
     internal let migrationChain: MigrationChain
-    internal let childTransactionQueue = GCDQueue.createSerial("com.coreStore.dataStack.childTransactionQueue")
-    internal let storeMetadataUpdateQueue = GCDQueue.createConcurrent("com.coreStore.persistentStoreBarrierQueue")
+    internal let childTransactionQueue = DispatchQueue(serialWith: "com.coreStore.dataStack.childTransactionQueue")
+    internal let storeMetadataUpdateQueue = DispatchQueue(concurrentWith: "com.coreStore.persistentStoreBarrierQueue")
     internal let migrationQueue: OperationQueue = {
         
         let migrationQueue = OperationQueue()
         migrationQueue.maxConcurrentOperationCount = 1
         migrationQueue.name = "com.coreStore.migrationOperationQueue"
         migrationQueue.qualityOfService = .utility
-        migrationQueue.underlyingQueue = GCDQueue.createSerial("com.coreStore.migrationQueue").dispatchQueue()
+        migrationQueue.underlyingQueue = DispatchQueue(
+            label: "com.coreStore.migrationQueue",
+            qos: .userInitiated,
+            attributes: .allZeros,
+            autoreleaseFrequency: .workItem,
+            target: nil
+        )
         return migrationQueue
     }()
     
@@ -415,7 +418,7 @@ public final class DataStack {
     internal func persistentStoresForEntityClass(_ entityClass: AnyClass) -> [NSPersistentStore]? {
         
         var returnValue: [NSPersistentStore]? = nil
-        self.storeMetadataUpdateQueue.barrierSync {
+        self.storeMetadataUpdateQueue.sync(flags: .barrier) {
             
             returnValue = self.entityConfigurationsMapping[NSStringFromClass(entityClass)]?.map {
                 
@@ -428,7 +431,7 @@ public final class DataStack {
     internal func persistentStoreForEntityClass(_ entityClass: AnyClass, configuration: String?, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
         
         var returnValue: (store: NSPersistentStore?, isAmbiguous: Bool) = (store: nil, isAmbiguous: false)
-        self.storeMetadataUpdateQueue.barrierSync {
+        self.storeMetadataUpdateQueue.sync(flags: .barrier) {
             
             let configurationsForEntity = self.entityConfigurationsMapping[NSStringFromClass(entityClass)] ?? []
             if let configuration = configuration {
@@ -462,14 +465,14 @@ public final class DataStack {
     internal func createPersistentStoreFromStorage(_ storage: StorageInterface, finalURL: URL?, finalStoreOptions: [String: AnyObject]?) throws -> NSPersistentStore {
         
         let persistentStore = try self.coordinator.addPersistentStore(
-            ofType: storage.dynamicType.storeType,
+            ofType: type(of: storage).storeType,
             configurationName: storage.configuration,
             at: finalURL,
             options: finalStoreOptions
         )
         persistentStore.storageInterface = storage
         
-        self.storeMetadataUpdateQueue.barrierAsync {
+        self.storeMetadataUpdateQueue.async(flags: .barrier) {
             
             let configurationName = persistentStore.configurationName
             self.configurationStoreMapping[configurationName] = persistentStore

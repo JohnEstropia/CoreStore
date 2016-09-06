@@ -29,17 +29,17 @@ import CoreData
 
 public func && (left: Where, right: Where) -> Where {
     
-    return Where(CompoundPredicate(type: .and, subpredicates: [left.predicate, right.predicate]))
+    return Where(NSCompoundPredicate(type: .and, subpredicates: [left.predicate, right.predicate]))
 }
 
 public func || (left: Where, right: Where) -> Where {
     
-    return Where(CompoundPredicate(type: .or, subpredicates: [left.predicate, right.predicate]))
+    return Where(NSCompoundPredicate(type: .or, subpredicates: [left.predicate, right.predicate]))
 }
 
 public prefix func ! (clause: Where) -> Where {
     
-    return Where(CompoundPredicate(type: .not, subpredicates: [clause.predicate]))
+    return Where(NSCompoundPredicate(type: .not, subpredicates: [clause.predicate]))
 }
 
 
@@ -53,7 +53,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     /**
      The `NSPredicate` for the fetch or query
      */
-    public let predicate: Predicate
+    public let predicate: NSPredicate
     
     /**
      Initializes a `Where` clause with a predicate that always evaluates to `true`
@@ -70,7 +70,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      */
     public init(_ value: Bool) {
         
-        self.init(Predicate(value: value))
+        self.init(NSPredicate(value: value))
     }
     
     /**
@@ -81,7 +81,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      */
     public init(_ format: String, _ args: NSObject...) {
         
-        self.init(Predicate(format: format, argumentArray: args))
+        self.init(NSPredicate(format: format, argumentArray: args))
     }
     
     /**
@@ -92,7 +92,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      */
     public init(_ format: String, argumentArray: [NSObject]?) {
         
-        self.init(Predicate(format: format, argumentArray: argumentArray))
+        self.init(NSPredicate(format: format, argumentArray: argumentArray))
     }
     
     /**
@@ -104,8 +104,8 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     public init(_ keyPath: KeyPath, isEqualTo value: NSObject?) {
         
         self.init(value == nil
-            ? Predicate(format: "\(keyPath) == nil")
-            : Predicate(format: "\(keyPath) == %@", argumentArray: [value!]))
+            ? NSPredicate(format: "\(keyPath) == nil")
+            : NSPredicate(format: "\(keyPath) == %@", argumentArray: [value!]))
     }
     
     /**
@@ -116,7 +116,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      */
     public init(_ keyPath: KeyPath, isMemberOf list: [NSObject]) {
         
-        self.init(Predicate(format: "\(keyPath) IN %@", list))
+        self.init(NSPredicate(format: "\(keyPath) IN %@", list))
     }
     
     /**
@@ -125,9 +125,9 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence where S.Iterator.Element: NSObject>(_ keyPath: KeyPath, isMemberOf list: S) {
+    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: NSObject {
         
-        self.init(Predicate(format: "\(keyPath) IN %@", Array(list) as NSArray))
+        self.init(NSPredicate(format: "\(keyPath) IN %@", Array(list) as NSArray))
     }
     
     /**
@@ -135,7 +135,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      
      - parameter predicate: the `NSPredicate` for the fetch or query
      */
-    public init(_ predicate: Predicate) {
+    public init(_ predicate: NSPredicate) {
         
         self.predicate = predicate
     }

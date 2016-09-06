@@ -90,15 +90,15 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleSuccess(_ success: @noescape (migrationTypes: [CSMigrationType]) -> Void, failure: @noescape (error: NSError) -> Void) {
+    public func handleSuccess(_ success: (_ migrationTypes: [CSMigrationType]) -> Void, failure: (_ error: NSError) -> Void) {
         
         switch self.bridgeToSwift {
             
         case .success(let migrationTypes):
-            success(migrationTypes: migrationTypes.map { $0.bridgeToObjectiveC })
+            success(migrationTypes.map { $0.bridgeToObjectiveC })
             
         case .failure(let error):
-            failure(error: error.bridgeToObjectiveC)
+            failure(error.bridgeToObjectiveC)
         }
     }
     
@@ -110,13 +110,13 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
      - parameter success: the block to execute on success. The block passes an array of `CSMigrationType`s that indicates the migration steps completed.
      */
     @objc
-    public func handleSuccess(_ success: @noescape (migrationTypes: [CSMigrationType]) -> Void) {
+    public func handleSuccess(_ success: (_ migrationTypes: [CSMigrationType]) -> Void) {
         
         guard case .success(let migrationTypes) = self.bridgeToSwift else {
             
             return
         }
-        success(migrationTypes: migrationTypes.map { $0.bridgeToObjectiveC })
+        success(migrationTypes.map { $0.bridgeToObjectiveC })
     }
     
     /**
@@ -127,13 +127,13 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleFailure(_ failure: @noescape (error: NSError) -> Void) {
+    public func handleFailure(_ failure: (_ error: NSError) -> Void) {
         
         guard case .failure(let error) = self.bridgeToSwift else {
             
             return
         }
-        failure(error: error.bridgeToObjectiveC)
+        failure(error.bridgeToObjectiveC)
     }
     
     
@@ -144,7 +144,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(_ object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSMigrationResult else {
             
@@ -155,7 +155,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

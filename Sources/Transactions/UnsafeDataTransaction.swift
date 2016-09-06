@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - UnsafeDataTransaction
@@ -42,12 +39,12 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
      */
-    public func commit(_ completion: (result: SaveResult) -> Void) {
+    public func commit(_ completion: @escaping (_ result: SaveResult) -> Void) {
         
         self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             
             self.result = result
-            completion(result: result)
+            completion(result)
         }
     }
     
@@ -105,7 +102,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - parameter closure: the closure where changes can be made prior to the flush
      - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
      */
-    public func flush(closure: @noescape () throws -> Void) rethrows {
+    public func flush(closure: () throws -> Void) rethrows {
         
         try closure()
         self.context.processPendingChanges()
@@ -153,7 +150,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, supportsUndo: Bool) {
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, supportsUndo: Bool) {
         
         super.init(mainContext: mainContext, queue: queue, supportsUndo: supportsUndo, bypassesQueueing: true)
     }

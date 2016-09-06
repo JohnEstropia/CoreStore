@@ -43,11 +43,11 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
      */
     @objc
-    public func commitWithCompletion(_ completion: ((result: CSSaveResult) -> Void)?) {
+    public func commitWithCompletion(_ completion: ((_ result: CSSaveResult) -> Void)?) {
         
         self.bridgeToSwift.commit { (result) in
             
-            completion?(result: result.bridgeToObjectiveC)
+            completion?(result.bridgeToObjectiveC)
         }
     }
     
@@ -59,7 +59,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      */
     @objc
     @discardableResult
-    public func beginSynchronous(_ closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {
             
@@ -75,7 +75,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

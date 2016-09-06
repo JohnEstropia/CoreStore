@@ -24,9 +24,6 @@
 //
 
 import Foundation
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - NSProgress
@@ -39,7 +36,7 @@ public extension Progress {
      - parameter closure: the closure to execute on progress change
      */
     @nonobjc
-    public func setProgressHandler(_ closure: ((progress: Progress) -> Void)?) {
+    public func setProgressHandler(_ closure: ((_ progress: Progress) -> Void)?) {
         
         self.progressObserver.progressHandler = closure
     }
@@ -82,7 +79,7 @@ public extension Progress {
 private final class ProgressObserver: NSObject {
     
     private unowned let progress: Progress
-    private var progressHandler: ((progress: Progress) -> Void)? {
+    private var progressHandler: ((_ progress: Progress) -> Void)? {
         
         didSet {
             
@@ -132,7 +129,7 @@ private final class ProgressObserver: NSObject {
                 return
         }
         
-        GCDQueue.main.async { [weak self] () -> Void in
+        DispatchQueue.main.async { [weak self] () -> Void in
             
             self?.progressHandler?(progress: progress)
         }

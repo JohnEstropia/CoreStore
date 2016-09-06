@@ -60,7 +60,7 @@ public struct SectionBy {
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
      */
-    public init(_ sectionKeyPath: KeyPath, _ sectionIndexTransformer: (sectionName: String?) -> String?) {
+    public init(_ sectionKeyPath: KeyPath, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
         
         self.sectionKeyPath = sectionKeyPath
         self.sectionIndexTransformer = sectionIndexTransformer
@@ -70,7 +70,7 @@ public struct SectionBy {
     // MARK: Internal
     
     internal let sectionKeyPath: KeyPath
-    internal let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
+    internal let sectionIndexTransformer: (_ sectionName: KeyPath?) -> String?
 }
 
 #endif

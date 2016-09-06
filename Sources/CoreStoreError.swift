@@ -32,7 +32,7 @@ import CoreData
 /**
  All errors thrown from CoreStore are expressed in `CoreStoreError` enum values.
  */
-public enum CoreStoreError: ErrorProtocol, Hashable {
+public enum CoreStoreError: Error, Hashable {
     
     /**
      A failure occured because of an unknown error.
@@ -116,7 +116,7 @@ public enum CoreStoreError: ErrorProtocol, Hashable {
     
     // MARK: Internal
     
-    internal init(_ error: ErrorProtocol?) {
+    internal init(_ error: Error?) {
         
         self = error.flatMap { $0.bridgeToSwift } ?? .unknown
     }

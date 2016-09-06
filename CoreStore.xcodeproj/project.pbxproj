@@ -193,6 +193,10 @@
 		B52DD1C91BE1F94600949AFE /* NSManagedObjectContext+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */; };
 		B52DD1CA1BE1F94600949AFE /* NSManagedObjectModel+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51BE0691B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift */; };
 		B52DD1CB1BE1F94600949AFE /* WeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2D1AFF849C0064E85B /* WeakObject.swift */; };
+		B533C4DB1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */; };
+		B533C4DC1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */; };
+		B533C4DD1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */; };
+		B533C4DE1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */; };
 		B538BA771D15B3E30003A766 /* CoreStoreBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B538BA701D15B3E30003A766 /* CoreStoreBridge.m */; };
 		B538BA781D15B3E30003A766 /* CoreStoreBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B538BA701D15B3E30003A766 /* CoreStoreBridge.m */; };
 		B538BA791D15B3E30003A766 /* CoreStoreBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B538BA701D15B3E30003A766 /* CoreStoreBridge.m */; };
@@ -604,6 +608,7 @@
 		B529C2031CA4A2DB007E7EBD /* CSSaveResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSaveResult.swift; sourceTree = "<group>"; };
 		B52DD1741BE1F8CC00949AFE /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+CoreStore.swift"; sourceTree = "<group>"; };
 		B538BA701D15B3E30003A766 /* CoreStoreBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreStoreBridge.m; sourceTree = "<group>"; };
 		B53FB9FD1CAB2D2F00F0D40A /* CSMigrationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSMigrationResult.swift; sourceTree = "<group>"; };
 		B53FBA031CAB300C00F0D40A /* CSMigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSMigrationType.swift; sourceTree = "<group>"; };
@@ -1199,6 +1204,7 @@
 				B5E834BA1B7691F3001D3D50 /* Functions.swift */,
 				B5FAD6AB1B51285300714891 /* MigrationManager.swift */,
 				B5E84F2B1AFF849C0064E85B /* NotificationObserver.swift */,
+				B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */,
 				B5E84F2C1AFF849C0064E85B /* NSManagedObjectContext+CoreStore.swift */,
 				B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */,
 				B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */,
@@ -1614,6 +1620,7 @@
 				B5E2222A1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				B5E84F391AFF85470064E85B /* NSManagedObjectContext+Querying.swift in Sources */,
 				B5E84EE81AFF84610064E85B /* CoreStoreLogger.swift in Sources */,
+				B533C4DB1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */,
 				B559CD491CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
 				B5ECDC2F1CA81CDC00C7F112 /* CSCoreStore+Transaction.swift in Sources */,
 				B5E84F311AFF849C0064E85B /* WeakObject.swift in Sources */,
@@ -1762,6 +1769,7 @@
 				82BA18A71C4BBD2900A0916E /* CoreStore+Logging.swift in Sources */,
 				82BA18D81C4BBD7100A0916E /* WeakObject.swift in Sources */,
 				B559CD4B1CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
+				B533C4DC1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */,
 				B5ECDC311CA81CDC00C7F112 /* CSCoreStore+Transaction.swift in Sources */,
 				82BA18AF1C4BBD3100A0916E /* CoreStore+Transaction.swift in Sources */,
 				82BA18CB1C4BBD6400A0916E /* NSManagedObject+Convenience.swift in Sources */,
@@ -1910,6 +1918,7 @@
 				B52DD1A71BE1F93200949AFE /* BaseDataTransaction+Querying.swift in Sources */,
 				B546F96C1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
 				B52DD1C61BE1F94600949AFE /* NSManagedObjectContext+CoreStore.swift in Sources */,
+				B533C4DE1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */,
 				B5220E141D130614009BC71E /* DataStack+Observing.swift in Sources */,
 				B52DD1A21BE1F92C00949AFE /* CoreStore+Transaction.swift in Sources */,
 				B5E2222E1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
@@ -2058,6 +2067,7 @@
 				B563219F1BD65216006C9394 /* ObjectMonitor.swift in Sources */,
 				B56321B61BD6521C006C9394 /* WeakObject.swift in Sources */,
 				B559CD4C1CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
+				B533C4DD1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */,
 				B5ECDC321CA81CDC00C7F112 /* CSCoreStore+Transaction.swift in Sources */,
 				B56321AC1BD6521C006C9394 /* Functions.swift in Sources */,
 				B56321851BD65216006C9394 /* CoreStore+Logging.swift in Sources */,
@@ -2289,10 +2299,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Checkouts/GCDKit/build/Debug-appletvos",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2311,10 +2318,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Checkouts/GCDKit/build/Debug-appletvos",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

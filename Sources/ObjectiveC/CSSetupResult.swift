@@ -76,15 +76,15 @@ public final class CSSetupResult: NSObject {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleSuccess(_ success: @noescape (storage: CSStorageInterface) -> Void, failure: @noescape (error: NSError) -> Void) {
+    public func handleSuccess(_ success: (_ storage: CSStorageInterface) -> Void, failure: (_ error: NSError) -> Void) {
         
         if let storage = self.storage {
             
-            success(storage: storage)
+            success(storage)
         }
         else {
             
-            failure(error: self.error!)
+            failure(self.error!)
         }
     }
     
@@ -96,13 +96,13 @@ public final class CSSetupResult: NSObject {
      - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
      */
     @objc
-    public func handleSuccess(_ success: @noescape (storage: CSStorageInterface) -> Void) {
+    public func handleSuccess(_ success: (_ storage: CSStorageInterface) -> Void) {
         
         guard let storage = self.storage else {
             
             return
         }
-        success(storage: storage)
+        success(storage)
     }
     
     /**
@@ -113,13 +113,13 @@ public final class CSSetupResult: NSObject {
      - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
      */
     @objc
-    public func handleFailure(_ failure: @noescape (error: NSError) -> Void) {
+    public func handleFailure(_ failure: (_ error: NSError) -> Void) {
         
         guard let error = self.error else {
             
             return
         }
-        failure(error: error)
+        failure(error)
     }
     
     
@@ -134,7 +134,7 @@ public final class CSSetupResult: NSObject {
         return self.isSuccess.hashValue ^ self.error!.hashValue
     }
     
-    public override func isEqual(_ object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSSetupResult else {
             
@@ -146,13 +146,13 @@ public final class CSSetupResult: NSObject {
 
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     
     // MARK: CoreStoreObjectiveCType
     
-    public required init<T: StorageInterface where T: CoreStoreSwiftType, T.ObjectiveCType: CSStorageInterface>(_ swiftValue: SetupResult<T>) {
+    public required init<T: StorageInterface>(_ swiftValue: SetupResult<T>) where T: CoreStoreSwiftType, T.ObjectiveCType: CSStorageInterface {
         
         switch swiftValue {
             

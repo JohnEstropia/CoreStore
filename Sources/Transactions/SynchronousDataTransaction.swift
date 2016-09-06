@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - SynchronousDataTransaction
@@ -67,7 +64,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @discardableResult
-    public func beginSynchronous(_ closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    public func beginSynchronous(_ closure: (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
@@ -173,7 +170,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      
      - parameter objects: the `NSManagedObject`s to be deleted
      */
-    public override func delete<S: Sequence where S.Iterator.Element: NSManagedObject>(_ objects: S) {
+    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: NSManagedObject {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -186,7 +183,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: SynchronousDataTransaction) -> Void) {
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, closure: (_ transaction: SynchronousDataTransaction) -> Void) {
         
         self.closure = closure
         
@@ -213,5 +210,5 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Private
     
-    private let closure: (transaction: SynchronousDataTransaction) -> Void
+    private let closure: (_ transaction: SynchronousDataTransaction) -> Void
 }

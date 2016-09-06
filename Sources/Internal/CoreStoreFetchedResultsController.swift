@@ -36,7 +36,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     // MARK: Internal
     
     @nonobjc
-    internal convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -48,14 +48,14 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     }
     
     @nonobjc
-    internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         _ = from?.applyToFetchRequest(
             fetchRequest,
             context: context,
             applyAffectedStores: false
         )
-        applyFetchClauses(fetchRequest: unsafeBitCast(fetchRequest, to: NSFetchRequest<NSManagedObject>.self))
+        applyFetchClauses(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSManagedObject>.self))
         
         if let from = from {
             
@@ -88,7 +88,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     @nonobjc
     internal func performFetchFromSpecifiedStores() throws {
         
-        if !self.reapplyAffectedStores(fetchRequest: self.fetchRequest, context: self.managedObjectContext) {
+        if !self.reapplyAffectedStores(self.fetchRequest, self.managedObjectContext) {
             
             CoreStore.log(
                 .warning,
@@ -113,7 +113,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     // MARK: Private
     
     @nonobjc
-    private let reapplyAffectedStores: (fetchRequest: NSFetchRequest<NSManagedObject>, context: NSManagedObjectContext) -> Bool
+    private let reapplyAffectedStores: (_ fetchRequest: NSFetchRequest<NSManagedObject>, _ context: NSManagedObjectContext) -> Bool
 }
 
 #endif

@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - AsynchronousDataTransaction
@@ -42,7 +39,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
      */
-    public func commit(_ completion: (result: SaveResult) -> Void = { _ in }) {
+    public func commit(_ completion: @escaping (_ result: SaveResult) -> Void = { _ in }) {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
@@ -54,12 +51,12 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         )
         
         self.isCommitted = true
-        let group = GCDGroup()
+        let group = DispatchGroup()
         group.enter()
         self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             
             self.result = result
-            completion(result: result)
+            completion(result)
             group.leave()
         }
         group.wait()
@@ -72,7 +69,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @discardableResult
-    public func beginSynchronous(_ closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    public func beginSynchronous(_ closure: (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         CoreStore.assert(
             self.transactionQueue.isCurrentExecutionContext(),
@@ -178,7 +175,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      
      - parameter objects: the `NSManagedObject`s type to be deleted
      */
-    public override func delete<S: Sequence where S.Iterator.Element: NSManagedObject>(_ objects: S) {
+    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: NSManagedObject {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -191,7 +188,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: AsynchronousDataTransaction) -> Void) {
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, closure: (_ transaction: AsynchronousDataTransaction) -> Void) {
         
         self.closure = closure
         
@@ -233,5 +230,5 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Private
     
-    private let closure: (transaction: AsynchronousDataTransaction) -> Void
+    private let closure: (_ transaction: AsynchronousDataTransaction) -> Void
 }

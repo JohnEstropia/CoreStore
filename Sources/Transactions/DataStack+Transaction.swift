@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - DataStack
@@ -39,7 +36,7 @@ public extension DataStack {
      
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
-    public func beginAsynchronous(_ closure: (transaction: AsynchronousDataTransaction) -> Void) {
+    public func beginAsynchronous(_ closure: (_ transaction: AsynchronousDataTransaction) -> Void) {
         
         AsynchronousDataTransaction(
             mainContext: self.rootSavingContext,
@@ -54,7 +51,7 @@ public extension DataStack {
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @discardableResult
-    public func beginSynchronous(_ closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    public func beginSynchronous(_ closure: (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         return SynchronousDataTransaction(
             mainContext: self.rootSavingContext,

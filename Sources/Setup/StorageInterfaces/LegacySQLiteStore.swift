@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - LegacySQLiteStore
@@ -177,7 +174,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
             
             let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
             let store = try journalUpdatingCoordinator.addPersistentStore(
-                ofType: self.dynamicType.storeType,
+                ofType: type(of: self).storeType,
                 configurationName: self.configuration,
                 at: fileURL,
                 options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
@@ -197,7 +194,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
                     attributes: nil
                 )
                 try fileManager.moveItem(at: fileURL, to: temporaryFile)
-                GCDQueue.background.async {
+                DispatchQueue.global(qos: .background).async {
                     
                     _ = try? fileManager.removeItem(at: temporaryFile)
                 }

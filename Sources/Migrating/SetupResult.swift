@@ -60,7 +60,7 @@ import CoreData
  )
  ```
  */
-public enum SetupResult<T: StorageInterface>: Boolean, Hashable {
+public enum SetupResult<T: StorageInterface>: Hashable {
     
     /**
      `SetupResult.success` indicates that the storage setup succeeded. The associated object for this `enum` value is the related `StorageInterface` instance.
@@ -73,9 +73,10 @@ public enum SetupResult<T: StorageInterface>: Boolean, Hashable {
     case failure(CoreStoreError)
     
     
-    // MARK: BooleanType
-    
-    public var boolValue: Bool {
+    /**
+     Returns `true` if the result indicates `.success`, `false` if the result is `.failure`.
+     */
+    public var isSuccess: Bool {
         
         switch self {
             
@@ -112,7 +113,7 @@ public enum SetupResult<T: StorageInterface>: Boolean, Hashable {
         self = .failure(error)
     }
     
-    internal init(_ error: ErrorProtocol) {
+    internal init(_ error: Error) {
         
         self = .failure(CoreStoreError(error))
     }

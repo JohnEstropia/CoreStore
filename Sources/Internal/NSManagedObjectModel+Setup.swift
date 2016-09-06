@@ -36,7 +36,7 @@ internal extension NSManagedObjectModel {
     @nonobjc
     internal static func fromBundle(_ bundle: Bundle, modelName: String, modelVersionHints: Set<String> = []) -> NSManagedObjectModel {
         
-        guard let modelFilePath = bundle.pathForResource(modelName, ofType: "momd") else {
+        guard let modelFilePath = bundle.path(forResource: modelName, ofType: "momd") else {
             
             CoreStore.abort("Could not find \"\(modelName).momd\" from the bundle. \(bundle)")
         }

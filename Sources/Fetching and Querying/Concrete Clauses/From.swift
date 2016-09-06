@@ -201,7 +201,7 @@ public struct From<T: NSManagedObject> {
     
     internal func applyAffectedStoresForFetchedRequest<U: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<U>, context: NSManagedObjectContext) -> Bool {
         
-        let stores = self.findPersistentStores(context: context)
+        let stores = self.findPersistentStores(context)
         fetchRequest.affectedStores = stores
         return stores?.isEmpty == false
     }
@@ -218,7 +218,7 @@ public struct From<T: NSManagedObject> {
     
     // MARK: Private
     
-    private let findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?
+    private let findPersistentStores: (_ context: NSManagedObjectContext) -> [NSPersistentStore]?
     
     private init(entityClass: AnyClass, configurations: [String?]?) {
         
@@ -244,7 +244,7 @@ public struct From<T: NSManagedObject> {
         }
     }
     
-    private init(entityClass: AnyClass, configurations: [String?]?, findPersistentStores: (context: NSManagedObjectContext) -> [NSPersistentStore]?) {
+    private init(entityClass: AnyClass, configurations: [String?]?, findPersistentStores: @escaping (_ context: NSManagedObjectContext) -> [NSPersistentStore]?) {
         
         self.entityClass = entityClass
         self.configurations = configurations

@@ -57,7 +57,7 @@ import Foundation
  }
  ```
  */
-public enum MigrationResult: Boolean, Hashable {
+public enum MigrationResult: Hashable {
     
     /**
      `MigrationResult.success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
@@ -70,9 +70,10 @@ public enum MigrationResult: Boolean, Hashable {
     case failure(CoreStoreError)
     
     
-    // MARK: BooleanType
-    
-    public var boolValue: Bool {
+    /**
+     Returns `true` if the result indicates `.success`, `false` if the result is `.failure`.
+     */
+    public var isSuccess: Bool {
         
         switch self {
             
@@ -90,7 +91,7 @@ public enum MigrationResult: Boolean, Hashable {
             
         case .success(let migrationTypes):
             return self.boolValue.hashValue
-                ^ migrationTypes.map { $0.hashValue }.reduce(0, combine: ^).hashValue
+                ^ migrationTypes.map { $0.hashValue }.reduce(0, ^).hashValue
             
         case .failure(let error):
             return self.boolValue.hashValue ^ error.hashValue
@@ -110,7 +111,7 @@ public enum MigrationResult: Boolean, Hashable {
         self = .failure(error)
     }
     
-    internal init(_ error: ErrorProtocol) {
+    internal init(_ error: Error) {
         
         self = .failure(CoreStoreError(error))
     }

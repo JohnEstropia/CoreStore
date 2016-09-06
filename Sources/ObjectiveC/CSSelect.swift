@@ -164,7 +164,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(_ object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSSelectTerm else {
             
@@ -335,10 +335,10 @@ public final class CSSelect: NSObject {
     public override var hash: Int {
         
         return self.attributeType.hashValue
-            ^ self.selectTerms.map { $0.hashValue }.reduce(0, combine: ^)
+            ^ self.selectTerms.map { $0.hashValue }.reduce(0, ^)
     }
     
-    public override func isEqual(_ object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSSelect else {
             
@@ -350,7 +350,7 @@ public final class CSSelect: NSObject {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

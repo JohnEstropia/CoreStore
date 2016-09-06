@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - NSManagedObjectContext
@@ -150,13 +147,13 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func saveAsynchronouslyWithCompletion(_ completion: ((result: SaveResult) -> Void) = { _ in }) {
+    internal func saveAsynchronouslyWithCompletion(_ completion: ((_ result: SaveResult) -> Void) = { _ in }) {
         
         self.perform {
             
             guard self.hasChanges else {
                 
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(result: SaveResult(hasChanges: false))
                 }
@@ -176,7 +173,7 @@ internal extension NSManagedObjectContext {
                     saveError,
                     "Failed to save \(cs_typeName(NSManagedObjectContext.self))."
                 )
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(result: SaveResult(saveError))
                 }
@@ -189,7 +186,7 @@ internal extension NSManagedObjectContext {
             }
             else {
                 
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(result: SaveResult(hasChanges: true))
                 }

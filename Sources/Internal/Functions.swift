@@ -27,7 +27,7 @@ import Foundation
 
 // MARK: Associated Objects
 
-internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafePointer<Void>, inObject object: AnyObject) -> T? {
+internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafeRawPointer, inObject object: AnyObject) -> T? {
     
     switch objc_getAssociatedObject(object, key) {
         
@@ -42,17 +42,17 @@ internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafePointer<Vo
     }
 }
 
-internal func cs_setAssociatedRetainedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
+internal func cs_setAssociatedRetainedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: AnyObject) {
     
     objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 }
 
-internal func cs_setAssociatedCopiedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
+internal func cs_setAssociatedCopiedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: AnyObject) {
     
     objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_COPY_NONATOMIC)
 }
 
-internal func cs_setAssociatedWeakObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafePointer<Void>, inObject object: AnyObject) {
+internal func cs_setAssociatedWeakObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: AnyObject) {
     
     if let associatedObject = associatedObject {
         
@@ -69,7 +69,7 @@ internal func cs_setAssociatedWeakObject<T: AnyObject>(_ associatedObject: T?, f
 
 internal func cs_typeName<T>(_ value: T) -> String {
     
-    return "'\(String(reflecting: value.dynamicType))'"
+    return "'\(String(reflecting: type(of: value)))'"
 }
 
 internal func cs_typeName<T>(_ value: T.Type) -> String {

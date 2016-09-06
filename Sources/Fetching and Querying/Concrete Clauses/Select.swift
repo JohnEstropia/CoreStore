@@ -64,7 +64,7 @@ public protocol SelectAttributesResultType: SelectResultType {
 /**
  The `SelectTerm` is passed to the `Select` clause to indicate the attributes/aggregate keys to be queried.
  */
-public enum SelectTerm: StringLiteralConvertible, Hashable {
+public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
     
     /**
      Provides a `SelectTerm` to a `Select` clause for querying an entity attribute. A shorter way to do the same is to assign from the string keypath directly:
@@ -223,7 +223,7 @@ public enum SelectTerm: StringLiteralConvertible, Hashable {
     }
     
     
-    // MARK: StringLiteralConvertible
+    // MARK: ExpressibleByStringLiteral
     
     public init(stringLiteral value: KeyPath) {
         
@@ -367,7 +367,7 @@ public struct Select<T: SelectResultType>: Hashable {
     
     public var hashValue: Int {
         
-        return self.selectTerms.map { $0.hashValue }.reduce(0, combine: ^)
+        return self.selectTerms.map { $0.hashValue }.reduce(0, ^)
     }
     
     

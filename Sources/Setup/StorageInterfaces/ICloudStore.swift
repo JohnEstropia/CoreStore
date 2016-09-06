@@ -434,9 +434,9 @@ public class ICloudStore: CloudStorage {
             let options = [
                 NSSQLitePragmasOption: ["journal_mode": "DELETE"],
                 NSPersistentStoreRemoveUbiquitousMetadataOption: true
-            ]
+            ] as [String : Any]
             let store = try journalUpdatingCoordinator.addPersistentStore(
-                ofType: self.dynamicType.storeType,
+                ofType: type(of: self).storeType,
                 configurationName: self.configuration,
                 at: cacheFileURL,
                 options: options
@@ -470,7 +470,7 @@ public class ICloudStore: CloudStorage {
     
     private weak var dataStack: DataStack?
     
-    private func registerNotification<T: ICloudStoreObserver>(_ notificationKey: UnsafePointer<Void>, name: Notification.Name, toObserver observer: T, callback: (observer: T, storage: ICloudStore, dataStack: DataStack) -> Void) {
+    private func registerNotification<T: ICloudStoreObserver>(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: T, callback: @escaping (_ observer: T, _ storage: ICloudStore, _ dataStack: DataStack) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -485,7 +485,7 @@ public class ICloudStore: CloudStorage {
                             
                             return
                     }
-                    callback(observer: observer, storage: self, dataStack: dataStack)
+                    callback(observer, self, dataStack)
                 }
             ),
             forKey: notificationKey,

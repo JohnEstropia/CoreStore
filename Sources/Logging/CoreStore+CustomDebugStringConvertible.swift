@@ -912,7 +912,7 @@ private func formattedValue(_ any: Any) -> String {
 
 private func formattedDebugDescription(_ any: Any) -> String {
     
-    var string = "(\(String(reflecting: any.dynamicType))) "
+    var string = "(\(String(reflecting: type(of: any)))) "
     string.append(formattedValue(any))
     return string
 }
@@ -1163,7 +1163,7 @@ extension NSMappingModel: CoreStoreDebugStringConvertible {
     }
 }
 
-extension Predicate: CoreStoreDebugStringConvertible {
+extension NSPredicate: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         
@@ -1199,7 +1199,7 @@ extension NSRelationshipDescription: CoreStoreDebugStringConvertible {
     }
 }
 
-extension SortDescriptor: CoreStoreDebugStringConvertible {
+extension NSSortDescriptor: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         

@@ -36,11 +36,11 @@ public extension CSDataStack {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
     @objc
-    public func beginAsynchronous(_ closure: (transaction: CSAsynchronousDataTransaction) -> Void) {
+    public func beginAsynchronous(_ closure: @escaping (_ transaction: CSAsynchronousDataTransaction) -> Void) {
         
         return self.bridgeToSwift.beginAsynchronous { (transaction) in
             
-            closure(transaction: transaction.bridgeToObjectiveC)
+            closure(transaction.bridgeToObjectiveC)
         }
     }
     
@@ -52,7 +52,7 @@ public extension CSDataStack {
      */
     @objc
     @discardableResult
-    public func beginSynchronous(_ closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {
             

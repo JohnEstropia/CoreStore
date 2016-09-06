@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - CoreStore
@@ -81,7 +78,7 @@ public extension CoreStore {
      - returns: the `StorageInterface` added to the `defaultStack`
      */
     @discardableResult
-    public static func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(_ storeType: T.Type) throws -> T {
+    public static func addStorageAndWait<T: StorageInterface>(_ storeType: T.Type) throws -> T where T: DefaultInitializableStore {
         
         return try self.defaultStack.addStorageAndWait(storeType.init())
     }
@@ -111,7 +108,7 @@ public extension CoreStore {
      - returns: the local storage added to the `defaultStack`
      */
     @discardableResult
-    public static func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(_ storageType: T.Type) throws -> T {
+    public static func addStorageAndWait<T: LocalStorage>(_ storageType: T.Type) throws -> T where T: DefaultInitializableStore {
         
         return try self.defaultStack.addStorageAndWait(storageType.init())
     }

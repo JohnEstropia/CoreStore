@@ -59,7 +59,7 @@ public extension CoreStore {
      - parameter objects: an array of `NSManagedObject`s created/fetched outside the `DataStack`
      - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
      */
-    public static func fetchExisting<T: NSManagedObject, S: Sequence where S.Iterator.Element == T>(_ objects: S) -> [T] {
+    public static func fetchExisting<T: NSManagedObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
         
         return self.defaultStack.fetchExisting(objects)
     }
@@ -70,7 +70,7 @@ public extension CoreStore {
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
      */
-    public static func fetchExisting<T: NSManagedObject, S: Sequence where S.Iterator.Element == NSManagedObjectID>(_ objectIDs: S) -> [T] {
+    public static func fetchExisting<T: NSManagedObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
         
         return self.defaultStack.fetchExisting(objectIDs)
     }

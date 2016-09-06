@@ -24,7 +24,6 @@
 //
 
 import XCTest
-import GCDKit
 
 @testable
 import CoreStore
@@ -651,7 +650,7 @@ final class TransactionTests: BaseTestCase {
                     
                     transaction.delete(object)
                     
-                    GCDQueue.main.async {
+                    DispatchQueue.main.async {
                         
                         XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                         

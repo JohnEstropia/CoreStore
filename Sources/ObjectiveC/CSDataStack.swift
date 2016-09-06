@@ -244,7 +244,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
-    public override func isEqual(_ object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSDataStack else {
             
@@ -255,7 +255,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

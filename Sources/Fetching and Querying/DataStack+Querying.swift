@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - DataStack
@@ -76,7 +73,7 @@ public extension DataStack {
      - parameter objects: an array of `NSManagedObject`s created/fetched outside the `DataStack`
      - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
      */
-    public func fetchExisting<T: NSManagedObject, S: Sequence where S.Iterator.Element == T>(_ objects: S) -> [T] {
+    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
         
         return objects.flatMap { (try? self.mainContext.existingObject(with: $0.objectID)) as? T }
     }
@@ -87,7 +84,7 @@ public extension DataStack {
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
      */
-    public func fetchExisting<T: NSManagedObject, S: Sequence where S.Iterator.Element == NSManagedObjectID>(_ objectIDs: S) -> [T] {
+    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
         
         return objectIDs.flatMap { (try? self.mainContext.existingObject(with: $0)) as? T }
     }

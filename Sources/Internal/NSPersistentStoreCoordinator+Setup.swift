@@ -26,23 +26,19 @@
 import Foundation
 import CoreData
 
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
-
 
 // MARK: - NSPersistentStoreCoordinator
 
 internal extension NSPersistentStoreCoordinator {
     
     @nonobjc
-    internal func performAsynchronously(_ closure: () -> Void) {
+    internal func performAsynchronously(_ closure: @escaping () -> Void) {
         
         self.perform(closure)
     }
     
     @nonobjc
-    internal func performSynchronously<T>(_ closure: () -> T) -> T {
+    internal func performSynchronously<T>(_ closure: @escaping () -> T) -> T {
         
         var result: T?
         self.performAndWait {
@@ -53,9 +49,9 @@ internal extension NSPersistentStoreCoordinator {
     }
     
     @nonobjc
-    internal func performSynchronously<T>(_ closure: () throws -> T) throws -> T {
+    internal func performSynchronously<T>(_ closure: @escaping () throws -> T) throws -> T {
         
-        var closureError: ErrorProtocol?
+        var closureError: Error?
         var result: T?
         self.performAndWait {
             

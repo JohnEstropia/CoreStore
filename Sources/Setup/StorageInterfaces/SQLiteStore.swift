@@ -24,9 +24,6 @@
 //
 
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - SQLiteStore
@@ -174,7 +171,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
             
             let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
             let store = try journalUpdatingCoordinator.addPersistentStore(
-                ofType: self.dynamicType.storeType,
+                ofType: type(of: self).storeType,
                 configurationName: self.configuration,
                 at: fileURL,
                 options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
@@ -194,7 +191,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
                     attributes: nil
                 )
                 try fileManager.moveItem(at: fileURL, to: temporaryFile)
-                GCDQueue.background.async {
+                DispatchQueue.global(qos: .background).async {
                     
                     _ = try? fileManager.removeItem(at: temporaryFile)
                 }
@@ -226,9 +223,9 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
         )
     }()
     
-    internal static let defaultFileURL = try! SQLiteStore.defaultRootDirectory
+    internal static let defaultFileURL = SQLiteStore.defaultRootDirectory
         .appendingPathComponent(
-            (Bundle.main.objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData",
+            (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData",
             isDirectory: false
         )
         .appendingPathExtension("sqlite")

@@ -266,7 +266,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
         return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
-    public override func isEqual(_ object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSBaseDataTransaction else {
             

@@ -36,7 +36,7 @@ public extension Progress {
      - parameter closure: the closure to execute on progress change
      */
     @objc
-    public func cs_setProgressHandler(_ closure: ((progress: Progress) -> Void)?) {
+    public func cs_setProgressHandler(_ closure: ((_ progress: Progress) -> Void)?) {
         
         self.setProgressHandler(closure)
     }

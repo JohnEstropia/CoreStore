@@ -35,7 +35,7 @@ public extension CoreStore {
      
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
-    public static func beginAsynchronous(_ closure: (transaction: AsynchronousDataTransaction) -> Void) {
+    public static func beginAsynchronous(_ closure: (_ transaction: AsynchronousDataTransaction) -> Void) {
         
         self.defaultStack.beginAsynchronous(closure)
     }
@@ -47,7 +47,7 @@ public extension CoreStore {
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @discardableResult
-    public static func beginSynchronous(_ closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    public static func beginSynchronous(_ closure: (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         return self.defaultStack.beginSynchronous(closure)
     }

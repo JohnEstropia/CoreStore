@@ -92,7 +92,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
         return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
-    public override func isEqual(_ object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSInMemoryStore else {
             
@@ -103,7 +103,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

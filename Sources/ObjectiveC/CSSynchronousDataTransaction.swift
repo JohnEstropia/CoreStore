@@ -59,7 +59,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
      */
     @objc
     @discardableResult
-    public func beginSynchronous(_ closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {
             
@@ -75,7 +75,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

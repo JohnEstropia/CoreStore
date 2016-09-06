@@ -82,7 +82,7 @@ public protocol DefaultInitializableStore: StorageInterface {
 /**
  The `LocalStorageOptions` provides settings that tells the `DataStack` how to setup the persistent store for `LocalStorage` implementers.
  */
-public struct LocalStorageOptions: OptionSet, NilLiteralConvertible {
+public struct LocalStorageOptions: OptionSet, ExpressibleByNilLiteral {
     
     /**
      Tells the `DataStack` that the store should not be migrated or recreated, and should simply fail on model mismatch
@@ -119,7 +119,7 @@ public struct LocalStorageOptions: OptionSet, NilLiteralConvertible {
     public let rawValue: Int
     
     
-    // MARK: NilLiteralConvertible
+    // MARK: ExpressibleByNilLiteral
     
     public init(nilLiteral: ()) {
         
@@ -165,7 +165,7 @@ internal extension LocalStorage {
     
     internal func matchesPersistentStore(_ persistentStore: NSPersistentStore) -> Bool {
         
-        return persistentStore.type == self.dynamicType.storeType
+        return persistentStore.type == type(of: self).storeType
             && persistentStore.configurationName == (self.configuration ?? Into.defaultConfigurationName)
             && persistentStore.url == self.fileURL
     }
@@ -177,7 +177,7 @@ internal extension LocalStorage {
 /**
  The `CloudStorageOptions` provides settings that tells the `DataStack` how to setup the persistent store for `LocalStorage` implementers.
  */
-public struct CloudStorageOptions: OptionSet, NilLiteralConvertible {
+public struct CloudStorageOptions: OptionSet, ExpressibleByNilLiteral {
     
     /**
      Tells the `DataStack` that the store should not be migrated or recreated, and should simply fail on model mismatch
@@ -208,7 +208,7 @@ public struct CloudStorageOptions: OptionSet, NilLiteralConvertible {
     public let rawValue: Int
     
     
-    // MARK: NilLiteralConvertible
+    // MARK: ExpressibleByNilLiteral
     
     public init(nilLiteral: ()) {
         
@@ -249,7 +249,7 @@ internal extension CloudStorage {
     
     internal func matchesPersistentStore(_ persistentStore: NSPersistentStore) -> Bool {
         
-        guard persistentStore.type == self.dynamicType.storeType
+        guard persistentStore.type == type(of: self).storeType
             && persistentStore.configurationName == (self.configuration ?? Into.defaultConfigurationName) else {
                 
                 return false

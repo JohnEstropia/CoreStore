@@ -70,6 +70,19 @@ public enum SaveResult: Hashable {
     case failure(CoreStoreError)
     
     
+    /**
+     Returns `true` if the result indicates `.success`, `false` if the result is `.failure`.
+     */
+    public var boolValue: Bool {
+        
+        switch self {
+            
+        case .success: return true
+        case .failure: return false
+        }
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -95,21 +108,6 @@ public enum SaveResult: Hashable {
     internal init(_ error: CoreStoreError) {
         
         self = .failure(error)
-    }
-}
-
-
-// MARK: - SaveResult: BooleanType
-
-extension SaveResult: Boolean {
-    
-    public var boolValue: Bool {
-        
-        switch self {
-            
-        case .success: return true
-        case .failure: return false
-        }
     }
 }
 

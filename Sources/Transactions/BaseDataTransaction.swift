@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - BaseDataTransaction
@@ -87,7 +84,7 @@ public /*abstract*/ class BaseDataTransaction {
             switch context.parentStack!.persistentStoreForEntityClass(
                 entityClass,
                 configuration: into.configuration
-                    ?? into.dynamicType.defaultConfigurationName,
+                    ?? type(of: into).defaultConfigurationName,
                 inferStoreIfPossible: false
             ) {
                 
@@ -187,7 +184,7 @@ public /*abstract*/ class BaseDataTransaction {
      
      - parameter objects: the `NSManagedObject`s to be deleted
      */
-    public func delete<S: Sequence where S.Iterator.Element: NSManagedObject>(_ objects: S) {
+    public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: NSManagedObject {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -453,8 +450,8 @@ public /*abstract*/ class BaseDataTransaction {
     // MARK: Internal
     
     internal let context: NSManagedObjectContext
-    internal let transactionQueue: GCDQueue
-    internal let childTransactionQueue = GCDQueue.createSerial("com.corestore.datastack.childtransactionqueue")
+    internal let transactionQueue: DispatchQueue
+    internal let childTransactionQueue = DispatchQueue(serialWith: "com.corestore.datastack.childtransactionqueue")
     internal let supportsUndo: Bool
     internal let bypassesQueueing: Bool
     
@@ -462,7 +459,7 @@ public /*abstract*/ class BaseDataTransaction {
     internal var isCommitted = false
     internal var result: SaveResult?
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, supportsUndo: Bool, bypassesQueueing: Bool) {
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, supportsUndo: Bool, bypassesQueueing: Bool) {
         
         let context = mainContext.temporaryContextInTransactionWithConcurrencyType(
             queue == .main

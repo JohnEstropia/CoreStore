@@ -60,7 +60,7 @@ import CoreData
  - a version appears twice as a key in a dictionary literal
  - a loop is found in any of the paths
  */
-public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, DictionaryLiteralConvertible, ArrayLiteralConvertible, Equatable {
+public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLiteral, ExpressibleByDictionaryLiteral, ExpressibleByArrayLiteral, Equatable {
     
     /**
      Initializes the `MigrationChain` with empty values, which instructs the `DataStack` to use the .xcdatamodel's current version as the final version, and to disable progressive migrations.
@@ -87,7 +87,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     /**
      Initializes the `MigrationChain` with a linear order of versions, which becomes the order of the `DataStack`'s progressive migrations.
      */
-    public init<T: Collection where T.Iterator.Element == String, T.SubSequence.Iterator.Element == String, T.Index: Comparable>(_ elements: T) {
+    public init<T: Collection>(_ elements: T) where T.Iterator.Element == String, T.SubSequence.Iterator.Element == String, T.Index: Comparable {
         
         CoreStore.assert(Set(elements).count == Array(elements).count, "\(cs_typeName(MigrationChain.self))'s migration chain could not be created due to duplicate version strings.")
         
@@ -168,7 +168,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     }
     
     
-    // MARK: NilLiteralConvertible
+    // MARK: ExpressibleByNilLiteral
     
     public init(nilLiteral: ()) {
         
@@ -176,7 +176,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     }
     
     
-    // MARK: StringLiteralConvertible
+    // MARK: ExpressibleByStringLiteral
     
     public init(stringLiteral value: String) {
         
@@ -200,7 +200,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     }
     
     
-    // MARK: DictionaryLiteralConvertible
+    // MARK: ExpressibleByDictionaryLiteral
     
     public init(dictionaryLiteral elements: (String, String)...) {
         
@@ -208,7 +208,7 @@ public struct MigrationChain: NilLiteralConvertible, StringLiteralConvertible, D
     }
     
     
-    // MARK: ArrayLiteralConvertible
+    // MARK: ExpressibleByArrayLiteral
     
     public init(arrayLiteral elements: String...) {
         

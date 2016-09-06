@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - DataStack
@@ -50,7 +47,7 @@ public extension DataStack {
      - parameter storeType: the storage type
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T: StorageInterface where T: DefaultInitializableStore>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) {
+    public func addStorage<T: StorageInterface>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) where T: DefaultInitializableStore {
         
         self.addStorage(storeType.init(), completion: completion)
     }
@@ -71,13 +68,13 @@ public extension DataStack {
      - parameter storage: the storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T: StorageInterface>(_ storage: T, completion: (SetupResult<T>) -> Void) {
+    public func addStorage<T: StorageInterface>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
         
         self.coordinator.performAsynchronously {
             
             if let _ = self.persistentStoreForStorage(storage) {
                 
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(SetupResult(storage))
                 }
@@ -92,7 +89,7 @@ public extension DataStack {
                     finalStoreOptions: storage.storeOptions
                 )
                 
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(SetupResult(storage))
                 }
@@ -104,7 +101,7 @@ public extension DataStack {
                     storeError,
                     "Failed to add \(cs_typeName(storage)) to the stack."
                 )
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(SetupResult(storeError))
                 }
@@ -129,9 +126,9 @@ public extension DataStack {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public func addStorage<T: LocalStorage where T: DefaultInitializableStore>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) -> Progress? {
+    public func addStorage<T: LocalStorage>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) -> Progress? where T: DefaultInitializableStore {
         
-        return self.addStorage(storeType.init(), completion: completion)
+        return self.addStorage(storeType.init() as! T.Type, completion: completion)
     }
     
     /**
@@ -151,7 +148,7 @@ public extension DataStack {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public func addStorage<T: LocalStorage>(_ storage: T, completion: (SetupResult<T>) -> Void) -> Progress? {
+    public func addStorage<T: LocalStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) -> Progress? {
         
         let fileURL = storage.fileURL
         CoreStore.assert(
@@ -163,7 +160,7 @@ public extension DataStack {
             
             if let _ = self.persistentStoreForStorage(storage) {
                 
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(SetupResult(storage))
                 }
@@ -175,7 +172,7 @@ public extension DataStack {
                 if let existingStorage = persistentStore.storageInterface as? T,
                     storage.matchesPersistentStore(persistentStore) {
                     
-                    GCDQueue.main.async {
+                    DispatchQueue.main.async {
                         
                         completion(SetupResult(existingStorage))
                     }
@@ -187,7 +184,7 @@ public extension DataStack {
                     error,
                     "Failed to add \(cs_typeName(storage)) at \"\(fileURL)\" because a different \(cs_typeName(NSPersistentStore.self)) at that URL already exists."
                 )
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(SetupResult(error))
                 }
@@ -203,14 +200,14 @@ public extension DataStack {
                 )
                 
                 let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
-                    ofType: storage.dynamicType.storeType,
+                    ofType: type(of: storage).storeType,
                     at: fileURL as URL,
                     options: storage.storeOptions
                 )
                 
                 return self.upgradeStorageIfNeeded(
                     storage,
-                    metadata: metadata,
+                    metadata: metadata as [String : AnyObject],
                     completion: { (result) -> Void in
                         
                         if case .failure(.internalError(let error)) = result {
@@ -222,7 +219,7 @@ public extension DataStack {
                                     _ = try self.model[metadata].flatMap(storage.eraseStorageAndWait)
                                     _ = try self.addStorageAndWait(storage)
                                     
-                                    GCDQueue.main.async {
+                                    DispatchQueue.main.async {
                                         
                                         completion(SetupResult(storage))
                                     }
@@ -258,14 +255,14 @@ public extension DataStack {
                         
                         _ = try self.addStorageAndWait(storage)
                         
-                        GCDQueue.main.async {
+                        DispatchQueue.main.async {
                             
                             completion(SetupResult(storage))
                         }
                     }
                     catch {
                         
-                        GCDQueue.main.async {
+                        DispatchQueue.main.async {
                             
                             completion(SetupResult(error))
                         }
@@ -279,7 +276,7 @@ public extension DataStack {
                     storeError,
                     "Failed to load SQLite \(cs_typeName(NSPersistentStore.self)) metadata."
                 )
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(SetupResult(storeError))
                 }
@@ -315,14 +312,14 @@ public extension DataStack {
      - parameter storage: the cloud storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `CloudStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T: CloudStorage>(_ storage: T, completion: (SetupResult<T>) -> Void)  {
+    public func addStorage<T: CloudStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void)  {
         
         let cacheFileURL = storage.cacheFileURL
         self.coordinator.performSynchronously {
             
             if let _ = self.persistentStoreForStorage(storage) {
                 
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(SetupResult(storage))
                 }
@@ -334,7 +331,7 @@ public extension DataStack {
                 if let existingStorage = persistentStore.storageInterface as? T,
                     storage.matchesPersistentStore(persistentStore) {
                     
-                    GCDQueue.main.async {
+                    DispatchQueue.main.async {
                         
                         completion(SetupResult(existingStorage))
                     }
@@ -346,7 +343,7 @@ public extension DataStack {
                     error,
                     "Failed to add \(cs_typeName(storage)) at \"\(cacheFileURL)\" because a different \(cs_typeName(NSPersistentStore.self)) at that URL already exists."
                 )
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(SetupResult(error))
                 }
@@ -371,7 +368,7 @@ public extension DataStack {
                         finalURL: cacheFileURL,
                         finalStoreOptions: storeOptions
                     )
-                    GCDQueue.main.async {
+                    DispatchQueue.main.async {
                         
                         completion(SetupResult(storage))
                     }
@@ -379,7 +376,7 @@ public extension DataStack {
                 catch let error as NSError where storage.cloudStorageOptions.contains(.recreateLocalStoreOnModelMismatch) && error.isCoreDataMigrationError {
                     
                     let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
-                        ofType: storage.dynamicType.storeType,
+                        ofType: type(of: storage).storeType,
                         at: cacheFileURL,
                         options: storeOptions
                     )
@@ -398,14 +395,14 @@ public extension DataStack {
                         
                         _ = try self.addStorageAndWait(storage)
                         
-                        GCDQueue.main.async {
+                        DispatchQueue.main.async {
                             
                             completion(SetupResult(storage))
                         }
                     }
                     catch {
                         
-                        GCDQueue.main.async {
+                        DispatchQueue.main.async {
                             
                             completion(SetupResult(error))
                         }
@@ -418,7 +415,7 @@ public extension DataStack {
                     storeError,
                     "Failed to load \(cs_typeName(NSPersistentStore.self)) metadata."
                 )
-                GCDQueue.main.async {
+                DispatchQueue.main.async {
                     
                     completion(SetupResult(storeError))
                 }
@@ -447,13 +444,13 @@ public extension DataStack {
                 )
                 
                 let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
-                    ofType: storage.dynamicType.storeType,
+                    ofType: type(of: storage).storeType,
                     at: fileURL as URL,
                     options: storage.storeOptions
                 )
                 return self.upgradeStorageIfNeeded(
                     storage,
-                    metadata: metadata,
+                    metadata: metadata as [String : AnyObject],
                     completion: completion
                 )
             }
@@ -489,12 +486,12 @@ public extension DataStack {
             do {
                 
                 let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
-                    ofType: storage.dynamicType.storeType,
+                    ofType: type(of: storage).storeType,
                     at: fileURL as URL,
                     options: storage.storeOptions
                 )
                 
-                guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
+                guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata as [String : AnyObject]) else {
                     
                     let error = CoreStoreError.mappingModelNotFound(
                         localStoreURL: fileURL,
@@ -540,7 +537,7 @@ public extension DataStack {
     
     // MARK: Private
     
-    private func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, metadata: [String: AnyObject], completion: (MigrationResult) -> Void) -> Progress? {
+    private func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, metadata: [String: AnyObject], completion: @escaping (MigrationResult) -> Void) -> Progress? {
         
         guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
             
@@ -554,7 +551,7 @@ public extension DataStack {
                 "Failed to find migration steps from \(cs_typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.model)\"."
             )
             
-            GCDQueue.main.async {
+            DispatchQueue.main.async {
                 
                 completion(MigrationResult(error))
             }
@@ -564,7 +561,7 @@ public extension DataStack {
         let numberOfMigrations: Int64 = Int64(migrationSteps.count)
         if numberOfMigrations == 0 {
             
-            GCDQueue.main.async {
+            DispatchQueue.main.async {
                 
                 completion(MigrationResult([]))
                 return
@@ -578,7 +575,7 @@ public extension DataStack {
                 error,
                 "Failed to find migration mapping from the \(cs_typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
             )
-            GCDQueue.main.async {
+            DispatchQueue.main.async {
                 
                 completion(MigrationResult(error))
             }
@@ -627,7 +624,7 @@ public extension DataStack {
                         }
                     }
                     
-                    GCDQueue.main.async {
+                    DispatchQueue.main.async {
                         
                         _ = withExtendedLifetime(childProgress) { (_: Progress) -> Void in }
                     }
@@ -642,7 +639,7 @@ public extension DataStack {
         operations.forEach { migrationOperation.addDependency($0) }
         migrationOperation.addExecutionBlock { () -> Void in
             
-            GCDQueue.main.async {
+            DispatchQueue.main.async {
                 
                 progress.setProgressHandler(nil)
                 completion(migrationResult ?? MigrationResult(migrationTypes))
@@ -752,7 +749,7 @@ public extension DataStack {
         )
         
         let temporaryFileURL = try! temporaryDirectoryURL.appendingPathComponent(
-            fileURL.lastPathComponent!,
+            fileURL.lastPathComponent,
             isDirectory: false
         )
         
@@ -766,11 +763,11 @@ public extension DataStack {
             
             try migrationManager.migrateStore(
                 from: fileURL,
-                sourceType: storage.dynamicType.storeType,
+                sourceType: type(of: storage).storeType,
                 options: nil,
                 with: mappingModel,
                 toDestinationURL: temporaryFileURL,
-                destinationType: storage.dynamicType.storeType,
+                destinationType: type(of: storage).storeType,
                 destinationOptions: nil
             )
         }

@@ -99,7 +99,7 @@ internal extension NSManagedObjectContext {
     internal func fetchOne<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> T? {
         
         var fetchResults: [T]?
-        var fetchError: ErrorProtocol?
+        var fetchError: Error?
         self.performAndWait {
             
             do {
@@ -152,7 +152,7 @@ internal extension NSManagedObjectContext {
     internal func fetchAll<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> [T]? {
         
         var fetchResults: [T]?
-        var fetchError: ErrorProtocol?
+        var fetchError: Error?
         self.performAndWait {
             
             do {
@@ -202,7 +202,7 @@ internal extension NSManagedObjectContext {
     internal func fetchCount(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Int? {
         
         var count = 0
-        var countError: ErrorProtocol?
+        var countError: Error?
         self.performAndWait {
             
             do {
@@ -255,7 +255,7 @@ internal extension NSManagedObjectContext {
     internal func fetchObjectID(_ fetchRequest: NSFetchRequest<NSManagedObjectID>) -> NSManagedObjectID? {
         
         var fetchResults: [NSManagedObjectID]?
-        var fetchError: ErrorProtocol?
+        var fetchError: Error?
         self.performAndWait {
             
             do {
@@ -308,7 +308,7 @@ internal extension NSManagedObjectContext {
     internal func fetchObjectIDs(_ fetchRequest: NSFetchRequest<NSManagedObjectID>) -> [NSManagedObjectID]? {
         
         var fetchResults: [NSManagedObjectID]?
-        var fetchError: ErrorProtocol?
+        var fetchError: Error?
         self.performAndWait {
             
             do {
@@ -363,7 +363,7 @@ internal extension NSManagedObjectContext {
     internal func deleteAll<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> Int? {
         
         var numberOfDeletedObjects: Int?
-        var fetchError: ErrorProtocol?
+        var fetchError: Error?
         self.performAndWait {
             
             autoreleasepool {
@@ -426,7 +426,7 @@ internal extension NSManagedObjectContext {
     internal func queryValue<U: SelectValueResultType>(_ selectTerms: [SelectTerm], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> U? {
         
         var fetchResults: [AnyObject]?
-        var fetchError: ErrorProtocol?
+        var fetchError: Error?
         self.performAndWait {
             
             do {
@@ -459,7 +459,7 @@ internal extension NSManagedObjectContext {
     internal func queryValue(_ selectTerms: [SelectTerm], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> AnyObject? {
         
         var fetchResults: [AnyObject]?
-        var fetchError: ErrorProtocol?
+        var fetchError: Error?
         self.performAndWait {
             
             do {
@@ -519,7 +519,7 @@ internal extension NSManagedObjectContext {
     internal func queryAttributes(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> [[NSString: AnyObject]]? {
         
         var fetchResults: [AnyObject]?
-        var fetchError: ErrorProtocol?
+        var fetchError: Error?
         self.performAndWait {
             
             do {

@@ -39,9 +39,9 @@ public extension BaseDataTransaction {
      - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
      - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
      */
-    public func importObject<T where T: NSManagedObject, T: ImportableObject>(
+    public func importObject<T>(
         _ into: Into<T>,
-        source: T.ImportSource) throws -> T? {
+        source: T.ImportSource) throws -> T? where T: NSManagedObject, T: ImportableObject {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -68,9 +68,9 @@ public extension BaseDataTransaction {
      - parameter source: the object to import values from
      - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
      */
-    public func importObject<T where T: NSManagedObject, T: ImportableObject>(
+    public func importObject<T>(
         _ object: T,
-        source: T.ImportSource) throws {
+        source: T.ImportSource) throws where T: NSManagedObject, T: ImportableObject {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -96,9 +96,9 @@ public extension BaseDataTransaction {
      - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
      - returns: the array of created `ImportableObject` instances
      */
-    public func importObjects<T, S: Sequence where T: NSManagedObject, T: ImportableObject, S.Iterator.Element == T.ImportSource>(
+    public func importObjects<T, S: Sequence>(
         _ into: Into<T>,
-        sourceArray: S) throws -> [T] {
+        sourceArray: S) throws -> [T] where T: NSManagedObject, T: ImportableObject, S.Iterator.Element == T.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -132,9 +132,9 @@ public extension BaseDataTransaction {
      - throws: an `ErrorType` thrown from any of the `ImportableUniqueObject` methods
      - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
      */
-    public func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
+    public func importUniqueObject<T>(
         _ into: Into<T>,
-        source: T.ImportSource) throws -> T?  {
+        source: T.ImportSource) throws -> T? where T: NSManagedObject, T: ImportableUniqueObject  {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -184,10 +184,10 @@ public extension BaseDataTransaction {
      - throws: an `ErrorType` thrown from any of the `ImportableUniqueObject` methods
      - returns: the array of created/updated `ImportableUniqueObject` instances
      */
-    public func importUniqueObjects<T, S: Sequence where T: NSManagedObject, T: ImportableUniqueObject, S.Iterator.Element == T.ImportSource>(
+    public func importUniqueObjects<T, S: Sequence>(
         _ into: Into<T>,
         sourceArray: S,
-        preProcess: @noescape (mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] {
+        preProcess: @escaping (_ mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] where T: NSManagedObject, T: ImportableUniqueObject, S.Iterator.Element == T.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -211,7 +211,7 @@ public extension BaseDataTransaction {
                     }
                 }
                 
-                mapping = try autoreleasepool { try preProcess(mapping: mapping) }
+                mapping = try autoreleasepool { try preProcess(mapping) }
                 
                 var objects = Dictionary<T.UniqueIDType, T>()
                 for object in self.fetchAll(From<T>(), Where(T.uniqueIDKeyPath, isMemberOf: sortedIDs)) ?? [] {
