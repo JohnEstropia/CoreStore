@@ -42,7 +42,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     public func commitAndWait() -> SaveResult {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -64,10 +64,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @discardableResult
-    public func beginSynchronous(_ closure: (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to begin a child transaction from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -183,7 +183,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, closure: (_ transaction: SynchronousDataTransaction) -> Void) {
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) {
         
         self.closure = closure
         
@@ -194,7 +194,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         
         self.transactionQueue.sync {
             
-            self.closure(transaction: self)
+            self.closure(self)
             
             if !self.isCommitted && self.hasChanges {
                 

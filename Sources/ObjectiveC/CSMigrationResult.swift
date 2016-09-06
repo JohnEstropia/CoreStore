@@ -43,7 +43,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
     @objc
     public var isSuccess: Bool {
         
-        return self.bridgeToSwift.boolValue
+        return self.bridgeToSwift.isSuccess
     }
     
     /**
@@ -52,7 +52,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
     @objc
     public var isFailure: Bool {
         
-        return !self.bridgeToSwift.boolValue
+        return !self.bridgeToSwift.isSuccess
     }
     
     /**

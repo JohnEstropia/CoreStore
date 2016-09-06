@@ -36,7 +36,7 @@ class SetupTests: BaseTestCase {
         
         do {
             
-            let model = NSManagedObjectModel.mergedModel(from: [Bundle(for: self.dynamicType)])!
+            let model = NSManagedObjectModel.mergedModel(from: [Bundle(for: type(of: self))])!
             
             let stack = DataStack(model: model, migrationChain: nil)
             XCTAssertEqual(stack.coordinator.managedObjectModel, model)
@@ -60,7 +60,7 @@ class SetupTests: BaseTestCase {
                 
                 DataStack(
                     modelName: "Model",
-                    bundle: Bundle(for: self.dynamicType),
+                    bundle: Bundle(for: type(of: self)),
                     migrationChain: migrationChain
                 )
             }
@@ -77,7 +77,7 @@ class SetupTests: BaseTestCase {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: Bundle(for: self.dynamicType)
+            bundle: Bundle(for: type(of: self))
         )
         do {
             
@@ -132,7 +132,7 @@ class SetupTests: BaseTestCase {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: Bundle(for: self.dynamicType)
+            bundle: Bundle(for: type(of: self))
         )
         do {
             
@@ -194,7 +194,7 @@ class SetupTests: BaseTestCase {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: Bundle(for: self.dynamicType)
+            bundle: Bundle(for: type(of: self))
         )
         do {
             

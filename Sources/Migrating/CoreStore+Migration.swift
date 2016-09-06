@@ -47,7 +47,7 @@ public extension CoreStore {
      - parameter storeType: the storage type
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public static func addStorage<T: StorageInterface>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) where T: DefaultInitializableStore {
+    public static func addStorage<T: StorageInterface>(_ storeType: T.Type, completion: @escaping (SetupResult<T>) -> Void) where T: DefaultInitializableStore {
         
         self.defaultStack.addStorage(storeType.init(), completion: completion)
     }
@@ -68,7 +68,7 @@ public extension CoreStore {
      - parameter storage: the storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public static func addStorage<T: StorageInterface>(_ storage: T, completion: (SetupResult<T>) -> Void) {
+    public static func addStorage<T: StorageInterface>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
         
         self.defaultStack.addStorage(storage, completion: completion)
     }
@@ -90,7 +90,7 @@ public extension CoreStore {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public static func addStorage<T: LocalStorage>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) -> Progress? where T: DefaultInitializableStore {
+    public static func addStorage<T: LocalStorage>(_ storeType: T.Type, completion: @escaping (SetupResult<T>) -> Void) -> Progress? where T: DefaultInitializableStore {
         
         return self.defaultStack.addStorage(storeType.init(), completion: completion)
     }
@@ -112,7 +112,7 @@ public extension CoreStore {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public static func addStorage<T: LocalStorage>(_ storage: T, completion: (SetupResult<T>) -> Void) -> Progress? {
+    public static func addStorage<T: LocalStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) -> Progress? {
         
         return self.defaultStack.addStorage(storage, completion: completion)
     }
@@ -144,7 +144,7 @@ public extension CoreStore {
      - parameter storage: the cloud storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `CloudStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
-    public static func addStorage<T: CloudStorage>(_ storage: T, completion: (SetupResult<T>) -> Void) {
+    public static func addStorage<T: CloudStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
         
         self.defaultStack.addStorage(storage, completion: completion)
     }
@@ -157,7 +157,7 @@ public extension CoreStore {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
-    public static func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, completion: (MigrationResult) -> Void) throws -> Progress? {
+    public static func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, completion: @escaping (MigrationResult) -> Void) throws -> Progress? {
         
         return try self.defaultStack.upgradeStorageIfNeeded(storage, completion: completion)
     }

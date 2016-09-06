@@ -241,7 +241,7 @@ public final class DataStack {
                 do {
                     
                     try FileManager.default.createDirectory(
-                        at: try fileURL.deletingLastPathComponent(),
+                        at: fileURL.deletingLastPathComponent(),
                         withIntermediateDirectories: true,
                         attributes: nil
                     )
@@ -336,7 +336,7 @@ public final class DataStack {
                 do {
                     
                     try FileManager.default.createDirectory(
-                        at: try cacheFileURL.deletingLastPathComponent(),
+                        at: cacheFileURL.deletingLastPathComponent(),
                         withIntermediateDirectories: true,
                         attributes: nil
                     )
@@ -394,11 +394,8 @@ public final class DataStack {
         migrationQueue.name = "com.coreStore.migrationOperationQueue"
         migrationQueue.qualityOfService = .utility
         migrationQueue.underlyingQueue = DispatchQueue(
-            label: "com.coreStore.migrationQueue",
-            qos: .userInitiated,
-            attributes: .allZeros,
-            autoreleaseFrequency: .workItem,
-            target: nil
+            serialWith: "com.coreStore.migrationQueue",
+            qos: .userInitiated
         )
         return migrationQueue
     }()
@@ -462,7 +459,7 @@ public final class DataStack {
         return returnValue
     }
     
-    internal func createPersistentStoreFromStorage(_ storage: StorageInterface, finalURL: URL?, finalStoreOptions: [String: AnyObject]?) throws -> NSPersistentStore {
+    internal func createPersistentStoreFromStorage(_ storage: StorageInterface, finalURL: URL?, finalStoreOptions: [AnyHashable: Any]?) throws -> NSPersistentStore {
         
         let persistentStore = try self.coordinator.addPersistentStore(
             ofType: type(of: storage).storeType,

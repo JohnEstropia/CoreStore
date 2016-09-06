@@ -145,7 +145,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
      ```
      */
     @objc
-    public var storeOptions: [String: AnyObject]? {
+    public var storeOptions: [AnyHashable: Any]? {
         
         return self.bridgeToSwift.storeOptions
     }

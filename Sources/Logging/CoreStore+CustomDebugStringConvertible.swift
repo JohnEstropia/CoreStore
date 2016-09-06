@@ -934,14 +934,14 @@ private func createFormattedString(_ firstLine: String, _ lastLine: String, _ in
     return string
 }
 
-private extension String {
+fileprivate extension String {
     
-    private static func indention(_ level: Int = 1) -> String {
+    fileprivate static func indention(_ level: Int = 1) -> String {
         
-        return String(repeating: Character(" "), count: level * 4)
+        return String(repeating: " ", count: level * 4)
     }
     
-    private func trimSwiftModuleName() -> String {
+    fileprivate func trimSwiftModuleName() -> String {
         
         if self.hasPrefix("Swift.") {
             
@@ -950,12 +950,12 @@ private extension String {
         return self
     }
     
-    private mutating func indent(_ level: Int) {
+    fileprivate mutating func indent(_ level: Int) {
         
         self = self.replacingOccurrences(of: "\n", with: "\n\(String.indention(level))")
     }
     
-    private mutating func appendDumpInfo(_ key: String, _ value: Any) {
+    fileprivate mutating func appendDumpInfo(_ key: String, _ value: Any) {
         
         self.append("\n.\(key) = \(formattedValue(value));")
     }
@@ -1071,7 +1071,7 @@ extension Bundle: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         
-        return "\(self.bundleIdentifier.flatMap({ "\"\($0)\"" }) ?? "<unknown bundle identifier>") (\(self.bundleURL.lastPathComponent ?? "<unknown bundle URL>"))"
+        return "\(self.bundleIdentifier.flatMap({ "\"\($0)\"" }) ?? "<unknown bundle identifier>") (\(self.bundleURL.lastPathComponent))"
     }
 }
 

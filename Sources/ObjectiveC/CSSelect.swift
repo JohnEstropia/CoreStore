@@ -67,7 +67,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
     @objc
     public static func average(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.average(keyPath, As: alias))
+        return self.init(.average(keyPath, as: alias))
     }
 
     /**
@@ -84,7 +84,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
     @objc
     public static func count(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.count(keyPath, As: alias))
+        return self.init(.count(keyPath, as: alias))
     }
 
     /**
@@ -101,7 +101,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
     @objc
     public static func maximum(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.maximum(keyPath, As: alias))
+        return self.init(.maximum(keyPath, as: alias))
     }
 
     /**
@@ -118,7 +118,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
     @objc
     public static func minimum(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.minimum(keyPath, As: alias))
+        return self.init(.minimum(keyPath, as: alias))
     }
 
     /**
@@ -135,7 +135,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
     @objc
     public static func sum(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.sum(keyPath, As: alias))
+        return self.init(.sum(keyPath, as: alias))
     }
     
     /**
@@ -153,7 +153,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
     @objc
     public static func objectIDAs(_ alias: KeyPath? = nil) -> CSSelectTerm {
         
-        return self.init(.objectID(As: alias))
+        return self.init(.objectID(as: alias))
     }
 
     

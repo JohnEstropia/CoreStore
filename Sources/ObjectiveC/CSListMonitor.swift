@@ -48,7 +48,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index
      */
     @objc
-    public subscript(index: Int) -> AnyObject {
+    public subscript(index: Int) -> Any {
         
         return self.bridgeToSwift[index]
     }
@@ -60,7 +60,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index, or `nil` if out of bounds
      */
     @objc
-    public func objectAtSafeIndex(_ index: Int) -> AnyObject? {
+    public func objectAtSafeIndex(_ index: Int) -> Any? {
         
         return self.bridgeToSwift[safeIndex: index]
     }
@@ -73,12 +73,10 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified section and item index
      */
     @objc
-    public func objectAtSectionIndex(_ sectionIndex: Int, itemIndex: Int) -> AnyObject {
+    public func objectAtSectionIndex(_ sectionIndex: Int, itemIndex: Int) -> Any {
         
         return self.bridgeToSwift[sectionIndex, itemIndex]
-    }
-
-    /**
+    }    /**
      Returns the object at the given section and item index, or `nil` if out of bounds. This indexer is typically used for `CSListMonitor`s created as sectioned lists.
      
      - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will return `nil`.
@@ -86,7 +84,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified section and item index, or `nil` if out of bounds
      */
     @objc
-    public func objectAtSafeSectionIndex(_ sectionIndex: Int, safeItemIndex itemIndex: Int) -> AnyObject? {
+    public func objectAtSafeSectionIndex(_ sectionIndex: Int, safeItemIndex itemIndex: Int) -> Any? {
         
         return self.bridgeToSwift[safeSectionIndex: sectionIndex, safeItemIndex: itemIndex]
     }
@@ -98,7 +96,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index path
      */
     @objc
-    public func objectAtIndexPath(_ indexPath: IndexPath) -> AnyObject {
+    public func objectAtIndexPath(_ indexPath: IndexPath) -> Any {
         
         return self.bridgeToSwift[indexPath]
     }
@@ -110,7 +108,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` at the specified index path, or `nil` if out of bounds
      */
     @objc
-    public func objectAtSafeIndexPath(_ indexPath: IndexPath) -> AnyObject? {
+    public func objectAtSafeIndexPath(_ indexPath: IndexPath) -> Any? {
         
         return self.bridgeToSwift[safeIndexPath: indexPath]
     }
@@ -216,7 +214,9 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
     @objc
     public func numberOfObjectsInSafeSection(safeSectionIndex section: Int) -> NSNumber? {
         
-        return self.bridgeToSwift.numberOfObjectsInSection(safeSectionIndex: section)
+        return self.bridgeToSwift
+            .numberOfObjectsInSection(safeSectionIndex: section)
+            .flatMap { NSNumber(value: $0) }
     }
     
     /**
@@ -287,7 +287,9 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
     @objc
     public func indexOf(_ object: NSManagedObject) -> NSNumber? {
         
-        return self.bridgeToSwift.indexOf(object)
+        return self.bridgeToSwift
+            .indexOf(object)
+            .flatMap { NSNumber(value: $0) }
     }
     
     /**

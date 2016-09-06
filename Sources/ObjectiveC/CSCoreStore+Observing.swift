@@ -66,7 +66,7 @@ public extension CSCoreStore {
      - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      */
     @objc
-    public static func monitorListByCreatingAsynchronously(_ createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, fetchClauses: [CSFetchClause])  {
+    public static func monitorListByCreatingAsynchronously(_ createAsynchronously: @escaping (CSListMonitor) -> Void, from: CSFrom, fetchClauses: [CSFetchClause])  {
         
         return self.defaultStack.monitorListByCreatingAsynchronously(
             createAsynchronously,
@@ -102,7 +102,7 @@ public extension CSCoreStore {
      - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      */
     @objc
-    public static func monitorSectionedListByCreatingAsynchronously(_ createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) {
+    public static func monitorSectionedListByCreatingAsynchronously(_ createAsynchronously: @escaping (CSListMonitor) -> Void, from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) {
         
         self.defaultStack.monitorSectionedListByCreatingAsynchronously(
             createAsynchronously,

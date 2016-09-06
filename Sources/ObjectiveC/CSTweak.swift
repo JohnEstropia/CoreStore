@@ -53,7 +53,7 @@ public final class CSTweak: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - parameter block: the block to customize the `NSFetchRequest`
      */
     @objc
-    public convenience init(block: (_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void) {
+    public convenience init(block: @escaping (_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void) {
         
         self.init(Tweak(block))
     }

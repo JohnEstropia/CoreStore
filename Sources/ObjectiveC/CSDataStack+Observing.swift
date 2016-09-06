@@ -88,7 +88,7 @@ public extension CSDataStack {
      - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      */
     @objc
-    public func monitorListByCreatingAsynchronously(_ createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, fetchClauses: [CSFetchClause]) {
+    public func monitorListByCreatingAsynchronously(_ createAsynchronously: @escaping (CSListMonitor) -> Void, from: CSFrom, fetchClauses: [CSFetchClause]) {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -154,7 +154,7 @@ public extension CSDataStack {
      - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      */
-    public func monitorSectionedListByCreatingAsynchronously(_ createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) {
+    public func monitorSectionedListByCreatingAsynchronously(_ createAsynchronously: @escaping (CSListMonitor) -> Void, from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) {
         
         CoreStore.assert(
             Thread.isMainThread,

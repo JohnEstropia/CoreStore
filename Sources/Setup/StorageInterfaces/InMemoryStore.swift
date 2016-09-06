@@ -69,7 +69,7 @@ public final class InMemoryStore: StorageInterface, DefaultInitializableStore {
     /**
      The options dictionary for the `NSPersistentStore`. For `InMemoryStore`s, this is always set to `nil`.
      */
-    public let storeOptions: [String: AnyObject]? = nil
+    public let storeOptions: [AnyHashable: Any]? = nil
     
     /**
      Do not call directly. Used by the `DataStack` internally.

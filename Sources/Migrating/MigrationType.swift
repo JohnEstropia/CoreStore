@@ -126,7 +126,7 @@ public enum MigrationType: Hashable {
     
     public var hashValue: Int {
         
-        let preHash = self.boolValue.hashValue ^ self.isHeavyweightMigration.hashValue
+        let preHash = self.hasMigration.hashValue ^ self.isHeavyweightMigration.hashValue
         switch self {
             
         case .none(let version):

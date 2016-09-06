@@ -79,7 +79,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
      The options dictionary for the `NSPersistentStore`. For `CSInMemoryStore`s, this is always set to `nil`.
      */
     @objc
-    public var storeOptions: [String: AnyObject]? {
+    public var storeOptions: [AnyHashable: Any]? {
         
         return self.bridgeToSwift.storeOptions
     }

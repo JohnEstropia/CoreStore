@@ -7,7 +7,4 @@
    <FileRef
       location = "group:CoreStoreDemo/CoreStoreDemo.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/GCDKit/GCDKit.xcodeproj">
-   </FileRef>
 </Workspace>

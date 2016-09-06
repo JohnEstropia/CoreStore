@@ -604,7 +604,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     // MARK: Internal
     
-    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -616,7 +616,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
     }
     
-    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: (ListMonitor<T>) -> Void) {
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<T>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -628,7 +628,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -640,7 +640,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: (ListMonitor<T>) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<T>) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -687,15 +687,15 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     guard let `self` = self,
                         let userInfo = note.userInfo,
-                        let object = userInfo[String(NSManagedObject.self)] as? T else {
+                        let object = userInfo[String(describing: NSManagedObject.self)] as? T else {
                             
                             return
                     }
                     callback(
                         self,
                         object,
-                        userInfo[String(IndexPath.self)] as? IndexPath,
-                        userInfo["\(String(IndexPath.self)).New"] as? IndexPath
+                        userInfo[String(describing: IndexPath.self)] as? IndexPath,
+                        userInfo["\(String(describing: IndexPath.self)).New"] as? IndexPath
                     )
                 }
             ),
@@ -714,8 +714,8 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     guard let `self` = self,
                         let userInfo = note.userInfo,
-                        let sectionInfo = userInfo[String(NSFetchedResultsSectionInfo.self)] as? NSFetchedResultsSectionInfo,
-                        let sectionIndex = (userInfo[String(NSNumber.self)] as? NSNumber)?.intValue else {
+                        let sectionInfo = userInfo[String(describing: NSFetchedResultsSectionInfo.self)] as? NSFetchedResultsSectionInfo,
+                        let sectionIndex = (userInfo[String(describing: NSNumber.self)] as? NSNumber)?.intValue else {
                             
                             return
                     }
@@ -743,7 +743,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                willChange(observer: observer, monitor: monitor)
+                willChange(observer, monitor)
             }
         )
         self.registerChangeNotification(
@@ -756,7 +756,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didChange(observer: observer, monitor: monitor)
+                didChange(observer, monitor)
             }
         )
         self.registerChangeNotification(
@@ -769,7 +769,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                willRefetch(observer: observer, monitor: monitor)
+                willRefetch(observer, monitor)
             }
         )
         self.registerChangeNotification(
@@ -782,7 +782,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didRefetch(observer: observer, monitor: monitor)
+                didRefetch(observer, monitor)
             }
         )
     }
@@ -804,12 +804,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didInsertObject(
-                    observer: observer,
-                    monitor: monitor,
-                    object: object,
-                    toIndexPath: newIndexPath!
-                )
+                didInsertObject(observer, monitor, object, newIndexPath!)
             }
         )
         self.registerObjectNotification(
@@ -822,12 +817,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didDeleteObject(
-                    observer: observer,
-                    monitor: monitor,
-                    object: object,
-                    fromIndexPath: indexPath!
-                )
+                didDeleteObject(observer, monitor, object, indexPath!)
             }
         )
         self.registerObjectNotification(
@@ -840,12 +830,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didUpdateObject(
-                    observer: observer,
-                    monitor: monitor,
-                    object: object,
-                    atIndexPath: indexPath!
-                )
+                didUpdateObject(observer, monitor, object, indexPath!)
             }
         )
         self.registerObjectNotification(
@@ -858,13 +843,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didMoveObject(
-                    observer: observer,
-                    monitor: monitor,
-                    object: object,
-                    fromIndexPath: indexPath!,
-                    toIndexPath: newIndexPath!
-                )
+                didMoveObject(observer, monitor, object, indexPath!, newIndexPath!)
             }
         )
     }
@@ -886,12 +865,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didInsertSection(
-                    observer: observer,
-                    monitor: monitor,
-                    sectionInfo: sectionInfo,
-                    toIndex: sectionIndex
-                )
+                didInsertSection(observer, monitor, sectionInfo, sectionIndex)
             }
         )
         self.registerSectionNotification(
@@ -904,12 +878,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didDeleteSection(
-                    observer: observer,
-                    monitor: monitor,
-                    sectionInfo: sectionInfo,
-                    fromIndex: sectionIndex
-                )
+                didDeleteSection(observer, monitor, sectionInfo, sectionIndex)
             }
         )
     }
@@ -953,7 +922,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         }
         self.applyFetchClauses = applyFetchClauses
         
-        self.taskGroup.notify(.main) { [weak self] () -> Void in
+        self.taskGroup.notify(queue: .main) { [weak self] () -> Void in
             
             guard let `self` = self else {
                 
@@ -961,7 +930,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             }
             
             self.fetchedResultsControllerDelegate.enabled = false
-            self.applyFetchClauses(fetchRequest: self.fetchedResultsController.fetchRequest)
+            self.applyFetchClauses(self.fetchedResultsController.fetchRequest)
             
             self.transactionQueue.async { [weak self] in
                 
@@ -1000,6 +969,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     // MARK: Private
     
+    fileprivate let fetchedResultsController: CoreStoreFetchedResultsController
+    fileprivate let taskGroup = DispatchGroup()
+    fileprivate let sectionIndexTransformer: (_ sectionName: KeyPath?) -> String?
+    
     private var willChangeListKey: Void?
     private var didChangeListKey: Void?
     private var willRefetchListKey: Void?
@@ -1013,12 +986,9 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     private var didInsertSectionKey: Void?
     private var didDeleteSectionKey: Void?
     
-    private let fetchedResultsController: CoreStoreFetchedResultsController
     private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate<T>
-    private let sectionIndexTransformer: (_ sectionName: KeyPath?) -> String?
     private var observerForWillChangePersistentStore: NotificationObserver!
     private var observerForDidChangePersistentStore: NotificationObserver!
-    private let taskGroup = DispatchGroup()
     private let transactionQueue: DispatchQueue
     private var applyFetchClauses: (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void
     
@@ -1043,7 +1013,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         }
     }
     
-    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<T>) -> Void)?) {
+    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<T>) -> Void)?) {
         
         let fetchRequest = CoreStoreFetchRequest<T>()
         fetchRequest.fetchLimit = 0
@@ -1139,7 +1109,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             transactionQueue.async {
                 
                 try! fetchedResultsController.performFetchFromSpecifiedStores()
-                self.taskGroup.notify(.main) {
+                self.taskGroup.notify(queue: .main) {
                     
                     createAsynchronously(self)
                 }
@@ -1184,7 +1154,7 @@ extension ListMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
     
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: AnyObject, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         switch type {
             
@@ -1193,8 +1163,8 @@ extension ListMonitor: FetchedResultsControllerHandler {
                 name: Notification.Name.listMonitorDidInsertObject,
                 object: self,
                 userInfo: [
-                    String(NSManagedObject.self): anObject,
-                    "\(String(IndexPath.self)).New": newIndexPath!
+                    String(describing: NSManagedObject.self): anObject,
+                    "\(String(describing: IndexPath.self)).New": newIndexPath!
                 ]
             )
             
@@ -1203,8 +1173,8 @@ extension ListMonitor: FetchedResultsControllerHandler {
                 name: Notification.Name.listMonitorDidDeleteObject,
                 object: self,
                 userInfo: [
-                    String(NSManagedObject.self): anObject,
-                    String(IndexPath.self): indexPath!
+                    String(describing: NSManagedObject.self): anObject,
+                    String(describing: IndexPath.self): indexPath!
                 ]
             )
             
@@ -1213,8 +1183,8 @@ extension ListMonitor: FetchedResultsControllerHandler {
                 name: Notification.Name.listMonitorDidUpdateObject,
                 object: self,
                 userInfo: [
-                    String(NSManagedObject.self): anObject,
-                    String(IndexPath.self): indexPath!
+                    String(describing: NSManagedObject.self): anObject,
+                    String(describing: IndexPath.self): indexPath!
                 ]
             )
             
@@ -1223,9 +1193,9 @@ extension ListMonitor: FetchedResultsControllerHandler {
                 name: Notification.Name.listMonitorDidMoveObject,
                 object: self,
                 userInfo: [
-                    String(NSManagedObject.self): anObject,
-                    String(IndexPath.self): indexPath!,
-                    "\(String(IndexPath.self)).New": newIndexPath!
+                    String(describing: NSManagedObject.self): anObject,
+                    String(describing: IndexPath.self): indexPath!,
+                    "\(String(describing: IndexPath.self)).New": newIndexPath!
                 ]
             )
         }
@@ -1240,8 +1210,8 @@ extension ListMonitor: FetchedResultsControllerHandler {
                 name: Notification.Name.listMonitorDidInsertSection,
                 object: self,
                 userInfo: [
-                    String(NSFetchedResultsSectionInfo.self): sectionInfo,
-                    String(NSNumber.self): NSNumber(value: sectionIndex)
+                    String(describing: NSFetchedResultsSectionInfo.self): sectionInfo,
+                    String(describing: NSNumber.self): NSNumber(value: sectionIndex)
                 ]
             )
             
@@ -1250,8 +1220,8 @@ extension ListMonitor: FetchedResultsControllerHandler {
                 name: Notification.Name.listMonitorDidDeleteSection,
                 object: self,
                 userInfo: [
-                    String(NSFetchedResultsSectionInfo.self): sectionInfo,
-                    String(NSNumber.self): NSNumber(value: sectionIndex)
+                    String(describing: NSFetchedResultsSectionInfo.self): sectionInfo,
+                    String(describing: NSNumber.self): NSNumber(value: sectionIndex)
                 ]
             )
             
@@ -1280,25 +1250,25 @@ extension ListMonitor: FetchedResultsControllerHandler {
     
    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
     
-        return self.sectionIndexTransformer(sectionName: sectionName)
+        return self.sectionIndexTransformer(sectionName)
     }
 }
 
 
 // MARK: - Notification Keys
     
-private extension Notification.Name {
+fileprivate extension Notification.Name {
     
-    private static let listMonitorWillChangeList = Notification.Name(rawValue: "listMonitorWillChangeList")
-    private static let listMonitorDidChangeList = Notification.Name(rawValue: "listMonitorDidChangeList")
-    private static let listMonitorWillRefetchList = Notification.Name(rawValue: "listMonitorWillRefetchList")
-    private static let listMonitorDidRefetchList = Notification.Name(rawValue: "listMonitorDidRefetchList")
-    private static let listMonitorDidInsertObject = Notification.Name(rawValue: "listMonitorDidInsertObject")
-    private static let listMonitorDidDeleteObject = Notification.Name(rawValue: "listMonitorDidDeleteObject")
-    private static let listMonitorDidUpdateObject = Notification.Name(rawValue: "listMonitorDidUpdateObject")
-    private static let listMonitorDidMoveObject = Notification.Name(rawValue: "listMonitorDidMoveObject")
-    private static let listMonitorDidInsertSection = Notification.Name(rawValue: "listMonitorDidInsertSection")
-    private static let listMonitorDidDeleteSection = Notification.Name(rawValue: "listMonitorDidDeleteSection")
+    fileprivate static let listMonitorWillChangeList = Notification.Name(rawValue: "listMonitorWillChangeList")
+    fileprivate static let listMonitorDidChangeList = Notification.Name(rawValue: "listMonitorDidChangeList")
+    fileprivate static let listMonitorWillRefetchList = Notification.Name(rawValue: "listMonitorWillRefetchList")
+    fileprivate static let listMonitorDidRefetchList = Notification.Name(rawValue: "listMonitorDidRefetchList")
+    fileprivate static let listMonitorDidInsertObject = Notification.Name(rawValue: "listMonitorDidInsertObject")
+    fileprivate static let listMonitorDidDeleteObject = Notification.Name(rawValue: "listMonitorDidDeleteObject")
+    fileprivate static let listMonitorDidUpdateObject = Notification.Name(rawValue: "listMonitorDidUpdateObject")
+    fileprivate static let listMonitorDidMoveObject = Notification.Name(rawValue: "listMonitorDidMoveObject")
+    fileprivate static let listMonitorDidInsertSection = Notification.Name(rawValue: "listMonitorDidInsertSection")
+    fileprivate static let listMonitorDidDeleteSection = Notification.Name(rawValue: "listMonitorDidDeleteSection")
 }
 
 #endif

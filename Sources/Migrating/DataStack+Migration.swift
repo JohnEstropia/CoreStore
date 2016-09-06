@@ -47,7 +47,7 @@ public extension DataStack {
      - parameter storeType: the storage type
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public func addStorage<T: StorageInterface>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) where T: DefaultInitializableStore {
+    public func addStorage<T: StorageInterface>(_ storeType: T.Type, completion: @escaping (SetupResult<T>) -> Void) where T: DefaultInitializableStore {
         
         self.addStorage(storeType.init(), completion: completion)
     }
@@ -126,7 +126,7 @@ public extension DataStack {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
-    public func addStorage<T: LocalStorage>(_ storeType: T.Type, completion: (SetupResult<T>) -> Void) -> Progress? where T: DefaultInitializableStore {
+    public func addStorage<T: LocalStorage>(_ storeType: T.Type, completion: @escaping (SetupResult<T>) -> Void) -> Progress? where T: DefaultInitializableStore {
         
         return self.addStorage(storeType.init() as! T.Type, completion: completion)
     }
@@ -194,7 +194,7 @@ public extension DataStack {
             do {
                 
                 try FileManager.default.createDirectory(
-                    at: try fileURL.deletingLastPathComponent(),
+                    at: fileURL.deletingLastPathComponent(),
                     withIntermediateDirectories: true,
                     attributes: nil
                 )
@@ -207,7 +207,7 @@ public extension DataStack {
                 
                 return self.upgradeStorageIfNeeded(
                     storage,
-                    metadata: metadata as [String : AnyObject],
+                    metadata: metadata,
                     completion: { (result) -> Void in
                         
                         if case .failure(.internalError(let error)) = result {
@@ -359,7 +359,7 @@ public extension DataStack {
                 do {
                     
                     try FileManager.default.createDirectory(
-                        at: try cacheFileURL.deletingLastPathComponent(),
+                        at: cacheFileURL.deletingLastPathComponent(),
                         withIntermediateDirectories: true,
                         attributes: nil
                     )
@@ -431,7 +431,7 @@ public extension DataStack {
      - throws: a `CoreStoreError` value indicating the failure
      - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
      */
-    public func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, completion: (MigrationResult) -> Void) throws -> Progress? {
+    public func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, completion: @escaping (MigrationResult) -> Void) throws -> Progress? {
         
         return try self.coordinator.performSynchronously {
             
@@ -450,7 +450,7 @@ public extension DataStack {
                 )
                 return self.upgradeStorageIfNeeded(
                     storage,
-                    metadata: metadata as [String : AnyObject],
+                    metadata: metadata,
                     completion: completion
                 )
             }
@@ -491,7 +491,7 @@ public extension DataStack {
                     options: storage.storeOptions
                 )
                 
-                guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata as [String : AnyObject]) else {
+                guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
                     
                     let error = CoreStoreError.mappingModelNotFound(
                         localStoreURL: fileURL,
@@ -537,7 +537,7 @@ public extension DataStack {
     
     // MARK: Private
     
-    private func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, metadata: [String: AnyObject], completion: @escaping (MigrationResult) -> Void) -> Progress? {
+    private func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, metadata: [String: Any], completion: @escaping (MigrationResult) -> Void) -> Progress? {
         
         guard let migrationSteps = self.computeMigrationFromStorage(storage, metadata: metadata) else {
             
@@ -654,7 +654,7 @@ public extension DataStack {
         return progress
     }
     
-    private func computeMigrationFromStorage<T: LocalStorage>(_ storage: T, metadata: [String: AnyObject]) -> [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]? {
+    private func computeMigrationFromStorage<T: LocalStorage>(_ storage: T, metadata: [String: Any]) -> [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]? {
         
         let model = self.model
         if model.isConfiguration(withName: storage.configuration, compatibleWithStoreMetadata: metadata) {
@@ -737,7 +737,7 @@ public extension DataStack {
         
         let fileURL = storage.fileURL
         
-        let temporaryDirectoryURL = try! URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
             .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack")
             .appendingPathComponent(ProcessInfo().globallyUniqueString)
         
@@ -748,7 +748,7 @@ public extension DataStack {
             attributes: nil
         )
         
-        let temporaryFileURL = try! temporaryDirectoryURL.appendingPathComponent(
+        let temporaryFileURL = temporaryDirectoryURL.appendingPathComponent(
             fileURL.lastPathComponent,
             isDirectory: false
         )

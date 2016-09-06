@@ -37,11 +37,11 @@ class BaseTestCase: XCTestCase {
     
     @nonobjc
     @discardableResult
-    func prepareStack<T>(configurations: [String?] = [nil], _ closure: @noescape (dataStack: DataStack) -> T) -> T {
+    func prepareStack<T>(configurations: [String?] = [nil], _ closure: (_ dataStack: DataStack) -> T) -> T {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: Bundle(for: self.dynamicType)
+            bundle: Bundle(for: type(of: self))
         )
         do {
             
@@ -49,9 +49,9 @@ class BaseTestCase: XCTestCase {
                 
                 try stack.addStorageAndWait(
                     SQLiteStore(
-                        fileURL: try SQLiteStore.defaultRootDirectory
+                        fileURL: SQLiteStore.defaultRootDirectory
                             .appendingPathComponent(UUID().uuidString)
-                            .appendingPathComponent("\(self.dynamicType)_\(($0 ?? "-null-")).sqlite"),
+                            .appendingPathComponent("\(type(of: self))_\(($0 ?? "-null-")).sqlite"),
                         configuration: $0,
                         localStorageOptions: .recreateStoreOnModelMismatch
                     )
@@ -62,11 +62,11 @@ class BaseTestCase: XCTestCase {
             
             XCTFail(error.coreStoreDumpString)
         }
-        return closure(dataStack: stack)
+        return closure(stack)
     }
     
     @nonobjc
-    func expectLogger<T>(_ expectations: [TestLogger.Expectation], closure: @noescape () -> T) -> T {
+    func expectLogger<T>(_ expectations: [TestLogger.Expectation], closure: () -> T) -> T {
         
         CoreStore.logger = TestLogger(self.prepareLoggerExpectations(expectations))
         defer {
@@ -89,7 +89,7 @@ class BaseTestCase: XCTestCase {
         var testExpectations: [TestLogger.Expectation: XCTestExpectation] = [:]
         for expectation in expectations {
             
-            testExpectations[expectation] = self.expectation(withDescription: "Logger Expectation: \(expectation)")
+            testExpectations[expectation] = self.expectation(description: "Logger Expectation: \(expectation)")
         }
         return testExpectations
     }
@@ -97,13 +97,13 @@ class BaseTestCase: XCTestCase {
     @nonobjc
     func checkExpectationsImmediately() {
         
-        self.waitForExpectations(withTimeout: 0, handler: nil)
+        self.waitForExpectations(timeout: 0, handler: nil)
     }
     
     @nonobjc
     func waitAndCheckExpectations() {
         
-        self.waitForExpectations(withTimeout: 10, handler: nil)
+        self.waitForExpectations(timeout: 10, handler: nil)
     }
     
     // MARK: XCTestCase

@@ -58,7 +58,7 @@ public extension CSCoreStore {
             
             CoreStore.beginSynchronous { (transaction) in
                 
-                closure(transaction: transaction.bridgeToObjectiveC)
+                closure(transaction.bridgeToObjectiveC)
             }
         }
     }

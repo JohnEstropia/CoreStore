@@ -41,11 +41,5 @@ targets = []
 let package = Package(
     name: "CoreStore",
     targets: targets,
-    dependencies: [
-        .Package(
-            url: "https://github.com/JohnEstropia/GCDKit.git",
-            "1.2.6"
-        )
-    ],
     exclude: ["Carthage", "CoreStoreDemo", "Sources/libA/images"]
 )

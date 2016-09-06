@@ -51,7 +51,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      May contain `NSString` instances to pertain to named configurations, or `NSNull` to pertain to the default configuration
      */
     @objc
-    public var configurations: [AnyObject]? {
+    public var configurations: [Any]? {
         
         return self.bridgeToSwift.configurations?.map {
             
@@ -85,7 +85,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
      */
     @objc
-    public convenience init(entityClass: AnyClass, configuration: AnyObject) {
+    public convenience init(entityClass: AnyClass, configuration: Any) {
         
         switch configuration {
             
@@ -111,7 +111,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      - parameter configurations: an array of the `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
      */
     @objc
-    public convenience init(entityClass: AnyClass, configurations: [AnyObject]) {
+    public convenience init(entityClass: AnyClass, configurations: [Any]) {
         
         var arguments = [String?]()
         for configuration in configurations {

@@ -90,11 +90,11 @@ public enum MigrationResult: Hashable {
         switch self {
             
         case .success(let migrationTypes):
-            return self.boolValue.hashValue
+            return true.hashValue
                 ^ migrationTypes.map { $0.hashValue }.reduce(0, ^).hashValue
             
         case .failure(let error):
-            return self.boolValue.hashValue ^ error.hashValue
+            return false.hashValue ^ error.hashValue
         }
     }
     

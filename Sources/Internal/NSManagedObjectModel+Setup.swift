@@ -42,7 +42,7 @@ internal extension NSManagedObjectModel {
         }
         
         let modelFileURL = URL(fileURLWithPath: modelFilePath)
-        let versionInfoPlistURL = try! modelFileURL.appendingPathComponent("VersionInfo.plist", isDirectory: false)
+        let versionInfoPlistURL = modelFileURL.appendingPathComponent("VersionInfo.plist", isDirectory: false)
         
         guard let versionInfo = NSDictionary(contentsOf: versionInfoPlistURL),
             let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
@@ -84,7 +84,7 @@ internal extension NSManagedObjectModel {
         var modelVersionFileURL: URL?
         for modelVersion in modelVersions {
             
-            let fileURL = try! modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
+            let fileURL = modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
             
             if modelVersion == currentModelVersion {
                 
@@ -190,7 +190,7 @@ internal extension NSManagedObjectModel {
                 return nil
         }
         
-        let versionModelFileURL = try! modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
+        let versionModelFileURL = modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
         guard let model = NSManagedObjectModel(contentsOf: versionModelFileURL) else {
             
             return nil
@@ -203,7 +203,7 @@ internal extension NSManagedObjectModel {
     }
     
     @nonobjc
-    internal subscript(metadata: [String: AnyObject]) -> NSManagedObjectModel? {
+    internal subscript(metadata: [String: Any]) -> NSManagedObjectModel? {
         
         guard let modelHashes = metadata[NSStoreModelVersionHashesKey] as? [String : Data] else {
             
@@ -227,7 +227,7 @@ internal extension NSManagedObjectModel {
         
         get {
             
-            return try! self.modelVersionFileURL?.deletingLastPathComponent()
+            return self.modelVersionFileURL?.deletingLastPathComponent()
         }
     }
     

@@ -65,7 +65,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                     
                     XCTAssertEqual(events, 0)
                     XCTAssertEqual(
-                        ((note as NSNotification).userInfo ?? [:]),
+                        ((note.userInfo as NSDictionary?) ?? [:]),
                         ["object": object] as NSDictionary
                     )
                     defer {
@@ -82,7 +82,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                     
                     XCTAssertEqual(events, 1)
                     XCTAssertEqual(
-                        ((note as NSNotification).userInfo ?? [:]),
+                        ((note.userInfo as NSDictionary?) ?? [:]),
                         [
                             "object": object,
                             "changedPersistentKeys": Set(
@@ -104,7 +104,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                     return events == 1
                 }
             )
-            let saveExpectation = self.expectation(withDescription: "save")
+            let saveExpectation = self.expectation(description: "save")
             stack.beginAsynchronous { (transaction) in
                 
                 guard let object = transaction.edit(object) else {
@@ -162,7 +162,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                     
                     XCTAssertEqual(events, 0)
                     XCTAssertEqual(
-                        ((note as NSNotification).userInfo ?? [:]),
+                        ((note.userInfo as NSDictionary?) ?? [:]),
                         ["object": object] as NSDictionary
                     )
                     defer {
@@ -172,7 +172,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
                     return events == 0
                 }
             )
-            let saveExpectation = self.expectation(withDescription: "save")
+            let saveExpectation = self.expectation(description: "save")
             stack.beginAsynchronous { (transaction) in
                 
                 guard let object = transaction.edit(object) else {

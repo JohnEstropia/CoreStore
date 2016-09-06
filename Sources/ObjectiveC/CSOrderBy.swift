@@ -41,7 +41,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
      The list of sort descriptors
      */
     @objc
-    public var sortDescriptors: [SortDescriptor] {
+    public var sortDescriptors: [NSSortDescriptor] {
         
         return self.bridgeToSwift.sortDescriptors
     }
@@ -56,7 +56,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
      - parameter sortDescriptor: a `NSSortDescriptor`
      */
     @objc
-    public convenience init(sortDescriptor: SortDescriptor) {
+    public convenience init(sortDescriptor: NSSortDescriptor) {
         
         self.init(OrderBy(sortDescriptor))
     }
@@ -71,7 +71,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
      - parameter sortDescriptors: an array of `NSSortDescriptor`s
      */
     @objc
-    public convenience init(sortDescriptors: [SortDescriptor]) {
+    public convenience init(sortDescriptors: [NSSortDescriptor]) {
         
         self.init(OrderBy(sortDescriptors))
     }

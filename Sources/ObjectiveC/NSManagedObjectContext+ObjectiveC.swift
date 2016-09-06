@@ -135,7 +135,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func queryValue(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> AnyObject? {
+    internal func queryValue(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> Any? {
         
         let fetchRequest = CoreStoreFetchRequest<NSFetchRequestResult>()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
@@ -154,7 +154,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func queryAttributes(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
+    internal func queryAttributes(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> [[String: Any]]? {
         
         let fetchRequest = CoreStoreFetchRequest<NSFetchRequestResult>()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)

@@ -103,7 +103,7 @@ public protocol CSListObjectObserver: CSListObserver {
      - parameter indexPath: the new `NSIndexPath` for the inserted object
      */
     @objc
-    optional func listMonitor(_ monitor: CSListMonitor, didInsertObject object: AnyObject, toIndexPath indexPath: IndexPath)
+    optional func listMonitor(_ monitor: CSListMonitor, didInsertObject object: Any, toIndexPath indexPath: IndexPath)
     
     /**
      Notifies that an object was deleted from the specified `NSIndexPath` in the list
@@ -113,7 +113,7 @@ public protocol CSListObjectObserver: CSListObserver {
      - parameter indexPath: the `NSIndexPath` for the deleted object
      */
     @objc
-    optional func listMonitor(_ monitor: CSListMonitor, didDeleteObject object: AnyObject, fromIndexPath indexPath: IndexPath)
+    optional func listMonitor(_ monitor: CSListMonitor, didDeleteObject object: Any, fromIndexPath indexPath: IndexPath)
     
     /**
      Notifies that an object at the specified `NSIndexPath` was updated
@@ -123,7 +123,7 @@ public protocol CSListObjectObserver: CSListObserver {
      - parameter indexPath: the `NSIndexPath` for the updated object
      */
     @objc
-    optional func listMonitor(_ monitor: CSListMonitor, didUpdateObject object: AnyObject, atIndexPath indexPath: IndexPath)
+    optional func listMonitor(_ monitor: CSListMonitor, didUpdateObject object: Any, atIndexPath indexPath: IndexPath)
     
     /**
      Notifies that an object's index changed
@@ -134,7 +134,7 @@ public protocol CSListObjectObserver: CSListObserver {
      - parameter toIndexPath: the new `NSIndexPath` for the moved object
      */
     @objc
-    optional func listMonitor(_ monitor: CSListMonitor, didMoveObject object: AnyObject, fromIndexPath: IndexPath, toIndexPath: IndexPath)
+    optional func listMonitor(_ monitor: CSListMonitor, didMoveObject object: Any, fromIndexPath: IndexPath, toIndexPath: IndexPath)
 }
 
 

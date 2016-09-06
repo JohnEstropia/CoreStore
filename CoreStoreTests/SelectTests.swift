@@ -84,7 +84,7 @@ final class SelectTests: XCTestCase {
             
             let term = SelectTerm.average("attribute")
             XCTAssertEqual(term, SelectTerm.average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.average("attribute", As: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute"))
@@ -106,9 +106,9 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.average("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.average("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.average("attribute", As: "alias2"))
+            let term = SelectTerm.average("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.average("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute"))
@@ -137,7 +137,7 @@ final class SelectTests: XCTestCase {
             
             let term = SelectTerm.count("attribute")
             XCTAssertEqual(term, SelectTerm.count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.count("attribute", As: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
@@ -159,9 +159,9 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.count("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.count("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.count("attribute", As: "alias2"))
+            let term = SelectTerm.count("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.count("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
@@ -190,7 +190,7 @@ final class SelectTests: XCTestCase {
             
             let term = SelectTerm.maximum("attribute")
             XCTAssertEqual(term, SelectTerm.maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.maximum("attribute", As: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.maximum("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
@@ -212,9 +212,9 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.maximum("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.maximum("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.maximum("attribute", As: "alias2"))
+            let term = SelectTerm.maximum("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.maximum("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.maximum("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
@@ -243,7 +243,7 @@ final class SelectTests: XCTestCase {
             
             let term = SelectTerm.minimum("attribute")
             XCTAssertEqual(term, SelectTerm.minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.minimum("attribute", As: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.minimum("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
@@ -265,9 +265,9 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.minimum("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.minimum("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.minimum("attribute", As: "alias2"))
+            let term = SelectTerm.minimum("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.minimum("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.minimum("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
@@ -296,7 +296,7 @@ final class SelectTests: XCTestCase {
             
             let term = SelectTerm.sum("attribute")
             XCTAssertEqual(term, SelectTerm.sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.sum("attribute", As: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.sum("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
@@ -318,9 +318,9 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.sum("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.sum("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.sum("attribute", As: "alias2"))
+            let term = SelectTerm.sum("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.sum("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.sum("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
@@ -349,7 +349,7 @@ final class SelectTests: XCTestCase {
             
             let term = SelectTerm.objectID()
             XCTAssertEqual(term, SelectTerm.objectID())
-            XCTAssertNotEqual(term, SelectTerm.objectID(As: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.objectID(as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute"))
@@ -368,9 +368,9 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.objectID(As: "alias")
-            XCTAssertEqual(term, SelectTerm.objectID(As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.objectID(As: "alias2"))
+            let term = SelectTerm.objectID(as: "alias")
+            XCTAssertEqual(term, SelectTerm.objectID(as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.objectID(as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.objectID())
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))

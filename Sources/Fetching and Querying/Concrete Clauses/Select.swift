@@ -44,7 +44,7 @@ public protocol SelectValueResultType: SelectResultType {
     
     static var attributeType: NSAttributeType { get }
     
-    static func fromResultObject(_ result: AnyObject) -> Self?
+    static func fromResultObject(_ result: Any) -> Self?
 }
 
 
@@ -55,7 +55,7 @@ public protocol SelectValueResultType: SelectResultType {
  */
 public protocol SelectAttributesResultType: SelectResultType {
     
-    static func fromResultObjects(_ result: [AnyObject]) -> [[NSString: AnyObject]]
+    static func fromResultObjects(_ result: [Any]) -> [[String: Any]]
 }
 
 
@@ -103,7 +103,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
      */
-    public static func average(_ keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
+    public static func average(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "average:",
@@ -125,7 +125,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for a count query
      */
-    public static func count(_ keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
+    public static func count(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "count:",
@@ -147,7 +147,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
      */
-    public static func maximum(_ keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
+    public static func maximum(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "max:",
@@ -169,7 +169,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
      */
-    public static func minimum(_ keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
+    public static func minimum(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "min:",
@@ -191,7 +191,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
      */
-    public static func sum(_ keyPath: KeyPath, As alias: KeyPath? = nil) -> SelectTerm {
+    public static func sum(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "sum:",
@@ -214,7 +214,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
      */
-    public static func objectID(As alias: KeyPath? = nil) -> SelectTerm {
+    public static func objectID(as alias: KeyPath? = nil) -> SelectTerm {
         
         return ._identity(
             alias: alias ?? "objectID",
@@ -402,7 +402,7 @@ extension Bool: SelectValueResultType {
         return .booleanAttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Bool? {
+    public static func fromResultObject(_ result: Any) -> Bool? {
         switch result {
             
         case let decimal as NSDecimalNumber:
@@ -429,7 +429,7 @@ extension Int8: SelectValueResultType {
         return .integer64AttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Int8? {
+    public static func fromResultObject(_ result: Any) -> Int8? {
         
         guard let value = (result as? NSNumber)?.int64Value else {
             
@@ -449,7 +449,7 @@ extension Int16: SelectValueResultType {
         return .integer64AttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Int16? {
+    public static func fromResultObject(_ result: Any) -> Int16? {
         
         guard let value = (result as? NSNumber)?.int64Value else {
             
@@ -469,7 +469,7 @@ extension Int32: SelectValueResultType {
         return .integer64AttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Int32? {
+    public static func fromResultObject(_ result: Any) -> Int32? {
         
         guard let value = (result as? NSNumber)?.int64Value else {
             
@@ -489,7 +489,7 @@ extension Int64: SelectValueResultType {
         return .integer64AttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Int64? {
+    public static func fromResultObject(_ result: Any) -> Int64? {
         
         return (result as? NSNumber)?.int64Value
     }
@@ -505,7 +505,7 @@ extension Int: SelectValueResultType {
         return .integer64AttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Int? {
+    public static func fromResultObject(_ result: Any) -> Int? {
         
         guard let value = (result as? NSNumber)?.int64Value else {
             
@@ -525,7 +525,7 @@ extension Double: SelectValueResultType {
         return .doubleAttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Double? {
+    public static func fromResultObject(_ result: Any) -> Double? {
         
         return (result as? NSNumber)?.doubleValue
     }
@@ -541,7 +541,7 @@ extension Float: SelectValueResultType {
         return .floatAttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Float? {
+    public static func fromResultObject(_ result: Any) -> Float? {
         
         return (result as? NSNumber)?.floatValue
     }
@@ -557,7 +557,7 @@ extension String: SelectValueResultType {
         return .stringAttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> String? {
+    public static func fromResultObject(_ result: Any) -> String? {
         
         return result as? String
     }
@@ -573,7 +573,7 @@ extension Date: SelectValueResultType {
         return .dateAttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Date? {
+    public static func fromResultObject(_ result: Any) -> Date? {
         
         return result as? Date
     }
@@ -589,7 +589,7 @@ extension Data: SelectValueResultType {
         return .binaryDataAttributeType
     }
     
-    public static func fromResultObject(_ result: AnyObject) -> Data? {
+    public static func fromResultObject(_ result: Any) -> Data? {
         
         return result as? Data
     }
@@ -605,9 +605,9 @@ extension NSNumber: SelectValueResultType {
         return .integer64AttributeType
     }
     
-    public class func fromResultObject(_ result: AnyObject) -> Self? {
+    public class func fromResultObject(_ result: Any) -> Self? {
         
-        func forceCast<T: NSNumber>(_ object: AnyObject) -> T? {
+        func forceCast<T: NSNumber>(_ object: Any) -> T? {
             
             return (object as? T)
         }
@@ -625,9 +625,9 @@ extension NSString: SelectValueResultType {
         return .stringAttributeType
     }
     
-    public class func fromResultObject(_ result: AnyObject) -> Self? {
+    public class func fromResultObject(_ result: Any) -> Self? {
         
-        func forceCast<T: NSString>(_ object: AnyObject) -> T? {
+        func forceCast<T: NSString>(_ object: Any) -> T? {
             
             return (object as? T)
         }
@@ -645,9 +645,9 @@ extension NSDecimalNumber {
         return .decimalAttributeType
     }
     
-    public override class func fromResultObject(_ result: AnyObject) -> Self? {
+    public override class func fromResultObject(_ result: Any) -> Self? {
         
-        func forceCast<T: NSDecimalNumber>(_ object: AnyObject) -> T? {
+        func forceCast<T: NSDecimalNumber>(_ object: Any) -> T? {
             
             return (object as? T)
         }
@@ -665,9 +665,9 @@ extension NSDate: SelectValueResultType {
         return .dateAttributeType
     }
     
-    public class func fromResultObject(_ result: AnyObject) -> Self? {
+    public class func fromResultObject(_ result: Any) -> Self? {
         
-        func forceCast<T: NSDate>(_ object: AnyObject) -> T? {
+        func forceCast<T: NSDate>(_ object: Any) -> T? {
             
             return (object as? T)
         }
@@ -685,9 +685,9 @@ extension NSData: SelectValueResultType {
         return .binaryDataAttributeType
     }
     
-    public class func fromResultObject(_ result: AnyObject) -> Self? {
+    public class func fromResultObject(_ result: Any) -> Self? {
         
-        func forceCast<T: NSData>(_ object: AnyObject) -> T? {
+        func forceCast<T: NSData>(_ object: Any) -> T? {
             
             return (object as? T)
         }
@@ -705,9 +705,9 @@ extension NSManagedObjectID: SelectValueResultType {
         return .objectIDAttributeType
     }
     
-    public class func fromResultObject(_ result: AnyObject) -> Self? {
+    public class func fromResultObject(_ result: Any) -> Self? {
         
-        func forceCast<T: NSManagedObjectID>(_ object: AnyObject) -> T? {
+        func forceCast<T: NSManagedObjectID>(_ object: Any) -> T? {
             
             return (object as? T)
         }
@@ -722,9 +722,9 @@ extension NSDictionary: SelectAttributesResultType {
     
     // MARK: SelectAttributesResultType
     
-    public class func fromResultObjects(_ result: [AnyObject]) -> [[NSString: AnyObject]] {
+    public class func fromResultObjects(_ result: [Any]) -> [[String: Any]] {
         
-        return result as! [[NSString: AnyObject]]
+        return result as! [[String: Any]]
     }
 }
 
@@ -761,7 +761,7 @@ internal extension Collection where Iterator.Element == SelectTerm {
             }
         }
         
-        var propertiesToFetch = [AnyObject]()
+        var propertiesToFetch = [Any]()
         for term in self {
             
             switch term {

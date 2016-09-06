@@ -62,7 +62,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
      */
     public init(fileName: String, configuration: String? = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
         
-        self.fileURL = try! SQLiteStore.defaultRootDirectory
+        self.fileURL = SQLiteStore.defaultRootDirectory
             .appendingPathComponent(fileName, isDirectory: false)
         self.configuration = configuration
         self.mappingModelBundles = mappingModelBundles
@@ -104,7 +104,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
      [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
      ```
      */
-    public let storeOptions: [String: AnyObject]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+    public let storeOptions: [AnyHashable: Any]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
     
     /**
      Do not call directly. Used by the `DataStack` internally.
@@ -143,7 +143,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      The options dictionary for the specified `LocalStorageOptions`
      */
-    public func storeOptionsForOptions(_ options: LocalStorageOptions) -> [String: AnyObject]? {
+    public func storeOptionsForOptions(_ options: LocalStorageOptions) -> [AnyHashable: Any]? {
         
         if options == .none {
             
@@ -181,12 +181,12 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
             let fileManager = FileManager.default
             do {
                 
-                let temporaryFile = try URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
+                let temporaryFile = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
                     .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack", isDirectory: true)
                     .appendingPathComponent("trash", isDirectory: true)
                     .appendingPathComponent(UUID().uuidString, isDirectory: false)
                 try fileManager.createDirectory(
-                    at: try temporaryFile.deletingLastPathComponent(),
+                    at: temporaryFile.deletingLastPathComponent(),
                     withIntermediateDirectories: true,
                     attributes: nil
                 )
@@ -214,10 +214,11 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
             let systemDirectorySearchPath = FileManager.SearchPathDirectory.applicationSupportDirectory
         #endif
         
-        let defaultSystemDirectory = FileManager.default
-            .urlsForDirectory(systemDirectorySearchPath, inDomains: .userDomainMask).first!
+        let defaultSystemDirectory = FileManager.default.urls(
+                for: systemDirectorySearchPath,
+                in: .userDomainMask).first!
         
-        return try! defaultSystemDirectory.appendingPathComponent(
+        return defaultSystemDirectory.appendingPathComponent(
             Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack",
             isDirectory: true
         )

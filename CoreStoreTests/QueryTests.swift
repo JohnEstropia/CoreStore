@@ -173,7 +173,7 @@ class QueryTests: BaseTestDataTestCase {
                     queryClauses
                 )
                 XCTAssertNotNil(value)
-                XCTAssertEqual(value, ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue))
+                XCTAssertEqual(value as Data?, "nil:TestEntity1:1".data(using: .utf8))
             }
             do {
                 
@@ -183,7 +183,7 @@ class QueryTests: BaseTestDataTestCase {
                     queryClauses
                 )
                 XCTAssertNotNil(value)
-                XCTAssertEqual(value, self.dateFormatter.date(from: "2000-01-01T00:00:00Z"))
+                XCTAssertEqual(value as Date?, self.dateFormatter.date(from: "2000-01-01T00:00:00Z"))
             }
             do {
                 
@@ -657,7 +657,7 @@ class QueryTests: BaseTestDataTestCase {
                     queryClauses
                 )
                 XCTAssertNotNil(value)
-                XCTAssertEqual(value, ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue))
+                XCTAssertEqual(value as Data?, "nil:TestEntity1:5".data(using: .utf8))
             }
             do {
                 
@@ -667,7 +667,7 @@ class QueryTests: BaseTestDataTestCase {
                     queryClauses
                 )
                 XCTAssertNotNil(value)
-                XCTAssertEqual(value, self.dateFormatter.date(from: "2000-01-05T00:00:00Z"))
+                XCTAssertEqual(value as Date?, self.dateFormatter.date(from: "2000-01-05T00:00:00Z"))
             }
             do {
                 
@@ -821,7 +821,7 @@ class QueryTests: BaseTestDataTestCase {
                     queryClauses
                 )
                 XCTAssertNotNil(value)
-                XCTAssertEqual(value, ("nil:TestEntity1:2" as NSString).data(using: String.Encoding.utf8.rawValue))
+                XCTAssertEqual(value as Data?, "nil:TestEntity1:2".data(using: .utf8))
             }
             do {
                 
@@ -831,7 +831,7 @@ class QueryTests: BaseTestDataTestCase {
                     queryClauses
                 )
                 XCTAssertNotNil(value)
-                XCTAssertEqual(value, self.dateFormatter.date(from: "2000-01-02T00:00:00Z"))
+                XCTAssertEqual(value as Date?, self.dateFormatter.date(from: "2000-01-02T00:00:00Z"))
             }
             do {
                 
@@ -1170,7 +1170,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let values = stack.queryAttributes(
+                let values: [NSDictionary]? = stack.queryAttributes(
                     from,
                     Select(
                         "testBoolean",
@@ -1203,7 +1203,7 @@ class QueryTests: BaseTestDataTestCase {
                             "testData": ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue)!,
                             "testDate": self.dateFormatter.date(from: "2000-01-05T00:00:00Z")!
                         ]
-                    ]
+                    ] as [NSDictionary]
                 )
             }
         }
@@ -1221,7 +1221,7 @@ class QueryTests: BaseTestDataTestCase {
             let queryClauses: [QueryClause] = []
             do {
                 
-                let values = stack.queryAttributes(
+                let values: [NSDictionary]? = stack.queryAttributes(
                     from,
                     Select(
                         .sum("testBoolean"),
@@ -1243,19 +1243,19 @@ class QueryTests: BaseTestDataTestCase {
                             "min(testNumber)": 1,
                             "average(testDecimal)": 3,
                         ]
-                    ]
+                    ] as [NSDictionary]
                 )
             }
             do {
                 
-                let values = stack.queryAttributes(
+                let values: [NSDictionary]? = stack.queryAttributes(
                     from,
                     Select(
-                        .sum("testBoolean", As: "testSum"),
-                        .count("testNumber", As: "testCount"),
-                        .maximum("testNumber", As: "testMaximum"),
-                        .minimum("testNumber", As: "testMinimum"),
-                        .average("testDecimal", As: "testAverage")
+                        .sum("testBoolean", as: "testSum"),
+                        .count("testNumber", as: "testCount"),
+                        .maximum("testNumber", as: "testMaximum"),
+                        .minimum("testNumber", as: "testMinimum"),
+                        .average("testDecimal", as: "testAverage")
                     ),
                     queryClauses
                 )
@@ -1270,7 +1270,7 @@ class QueryTests: BaseTestDataTestCase {
                             "testMinimum": 1,
                             "testAverage": 3,
                         ]
-                    ]
+                    ] as [NSDictionary]
                 )
             }
         }

@@ -1084,7 +1084,7 @@ The `"count(friends)"` key name was automatically used by CoreStore, but you can
 ```swift
 let personJSON = CoreStore.queryAttributes(
     From<MyPersonEntity>(),
-    Select("name", .count("friends", As: "friendsCount"))
+    Select("name", .count("friends", as: "friendsCount"))
 )
 ```
 which now returns:
@@ -1107,7 +1107,7 @@ The `GroupBy` clause lets you group results by a specified attribute/aggregate. 
 ```swift
 let personJSON = CoreStore.queryAttributes(
     From<MyPersonEntity>(),
-    Select("age", .count("age", As: "count")),
+    Select("age", .count("age", as: "count")),
     GroupBy("age")
 )
 ```
@@ -1431,8 +1431,6 @@ to your target's `GCC_PREPROCESSOR_DEFINITIONS` build setting.
 - Requires:
     - iOS 7 SDK and above
     - Swift 2.2 (Xcode 7.3)
-- Dependencies:
-    - [GCDKit](https://github.com/JohnEstropia/GCDKit)
 - Other notes:
     - The `com.apple.CoreData.ConcurrencyDebug` debug argument should be turned off for the app. CoreStore already guarantees safety for you by making the main context read-only, and by only executing transactions serially.
 
@@ -1446,7 +1444,6 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 In your `Cartfile`, add
 ```
 github "JohnEstropia/CoreStore" >= 2.0.0
-github "JohnEstropia/GCDKit" >= 1.2.5
 ```
 and run 
 ```

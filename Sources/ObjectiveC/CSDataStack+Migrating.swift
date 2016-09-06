@@ -48,7 +48,7 @@ public extension CSDataStack {
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously.
      */
     @objc
-    public func addInMemoryStorage(_ storage: CSInMemoryStore, completion: (CSSetupResult) -> Void) {
+    public func addInMemoryStorage(_ storage: CSInMemoryStore, completion: @escaping (CSSetupResult) -> Void) {
         
         self.bridgeToSwift.addStorage(
             storage.bridgeToSwift,
@@ -77,7 +77,7 @@ public extension CSDataStack {
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
     @objc
-    public func addSQLiteStorage(_ storage: CSSQLiteStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> Progress? {
+    public func addSQLiteStorage(_ storage: CSSQLiteStore, completion: @escaping (CSSetupResult) -> Void, error: NSErrorPointer) -> Progress? {
         
         return bridge(error) {
             
@@ -97,7 +97,7 @@ public extension CSDataStack {
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
     @objc
-    public func upgradeStorageIfNeeded(_ storage: CSSQLiteStore, completion: (CSMigrationResult) -> Void, error: NSErrorPointer) -> Progress? {
+    public func upgradeStorageIfNeeded(_ storage: CSSQLiteStore, completion: @escaping (CSMigrationResult) -> Void, error: NSErrorPointer) -> Progress? {
         
         return bridge(error) {
             

@@ -79,7 +79,8 @@ public extension Progress {
 private final class ProgressObserver: NSObject {
     
     private unowned let progress: Progress
-    private var progressHandler: ((_ progress: Progress) -> Void)? {
+    
+    fileprivate var progressHandler: ((_ progress: Progress) -> Void)? {
         
         didSet {
             
@@ -105,7 +106,7 @@ private final class ProgressObserver: NSObject {
         }
     }
     
-    private init(_ progress: Progress) {
+    fileprivate init(_ progress: Progress) {
         
         self.progress = progress
         super.init()
@@ -120,7 +121,7 @@ private final class ProgressObserver: NSObject {
         }
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: AnyObject?, change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         guard let progress = object as? Progress,
             progress == self.progress,
@@ -131,7 +132,7 @@ private final class ProgressObserver: NSObject {
         
         DispatchQueue.main.async { [weak self] () -> Void in
             
-            self?.progressHandler?(progress: progress)
+            self?.progressHandler?(progress)
         }
     }
 }

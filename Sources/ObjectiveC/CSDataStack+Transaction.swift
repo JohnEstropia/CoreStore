@@ -58,7 +58,7 @@ public extension CSDataStack {
             
             self.bridgeToSwift.beginSynchronous { (transaction) in
                 
-                closure(transaction: transaction.bridgeToObjectiveC)
+                closure(transaction.bridgeToObjectiveC)
             }
         }
     }

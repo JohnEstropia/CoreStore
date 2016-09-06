@@ -75,7 +75,7 @@ public extension CoreStore {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public static func monitorList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
+    public static func monitorList<T: NSManagedObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
         
         self.defaultStack.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -87,7 +87,7 @@ public extension CoreStore {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public static func monitorList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
+    public static func monitorList<T: NSManagedObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
         
         self.defaultStack.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -126,7 +126,7 @@ public extension CoreStore {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public static func monitorSectionedList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
+    public static func monitorSectionedList<T: NSManagedObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
         
         self.defaultStack.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -139,7 +139,7 @@ public extension CoreStore {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public static func monitorSectionedList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
+    public static func monitorSectionedList<T: NSManagedObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
         
         self.defaultStack.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }

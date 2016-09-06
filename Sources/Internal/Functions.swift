@@ -27,7 +27,7 @@ import Foundation
 
 // MARK: Associated Objects
 
-internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafeRawPointer, inObject object: AnyObject) -> T? {
+internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafeRawPointer, inObject object: Any) -> T? {
     
     switch objc_getAssociatedObject(object, key) {
         
@@ -42,17 +42,17 @@ internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafeRawPointer
     }
 }
 
-internal func cs_setAssociatedRetainedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: AnyObject) {
+internal func cs_setAssociatedRetainedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: Any) {
     
     objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 }
 
-internal func cs_setAssociatedCopiedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: AnyObject) {
+internal func cs_setAssociatedCopiedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: Any) {
     
     objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_COPY_NONATOMIC)
 }
 
-internal func cs_setAssociatedWeakObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: AnyObject) {
+internal func cs_setAssociatedWeakObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: Any) {
     
     if let associatedObject = associatedObject {
         

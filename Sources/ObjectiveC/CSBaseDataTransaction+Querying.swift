@@ -38,7 +38,7 @@ public extension CSBaseDataTransaction {
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
     @objc
-    public func fetchExistingObject(_ object: NSManagedObject) -> AnyObject? {
+    public func fetchExistingObject(_ object: NSManagedObject) -> Any? {
         
         do {
             
@@ -57,7 +57,7 @@ public extension CSBaseDataTransaction {
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
     @objc
-    public func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> AnyObject? {
+    public func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> Any? {
         
         do {
             
@@ -76,7 +76,7 @@ public extension CSBaseDataTransaction {
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
     @objc
-    public func fetchExistingObjects(_ objects: [NSManagedObject]) -> [AnyObject] {
+    public func fetchExistingObjects(_ objects: [NSManagedObject]) -> [Any] {
         
         return objects.flatMap { try? self.bridgeToSwift.context.existingObject(with: $0.objectID) }
     }
@@ -88,7 +88,7 @@ public extension CSBaseDataTransaction {
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
     @objc
-    public func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [AnyObject] {
+    public func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [Any] {
         
         return objectIDs.flatMap { try? self.bridgeToSwift.context.existingObject(with: $0) }
     }
@@ -101,7 +101,7 @@ public extension CSBaseDataTransaction {
      - returns: the first `NSManagedObject` instance that satisfies the specified `CSFetchClause`s
      */
     @objc
-    public func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
+    public func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> Any? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
@@ -118,7 +118,7 @@ public extension CSBaseDataTransaction {
      - returns: all `NSManagedObject` instances that satisfy the specified `CSFetchClause`s
      */
     @objc
-    public func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
+    public func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [Any]? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
@@ -141,7 +141,9 @@ public extension CSBaseDataTransaction {
             self.bridgeToSwift.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.bridgeToSwift.context.fetchCount(from, fetchClauses)
+        return self.bridgeToSwift.context
+            .fetchCount(from, fetchClauses)
+            .flatMap { NSNumber(value: $0) }
     }
     
     /**
@@ -172,7 +174,7 @@ public extension CSBaseDataTransaction {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    public func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
+    public func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> Any? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),
@@ -192,7 +194,7 @@ public extension CSBaseDataTransaction {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    public func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
+    public func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[String: Any]]? {
         
         CoreStore.assert(
             self.bridgeToSwift.isRunningInAllowedQueue(),

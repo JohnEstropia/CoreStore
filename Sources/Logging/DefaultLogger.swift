@@ -70,7 +70,7 @@ public final class DefaultLogger: CoreStoreLogger {
                 icon = "❗"
                 levelString = "Fatal"
             }
-            Swift.print("\(icon) [CoreStore: \(levelString)] \((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+            Swift.print("\(icon) [CoreStore: \(levelString)] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         #endif
     }
     
@@ -86,7 +86,7 @@ public final class DefaultLogger: CoreStoreLogger {
     public func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.print("⚠️ [CoreStore: Error] \((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
+            Swift.print("⚠️ [CoreStore: Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
         #endif
     }
     
@@ -106,7 +106,7 @@ public final class DefaultLogger: CoreStoreLogger {
                 
                 return
             }
-            Swift.print("❗ [CoreStore: Assertion Failure] \((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message())\n")
+            Swift.print("❗ [CoreStore: Assertion Failure] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message())\n")
             Swift.fatalError(file: fileName, line: UInt(lineNumber))
         #endif
     }
@@ -122,7 +122,7 @@ public final class DefaultLogger: CoreStoreLogger {
      */
     public func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        Swift.print("❗ [CoreStore: Fatal Error] \((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+        Swift.print("❗ [CoreStore: Fatal Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         Swift.fatalError(file: fileName, line: UInt(lineNumber))
     }
 }

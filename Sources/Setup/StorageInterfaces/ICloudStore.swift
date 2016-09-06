@@ -85,12 +85,12 @@ public class ICloudStore: CloudStorage {
         )
         
         let fileManager = FileManager.default
-        guard let cacheFileURL = fileManager.urlForUbiquityContainerIdentifier(ubiquitousContainerID) else {
+        guard let cacheFileURL = fileManager.url(forUbiquityContainerIdentifier: ubiquitousContainerID) else {
             
             return nil
         }
         
-        var storeOptions: [String: AnyObject] = [
+        var storeOptions: [String: Any] = [
             NSSQLitePragmasOption: ["journal_mode": "WAL"],
             NSPersistentStoreUbiquitousContentNameKey: ubiquitousContentName
         ]
@@ -265,7 +265,7 @@ public class ICloudStore: CloudStorage {
      [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
      ```
      */
-    public let storeOptions: [String: AnyObject]?
+    public let storeOptions: [AnyHashable: Any]?
     
     /**
      Do not call directly. Used by the `DataStack` internally.
@@ -312,7 +312,7 @@ public class ICloudStore: CloudStorage {
                     NotificationCenter.default.post(
                         name: notification,
                         object: self,
-                        userInfo: [String(DataStack.self): dataStack]
+                        userInfo: [String(describing: DataStack.self): dataStack]
                     )
                 }
             ),
@@ -354,7 +354,7 @@ public class ICloudStore: CloudStorage {
                     NotificationCenter.default.post(
                         name: notification,
                         object: self,
-                        userInfo: [String(DataStack.self): dataStack]
+                        userInfo: [String(describing: DataStack.self): dataStack]
                     )
                 }
             ),
@@ -400,7 +400,7 @@ public class ICloudStore: CloudStorage {
     /**
      The options dictionary for the specified `CloudStorageOptions`
      */
-    public func storeOptionsForOptions(_ options: CloudStorageOptions) -> [String: AnyObject]? {
+    public func storeOptionsForOptions(_ options: CloudStorageOptions) -> [AnyHashable: Any]? {
         
         if options == .none {
             
@@ -453,10 +453,10 @@ public class ICloudStore: CloudStorage {
     
     // MARK: Private
     
-    private struct Static {
+    fileprivate struct Static {
         
-        private static var persistentStoreCoordinatorWillChangeStores: Void?
-        private static var persistentStoreCoordinatorDidChangeStores: Void?
+        fileprivate static var persistentStoreCoordinatorWillChangeStores: Void?
+        fileprivate static var persistentStoreCoordinatorDidChangeStores: Void?
     }
     
     private var willFinishInitialImportKey: Void?
@@ -480,7 +480,7 @@ public class ICloudStore: CloudStorage {
                     
                     guard let `self` = self,
                         let observer = observer,
-                        let dataStack = note.userInfo?[String(DataStack.self)] as? DataStack,
+                        let dataStack = note.userInfo?[String(describing: DataStack.self)] as? DataStack,
                         self.dataStack === dataStack else {
                             
                             return
@@ -497,16 +497,16 @@ public class ICloudStore: CloudStorage {
 
 // MARK: - Notification Keys
     
-private extension Notification.Name {
+fileprivate extension Notification.Name {
     
-    private static let iCloudUbiquitousStoreWillFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreWillFinishInitialImport")
-    private static let iCloudUbiquitousStoreDidFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreDidFinishInitialImport")
-    private static let iCloudUbiquitousStoreWillAddAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreWillAddAccount")
-    private static let iCloudUbiquitousStoreDidAddAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreDidAddAccount")
-    private static let iCloudUbiquitousStoreWillRemoveAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreWillRemoveAccount")
-    private static let iCloudUbiquitousStoreDidRemoveAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreDidRemoveAccount")
-    private static let iCloudUbiquitousStoreWillRemoveContent = Notification.Name(rawValue: "iCloudUbiquitousStoreWillRemoveContent")
-    private static let iCloudUbiquitousStoreDidRemoveContent = Notification.Name(rawValue: "iCloudUbiquitousStoreDidRemoveContent")
+    fileprivate static let iCloudUbiquitousStoreWillFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreWillFinishInitialImport")
+    fileprivate static let iCloudUbiquitousStoreDidFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreDidFinishInitialImport")
+    fileprivate static let iCloudUbiquitousStoreWillAddAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreWillAddAccount")
+    fileprivate static let iCloudUbiquitousStoreDidAddAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreDidAddAccount")
+    fileprivate static let iCloudUbiquitousStoreWillRemoveAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreWillRemoveAccount")
+    fileprivate static let iCloudUbiquitousStoreDidRemoveAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreDidRemoveAccount")
+    fileprivate static let iCloudUbiquitousStoreWillRemoveContent = Notification.Name(rawValue: "iCloudUbiquitousStoreWillRemoveContent")
+    fileprivate static let iCloudUbiquitousStoreDidRemoveContent = Notification.Name(rawValue: "iCloudUbiquitousStoreDidRemoveContent")
 }
 
 #endif

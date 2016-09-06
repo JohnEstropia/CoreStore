@@ -30,22 +30,22 @@ import Foundation
 
 internal extension DispatchQueue {
     
-    internal convenience init(serialWith label: String) {
+    internal convenience init(serialWith label: String, qos: DispatchQoS = .default) {
         
         self.init(
             label: label,
-            qos: .default,
-            attributes: .allZeros,
+            qos: qos,
+            attributes: [],
             autoreleaseFrequency: .inherit,
             target: nil
         )
     }
     
-    internal convenience init(concurrentWith label: String) {
+    internal convenience init(concurrentWith label: String, qos: DispatchQoS = .default) {
         
         self.init(
             label: label,
-            qos: .default,
+            qos: qos,
             attributes: .concurrent,
             autoreleaseFrequency: .inherit,
             target: nil
@@ -62,20 +62,20 @@ internal extension DispatchQueue {
     
     internal func cs_sync<T>(_ closure: () throws -> T) rethrows -> T {
         
-        return self.sync { autoreleasepool(invoking: closure) }
+        return try self.sync { try autoreleasepool(invoking: closure) }
     }
     
-    internal func cs_async(_ closure: () -> Void) {
+    internal func cs_async(_ closure: @escaping () -> Void) {
         
         self.async { autoreleasepool(invoking: closure) }
     }
     
     internal func cs_barrierSync<T>(_ closure: () throws -> T) rethrows -> T {
         
-        return self.sync(flags: .barrier) { autoreleasepool(invoking: closure) }
+        return try self.sync(flags: .barrier) { try autoreleasepool(invoking: closure) }
     }
     
-    internal func cs_barrierAsync(_ closure: () -> Void) {
+    internal func cs_barrierAsync(_ closure: @escaping () -> Void) {
         
         self.async(flags: .barrier) { autoreleasepool(invoking: closure) }
     }

@@ -79,7 +79,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter format: the format string for the predicate
      - parameter args: the arguments for `format`
      */
-    public init(_ format: String, _ args: NSObject...) {
+    public init(_ format: String, _ args: Any...) {
         
         self.init(NSPredicate(format: format, argumentArray: args))
     }
@@ -90,7 +90,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter format: the format string for the predicate
      - parameter argumentArray: the arguments for `format`
      */
-    public init(_ format: String, argumentArray: [NSObject]?) {
+    public init(_ format: String, argumentArray: [Any]?) {
         
         self.init(NSPredicate(format: format, argumentArray: argumentArray))
     }
@@ -101,7 +101,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init(_ keyPath: KeyPath, isEqualTo value: NSObject?) {
+    public init(_ keyPath: KeyPath, isEqualTo value: Any?) {
         
         self.init(value == nil
             ? NSPredicate(format: "\(keyPath) == nil")
@@ -114,7 +114,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the array to check membership of
      */
-    public init(_ keyPath: KeyPath, isMemberOf list: [NSObject]) {
+    public init(_ keyPath: KeyPath, isMemberOf list: [Any]) {
         
         self.init(NSPredicate(format: "\(keyPath) IN %@", list))
     }
@@ -125,7 +125,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: NSObject {
+    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: Any {
         
         self.init(NSPredicate(format: "\(keyPath) IN %@", Array(list) as NSArray))
     }

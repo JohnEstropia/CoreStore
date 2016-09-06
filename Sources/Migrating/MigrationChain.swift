@@ -246,7 +246,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
     
     // MARK: Private
     
-    private let versionTree: [String: String]
+    fileprivate let versionTree: [String: String]
 }
 
 

@@ -38,7 +38,7 @@ public extension CSCoreStore {
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
     @objc
-    public static func fetchExistingObject(_ object: NSManagedObject) -> AnyObject? {
+    public static func fetchExistingObject(_ object: NSManagedObject) -> Any? {
         
         return self.defaultStack.fetchExistingObject(object)
     }
@@ -50,7 +50,7 @@ public extension CSCoreStore {
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
     @objc
-    public static func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> AnyObject? {
+    public static func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> Any? {
         
         return self.defaultStack.fetchExistingObjectWithID(objectID)
     }
@@ -62,7 +62,7 @@ public extension CSCoreStore {
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
     @objc
-    public static func fetchExistingObjects(_ objects: [NSManagedObject]) -> [AnyObject] {
+    public static func fetchExistingObjects(_ objects: [NSManagedObject]) -> [Any] {
         
         return self.defaultStack.fetchExistingObjects(objects)
     }
@@ -74,7 +74,7 @@ public extension CSCoreStore {
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
     @objc
-    public static func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [AnyObject] {
+    public static func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [Any] {
         
         return self.defaultStack.fetchExistingObjectsWithIDs(objectIDs)
     }
@@ -87,7 +87,7 @@ public extension CSCoreStore {
      - returns: the first `NSManagedObject` instance that satisfies the specified `CSFetchClause`s
      */
     @objc
-    public static func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> AnyObject? {
+    public static func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> Any? {
         
         return self.defaultStack.fetchOneFrom(from, fetchClauses: fetchClauses)
     }
@@ -100,7 +100,7 @@ public extension CSCoreStore {
      - returns: all `NSManagedObject` instances that satisfy the specified `CSFetchClause`s
      */
     @objc
-    public static func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [AnyObject]? {
+    public static func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [Any]? {
         
         return self.defaultStack.fetchAllFrom(from, fetchClauses: fetchClauses)
     }
@@ -155,7 +155,7 @@ public extension CSCoreStore {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    public static func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> AnyObject? {
+    public static func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> Any? {
         
         return self.defaultStack.queryValueFrom(from, selectClause: selectClause, queryClauses: queryClauses)
     }
@@ -171,7 +171,7 @@ public extension CSCoreStore {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `CSSelect` parameter.
      */
     @objc
-    public static func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
+    public static func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[String: Any]]? {
         
         return self.defaultStack.queryAttributesFrom(from, selectClause: selectClause, queryClauses: queryClauses)
     }

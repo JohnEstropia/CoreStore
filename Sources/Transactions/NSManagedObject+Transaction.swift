@@ -50,7 +50,7 @@ public extension NSManagedObject {
     @nonobjc
     internal class func createInContext(_ context: NSManagedObjectContext) -> Self {
         
-        return self.`init`(entity:insertInto:)(
+        return self.init(
             entity: context.entityDescriptionForEntityType(self)!,
             insertInto: context
         )

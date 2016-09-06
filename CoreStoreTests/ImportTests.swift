@@ -72,7 +72,7 @@ class ImportTests: BaseTestDataTestCase {
             
             stack.beginSynchronous { (transaction) in
                 
-                let errorExpectation = self.expectation(withDescription: "error")
+                let errorExpectation = self.expectation(description: "error")
                 do {
                     
                     let _ = try transaction.importObject(
@@ -215,8 +215,8 @@ class ImportTests: BaseTestDataTestCase {
                     XCTAssertEqual(object.testNumber, dictionary["testNumber"] as? NSNumber)
                     XCTAssertEqual(object.testDecimal, dictionary["testDecimal"] as? NSDecimalNumber)
                     XCTAssertEqual(object.testString, dictionary["testString"] as? String)
-                    XCTAssertEqual(object.testData, dictionary["testData"] as? NSData)
-                    XCTAssertEqual(object.testDate, dictionary["testDate"] as? NSDate)
+                    XCTAssertEqual(object.testData, dictionary["testData"] as? Data)
+                    XCTAssertEqual(object.testDate, dictionary["testDate"] as? Date)
                 }
                 catch {
                     
@@ -234,7 +234,7 @@ class ImportTests: BaseTestDataTestCase {
             
             stack.beginSynchronous { (transaction) in
                 
-                let errorExpectation = self.expectation(withDescription: "error")
+                let errorExpectation = self.expectation(description: "error")
                 do {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
@@ -331,8 +331,8 @@ class ImportTests: BaseTestDataTestCase {
                         XCTAssertEqual(object.testNumber, dictionary["testNumber"] as? NSNumber)
                         XCTAssertEqual(object.testDecimal, dictionary["testDecimal"] as? NSDecimalNumber)
                         XCTAssertEqual(object.testString, dictionary["testString"] as? String)
-                        XCTAssertEqual(object.testData, dictionary["testData"] as? NSData)
-                        XCTAssertEqual(object.testDate, dictionary["testDate"] as? NSDate)
+                        XCTAssertEqual(object.testData, dictionary["testData"] as? Data)
+                        XCTAssertEqual(object.testDate, dictionary["testDate"] as? Date)
                     }
                 }
                 catch {
@@ -425,7 +425,7 @@ class ImportTests: BaseTestDataTestCase {
                 
                 do {
                     
-                    let errorExpectation = self.expectation(withDescription: "error")
+                    let errorExpectation = self.expectation(description: "error")
                     do {
                         
                         let _ = try transaction.importUniqueObject(
@@ -466,7 +466,7 @@ class ImportTests: BaseTestDataTestCase {
                 }
                 do {
                     
-                    let errorExpectation = self.expectation(withDescription: "error")
+                    let errorExpectation = self.expectation(description: "error")
                     do {
                         
                         let _ = try transaction.importUniqueObject(
@@ -639,8 +639,8 @@ class ImportTests: BaseTestDataTestCase {
                     XCTAssertEqual(object.testNumber, dictionary["testNumber"] as? NSNumber)
                     XCTAssertEqual(object.testDecimal, dictionary["testDecimal"] as? NSDecimalNumber)
                     XCTAssertEqual(object.testString, dictionary["testString"] as? String)
-                    XCTAssertEqual(object.testData, dictionary["testData"] as? NSData)
-                    XCTAssertEqual(object.testDate, dictionary["testDate"] as? NSDate)
+                    XCTAssertEqual(object.testData, dictionary["testData"] as? Data)
+                    XCTAssertEqual(object.testDate, dictionary["testDate"] as? Date)
                 }
                 catch {
                     
@@ -660,7 +660,7 @@ class ImportTests: BaseTestDataTestCase {
             
             stack.beginSynchronous { (transaction) in
                 
-                let errorExpectation = self.expectation(withDescription: "error")
+                let errorExpectation = self.expectation(description: "error")
                 do {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
@@ -707,7 +707,7 @@ class ImportTests: BaseTestDataTestCase {
             }
             stack.beginSynchronous { (transaction) in
                 
-                let errorExpectation = self.expectation(withDescription: "error")
+                let errorExpectation = self.expectation(description: "error")
                 do {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
@@ -760,7 +760,7 @@ class ImportTests: BaseTestDataTestCase {
             }
             stack.beginSynchronous { (transaction) in
                 
-                let errorExpectation = self.expectation(withDescription: "error")
+                let errorExpectation = self.expectation(description: "error")
                 do {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
@@ -860,8 +860,8 @@ class ImportTests: BaseTestDataTestCase {
                         XCTAssertEqual(object.testNumber, dictionary["testNumber"] as? NSNumber)
                         XCTAssertEqual(object.testDecimal, dictionary["testDecimal"] as? NSDecimalNumber)
                         XCTAssertEqual(object.testString, dictionary["testString"] as? String)
-                        XCTAssertEqual(object.testData, dictionary["testData"] as? NSData)
-                        XCTAssertEqual(object.testDate, dictionary["testDate"] as? NSDate)
+                        XCTAssertEqual(object.testData, dictionary["testData"] as? Data)
+                        XCTAssertEqual(object.testDate, dictionary["testDate"] as? Date)
                     }
                     let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where("testEntityID", isEqualTo: 105))
                     XCTAssertNotNil(existingObjects)
@@ -883,17 +883,17 @@ class ImportTests: BaseTestDataTestCase {
 
 // MARK: - TestInsertError
 
-private struct TestInsertError: ErrorProtocol {}
+private struct TestInsertError: Error {}
 
 
 // MARK: - TestUpdateError
 
-private struct TestUpdateError: ErrorProtocol {}
+private struct TestUpdateError: Error {}
 
 
 // MARK: - TestIDError
 
-private struct TestIDError: ErrorProtocol {}
+private struct TestIDError: Error {}
 
 
 // MARK: - TestEntity1
@@ -902,14 +902,14 @@ extension TestEntity1: ImportableUniqueObject {
     
     // MARK: ImportableObject
     
-    typealias ImportSource = [String: AnyObject]
+    typealias ImportSource = [String: Any]
     
-    static func shouldInsertFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) -> Bool {
+    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return source["skip_insert"] == nil
     }
     
-    func didInsertFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) throws {
+    func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         if let _ = source["throw_on_insert"] {
             
@@ -951,12 +951,12 @@ extension TestEntity1: ImportableUniqueObject {
         }
     }
     
-    static func shouldUpdateFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) -> Bool {
+    static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return source["skip_update"] == nil
     }
     
-    static func uniqueIDFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) throws -> NSNumber? {
+    static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> NSNumber? {
         
         if let _ = source["throw_on_id"] {
             
@@ -965,7 +965,7 @@ extension TestEntity1: ImportableUniqueObject {
         return source["testEntityID"] as? NSNumber
     }
     
-    func updateFromImportSource(_ source: [String: AnyObject], inTransaction transaction: BaseDataTransaction) throws {
+    func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         if let _ = source["throw_on_update"] {
             

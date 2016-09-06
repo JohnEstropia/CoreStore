@@ -96,7 +96,7 @@ public extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
+    public func monitorList<T: NSManagedObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
         
         self.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -108,7 +108,7 @@ public extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
+    public func monitorList<T: NSManagedObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -183,7 +183,7 @@ public extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
+    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
         
         self.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -196,7 +196,7 @@ public extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously: (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
+    public func monitorSectionedList<T: NSManagedObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
         
         CoreStore.assert(
             Thread.isMainThread,

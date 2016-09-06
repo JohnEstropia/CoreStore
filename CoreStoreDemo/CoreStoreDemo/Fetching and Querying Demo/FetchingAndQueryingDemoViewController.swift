@@ -271,7 +271,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 return Static.timeZonesStack.queryAttributes(
                     From<TimeZone>(),
                     Select<NSDictionary>(
-                        .count("hasDaylightSavingTime", As: "numberOfCountries"),
+                        .count("hasDaylightSavingTime", as: "numberOfCountries"),
                         "hasDaylightSavingTime"
                     ),
                     GroupBy("hasDaylightSavingTime"),

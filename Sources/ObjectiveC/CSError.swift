@@ -140,7 +140,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
         self.swiftError = swiftValue
         
         let code: CoreStoreErrorCode
-        let info: [NSObject: AnyObject]
+        let info: [AnyHashable: Any]
         switch swiftValue {
             
         case .unknown:
@@ -150,27 +150,27 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
         case .differentStorageExistsAtURL(let existingPersistentStoreURL):
             code = .differentStorageExistsAtURL
             info = [
-                "existingPersistentStoreURL" as NSObject: existingPersistentStoreURL as AnyObject
+                "existingPersistentStoreURL": existingPersistentStoreURL
             ]
             
         case .mappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
             code = .mappingModelNotFound
             info = [
-                "localStoreURL" as NSObject: localStoreURL as AnyObject,
-                "targetModel" as NSObject: targetModel,
-                "targetModelVersion" as NSObject: targetModelVersion as AnyObject
+                "localStoreURL": localStoreURL,
+                "targetModel": targetModel,
+                "targetModelVersion": targetModelVersion
             ]
             
         case .progressiveMigrationRequired(let localStoreURL):
             code = .progressiveMigrationRequired
             info = [
-                "localStoreURL" as NSObject: localStoreURL as AnyObject
+                "localStoreURL": localStoreURL
             ]
             
         case .internalError(let NSError):
             code = .internalError
             info = [
-                "NSError" as NSObject: NSError
+                "NSError": NSError
             ]
         }
         

@@ -60,7 +60,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 0)
-                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual((note.userInfo as NSDictionary?) ?? [:], NSDictionary())
                     defer {
                         
                         events += 1
@@ -75,7 +75,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     XCTAssertEqual(events, 1)
                     XCTAssertEqual(
-                        ((note as NSNotification).userInfo ?? [:]),
+                        ((note.userInfo as NSDictionary?) ?? [:]),
                         [
                             "sectionInfo": monitor.sectionInfoAtIndex(0),
                             "sectionIndex": 0
@@ -95,10 +95,10 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     XCTAssertEqual(events, 2)
                     
-                    let userInfo = (note as NSNotification).userInfo
+                    let userInfo = note.userInfo
                     XCTAssertNotNil(userInfo)
                     XCTAssertEqual(
-                        Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
+                        Set(userInfo?.keys.map({ $0 as! String }) ?? []),
                         ["indexPath", "object"]
                     )
                     
@@ -125,7 +125,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 object: observer,
                 handler: { (note) -> Bool in
                     
-                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual((note.userInfo as NSDictionary?) ?? [:], NSDictionary())
                     defer {
                         
                         events += 1
@@ -133,7 +133,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 3
                 }
             )
-            let saveExpectation = self.expectation(withDescription: "save")
+            let saveExpectation = self.expectation(description: "save")
             stack.beginAsynchronous { (transaction) in
                 
                 let object = transaction.create(Into<TestEntity1>())
@@ -191,7 +191,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 0)
-                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual((note.userInfo as NSDictionary?) ?? [:], NSDictionary())
                     defer {
                         
                         events += 1
@@ -208,10 +208,10 @@ class ListObserverTests: BaseTestDataTestCase {
                         
                         XCTAssert(events == 1 || events == 2)
                         
-                        let userInfo = (note as NSNotification).userInfo
+                        let userInfo = note.userInfo
                         XCTAssertNotNil(userInfo)
                         XCTAssertEqual(
-                            Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
+                            Set(userInfo?.keys.map({ $0 as! String }) ?? []),
                             ["indexPath", "object"]
                         )
                         
@@ -259,7 +259,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 3)
-                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual((note.userInfo as NSDictionary?) ?? [:], NSDictionary())
                     defer {
                         
                         events += 1
@@ -267,7 +267,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 3
                 }
             )
-            let saveExpectation = self.expectation(withDescription: "save")
+            let saveExpectation = self.expectation(description: "save")
             stack.beginAsynchronous { (transaction) in
                 
                 if let object = transaction.fetchOne(
@@ -338,7 +338,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 0)
-                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual((note.userInfo as NSDictionary?) ?? [:], NSDictionary())
                     defer {
                         
                         events += 1
@@ -353,10 +353,10 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     XCTAssertEqual(events, 1)
                     
-                    let userInfo = (note as NSNotification).userInfo
+                    let userInfo = note.userInfo
                     XCTAssertNotNil(userInfo)
                     XCTAssertEqual(
-                        Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
+                        Set(userInfo?.keys.map({ $0 as! String }) ?? []),
                         ["fromIndexPath", "toIndexPath", "object"]
                     )
                     
@@ -385,7 +385,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 2)
-                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual((note.userInfo as NSDictionary?) ?? [:], NSDictionary())
                     defer {
                         
                         events += 1
@@ -393,7 +393,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 2
                 }
             )
-            let saveExpectation = self.expectation(withDescription: "save")
+            let saveExpectation = self.expectation(description: "save")
             stack.beginAsynchronous { (transaction) in
                 
                 if let object = transaction.fetchOne(
@@ -446,7 +446,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 0)
-                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual((note.userInfo as NSDictionary?) ?? [:], NSDictionary())
                     defer {
                         
                         events += 1
@@ -463,10 +463,10 @@ class ListObserverTests: BaseTestDataTestCase {
                         
                         XCTAssert(events == 1 || events == 2)
                         
-                        let userInfo = (note as NSNotification).userInfo
+                        let userInfo = note.userInfo
                         XCTAssertNotNil(userInfo)
                         XCTAssertEqual(
-                            Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
+                            Set(userInfo?.keys.map({ $0 as! String }) ?? []),
                             ["indexPath", "object"]
                         )
                         
@@ -493,14 +493,14 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     XCTAssertEqual(events, 3)
                     
-                    let userInfo = (note as NSNotification).userInfo
+                    let userInfo = note.userInfo
                     XCTAssertNotNil(userInfo)
                     XCTAssertEqual(
-                        Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
+                        Set(userInfo?.keys.map({ $0 as! String }) ?? []),
                         ["sectionInfo", "sectionIndex"]
                     )
                     
-                    let sectionInfo = userInfo?["sectionInfo"]
+                    let sectionInfo = userInfo?["sectionInfo"] as? NSFetchedResultsSectionInfo
                     XCTAssertNotNil(sectionInfo)
                     XCTAssertEqual(sectionInfo?.name, "0")
                     
@@ -520,7 +520,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 4)
-                    XCTAssertEqual(((note as NSNotification).userInfo ?? [:]), NSDictionary())
+                    XCTAssertEqual((note.userInfo as NSDictionary?) ?? [:], NSDictionary())
                     defer {
                         
                         events += 1
@@ -528,7 +528,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     return events == 4
                 }
             )
-            let saveExpectation = self.expectation(withDescription: "save")
+            let saveExpectation = self.expectation(description: "save")
             stack.beginAsynchronous { (transaction) in
                 
                 transaction.deleteAll(

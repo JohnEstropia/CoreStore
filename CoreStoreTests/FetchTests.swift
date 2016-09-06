@@ -69,7 +69,7 @@ final class FetchTests: BaseTestDataTestCase {
             }
             do {
                 
-                let fetchExpectation = self.expectation(withDescription: "fetch")
+                let fetchExpectation = self.expectation(description: "fetch")
                 
                 var existing1: TestEntity1?
                 stack.beginSynchronous { (transaction) in
@@ -88,7 +88,7 @@ final class FetchTests: BaseTestDataTestCase {
             }
             do {
                 
-                let fetchExpectation = self.expectation(withDescription: "fetch")
+                let fetchExpectation = self.expectation(description: "fetch")
                 stack.beginAsynchronous { (transaction) in
                     
                     let existing1 = transaction.fetchExisting(object)
@@ -162,7 +162,7 @@ final class FetchTests: BaseTestDataTestCase {
             }
             do {
                 
-                let fetchExpectation = self.expectation(withDescription: "fetch")
+                let fetchExpectation = self.expectation(description: "fetch")
                 
                 var existing1 = [TestEntity1]()
                 stack.beginSynchronous { (transaction) in
@@ -191,7 +191,7 @@ final class FetchTests: BaseTestDataTestCase {
             }
             do {
                 
-                let fetchExpectation = self.expectation(withDescription: "fetch")
+                let fetchExpectation = self.expectation(description: "fetch")
                 stack.beginAsynchronous { (transaction) in
                     
                     let existing1 = transaction.fetchExisting(objects)

@@ -93,10 +93,10 @@ public enum SetupResult<T: StorageInterface>: Hashable {
         switch self {
             
         case .success(let storage):
-            return self.boolValue.hashValue ^ ObjectIdentifier(storage).hashValue
+            return true.hashValue ^ ObjectIdentifier(storage).hashValue
             
         case .failure(let error):
-            return self.boolValue.hashValue ^ error.hashValue
+            return false.hashValue ^ error.hashValue
         }
     }
     

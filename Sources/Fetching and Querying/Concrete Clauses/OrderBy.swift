@@ -115,10 +115,10 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
                 switch sortKey {
                     
                 case .ascending(let keyPath):
-                    return SortDescriptor(key: keyPath, ascending: true)
+                    return NSSortDescriptor(key: keyPath, ascending: true)
                     
                 case .descending(let keyPath):
-                    return SortDescriptor(key: keyPath, ascending: false)
+                    return NSSortDescriptor(key: keyPath, ascending: false)
                 }
             }
         )

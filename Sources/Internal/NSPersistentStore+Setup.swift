@@ -66,15 +66,15 @@ internal extension NSPersistentStore {
 
 // MARK: - StorageObject
 
-private class StorageObject: NSObject {
+fileprivate class StorageObject: NSObject {
     
     // MARK: Private
     
     @nonobjc
-    private let storageInterface: StorageInterface?
+    fileprivate let storageInterface: StorageInterface?
     
     @nonobjc
-    private init(_ storage: StorageInterface?) {
+    fileprivate init(_ storage: StorageInterface?) {
         
         self.storageInterface = storage
     }

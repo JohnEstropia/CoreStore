@@ -20,8 +20,8 @@ class BaseTestDataTestCase: BaseTestCase {
     let dateFormatter: DateFormatter = {
         
         let formatter = DateFormatter()
-        formatter.locale = Locale(localeIdentifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(name: "UTC")
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "UTC")
         formatter.calendar = Calendar(identifier: Calendar.Identifier.gregorian)
         formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZ"
         return formatter
@@ -42,9 +42,9 @@ class BaseTestDataTestCase: BaseTestCase {
                         let object = transaction.create(Into<TestEntity1>(configuration))
                         object.testEntityID = NSNumber(value: (configurationOrdinal * 100) + idIndex)
                         
-                        object.testNumber = idIndex
+                        object.testNumber = NSNumber(value: idIndex)
                         object.testDate = self.dateFormatter.date(from: "2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
-                        object.testBoolean = (idIndex % 2) == 1
+                        object.testBoolean = NSNumber(value: (idIndex % 2) == 1)
                         object.testDecimal = NSDecimalNumber(string: "\(idIndex)")
                         
                         let string = "\(configuration ?? "nil"):TestEntity1:\(idIndex)"
@@ -59,9 +59,9 @@ class BaseTestDataTestCase: BaseTestCase {
                         let object = transaction.create(Into<TestEntity2>(configuration))
                         object.testEntityID = NSNumber(value: (configurationOrdinal * 200) + idIndex)
                         
-                        object.testNumber = idIndex
+                        object.testNumber = NSNumber(value: idIndex)
                         object.testDate = self.dateFormatter.date(from: "2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
-                        object.testBoolean = (idIndex % 2) == 1
+                        object.testBoolean = NSNumber(value: (idIndex % 2) == 1)
                         object.testDecimal = NSDecimalNumber(string: "\(idIndex)")
                         
                         let string = "\(configuration ?? "nil"):TestEntity2:\(idIndex)"
@@ -70,7 +70,7 @@ class BaseTestDataTestCase: BaseTestCase {
                     }
                 }
             }
-            transaction.commitAndWait()
+            _ = transaction.commitAndWait()
         }
     }
 }

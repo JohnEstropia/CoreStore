@@ -53,7 +53,7 @@ public protocol CSStorageInterface {
      The options dictionary for the `NSPersistentStore`
      */
     @objc
-    var storeOptions: [String: AnyObject]? { get }
+    var storeOptions: [AnyHashable: Any]? { get }
 }
 
 

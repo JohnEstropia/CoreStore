@@ -11,7 +11,6 @@ import CoreLocation
 import MapKit
 import AddressBookUI
 import CoreStore
-import GCDKit
 
 
 private struct Static {

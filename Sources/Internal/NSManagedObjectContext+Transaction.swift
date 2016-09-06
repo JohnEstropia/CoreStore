@@ -155,7 +155,7 @@ internal extension NSManagedObjectContext {
                 
                 DispatchQueue.main.async {
                     
-                    completion(result: SaveResult(hasChanges: false))
+                    completion(SaveResult(hasChanges: false))
                 }
                 return
             }
@@ -175,7 +175,7 @@ internal extension NSManagedObjectContext {
                 )
                 DispatchQueue.main.async {
                     
-                    completion(result: SaveResult(saveError))
+                    completion(SaveResult(saveError))
                 }
                 return
             }
@@ -188,7 +188,7 @@ internal extension NSManagedObjectContext {
                 
                 DispatchQueue.main.async {
                     
-                    completion(result: SaveResult(hasChanges: true))
+                    completion(SaveResult(hasChanges: true))
                 }
             }
         }

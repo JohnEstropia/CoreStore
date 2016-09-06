@@ -425,7 +425,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func queryValue<U: SelectValueResultType>(_ selectTerms: [SelectTerm], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> U? {
         
-        var fetchResults: [AnyObject]?
+        var fetchResults: [Any]?
         var fetchError: Error?
         self.performAndWait {
             
@@ -441,7 +441,7 @@ internal extension NSManagedObjectContext {
         if let fetchResults = fetchResults {
             
             if let rawResult = fetchResults.first as? NSDictionary,
-                let rawObject: AnyObject = rawResult[selectTerms.keyPathForFirstSelectTerm()] {
+                let rawObject = rawResult[selectTerms.keyPathForFirstSelectTerm()] {
                 
                 return Select<U>.ReturnType.fromResultObject(rawObject)
             }
@@ -456,9 +456,9 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func queryValue(_ selectTerms: [SelectTerm], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> AnyObject? {
+    internal func queryValue(_ selectTerms: [SelectTerm], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Any? {
         
-        var fetchResults: [AnyObject]?
+        var fetchResults: [Any]?
         var fetchError: Error?
         self.performAndWait {
             
@@ -474,7 +474,7 @@ internal extension NSManagedObjectContext {
         if let fetchResults = fetchResults {
             
             if let rawResult = fetchResults.first as? NSDictionary,
-                let rawObject: AnyObject = rawResult[selectTerms.keyPathForFirstSelectTerm()] {
+                let rawObject = rawResult[selectTerms.keyPathForFirstSelectTerm()] {
                 
                 return rawObject
             }
@@ -492,13 +492,13 @@ internal extension NSManagedObjectContext {
     // MARK: Internal: Attributes
     
     @nonobjc
-    internal func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
+    internal func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
         
         return self.queryAttributes(from, selectClause, queryClauses)
     }
     
     @nonobjc
-    internal func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
+    internal func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
         let fetchRequest = CoreStoreFetchRequest<NSFetchRequestResult>()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -516,9 +516,9 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func queryAttributes(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> [[NSString: AnyObject]]? {
+    internal func queryAttributes(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> [[String: Any]]? {
         
-        var fetchResults: [AnyObject]?
+        var fetchResults: [Any]?
         var fetchError: Error?
         self.performAndWait {
             

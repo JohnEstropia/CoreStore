@@ -322,7 +322,7 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
     
     internal func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) { }
     
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: AnyObject, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         switch type {
             

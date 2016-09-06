@@ -41,7 +41,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      The internal `NSPredicate` instance for the `Where` clause
      */
     @objc
-    public var predicate: Predicate {
+    public var predicate: NSPredicate {
         
         return self.bridgeToSwift.predicate
     }
@@ -108,7 +108,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - parameter predicate: the `NSPredicate` for the fetch or query
      */
     @objc
-    public convenience init(predicate: Predicate) {
+    public convenience init(predicate: NSPredicate) {
         
         self.init(Where(predicate))
     }

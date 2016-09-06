@@ -41,7 +41,7 @@ final class TransactionTests: BaseTestCase {
             let testDate = Date()
             do {
                 
-                let createExpectation = self.expectation(withDescription: "create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>())
@@ -73,7 +73,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateExpectation = self.expectation(withDescription: "update")
+                let updateExpectation = self.expectation(description: "update")
                 stack.beginSynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>()) else {
@@ -108,7 +108,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let deleteExpectation = self.expectation(withDescription: "delete")
+                let deleteExpectation = self.expectation(description: "delete")
                 stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.fetchOne(From<TestEntity1>())
@@ -142,7 +142,7 @@ final class TransactionTests: BaseTestCase {
             let testDate = Date()
             do {
                 
-                let createExpectation = self.expectation(withDescription: "create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>("Config1"))
@@ -175,7 +175,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateExpectation = self.expectation(withDescription: "update")
+                let updateExpectation = self.expectation(description: "update")
                 stack.beginSynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>("Config1")) else {
@@ -211,7 +211,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let deleteExpectation = self.expectation(withDescription: "delete")
+                let deleteExpectation = self.expectation(description: "delete")
                 stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.fetchOne(From<TestEntity1>("Config1"))
@@ -242,7 +242,7 @@ final class TransactionTests: BaseTestCase {
             
             do {
                 
-                let createDiscardExpectation = self.expectation(withDescription: "create-discard")
+                let createDiscardExpectation = self.expectation(description: "create-discard")
                 let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginSynchronous { (transaction) in
                     
@@ -265,7 +265,7 @@ final class TransactionTests: BaseTestCase {
             let testDate = Date()
             do {
                 
-                let createExpectation = self.expectation(withDescription: "create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>())
@@ -287,7 +287,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateDiscardExpectation = self.expectation(withDescription: "update-discard")
+                let updateDiscardExpectation = self.expectation(description: "update-discard")
                 let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginSynchronous { (transaction) in
                     
@@ -316,7 +316,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let deleteDiscardExpectation = self.expectation(withDescription: "delete-discard")
+                let deleteDiscardExpectation = self.expectation(description: "delete-discard")
                 let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginSynchronous { (transaction) in
                     
@@ -352,7 +352,7 @@ final class TransactionTests: BaseTestCase {
             let testDate = Date()
             do {
                 
-                let createExpectation = self.expectation(withDescription: "create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginAsynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>())
@@ -386,7 +386,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateExpectation = self.expectation(withDescription: "update")
+                let updateExpectation = self.expectation(description: "update")
                 stack.beginAsynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>()) else {
@@ -423,7 +423,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let deleteExpectation = self.expectation(withDescription: "delete")
+                let deleteExpectation = self.expectation(description: "delete")
                 stack.beginAsynchronous { (transaction) in
                     
                     let object = transaction.fetchOne(From<TestEntity1>())
@@ -460,7 +460,7 @@ final class TransactionTests: BaseTestCase {
             let testDate = Date()
             do {
                 
-                let createExpectation = self.expectation(withDescription: "create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginAsynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>("Config1"))
@@ -495,7 +495,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateExpectation = self.expectation(withDescription: "update")
+                let updateExpectation = self.expectation(description: "update")
                 stack.beginAsynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>("Config1")) else {
@@ -533,7 +533,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let deleteExpectation = self.expectation(withDescription: "delete")
+                let deleteExpectation = self.expectation(description: "delete")
                 stack.beginAsynchronous { (transaction) in
                     
                     let object = transaction.fetchOne(From<TestEntity1>("Config1"))
@@ -568,7 +568,7 @@ final class TransactionTests: BaseTestCase {
             
             do {
                 
-                let createDiscardExpectation = self.expectation(withDescription: "create-discard")
+                let createDiscardExpectation = self.expectation(description: "create-discard")
                 let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginAsynchronous { (transaction) in
                     
@@ -585,7 +585,7 @@ final class TransactionTests: BaseTestCase {
             let testDate = Date()
             do {
                 
-                let createExpectation = self.expectation(withDescription: "create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginAsynchronous { (transaction) in
                     
                     XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 0)
@@ -612,7 +612,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateDiscardExpectation = self.expectation(withDescription: "update-discard")
+                let updateDiscardExpectation = self.expectation(description: "update-discard")
                 let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginAsynchronous { (transaction) in
                     
@@ -631,7 +631,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let deleteDiscardExpectation = self.expectation(withDescription: "delete-discard")
+                let deleteDiscardExpectation = self.expectation(description: "delete-discard")
                 let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginAsynchronous { (transaction) in
                     

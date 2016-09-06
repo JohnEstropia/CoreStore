@@ -43,7 +43,7 @@ public final class CSMigrationType: NSObject, CoreStoreObjectiveCType {
     @objc
     public var needsMigration: Bool {
         
-        return self.bridgeToSwift.boolValue
+        return self.bridgeToSwift.hasMigration
     }
     
     /**

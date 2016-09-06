@@ -65,7 +65,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
             
             self.bridgeToSwift.beginSynchronous { (transaction) in
                 
-                closure(transaction: transaction.bridgeToObjectiveC)
+                closure(transaction.bridgeToObjectiveC)
             }
         }
     }
@@ -88,7 +88,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
     @objc
-    public override func createInto(_ into: CSInto) -> AnyObject {
+    public override func createInto(_ into: CSInto) -> Any {
         
         return self.bridgeToSwift.create(into.bridgeToSwift)
     }
@@ -100,7 +100,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    public override func editObject(_ object: NSManagedObject?) -> AnyObject? {
+    public override func editObject(_ object: NSManagedObject?) -> Any? {
         
         return self.bridgeToSwift.edit(object)
     }
@@ -113,7 +113,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    public override func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
+    public override func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> Any? {
         
         return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
     }

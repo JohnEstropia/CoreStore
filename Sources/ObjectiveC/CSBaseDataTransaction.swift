@@ -55,7 +55,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
     @objc
-    public func createInto(_ into: CSInto) -> AnyObject {
+    public func createInto(_ into: CSInto) -> Any {
         
         return self.bridgeToSwift.create(into.bridgeToSwift)
     }
@@ -67,7 +67,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    public func editObject(_ object: NSManagedObject?) -> AnyObject? {
+    public func editObject(_ object: NSManagedObject?) -> Any? {
         
         return self.bridgeToSwift.edit(object)
     }
@@ -80,7 +80,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    public func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
+    public func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> Any? {
         
         return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
     }
