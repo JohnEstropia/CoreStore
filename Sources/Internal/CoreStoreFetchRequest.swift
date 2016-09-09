@@ -49,14 +49,13 @@ internal final class CoreStoreFetchRequest<T: NSFetchRequestResult>: NSFetchRequ
         
         get {
             
-            return super.affectedStores
-//            let affectedStores: NSArray? = super.affectedStores.flatMap({ NSArray(array: $0) } )
-//            return affectedStores as? [NSPersistentStore]
+            // This forced-casting is needed to fix an ARC bug with "affectedStores" mis-retaining the array
+            let affectedStores: NSArray? = super.affectedStores.flatMap({ NSArray(array: $0) } )
+            return affectedStores as? [NSPersistentStore]
         }
         set {
             
             super.affectedStores = newValue
-//            super.affectedStores = newValue.flatMap(Array.init)
         }
     }
 }
