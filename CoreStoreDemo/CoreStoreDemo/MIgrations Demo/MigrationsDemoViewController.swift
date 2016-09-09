@@ -241,7 +241,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
                 
                 let count = dataStack.queryValue(
                     From(model.entityType),
-                    Select<Int>(.count("dna")))!
+                    Select<Int>(.count(#keyPath(OrganismProtocol.dna))))!
                 if count > 0 {
                     
                     self.setEnabled(true)

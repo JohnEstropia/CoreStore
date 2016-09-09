@@ -113,7 +113,7 @@ public final class DefaultLogger: CoreStoreLogger {
     
     /**
      Handles fatal errors made throughout the `CoreStore` framework.
-     - Important: This method should be marked `@noreturn` and implementers should guarantee that the function doesn't, either by calling another `@noreturn` function such as `fatalError()` or `abort()`, or by raising an exception.
+     - Important: Implementers should guarantee that this function doesn't return, either by calling another `Never` function such as `fatalError()` or `abort()`, or by raising an exception.
      
      - parameter message: the fatal error message
      - parameter fileName: the source file name

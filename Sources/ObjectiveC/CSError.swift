@@ -76,58 +76,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
             
             return swift
         }
-        
-        func createSwiftObject(_ error: CSError) -> CoreStoreError {
-            
-            guard error.domain == CoreStoreErrorDomain else {
-                
-                return .internalError(NSError: self)
-            }
-            
-            guard let code = CoreStoreErrorCode(rawValue: error.code) else {
-                
-                return .unknown
-            }
-            
-            let info = error.userInfo
-            switch code {
-                
-            case .unknownError:
-                return .unknown
-                
-            case .differentStorageExistsAtURL:
-                guard case let existingPersistentStoreURL as URL = info["existingPersistentStoreURL"] else {
-                    
-                    return .unknown
-                }
-                return .differentStorageExistsAtURL(existingPersistentStoreURL: existingPersistentStoreURL)
-                
-            case .mappingModelNotFound:
-                guard let localStoreURL = info["localStoreURL"] as? URL,
-                    let targetModel = info["targetModel"] as? NSManagedObjectModel,
-                    let targetModelVersion = info["targetModelVersion"] as? String else {
-                        
-                        return .unknown
-                }
-                return .mappingModelNotFound(localStoreURL: localStoreURL, targetModel: targetModel, targetModelVersion: targetModelVersion)
-                
-            case .progressiveMigrationRequired:
-                guard let localStoreURL = info["localStoreURL"] as? URL else {
-                    
-                    return .unknown
-                }
-                return .progressiveMigrationRequired(localStoreURL: localStoreURL)
-                
-            case .internalError:
-                guard case let NSError as NSError = info["NSError"] else {
-                    
-                    return .unknown
-                }
-                return .internalError(NSError: NSError)
-            }
-        }
-        
-        let swift = createSwiftObject(self)
+        let swift = CoreStoreError(_bridgedNSError: self) ?? .unknown
         self.swiftError = swift
         return swift
     }
@@ -138,43 +87,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
     public init(_ swiftValue: CoreStoreError) {
         
         self.swiftError = swiftValue
-        
-        let code: CoreStoreErrorCode
-        let info: [AnyHashable: Any]
-        switch swiftValue {
-            
-        case .unknown:
-            code = .unknownError
-            info = [:]
-            
-        case .differentStorageExistsAtURL(let existingPersistentStoreURL):
-            code = .differentStorageExistsAtURL
-            info = [
-                "existingPersistentStoreURL": existingPersistentStoreURL
-            ]
-            
-        case .mappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
-            code = .mappingModelNotFound
-            info = [
-                "localStoreURL": localStoreURL,
-                "targetModel": targetModel,
-                "targetModelVersion": targetModelVersion
-            ]
-            
-        case .progressiveMigrationRequired(let localStoreURL):
-            code = .progressiveMigrationRequired
-            info = [
-                "localStoreURL": localStoreURL
-            ]
-            
-        case .internalError(let NSError):
-            code = .internalError
-            info = [
-                "NSError": NSError
-            ]
-        }
-        
-        super.init(domain: CoreStoreErrorDomain, code: code.rawValue, userInfo: info)
+        super.init(domain: CoreStoreError.errorDomain, code: swiftValue.errorCode, userInfo: swiftValue.errorUserInfo)
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -229,13 +142,80 @@ public enum CSErrorCode: Int {
 
 // MARK: - CoreStoreError
 
-extension CoreStoreError: CoreStoreSwiftType {
+extension CoreStoreError: CoreStoreSwiftType, _ObjectiveCBridgeableError {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSError {
         
         return CSError(self)
+    }
+    
+    
+    // MARK: _ObjectiveCBridgeableError
+    
+    public init?(_bridgedNSError error: NSError) {
+        
+        guard error.domain == CoreStoreErrorDomain else {
+            
+            if error is CSError {
+                
+                self = .internalError(NSError: error)
+                return
+            }
+            return nil
+        }
+        
+        guard let code = CoreStoreErrorCode(rawValue: error.code) else {
+            
+            if error is CSError {
+                
+                self = .unknown
+                return
+            }
+            return nil
+        }
+        
+        let info = error.userInfo
+        switch code {
+            
+        case .unknownError:
+            self = .unknown
+            
+        case .differentStorageExistsAtURL:
+            guard case let existingPersistentStoreURL as URL = info["existingPersistentStoreURL"] else {
+                
+                self = .unknown
+                return
+            }
+            self = .differentStorageExistsAtURL(existingPersistentStoreURL: existingPersistentStoreURL)
+            
+        case .mappingModelNotFound:
+            guard let localStoreURL = info["localStoreURL"] as? URL,
+                let targetModel = info["targetModel"] as? NSManagedObjectModel,
+                let targetModelVersion = info["targetModelVersion"] as? String else {
+                    
+                    self = .unknown
+                    return
+            }
+            self = .mappingModelNotFound(localStoreURL: localStoreURL, targetModel: targetModel, targetModelVersion: targetModelVersion)
+            
+        case .progressiveMigrationRequired:
+            guard let localStoreURL = info["localStoreURL"] as? URL else {
+                
+                self = .unknown
+                return
+            }
+            self = .progressiveMigrationRequired(localStoreURL: localStoreURL)
+            
+        case .internalError:
+            guard case let NSError as NSError = info["NSError"] else {
+                
+                self = .unknown
+                return
+            }
+            self = .internalError(NSError: NSError)
+        }
     }
 }
 

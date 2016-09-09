@@ -55,7 +55,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
             context: context,
             applyAffectedStores: false
         )
-        applyFetchClauses(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSManagedObject>.self))
+        applyFetchClauses(fetchRequest)
         
         if let from = from {
             

@@ -65,6 +65,6 @@ public struct Tweak: FetchClause, QueryClause, DeleteClause {
     
     public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
-        self.closure(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self))
+        self.closure(fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
     }
 }

@@ -454,8 +454,6 @@ public /*abstract*/ class BaseDataTransaction {
     internal let childTransactionQueue = DispatchQueue.serial("com.corestore.datastack.childtransactionqueue")
     internal let supportsUndo: Bool
     internal let bypassesQueueing: Bool
-    
-    
     internal var isCommitted = false
     internal var result: SaveResult?
     

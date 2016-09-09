@@ -50,7 +50,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     required init?(coder aDecoder: NSCoder) {
         
-        if let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending("hue"))) {
+        if let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending(#keyPath(Palette.hue)))) {
             
             self.monitor = CoreStore.monitorObject(palette)
         }
@@ -64,7 +64,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
                 _ = transaction.commitAndWait()
             }
             
-            let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending("hue")))!
+            let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending(#keyPath(Palette.hue))))!
             self.monitor = CoreStore.monitorObject(palette)
         }
         
@@ -176,15 +176,15 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         
         self.hsbLabel?.text = palette.colorText
         
-        if changedKeys == nil || changedKeys?.contains("hue") == true {
+        if changedKeys == nil || changedKeys?.contains(#keyPath(Palette.hue)) == true {
             
             self.hueSlider?.value = Float(palette.hue)
         }
-        if changedKeys == nil || changedKeys?.contains("saturation") == true {
+        if changedKeys == nil || changedKeys?.contains(#keyPath(Palette.saturation)) == true {
             
             self.saturationSlider?.value = palette.saturation
         }
-        if changedKeys == nil || changedKeys?.contains("brightness") == true {
+        if changedKeys == nil || changedKeys?.contains(#keyPath(Palette.brightness)) == true {
             
             self.brightnessSlider?.value = palette.brightness
         }

@@ -16,8 +16,14 @@ class OrganismV2ToV3MigrationPolicy: NSEntityMigrationPolicy {
         
         for dInstance in manager.destinationInstances(forEntityMappingName: mapping.name, sourceInstances: [sInstance]) {
             
-            dInstance.setValue(false, forKey: "hasVertebrae")
-            dInstance.setValue(sInstance.value(forKey: "numberOfFlippers"), forKey: "numberOfLimbs")
+            dInstance.setValue(
+                false,
+                forKey: #keyPath(OrganismV3.hasVertebrae)
+            )
+            dInstance.setValue(
+                sInstance.value(forKey: #keyPath(OrganismV2.numberOfFlippers)),
+                forKey: #keyPath(OrganismV3.numberOfLimbs)
+            )
         }
     }
 }

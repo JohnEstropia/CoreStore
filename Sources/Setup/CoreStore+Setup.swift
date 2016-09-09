@@ -99,11 +99,11 @@ public extension CoreStore {
     }
     
     /**
-     Creates a `LocalStorageface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
+     Creates a `LocalStorageInterface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
      ```
      try CoreStore.addStorageAndWait(SQLiteStore.self)
      ```
-     - parameter storeType: the `LocalStorageface` type
+     - parameter storeType: the `LocalStorageInterface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the `defaultStack`
      */

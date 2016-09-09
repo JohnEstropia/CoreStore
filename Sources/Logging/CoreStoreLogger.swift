@@ -82,7 +82,7 @@ public protocol CoreStoreLogger {
     
     /**
      Handles fatal errors made throughout the `CoreStore` framework. The app wil terminate after this method is called.
-     - Important: Implementers may guarantee that the function doesn't return, either by calling another `@noreturn` function such as `fatalError()` or `abort()`, or by raising an exception. If the implementation does not terminate the app, CoreStore will call an internal `fatalError()` to do so.
+     - Important: Implementers may guarantee that the function doesn't return, either by calling another `Never` function such as `fatalError()` or `abort()`, or by raising an exception. If the implementation does not terminate the app, CoreStore will call an internal `fatalError()` to do so.
      
      - parameter message: the fatal error message
      - parameter fileName: the source file name

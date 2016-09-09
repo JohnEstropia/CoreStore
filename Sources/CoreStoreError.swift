@@ -32,7 +32,7 @@ import CoreData
 /**
  All errors thrown from CoreStore are expressed in `CoreStoreError` enum values.
  */
-public enum CoreStoreError: Error, Hashable {
+public enum CoreStoreError: Error, CustomNSError, Hashable {
     
     /**
      A failure occured because of an unknown error.
@@ -60,14 +60,14 @@ public enum CoreStoreError: Error, Hashable {
     case internalError(NSError: NSError)
     
     
-    // MARK: ErrorType
+    // MARK: CustomNSError
     
-    public var _domain: String {
+    public static var errorDomain: String {
         
         return CoreStoreErrorDomain
     }
     
-    public var _code: Int {
+    public var errorCode: Int {
     
         switch self {
             
@@ -85,6 +85,37 @@ public enum CoreStoreError: Error, Hashable {
             
         case .internalError:
             return CoreStoreErrorCode.internalError.rawValue
+        }
+    }
+    
+    public var errorUserInfo: [String : Any] {
+        
+        switch self {
+            
+        case .unknown:
+            return [:]
+            
+        case .differentStorageExistsAtURL(let existingPersistentStoreURL):
+            return [
+                "existingPersistentStoreURL": existingPersistentStoreURL
+            ]
+            
+        case .mappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
+            return [
+                "localStoreURL": localStoreURL,
+                "targetModel": targetModel,
+                "targetModelVersion": targetModelVersion
+            ]
+            
+        case .progressiveMigrationRequired(let localStoreURL):
+            return [
+                "localStoreURL": localStoreURL
+            ]
+            
+        case .internalError(let NSError):
+            return [
+                "NSError": NSError
+            ]
         }
     }
     

@@ -45,12 +45,12 @@ class ImportTests: BaseTestDataTestCase {
                     let object = try transaction.importObject(
                         Into<TestEntity1>(),
                         source: [
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 1),
-                            "testDecimal": NSDecimalNumber(string: "1"),
-                            "testString": "nil:TestEntity1:1",
-                            "testData": ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!,
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 1),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "1"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:1",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!,
                             "skip_insert": ""
                         ]
                     )
@@ -78,12 +78,12 @@ class ImportTests: BaseTestDataTestCase {
                     let _ = try transaction.importObject(
                         Into<TestEntity1>(),
                         source: [
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 1),
-                            "testDecimal": NSDecimalNumber(string: "1"),
-                            "testString": "nil:TestEntity1:1",
-                            "testData": ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!,
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 1),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "1"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:1",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!,
                             "throw_on_insert": ""
                         ]
                     )
@@ -126,12 +126,12 @@ class ImportTests: BaseTestDataTestCase {
                     let object = try transaction.importObject(
                         Into<TestEntity1>(),
                         source: [
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 1),
-                            "testDecimal": NSDecimalNumber(string: "1"),
-                            "testString": "nil:TestEntity1:1",
-                            "testData": ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 1),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "1"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:1",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!
                         ]
                     )
                     XCTAssertNotNil(object)
@@ -147,12 +147,12 @@ class ImportTests: BaseTestDataTestCase {
                     try transaction.importObject(
                         object!,
                         source: [
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 2),
-                            "testDecimal": NSDecimalNumber(string: "2"),
-                            "testString": "nil:TestEntity1:2",
-                            "testData": ("nil:TestEntity1:2" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-02T00:00:00Z")!
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 2),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "2"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:2",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:2" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-02T00:00:00Z")!
                         ]
                     )
                     XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 1)
@@ -184,21 +184,21 @@ class ImportTests: BaseTestDataTestCase {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
                         [
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 1),
-                            "testDecimal": NSDecimalNumber(string: "1"),
-                            "testString": "nil:TestEntity1:1",
-                            "testData": ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!,
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 1),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "1"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:1",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!,
                             "skip_insert": ""
                         ],
                         [
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 2),
-                            "testDecimal": NSDecimalNumber(string: "2"),
-                            "testString": "nil:TestEntity1:2",
-                            "testData": ("nil:TestEntity1:2" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-02T00:00:00Z")!
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 2),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "2"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:2",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:2" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-02T00:00:00Z")!
                         ]
                     ]
                     let objects = try transaction.importObjects(
@@ -211,12 +211,12 @@ class ImportTests: BaseTestDataTestCase {
                     let object = objects[0]
                     let dictionary = sourceArray[1]
                     XCTAssertNil(object.testEntityID)
-                    XCTAssertEqual(object.testBoolean, dictionary["testBoolean"] as? NSNumber)
-                    XCTAssertEqual(object.testNumber, dictionary["testNumber"] as? NSNumber)
-                    XCTAssertEqual(object.testDecimal, dictionary["testDecimal"] as? NSDecimalNumber)
-                    XCTAssertEqual(object.testString, dictionary["testString"] as? String)
-                    XCTAssertEqual(object.testData, dictionary["testData"] as? Data)
-                    XCTAssertEqual(object.testDate, dictionary["testDate"] as? Date)
+                    XCTAssertEqual(object.testBoolean, dictionary[(#keyPath(TestEntity1.testBoolean))] as? NSNumber)
+                    XCTAssertEqual(object.testNumber, dictionary[(#keyPath(TestEntity1.testNumber))] as? NSNumber)
+                    XCTAssertEqual(object.testDecimal, dictionary[(#keyPath(TestEntity1.testDecimal))] as? NSDecimalNumber)
+                    XCTAssertEqual(object.testString, dictionary[(#keyPath(TestEntity1.testString))] as? String)
+                    XCTAssertEqual(object.testData, dictionary[(#keyPath(TestEntity1.testData))] as? Data)
+                    XCTAssertEqual(object.testDate, dictionary[(#keyPath(TestEntity1.testDate))] as? Date)
                 }
                 catch {
                     
@@ -239,21 +239,21 @@ class ImportTests: BaseTestDataTestCase {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
                         [
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 1),
-                            "testDecimal": NSDecimalNumber(string: "1"),
-                            "testString": "nil:TestEntity1:1",
-                            "testData": ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!,
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 1),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "1"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:1",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!,
                             "throw_on_insert": ""
                         ],
                         [
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 2),
-                            "testDecimal": NSDecimalNumber(string: "2"),
-                            "testString": "nil:TestEntity1:2",
-                            "testData": ("nil:TestEntity1:2" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-02T00:00:00Z")!
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 2),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "2"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:2",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:2" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-02T00:00:00Z")!
                         ]
                     ]
                     let _ = try transaction.importObjects(
@@ -298,20 +298,20 @@ class ImportTests: BaseTestDataTestCase {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
                         [
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 1),
-                            "testDecimal": NSDecimalNumber(string: "1"),
-                            "testString": "nil:TestEntity1:1",
-                            "testData": ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 1),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "1"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:1",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!
                         ],
                         [
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 2),
-                            "testDecimal": NSDecimalNumber(string: "2"),
-                            "testString": "nil:TestEntity1:2",
-                            "testData": ("nil:TestEntity1:2" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-02T00:00:00Z")!
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 2),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "2"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:2",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:2" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-02T00:00:00Z")!
                         ]
                     ]
                     let objects = try transaction.importObjects(
@@ -327,12 +327,12 @@ class ImportTests: BaseTestDataTestCase {
                         let dictionary = sourceArray[i]
                         
                         XCTAssertNil(object.testEntityID)
-                        XCTAssertEqual(object.testBoolean, dictionary["testBoolean"] as? NSNumber)
-                        XCTAssertEqual(object.testNumber, dictionary["testNumber"] as? NSNumber)
-                        XCTAssertEqual(object.testDecimal, dictionary["testDecimal"] as? NSDecimalNumber)
-                        XCTAssertEqual(object.testString, dictionary["testString"] as? String)
-                        XCTAssertEqual(object.testData, dictionary["testData"] as? Data)
-                        XCTAssertEqual(object.testDate, dictionary["testDate"] as? Date)
+                        XCTAssertEqual(object.testBoolean, dictionary[(#keyPath(TestEntity1.testBoolean))] as? NSNumber)
+                        XCTAssertEqual(object.testNumber, dictionary[(#keyPath(TestEntity1.testNumber))] as? NSNumber)
+                        XCTAssertEqual(object.testDecimal, dictionary[(#keyPath(TestEntity1.testDecimal))] as? NSDecimalNumber)
+                        XCTAssertEqual(object.testString, dictionary[(#keyPath(TestEntity1.testString))] as? String)
+                        XCTAssertEqual(object.testData, dictionary[(#keyPath(TestEntity1.testData))] as? Data)
+                        XCTAssertEqual(object.testDate, dictionary[(#keyPath(TestEntity1.testDate))] as? Date)
                     }
                 }
                 catch {
@@ -358,13 +358,13 @@ class ImportTests: BaseTestDataTestCase {
                     let object = try transaction.importUniqueObject(
                         Into<TestEntity1>(),
                         source: [
-                            "testEntityID": NSNumber(value: 106),
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 6),
-                            "testDecimal": NSDecimalNumber(string: "6"),
-                            "testString": "nil:TestEntity1:6",
-                            "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
                             "skip_insert": ""
                         ]
                     )
@@ -380,20 +380,20 @@ class ImportTests: BaseTestDataTestCase {
                     let object = try transaction.importUniqueObject(
                         Into<TestEntity1>(),
                         source: [
-                            "testEntityID": NSNumber(value: 105),
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 6),
-                            "testDecimal": NSDecimalNumber(string: "6"),
-                            "testString": "nil:TestEntity1:6",
-                            "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 105),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
                             "skip_update": ""
                         ]
                     )
                     XCTAssertNil(object)
                     XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 5)
                     
-                    let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where("testEntityID", isEqualTo: 105))
+                    let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
                     XCTAssertNotNil(existingObjects)
                     XCTAssertEqual(existingObjects?.count, 1)
                     
@@ -431,13 +431,13 @@ class ImportTests: BaseTestDataTestCase {
                         let _ = try transaction.importUniqueObject(
                             Into<TestEntity1>(),
                             source: [
-                                "testEntityID": NSNumber(value: 106),
-                                "testBoolean": NSNumber(value: true),
-                                "testNumber": NSNumber(value: 6),
-                                "testDecimal": NSDecimalNumber(string: "6"),
-                                "testString": "nil:TestEntity1:6",
-                                "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                                "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
+                                #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                                #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                                #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                                #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                                #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                                #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                                #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
                                 "throw_on_insert": ""
                             ]
                         )
@@ -448,7 +448,7 @@ class ImportTests: BaseTestDataTestCase {
                         errorExpectation.fulfill()
                         XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
                         
-                        let object = transaction.fetchOne(From<TestEntity1>(), Where("testEntityID", isEqualTo: 106))
+                        let object = transaction.fetchOne(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 106))
                         XCTAssertNotNil(object)
                         XCTAssertEqual(object?.testEntityID, NSNumber(value: 106))
                         XCTAssertNil(object?.testBoolean)
@@ -472,13 +472,13 @@ class ImportTests: BaseTestDataTestCase {
                         let _ = try transaction.importUniqueObject(
                             Into<TestEntity1>(),
                             source: [
-                                "testEntityID": NSNumber(value: 105),
-                                "testBoolean": NSNumber(value: false),
-                                "testNumber": NSNumber(value: 6),
-                                "testDecimal": NSDecimalNumber(string: "6"),
-                                "testString": "nil:TestEntity1:6",
-                                "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                                "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
+                                #keyPath(TestEntity1.testEntityID): NSNumber(value: 105),
+                                #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                                #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                                #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                                #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                                #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                                #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
                                 "throw_on_update": ""
                             ]
                         )
@@ -489,7 +489,7 @@ class ImportTests: BaseTestDataTestCase {
                         errorExpectation.fulfill()
                         XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
                         
-                        let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where("testEntityID", isEqualTo: 105))
+                        let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
                         XCTAssertNotNil(existingObjects)
                         XCTAssertEqual(existingObjects?.count, 1)
                         
@@ -528,13 +528,13 @@ class ImportTests: BaseTestDataTestCase {
                     let object = try transaction.importUniqueObject(
                         Into<TestEntity1>(),
                         source: [
-                            "testEntityID": NSNumber(value: 106),
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 6),
-                            "testDecimal": NSDecimalNumber(string: "6"),
-                            "testString": "nil:TestEntity1:6",
-                            "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!
                         ]
                     )
                     XCTAssertNotNil(object)
@@ -557,13 +557,13 @@ class ImportTests: BaseTestDataTestCase {
                     let object = try transaction.importUniqueObject(
                         Into<TestEntity1>(),
                         source: [
-                            "testEntityID": NSNumber(value: 106),
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 7),
-                            "testDecimal": NSDecimalNumber(string: "7"),
-                            "testString": "nil:TestEntity1:7",
-                            "testData": ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!,
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 7),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "7"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:7",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!,
                         ]
                     )
                     XCTAssertNotNil(object)
@@ -577,7 +577,7 @@ class ImportTests: BaseTestDataTestCase {
                     XCTAssertEqual(object?.testData, ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!)
                     XCTAssertEqual(object?.testDate, self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!)
                     
-                    let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where("testEntityID", isEqualTo: 106))
+                    let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 106))
                     XCTAssertNotNil(existingObjects)
                     XCTAssertEqual(existingObjects?.count, 1)
                     
@@ -606,23 +606,23 @@ class ImportTests: BaseTestDataTestCase {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
                         [
-                            "testEntityID": NSNumber(value: 106),
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 6),
-                            "testDecimal": NSDecimalNumber(string: "6"),
-                            "testString": "nil:TestEntity1:6",
-                            "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
                             "skip_insert": ""
                         ],
                         [
-                            "testEntityID": NSNumber(value: 107),
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 7),
-                            "testDecimal": NSDecimalNumber(string: "7"),
-                            "testString": "nil:TestEntity1:7",
-                            "testData": ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 107),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 7),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "7"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:7",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!
                         ]
                     ]
                     let objects = try transaction.importUniqueObjects(
@@ -634,13 +634,13 @@ class ImportTests: BaseTestDataTestCase {
                     
                     let object = objects[0]
                     let dictionary = sourceArray[1]
-                    XCTAssertEqual(object.testEntityID, dictionary["testEntityID"] as? NSNumber)
-                    XCTAssertEqual(object.testBoolean, dictionary["testBoolean"] as? NSNumber)
-                    XCTAssertEqual(object.testNumber, dictionary["testNumber"] as? NSNumber)
-                    XCTAssertEqual(object.testDecimal, dictionary["testDecimal"] as? NSDecimalNumber)
-                    XCTAssertEqual(object.testString, dictionary["testString"] as? String)
-                    XCTAssertEqual(object.testData, dictionary["testData"] as? Data)
-                    XCTAssertEqual(object.testDate, dictionary["testDate"] as? Date)
+                    XCTAssertEqual(object.testEntityID, dictionary[(#keyPath(TestEntity1.testEntityID))] as? NSNumber)
+                    XCTAssertEqual(object.testBoolean, dictionary[(#keyPath(TestEntity1.testBoolean))] as? NSNumber)
+                    XCTAssertEqual(object.testNumber, dictionary[(#keyPath(TestEntity1.testNumber))] as? NSNumber)
+                    XCTAssertEqual(object.testDecimal, dictionary[(#keyPath(TestEntity1.testDecimal))] as? NSDecimalNumber)
+                    XCTAssertEqual(object.testString, dictionary[(#keyPath(TestEntity1.testString))] as? String)
+                    XCTAssertEqual(object.testData, dictionary[(#keyPath(TestEntity1.testData))] as? Data)
+                    XCTAssertEqual(object.testDate, dictionary[(#keyPath(TestEntity1.testDate))] as? Date)
                 }
                 catch {
                     
@@ -665,23 +665,23 @@ class ImportTests: BaseTestDataTestCase {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
                         [
-                            "testEntityID": NSNumber(value: 106),
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 6),
-                            "testDecimal": NSDecimalNumber(string: "6"),
-                            "testString": "nil:TestEntity1:6",
-                            "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
                             "throw_on_id": ""
                         ],
                         [
-                            "testEntityID": NSNumber(value: 107),
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 7),
-                            "testDecimal": NSDecimalNumber(string: "7"),
-                            "testString": "nil:TestEntity1:7",
-                            "testData": ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 107),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 7),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "7"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:7",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!
                         ]
                     ]
                     let _ = try transaction.importUniqueObjects(
@@ -695,8 +695,8 @@ class ImportTests: BaseTestDataTestCase {
                     errorExpectation.fulfill()
                     XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 5)
                     
-                    XCTAssertNil(transaction.fetchOne(From<TestEntity1>(), Where("testEntityID", isEqualTo: 106)))
-                    XCTAssertNil(transaction.fetchOne(From<TestEntity1>(), Where("testEntityID", isEqualTo: 107)))
+                    XCTAssertNil(transaction.fetchOne(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 106)))
+                    XCTAssertNil(transaction.fetchOne(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 107)))
                 }
                 catch {
                     
@@ -712,23 +712,23 @@ class ImportTests: BaseTestDataTestCase {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
                         [
-                            "testEntityID": NSNumber(value: 106),
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 6),
-                            "testDecimal": NSDecimalNumber(string: "6"),
-                            "testString": "nil:TestEntity1:6",
-                            "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
                             "throw_on_insert": ""
                         ],
                         [
-                            "testEntityID": NSNumber(value: 107),
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 7),
-                            "testDecimal": NSDecimalNumber(string: "7"),
-                            "testString": "nil:TestEntity1:7",
-                            "testData": ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 107),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 7),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "7"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:7",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!
                         ]
                     ]
                     let _ = try transaction.importUniqueObjects(
@@ -741,7 +741,7 @@ class ImportTests: BaseTestDataTestCase {
                     
                     errorExpectation.fulfill()
                     
-                    let object = transaction.fetchOne(From<TestEntity1>(), Where("testEntityID", isEqualTo: 106))
+                    let object = transaction.fetchOne(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 106))
                     XCTAssertNotNil(object)
                     XCTAssertEqual(object?.testEntityID, NSNumber(value: 106))
                     XCTAssertNil(object?.testBoolean)
@@ -765,13 +765,13 @@ class ImportTests: BaseTestDataTestCase {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
                         [
-                            "testEntityID": NSNumber(value: 105),
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 6),
-                            "testDecimal": NSDecimalNumber(string: "6"),
-                            "testString": "nil:TestEntity1:6",
-                            "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 105),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!,
                             "throw_on_update": ""
                         ]
                     ]
@@ -786,7 +786,7 @@ class ImportTests: BaseTestDataTestCase {
                     errorExpectation.fulfill()
                     XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 5)
                     
-                    let object = transaction.fetchOne(From<TestEntity1>(), Where("testEntityID", isEqualTo: 105))
+                    let object = transaction.fetchOne(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
                     XCTAssertNotNil(object)
                     XCTAssertEqual(object?.testEntityID, NSNumber(value: 105))
                     XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
@@ -796,7 +796,7 @@ class ImportTests: BaseTestDataTestCase {
                     XCTAssertEqual(object?.testData, ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue)!)
                     XCTAssertEqual(object?.testDate, self.dateFormatter.date(from: "2000-01-05T00:00:00Z")!)
                     
-                    let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where("testEntityID", isEqualTo: 105))
+                    let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
                     XCTAssertNotNil(existingObjects)
                     XCTAssertEqual(existingObjects?.count, 1)
                     
@@ -826,22 +826,22 @@ class ImportTests: BaseTestDataTestCase {
                     
                     let sourceArray: [TestEntity1.ImportSource] = [
                         [
-                            "testEntityID": NSNumber(value: 105),
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 15),
-                            "testDecimal": NSDecimalNumber(string: "15"),
-                            "testString": "nil:TestEntity1:15",
-                            "testData": ("nil:TestEntity1:15" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-15T00:00:00Z")!
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 105),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 15),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "15"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:15",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:15" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-15T00:00:00Z")!
                         ],
                         [
-                            "testEntityID": NSNumber(value: 106),
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 6),
-                            "testDecimal": NSDecimalNumber(string: "6"),
-                            "testString": "nil:TestEntity1:6",
-                            "testData": ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!
                         ]
                     ]
                     let objects = try transaction.importUniqueObjects(
@@ -855,15 +855,15 @@ class ImportTests: BaseTestDataTestCase {
                         let object = objects[i]
                         let dictionary = sourceArray[i]
                         
-                        XCTAssertEqual(object.testEntityID, dictionary["testEntityID"] as? NSNumber)
-                        XCTAssertEqual(object.testBoolean, dictionary["testBoolean"] as? NSNumber)
-                        XCTAssertEqual(object.testNumber, dictionary["testNumber"] as? NSNumber)
-                        XCTAssertEqual(object.testDecimal, dictionary["testDecimal"] as? NSDecimalNumber)
-                        XCTAssertEqual(object.testString, dictionary["testString"] as? String)
-                        XCTAssertEqual(object.testData, dictionary["testData"] as? Data)
-                        XCTAssertEqual(object.testDate, dictionary["testDate"] as? Date)
+                        XCTAssertEqual(object.testEntityID, dictionary[(#keyPath(TestEntity1.testEntityID))] as? NSNumber)
+                        XCTAssertEqual(object.testBoolean, dictionary[(#keyPath(TestEntity1.testBoolean))] as? NSNumber)
+                        XCTAssertEqual(object.testNumber, dictionary[(#keyPath(TestEntity1.testNumber))] as? NSNumber)
+                        XCTAssertEqual(object.testDecimal, dictionary[(#keyPath(TestEntity1.testDecimal))] as? NSDecimalNumber)
+                        XCTAssertEqual(object.testString, dictionary[(#keyPath(TestEntity1.testString))] as? String)
+                        XCTAssertEqual(object.testData, dictionary[(#keyPath(TestEntity1.testData))] as? Data)
+                        XCTAssertEqual(object.testDate, dictionary[(#keyPath(TestEntity1.testDate))] as? Date)
                     }
-                    let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where("testEntityID", isEqualTo: 105))
+                    let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
                     XCTAssertNotNil(existingObjects)
                     XCTAssertEqual(existingObjects?.count, 1)
                     
@@ -915,12 +915,12 @@ extension TestEntity1: ImportableUniqueObject {
             
             throw TestInsertError()
         }
-        self.testBoolean = source["testBoolean"] as? NSNumber
-        self.testNumber = source["testNumber"] as? NSNumber
-        self.testDecimal = source["testDecimal"] as? NSDecimalNumber
-        self.testString = source["testString"] as? String
-        self.testData = source["testData"] as? Data
-        self.testDate = source["testDate"] as? Date
+        self.testBoolean = source[(#keyPath(TestEntity1.testBoolean))] as? NSNumber
+        self.testNumber = source[(#keyPath(TestEntity1.testNumber))] as? NSNumber
+        self.testDecimal = source[(#keyPath(TestEntity1.testDecimal))] as? NSDecimalNumber
+        self.testString = source[(#keyPath(TestEntity1.testString))] as? String
+        self.testData = source[(#keyPath(TestEntity1.testData))] as? Data
+        self.testDate = source[(#keyPath(TestEntity1.testDate))] as? Date
         self.testNil = nil
     }
     
@@ -931,7 +931,7 @@ extension TestEntity1: ImportableUniqueObject {
     
     static var uniqueIDKeyPath: String {
         
-        return "testEntityID"
+        return #keyPath(TestEntity1.testEntityID)
     }
     
     var uniqueIDValue: NSNumber {
@@ -962,7 +962,7 @@ extension TestEntity1: ImportableUniqueObject {
             
             throw TestIDError()
         }
-        return source["testEntityID"] as? NSNumber
+        return source[(#keyPath(TestEntity1.testEntityID))] as? NSNumber
     }
     
     func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
@@ -971,12 +971,12 @@ extension TestEntity1: ImportableUniqueObject {
             
             throw TestUpdateError()
         }
-        self.testBoolean = source["testBoolean"] as? NSNumber
-        self.testNumber = source["testNumber"] as? NSNumber
-        self.testDecimal = source["testDecimal"] as? NSDecimalNumber
-        self.testString = source["testString"] as? String
-        self.testData = source["testData"] as? Data
-        self.testDate = source["testDate"] as? Date
+        self.testBoolean = source[(#keyPath(TestEntity1.testBoolean))] as? NSNumber
+        self.testNumber = source[(#keyPath(TestEntity1.testNumber))] as? NSNumber
+        self.testDecimal = source[(#keyPath(TestEntity1.testDecimal))] as? NSDecimalNumber
+        self.testString = source[(#keyPath(TestEntity1.testString))] as? String
+        self.testData = source[(#keyPath(TestEntity1.testData))] as? Data
+        self.testDate = source[(#keyPath(TestEntity1.testDate))] as? Date
         self.testNil = nil
     }
 }

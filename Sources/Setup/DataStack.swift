@@ -177,11 +177,11 @@ public final class DataStack {
     }
     
     /**
-     Creates a `LocalStorageface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
+     Creates a `LocalStorageInterface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
      ```
      try dataStack.addStorageAndWait(SQLiteStore.self)
      ```
-     - parameter storeType: the `LocalStorageface` type
+     - parameter storeType: the `LocalStorageInterface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the stack
      */
@@ -424,36 +424,33 @@ public final class DataStack {
     
     internal func persistentStoreForEntityClass(_ entityClass: AnyClass, configuration: String?, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
         
-        var returnValue: (store: NSPersistentStore?, isAmbiguous: Bool) = (store: nil, isAmbiguous: false)
-        self.storeMetadataUpdateQueue.sync(flags: .barrier) {
+        return self.storeMetadataUpdateQueue.sync(flags: .barrier) { () -> (store: NSPersistentStore?, isAmbiguous: Bool) in
             
             let configurationsForEntity = self.entityConfigurationsMapping[NSStringFromClass(entityClass)] ?? []
             if let configuration = configuration {
                 
                 if configurationsForEntity.contains(configuration) {
                     
-                    returnValue = (store: self.configurationStoreMapping[configuration], isAmbiguous: false)
-                    return
+                    return (store: self.configurationStoreMapping[configuration], isAmbiguous: false)
                 }
                 else if !inferStoreIfPossible {
                     
-                    return
+                    return (store: nil, isAmbiguous: false)
                 }
             }
             
             switch configurationsForEntity.count {
                 
             case 0:
-                return
+                return (store: nil, isAmbiguous: false)
                 
             case 1 where inferStoreIfPossible:
-                returnValue = (store: self.configurationStoreMapping[configurationsForEntity.first!], isAmbiguous: false)
+                return (store: self.configurationStoreMapping[configurationsForEntity.first!], isAmbiguous: false)
                 
             default:
-                returnValue = (store: nil, isAmbiguous: true)
+                return (store: nil, isAmbiguous: true)
             }
         }
-        return returnValue
     }
     
     internal func createPersistentStoreFromStorage(_ storage: StorageInterface, finalURL: URL?, finalStoreOptions: [AnyHashable: Any]?) throws -> NSPersistentStore {

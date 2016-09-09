@@ -34,7 +34,7 @@ import CoreData
 /**
  A storage interface backed by an SQLite database managed by iCloud.
  */
-public class ICloudStore: CloudStorage {
+public final class ICloudStore: CloudStorage {
     
     /**
      Initializes an iCloud store interface from the given ubiquitous store information. Returns `nil` if the container could not be located or if iCloud storage is unavailable for the current user or device

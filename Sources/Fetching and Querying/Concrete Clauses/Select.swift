@@ -322,13 +322,14 @@ public func == (lhs: SelectTerm, rhs: SelectTerm) -> Bool {
      - `Double`
      - `Float`
      - `String`
+     - `Date`
+     - `Data`
      - `NSNumber`
      - `NSString`
      - `NSDecimalNumber`
      - `NSDate`
      - `NSData`
      - `NSManagedObjectID`
-     - `NSString`
  - for `queryAttributes(...)` methods:
      - `NSDictionary`
  

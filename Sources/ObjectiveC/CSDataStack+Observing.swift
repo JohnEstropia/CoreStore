@@ -74,7 +74,7 @@ public extension CSDataStack {
                 sectionBy: nil,
                 applyFetchClauses: { (fetchRequest) in
                     
-                    fetchClauses.forEach { $0.applyToFetchRequest(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self)) }
+                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
                 }
             )
         }
@@ -104,7 +104,7 @@ public extension CSDataStack {
             sectionBy: nil,
             applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self)) }
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
             },
             createAsynchronously: {
                 
@@ -140,7 +140,7 @@ public extension CSDataStack {
                 sectionBy: sectionBy.bridgeToSwift,
                 applyFetchClauses: { (fetchRequest) in
                     
-                    fetchClauses.forEach { $0.applyToFetchRequest(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self)) }
+                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
                 }
             )
         }
@@ -170,7 +170,7 @@ public extension CSDataStack {
             sectionBy: sectionBy.bridgeToSwift,
             applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(unsafeBitCast(fetchRequest, to: NSFetchRequest<NSFetchRequestResult>.self)) }
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
             },
             createAsynchronously: {
                 

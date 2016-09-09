@@ -1427,9 +1427,11 @@
 					};
 					B52DD1731BE1F8CC00949AFE = {
 						CreatedOnToolsVersion = 7.1;
+						LastSwiftMigration = 0800;
 					};
 					B52DD17C1BE1F8CC00949AFE = {
 						CreatedOnToolsVersion = 7.1;
+						LastSwiftMigration = 0800;
 					};
 					B563216E1BD65082006C9394 = {
 						CreatedOnToolsVersion = 7.0.1;
@@ -2369,6 +2371,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2391,6 +2394,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2409,6 +2413,7 @@
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2427,6 +2432,7 @@
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

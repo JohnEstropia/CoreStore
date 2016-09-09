@@ -43,8 +43,8 @@ class ListObserverTests: BaseTestDataTestCase {
             let observer = TestListObserver()
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
-                SectionBy("testBoolean"),
-                OrderBy(.ascending("testBoolean"), .ascending("testEntityID"))
+                SectionBy(#keyPath(TestEntity1.testBoolean)),
+                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -171,8 +171,8 @@ class ListObserverTests: BaseTestDataTestCase {
             let observer = TestListObserver()
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
-                SectionBy("testBoolean"),
-                OrderBy(.ascending("testBoolean"), .ascending("testEntityID"))
+                SectionBy(#keyPath(TestEntity1.testBoolean)),
+                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -272,7 +272,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 
                 if let object = transaction.fetchOne(
                     From<TestEntity1>(),
-                    Where("testEntityID", isEqualTo: 101)) {
+                    Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) {
                     
                     object.testNumber = NSNumber(value: 11)
                     object.testDecimal = NSDecimalNumber(string: "11")
@@ -286,7 +286,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
                 if let object = transaction.fetchOne(
                     From<TestEntity1>(),
-                    Where("testEntityID", isEqualTo: 102)) {
+                    Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
                     
                     object.testNumber = NSNumber(value: 22)
                     object.testDecimal = NSDecimalNumber(string: "22")
@@ -325,8 +325,8 @@ class ListObserverTests: BaseTestDataTestCase {
             let observer = TestListObserver()
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
-                SectionBy("testBoolean"),
-                OrderBy(.ascending("testBoolean"), .ascending("testEntityID"))
+                SectionBy(#keyPath(TestEntity1.testBoolean)),
+                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -398,7 +398,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 
                 if let object = transaction.fetchOne(
                     From<TestEntity1>(),
-                    Where("testEntityID", isEqualTo: 102)) {
+                    Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
                     
                     object.testBoolean = NSNumber(value: true)
                 }
@@ -433,8 +433,8 @@ class ListObserverTests: BaseTestDataTestCase {
             let observer = TestListObserver()
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
-                SectionBy("testBoolean"),
-                OrderBy(.ascending("testBoolean"), .ascending("testEntityID"))
+                SectionBy(#keyPath(TestEntity1.testBoolean)),
+                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -533,7 +533,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 
                 transaction.deleteAll(
                     From<TestEntity1>(),
-                    Where("testBoolean", isEqualTo: false)
+                    Where(#keyPath(TestEntity1.testBoolean), isEqualTo: false)
                 )
                 transaction.commit { (result) in
                     

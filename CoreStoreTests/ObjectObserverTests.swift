@@ -44,7 +44,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             
             guard let object = stack.fetchOne(
                 From<TestEntity1>(),
-                Where("testEntityID", isEqualTo: 101)) else {
+                Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
                     
                     XCTFail()
                     return
@@ -87,8 +87,8 @@ class ObjectObserverTests: BaseTestDataTestCase {
                             "object": object,
                             "changedPersistentKeys": Set(
                                 [
-                                    "testNumber",
-                                    "testString"
+                                    #keyPath(TestEntity1.testNumber),
+                                    #keyPath(TestEntity1.testString)
                                 ]
                             )
                         ] as NSDictionary
@@ -141,7 +141,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             
             guard let object = stack.fetchOne(
                 From<TestEntity1>(),
-                Where("testEntityID", isEqualTo: 101)) else {
+                Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
                     
                     XCTFail()
                     return

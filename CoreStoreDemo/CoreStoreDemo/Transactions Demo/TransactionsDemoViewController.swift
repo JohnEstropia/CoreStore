@@ -140,7 +140,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
             mapView.setCenter(object.coordinate, animated: true)
             mapView.selectAnnotation(object, animated: true)
             
-            if changedPersistentKeys.contains("latitude") || changedPersistentKeys.contains("longitude") {
+            if changedPersistentKeys.contains(#keyPath(Place.latitude) || changedPersistentKeys.contains(#keyPath(Place.longitude)) {
                 
                 self.geocode(place: object)
             }

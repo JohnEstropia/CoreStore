@@ -168,7 +168,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 
                 return Static.timeZonesStack.fetchAll(
                     From<TimeZone>(),
-                    OrderBy(.ascending("name"))
+                    OrderBy(.ascending(#keyPath(TimeZone.name)))
                 )!
             }
         ),
@@ -178,8 +178,8 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 
                 return Static.timeZonesStack.fetchAll(
                     From<TimeZone>(),
-                    Where("%K BEGINSWITH[c] %@", "name", "Asia"),
-                    OrderBy(.ascending("secondsFromGMT"))
+                    Where("%K BEGINSWITH[c] %@", #keyPath(TimeZone.name), "Asia"),
+                    OrderBy(.ascending(#keyPath(TimeZone.secondsFromGMT)))
                 )!
             }
         ),
@@ -189,9 +189,9 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 
                 return Static.timeZonesStack.fetchAll(
                     From<TimeZone>(),
-                    Where("%K BEGINSWITH[c] %@", "name", "America")
-                        || Where("%K BEGINSWITH[c] %@", "name", "Europe"),
-                    OrderBy(.ascending("secondsFromGMT"))
+                    Where("%K BEGINSWITH[c] %@", #keyPath(TimeZone.name), "America")
+                        || Where("%K BEGINSWITH[c] %@", #keyPath(TimeZone.name), "Europe"),
+                    OrderBy(.ascending(#keyPath(TimeZone.secondsFromGMT)))
                 )!
             }
         ),
@@ -201,8 +201,8 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 
                 return Static.timeZonesStack.fetchAll(
                     From<TimeZone>(),
-                    !Where("%K BEGINSWITH[c] %@", "name", "America"),
-                    OrderBy(.ascending("secondsFromGMT"))
+                    !Where("%K BEGINSWITH[c] %@", #keyPath(TimeZone.name), "America"),
+                    OrderBy(.ascending(#keyPath(TimeZone.secondsFromGMT)))
                     )!
             }
         ),
@@ -213,7 +213,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 return Static.timeZonesStack.fetchAll(
                     From<TimeZone>(),
                     Where("hasDaylightSavingTime", isEqualTo: true),
-                    OrderBy(.ascending("name"))
+                    OrderBy(.ascending(#keyPath(TimeZone.name)))
                 )!
             }
         )
@@ -226,7 +226,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 
                 return Static.timeZonesStack.queryValue(
                     From<TimeZone>(),
-                    Select<NSNumber>(.count("name"))
+                    Select<NSNumber>(.count(#keyPath(TimeZone.name)))
                 )!
             }
         ),
@@ -236,8 +236,8 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 
                 return Static.timeZonesStack.queryValue(
                     From<TimeZone>(),
-                    Select<String>("abbreviation"),
-                    Where("%K ENDSWITH[c] %@", "name", "Tokyo")
+                    Select<String>(#keyPath(TimeZone.abbreviation)),
+                    Where("%K ENDSWITH[c] %@", #keyPath(TimeZone.name), "Tokyo")
                 )!
             }
         ),
@@ -247,8 +247,8 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 
                 return Static.timeZonesStack.queryAttributes(
                     From<TimeZone>(),
-                    Select<NSDictionary>("name", "abbreviation"),
-                    OrderBy(.ascending("name"))
+                    Select<NSDictionary>(#keyPath(TimeZone.name), #keyPath(TimeZone.abbreviation)),
+                    OrderBy(.ascending(#keyPath(TimeZone.name)))
                 )!
             }
         ),
@@ -258,9 +258,9 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 
                 return Static.timeZonesStack.queryAttributes(
                     From<TimeZone>(),
-                    Select<NSDictionary>(.count("abbreviation"), "abbreviation"),
-                    GroupBy("abbreviation"),
-                    OrderBy(.ascending("secondsFromGMT"), .ascending("name"))
+                    Select<NSDictionary>(.count(#keyPath(TimeZone.abbreviation)), #keyPath(TimeZone.abbreviation)),
+                    GroupBy(#keyPath(TimeZone.abbreviation)),
+                    OrderBy(.ascending(#keyPath(TimeZone.secondsFromGMT)), .ascending(#keyPath(TimeZone.name)))
                 )!
             }
         ),
@@ -271,11 +271,11 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                 return Static.timeZonesStack.queryAttributes(
                     From<TimeZone>(),
                     Select<NSDictionary>(
-                        .count("hasDaylightSavingTime", as: "numberOfCountries"),
-                        "hasDaylightSavingTime"
+                        .count(#keyPath(TimeZone.hasDaylightSavingTime), as: "numberOfCountries"),
+                        #keyPath(TimeZone.hasDaylightSavingTime)
                     ),
-                    GroupBy("hasDaylightSavingTime"),
-                    OrderBy(.descending("hasDaylightSavingTime"))
+                    GroupBy(#keyPath(TimeZone.hasDaylightSavingTime)),
+                    OrderBy(.descending(#keyPath(TimeZone.hasDaylightSavingTime)))
                 )!
             }
         )

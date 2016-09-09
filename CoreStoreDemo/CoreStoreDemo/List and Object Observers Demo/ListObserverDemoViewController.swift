@@ -33,8 +33,8 @@ private struct Static {
             switch self {
                 
             case .all: return Where(true)
-            case .light: return Where("brightness >= 0.9")
-            case .dark: return Where("brightness <= 0.4")
+            case .light: return Where("%K >= %@", #keyPath(Palette.brightness), 0.9)
+            case .dark: return Where("%K <= %@", #keyPath(Palette.brightness), 0.4)
             }
         }
     }
@@ -59,8 +59,8 @@ private struct Static {
         
         return CoreStore.monitorSectionedList(
             From<Palette>(),
-            SectionBy("colorName"),
-            OrderBy(.ascending("hue"))
+            SectionBy(#keyPath(Palette.colorName)),
+            OrderBy(.ascending(#keyPath(Palette.hue)))
         )
     }()
 }

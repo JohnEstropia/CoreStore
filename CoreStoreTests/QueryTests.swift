@@ -43,13 +43,13 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("testEntityID", isEqualTo: 101)
+                Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)
             ]
             do {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Bool>("testBoolean"),
+                    Select<Bool>(#keyPath(TestEntity1.testBoolean)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -59,7 +59,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int8>("testNumber"),
+                    Select<Int8>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -69,7 +69,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int16>("testNumber"),
+                    Select<Int16>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -79,7 +79,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int32>("testNumber"),
+                    Select<Int32>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -89,7 +89,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int64>("testNumber"),
+                    Select<Int64>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -99,7 +99,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int>("testNumber"),
+                    Select<Int>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -109,7 +109,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Double>("testNumber"),
+                    Select<Double>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -119,7 +119,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Float>("testNumber"),
+                    Select<Float>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -129,7 +129,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSNumber>("testNumber"),
+                    Select<NSNumber>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -139,7 +139,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDecimalNumber>("testDecimal"),
+                    Select<NSDecimalNumber>(#keyPath(TestEntity1.testDecimal)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -149,7 +149,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<String>("testString"),
+                    Select<String>(#keyPath(TestEntity1.testString)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -159,7 +159,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSString>("testString"),
+                    Select<NSString>(#keyPath(TestEntity1.testString)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -169,7 +169,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSData>("testData"),
+                    Select<Data>(#keyPath(TestEntity1.testData)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -179,7 +179,17 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDate>("testDate"),
+                    Select<NSData>(#keyPath(TestEntity1.testData)),
+                    queryClauses
+                )
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value as Data?, "nil:TestEntity1:1".data(using: .utf8))
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<Date>(#keyPath(TestEntity1.testDate)),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -189,7 +199,17 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSManagedObjectID>("testDate"),
+                    Select<NSDate>(#keyPath(TestEntity1.testDate)),
+                    queryClauses
+                )
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value as Date?, self.dateFormatter.date(from: "2000-01-01T00:00:00Z"))
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<NSManagedObjectID>(#keyPath(TestEntity1.testDate)),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -207,14 +227,14 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", "testNumber", 1),
-                OrderBy(.ascending("testEntityID"))
+                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1),
+                OrderBy(.ascending(#keyPath(TestEntity1.testEntityID)))
             ]
             do {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Bool>(.average("testBoolean")),
+                    Select<Bool>(.average(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -224,7 +244,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int8>(.average("testNumber")),
+                    Select<Int8>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -234,7 +254,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int16>(.average("testNumber")),
+                    Select<Int16>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -244,7 +264,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int32>(.average("testNumber")),
+                    Select<Int32>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -254,7 +274,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int64>(.average("testNumber")),
+                    Select<Int64>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -264,7 +284,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int>(.average("testNumber")),
+                    Select<Int>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -274,7 +294,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Double>(.average("testNumber")),
+                    Select<Double>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -284,7 +304,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Float>(.average("testNumber")),
+                    Select<Float>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -294,7 +314,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSNumber>(.average("testNumber")),
+                    Select<NSNumber>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -304,7 +324,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDecimalNumber>(.average("testDecimal")),
+                    Select<NSDecimalNumber>(.average(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -314,7 +334,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<String>(.average("testString")),
+                    Select<String>(.average(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -323,7 +343,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSString>(.average("testString")),
+                    Select<NSString>(.average(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -332,7 +352,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSData>(.average("testData")),
+                    Select<Data>(.average(#keyPath(TestEntity1.testData))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -341,7 +361,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDate>(.average("testDate")),
+                    Select<NSData>(.average(#keyPath(TestEntity1.testData))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -350,7 +370,25 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSManagedObjectID>("testEntityID"),
+                    Select<Date>(.average(#keyPath(TestEntity1.testDate))),
+                    queryClauses
+                )
+                XCTAssertNil(value)
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<NSDate>(.average(#keyPath(TestEntity1.testDate))),
+                    queryClauses
+                )
+                XCTAssertNil(value)
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<NSManagedObjectID>(#keyPath(TestEntity1.testEntityID)),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -368,13 +406,13 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", "testNumber", 1)
+                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Bool>(.count("testBoolean")),
+                    Select<Bool>(.count(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -384,7 +422,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int8>(.count("testNumber")),
+                    Select<Int8>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -394,7 +432,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int16>(.count("testNumber")),
+                    Select<Int16>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -404,7 +442,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int32>(.count("testNumber")),
+                    Select<Int32>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -414,7 +452,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int64>(.count("testNumber")),
+                    Select<Int64>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -424,7 +462,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int>(.count("testNumber")),
+                    Select<Int>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -434,7 +472,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Double>(.count("testNumber")),
+                    Select<Double>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -444,7 +482,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Float>(.count("testNumber")),
+                    Select<Float>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -454,7 +492,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSNumber>(.count("testNumber")),
+                    Select<NSNumber>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -464,7 +502,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDecimalNumber>(.count("testDecimal")),
+                    Select<NSDecimalNumber>(.count(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -473,7 +511,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<String>(.count("testString")),
+                    Select<String>(.count(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -482,7 +520,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSString>(.count("testString")),
+                    Select<NSString>(.count(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -491,7 +529,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSData>(.count("testData")),
+                    Select<Data>(.count(#keyPath(TestEntity1.testData))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -500,7 +538,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDate>(.count("testDate")),
+                    Select<NSData>(.count(#keyPath(TestEntity1.testData))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -509,7 +547,25 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSManagedObjectID>(.count("testEntityID")),
+                    Select<Date>(.count(#keyPath(TestEntity1.testDate))),
+                    queryClauses
+                )
+                XCTAssertNil(value)
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<NSDate>(.count(#keyPath(TestEntity1.testDate))),
+                    queryClauses
+                )
+                XCTAssertNil(value)
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<NSManagedObjectID>(.count(#keyPath(TestEntity1.testEntityID))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -527,13 +583,13 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", "testNumber", 1)
+                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Bool>(.maximum("testBoolean")),
+                    Select<Bool>(.maximum(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -543,7 +599,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int8>(.maximum("testNumber")),
+                    Select<Int8>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -553,7 +609,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int16>(.maximum("testNumber")),
+                    Select<Int16>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -563,7 +619,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int32>(.maximum("testNumber")),
+                    Select<Int32>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -573,7 +629,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int64>(.maximum("testNumber")),
+                    Select<Int64>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -583,7 +639,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int>(.maximum("testNumber")),
+                    Select<Int>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -593,7 +649,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Double>(.maximum("testNumber")),
+                    Select<Double>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -603,7 +659,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Float>(.maximum("testNumber")),
+                    Select<Float>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -613,7 +669,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSNumber>(.maximum("testNumber")),
+                    Select<NSNumber>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -623,7 +679,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDecimalNumber>(.maximum("testDecimal")),
+                    Select<NSDecimalNumber>(.maximum(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -633,7 +689,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<String>(.maximum("testString")),
+                    Select<String>(.maximum(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -643,7 +699,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSString>(.maximum("testString")),
+                    Select<NSString>(.maximum(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -653,7 +709,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSData>(.maximum("testData")),
+                    Select<Data>(.maximum(#keyPath(TestEntity1.testData))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -663,7 +719,17 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDate>(.maximum("testDate")),
+                    Select<NSData>(.maximum(#keyPath(TestEntity1.testData))),
+                    queryClauses
+                )
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value as Data?, "nil:TestEntity1:5".data(using: .utf8))
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<Date>(.maximum(#keyPath(TestEntity1.testDate))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -673,7 +739,17 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSManagedObjectID>(.maximum("testEntityID")),
+                    Select<NSDate>(.maximum(#keyPath(TestEntity1.testDate))),
+                    queryClauses
+                )
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value as Date?, self.dateFormatter.date(from: "2000-01-05T00:00:00Z"))
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<NSManagedObjectID>(.maximum(#keyPath(TestEntity1.testEntityID))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -691,13 +767,13 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", "testNumber", 1)
+                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Bool>(.minimum("testBoolean")),
+                    Select<Bool>(.minimum(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -707,7 +783,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int8>(.minimum("testNumber")),
+                    Select<Int8>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -717,7 +793,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int16>(.minimum("testNumber")),
+                    Select<Int16>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -727,7 +803,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int32>(.minimum("testNumber")),
+                    Select<Int32>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -737,7 +813,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int64>(.minimum("testNumber")),
+                    Select<Int64>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -747,7 +823,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int>(.minimum("testNumber")),
+                    Select<Int>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -757,7 +833,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Double>(.minimum("testNumber")),
+                    Select<Double>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -767,7 +843,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Float>(.minimum("testNumber")),
+                    Select<Float>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -777,7 +853,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSNumber>(.minimum("testNumber")),
+                    Select<NSNumber>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -787,7 +863,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDecimalNumber>(.minimum("testDecimal")),
+                    Select<NSDecimalNumber>(.minimum(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -797,7 +873,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<String>(.minimum("testString")),
+                    Select<String>(.minimum(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -807,7 +883,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSString>(.minimum("testString")),
+                    Select<NSString>(.minimum(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -817,7 +893,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSData>(.minimum("testData")),
+                    Select<Data>(.minimum(#keyPath(TestEntity1.testData))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -827,7 +903,17 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDate>(.minimum("testDate")),
+                    Select<NSData>(.minimum(#keyPath(TestEntity1.testData))),
+                    queryClauses
+                )
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value as Data?, "nil:TestEntity1:2".data(using: .utf8))
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<Date>(.minimum(#keyPath(TestEntity1.testDate))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -837,7 +923,17 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSManagedObjectID>(.minimum("testEntityID")),
+                    Select<NSDate>(.minimum(#keyPath(TestEntity1.testDate))),
+                    queryClauses
+                )
+                XCTAssertNotNil(value)
+                XCTAssertEqual(value as Date?, self.dateFormatter.date(from: "2000-01-02T00:00:00Z"))
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<NSManagedObjectID>(.minimum(#keyPath(TestEntity1.testEntityID))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -855,13 +951,13 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", "testNumber", 1)
+                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Bool>(.sum("testBoolean")),
+                    Select<Bool>(.sum(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -871,7 +967,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int8>(.sum("testNumber")),
+                    Select<Int8>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -881,7 +977,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int16>(.sum("testNumber")),
+                    Select<Int16>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -891,7 +987,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int32>(.sum("testNumber")),
+                    Select<Int32>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -901,7 +997,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int64>(.sum("testNumber")),
+                    Select<Int64>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -911,7 +1007,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Int>(.sum("testNumber")),
+                    Select<Int>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -921,7 +1017,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Double>(.sum("testNumber")),
+                    Select<Double>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -931,7 +1027,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<Float>(.sum("testNumber")),
+                    Select<Float>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -941,7 +1037,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSNumber>(.sum("testNumber")),
+                    Select<NSNumber>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -951,7 +1047,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDecimalNumber>(.sum("testDecimal")),
+                    Select<NSDecimalNumber>(.sum(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
                 )
                 XCTAssertNotNil(value)
@@ -961,7 +1057,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<String>(.sum("testString")),
+                    Select<String>(.sum(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -970,7 +1066,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSString>(.sum("testString")),
+                    Select<NSString>(.sum(#keyPath(TestEntity1.testString))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -979,7 +1075,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSData>(.sum("testData")),
+                    Select<Data>(.sum(#keyPath(TestEntity1.testData))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -988,7 +1084,7 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSDate>(.sum("testDate")),
+                    Select<NSData>(.sum(#keyPath(TestEntity1.testData))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -997,7 +1093,25 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
-                    Select<NSManagedObjectID>(.sum("testEntityID")),
+                    Select<Date>(.sum(#keyPath(TestEntity1.testDate))),
+                    queryClauses
+                )
+                XCTAssertNil(value)
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<NSDate>(.sum(#keyPath(TestEntity1.testDate))),
+                    queryClauses
+                )
+                XCTAssertNil(value)
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<NSManagedObjectID>(.sum(#keyPath(TestEntity1.testEntityID))),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -1015,7 +1129,7 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", "testNumber", 1)
+                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
@@ -1129,7 +1243,25 @@ class QueryTests: BaseTestDataTestCase {
                 
                 let value = stack.queryValue(
                     from,
+                    Select<Data>(.objectID()),
+                    queryClauses
+                )
+                XCTAssertNil(value)
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
                     Select<NSData>(.objectID()),
+                    queryClauses
+                )
+                XCTAssertNil(value)
+            }
+            do {
+                
+                let value = stack.queryValue(
+                    from,
+                    Select<Date>(.objectID()),
                     queryClauses
                 )
                 XCTAssertNil(value)
@@ -1165,21 +1297,21 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", "testNumber", 3),
-                OrderBy(.ascending("testEntityID"))
+                Where("%K > %@", #keyPath(TestEntity1.testNumber), 3),
+                OrderBy(.ascending(#keyPath(TestEntity1.testEntityID)))
             ]
             do {
                 
                 let values = stack.queryAttributes(
                     from,
                     Select(
-                        "testBoolean",
-                        "testNumber",
-                        "testDecimal",
-                        "testString",
-                        "testData",
-                        "testDate",
-                        "testNil"
+                        #keyPath(TestEntity1.testBoolean),
+                        #keyPath(TestEntity1.testNumber),
+                        #keyPath(TestEntity1.testDecimal),
+                        #keyPath(TestEntity1.testString),
+                        #keyPath(TestEntity1.testData),
+                        #keyPath(TestEntity1.testDate),
+                        #keyPath(TestEntity1.testNil)
                     ),
                     queryClauses
                 )
@@ -1188,20 +1320,20 @@ class QueryTests: BaseTestDataTestCase {
                     values as Any as! [NSDictionary],
                     [
                         [
-                            "testBoolean": NSNumber(value: false),
-                            "testNumber": NSNumber(value: 4),
-                            "testDecimal": NSDecimalNumber(string: "4"),
-                            "testString": "nil:TestEntity1:4",
-                            "testData": ("nil:TestEntity1:4" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-04T00:00:00Z")!
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 4),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "4"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:4",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:4" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-04T00:00:00Z")!
                         ],
                         [
-                            "testBoolean": NSNumber(value: true),
-                            "testNumber": NSNumber(value: 5),
-                            "testDecimal": NSDecimalNumber(string: "5"),
-                            "testString": "nil:TestEntity1:5",
-                            "testData": ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue)!,
-                            "testDate": self.dateFormatter.date(from: "2000-01-05T00:00:00Z")!
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 5),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "5"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:5",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-05T00:00:00Z")!
                         ]
                     ] as [NSDictionary]
                 )
@@ -1224,11 +1356,11 @@ class QueryTests: BaseTestDataTestCase {
                 let values = stack.queryAttributes(
                     from,
                     Select(
-                        .sum("testBoolean"),
-                        .count("testNumber"),
-                        .maximum("testNumber"),
-                        .minimum("testNumber"),
-                        .average("testDecimal")
+                        .sum(#keyPath(TestEntity1.testBoolean)),
+                        .count(#keyPath(TestEntity1.testNumber)),
+                        .maximum(#keyPath(TestEntity1.testNumber)),
+                        .minimum(#keyPath(TestEntity1.testNumber)),
+                        .average(#keyPath(TestEntity1.testDecimal))
                     ),
                     queryClauses
                 )
@@ -1251,11 +1383,11 @@ class QueryTests: BaseTestDataTestCase {
                 let values = stack.queryAttributes(
                     from,
                     Select(
-                        .sum("testBoolean", as: "testSum"),
-                        .count("testNumber", as: "testCount"),
-                        .maximum("testNumber", as: "testMaximum"),
-                        .minimum("testNumber", as: "testMinimum"),
-                        .average("testDecimal", as: "testAverage")
+                        .sum(#keyPath(TestEntity1.testBoolean), as: "testSum"),
+                        .count(#keyPath(TestEntity1.testNumber), as: "testCount"),
+                        .maximum(#keyPath(TestEntity1.testNumber), as: "testMaximum"),
+                        .minimum(#keyPath(TestEntity1.testNumber), as: "testMinimum"),
+                        .average(#keyPath(TestEntity1.testDecimal), as: "testAverage")
                     ),
                     queryClauses
                 )
