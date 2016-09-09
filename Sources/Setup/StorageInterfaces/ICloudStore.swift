@@ -400,7 +400,7 @@ public final class ICloudStore: CloudStorage {
     /**
      The options dictionary for the specified `CloudStorageOptions`
      */
-    public func storeOptionsForOptions(_ options: CloudStorageOptions) -> [AnyHashable: Any]? {
+    public func dictionary(forOptions options: CloudStorageOptions) -> [AnyHashable: Any]? {
         
         if options == .none {
             

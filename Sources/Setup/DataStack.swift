@@ -103,7 +103,7 @@ public final class DataStack {
     /**
      Returns the `NSManagedObjectID` for the specified object URI if it exists in the persistent store.
      */
-    public func objectIDForURIRepresentation(_ url: URL) -> NSManagedObjectID? {
+    public func objectID(forURIRepresentation url: URL) -> NSManagedObjectID? {
         
         return self.coordinator.managedObjectID(forURIRepresentation: url)
     }
@@ -237,7 +237,7 @@ public final class DataStack {
                 var localStorageOptions = storage.localStorageOptions
                 localStorageOptions.remove(.recreateStoreOnModelMismatch)
                 
-                let storeOptions = storage.storeOptionsForOptions(localStorageOptions)
+                let storeOptions = storage.dictionary(forOptions: localStorageOptions)
                 do {
                     
                     try FileManager.default.createDirectory(
@@ -332,7 +332,7 @@ public final class DataStack {
                 var cloudStorageOptions = storage.cloudStorageOptions
                 cloudStorageOptions.remove(.recreateLocalStoreOnModelMismatch)
                 
-                let storeOptions = storage.storeOptionsForOptions(cloudStorageOptions)
+                let storeOptions = storage.dictionary(forOptions: cloudStorageOptions)
                 do {
                     
                     try FileManager.default.createDirectory(
@@ -514,6 +514,12 @@ public final class DataStack {
     public func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
         return self.entityDescription(for: type)
+    }
+    
+    @available(*, deprecated: 3.0.0, renamed: "objectID(forURIRepresentation:)")
+    public func objectIDForURIRepresentation(_ url: URL) -> NSManagedObjectID? {
+        
+        return self.objectID(forURIRepresentation: url)
     }
 }
 

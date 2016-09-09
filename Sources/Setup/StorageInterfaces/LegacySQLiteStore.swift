@@ -99,7 +99,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      The options dictionary for the specified `LocalStorageOptions`
      */
-    public func storeOptionsForOptions(_ options: LocalStorageOptions) -> [AnyHashable: Any]? {
+    public func dictionary(forOptions options: LocalStorageOptions) -> [AnyHashable: Any]? {
         
         if options == .none {
             

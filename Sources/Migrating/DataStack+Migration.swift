@@ -355,7 +355,7 @@ public extension DataStack {
                 var cloudStorageOptions = storage.cloudStorageOptions
                 cloudStorageOptions.remove(.recreateLocalStoreOnModelMismatch)
                 
-                let storeOptions = storage.storeOptionsForOptions(cloudStorageOptions)
+                let storeOptions = storage.dictionary(forOptions: cloudStorageOptions)
                 do {
                     
                     try FileManager.default.createDirectory(

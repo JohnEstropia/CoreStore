@@ -153,7 +153,7 @@ public protocol LocalStorage: StorageInterface {
     /**
      The options dictionary for the specified `LocalStorageOptions`
      */
-    func storeOptionsForOptions(_ options: LocalStorageOptions) -> [AnyHashable: Any]?
+    func dictionary(forOptions options: LocalStorageOptions) -> [AnyHashable: Any]?
     
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
@@ -237,7 +237,7 @@ public protocol CloudStorage: StorageInterface {
     /**
      The options dictionary for the specified `CloudStorageOptions`
      */
-    func storeOptionsForOptions(_ options: CloudStorageOptions) -> [AnyHashable: Any]?
+    func dictionary(forOptions options: CloudStorageOptions) -> [AnyHashable: Any]?
     
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (Cloud stores for example, can set the NSPersistentStoreRemoveUbiquitousMetadataOption option before deleting)
