@@ -147,7 +147,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func saveAsynchronouslyWithCompletion(_ completion: ((_ result: SaveResult) -> Void) = { _ in }) {
+    internal func saveAsynchronouslyWithCompletion(_ completion: @escaping ((_ result: SaveResult) -> Void) = { _ in }) {
         
         self.perform {
             

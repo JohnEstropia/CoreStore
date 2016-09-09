@@ -12,7 +12,7 @@ import CoreStore
 
 // MARK: - MigrationsDemoViewController
 
-class MigrationsDemoViewController: UIViewController {
+class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: UIViewController
     
@@ -70,6 +70,71 @@ class MigrationsDemoViewController: UIViewController {
         }
         
         self.selectModelVersion(modelMetadata)
+    }
+    
+    // MARK: ListObserver
+    
+    func listMonitorWillChange(_ monitor: ListMonitor<NSManagedObject>) { }
+    
+    func listMonitorDidChange(_ monitor: ListMonitor<NSManagedObject>) {
+        
+        if self.lastSelectedIndexPath == nil,
+            let numberOfObjectsInSection = self.listMonitor?.numberOfObjectsInSection(0),
+            numberOfObjectsInSection > 0 {
+            
+            self.tableView?.reloadData()
+            self.setSelectedIndexPath(IndexPath(row: 0, section: 0), scrollToSelection: false)
+        }
+        else {
+            
+            self.updateDisplay(reloadData: true, scrollToSelection: true, animated: true)
+        }
+    }
+    
+    // MARK: UITableViewDataSource
+    
+    @objc dynamic func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return self.listMonitor?.numberOfObjectsInSection(0) ?? 0
+    }
+    
+    @objc dynamic func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "OrganismTableViewCell", for: indexPath) as! OrganismTableViewCell
+        
+        let dna = (self.listMonitor?[indexPath] as? OrganismProtocol)?.dna.description ?? ""
+        cell.dnaLabel?.text = "DNA: \(dna)"
+        cell.mutateButtonHandler = { [weak self] _ -> Void in
+            
+            guard let `self` = self,
+                let dataStack = self.dataStack,
+                let organism = self.listMonitor?[indexPath] else {
+                    
+                    return
+            }
+            
+            self.setSelectedIndexPath(indexPath, scrollToSelection: false)
+            self.setEnabled(false)
+            dataStack.beginAsynchronous { [weak self] (transaction) -> Void in
+                
+                let organism = transaction.edit(organism) as! OrganismProtocol
+                organism.mutate()
+                
+                transaction.commit { _ -> Void in
+                    
+                    self?.setEnabled(true)
+                }
+            }
+        }
+        return cell
+    }
+    
+    
+    // MARK: UITableViewDelegate
+    
+    @objc dynamic func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        self.setSelectedIndexPath(indexPath, scrollToSelection: false)
     }
     
     
@@ -176,8 +241,7 @@ class MigrationsDemoViewController: UIViewController {
                 
                 let count = dataStack.queryValue(
                     From(model.entityType),
-                    Select<Int>(.count("dna"))
-                )
+                    Select<Int>(.count("dna")))!
                 if count > 0 {
                     
                     self.setEnabled(true)
@@ -287,7 +351,7 @@ class MigrationsDemoViewController: UIViewController {
             
             for property in organism.entity.properties {
                 
-                let value: AnyObject = organism.value(forKey: property.name) ?? NSNull()
+                let value = organism.value(forKey: property.name) ?? NSNull()
                 lines.append("\(property.name): \(value)")
             }
             organismType = organism.entity.managedObjectClassName
@@ -319,80 +383,5 @@ class MigrationsDemoViewController: UIViewController {
                 scrollPosition: scrollToSelection ? .middle : .none
             )
         }
-    }
-}
-
-
-// MARK: - MigrationsDemoViewController: ListObserver
-
-extension MigrationsDemoViewController: ListObserver {
-    
-    // MARK: ListObserver
-    
-    func listMonitorWillChange(_ monitor: ListMonitor<NSManagedObject>) { }
-    
-    func listMonitorDidChange(_ monitor: ListMonitor<NSManagedObject>) {
-        
-        if self.lastSelectedIndexPath == nil && self.listMonitor?.numberOfObjectsInSection(0) > 0 {
-            
-            self.tableView?.reloadData()
-            self.setSelectedIndexPath(IndexPath(row: 0, section: 0), scrollToSelection: false)
-        }
-        else {
-            
-            self.updateDisplay(reloadData: true, scrollToSelection: true, animated: true)
-        }
-    }
-}
-
-
-// MARK: - MigrationsDemoViewController: UITableViewDataSource, UITableViewDelegate
-
-extension MigrationsDemoViewController: UITableViewDataSource, UITableViewDelegate {
-    
-    // MARK: UITableViewDataSource
-    
-    @objc dynamic func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return self.listMonitor?.numberOfObjectsInSection(0) ?? 0
-    }
-    
-    @objc dynamic func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "OrganismTableViewCell", for: indexPath) as! OrganismTableViewCell
-        
-        let dna = (self.listMonitor?[indexPath] as? OrganismProtocol)?.dna.description ?? ""
-        cell.dnaLabel?.text = "DNA: \(dna)"
-        cell.mutateButtonHandler = { [weak self] _ -> Void in
-            
-            guard let `self` = self,
-                let dataStack = self.dataStack,
-                let organism = self.listMonitor?[indexPath] else {
-                    
-                    return
-            }
-            
-            self.setSelectedIndexPath(indexPath, scrollToSelection: false)
-            self.setEnabled(false)
-            dataStack.beginAsynchronous { [weak self] (transaction) -> Void in
-                
-                let organism = transaction.edit(organism) as! OrganismProtocol
-                organism.mutate()
-                
-                transaction.commit { _ -> Void in
-                    
-                    self?.setEnabled(true)
-                }
-            }
-        }
-        return cell
-    }
-    
-    
-    // MARK: UITableViewDelegate
-    
-    @objc dynamic func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        self.setSelectedIndexPath(indexPath, scrollToSelection: false)
     }
 }

@@ -108,7 +108,7 @@ internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObjec
             return
         }
         
-        guard let actualType = NSFetchedResultsChangeType(rawValue: type.rawValue) else {
+        guard var actualType = NSFetchedResultsChangeType(rawValue: type.rawValue) else {
             
             // This fix is for a bug where iOS passes 0 for NSFetchedResultsChangeType, but this is not a valid enum case.
             // Swift will then always execute the first case of the switch causing strange behaviour.
@@ -123,19 +123,12 @@ internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObjec
 
         if #available(iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
          
-            // iOS 10 is better, but still not perfect...
+            // I don't know if iOS 10 even attempted to fix this mess...
             if case .update = actualType,
-                let indexPath = indexPath,
-                let newIndexPath = newIndexPath {
+                indexPath != nil,
+                newIndexPath != nil {
                 
-                self.handler?.controller(
-                    controller,
-                    didChangeObject: anObject,
-                    atIndexPath: indexPath,
-                    forChangeType: .move,
-                    newIndexPath: newIndexPath
-                )
-                return
+                actualType = .move
             }
         }
         

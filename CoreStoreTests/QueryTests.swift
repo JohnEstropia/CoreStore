@@ -1170,7 +1170,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let values: [NSDictionary]? = stack.queryAttributes(
+                let values = stack.queryAttributes(
                     from,
                     Select(
                         "testBoolean",
@@ -1185,7 +1185,7 @@ class QueryTests: BaseTestDataTestCase {
                 )
                 XCTAssertNotNil(values)
                 XCTAssertEqual(
-                    values!,
+                    values as Any as! [NSDictionary],
                     [
                         [
                             "testBoolean": NSNumber(value: false),
@@ -1221,7 +1221,7 @@ class QueryTests: BaseTestDataTestCase {
             let queryClauses: [QueryClause] = []
             do {
                 
-                let values: [NSDictionary]? = stack.queryAttributes(
+                let values = stack.queryAttributes(
                     from,
                     Select(
                         .sum("testBoolean"),
@@ -1234,7 +1234,7 @@ class QueryTests: BaseTestDataTestCase {
                 )
                 XCTAssertNotNil(values)
                 XCTAssertEqual(
-                    values!,
+                    values as Any as! [NSDictionary],
                     [
                         [
                             "sum(testBoolean)": 3,
@@ -1248,7 +1248,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let values: [NSDictionary]? = stack.queryAttributes(
+                let values = stack.queryAttributes(
                     from,
                     Select(
                         .sum("testBoolean", as: "testSum"),
@@ -1261,7 +1261,7 @@ class QueryTests: BaseTestDataTestCase {
                 )
                 XCTAssertNotNil(values)
                 XCTAssertEqual(
-                    values!,
+                    values as Any as! [NSDictionary],
                     [
                         [
                             "testSum": 3,

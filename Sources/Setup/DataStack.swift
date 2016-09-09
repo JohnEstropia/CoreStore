@@ -385,18 +385,15 @@ public final class DataStack {
     internal let mainContext: NSManagedObjectContext
     internal let model: NSManagedObjectModel
     internal let migrationChain: MigrationChain
-    internal let childTransactionQueue = DispatchQueue(serialWith: "com.coreStore.dataStack.childTransactionQueue")
-    internal let storeMetadataUpdateQueue = DispatchQueue(concurrentWith: "com.coreStore.persistentStoreBarrierQueue")
+    internal let childTransactionQueue = DispatchQueue.serial("com.coreStore.dataStack.childTransactionQueue")
+    internal let storeMetadataUpdateQueue = DispatchQueue.concurrent("com.coreStore.persistentStoreBarrierQueue")
     internal let migrationQueue: OperationQueue = {
         
         let migrationQueue = OperationQueue()
         migrationQueue.maxConcurrentOperationCount = 1
         migrationQueue.name = "com.coreStore.migrationOperationQueue"
         migrationQueue.qualityOfService = .utility
-        migrationQueue.underlyingQueue = DispatchQueue(
-            serialWith: "com.coreStore.migrationQueue",
-            qos: .userInitiated
-        )
+        migrationQueue.underlyingQueue = DispatchQueue.serial("com.coreStore.migrationQueue", qos: .userInitiated)
         return migrationQueue
     }()
     

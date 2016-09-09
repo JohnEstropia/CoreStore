@@ -14,17 +14,17 @@ private struct Static {
     
     enum Filter: String {
         
-        case All = "All Colors"
-        case Light = "Light Colors"
-        case Dark = "Dark Colors"
+        case all = "All Colors"
+        case light = "Light Colors"
+        case dark = "Dark Colors"
         
         func next() -> Filter {
             
             switch self {
                 
-            case All: return .Light
-            case Light: return .Dark
-            case Dark: return .All
+            case .all: return .light
+            case .light: return .dark
+            case .dark: return .all
             }
         }
         
@@ -32,14 +32,14 @@ private struct Static {
             
             switch self {
                 
-            case .All: return Where(true)
-            case .Light: return Where("brightness >= 0.9")
-            case .Dark: return Where("brightness <= 0.4")
+            case .all: return Where(true)
+            case .light: return Where("brightness >= 0.9")
+            case .dark: return Where("brightness <= 0.4")
             }
         }
     }
     
-    static var filter = Filter.All {
+    static var filter = Filter.all {
         
         didSet {
             
@@ -86,7 +86,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         
         let navigationItem = self.navigationItem
         navigationItem.leftBarButtonItems = [
-            self.editButtonItem(),
+            self.editButtonItem,
             UIBarButtonItem(
                 barButtonSystemItem: .trash,
                 target: self,
@@ -115,11 +115,11 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         self.setTable(enabled: !Static.palettes.isPendingRefetch)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         super.prepare(for: segue, sender: sender)
         
-        switch (segue.identifier, segue.destinationViewController, sender) {
+        switch (segue.identifier, segue.destination, sender) {
             
         case ("ObjectObserverDemoViewController"?, let destinationViewController as ObjectObserverDemoViewController, let palette as Palette):
             destinationViewController.palette = palette

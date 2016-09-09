@@ -135,7 +135,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         
         if let mapView = self.mapView {
             
-            mapView.removeAnnotations(mapView.annotations ?? [])
+            mapView.removeAnnotations(mapView.annotations)
             mapView.addAnnotation(object)
             mapView.setCenter(object.coordinate, animated: true)
             mapView.selectAnnotation(object, animated: true)

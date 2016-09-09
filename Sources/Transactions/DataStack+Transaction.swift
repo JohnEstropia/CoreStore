@@ -69,10 +69,7 @@ public extension DataStack {
         
         return UnsafeDataTransaction(
             mainContext: self.rootSavingContext,
-            queue: DispatchQueue(
-                serialWith: "com.coreStore.dataStack.unsafeTransactionQueue",
-                qos: .userInitiated
-            ),
+            queue: DispatchQueue.serial("com.coreStore.dataStack.unsafeTransactionQueue", qos: .userInitiated),
             supportsUndo: supportsUndo
         )
     }

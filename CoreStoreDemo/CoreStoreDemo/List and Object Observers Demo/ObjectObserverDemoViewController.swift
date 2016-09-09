@@ -98,7 +98,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         self.colorView?.alpha = 0.3
         
         self.hsbLabel?.text = "Deleted"
-        self.hsbLabel?.textColor = UIColor.red()
+        self.hsbLabel?.textColor = UIColor.red
         
         self.hueSlider?.isEnabled = false
         self.saturationSlider?.isEnabled = false

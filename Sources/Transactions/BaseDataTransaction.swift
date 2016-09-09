@@ -451,7 +451,7 @@ public /*abstract*/ class BaseDataTransaction {
     
     internal let context: NSManagedObjectContext
     internal let transactionQueue: DispatchQueue
-    internal let childTransactionQueue = DispatchQueue(serialWith: "com.corestore.datastack.childtransactionqueue")
+    internal let childTransactionQueue = DispatchQueue.serial("com.corestore.datastack.childtransactionqueue")
     internal let supportsUndo: Bool
     internal let bypassesQueueing: Bool
     

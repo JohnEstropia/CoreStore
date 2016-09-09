@@ -97,13 +97,13 @@ class BaseTestCase: XCTestCase {
     @nonobjc
     func checkExpectationsImmediately() {
         
-        self.waitForExpectations(timeout: 0, handler: nil)
+        self.waitForExpectations(timeout: 0, handler: { _ in })
     }
     
     @nonobjc
     func waitAndCheckExpectations() {
         
-        self.waitForExpectations(timeout: 10, handler: nil)
+        self.waitForExpectations(timeout: 10, handler: {_ in })
     }
     
     // MARK: XCTestCase

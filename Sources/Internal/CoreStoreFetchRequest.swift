@@ -45,9 +45,18 @@ internal final class CoreStoreFetchRequest<T: NSFetchRequestResult>: NSFetchRequ
     // MARK: NSFetchRequest
     
     @objc
-    override var affectedStores: [NSPersistentStore]? {
+    dynamic override var affectedStores: [NSPersistentStore]? {
         
-        get { return super.affectedStores }
-        set { super.affectedStores = newValue }
+        get {
+            
+            return super.affectedStores
+//            let affectedStores: NSArray? = super.affectedStores.flatMap({ NSArray(array: $0) } )
+//            return affectedStores as? [NSPersistentStore]
+        }
+        set {
+            
+            super.affectedStores = newValue
+//            super.affectedStores = newValue.flatMap(Array.init)
+        }
     }
 }

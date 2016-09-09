@@ -51,7 +51,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
     
     func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        GCDQueue.main.async { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             
             let levelString: String
             switch level {
@@ -61,15 +61,15 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
             case .warning: levelString = "Warning"
             case .fatal: levelString = "Fatal"
             }
-            self?.textView?.insertText("\((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Log:\(levelString)] \(message)\n\n")
+            self?.textView?.insertText("\((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Log:\(levelString)] \(message)\n\n")
         }
     }
     
     func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        GCDQueue.main.async { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             
-            self?.textView?.insertText("\((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Error] \(message): \(error)\n\n")
+            self?.textView?.insertText("\((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Error] \(message): \(error)\n\n")
         }
     }
     
@@ -81,9 +81,9 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         }
         
         let messageString = message()
-        GCDQueue.main.async { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             
-            self?.textView?.insertText("\((String(fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(messageString)\n\n")
+            self?.textView?.insertText("\((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ [Assert] \(messageString)\n\n")
         }
     }
     

@@ -12,23 +12,23 @@ class QueryingResultsViewController: UITableViewController {
     
     // MARK: Public
     
-    func set(value: AnyObject?, title: String) {
+    func set(value: Any?, title: String) {
         
         switch value {
             
-        case (let array as [AnyObject])?:
-            self.values = array.map { (item: AnyObject) -> (title: String, detail: String) in
+        case (let array as [Any])?:
+            self.values = array.map { (item: Any) -> (title: String, detail: String) in
                 (
-                    title: item.description,
-                    detail: String(reflecting: item.dynamicType)
+                    title: String(describing: item),
+                    detail: String(reflecting: type(of: item))
                 )
             }
             
         case let item?:
             self.values = [
                 (
-                    title: item.description,
-                    detail: String(reflecting: item.dynamicType)
+                    title: String(describing: item),
+                    detail: String(reflecting: type(of: item))
                 )
             ]
             

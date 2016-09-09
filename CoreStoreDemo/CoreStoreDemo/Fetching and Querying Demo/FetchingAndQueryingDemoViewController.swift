@@ -27,9 +27,9 @@ private struct Static {
             
             transaction.deleteAll(From<TimeZone>())
             
-            for name in Foundation.TimeZone.knownTimeZoneNames {
+            for name in NSTimeZone.knownTimeZoneNames {
                 
-                let rawTimeZone = Foundation.TimeZone(name: name)!
+                let rawTimeZone = NSTimeZone(name: name)!
                 let cachedTimeZone = transaction.create(Into<TimeZone>())
                 
                 cachedTimeZone.name = rawTimeZone.name
@@ -73,13 +73,13 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         self.present(alert, animated: true, completion: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         super.prepare(for: segue, sender: sender)
         
         if let indexPath = sender as? IndexPath {
             
-            switch segue.destinationViewController {
+            switch segue.destination {
                 
             case let controller as FetchingResultsViewController:
                 let item = self.fetchingItems[indexPath.row]
@@ -222,7 +222,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
     private let queryingItems = [
         (
             title: "Number of Time Zones",
-            query: { () -> AnyObject in
+            query: { () -> Any in
                 
                 return Static.timeZonesStack.queryValue(
                     From<TimeZone>(),
@@ -232,7 +232,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         ),
         (
             title: "Abbreviation For Tokyo's Time Zone",
-            query: { () -> AnyObject in
+            query: { () -> Any in
                 
                 return Static.timeZonesStack.queryValue(
                     From<TimeZone>(),
@@ -243,7 +243,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         ),
         (
             title: "All Abbreviations",
-            query: { () -> AnyObject in
+            query: { () -> Any in
                 
                 return Static.timeZonesStack.queryAttributes(
                     From<TimeZone>(),
@@ -254,7 +254,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         ),
         (
             title: "Number of Countries per Time Zone",
-            query: { () -> AnyObject in
+            query: { () -> Any in
                 
                 return Static.timeZonesStack.queryAttributes(
                     From<TimeZone>(),
@@ -266,7 +266,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
         ),
         (
             title: "Number of Countries with Summer Time",
-            query: { () -> AnyObject in
+            query: { () -> Any in
                 
                 return Static.timeZonesStack.queryAttributes(
                     From<TimeZone>(),
