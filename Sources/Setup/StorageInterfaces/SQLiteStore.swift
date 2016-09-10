@@ -171,8 +171,8 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
             
             let fileManager = NSFileManager.defaultManager()
             try fileManager.removeItemAtURL(fileURL)
-            _ = try fileManager.removeItemAtPath("\(fileURL.absoluteString)-wal")
-            _ = try fileManager.removeItemAtPath("\(fileURL.absoluteString)-shm")
+            _ = try? fileManager.removeItemAtPath("\(fileURL.absoluteString)-wal")
+            _ = try? fileManager.removeItemAtPath("\(fileURL.absoluteString)-shm")
             return
         }
         try cs_autoreleasepool {

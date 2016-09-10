@@ -433,8 +433,8 @@ public class ICloudStore: CloudStorage {
             
             let fileManager = NSFileManager.defaultManager()
             try fileManager.removeItemAtURL(cacheFileURL)
-            _ = try fileManager.removeItemAtPath("\(cacheFileURL.absoluteString)-wal")
-            _ = try fileManager.removeItemAtPath("\(cacheFileURL.absoluteString)-shm")
+            _ = try? fileManager.removeItemAtPath("\(cacheFileURL.absoluteString)-wal")
+            _ = try? fileManager.removeItemAtPath("\(cacheFileURL.absoluteString)-shm")
             return
         }
         try cs_autoreleasepool {
