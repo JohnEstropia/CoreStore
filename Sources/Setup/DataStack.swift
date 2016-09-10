@@ -263,7 +263,7 @@ public final class DataStack {
                         URL: fileURL,
                         options: storeOptions
                     )
-                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                    _ = try storage.eraseStorageAndWait(soureModel: self.model[metadata])
                     
                     try self.createPersistentStoreFromStorage(
                         storage,
@@ -359,7 +359,7 @@ public final class DataStack {
                         URL: cacheFileURL,
                         options: storeOptions
                     )
-                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                    _ = try storage.eraseStorageAndWait(soureModel: self.model[metadata])
                     
                     try self.createPersistentStoreFromStorage(
                         storage,

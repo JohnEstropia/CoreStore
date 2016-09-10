@@ -162,11 +162,19 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
-    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws {
+    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel?) throws {
         
         // TODO: check if attached to persistent store
         
         let fileURL = self.fileURL
+        guard let soureModel = soureModel else {
+            
+            let fileManager = NSFileManager.defaultManager()
+            try fileManager.removeItemAtURL(fileURL)
+            _ = try fileManager.removeItemAtPath("\(fileURL.absoluteString)-wal")
+            _ = try fileManager.removeItemAtPath("\(fileURL.absoluteString)-shm")
+            return
+        }
         try cs_autoreleasepool {
             
             let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)

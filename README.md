@@ -308,7 +308,7 @@ public protocol LocalStorage: StorageInterface {
     var mappingModelBundles: [NSBundle] { get }
     var localStorageOptions: LocalStorageOptions { get }
     func storeOptionsForOptions(options: LocalStorageOptions) -> [String: AnyObject]?
-    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel) throws
+    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel?) throws
 }
 ```
 If you have custom `NSIncrementalStore` or `NSAtomicStore` subclasses, you can implement this protocol and use it similarly to `SQLiteStore`.

@@ -154,7 +154,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
      Called by the `CSDataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `CSSQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
     @objc
-    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel, error: NSErrorPointer) -> Bool {
+    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel?, error: NSErrorPointer) -> Bool {
         
         return bridge(error) {
             

@@ -223,7 +223,7 @@ public extension DataStack {
                                 
                                 do {
                                     
-                                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                                    _ = try storage.eraseStorageAndWait(soureModel: self.model[metadata])
                                     try self.addStorageAndWait(storage)
                                     
                                     GCDQueue.Main.async {
@@ -388,7 +388,7 @@ public extension DataStack {
                         URL: cacheFileURL,
                         options: storeOptions
                     )
-                    try _ = self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                    _ = try storage.eraseStorageAndWait(soureModel: self.model[metadata])
                     
                     try self.createPersistentStoreFromStorage(
                         storage,
