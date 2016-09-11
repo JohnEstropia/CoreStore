@@ -118,12 +118,18 @@ internal func bridge<T: CoreStoreSwiftType>(error: NSErrorPointer, @noescape _ c
     do {
         
         let result = try closure()
-        error.memory = nil
+        if error != nil {
+            
+            error.memory = nil
+        }
         return result.bridgeToObjectiveC
     }
     catch let swiftError {
         
-        error.memory = swiftError.bridgeToObjectiveC
+        if error != nil {
+            
+            error.memory = swiftError.bridgeToObjectiveC
+        }
         return nil
     }
 }
@@ -133,12 +139,18 @@ internal func bridge(error: NSErrorPointer, @noescape _ closure: () throws -> Vo
     do {
         
         try closure()
-        error.memory = nil
+        if error != nil {
+            
+            error.memory = nil
+        }
         return true
     }
     catch let swiftError {
         
-        error.memory = swiftError.bridgeToObjectiveC
+        if error != nil {
+            
+            error.memory = swiftError.bridgeToObjectiveC
+        }
         return false
     }
 }
@@ -148,12 +160,18 @@ internal func bridge<T>(error: NSErrorPointer, @noescape _ closure: () throws ->
     do {
         
         let result = try closure()
-        error.memory = nil
+        if error != nil {
+            
+            error.memory = nil
+        }
         return result
     }
     catch let swiftError {
         
-        error.memory = swiftError.bridgeToObjectiveC
+        if error != nil {
+            
+            error.memory = swiftError.bridgeToObjectiveC
+        }
         return nil
     }
 }
@@ -163,12 +181,18 @@ internal func bridge<T: CoreStoreSwiftType>(error: NSErrorPointer, @noescape _ c
     do {
         
         let result = try closure()
-        error.memory = nil
+        if error != nil {
+            
+            error.memory = nil
+        }
         return result.map { $0.bridgeToObjectiveC }
     }
     catch let swiftError {
         
-        error.memory = swiftError.bridgeToObjectiveC
+        if error != nil {
+            
+            error.memory = swiftError.bridgeToObjectiveC
+        }
         return nil
     }
 }

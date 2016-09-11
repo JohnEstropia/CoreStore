@@ -174,7 +174,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     
     // MARK: CoreStoreObjectiveCType
     
-    internal typealias SwiftType = UnsafeDataTransaction
+    public typealias SwiftType = UnsafeDataTransaction
     
     public override var bridgeToSwift: UnsafeDataTransaction {
         
@@ -183,21 +183,21 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     
     public required init(_ swiftValue: UnsafeDataTransaction) {
         
-        super.init(swiftValue)
+        super.init(swiftValue as BaseDataTransaction)
     }
     
     public required init(_ swiftValue: BaseDataTransaction) {
         
-        fatalError("init(_:) requires an UnsafeDataTransaction instance")
+        super.init(swiftValue as! UnsafeDataTransaction)
     }
 }
 
 
 // MARK: - UnsafeDataTransaction
 
-extension UnsafeDataTransaction {
+extension UnsafeDataTransaction: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    internal typealias ObjectiveCType = CSUnsafeDataTransaction
+    public typealias ObjectiveCType = CSUnsafeDataTransaction
 }

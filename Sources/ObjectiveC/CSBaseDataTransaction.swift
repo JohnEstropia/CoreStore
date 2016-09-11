@@ -292,8 +292,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     
     // MARK: CoreStoreObjectiveCType
     
-    public typealias SwiftType = BaseDataTransaction
-    
     public required init(_ swiftValue: BaseDataTransaction) {
         
         self.swiftTransaction = swiftValue
@@ -312,11 +310,11 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
 }
 
 
-// MARK: - BaseDataTransaction
-
-extension BaseDataTransaction: CoreStoreSwiftType {
-    
-    // MARK: CoreStoreSwiftType
-    
-    public typealias ObjectiveCType = CSBaseDataTransaction
-}
+//// MARK: - BaseDataTransaction
+//
+//extension BaseDataTransaction: CoreStoreSwiftType {
+//    
+//    // MARK: CoreStoreSwiftType
+//    
+//    public typealias ObjectiveCType = CSBaseDataTransaction
+//}
