@@ -19,9 +19,9 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 </p>
 
 * iOS 7+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
-- for Swift 2.2 (Xcode 7.3 and iOS 7): Use version [2.0.6](https://github.com/JohnEstropia/CoreStore/releases/tag/2.0.6) or the [master_ios_7_to_9](https://github.com/JohnEstropia/CoreStore/tree/master_ios_7_to_9) branch
-- for Swift 2.3 (Xcode 8): Use version [2.1.0](https://github.com/JohnEstropia/CoreStore/releases/tag/2.1.0) or the [master](https://github.com/JohnEstropia/CoreStore/tree/master) branch
-- for Swift 3 (Xcode 8): Use the [swift3_develop](https://github.com/JohnEstropia/CoreStore/tree/swift3_develop) branch
+  - for Swift 2.2 (Xcode 7.3 and iOS 7): Use version [2.0.6](https://github.com/JohnEstropia/CoreStore/releases/tag/2.0.6) or the [master_ios_7_to_9](https://github.com/JohnEstropia/CoreStore/tree/master_ios_7_to_9) branch
+  - for Swift 2.3 (Xcode 8): Use version [2.1.0](https://github.com/JohnEstropia/CoreStore/releases/tag/2.1.0) or the [master](https://github.com/JohnEstropia/CoreStore/tree/master) branch
+  - for Swift 3 (Xcode 8): Use the [swift3_develop](https://github.com/JohnEstropia/CoreStore/tree/swift3_develop) branch
 
 * **New in CoreStore 2.0:** Objective-C support! All CoreStore types now have their corresponding Objective-C "bridging classes". Perfect for projects transitioning from Objective-C to Swift!
 
