@@ -17,8 +17,12 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <a href="https://twitter.com/JohnEstropia"><img alt="Reach me on Twitter!" src="https://img.shields.io/badge/twitter-%40JohnEstropia-3498db.svg" /></a>
 <br />
 </p>
-* Swift 2.2 (Xcode 7.3)
+
 * iOS 7+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
+- for Swift 2.2 (Xcode 7.3 and iOS 7): Use version [2.0.6](https://github.com/JohnEstropia/CoreStore/releases/tag/2.0.6) or the [master_ios_7_to_9](https://github.com/JohnEstropia/CoreStore/tree/master_ios_7_to_9) branch
+- for Swift 2.3 (Xcode 8): Use version [2.1.0](https://github.com/JohnEstropia/CoreStore/releases/tag/2.1.0) or the [master](https://github.com/JohnEstropia/CoreStore/tree/master) branch
+- for Swift 3 (Xcode 8): Use the [swift3_develop](https://github.com/JohnEstropia/CoreStore/tree/swift3_develop) branch
+
 * **New in CoreStore 2.0:** Objective-C support! All CoreStore types now have their corresponding Objective-C "bridging classes". Perfect for projects transitioning from Objective-C to Swift!
 
 Upgrading from CoreStore 1.x to 2.x? Check out the [new features](#new-in-corestore-20) and make sure to read the [Migration guide](#upgrading-from-1xx-to-2xx).
@@ -1411,13 +1415,7 @@ NSArray<MYPerson *> *objects =
                               CSSortAscending(CSKeyPath(MYPerson, firstName)), nil)]];
 ```
 
-To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C source files. For projects that support iOS 7 (and thus cannot build CoreStore as a module), you will need to add 
-```
-SWIFT_OBJC_INTERFACE_HEADER_NAME=$(SWIFT_OBJC_INTERFACE_HEADER_NAME)
-```
-to your target's `GCC_PREPROCESSOR_DEFINITIONS` build setting.
-
-<img width="797" alt="GCC_PREPROCESSOR_DEFINITIONS" src="https://cloud.githubusercontent.com/assets/3029684/16714547/92497fc4-4701-11e6-81db-6b1a11743cc5.png" />
+To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C source files.
 
 
 # Roadmap
@@ -1429,14 +1427,14 @@ to your target's `GCC_PREPROCESSOR_DEFINITIONS` build setting.
 
 # Installation
 - Requires:
-    - iOS 7 SDK and above
-    - Swift 2.2 (Xcode 7.3)
+    - iOS 8 SDK and above
+    - Swift 2.3 (Xcode 8)
 - Dependencies:
     - [GCDKit](https://github.com/JohnEstropia/GCDKit)
 - Other notes:
     - The `com.apple.CoreData.ConcurrencyDebug` debug argument should be turned off for the app. CoreStore already guarantees safety for you by making the main context read-only, and by only executing transactions serially.
 
-### Install with CocoaPods (iOS 7 not supported)
+### Install with CocoaPods
 ```
 pod 'CoreStore'
 ```
@@ -1445,8 +1443,8 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 2.0.0
-github "JohnEstropia/GCDKit" >= 1.2.5
+github "JohnEstropia/CoreStore" >= 2.1.0
+github "JohnEstropia/GCDKit" >= 1.3.0
 ```
 and run 
 ```
@@ -1459,7 +1457,7 @@ git submodule add https://github.com/JohnEstropia/CoreStore.git <destination dir
 ```
 Drag and drop **CoreStore.xcodeproj** to your project.
 
-#### To install as a framework (iOS 7 not supported):
+#### To install as a framework:
 Drag and drop **CoreStore.xcodeproj** to your project.
 
 #### To include directly in your app module:
@@ -1469,15 +1467,6 @@ Add all *.swift* files to your project.
 ### Objective-C support
 
 To use the Objective-C syntax sugars, import *CoreStoreBridge.h* in your *.m* source files.
-
-For projects that support iOS 7 (and thus cannot build CoreStore as a module), you will need to add 
-```
-SWIFT_OBJC_INTERFACE_HEADER_NAME=$(SWIFT_OBJC_INTERFACE_HEADER_NAME)
-```
-to your target's `GCC_PREPROCESSOR_DEFINITIONS` build setting:
-
-<img width="797" alt="GCC_PREPROCESSOR_DEFINITIONS" src="https://cloud.githubusercontent.com/assets/3029684/16714547/92497fc4-4701-11e6-81db-6b1a11743cc5.png" />
-
 
 # Changesets
 ### Upgrading from 1.x.x to 2.x.x

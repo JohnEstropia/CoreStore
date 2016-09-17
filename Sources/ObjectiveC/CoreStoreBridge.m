@@ -26,22 +26,7 @@
 
 #import "CoreStoreBridge.h"
 
-#if USE_FRAMEWORKS
 #import <CoreStore/CoreStore-Swift.h>
-
-#elif !defined(SWIFT_OBJC_INTERFACE_HEADER_NAME)
-#error Add "SWIFT_OBJC_INTERFACE_HEADER_NAME=$(SWIFT_OBJC_INTERFACE_HEADER_NAME)" to the project's GCC_PREPROCESSOR_DEFINITIONS settings
-
-#elif __has_include(SWIFT_OBJC_INTERFACE_HEADER_NAME)
-#import SWIFT_OBJC_INTERFACE_HEADER_NAME
-
-#else
-#define _STRINGIFY(x)    #x
-#define STRINGIFY(x)    _STRINGIFY(x)
-#import STRINGIFY(SWIFT_OBJC_INTERFACE_HEADER_NAME)
-
-#endif
-
 
 
 #pragma mark - Clauses
