@@ -11,7 +11,7 @@ env:
   - LANG=en_US.UTF-8
   matrix:
     - DESTINATION="OS=10.0,name=iPhone 7"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.0  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=9.3,name=iPhone 6s"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=9.3,name=iPhone 6S"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.0  RUN_TESTS="YES" POD_LINT="NO"
     - DESTINATION="OS=9.0,name=iPhone 6 Plus"      SCHEME="CoreStore iOS"     SDK=iphonesimulator10.0  RUN_TESTS="YES" POD_LINT="NO"
     - DESTINATION="OS=8.4,name=iPhone 6"           SCHEME="CoreStore iOS"     SDK=iphonesimulator10.0  RUN_TESTS="YES" POD_LINT="NO"
     - DESTINATION="OS=8.3,name=iPhone 5S"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.0  RUN_TESTS="YES" POD_LINT="NO"
