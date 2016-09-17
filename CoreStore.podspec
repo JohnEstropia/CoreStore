@@ -20,5 +20,5 @@ Pod::Spec.new do |s|
                               'OTHER_SWIFT_FLAGS[config=Release]' => '-D USE_FRAMEWORKS',
                               'GCC_PREPROCESSOR_DEFINITIONS' => 'USE_FRAMEWORKS=1' }
 
-    s.dependency "GCDKit", "1.2.6"
+    s.dependency "GCDKit", "1.3.0"
 end

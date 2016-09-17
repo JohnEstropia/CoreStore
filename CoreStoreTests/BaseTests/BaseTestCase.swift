@@ -49,8 +49,8 @@ class BaseTestCase: XCTestCase {
                 try stack.addStorageAndWait(
                     SQLiteStore(
                         fileURL: SQLiteStore.defaultRootDirectory
-                            .URLByAppendingPathComponent(NSUUID().UUIDString)
-                            .URLByAppendingPathComponent("\(self.dynamicType)_\(($0 ?? "-null-")).sqlite"),
+                            .URLByAppendingPathComponent(NSUUID().UUIDString)!
+                            .URLByAppendingPathComponent("\(self.dynamicType)_\(($0 ?? "-null-")).sqlite")!,
                         configuration: $0,
                         localStorageOptions: .RecreateStoreOnModelMismatch
                     )

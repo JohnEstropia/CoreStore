@@ -42,7 +42,7 @@ internal extension NSManagedObjectModel {
         }
         
         let modelFileURL = NSURL(fileURLWithPath: modelFilePath)
-        let versionInfoPlistURL = modelFileURL.URLByAppendingPathComponent("VersionInfo.plist", isDirectory: false)
+        let versionInfoPlistURL = modelFileURL.URLByAppendingPathComponent("VersionInfo.plist", isDirectory: false)!
         
         guard let versionInfo = NSDictionary(contentsOfURL: versionInfoPlistURL),
             let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
@@ -83,7 +83,7 @@ internal extension NSManagedObjectModel {
         var modelVersionFileURL: NSURL?
         for modelVersion in modelVersions {
             
-            let fileURL = modelFileURL.URLByAppendingPathComponent("\(modelVersion).mom", isDirectory: false)
+            let fileURL = modelFileURL.URLByAppendingPathComponent("\(modelVersion).mom", isDirectory: false)!
             
             if modelVersion == currentModelVersion {
                 
@@ -190,7 +190,7 @@ internal extension NSManagedObjectModel {
         }
         
         let versionModelFileURL = modelFileURL.URLByAppendingPathComponent("\(modelVersion).mom", isDirectory: false)
-        guard let model = NSManagedObjectModel(contentsOfURL: versionModelFileURL) else {
+        guard let model = NSManagedObjectModel(contentsOfURL: versionModelFileURL!) else {
             
             return nil
         }

@@ -205,15 +205,22 @@ internal extension NSManagedObjectContext {
     internal func fetchCount(fetchRequest: NSFetchRequest) -> Int? {
         
         var count = 0
-        var error: NSError?
+        var countError: ErrorType?
         self.performBlockAndWait {
             
-            count = self.countForFetchRequest(fetchRequest, error: &error)
+            do {
+                
+                count = try self.countForFetchRequest(fetchRequest)
+            }
+            catch {
+                
+                countError = error
+            }
         }
         if count == NSNotFound {
             
             CoreStore.log(
-                CoreStoreError(error),
+                CoreStoreError(countError),
                 "Failed executing fetch request."
             )
             return nil

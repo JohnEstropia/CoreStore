@@ -63,7 +63,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     public init(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), localStorageOptions: LocalStorageOptions = nil) {
         
         self.fileURL = SQLiteStore.defaultRootDirectory
-            .URLByAppendingPathComponent(fileName, isDirectory: false)
+            .URLByAppendingPathComponent(fileName, isDirectory: false)!
         self.configuration = configuration
         self.mappingModelBundles = mappingModelBundles
         self.localStorageOptions = localStorageOptions
@@ -79,7 +79,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
      */
     public init() {
         
-        self.fileURL = SQLiteStore.defaultFileURL
+        self.fileURL = SQLiteStore.defaultFileURL!
         self.configuration = nil
         self.mappingModelBundles = NSBundle.allBundles()
         self.localStorageOptions = nil
@@ -206,15 +206,13 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
         
         return defaultSystemDirectory.URLByAppendingPathComponent(
             NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack",
-            isDirectory: true
-        )
+            isDirectory: true)!
     }()
     
     internal static let defaultFileURL = SQLiteStore.defaultRootDirectory
         .URLByAppendingPathComponent(
             (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData",
-            isDirectory: false
-        )
+            isDirectory: false)!
         .URLByAppendingPathExtension("sqlite")
     
     

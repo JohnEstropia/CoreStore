@@ -66,13 +66,12 @@ final class StorageInterfaceTests: XCTestCase {
         
         let defaultRootDirectory = defaultSystemDirectory.URLByAppendingPathComponent(
             NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack",
-            isDirectory: true
-        )
+            isDirectory: true)!
         let applicationName = (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData"
         
         let defaultFileURL = defaultRootDirectory
-            .URLByAppendingPathComponent(applicationName, isDirectory: false)
-            .URLByAppendingPathExtension("sqlite")
+            .URLByAppendingPathComponent(applicationName, isDirectory: false)!
+            .URLByAppendingPathExtension("sqlite")!
         
         XCTAssertEqual(SQLiteStore.defaultRootDirectory, defaultRootDirectory)
         XCTAssertEqual(SQLiteStore.defaultFileURL, defaultFileURL)
@@ -95,8 +94,8 @@ final class StorageInterfaceTests: XCTestCase {
     dynamic func test_ThatFileURLSQLiteStores_ConfigureCorrectly() {
         
         let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
-            .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)
-            .URLByAppendingPathExtension("db")
+            .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)!
+            .URLByAppendingPathExtension("db")!
         let bundles = [NSBundle(forClass: self.dynamicType)]
         
         let store = SQLiteStore(
@@ -151,8 +150,8 @@ final class StorageInterfaceTests: XCTestCase {
             ).first!
         
         let legacyDefaultFileURL = legacyDefaultRootDirectory
-            .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
-            .URLByAppendingPathExtension("sqlite")
+            .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)!
+            .URLByAppendingPathExtension("sqlite")!
         
         XCTAssertEqual(LegacySQLiteStore.defaultRootDirectory, legacyDefaultRootDirectory)
         XCTAssertEqual(LegacySQLiteStore.defaultFileURL, legacyDefaultFileURL)
@@ -175,8 +174,8 @@ final class StorageInterfaceTests: XCTestCase {
     dynamic func test_ThatFileURLLegacySQLiteStores_ConfigureCorrectly() {
         
         let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
-            .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)
-            .URLByAppendingPathExtension("db")
+            .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)!
+            .URLByAppendingPathExtension("db")!
         let bundles = [NSBundle(forClass: self.dynamicType)]
         
         let store = LegacySQLiteStore(

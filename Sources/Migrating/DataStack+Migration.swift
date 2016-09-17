@@ -756,20 +756,19 @@ public extension DataStack {
         let fileURL = storage.fileURL
         
         let temporaryDirectoryURL = NSURL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-            .URLByAppendingPathComponent(NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack")
+            .URLByAppendingPathComponent(NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack")!
             .URLByAppendingPathComponent(NSProcessInfo().globallyUniqueString)
         
         let fileManager = NSFileManager.defaultManager()
         try! fileManager.createDirectoryAtURL(
-            temporaryDirectoryURL,
+            temporaryDirectoryURL!,
             withIntermediateDirectories: true,
             attributes: nil
         )
         
-        let temporaryFileURL = temporaryDirectoryURL.URLByAppendingPathComponent(
+        let temporaryFileURL = temporaryDirectoryURL!.URLByAppendingPathComponent(
             fileURL.lastPathComponent!,
-            isDirectory: false
-        )
+            isDirectory: false)!
         
         let migrationManager = MigrationManager(
             sourceModel: sourceModel,

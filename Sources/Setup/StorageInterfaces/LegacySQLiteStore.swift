@@ -65,8 +65,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
         
         self.fileURL = LegacySQLiteStore.defaultRootDirectory.URLByAppendingPathComponent(
             fileName,
-            isDirectory: false
-        )
+            isDirectory: false)!
         self.configuration = configuration
         self.mappingModelBundles = mappingModelBundles
         self.localStorageOptions = localStorageOptions
@@ -210,8 +209,8 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     }()
     
     internal static let defaultFileURL = LegacySQLiteStore.defaultRootDirectory
-        .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)
-        .URLByAppendingPathExtension("sqlite")
+        .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)!
+        .URLByAppendingPathExtension("sqlite")!
     
     
     // MARK: Private
