@@ -737,8 +737,8 @@ You can even use external types from popular 3rd-party JSON libraries ([SwiftyJS
 ```swift
 public protocol ImportableObject: class {
     typealias ImportSource
-    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
+    func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws
 }
 ```
 First, set `ImportSource` to the expected type of the data source:
@@ -756,9 +756,9 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
     // ...
 }
 ```
-The actual extraction and assignment of values should be implemented in the `didInsertFromImportSource(...)` method of the `ImportableObject` protocol:
+The actual extraction and assignment of values should be implemented in the `didInsert(from:in:)` method of the `ImportableObject` protocol:
 ```swift
-func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws {
     self.name = source["name"] as? NSString
     self.age = source["age"] as? NSNumber
     // ...
@@ -775,11 +775,11 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
     // ...
 }
 ```
-Doing so tells the transaction to iterate through the array of import sources and calls `shouldInsertFromImportSource(...)` on the `ImportableObject` to determine which instances should be created. You can do validations and return `false` from `shouldInsertFromImportSource(...)` if you want to skip importing from a source and continue on with the other sources in the array.
+Doing so tells the transaction to iterate through the array of import sources and calls `shouldInsert(from:in:)` on the `ImportableObject` to determine which instances should be created. You can do validations and return `false` from `shouldInsert(from:in:)` if you want to skip importing from a source and continue on with the other sources in the array.
 
-If on the other hand, your validation in one of the sources failed in such a manner that all other sources should also be cancelled, you can `throw` from within `didInsertFromImportSource(...)`:
+If on the other hand, your validation in one of the sources failed in such a manner that all other sources should also be cancelled, you can `throw` from within `didInsert(from:in:)`:
 ```swift
-func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws {
     self.name = source["name"] as? NSString
     self.age = source["age"] as? NSNumber
     // ...
@@ -817,11 +817,11 @@ public protocol ImportableUniqueObject: ImportableObject {
     static var uniqueIDKeyPath: String { get }
     var uniqueIDValue: UniqueIDType { get set }
 
-    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    static func shouldUpdateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    static func uniqueIDFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType?
-    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
-    func updateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+    static func shouldInsert(from source: ImportSource, inn transaction: BaseDataTransaction) -> Bool
+    static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
+    static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> UniqueIDType?
+    func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws
+    func update(from source: ImportSource, in transaction: BaseDataTransaction) throws
 }
 ```
 Notice that it has the same insert methods as `ImportableObject`, with additional methods for updates and for specifying the unique ID:
@@ -833,11 +833,11 @@ var uniqueIDValue: NSNumber {
     get { return self.personID }
     set { self.personID = newValue }
 }
-class func uniqueIDFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> NSNumber? {
+class func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> NSNumber? {
     return source["id"] as? NSNumber
 }
 ```
-For `ImportableUniqueObject`, the extraction and assignment of values should be implemented from the `updateFromImportSource(...)` method. The `didInsertFromImportSource(...)` by default calls `updateFromImportSource(...)`, but you can separate the implementation for inserts and updates if needed.
+For `ImportableUniqueObject`, the extraction and assignment of values should be implemented from the `update(from:in:)` method. The `didInsert(from:in:)` by default calls `update(from:in:)`, but you can separate the implementation for inserts and updates if needed.
 
 You can then create/update an object by calling a transaction's `importUniqueObject(...)` method:
 ```swift
@@ -863,7 +863,7 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 }
 ```
 As with `ImportableObject`, you can control wether to skip importing an object by implementing 
-`shouldInsertFromImportSource(...)` and `shouldUpdateFromImportSource(...)`, or to cancel all objects by `throw`ing an error from the `uniqueIDFromImportSource(...)`, `didInsertFromImportSource(...)` or `updateFromImportSource(...)` methods.
+`shouldInsert(from:in:)` and `shouldUpdate(from:in:)`, or to cancel all objects by `throw`ing an error from the `uniqueID(from:in:)`, `didInsert(from:in:)` or `update(from:in:)` methods.
 
 
 ## Fetching and Querying

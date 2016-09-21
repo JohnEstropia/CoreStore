@@ -72,13 +72,13 @@ public protocol ImportableUniqueObject: ImportableObject {
     var uniqueIDValue: UniqueIDType { get set }
     
     /**
-     Return `true` if an object should be created from `source`. Return `false` to ignore and skip `source`. The default implementation returns the value returned by the `shouldUpdateFromImportSource(:inTransaction:)` implementation.
+     Return `true` if an object should be created from `source`. Return `false` to ignore and skip `source`. The default implementation returns the value returned by the `shouldUpdate(from:in:)` implementation.
      
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      - returns: `true` if an object should be created from `source`. Return `false` to ignore.
      */
-    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
+    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
     
     /**
      Return `true` if an object should be updated from `source`. Return `false` to ignore and skip `source`. The default implementation returns `true`.
@@ -87,24 +87,24 @@ public protocol ImportableUniqueObject: ImportableObject {
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      - returns: `true` if an object should be updated from `source`. Return `false` to ignore.
      */
-    static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
+    static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
     
     /**
-     Return the unique ID as extracted from `source`. This method is called before `shouldInsertFromImportSource(...)` or `shouldUpdateFromImportSource(...)`. Return `nil` to skip importing from `source`. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
+     Return the unique ID as extracted from `source`. This method is called before `shouldInsert(from:in:)` or `shouldUpdate(from:in:)`. Return `nil` to skip importing from `source`. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
      
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      - returns: the unique ID as extracted from `source`, or `nil` to skip importing from `source`.
      */
-    static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType?
+    static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> UniqueIDType?
     
     /**
-     Implements the actual importing of data from `source`. This method is called just after the object is created and assigned its unique ID as returned from `uniqueIDFromImportSource(...)`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled. The default implementation simply calls `updateFromImportSource(...)`.
+     Implements the actual importing of data from `source`. This method is called just after the object is created and assigned its unique ID as returned from `uniqueID(from:in:)`. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled. The default implementation simply calls `update(from:in:)`.
      
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      */
-    func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+    func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws
     
     /**
      Implements the actual importing of data from `source`. This method is called just after the existing object is fetched using its unique ID. Implementers should pull values from `source` and assign them to the receiver's attributes. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
@@ -112,6 +112,24 @@ public protocol ImportableUniqueObject: ImportableObject {
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      */
+    func update(from source: ImportSource, in transaction: BaseDataTransaction) throws
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated: 3.0.0, renamed: "shouldInsert(from:in:)")
+    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
+    
+    @available(*, deprecated: 3.0.0, renamed: "shouldUpdate(from:in:)")
+    static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
+    
+    @available(*, deprecated: 3.0.0, renamed: "uniqueID(from:in:)")
+    static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType?
+    
+    @available(*, deprecated: 3.0.0, renamed: "didInsert(from:in:)")
+    func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+    
+    @available(*, deprecated: 3.0.0, renamed: "update(from:in:)")
     func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
 }
 
@@ -120,18 +138,46 @@ public protocol ImportableUniqueObject: ImportableObject {
 
 public extension ImportableUniqueObject {
     
-    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
         
-        return self.shouldUpdateFromImportSource(source, inTransaction: transaction)
+        return Self.shouldUpdate(from: source, in: transaction)
     }
     
-    static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+    static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool{
         
         return true
     }
     
+    func didInsert(from source: Self.ImportSource, in transaction: BaseDataTransaction) throws {
+        
+        try self.update(from: source, in: transaction)
+    }
+    
+    
+    // MARK: Deprecated
+    
+    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+        
+        return Self.shouldInsert(from: source, in: transaction)
+    }
+    
+    static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+        
+        return Self.shouldUpdate(from: source, in: transaction)
+    }
+    
+    static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType? {
+        
+        return try Self.uniqueID(from: source, in: transaction)
+    }
+    
     func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
-        try self.updateFromImportSource(source, inTransaction: transaction)
+        try self.didInsert(from: source, in: transaction)
+    }
+    
+    func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+        
+        try self.update(from: source, in: transaction)
     }
 }

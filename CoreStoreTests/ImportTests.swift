@@ -904,12 +904,12 @@ extension TestEntity1: ImportableUniqueObject {
     
     typealias ImportSource = [String: Any]
     
-    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
         
         return source["skip_insert"] == nil
     }
     
-    func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+    func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws {
         
         if let _ = source["throw_on_insert"] {
             
@@ -951,12 +951,12 @@ extension TestEntity1: ImportableUniqueObject {
         }
     }
     
-    static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+    static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
         
         return source["skip_update"] == nil
     }
     
-    static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> NSNumber? {
+    static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> NSNumber? {
         
         if let _ = source["throw_on_id"] {
             
@@ -965,7 +965,7 @@ extension TestEntity1: ImportableUniqueObject {
         return source[(#keyPath(TestEntity1.testEntityID))] as? NSNumber
     }
     
-    func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+    func update(from source: ImportSource, in transaction: BaseDataTransaction) throws {
         
         if let _ = source["throw_on_update"] {
             
