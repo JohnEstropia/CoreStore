@@ -218,3 +218,21 @@ CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CORESTORE_RE
     
     return [[CSWhere alloc] initWithPredicate:predicate];
 }
+
+
+#pragma mark CoreStoreFetchRequest
+
+@interface _CSFetchRequest ()
+@end
+
+@implementation _CSFetchRequest
+
+- (NSArray<NSPersistentStore *> *)affectedStores {
+    
+    // Bugfix for NSFetchRequest messing up memory management for `affectedStores`
+    // http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
+    CFBridgingRetain([super affectedStores]);
+    return [super affectedStores];
+}
+
+@end
