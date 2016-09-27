@@ -81,7 +81,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
-        let fetchRequest = CoreStoreFetchRequest<T>()
+        let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
@@ -134,7 +134,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
-        let fetchRequest = CoreStoreFetchRequest<T>()
+        let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
@@ -187,7 +187,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
-        let fetchRequest = CoreStoreFetchRequest<T>()
+        let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
@@ -237,7 +237,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
-        let fetchRequest = CoreStoreFetchRequest<NSManagedObjectID>()
+        let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
@@ -290,7 +290,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
-        let fetchRequest = CoreStoreFetchRequest<NSManagedObjectID>()
+        let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
@@ -343,7 +343,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
         
-        let fetchRequest = CoreStoreFetchRequest<T>()
+        let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
@@ -406,7 +406,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
-        let fetchRequest = CoreStoreFetchRequest<NSFetchRequestResult>()
+        let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
@@ -500,7 +500,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
-        let fetchRequest = CoreStoreFetchRequest<NSFetchRequestResult>()
+        let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0

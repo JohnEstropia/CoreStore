@@ -94,9 +94,9 @@ final class StorageInterfaceTests: XCTestCase {
     dynamic func test_ThatFileURLSQLiteStores_ConfigureCorrectly() {
         
         let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
-            .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)!
-            .URLByAppendingPathExtension("db")!
-        let bundles = [NSBundle(forClass: self.dynamicType)]
+            .appendingPathComponent(NSUUID().uuidString, isDirectory: false)!
+            .appendingPathExtension("db")
+        let bundles = [Bundle(for: type(of: self))]
         
         let store = SQLiteStore(
             fileURL: fileURL,
@@ -149,8 +149,8 @@ final class StorageInterfaceTests: XCTestCase {
             in: .userDomainMask).first!
         
         let legacyDefaultFileURL = legacyDefaultRootDirectory
-            .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)!
-            .URLByAppendingPathExtension("sqlite")!
+            .appendingPathComponent(DataStack.applicationName, isDirectory: false)
+            .appendingPathExtension("sqlite")
         
         XCTAssertEqual(LegacySQLiteStore.defaultRootDirectory, legacyDefaultRootDirectory)
         XCTAssertEqual(LegacySQLiteStore.defaultFileURL, legacyDefaultFileURL)
@@ -173,9 +173,9 @@ final class StorageInterfaceTests: XCTestCase {
     dynamic func test_ThatFileURLLegacySQLiteStores_ConfigureCorrectly() {
         
         let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
-            .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)!
-            .URLByAppendingPathExtension("db")!
-        let bundles = [NSBundle(forClass: self.dynamicType)]
+            .appendingPathComponent(NSUUID().uuidString, isDirectory: false)!
+            .appendingPathExtension("db")
+        let bundles = [Bundle(for: type(of: self))]
         
         let store = LegacySQLiteStore(
             fileURL: fileURL,

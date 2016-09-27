@@ -1015,7 +1015,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<T>) -> Void)?) {
         
-        let fetchRequest = CoreStoreFetchRequest<T>()
+        let fetchRequest = CoreStoreFetchRequest()
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
         fetchRequest.fetchBatchSize = 20
@@ -1068,7 +1068,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                 self.isPersistentStoreChanging = true
                 
                 guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init),
-                    !Set((self.fetchedResultsController.fetchRequest as! CoreStoreFetchRequest).affectedStores ?? []).intersection(removedStores).isEmpty else {
+                    !Set((self.fetchedResultsController.fetchRequest as Any as! CoreStoreFetchRequest).safeAffectedStores ?? []).intersection(removedStores).isEmpty else {
                         
                         return
                 }
@@ -1089,7 +1089,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                 
                 if !self.isPendingRefetch {
                     
-                    let previousStores = Set((self.fetchedResultsController.fetchRequest as! CoreStoreFetchRequest).safeAffectedStores ?? [])
+                    let previousStores = Set((self.fetchedResultsController.fetchRequest as Any as! CoreStoreFetchRequest).safeAffectedStores ?? [])
                     let currentStores = previousStores
                         .subtracting(note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore] ?? [])
                         .union(note.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore] ?? [])

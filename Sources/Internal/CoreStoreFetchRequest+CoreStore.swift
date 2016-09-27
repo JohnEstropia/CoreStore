@@ -1,5 +1,5 @@
 //
-//  CoreStoreFetchRequest.swift
+//  CoreStoreFetchRequest+CoreStore.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia
@@ -29,9 +29,7 @@ import CoreData
 
 // MARK: - CoreStoreFetchRequest
 
-// Bugfix for NSFetchRequest messing up memory management for `affectedStores`
-// http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
-internal final class CoreStoreFetchRequest<T: NSFetchRequestResult>: NSFetchRequest<NSFetchRequestResult> {
+internal extension CoreStoreFetchRequest {
     
     // MARK: Internal
     
@@ -39,23 +37,5 @@ internal final class CoreStoreFetchRequest<T: NSFetchRequestResult>: NSFetchRequ
     internal func dynamicCast<U: NSFetchRequestResult>() -> NSFetchRequest<U> {
         
         return unsafeBitCast(self, to: NSFetchRequest<U>.self)
-    }
-    
-    
-    // MARK: NSFetchRequest
-    
-    @objc
-    dynamic override var affectedStores: [NSPersistentStore]? {
-        
-        get {
-            
-            // This forced-casting is needed to fix an ARC bug with "affectedStores" mis-retaining the array
-            let affectedStores: NSArray? = super.affectedStores.flatMap({ NSArray(array: $0) } )
-            return affectedStores as? [NSPersistentStore]
-        }
-        set {
-            
-            super.affectedStores = newValue
-        }
     }
 }
