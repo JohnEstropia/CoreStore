@@ -68,7 +68,7 @@ final class GroupByTests: BaseTestCase {
             
             let groupBy = GroupBy("testString")
             
-            let request = NSFetchRequest()
+            let request = CoreStoreFetchRequest()
             _ = From(TestEntity1).applyToFetchRequest(request, context: dataStack.mainContext)
             groupBy.applyToFetchRequest(request)
             

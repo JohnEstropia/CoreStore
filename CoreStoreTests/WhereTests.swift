@@ -142,7 +142,7 @@ final class WhereTests: XCTestCase {
     dynamic func test_ThatWhereClauses_ApplyToFetchRequestsCorrectly() {
         
         let whereClause = Where("key", isEqualTo: "value")
-        let request = NSFetchRequest()
+        let request = CoreStoreFetchRequest()
         whereClause.applyToFetchRequest(request)
         XCTAssertNotNil(request.predicate)
         XCTAssertEqual(request.predicate, whereClause.predicate)

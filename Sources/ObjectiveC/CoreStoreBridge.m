@@ -223,16 +223,35 @@ CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CORESTORE_RE
 #pragma mark CoreStoreFetchRequest
 
 @interface _CSFetchRequest ()
+
+@property (nullable, nonatomic, copy) NSArray<NSPersistentStore *> *safeAffectedStores;
+@property (nullable, nonatomic, assign) CFArrayRef releaseArray;
+
 @end
 
 @implementation _CSFetchRequest
 
-- (NSArray<NSPersistentStore *> *)affectedStores {
+// MARK: NSFetchRequest
+
+- (void)setAffectedStores:(NSArray<NSPersistentStore *> *_Nullable)affectedStores {
     
     // Bugfix for NSFetchRequest messing up memory management for `affectedStores`
     // http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
-    CFBridgingRetain([super affectedStores]);
-    return [super affectedStores];
+    
+    if (NSFoundationVersionNumber < NSFoundationVersionNumber10_0) {
+        
+        self.safeAffectedStores = affectedStores;
+        [super setAffectedStores:affectedStores];
+        return;
+    }
+    if (self.releaseArray != NULL) {
+        
+        CFRelease(self.releaseArray);
+        self.releaseArray = NULL;
+    }
+    self.safeAffectedStores = affectedStores;
+    [super setAffectedStores:affectedStores];
+    self.releaseArray = CFBridgingRetain([super affectedStores]);
 }
 
 @end

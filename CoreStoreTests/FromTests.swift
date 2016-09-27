@@ -74,33 +74,33 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>()
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(affectedConfigurations, ["PF_DEFAULT_CONFIGURATION_NAME"])
             }
             do {
                 
                 let from = From<TestEntity1>("Config1")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
         }
@@ -115,102 +115,102 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>()
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(affectedConfigurations, ["Config1"])
             }
             do {
                 
                 let from = From<TestEntity1>("Config1")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(affectedConfigurations, ["Config1"])
             }
             do {
                 
                 let from = From<TestEntity1>("Config2")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
             do {
                 
                 let from = From<TestEntity2>()
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
             do {
                 
                 let from = From<TestEntity2>("Config1")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
             do {
                 
                 let from = From<TestEntity2>("Config2")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
         }
@@ -225,99 +225,99 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>()
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(Set(affectedConfigurations), ["PF_DEFAULT_CONFIGURATION_NAME", "Config1"] as Set)
             }
             do {
                 
                 let from = From<TestEntity1>("Config1")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(affectedConfigurations, ["Config1"])
             }
             do {
                 
                 let from = From<TestEntity1>("Config2")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
             do {
                 
                 let from = From<TestEntity2>()
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(affectedConfigurations, ["PF_DEFAULT_CONFIGURATION_NAME"])
             }
             do {
                 
                 let from = From<TestEntity2>("Config1")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
             do {
                 
                 let from = From<TestEntity2>("Config2")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
         }
@@ -332,96 +332,96 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>()
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(affectedConfigurations, ["Config1"])
             }
             do {
                 
                 let from = From<TestEntity1>("Config1")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(affectedConfigurations, ["Config1"])
             }
             do {
                 
                 let from = From<TestEntity1>("Config2")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
             do {
                 
                 let from = From<TestEntity2>()
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(affectedConfigurations, ["Config2"])
             }
             do {
                 
                 let from = From<TestEntity2>("Config1")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = self.expectLogger([.LogWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
                 XCTAssertFalse(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertTrue(affectedConfigurations.isEmpty)
             }
             do {
                 
                 let from = From<TestEntity2>("Config2")
                 
-                let request = NSFetchRequest()
+                let request = CoreStoreFetchRequest()
                 let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertTrue(storesFound)
                 XCTAssertNotNil(request.entity)
-                XCTAssertNotNil(request.affectedStores)
+                XCTAssertNotNil(request.safeAffectedStores)
                 
                 XCTAssert(from.entityClass == NSClassFromString(request.entity!.managedObjectClassName))
                 
-                let affectedConfigurations = request.affectedStores!.map { $0.configurationName }
+                let affectedConfigurations = request.safeAffectedStores!.map { $0.configurationName }
                 XCTAssertEqual(affectedConfigurations, ["Config2"])
             }
         }
