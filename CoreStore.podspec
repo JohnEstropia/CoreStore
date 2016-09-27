@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = "CoreStore"
-    s.version = "2.0.4"
+    s.version = "2.1.1"
     s.license = "MIT"
     s.summary = "Unleashing the real power of Core Data with the elegance and safety of Swift"
     s.homepage = "https://github.com/JohnEstropia/CoreStore"
@@ -16,6 +16,7 @@ Pod::Spec.new do |s|
     s.public_header_files = "Sources/**/*.h"
     s.frameworks = "Foundation", "CoreData"
     s.requires_arc = true
-    s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS' => '-D USE_FRAMEWORKS',
+    s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS[config=Debug]' => '-D USE_FRAMEWORKS -D DEBUG',
+                              'OTHER_SWIFT_FLAGS[config=Release]' => '-D USE_FRAMEWORKS',
                               'GCC_PREPROCESSOR_DEFINITIONS' => 'USE_FRAMEWORKS=1' }
 end

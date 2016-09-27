@@ -271,8 +271,6 @@
 				TargetAttributes = {
 					B54AAD481AF4D26E00848AE0 = {
 						CreatedOnToolsVersion = 6.3;
-						DevelopmentTeam = 2JT32EJ5BH;
-						DevelopmentTeamName = "JOHNROMMEL ESTROPIA";
 						LastSwiftMigration = 0800;
 					};
 				};

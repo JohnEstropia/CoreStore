@@ -1068,7 +1068,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                 self.isPersistentStoreChanging = true
                 
                 guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init),
-                    !Set(self.fetchedResultsController.fetchRequest.affectedStores ?? []).intersection(removedStores).isEmpty else {
+                    !Set((self.fetchedResultsController.fetchRequest as! CoreStoreFetchRequest).affectedStores ?? []).intersection(removedStores).isEmpty else {
                         
                         return
                 }
@@ -1089,7 +1089,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                 
                 if !self.isPendingRefetch {
                     
-                    let previousStores = Set(self.fetchedResultsController.fetchRequest.affectedStores ?? [])
+                    let previousStores = Set((self.fetchedResultsController.fetchRequest as! CoreStoreFetchRequest).safeAffectedStores ?? [])
                     let currentStores = previousStores
                         .subtracting(note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore] ?? [])
                         .union(note.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore] ?? [])

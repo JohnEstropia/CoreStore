@@ -143,7 +143,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     
     // MARK: CoreStoreObjectiveCType
     
-    internal typealias SwiftType = AsynchronousDataTransaction
+    public typealias SwiftType = AsynchronousDataTransaction
     
     public override var bridgeToSwift: AsynchronousDataTransaction {
         
@@ -152,21 +152,21 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     
     public required init(_ swiftValue: AsynchronousDataTransaction) {
         
-        super.init(swiftValue)
+        super.init(swiftValue as BaseDataTransaction)
     }
     
     public required init(_ swiftValue: BaseDataTransaction) {
         
-        fatalError("init(_:) requires an AsynchronousDataTransaction instance")
+        super.init(swiftValue as! AsynchronousDataTransaction)
     }
 }
 
 
 // MARK: - AsynchronousDataTransaction
 
-extension AsynchronousDataTransaction {
+extension AsynchronousDataTransaction: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    internal typealias ObjectiveCType = CSAsynchronousDataTransaction
+    public typealias ObjectiveCType = CSAsynchronousDataTransaction
 }

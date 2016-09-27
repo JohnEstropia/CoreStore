@@ -142,7 +142,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
     
     // MARK: CoreStoreObjectiveCType
     
-    internal typealias SwiftType = SynchronousDataTransaction
+    public typealias SwiftType = SynchronousDataTransaction
     
     public override var bridgeToSwift: SynchronousDataTransaction {
         
@@ -151,21 +151,21 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
     
     public required init(_ swiftValue: SynchronousDataTransaction) {
         
-        super.init(swiftValue)
+        super.init(swiftValue as BaseDataTransaction)
     }
     
     public required init(_ swiftValue: BaseDataTransaction) {
         
-        fatalError("init(_:) requires a BaseDataTransaction instance")
+        super.init(swiftValue as! SynchronousDataTransaction)
     }
 }
 
 
 // MARK: - SynchronousDataTransaction
 
-extension SynchronousDataTransaction {
+extension SynchronousDataTransaction: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    internal typealias ObjectiveCType = CSSynchronousDataTransaction
+    public typealias ObjectiveCType = CSSynchronousDataTransaction
 }

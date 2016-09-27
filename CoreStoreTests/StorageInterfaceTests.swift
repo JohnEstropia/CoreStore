@@ -93,10 +93,10 @@ final class StorageInterfaceTests: XCTestCase {
     @objc
     dynamic func test_ThatFileURLSQLiteStores_ConfigureCorrectly() {
         
-        let fileURL = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent(UUID().uuidString, isDirectory: false)
-            .appendingPathExtension("db")
-        let bundles = [Bundle(for: type(of: self))]
+        let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
+            .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)!
+            .URLByAppendingPathExtension("db")!
+        let bundles = [NSBundle(forClass: self.dynamicType)]
         
         let store = SQLiteStore(
             fileURL: fileURL,
@@ -149,8 +149,8 @@ final class StorageInterfaceTests: XCTestCase {
             in: .userDomainMask).first!
         
         let legacyDefaultFileURL = legacyDefaultRootDirectory
-            .appendingPathComponent(DataStack.applicationName, isDirectory: false)
-            .appendingPathExtension("sqlite")
+            .URLByAppendingPathComponent(DataStack.applicationName, isDirectory: false)!
+            .URLByAppendingPathExtension("sqlite")!
         
         XCTAssertEqual(LegacySQLiteStore.defaultRootDirectory, legacyDefaultRootDirectory)
         XCTAssertEqual(LegacySQLiteStore.defaultFileURL, legacyDefaultFileURL)
@@ -172,10 +172,10 @@ final class StorageInterfaceTests: XCTestCase {
     @objc
     dynamic func test_ThatFileURLLegacySQLiteStores_ConfigureCorrectly() {
         
-        let fileURL = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent(UUID().uuidString, isDirectory: false)
-            .appendingPathExtension("db")
-        let bundles = [Bundle(for: type(of: self))]
+        let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
+            .URLByAppendingPathComponent(NSUUID().UUIDString, isDirectory: false)!
+            .URLByAppendingPathExtension("db")!
+        let bundles = [NSBundle(forClass: self.dynamicType)]
         
         let store = LegacySQLiteStore(
             fileURL: fileURL,

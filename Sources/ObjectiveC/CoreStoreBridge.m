@@ -26,22 +26,7 @@
 
 #import "CoreStoreBridge.h"
 
-#if USE_FRAMEWORKS
 #import <CoreStore/CoreStore-Swift.h>
-
-#elif !defined(SWIFT_OBJC_INTERFACE_HEADER_NAME)
-#error Add "SWIFT_OBJC_INTERFACE_HEADER_NAME=$(SWIFT_OBJC_INTERFACE_HEADER_NAME)" to the project's GCC_PREPROCESSOR_DEFINITIONS settings
-
-#elif __has_include(SWIFT_OBJC_INTERFACE_HEADER_NAME)
-#import SWIFT_OBJC_INTERFACE_HEADER_NAME
-
-#else
-#define _STRINGIFY(x)    #x
-#define STRINGIFY(x)    _STRINGIFY(x)
-#import STRINGIFY(SWIFT_OBJC_INTERFACE_HEADER_NAME)
-
-#endif
-
 
 
 #pragma mark - Clauses
@@ -233,3 +218,40 @@ CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CORESTORE_RE
     
     return [[CSWhere alloc] initWithPredicate:predicate];
 }
+
+
+#pragma mark CoreStoreFetchRequest
+
+@interface _CSFetchRequest ()
+
+@property (nullable, nonatomic, copy) NSArray<NSPersistentStore *> *safeAffectedStores;
+@property (nullable, nonatomic, assign) CFArrayRef releaseArray;
+
+@end
+
+@implementation _CSFetchRequest
+
+// MARK: NSFetchRequest
+
+- (void)setAffectedStores:(NSArray<NSPersistentStore *> *_Nullable)affectedStores {
+    
+    // Bugfix for NSFetchRequest messing up memory management for `affectedStores`
+    // http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
+    
+    if (NSFoundationVersionNumber < NSFoundationVersionNumber10_0) {
+        
+        self.safeAffectedStores = affectedStores;
+        [super setAffectedStores:affectedStores];
+        return;
+    }
+    if (self.releaseArray != NULL) {
+        
+        CFRelease(self.releaseArray);
+        self.releaseArray = NULL;
+    }
+    self.safeAffectedStores = affectedStores;
+    [super setAffectedStores:affectedStores];
+    self.releaseArray = CFBridgingRetain([super affectedStores]);
+}
+
+@end

@@ -197,4 +197,41 @@
     XCTAssertNil(sqliteError);
 }
 
+- (void)test_ThatTransactions_BridgeCorrectly {
+    
+    [CSCoreStore
+     setDefaultStack:[[CSDataStack alloc]
+                      initWithModelName:@"Model"
+                      bundle:[NSBundle bundleForClass:[self class]]
+                      versionChain:nil]];
+    [CSCoreStore
+     addInMemoryStorageAndWait:[CSInMemoryStore new]
+     error:nil];
+    
+    {
+        CSUnsafeDataTransaction *transaction = [CSCoreStore beginUnsafe];
+        XCTAssertNotNil(transaction);
+        XCTAssert([transaction isKindOfClass:[CSUnsafeDataTransaction class]]);
+    }
+    {
+        XCTestExpectation *expectation = [self expectationWithDescription:@"sync"];
+        [CSCoreStore beginSynchronous:^(CSSynchronousDataTransaction * _Nonnull transaction) {
+            
+            XCTAssertNotNil(transaction);
+            XCTAssert([transaction isKindOfClass:[CSSynchronousDataTransaction class]]);
+            [expectation fulfill];
+        }];
+    }
+    {
+        XCTestExpectation *expectation = [self expectationWithDescription:@"async"];
+        [CSCoreStore beginAsynchronous:^(CSAsynchronousDataTransaction * _Nonnull transaction) {
+            
+            XCTAssertNotNil(transaction);
+            XCTAssert([transaction isKindOfClass:[CSAsynchronousDataTransaction class]]);
+            [expectation fulfill];
+        }];
+    }
+    [self waitForExpectationsWithTimeout:10 handler:nil];
+}
+
 @end

@@ -132,6 +132,16 @@ internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObjec
             }
         }
         
+        if #available(iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
+            
+            // I don't know if iOS 10 even attempted to fix this mess...
+            if case .update = actualType,
+                indexPath != nil && newIndexPath != nil {
+                
+                actualType = .move
+            }
+        }
+        
         switch actualType {
             
         case .update:
@@ -141,8 +151,8 @@ internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObjec
             }
             if self.deletedSections.contains(section)
                 || self.insertedSections.contains(section) {
-                    
-                    return
+                
+                return
             }
             
         case .move:
