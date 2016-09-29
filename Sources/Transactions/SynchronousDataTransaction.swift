@@ -59,7 +59,33 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         self.result = result
         return result
     }
-    
+  
+    /**
+     Saves the transaction changes and waits for completion synchronously, but merges into the main context asynchronously. This method should not be used after the `commit()` method was already called once.
+   
+     This method can be used to avoid potential deadlocks that can arise when a background thread attempts to merge changes into the main context while the main queue is querying from that context. Note that this
+     introduces a possibility that the main thread can attempt to query for the changes before the asynchronous merge operation has happened.
+     
+     - returns: a `SaveResult` containing the success or failure information
+     */
+    public func commit() -> SaveResult {
+      
+      CoreStore.assert(
+        self.transactionQueue.isCurrentExecutionContext(),
+        "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
+      )
+      CoreStore.assert(
+        !self.isCommitted,
+        "Attempted to commit a \(cs_typeName(self)) more than once."
+      )
+      
+      self.isCommitted = true
+      
+      let result = self.context.saveSynchronously(false)
+      self.result = result
+      return result
+    }
+  
     /**
      Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
      
