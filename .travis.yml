@@ -38,8 +38,8 @@ script:
       xcodebuild -workspace CoreStore.xcworkspace -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
     fi
   - if [ $RUN_DEMO == "YES" ]; then
-      xcodebuild -project "CoreStoreDemo/CoreStoreDemo.xcodeproj" -target "CoreStoreDemo" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
-      xcodebuild -project "CoreStoreDemo/CoreStoreDemo.xcodeproj" -target "CoreStoreDemo" -sdk "$SDK" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
+      xcodebuild -project "CoreStoreDemo/CoreStoreDemo.xcodeproj" -target "CoreStoreDemo" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO clean build | xcpretty -c;
+      xcodebuild -project "CoreStoreDemo/CoreStoreDemo.xcodeproj" -target "CoreStoreDemo" -sdk "$SDK" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO clean build | xcpretty -c;
     fi
   - if [ $POD_LINT == "YES" ]; then
       pod lib lint --quick;
