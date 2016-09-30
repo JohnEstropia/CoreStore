@@ -346,6 +346,103 @@ final class TransactionTests: BaseTestCase {
     }
     
     @objc
+    dynamic func test_ThatSynchronousTransactions_CanCommitWithoutWaitingForMerges() {
+        
+        self.prepareStack { (stack) in
+            
+            let observer = TestListObserver()
+            let monitor = stack.monitorList(
+                From(TestEntity1),
+                OrderBy(.Ascending("testEntityID"))
+            )
+            monitor.addObserver(observer)
+            
+            XCTAssertFalse(monitor.hasObjects())
+            
+            var events = 0
+            let willChangeExpectation = self.expectationForNotification(
+                "listMonitorWillChange:",
+                object: observer,
+                handler: { (note) -> Bool in
+                    
+                    XCTAssertEqual(events, 0)
+                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    defer {
+                        
+                        events += 1
+                    }
+                    return events == 0
+                }
+            )
+            let didInsertObjectExpectation = self.expectationForNotification(
+                "listMonitor:didInsertObject:toIndexPath:",
+                object: observer,
+                handler: { (note) -> Bool in
+                    
+                    XCTAssertEqual(events, 1)
+                    
+                    let userInfo = note.userInfo
+                    XCTAssertNotNil(userInfo)
+                    XCTAssertEqual(
+                        Set(((userInfo as? [String: AnyObject]) ?? [:]).keys),
+                        ["indexPath", "object"]
+                    )
+                    
+                    let indexPath = userInfo?["indexPath"] as? NSIndexPath
+                    XCTAssertEqual(indexPath?.section, 0)
+                    XCTAssertEqual(indexPath?.row, 0)
+                    
+                    let object = userInfo?["object"] as? TestEntity1
+                    XCTAssertEqual(object?.testBoolean, NSNumber(bool: true))
+                    XCTAssertEqual(object?.testNumber, NSNumber(integer: 1))
+                    XCTAssertEqual(object?.testDecimal, NSDecimalNumber(string: "1"))
+                    XCTAssertEqual(object?.testString, "nil:TestEntity1:1")
+                    defer {
+                        
+                        events += 1
+                    }
+                    return events == 1
+                }
+            )
+            let didChangeExpectation = self.expectationForNotification(
+                "listMonitorDidChange:",
+                object: observer,
+                handler: { (note) -> Bool in
+                    
+                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    defer {
+                        
+                        events += 1
+                    }
+                    return events == 2
+                }
+            )
+            let saveExpectation = self.expectationWithDescription("save")
+            stack.beginSynchronous { (transaction) in
+                
+                let object = transaction.create(Into(TestEntity1))
+                object.testBoolean = NSNumber(bool: true)
+                object.testNumber = NSNumber(integer: 1)
+                object.testDecimal = NSDecimalNumber(string: "1")
+                object.testString = "nil:TestEntity1:1"
+                
+                switch transaction.commit() {
+                    
+                case .Success(let hasChanges):
+                    XCTAssertTrue(hasChanges)
+                    saveExpectation.fulfill()
+                    
+                default:
+                    XCTFail()
+                }
+            }
+            XCTAssertEqual(events, 0)
+            XCTAssertEqual(monitor.numberOfObjects(), 0)
+            self.waitAndCheckExpectations()
+        }
+    }
+    
+    @objc
     dynamic func test_ThatAsynchronousTransactions_CanPerformCRUDs() {
         
         self.prepareStack { (stack) in

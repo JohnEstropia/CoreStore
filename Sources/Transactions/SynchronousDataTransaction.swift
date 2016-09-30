@@ -38,7 +38,8 @@ import CoreData
 public final class SynchronousDataTransaction: BaseDataTransaction {
     
     /**
-     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` method was already called once.
+     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` or `commitAndWait()` method was already called once.
+     - Important: Unlike `SynchronousDataTransaction.commit()`, this method waits for all observers to be notified of the changes before returning. This results in more predictable data update order, but may risk triggering deadlocks.
      
      - returns: a `SaveResult` containing the success or failure information
      */
@@ -55,35 +56,33 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         
         self.isCommitted = true
         
-        let result = self.context.saveSynchronously()
+        let result = self.context.saveSynchronously(waitForMerge: true)
         self.result = result
         return result
     }
-  
+    
     /**
-     Saves the transaction changes and waits for completion synchronously, but merges into the main context asynchronously. This method should not be used after the `commit()` method was already called once.
-   
-     This method can be used to avoid potential deadlocks that can arise when a background thread attempts to merge changes into the main context while the main queue is querying from that context. Note that this
-     introduces a possibility that the main thread can attempt to query for the changes before the asynchronous merge operation has happened.
+     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` or `commitAndWait()` method was already called once.
+     - Important: Unlike `SynchronousDataTransaction.commitAndWait()`, this method does not wait for observers to be notified of the changes before returning. This results in lower risk for deadlocks, but the updated data may not have been propagated to the `DataStack` after returning.
      
      - returns: a `SaveResult` containing the success or failure information
      */
     public func commit() -> SaveResult {
-      
-      CoreStore.assert(
-        self.transactionQueue.isCurrentExecutionContext(),
-        "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
-      )
-      CoreStore.assert(
-        !self.isCommitted,
-        "Attempted to commit a \(cs_typeName(self)) more than once."
-      )
-      
-      self.isCommitted = true
-      
-      let result = self.context.saveSynchronously(false)
-      self.result = result
-      return result
+        
+        CoreStore.assert(
+            self.transactionQueue.isCurrentExecutionContext(),
+            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to commit a \(cs_typeName(self)) more than once."
+        )
+        
+        self.isCommitted = true
+        
+        let result = self.context.saveSynchronously(waitForMerge: false)
+        self.result = result
+        return result
     }
   
     /**
