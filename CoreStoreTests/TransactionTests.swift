@@ -345,6 +345,8 @@ final class TransactionTests: BaseTestCase {
         }
     }
     
+    #if os(iOS) || os(watchOS) || os(tvOS)
+    
     @objc
     dynamic func test_ThatSynchronousTransactions_CanCommitWithoutWaitingForMerges() {
         
@@ -441,6 +443,8 @@ final class TransactionTests: BaseTestCase {
             self.waitAndCheckExpectations()
         }
     }
+    
+    #endif
     
     @objc
     dynamic func test_ThatAsynchronousTransactions_CanPerformCRUDs() {
