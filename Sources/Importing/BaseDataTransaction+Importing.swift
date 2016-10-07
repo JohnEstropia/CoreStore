@@ -50,7 +50,9 @@ public extension BaseDataTransaction {
         
             return try autoreleasepool {
                 
-                guard T.shouldInsert(from: source, in: self) else {
+                let entityType = into.entityClass as! T.Type
+                
+                guard entityType.shouldInsert(from: source, in: self) else {
                     
                     return nil
                 }
@@ -78,8 +80,10 @@ public extension BaseDataTransaction {
             )
             
             try autoreleasepool {
-                
-                guard T.shouldInsert(from: source, in: self) else {
+              
+                let entityType = type(of: object)
+              
+                guard entityType.shouldInsert(from: source, in: self) else {
                     
                     return
                 }
@@ -108,8 +112,10 @@ public extension BaseDataTransaction {
             return try autoreleasepool {
                 
                 return try sourceArray.flatMap { (source) -> T? in
-                    
-                    guard T.shouldInsert(from: source, in: self) else {
+                  
+                    let entityType = into.entityClass as! T.Type
+                  
+                    guard entityType.shouldInsert(from: source, in: self) else {
                         
                         return nil
                     }
@@ -142,16 +148,18 @@ public extension BaseDataTransaction {
             )
             
             return try autoreleasepool {
-                
-                let uniqueIDKeyPath = T.uniqueIDKeyPath
-                guard let uniqueIDValue = try T.uniqueID(from: source, in: self) else {
+              
+                let entityType = into.entityClass as! T.Type
+              
+                let uniqueIDKeyPath = entityType.uniqueIDKeyPath
+                guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
                     
                     return nil
                 }
                 
-                if let object = self.fetchOne(From<T>(), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
+                if let object = self.fetchOne(From(entityType), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
-                    guard T.shouldUpdate(from: source, in: self) else {
+                    guard entityType.shouldUpdate(from: source, in: self) else {
                         
                         return nil
                     }
@@ -161,7 +169,7 @@ public extension BaseDataTransaction {
                 }
                 else {
                     
-                    guard T.shouldInsert(from: source, in: self) else {
+                    guard entityType.shouldInsert(from: source, in: self) else {
                         
                         return nil
                     }
@@ -195,13 +203,15 @@ public extension BaseDataTransaction {
             )
             
             return try autoreleasepool {
-                
+              
+                let entityType = into.entityClass as! T.Type
+              
                 var mapping = Dictionary<T.UniqueIDType, T.ImportSource>()
                 let sortedIDs = try autoreleasepool {
-                    
+                  
                     return try sourceArray.flatMap { (source) -> T.UniqueIDType? in
                         
-                        guard let uniqueIDValue = try T.uniqueID(from: source, in: self) else {
+                        guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
                             
                             return nil
                         }
@@ -214,14 +224,14 @@ public extension BaseDataTransaction {
                 mapping = try autoreleasepool { try preProcess(mapping) }
                 
                 var objects = Dictionary<T.UniqueIDType, T>()
-                for object in self.fetchAll(From<T>(), Where(T.uniqueIDKeyPath, isMemberOf: sortedIDs)) ?? [] {
+                for object in self.fetchAll(From(entityType), Where(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs)) ?? [] {
                     
                     try autoreleasepool {
                         
                         let uniqueIDValue = object.uniqueIDValue
                         
                         guard let source = mapping.removeValue(forKey: uniqueIDValue),
-                            T.shouldUpdate(from: source, in: self) else {
+                            entityType.shouldUpdate(from: source, in: self) else {
                                 
                                 return
                         }
@@ -235,7 +245,7 @@ public extension BaseDataTransaction {
                     
                     try autoreleasepool {
                         
-                        guard T.shouldInsert(from: source, in: self) else {
+                        guard entityType.shouldInsert(from: source, in: self) else {
                             
                             return
                         }
