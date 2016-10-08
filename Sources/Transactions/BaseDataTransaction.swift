@@ -52,13 +52,13 @@ public /*abstract*/ class BaseDataTransaction {
      */
     public func create<T: NSManagedObject>(_ into: Into<T>) -> T {
         
+        let entityClass = (into.entityClass as! T.Type)
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to create an entity of type \(cs_typeName(T.self)) outside its designated queue."
+            "Attempted to create an entity of type \(cs_typeName(entityClass)) outside its designated queue."
         )
         
         let context = self.context
-        let entityClass = (into.entityClass as! NSManagedObject.Type)
         if into.inferStoreIfPossible {
             
             switch context.parentStack!.persistentStoreForEntityClass(
@@ -68,7 +68,7 @@ public /*abstract*/ class BaseDataTransaction {
             ) {
                 
             case (let persistentStore?, _):
-                let object = entityClass.createInContext(context) as! T
+                let object = entityClass.createInContext(context)
                 context.assign(object, to: persistentStore)
                 return object
                 
@@ -89,7 +89,7 @@ public /*abstract*/ class BaseDataTransaction {
             ) {
                 
             case (let persistentStore?, _):
-                let object = entityClass.createInContext(context) as! T
+                let object = entityClass.createInContext(context)
                 context.assign(object, to: persistentStore)
                 return object
                 
@@ -139,12 +139,12 @@ public /*abstract*/ class BaseDataTransaction {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to update an entity of type \(cs_typeName(T.self)) outside its designated queue."
+            "Attempted to update an entity of type \(cs_typeName(into.entityClass)) outside its designated queue."
         )
         CoreStore.assert(
             into.inferStoreIfPossible
                 || (into.configuration ?? Into.defaultConfigurationName) == objectID.persistentStore?.configurationName,
-            "Attempted to update an entity of type \(cs_typeName(T.self)) but the specified persistent store do not match the `NSManagedObjectID`."
+            "Attempted to update an entity of type \(cs_typeName(into.entityClass)) but the specified persistent store do not match the `NSManagedObjectID`."
         )
         return self.fetchExisting(objectID) as? T
     }

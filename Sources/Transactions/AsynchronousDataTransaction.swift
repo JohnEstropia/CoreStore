@@ -99,7 +99,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to create an entity of type \(cs_typeName(T.self)) from an already committed \(cs_typeName(self))."
+            "Attempted to create an entity of type \(cs_typeName(into.entityClass)) from an already committed \(cs_typeName(self))."
         )
         
         return super.create(into)
@@ -132,7 +132,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to update an entity of type \(cs_typeName(T.self)) from an already committed \(cs_typeName(self))."
+            "Attempted to update an entity of type \(cs_typeName(into.entityClass)) from an already committed \(cs_typeName(self))."
         )
         
         return super.edit(into, objectID)
