@@ -186,6 +186,7 @@ public extension BaseDataTransaction {
      Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources. 
      Objects are called with `ImportableUniqueObject` methods in the same order as in import sources array.
      The array returned from `importUniqueObjects(...)` correctly maps to the order of `sourceArray`.
+     If `sourceArray` contains multiple import sources with same ID, the last one will be imported.
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from
@@ -217,7 +218,8 @@ public extension BaseDataTransaction {
                             
                             return nil
                         }
-                        
+                      
+                        // each subsequent import source with the same ID will replace the existing one
                         importSourceByID[uniqueIDValue] = source
                         return uniqueIDValue
                     }
@@ -230,32 +232,36 @@ public extension BaseDataTransaction {
                 self.fetchAll(From(entityType), Where(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))?
                   .forEach { existingObjectsByID[$0.uniqueIDValue] = $0 }
               
-                var insertedObjectsByID = Dictionary<T.UniqueIDType, T>()
+                var processedObjectIDs = Set<T.UniqueIDType>()
+                var result = [T]()
               
                 for objectID in sortedIDs {
                     
                     try autoreleasepool {
                       
-                        guard let source = importSourceByID[objectID] else { return }
-                      
+                        guard let source = importSourceByID[objectID], !processedObjectIDs.contains(objectID) else { return }
                       
                         if let object = existingObjectsByID[objectID] {
                             guard entityType.shouldUpdate(from: source, in: self) else { return }
                           
                             try object.update(from: source, in: self)
+                          
+                            result.append(object)
                         }
                         else if entityType.shouldInsert(from: source, in: self) {
                             let object = self.create(into)
                             object.uniqueIDValue = objectID
                             try object.didInsert(from: source, in: self)
-                            
-                            insertedObjectsByID[objectID] = object
+                          
+                            result.append(object)
                         }
+                      
+                        processedObjectIDs.insert(objectID)
                     }
                 }
               
               
-                return sortedIDs.flatMap { existingObjectsByID[$0] ?? insertedObjectsByID[$0] }
+                return result
             }
     }
 }
