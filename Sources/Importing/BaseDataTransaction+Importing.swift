@@ -183,9 +183,8 @@ public extension BaseDataTransaction {
     }
     
     /**
-     Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources. 
-     Objects are called with `ImportableUniqueObject` methods in the same order as in import sources array.
-     The array returned from `importUniqueObjects(...)` correctly maps to the order of `sourceArray`.
+     Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources.
+     - Warning: While the array returned from `importUniqueObjects(...)` correctly maps to the order of `sourceArray`, the order of objects called with `ImportableUniqueObject` methods is arbitrary. Do not make assumptions that any particular object will be imported ahead or after another object.
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from
@@ -207,8 +206,7 @@ public extension BaseDataTransaction {
               
                 let entityType = into.entityClass as! T.Type
               
-                var importSourceByID = Dictionary<T.UniqueIDType, T.ImportSource>()
-              
+                var mapping = Dictionary<T.UniqueIDType, T.ImportSource>()
                 let sortedIDs = try autoreleasepool {
                   
                     return try sourceArray.flatMap { (source) -> T.UniqueIDType? in
@@ -218,44 +216,49 @@ public extension BaseDataTransaction {
                             return nil
                         }
                         
-                        importSourceByID[uniqueIDValue] = source
+                        mapping[uniqueIDValue] = source
                         return uniqueIDValue
                     }
                 }
                 
-                importSourceByID = try autoreleasepool { try preProcess(importSourceByID) }
-              
-              
-                var existingObjectsByID = Dictionary<T.UniqueIDType, T>()
-                self.fetchAll(From(entityType), Where(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))?
-                  .forEach { existingObjectsByID[$0.uniqueIDValue] = $0 }
-              
-                var insertedObjectsByID = Dictionary<T.UniqueIDType, T>()
-              
-                for objectID in sortedIDs {
+                mapping = try autoreleasepool { try preProcess(mapping) }
+                
+                var objects = Dictionary<T.UniqueIDType, T>()
+                for object in self.fetchAll(From(entityType), Where(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs)) ?? [] {
                     
                     try autoreleasepool {
-                      
-                        guard let source = importSourceByID[objectID] else { return }
-                      
-                      
-                        if let object = existingObjectsByID[objectID] {
-                            guard entityType.shouldUpdate(from: source, in: self) else { return }
-                          
-                            try object.update(from: source, in: self)
+                        
+                        let uniqueIDValue = object.uniqueIDValue
+                        
+                        guard let source = mapping.removeValue(forKey: uniqueIDValue),
+                            entityType.shouldUpdate(from: source, in: self) else {
+                                
+                                return
                         }
-                        else if entityType.shouldInsert(from: source, in: self) {
-                            let object = self.create(into)
-                            object.uniqueIDValue = objectID
-                            try object.didInsert(from: source, in: self)
-                            
-                            insertedObjectsByID[objectID] = object
-                        }
+                        
+                        try object.update(from: source, in: self)
+                        objects[uniqueIDValue] = object
                     }
                 }
-              
-              
-                return sortedIDs.flatMap { existingObjectsByID[$0] ?? insertedObjectsByID[$0] }
+                
+                for (uniqueIDValue, source) in mapping {
+                    
+                    try autoreleasepool {
+                        
+                        guard entityType.shouldInsert(from: source, in: self) else {
+                            
+                            return
+                        }
+                        
+                        let object = self.create(into)
+                        object.uniqueIDValue = uniqueIDValue
+                        try object.didInsert(from: source, in: self)
+                        
+                        objects[uniqueIDValue] = object
+                    }
+                }
+                
+                return sortedIDs.flatMap { objects[$0] }
             }
     }
 }
