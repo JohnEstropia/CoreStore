@@ -38,6 +38,7 @@ internal extension NSManagedObjectModel {
         
         guard let modelFilePath = bundle.path(forResource: modelName, ofType: "momd") else {
             
+            // For users migrating from very old Xcode versions: Old xcdatamodel files are not contained inside xcdatamodeld (with a "d"), and will thus fail this check. If that was the case, create a new xcdatamodeld file and copy all contents into the new model.
             CoreStore.abort("Could not find \"\(modelName).momd\" from the bundle. \(bundle)")
         }
         
