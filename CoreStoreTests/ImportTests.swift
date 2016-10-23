@@ -415,6 +415,65 @@ class ImportTests: BaseTestDataTestCase {
     }
     
     @objc
+    dynamic func test_ThatImportUniqueObjects_ImportsLastOfImportSourcesWithSameIDs() {
+        
+        self.prepareStack { (stack) in
+            
+            self.prepareTestDataForStack(stack)
+            
+            stack.beginSynchronous { (transaction) in
+                
+                do {
+                    
+                    let sourceArray: [TestEntity1.ImportSource] = [
+                        [
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: true),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 6),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "6"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:6",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:6" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-06T00:00:00Z")!
+                        ],
+                        [
+                            #keyPath(TestEntity1.testEntityID): NSNumber(value: 106),
+                            #keyPath(TestEntity1.testBoolean): NSNumber(value: false),
+                            #keyPath(TestEntity1.testNumber): NSNumber(value: 7),
+                            #keyPath(TestEntity1.testDecimal): NSDecimalNumber(string: "7"),
+                            #keyPath(TestEntity1.testString): "nil:TestEntity1:7",
+                            #keyPath(TestEntity1.testData): ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!,
+                            #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!
+                        ]
+                    ]
+                    let objects = try transaction.importUniqueObjects(
+                        Into<TestEntity1>(),
+                        sourceArray: sourceArray
+                    )
+                  
+                    XCTAssertEqual(objects.count, 1)
+                    XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
+                  
+                    let object = objects[0]
+                    let dictionary = sourceArray[1]
+                    XCTAssertEqual(object.testEntityID, dictionary[(#keyPath(TestEntity1.testEntityID))] as? NSNumber)
+                    XCTAssertEqual(object.testBoolean, dictionary[(#keyPath(TestEntity1.testBoolean))] as? NSNumber)
+                    XCTAssertEqual(object.testNumber, dictionary[(#keyPath(TestEntity1.testNumber))] as? NSNumber)
+                    XCTAssertEqual(object.testDecimal, dictionary[(#keyPath(TestEntity1.testDecimal))] as? NSDecimalNumber)
+                    XCTAssertEqual(object.testString, dictionary[(#keyPath(TestEntity1.testString))] as? String)
+                    XCTAssertEqual(object.testData, dictionary[(#keyPath(TestEntity1.testData))] as? Data)
+                    XCTAssertEqual(object.testDate, dictionary[(#keyPath(TestEntity1.testDate))] as? Date)
+                }
+                catch {
+                    
+                    XCTFail()
+                }
+                transaction.context.reset()
+            }
+        }
+    }
+
+    
+    @objc
     dynamic func test_ThatImportUniqueObject_CanThrowError() {
         
         self.prepareStack { (stack) in
