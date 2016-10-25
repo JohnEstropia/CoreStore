@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1137EE861DC00F3F00FED6AE /* Limit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE851DC00F3F00FED6AE /* Limit.swift */; };
+		1137EE871DC00F4C00FED6AE /* Limit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE851DC00F3F00FED6AE /* Limit.swift */; };
+		1137EE881DC00F4D00FED6AE /* Limit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE851DC00F3F00FED6AE /* Limit.swift */; };
+		1137EE891DC00F4E00FED6AE /* Limit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE851DC00F3F00FED6AE /* Limit.swift */; };
+		1137EE8B1DC0113500FED6AE /* CSLimit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE8A1DC0113500FED6AE /* CSLimit.swift */; };
+		1137EE8C1DC0113500FED6AE /* CSLimit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE8A1DC0113500FED6AE /* CSLimit.swift */; };
+		1137EE8D1DC0113500FED6AE /* CSLimit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE8A1DC0113500FED6AE /* CSLimit.swift */; };
+		1137EE8E1DC0113500FED6AE /* CSLimit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE8A1DC0113500FED6AE /* CSLimit.swift */; };
+		1137EE901DC0147400FED6AE /* LimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE8F1DC0147400FED6AE /* LimitTests.swift */; };
+		1137EE911DC0147400FED6AE /* LimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE8F1DC0147400FED6AE /* LimitTests.swift */; };
+		1137EE921DC0147400FED6AE /* LimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1137EE8F1DC0147400FED6AE /* LimitTests.swift */; };
 		2F03A53619C5C6DA005002A5 /* CoreStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A53519C5C6DA005002A5 /* CoreStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A54D19C5C872005002A5 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F03A54C19C5C872005002A5 /* CoreData.framework */; };
 		2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F291E2619C6D3CF007AF63F /* CoreStore.swift */; };
@@ -569,6 +580,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1137EE851DC00F3F00FED6AE /* Limit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Limit.swift; sourceTree = "<group>"; };
+		1137EE8A1DC0113500FED6AE /* CSLimit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSLimit.swift; sourceTree = "<group>"; };
+		1137EE8F1DC0147400FED6AE /* LimitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimitTests.swift; sourceTree = "<group>"; };
 		2F03A53019C5C6DA005002A5 /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F03A53419C5C6DA005002A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F03A53519C5C6DA005002A5 /* CoreStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreStore.h; sourceTree = "<group>"; };
@@ -864,6 +878,7 @@
 				B525577B1D0291FE00E51965 /* GroupByTests.swift */,
 				B5220E0B1D0D0D19009BC71E /* ImportTests.swift */,
 				B525576B1CFAF18F00E51965 /* IntoTests.swift */,
+				1137EE8F1DC0147400FED6AE /* LimitTests.swift */,
 				B5220E0F1D0DA6AB009BC71E /* ListObserverTests.swift */,
 				B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */,
 				B5220E071D0C5F8D009BC71E /* ObjectObserverTests.swift */,
@@ -1140,6 +1155,7 @@
 				B5E84F041AFF847B0064E85B /* OrderBy.swift */,
 				B5E84F021AFF847B0064E85B /* GroupBy.swift */,
 				B5E84F001AFF847B0064E85B /* Tweak.swift */,
+				1137EE851DC00F3F00FED6AE /* Limit.swift */,
 			);
 			path = "Concrete Clauses";
 			sourceTree = "<group>";
@@ -1216,6 +1232,7 @@
 				B5ECDC041CA8138100C7F112 /* CSOrderBy.swift */,
 				B5ECDC0A1CA8161B00C7F112 /* CSGroupBy.swift */,
 				B5ECDC101CA816E500C7F112 /* CSTweak.swift */,
+				1137EE8A1DC0113500FED6AE /* CSLimit.swift */,
 			);
 			name = "Concrete Clauses";
 			sourceTree = "<group>";
@@ -1526,6 +1543,7 @@
 				B5C976E71C6E3A5A00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */,
 				B5F1DA901B9AA991007C5CBB /* ImportableUniqueObject.swift in Sources */,
 				B504D0D61B02362500B2BBB1 /* CoreStore+Setup.swift in Sources */,
+				1137EE861DC00F3F00FED6AE /* Limit.swift in Sources */,
 				B529C2041CA4A2DB007E7EBD /* CSSaveResult.swift in Sources */,
 				B5D1E22C19FA9FBC003B2874 /* CoreStoreError.swift in Sources */,
 				B5E84F131AFF847B0064E85B /* Where.swift in Sources */,
@@ -1579,6 +1597,7 @@
 				B501FDE21CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */,
 				B5ECDC111CA816E500C7F112 /* CSTweak.swift in Sources */,
+				1137EE8B1DC0113500FED6AE /* CSLimit.swift in Sources */,
 				B5E84F411AFF8CCD0064E85B /* ClauseTypes.swift in Sources */,
 				B5E84F0D1AFF847B0064E85B /* BaseDataTransaction+Querying.swift in Sources */,
 				B5FAD6AC1B51285300714891 /* MigrationManager.swift in Sources */,
@@ -1653,6 +1672,7 @@
 				B52557781D02826E00E51965 /* OrderByTests.swift in Sources */,
 				B5220E081D0C5F8D009BC71E /* ObjectObserverTests.swift in Sources */,
 				B5489F421CF5EEBC008B4978 /* TestEntity2.swift in Sources */,
+				1137EE901DC0147400FED6AE /* LimitTests.swift in Sources */,
 				B52557701D02561A00E51965 /* SelectTests.swift in Sources */,
 				B5489F461CF5F017008B4978 /* TransactionTests.swift in Sources */,
 				B52557801D029D2500E51965 /* TweakTests.swift in Sources */,
@@ -1675,6 +1695,7 @@
 				B5C976E81C6E3A5D00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */,
 				82BA18A21C4BBD1D00A0916E /* CoreStoreError.swift in Sources */,
 				82BA18B21C4BBD3900A0916E /* ImportableObject.swift in Sources */,
+				1137EE871DC00F4C00FED6AE /* Limit.swift in Sources */,
 				B529C2061CA4A2DB007E7EBD /* CSSaveResult.swift in Sources */,
 				82BA18AE1C4BBD3100A0916E /* DataStack+Transaction.swift in Sources */,
 				82BA18AB1C4BBD3100A0916E /* AsynchronousDataTransaction.swift in Sources */,
@@ -1728,6 +1749,7 @@
 				B501FDE41CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
 				B5FE4DA31C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B5ECDC131CA816E500C7F112 /* CSTweak.swift in Sources */,
+				1137EE8C1DC0113500FED6AE /* CSLimit.swift in Sources */,
 				82BA18C91C4BBD5900A0916E /* MigrationType.swift in Sources */,
 				82BA18D01C4BBD7100A0916E /* MigrationManager.swift in Sources */,
 				82BA18C61C4BBD5900A0916E /* DataStack+Migration.swift in Sources */,
@@ -1802,6 +1824,7 @@
 				B5489F511CF603D5008B4978 /* FromTests.swift in Sources */,
 				B5220E091D0C5F8D009BC71E /* ObjectObserverTests.swift in Sources */,
 				B52557791D02826E00E51965 /* OrderByTests.swift in Sources */,
+				1137EE911DC0147400FED6AE /* LimitTests.swift in Sources */,
 				B5489F431CF5EEBC008B4978 /* TestEntity2.swift in Sources */,
 				B52557711D02561A00E51965 /* SelectTests.swift in Sources */,
 				B5489F471CF5F017008B4978 /* TransactionTests.swift in Sources */,
@@ -1824,6 +1847,7 @@
 				B5677D411CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
 				B52DD1BE1BE1F94300949AFE /* NSProgress+Convenience.swift in Sources */,
 				B5ECDC151CA816E500C7F112 /* CSTweak.swift in Sources */,
+				1137EE891DC00F4E00FED6AE /* Limit.swift in Sources */,
 				B546F9761C9C553300D5AC55 /* SetupResult.swift in Sources */,
 				B53FBA161CAB63CB00F0D40A /* NSProgress+ObjectiveC.swift in Sources */,
 				B5ECDC271CA81A3900C7F112 /* CSCoreStore+Querying.swift in Sources */,
@@ -1877,6 +1901,7 @@
 				B5ECDBE91CA6BEA300C7F112 /* CSClauseTypes.swift in Sources */,
 				B52DD1B81BE1F94000949AFE /* DataStack+Migration.swift in Sources */,
 				B5ECDC091CA8138100C7F112 /* CSOrderBy.swift in Sources */,
+				1137EE8E1DC0113500FED6AE /* CSLimit.swift in Sources */,
 				B52DD1A51BE1F92F00949AFE /* ImportableUniqueObject.swift in Sources */,
 				B5E222271CA4E12600BA2E95 /* CSSynchronousDataTransaction.swift in Sources */,
 				B5519A621CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */,
@@ -1951,6 +1976,7 @@
 				B5489F521CF603D5008B4978 /* FromTests.swift in Sources */,
 				B525577A1D02826E00E51965 /* OrderByTests.swift in Sources */,
 				B5489F441CF5EEBC008B4978 /* TestEntity2.swift in Sources */,
+				1137EE921DC0147400FED6AE /* LimitTests.swift in Sources */,
 				B52557721D02561A00E51965 /* SelectTests.swift in Sources */,
 				B5489F481CF5F017008B4978 /* TransactionTests.swift in Sources */,
 				B52557821D029D2500E51965 /* TweakTests.swift in Sources */,
@@ -1973,6 +1999,7 @@
 				B5C976E91C6E3A5E00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */,
 				B56321801BD65216006C9394 /* CoreStoreError.swift in Sources */,
 				B56321AD1BD6521C006C9394 /* MigrationManager.swift in Sources */,
+				1137EE881DC00F4D00FED6AE /* Limit.swift in Sources */,
 				B529C2071CA4A2DC007E7EBD /* CSSaveResult.swift in Sources */,
 				B563219D1BD65216006C9394 /* DataStack+Observing.swift in Sources */,
 				B56321961BD65216006C9394 /* From.swift in Sources */,
@@ -2026,6 +2053,7 @@
 				B5ECDC141CA816E500C7F112 /* CSTweak.swift in Sources */,
 				B56321AE1BD6521C006C9394 /* NotificationObserver.swift in Sources */,
 				B56321931BD65216006C9394 /* DataStack+Querying.swift in Sources */,
+				1137EE8D1DC0113500FED6AE /* CSLimit.swift in Sources */,
 				B56321A71BD65216006C9394 /* MigrationResult.swift in Sources */,
 				B598514A1C90289E00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B5FEC1901C9166E700532541 /* NSPersistentStore+Setup.swift in Sources */,
