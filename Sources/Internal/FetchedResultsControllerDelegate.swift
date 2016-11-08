@@ -108,7 +108,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
             return
         }
         
-        guard let actualType = NSFetchedResultsChangeType(rawValue: type.rawValue) else {
+        guard var actualType = NSFetchedResultsChangeType(rawValue: type.rawValue) else {
             
             // This fix is for a bug where iOS passes 0 for NSFetchedResultsChangeType, but this is not a valid enum case.
             // Swift will then always execute the first case of the switch causing strange behaviour.
@@ -120,6 +120,16 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
         // http://stackoverflow.com/questions/31383760/ios-9-attempt-to-delete-and-reload-the-same-index-path/31384014#31384014
         // https://forums.developer.apple.com/message/9998#9998
         // https://forums.developer.apple.com/message/31849#31849
+        
+        if #available(iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
+            
+            // I don't know if iOS 10 even attempted to fix this mess...
+            if case .Update = actualType
+                where indexPath != nil && newIndexPath != nil {
+                
+                actualType = .Move
+            }
+        }
         
         switch actualType {
             
