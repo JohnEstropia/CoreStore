@@ -362,6 +362,9 @@
 		B580857B1CDF808D004C2EEB /* SetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58085741CDF7F00004C2EEB /* SetupTests.swift */; };
 		B580857C1CDF808F004C2EEB /* SetupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58085741CDF7F00004C2EEB /* SetupTests.swift */; };
 		B58B22F51C93C1BA00521925 /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F03A53019C5C6DA005002A5 /* CoreStore.framework */; };
+		B596BBB21DD5A014001DCDD9 /* ConvenienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B596BBAD1DD59FDB001DCDD9 /* ConvenienceTests.swift */; };
+		B596BBB31DD5A014001DCDD9 /* ConvenienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B596BBAD1DD59FDB001DCDD9 /* ConvenienceTests.swift */; };
+		B596BBB41DD5A016001DCDD9 /* ConvenienceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B596BBAD1DD59FDB001DCDD9 /* ConvenienceTests.swift */; };
 		B59851491C90289D00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B598514A1C90289E00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B598514B1C90289F00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
@@ -648,6 +651,7 @@
 		B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestDataTestCase.swift; sourceTree = "<group>"; };
 		B57D27C11D0BC20100539C58 /* QueryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryTests.swift; sourceTree = "<group>"; };
 		B58085741CDF7F00004C2EEB /* SetupTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupTests.swift; sourceTree = "<group>"; };
+		B596BBAD1DD59FDB001DCDD9 /* ConvenienceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvenienceTests.swift; sourceTree = "<group>"; };
 		B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+Setup.swift"; sourceTree = "<group>"; };
 		B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudStore.swift; sourceTree = "<group>"; };
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
@@ -872,6 +876,7 @@
 				B52557831D02A07400E51965 /* SectionByTests.swift */,
 				B525576F1D02561A00E51965 /* SelectTests.swift */,
 				B58085741CDF7F00004C2EEB /* SetupTests.swift */,
+				B596BBAD1DD59FDB001DCDD9 /* ConvenienceTests.swift */,
 				B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */,
 				2F03A53D19C5C6DA005002A5 /* Supporting Files */,
 				B5489F3C1CF5EEBC008B4978 /* TestEntities */,
@@ -1640,6 +1645,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B52557841D02A07400E51965 /* SectionByTests.swift in Sources */,
+				B596BBB21DD5A014001DCDD9 /* ConvenienceTests.swift in Sources */,
 				B5220E101D0DA6AB009BC71E /* ListObserverTests.swift in Sources */,
 				B5519A401CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B525577C1D0291FE00E51965 /* GroupByTests.swift in Sources */,
@@ -1789,6 +1795,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B52557851D02A07400E51965 /* SectionByTests.swift in Sources */,
+				B596BBB31DD5A014001DCDD9 /* ConvenienceTests.swift in Sources */,
 				B5220E111D0DA6AB009BC71E /* ListObserverTests.swift in Sources */,
 				B5519A411CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B525577D1D0291FE00E51965 /* GroupByTests.swift in Sources */,
@@ -1938,6 +1945,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5519A421CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
+				B596BBB41DD5A016001DCDD9 /* ConvenienceTests.swift in Sources */,
 				B5220E271D1308D1009BC71E /* ObjectObserverTests.swift in Sources */,
 				B525577E1D0291FE00E51965 /* GroupByTests.swift in Sources */,
 				B52557761D02791400E51965 /* WhereTests.swift in Sources */,

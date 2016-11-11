@@ -27,40 +27,78 @@ import Foundation
 import CoreData
 
 
-//#if os(iOS) || os(watchOS) || os(tvOS)
-//
-//// MARK: - NSFetchedResultsController
-//
-//public extension NSFetchedResultsController {
-//    
-//    /**
-//     Utility for creating an `NSFetchedResultsController` from a `CSDataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstractio
-//     
-//     - parameter dataStack: the `CSDataStack` to observe objects from
-//     - parameter fetchRequest: the `NSFetchRequest` instance to use with the `NSFetchedResultsController`
-//     - parameter from: an optional `CSFrom` clause indicating the entity type. If not specified, the `fetchRequest` argument's `entity` property should already be set.
-//     - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
-//     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
-//     */
-//    @objc
-//    public static func cs_createForStack(_ dataStack: CSDataStack, fetchRequest: NSFetchRequest<NSFetchRequestResult>, from: CSFrom?, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController {
-//        
-//        return CoreStoreFetchedResultsController(
-//            context: dataStack.bridgeToSwift.mainContext,
-//            fetchRequest: fetchRequest,
-//            from: from?.bridgeToSwift,
-//            sectionBy: sectionBy?.bridgeToSwift,
-//            applyFetchClauses: { fetchRequest in
-//                
-//                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-//
-//                CoreStore.assert(
-//                    fetchRequest.sortDescriptors?.isEmpty == false,
-//                    "An \(cs_typeName(NSFetchedResultsController)) requires a sort information. Specify from a \(cs_typeName(CSOrderBy)) clause or any custom \(cs_typeName(CSFetchClause)) that provides a sort descriptor."
-//                )
-//            }
-//        )
-//    }
-//}
-//
-//#endif
+#if os(iOS) || os(watchOS) || os(tvOS)
+
+// MARK: - CSDataStack
+
+public extension CSDataStack {
+    
+    /**
+     Utility for creating an `NSFetchedResultsController` from the `CSDataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstraction.
+     
+     - parameter from: a `CSFrom` clause indicating the entity type
+     - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
+     - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
+     - returns: an `NSFetchedResultsController` that observes the `CSDataStack`
+     */
+    @objc
+    public func createFetchedResultsControllerFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
+        
+        return createFRC(
+            fromContext: self.bridgeToSwift.mainContext,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
+        )
+    }
+}
+    
+    
+// MARK: - CSUnsafeDataTransaction
+
+public extension CSUnsafeDataTransaction {
+    
+    /**
+     Utility for creating an `NSFetchedResultsController` from the `CSUnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstraction.
+     
+     - parameter from: a `CSFrom` clause indicating the entity type
+     - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: an `NSFetchedResultsController` that observes an `CSUnsafeDataTransaction`
+     */
+    @objc
+    public func createFetchedResultsControllerFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
+        
+        return createFRC(
+            fromContext: self.bridgeToSwift.context,
+            from: from,
+            sectionBy: sectionBy,
+            fetchClauses: fetchClauses
+        )
+    }
+}
+    
+    
+// MARK: - Private
+
+fileprivate func createFRC(fromContext context: NSManagedObjectContext, from: CSFrom? = nil, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
+    
+    let controller = CoreStoreFetchedResultsController(
+        context: context,
+        fetchRequest: CoreStoreFetchRequest().dynamicCast(),
+        from: from?.bridgeToSwift.upcast(),
+        sectionBy: sectionBy?.bridgeToSwift,
+        applyFetchClauses: { (fetchRequest) in
+            
+            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+            
+            CoreStore.assert(
+                fetchRequest.sortDescriptors?.isEmpty == false,
+                "An \(cs_typeName(NSFetchedResultsController<NSManagedObject>.self)) requires a sort information. Specify from a \(cs_typeName(CSOrderBy.self)) clause or any custom \(cs_typeName(CSFetchClause.self)) that provides a sort descriptor."
+            )
+        }
+    )
+    return controller.dynamicCast()
+}
+
+#endif

@@ -233,5 +233,37 @@
     }
     [self waitForExpectationsWithTimeout:10 handler:nil];
 }
+    
+#if TARGET_OS_IOS || TARGET_OS_WATCHOS || TARGET_OS_TV
+
+- (void)test_ThatDataStacks_CanCreateCustomFetchedResultsControllers {
+    
+    [CSCoreStore
+     setDefaultStack:[[CSDataStack alloc]
+                      initWithModelName:@"Model"
+                      bundle:[NSBundle bundleForClass:[self class]]
+                      versionChain:nil]];
+    [CSCoreStore
+     addInMemoryStorageAndWait:[CSInMemoryStore new]
+     error:nil];
+    NSFetchedResultsController *controller =
+    [[CSCoreStore defaultStack]
+     createFetchedResultsControllerFrom:CSFromClass([TestEntity1 class])
+     sectionBy:[CSSectionBy keyPath:CSKeyPath(TestEntity1, testString)]
+     fetchClauses:@[CSWhereFormat(@"%K > %d", CSKeyPath(TestEntity1, testEntityID), 100),
+                    CSOrderByKeys(CSSortAscending(CSKeyPath(TestEntity1, testString)), nil),
+                    CSTweakRequest(^(NSFetchRequest *fetchRequest) { fetchRequest.fetchLimit = 10; })]];
+    
+    XCTAssertNotNil(controller);
+    XCTAssertEqualObjects(controller.fetchRequest.entity.managedObjectClassName, [[TestEntity1 class] description]);
+    XCTAssertEqualObjects(controller.sectionNameKeyPath, CSKeyPath(TestEntity1, testString));
+    XCTAssertEqualObjects(controller.fetchRequest.predicate,
+                          CSWhereFormat(@"%K > %d", CSKeyPath(TestEntity1, testEntityID), 100).predicate);
+    XCTAssertEqualObjects(controller.fetchRequest.sortDescriptors,
+                   CSOrderByKeys(CSSortAscending(CSKeyPath(TestEntity1, testString)), nil).sortDescriptors);
+    XCTAssertEqual(controller.fetchRequest.fetchLimit, 10);
+}
+    
+#endif
 
 @end
