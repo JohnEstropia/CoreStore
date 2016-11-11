@@ -49,7 +49,7 @@ extension AsynchronousDataTransaction: CustomDebugStringConvertible, CoreStoreDe
             ("supportsUndo", self.supportsUndo),
             ("bypassesQueueing", self.bypassesQueueing),
             ("isCommitted", self.isCommitted),
-            ("result", self.result)
+            ("result", self.result as Any)
         )
     }
 }
@@ -254,8 +254,8 @@ extension ICloudStore: CustomDebugStringConvertible, CoreStoreDebugStringConvert
         
         return createFormattedString(
             "(", ")",
-            ("configuration", self.configuration),
-            ("storeOptions", self.storeOptions),
+            ("configuration", self.configuration as Any),
+            ("storeOptions", self.storeOptions as Any),
             ("cacheFileURL", self.cacheFileURL),
             ("cloudStorageOptions", self.cloudStorageOptions)
         )
@@ -283,8 +283,8 @@ extension InMemoryStore: CustomDebugStringConvertible, CoreStoreDebugStringConve
         
         return createFormattedString(
             "(", ")",
-            ("configuration", self.configuration),
-            ("storeOptions", self.storeOptions)
+            ("configuration", self.configuration as Any),
+            ("storeOptions", self.storeOptions as Any)
         )
     }
 }
@@ -309,7 +309,7 @@ extension Into: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
         return createFormattedString(
             "(", ")",
             ("entityClass", self.entityClass),
-            ("configuration", self.configuration),
+            ("configuration", self.configuration as Any),
             ("inferStoreIfPossible", self.inferStoreIfPossible)
         )
     }
@@ -334,8 +334,8 @@ extension LegacySQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringC
         
         return createFormattedString(
             "(", ")",
-            ("configuration", self.configuration),
-            ("storeOptions", self.storeOptions),
+            ("configuration", self.configuration as Any),
+            ("storeOptions", self.storeOptions as Any),
             ("fileURL", self.fileURL),
             ("mappingModelBundles", self.mappingModelBundles),
             ("localStorageOptions", self.localStorageOptions)
@@ -357,7 +357,7 @@ private struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertib
         return createFormattedString(
             "\"\(self.sectionInfo.name)\" (", ")",
             ("numberOfObjects", self.sectionInfo.numberOfObjects),
-            ("indexTitle", self.sectionInfo.indexTitle)
+            ("indexTitle", self.sectionInfo.indexTitle as Any)
         )
     }
 }
@@ -575,7 +575,7 @@ extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConve
         return createFormattedString(
             "(", ")",
             ("isObjectDeleted", self.isObjectDeleted),
-            ("object", self.object)
+            ("object", self.object as Any)
         )
     }
 }
@@ -786,8 +786,8 @@ extension SQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringConvert
         
         return createFormattedString(
             "(", ")",
-            ("configuration", self.configuration),
-            ("storeOptions", self.storeOptions),
+            ("configuration", self.configuration as Any),
+            ("storeOptions", self.storeOptions as Any),
             ("fileURL", self.fileURL),
             ("mappingModelBundles", self.mappingModelBundles),
             ("localStorageOptions", self.localStorageOptions)
@@ -818,7 +818,7 @@ extension SynchronousDataTransaction: CustomDebugStringConvertible, CoreStoreDeb
             ("supportsUndo", self.supportsUndo),
             ("bypassesQueueing", self.bypassesQueueing),
             ("isCommitted", self.isCommitted),
-            ("result", self.result)
+            ("result", self.result as Any)
         )
     }
 }
@@ -1025,21 +1025,21 @@ extension NSAttributeDescription: CoreStoreDebugStringConvertible {
         return createFormattedString(
             "(", ")",
             ("attributeType", self.attributeType),
-            ("attributeValueClassName", self.attributeValueClassName),
-            ("defaultValue", self.defaultValue),
-            ("valueTransformerName", self.valueTransformerName),
+            ("attributeValueClassName", self.attributeValueClassName as Any),
+            ("defaultValue", self.defaultValue as Any),
+            ("valueTransformerName", self.valueTransformerName as Any),
             ("allowsExternalBinaryDataStorage", self.allowsExternalBinaryDataStorage),
-            ("entity.name", self.entity.name),
+            ("entity.name", self.entity.name as Any),
             ("name", self.name),
             ("isOptional", self.isOptional),
             ("isTransient", self.isTransient),
-            ("userInfo", self.userInfo),
+            ("userInfo", self.userInfo as Any),
             ("isIndexed", self.isIndexed),
             ("versionHash", self.versionHash),
-            ("versionHashModifier", self.versionHashModifier),
+            ("versionHashModifier", self.versionHashModifier as Any),
             ("isIndexedBySpotlight", self.isIndexedBySpotlight),
             ("isStoredInExternalRecord", self.isStoredInExternalRecord),
-            ("renamingIdentifier", self.renamingIdentifier)
+            ("renamingIdentifier", self.renamingIdentifier as Any)
         )
     }
 }
@@ -1095,15 +1095,15 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
         
         var info: DumpInfo = [
             ("managedObjectClassName", self.managedObjectClassName!),
-            ("name", self.name),
+            ("name", self.name as Any),
             ("isAbstract", self.isAbstract),
-            ("superentity?.name", self.superentity?.name),
+            ("superentity?.name", self.superentity?.name as Any),
             ("subentities", self.subentities.map({ $0.name })),
             ("properties", self.properties),
-            ("userInfo", self.userInfo),
+            ("userInfo", self.userInfo as Any),
             ("versionHash", self.versionHash),
-            ("versionHashModifier", self.versionHashModifier),
-            ("renamingIdentifier", self.renamingIdentifier),
+            ("versionHashModifier", self.versionHashModifier as Any),
+            ("renamingIdentifier", self.renamingIdentifier as Any),
             ("compoundIndexes", self.compoundIndexes)
         ]
         if #available(iOS 9.0, OSXApplicationExtension 10.11, OSX 10.11, *) {
@@ -1148,9 +1148,9 @@ extension NSManagedObjectID: CoreStoreDebugStringConvertible {
         
         return createFormattedString(
             "\(self.uriRepresentation().coreStoreDumpString) (", ")",
-            ("entity.name", self.entity.name),
-            ("isTemporaryID", self.isTemporaryID),
-            ("persistentStore?.url", self.persistentStore?.url)
+            ("entity.name", self.entity.name as Any),
+            ("isTemporaryID", self.isTemporaryID as Any),
+            ("persistentStore?.url", self.persistentStore?.url as Any)
         )
     }
 }
@@ -1177,24 +1177,24 @@ extension NSRelationshipDescription: CoreStoreDebugStringConvertible {
         
         return createFormattedString(
             "(", ")",
-            ("destinationEntity?.name", self.destinationEntity?.name),
-            ("inverseRelationship?.name", self.inverseRelationship?.name),
+            ("destinationEntity?.name", self.destinationEntity?.name as Any),
+            ("inverseRelationship?.name", self.inverseRelationship?.name as Any),
             ("minCount", self.minCount),
             ("maxCount", self.maxCount),
             ("deleteRule", self.deleteRule),
             ("isToMany", self.isToMany),
             ("isOrdered", self.isOrdered),
-            ("entity.name", self.entity.name),
+            ("entity.name", self.entity.name as Any),
             ("name", self.name),
             ("isOptional", self.isOptional),
             ("isTransient", self.isTransient),
-            ("userInfo", self.userInfo),
+            ("userInfo", self.userInfo as Any),
             ("isIndexed", self.isIndexed),
             ("versionHash", self.versionHash),
-            ("versionHashModifier", self.versionHashModifier),
+            ("versionHashModifier", self.versionHashModifier as Any),
             ("isIndexedBySpotlight", self.isIndexedBySpotlight),
             ("isStoredInExternalRecord", self.isStoredInExternalRecord),
-            ("renamingIdentifier", self.renamingIdentifier)
+            ("renamingIdentifier", self.renamingIdentifier as Any)
         )
     }
 }
@@ -1205,9 +1205,9 @@ extension NSSortDescriptor: CoreStoreDebugStringConvertible {
         
         return createFormattedString(
             "(", ")",
-            ("key", self.key),
+            ("key", self.key as Any),
             ("ascending", self.ascending),
-            ("selector", self.selector)
+            ("selector", self.selector as Any)
         )
     }
 }
