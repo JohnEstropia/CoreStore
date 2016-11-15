@@ -135,23 +135,20 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         )
     }
     
-    /**
-     Returns the `NSManagedObjectContext` for this unsafe transaction. Use only for cases where external frameworks need an `NSManagedObjectContext` instance to work with.
-     
-     - Important: It is the developer's responsibility to ensure the following:
-     - that the `UnsafeDataTransaction` that owns this context should be strongly referenced and prevented from being deallocated during the context's lifetime
-     - that all saves will be done either through the `UnsafeDataTransaction`'s `commit(...)` method, or by calling `save()` manually on the context, its parent, and all other ancestor contexts if there are any.
-     */
-    public var internalContext: NSManagedObjectContext {
-        
-        return self.context
-    }
-    
     
     // MARK: Internal
     
     internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, supportsUndo: Bool) {
         
         super.init(mainContext: mainContext, queue: queue, supportsUndo: supportsUndo, bypassesQueueing: true)
+    }
+    
+    
+    // MARK: Obsolete
+    
+    @available(*, obsoleted: 3.0.0, message: "Transaction contexts are now exposed through the FetchableSource and QueryableSource protocols.", renamed: "internalContext()")
+    public var internalContext: NSManagedObjectContext {
+        
+        fatalError()
     }
 }

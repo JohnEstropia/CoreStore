@@ -44,11 +44,19 @@ final class TransactionTests: BaseTestCase {
                 let createExpectation = self.expectation(description: "create")
                 stack.beginSynchronous { (transaction) in
                     
+                    XCTAssertEqual(transaction.context, transaction.internalContext())
+                    XCTAssertTrue(transaction.context.isTransactionContext)
+                    XCTAssertFalse(transaction.context.isDataStackContext)
+                    
                     let object = transaction.create(Into<TestEntity1>())
+                    XCTAssertEqual(object.fetchSource()?.internalContext(), transaction.context)
+                    XCTAssertEqual(object.querySource()?.internalContext(), transaction.context)
+                    
                     object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
                     object.testDate = testDate
+                    
                     
                     switch transaction.commitAndWait() {
                         
@@ -66,6 +74,9 @@ final class TransactionTests: BaseTestCase {
                 
                 let object = stack.fetchOne(From<TestEntity1>())
                 XCTAssertNotNil(object)
+                XCTAssertEqual(object?.fetchSource()?.internalContext(), stack.mainContext)
+                XCTAssertEqual(object?.querySource()?.internalContext(), stack.mainContext)
+
                 XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                 XCTAssertEqual(object?.testString, "string1")
                 XCTAssertEqual(object?.testNumber, 100)
@@ -355,7 +366,14 @@ final class TransactionTests: BaseTestCase {
                 let createExpectation = self.expectation(description: "create")
                 stack.beginAsynchronous { (transaction) in
                     
+                    XCTAssertEqual(transaction.context, transaction.internalContext())
+                    XCTAssertTrue(transaction.context.isTransactionContext)
+                    XCTAssertFalse(transaction.context.isDataStackContext)
+                    
                     let object = transaction.create(Into<TestEntity1>())
+                    XCTAssertEqual(object.fetchSource()?.internalContext(), transaction.context)
+                    XCTAssertEqual(object.querySource()?.internalContext(), transaction.context)
+                    
                     object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
@@ -372,6 +390,9 @@ final class TransactionTests: BaseTestCase {
                             
                             let object = stack.fetchOne(From<TestEntity1>())
                             XCTAssertNotNil(object)
+                            XCTAssertEqual(object?.fetchSource()?.internalContext(), stack.mainContext)
+                            XCTAssertEqual(object?.querySource()?.internalContext(), stack.mainContext)
+                            
                             XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                             XCTAssertEqual(object?.testString, "string1")
                             XCTAssertEqual(object?.testNumber, 100)
@@ -675,11 +696,17 @@ final class TransactionTests: BaseTestCase {
         self.prepareStack { (stack) in
             
             let transaction = stack.beginUnsafe()
+            XCTAssertEqual(transaction.context, transaction.internalContext())
+            XCTAssertTrue(transaction.context.isTransactionContext)
+            XCTAssertFalse(transaction.context.isDataStackContext)
             
             let testDate = Date()
             do {
                 
                 let object = transaction.create(Into<TestEntity1>())
+                XCTAssertEqual(object.fetchSource()?.internalContext(), transaction.context)
+                XCTAssertEqual(object.querySource()?.internalContext(), transaction.context)
+                
                 object.testEntityID = NSNumber(value: 1)
                 object.testString = "string1"
                 object.testNumber = 100
@@ -693,6 +720,9 @@ final class TransactionTests: BaseTestCase {
                     
                     let object = stack.fetchOne(From<TestEntity1>())
                     XCTAssertNotNil(object)
+                    XCTAssertEqual(object?.fetchSource()?.internalContext(), stack.mainContext)
+                    XCTAssertEqual(object?.querySource()?.internalContext(), stack.mainContext)
+                    
                     XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object?.testString, "string1")
                     XCTAssertEqual(object?.testNumber, 100)

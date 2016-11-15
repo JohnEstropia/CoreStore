@@ -470,6 +470,7 @@ public /*abstract*/ class BaseDataTransaction {
         self.bypassesQueueing = bypassesQueueing
         
         context.parentTransaction = self
+        context.isTransactionContext = true
         if !supportsUndo {
             
             context.undoManager = nil

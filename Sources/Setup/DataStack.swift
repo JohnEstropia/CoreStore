@@ -71,6 +71,8 @@ public final class DataStack {
         self.migrationChain = migrationChain
         
         self.rootSavingContext.parentStack = self
+        
+        self.mainContext.isDataStackContext = true
     }
     
     /**

@@ -49,28 +49,33 @@ public protocol ListObserver: class {
     associatedtype ListEntityType: NSManagedObject
     
     /**
-     Handles processing just before a change to the observed list occurs
+     Handles processing just before a change to the observed list occurs. (Optional)
+     The default implementation does nothing.
      
      - parameter monitor: the `ListMonitor` monitoring the list being observed
      */
     func listMonitorWillChange(_ monitor: ListMonitor<ListEntityType>)
     
     /**
-     Handles processing right after a change to the observed list occurs
+     Handles processing right after a change to the observed list occurs. (Optional)
+     The default implementation does nothing.
      
      - parameter monitor: the `ListMonitor` monitoring the object being observed
      */
     func listMonitorDidChange(_ monitor: ListMonitor<ListEntityType>)
     
     /**
-     This method is broadcast from within the `ListMonitor`'s `refetch(...)` method to let observers prepare for the internal `NSFetchedResultsController`'s pending change to its predicate, sort descriptors, etc. Note that the actual refetch will happen after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes.
+     This method is broadcast from within the `ListMonitor`'s `refetch(...)` method to let observers prepare for the internal `NSFetchedResultsController`'s pending change to its predicate, sort descriptors, etc. (Optional)
+     The default implementation does nothing.
+     - Note: The actual refetch will happen after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes
      
      - parameter monitor: the `ListMonitor` monitoring the object being observed
      */
     func listMonitorWillRefetch(_ monitor: ListMonitor<ListEntityType>)
     
     /**
-     After the `ListMonitor`'s `refetch(...)` method is called, this method is broadcast after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes.
+     After the `ListMonitor`'s `refetch(...)` method is called, this method is broadcast after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes. (Optional)
+     The default implementation does nothing.
      
      - parameter monitor: the `ListMonitor` monitoring the object being observed
      */
@@ -82,25 +87,13 @@ public protocol ListObserver: class {
 
 public extension ListObserver {
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitorWillChange(_ monitor: ListMonitor<ListEntityType>) { }
+    public func listMonitorWillChange(_ monitor: ListMonitor<ListEntityType>) { }
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitorDidChange(_ monitor: ListMonitor<ListEntityType>) { }
+    public func listMonitorDidChange(_ monitor: ListMonitor<ListEntityType>) { }
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitorWillRefetch(_ monitor: ListMonitor<ListEntityType>) { }
+    public func listMonitorWillRefetch(_ monitor: ListMonitor<ListEntityType>) { }
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitorDidRefetch(_ monitor: ListMonitor<ListEntityType>) { }
+    public func listMonitorDidRefetch(_ monitor: ListMonitor<ListEntityType>) { }
 }
 
 
@@ -119,7 +112,8 @@ public extension ListObserver {
 public protocol ListObjectObserver: ListObserver {
     
     /**
-     Notifies that an object was inserted to the specified `NSIndexPath` in the list
+     Notifies that an object was inserted to the specified `NSIndexPath` in the list. (Optional)
+     The default implementation does nothing.
      
      - parameter monitor: the `ListMonitor` monitoring the list being observed
      - parameter object: the entity type for the inserted object
@@ -128,7 +122,8 @@ public protocol ListObjectObserver: ListObserver {
     func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: IndexPath)
     
     /**
-     Notifies that an object was deleted from the specified `NSIndexPath` in the list
+     Notifies that an object was deleted from the specified `NSIndexPath` in the list. (Optional)
+     The default implementation does nothing.
      
      - parameter monitor: the `ListMonitor` monitoring the list being observed
      - parameter object: the entity type for the deleted object
@@ -137,7 +132,8 @@ public protocol ListObjectObserver: ListObserver {
     func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteObject object: ListEntityType, fromIndexPath indexPath: IndexPath)
     
     /**
-     Notifies that an object at the specified `NSIndexPath` was updated
+     Notifies that an object at the specified `NSIndexPath` was updated. (Optional)
+     The default implementation does nothing.
      
      - parameter monitor: the `ListMonitor` monitoring the list being observed
      - parameter object: the entity type for the updated object
@@ -146,7 +142,8 @@ public protocol ListObjectObserver: ListObserver {
     func listMonitor(_ monitor: ListMonitor<ListEntityType>, didUpdateObject object: ListEntityType, atIndexPath indexPath: IndexPath)
     
     /**
-     Notifies that an object's index changed
+     Notifies that an object's index changed. (Optional)
+     The default implementation does nothing.
      
      - parameter monitor: the `ListMonitor` monitoring the list being observed
      - parameter object: the entity type for the moved object
@@ -161,25 +158,13 @@ public protocol ListObjectObserver: ListObserver {
 
 public extension ListObjectObserver {
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: IndexPath) { }
+    public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: IndexPath) { }
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteObject object: ListEntityType, fromIndexPath indexPath: IndexPath) { }
+    public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteObject object: ListEntityType, fromIndexPath indexPath: IndexPath) { }
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didUpdateObject object: ListEntityType, atIndexPath indexPath: IndexPath) { }
+    public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didUpdateObject object: ListEntityType, atIndexPath indexPath: IndexPath) { }
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didMoveObject object: ListEntityType, fromIndexPath: IndexPath, toIndexPath: IndexPath) { }
+    public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didMoveObject object: ListEntityType, fromIndexPath: IndexPath, toIndexPath: IndexPath) { }
 }
 
 
@@ -199,7 +184,8 @@ public extension ListObjectObserver {
 public protocol ListSectionObserver: ListObjectObserver {
     
     /**
-     Notifies that a section was inserted at the specified index
+     Notifies that a section was inserted at the specified index. (Optional)
+     The default implementation does nothing.
      
      - parameter monitor: the `ListMonitor` monitoring the list being observed
      - parameter sectionInfo: the `NSFetchedResultsSectionInfo` for the inserted section
@@ -208,7 +194,8 @@ public protocol ListSectionObserver: ListObjectObserver {
     func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
     
     /**
-     Notifies that a section was inserted at the specified index
+     Notifies that a section was inserted at the specified index. (Optional)
+     The default implementation does nothing.
      
      - parameter monitor: the `ListMonitor` monitoring the list being observed
      - parameter sectionInfo: the `NSFetchedResultsSectionInfo` for the deleted section
@@ -222,15 +209,9 @@ public protocol ListSectionObserver: ListObjectObserver {
 
 public extension ListSectionObserver {
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) { }
+    public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) { }
     
-    /**
-     The default implementation does nothing.
-     */
-    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) { }
+    public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) { }
 }
 
 #endif

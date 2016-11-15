@@ -34,6 +34,7 @@ public extension DataStack {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `performFetch()` on the created `NSFetchedResultsController`.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
@@ -53,6 +54,7 @@ public extension DataStack {
     
     /**
      Utility for creating an `NSFetchedResultsController` from a `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `performFetch()` on the created `NSFetchedResultsController`.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
@@ -72,6 +74,7 @@ public extension DataStack {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `performFetch()` on the created `NSFetchedResultsController`.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -90,6 +93,7 @@ public extension DataStack {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `performFetch()` on the created `NSFetchedResultsController`.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -114,6 +118,7 @@ public extension UnsafeDataTransaction {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `UnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `performFetch()` on the created `NSFetchedResultsController`.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
@@ -133,6 +138,7 @@ public extension UnsafeDataTransaction {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `UnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `performFetch()` on the created `NSFetchedResultsController`.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
@@ -152,6 +158,7 @@ public extension UnsafeDataTransaction {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `UnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `performFetch()` on the created `NSFetchedResultsController`.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -170,6 +177,7 @@ public extension UnsafeDataTransaction {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `UnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `performFetch()` on the created `NSFetchedResultsController`.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.

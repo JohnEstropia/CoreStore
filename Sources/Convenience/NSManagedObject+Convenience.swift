@@ -32,6 +32,52 @@ import CoreData
 public extension NSManagedObject {
     
     /**
+     Exposes a `FetchableSource` that can fetch sibling objects of this `NSManagedObject` instance. This may be the `DataStack`, a `BaseDataTransaction`, the `NSManagedObjectContext` itself, or `nil` if the obejct's parent is already deallocated.
+     - Warning: Future implementations may change the instance returned by this method depending on the timing or condition that `fetchSource()` was called. Do not make assumptions that the instance will be a specific instance. If the `NSManagedObjectContext` instance is desired, use the `FetchableSource.internalContext()` method to get the correct instance. Also, do not assume that the `fetchSource()` and `querySource()` return the same instance all the time.
+     - returns: a `FetchableSource` that can fetch sibling objects of this `NSManagedObject` instance. This may be the `DataStack`, a `BaseDataTransaction`, the `NSManagedObjectContext` itself, or `nil` if the object's parent is already deallocated.
+     */
+    @nonobjc
+    public func fetchSource() -> FetchableSource? {
+        
+        guard let context = self.managedObjectContext else {
+            
+            return nil
+        }
+        if context.isTransactionContext {
+            
+            return context.parentTransaction
+        }
+        if context.isDataStackContext {
+            
+            return context.parentStack
+        }
+        return context
+    }
+    
+    /**
+     Exposes a `QueryableSource` that can query attributes and aggregate values. This may be the `DataStack`, a `BaseDataTransaction`, the `NSManagedObjectContext` itself, or `nil` if the obejct's parent is already deallocated.
+     - Warning: Future implementations may change the instance returned by this method depending on the timing or condition that `querySource()` was called. Do not make assumptions that the instance will be a specific instance. If the `NSManagedObjectContext` instance is desired, use the `QueryableSource.internalContext()` method to get the correct instance. Also, do not assume that the `fetchSource()` and `querySource()` return the same instance all the time.
+     - returns: a `QueryableSource` that can query attributes and aggregate values. This may be the `DataStack`, a `BaseDataTransaction`, the `NSManagedObjectContext` itself, or `nil` if the object's parent is already deallocated.
+     */
+    @nonobjc
+    public func querySource() -> QueryableSource? {
+        
+        guard let context = self.managedObjectContext else {
+            
+            return nil
+        }
+        if context.isTransactionContext {
+            
+            return context.parentTransaction
+        }
+        if context.isDataStackContext {
+            
+            return context.parentStack
+        }
+        return context
+    }
+    
+    /**
      Provides a convenience wrapper for accessing `primitiveValueForKey(...)` with proper calls to `willAccessValueForKey(...)` and `didAccessValueForKey(...)`. This is useful when implementing accessor methods for transient attributes.
      
      - parameter KVCKey: the KVC key

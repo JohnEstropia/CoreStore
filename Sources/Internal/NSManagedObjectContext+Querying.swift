@@ -29,12 +29,12 @@ import CoreData
 
 // MARK: - NSManagedObjectContext
 
-internal extension NSManagedObjectContext {
+extension NSManagedObjectContext: FetchableSource, QueryableSource {
     
-    // MARK: Internal: Fetch Existing
+    // MARK: FetchableSource
     
     @nonobjc
-    internal func fetchExisting<T: NSManagedObject>(_ object: T) -> T? {
+    public func fetchExisting<T: NSManagedObject>(_ object: T) -> T? {
         
         if object.objectID.isTemporaryID {
             
@@ -69,17 +69,40 @@ internal extension NSManagedObjectContext {
         }
     }
     
-    
-    // MARK: Internal: Fetch One
+    @nonobjc
+    public func fetchExisting<T: NSManagedObject>(_ objectID: NSManagedObjectID) -> T? {
+        
+        do {
+            
+            return (try self.existingObject(with: objectID) as! T)
+        }
+        catch _ {
+            
+            return nil
+        }
+    }
     
     @nonobjc
-    internal func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
+    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
+        
+        return objects.flatMap { (try? self.existingObject(with: $0.objectID)) as? T }
+    }
+    
+    @nonobjc
+    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
+        
+        return objectIDs.flatMap { (try? self.existingObject(with: $0)) as? T }
+    }
+    
+    @nonobjc
+    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
+        
         
         return self.fetchOne(from, fetchClauses)
     }
     
     @nonobjc
-    internal func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
+    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -96,43 +119,13 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func fetchOne<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> T? {
-        
-        var fetchResults: [T]?
-        var fetchError: Error?
-        self.performAndWait {
-            
-            do {
-                
-                fetchResults = try self.fetch(fetchRequest)
-            }
-            catch {
-                
-                fetchError = error
-            }
-        }
-        if fetchResults == nil {
-            
-            CoreStore.log(
-                CoreStoreError(fetchError),
-                "Failed executing fetch request."
-            )
-            return nil
-        }
-        return fetchResults?.first
-    }
-    
-    
-    // MARK: Internal: Fetch All
-    
-    @nonobjc
-    internal func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
         return self.fetchAll(from, fetchClauses)
     }
     
     @nonobjc
-    internal func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -149,43 +142,13 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func fetchAll<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> [T]? {
-        
-        var fetchResults: [T]?
-        var fetchError: Error?
-        self.performAndWait {
-            
-            do {
-                
-                fetchResults = try self.fetch(fetchRequest)
-            }
-            catch {
-                
-                fetchError = error
-            }
-        }
-        if fetchResults == nil {
-            
-            CoreStore.log(
-                CoreStoreError(fetchError),
-                "Failed executing fetch request."
-            )
-            return nil
-        }
-        return fetchResults
-    }
-    
-    
-    // MARK: Internal: Count
-    
-    @nonobjc
-    internal func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
+    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
     
         return self.fetchCount(from, fetchClauses)
     }
     
     @nonobjc
-    internal func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
+    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -199,43 +162,13 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func fetchCount(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Int? {
-        
-        var count = 0
-        var countError: Error?
-        self.performAndWait {
-            
-            do {
-                
-                count = try self.count(for: fetchRequest)
-            }
-            catch {
-                
-                countError = error
-            }
-        }
-        if count == NSNotFound {
-            
-            CoreStore.log(
-                CoreStoreError(countError),
-                "Failed executing count request."
-            )
-            return nil
-        }
-        return count
-    }
-    
-    
-    // MARK: Internal: Object ID
-    
-    @nonobjc
-    internal func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
         return self.fetchObjectID(from, fetchClauses)
     }
     
     @nonobjc
-    internal func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -252,43 +185,13 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func fetchObjectID(_ fetchRequest: NSFetchRequest<NSManagedObjectID>) -> NSManagedObjectID? {
-        
-        var fetchResults: [NSManagedObjectID]?
-        var fetchError: Error?
-        self.performAndWait {
-            
-            do {
-                
-                fetchResults = try self.fetch(fetchRequest)
-            }
-            catch {
-                
-                fetchError = error
-            }
-        }
-        if fetchResults == nil {
-            
-            CoreStore.log(
-                CoreStoreError(fetchError),
-                "Failed executing fetch request."
-            )
-            return nil
-        }
-        return fetchResults?.first
-    }
-    
-    
-    // MARK: Internal: Object IDs
-    
-    @nonobjc
-    internal func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         return self.fetchObjectIDs(from, fetchClauses)
     }
     
     @nonobjc
-    internal func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -332,79 +235,16 @@ internal extension NSManagedObjectContext {
     }
     
     
-    // MARK: Internal: Delete All
+    // MARK: QueryableSource
     
     @nonobjc
-    internal func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
-        
-        return self.deleteAll(from, deleteClauses)
-    }
-    
-    @nonobjc
-    internal func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
-        
-        let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
-        
-        fetchRequest.fetchLimit = 0
-        fetchRequest.resultType = .managedObjectResultType
-        fetchRequest.returnsObjectsAsFaults = true
-        fetchRequest.includesPropertyValues = false
-        deleteClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.deleteAll(fetchRequest.dynamicCast())
-    }
-    
-    @nonobjc
-    internal func deleteAll<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> Int? {
-        
-        var numberOfDeletedObjects: Int?
-        var fetchError: Error?
-        self.performAndWait {
-            
-            autoreleasepool {
-                
-                do {
-                    
-                    let fetchResults = try self.fetch(fetchRequest)
-                    for object in fetchResults {
-                        
-                        self.delete(object)
-                    }
-                    numberOfDeletedObjects = fetchResults.count
-                }
-                catch {
-                    
-                    fetchError = error
-                }
-            }
-        }
-        if numberOfDeletedObjects == nil {
-            
-            CoreStore.log(
-                CoreStoreError(fetchError),
-                "Failed executing fetch request."
-            )
-            return nil
-        }
-        return numberOfDeletedObjects
-    }
-    
-    
-    // MARK: Internal: Value
-    
-    @nonobjc
-    internal func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         return self.queryValue(from, selectClause, queryClauses)
     }
     
     @nonobjc
-    internal func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -421,6 +261,158 @@ internal extension NSManagedObjectContext {
         }
         return self.queryValue(selectTerms, fetchRequest: fetchRequest)
     }
+    
+    @nonobjc
+    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
+        
+        return self.queryAttributes(from, selectClause, queryClauses)
+    }
+    
+    @nonobjc
+    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
+        
+        let fetchRequest = CoreStoreFetchRequest()
+        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
+        
+        fetchRequest.fetchLimit = 0
+        
+        selectClause.selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
+        queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+        
+        guard storeFound else {
+            
+            return nil
+        }
+        return self.queryAttributes(fetchRequest)
+    }
+    
+    
+    // MARK: FetchableSource, QueryableSource
+    
+    @nonobjc
+    public func internalContext() -> NSManagedObjectContext {
+        
+        return self
+    }
+}
+
+
+// MARK: - NSManagedObjectContext (Internal)
+
+internal extension NSManagedObjectContext {
+    
+    // MARK: Fetching
+    
+    @nonobjc
+    internal func fetchOne<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> T? {
+        
+        var fetchResults: [T]?
+        var fetchError: Error?
+        self.performAndWait {
+            
+            do {
+                
+                fetchResults = try self.fetch(fetchRequest)
+            }
+            catch {
+                
+                fetchError = error
+            }
+        }
+        if fetchResults == nil {
+            
+            CoreStore.log(
+                CoreStoreError(fetchError),
+                "Failed executing fetch request."
+            )
+            return nil
+        }
+        return fetchResults?.first
+    }
+    
+    @nonobjc
+    internal func fetchAll<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> [T]? {
+        
+        var fetchResults: [T]?
+        var fetchError: Error?
+        self.performAndWait {
+            
+            do {
+                
+                fetchResults = try self.fetch(fetchRequest)
+            }
+            catch {
+                
+                fetchError = error
+            }
+        }
+        if fetchResults == nil {
+            
+            CoreStore.log(
+                CoreStoreError(fetchError),
+                "Failed executing fetch request."
+            )
+            return nil
+        }
+        return fetchResults
+    }
+    
+    @nonobjc
+    internal func fetchCount(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Int? {
+        
+        var count = 0
+        var countError: Error?
+        self.performAndWait {
+            
+            do {
+                
+                count = try self.count(for: fetchRequest)
+            }
+            catch {
+                
+                countError = error
+            }
+        }
+        if count == NSNotFound {
+            
+            CoreStore.log(
+                CoreStoreError(countError),
+                "Failed executing count request."
+            )
+            return nil
+        }
+        return count
+    }
+    
+    @nonobjc
+    internal func fetchObjectID(_ fetchRequest: NSFetchRequest<NSManagedObjectID>) -> NSManagedObjectID? {
+        
+        var fetchResults: [NSManagedObjectID]?
+        var fetchError: Error?
+        self.performAndWait {
+            
+            do {
+                
+                fetchResults = try self.fetch(fetchRequest)
+            }
+            catch {
+                
+                fetchError = error
+            }
+        }
+        if fetchResults == nil {
+            
+            CoreStore.log(
+                CoreStoreError(fetchError),
+                "Failed executing fetch request."
+            )
+            return nil
+        }
+        return fetchResults?.first
+    }
+    
+    
+    // MARK: Querying
     
     @nonobjc
     internal func queryValue<U: SelectValueResultType>(_ selectTerms: [SelectTerm], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> U? {
@@ -488,33 +480,6 @@ internal extension NSManagedObjectContext {
         return nil
     }
     
-    
-    // MARK: Internal: Attributes
-    
-    @nonobjc
-    internal func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
-        
-        return self.queryAttributes(from, selectClause, queryClauses)
-    }
-    
-    @nonobjc
-    internal func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
-        
-        let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
-        
-        fetchRequest.fetchLimit = 0
-        
-        selectClause.selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
-        queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.queryAttributes(fetchRequest)
-    }
-    
     @nonobjc
     internal func queryAttributes(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> [[String: Any]]? {
         
@@ -541,5 +506,68 @@ internal extension NSManagedObjectContext {
             "Failed executing fetch request."
         )
         return nil
+    }
+    
+    
+    // MARK: Deleting
+    
+    @nonobjc
+    internal func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
+        
+        return self.deleteAll(from, deleteClauses)
+    }
+    
+    @nonobjc
+    internal func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
+        
+        let fetchRequest = CoreStoreFetchRequest()
+        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
+        
+        fetchRequest.fetchLimit = 0
+        fetchRequest.resultType = .managedObjectResultType
+        fetchRequest.returnsObjectsAsFaults = true
+        fetchRequest.includesPropertyValues = false
+        deleteClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+        
+        guard storeFound else {
+            
+            return nil
+        }
+        return self.deleteAll(fetchRequest.dynamicCast())
+    }
+    
+    @nonobjc
+    internal func deleteAll<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> Int? {
+        
+        var numberOfDeletedObjects: Int?
+        var fetchError: Error?
+        self.performAndWait {
+            
+            autoreleasepool {
+                
+                do {
+                    
+                    let fetchResults = try self.fetch(fetchRequest)
+                    for object in fetchResults {
+                        
+                        self.delete(object)
+                    }
+                    numberOfDeletedObjects = fetchResults.count
+                }
+                catch {
+                    
+                    fetchError = error
+                }
+            }
+        }
+        if numberOfDeletedObjects == nil {
+            
+            CoreStore.log(
+                CoreStoreError(fetchError),
+                "Failed executing fetch request."
+            )
+            return nil
+        }
+        return numberOfDeletedObjects
     }
 }

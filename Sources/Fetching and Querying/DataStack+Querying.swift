@@ -29,7 +29,9 @@ import CoreData
 
 // MARK: - DataStack
 
-public extension DataStack {
+extension DataStack: FetchableSource, QueryableSource {
+    
+    // MARK: FetchableSource
     
     /**
      Fetches the `NSManagedObject` instance in the `DataStack`'s context from a reference created from a transaction or from a different managed object context.
@@ -39,14 +41,7 @@ public extension DataStack {
      */
     public func fetchExisting<T: NSManagedObject>(_ object: T) -> T? {
         
-        do {
-            
-            return (try self.mainContext.existingObject(with: object.objectID) as! T)
-        }
-        catch _ {
-            
-            return nil
-        }
+        return self.mainContext.fetchExisting(object)
     }
     
     /**
@@ -57,14 +52,7 @@ public extension DataStack {
      */
     public func fetchExisting<T: NSManagedObject>(_ objectID: NSManagedObjectID) -> T? {
         
-        do {
-            
-            return (try self.mainContext.existingObject(with: objectID) as! T)
-        }
-        catch _ {
-            
-            return nil
-        }
+        return self.mainContext.fetchExisting(objectID)
     }
     
     /**
@@ -75,7 +63,7 @@ public extension DataStack {
      */
     public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
         
-        return objects.flatMap { (try? self.mainContext.existingObject(with: $0.objectID)) as? T }
+        return self.mainContext.fetchExisting(objects)
     }
     
     /**
@@ -86,7 +74,7 @@ public extension DataStack {
      */
     public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
         
-        return objectIDs.flatMap { (try? self.mainContext.existingObject(with: $0)) as? T }
+        return self.mainContext.fetchExisting(objectIDs)
     }
     
     /**
@@ -249,6 +237,9 @@ public extension DataStack {
         return self.mainContext.fetchObjectIDs(from, fetchClauses)
     }
     
+    
+    // MARK: QueryableSource
+    
     /**
      Queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      
@@ -323,5 +314,16 @@ public extension DataStack {
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.queryAttributes(from, selectClause, queryClauses)
+    }
+    
+    
+    // MARK: FetchableSource, QueryableSource
+    
+    /**
+     The internal `NSManagedObjectContext` managed by this instance. Using this context directly should typically be avoided, and is provided by CoreStore only for extremely specialized cases.
+     */
+    public func internalContext() -> NSManagedObjectContext {
+        
+        return self.mainContext
     }
 }

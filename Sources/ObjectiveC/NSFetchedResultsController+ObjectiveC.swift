@@ -35,6 +35,7 @@ public extension CSDataStack {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `CSDataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `-performFetch:` on the created `NSFetchedResultsController`.
      
      - parameter from: a `CSFrom` clause indicating the entity type
      - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
@@ -60,6 +61,7 @@ public extension CSUnsafeDataTransaction {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `CSUnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstraction.
+     - Note: It is the caller's responsibility to call `-performFetch:` on the created `NSFetchedResultsController`.
      
      - parameter from: a `CSFrom` clause indicating the entity type
      - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections

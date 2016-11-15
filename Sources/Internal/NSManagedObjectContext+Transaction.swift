@@ -75,6 +75,48 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
+    internal var isTransactionContext: Bool {
+        
+        get {
+            
+            let value: NSNumber? = cs_getAssociatedObjectForKey(
+                &PropertyKeys.isTransactionContext,
+                inObject: self
+            )
+            return value?.boolValue == true
+        }
+        set {
+            
+            cs_setAssociatedCopiedObject(
+                NSNumber(value: newValue),
+                forKey: &PropertyKeys.isTransactionContext,
+                inObject: self
+            )
+        }
+    }
+    
+    @nonobjc
+    internal var isDataStackContext: Bool {
+        
+        get {
+            
+            let value: NSNumber? = cs_getAssociatedObjectForKey(
+                &PropertyKeys.isDataStackContext,
+                inObject: self
+            )
+            return value?.boolValue == true
+        }
+        set {
+            
+            cs_setAssociatedCopiedObject(
+                NSNumber(value: newValue),
+                forKey: &PropertyKeys.isDataStackContext,
+                inObject: self
+            )
+        }
+    }
+    
+    @nonobjc
     internal func isRunningInAllowedQueue() -> Bool {
         
         guard let parentTransaction = self.parentTransaction else {
@@ -214,5 +256,7 @@ internal extension NSManagedObjectContext {
         
         static var parentTransaction: Void?
         static var isSavingSynchronously: Void?
+        static var isTransactionContext: Void?
+        static var isDataStackContext: Void?
     }
 }
