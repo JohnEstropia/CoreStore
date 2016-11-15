@@ -36,7 +36,7 @@ public extension BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter source: the object to import values from
-     - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
+     - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
      */
     public func importObject<T>(
@@ -68,7 +68,7 @@ public extension BaseDataTransaction {
      
      - parameter object: the `NSManagedObject` to update
      - parameter source: the object to import values from
-     - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
+     - throws: an `Error` thrown from any of the `ImportableObject` methods
      */
     public func importObject<T>(
         _ object: T,
@@ -97,7 +97,7 @@ public extension BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from
-     - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
+     - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the array of created `ImportableObject` instances
      */
     public func importObjects<T, S: Sequence>(
@@ -135,7 +135,7 @@ public extension BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter source: the object to import values from
-     - throws: an `ErrorType` thrown from any of the `ImportableUniqueObject` methods
+     - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
      */
     public func importUniqueObject<T>(
@@ -190,7 +190,7 @@ public extension BaseDataTransaction {
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from
      - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
-     - throws: an `ErrorType` thrown from any of the `ImportableUniqueObject` methods
+     - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the array of created/updated `ImportableUniqueObject` instances
      */
     public func importUniqueObjects<T, S: Sequence>(
