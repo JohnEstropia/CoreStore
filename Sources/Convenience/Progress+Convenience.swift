@@ -1,5 +1,5 @@
 //
-//  NSProgress+Convenience.swift
+//  Progress+Convenience.swift
 //  CoreStore
 //
 //  Copyright © 2015 John Rommel Estropia
@@ -26,12 +26,12 @@
 import Foundation
 
 
-// MARK: - NSProgress
+// MARK: - Progress
 
 public extension Progress {
     
     /**
-     Sets a closure that the `NSProgress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
+     Sets a closure that the `Progress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
      
      - parameter closure: the closure to execute on progress change
      */

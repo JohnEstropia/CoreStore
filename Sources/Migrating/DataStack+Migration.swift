@@ -124,7 +124,7 @@ public extension DataStack {
      ```
      - parameter storeType: the local storage type
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
-     - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
+     - returns: a `Progress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
     public func addStorage<T: LocalStorage>(_ storeType: T.Type, completion: @escaping (SetupResult<T>) -> Void) -> Progress? where T: DefaultInitializableStore {
         
@@ -146,7 +146,7 @@ public extension DataStack {
      ```
      - parameter storage: the local storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
-     - returns: an `NSProgress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
+     - returns: a `Progress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
      */
     public func addStorage<T: LocalStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) -> Progress? {
         
@@ -429,7 +429,7 @@ public extension DataStack {
      - parameter storage: the local storage
      - parameter completion: the closure to be executed on the main queue when the migration completes, either due to success or failure. The closure's `MigrationResult` argument indicates the result.
      - throws: a `CoreStoreError` value indicating the failure
-     - returns: an `NSProgress` instance if a migration has started, or `nil` is no migrations are required
+     - returns: a `Progress` instance if a migration has started, or `nil` is no migrations are required
      */
     public func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, completion: @escaping (MigrationResult) -> Void) throws -> Progress? {
         

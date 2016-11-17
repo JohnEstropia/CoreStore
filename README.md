@@ -379,12 +379,12 @@ The `ICloudStore` only keeps weak references of the registered observers. You ma
 
 
 ## Migrations
-We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests though, this method blocks so it should not do long tasks such as store migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.AllowSynchronousLightweightMigration` option:
+We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests though, this method blocks so it should not do long tasks such as store migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.allowSynchronousLightweightMigration` option:
 ```swift
 try dataStack.addStorageAndWait(
     SQLiteStore(
         fileURL: sqliteFileURL,
-        localStorageOptions: .AllowSynchronousLightweightMigration
+        localStorageOptions: .allowSynchronousLightweightMigration
     )
 }
 ```
@@ -392,7 +392,7 @@ if you do so, any model mismatch will be thrown as an error.
 
 In general though, if migrations are expected the asynchronous variant `addStorage(_:completion:)` method is recommended instead:
 ```swift
-let migrationProgress: NSProgress? = try dataStack.addStorage(
+let migrationProgress: Progress? = try dataStack.addStorage(
     SQLiteStore(
         fileName: "MyStore.sqlite",
         configuration: "Config2"
@@ -409,7 +409,7 @@ let migrationProgress: NSProgress? = try dataStack.addStorage(
 ```
 The `completion` block reports a `SetupResult` that indicates success or failure.
 
-Notice that this method also returns an optional `NSProgress`. If `nil`, no migrations are needed, thus progress reporting is unnecessary as well. If not `nil`, you can use this to track migration progress by using standard KVO on the `"fractionCompleted"` key, or by using a closure-based utility exposed in *NSProgress+Convenience.swift*:
+Notice that this method also returns an optional `Progress`. If `nil`, no migrations are needed, thus progress reporting is unnecessary as well. If not `nil`, you can use this to track migration progress by using standard KVO on the `"fractionCompleted"` key, or by using a closure-based utility exposed in *Progress+Convenience.swift*:
 ```swift
 migrationProgress?.setProgressHandler { [weak self] (progress) -> Void in
     self?.progressView?.setProgress(Float(progress.fractionCompleted), animated: true)
@@ -1428,9 +1428,9 @@ To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C sour
 # Installation
 - Requires:
     - iOS 8 SDK and above
-    - Swift 2.3 (Xcode 8)
+    - Swift 3.0 (Xcode 8.1)
 - Dependencies:
-    - [GCDKit](https://github.com/JohnEstropia/GCDKit)
+    - *None*
 - Other notes:
     - The `com.apple.CoreData.ConcurrencyDebug` debug argument should be turned off for the app. CoreStore already guarantees safety for you by making the main context read-only, and by only executing transactions serially.
 
@@ -1443,7 +1443,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 2.1.0
+github "JohnEstropia/CoreStore" >= 3.0.0
 ```
 and run 
 ```
