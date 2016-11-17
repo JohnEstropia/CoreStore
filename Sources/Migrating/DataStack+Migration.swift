@@ -239,7 +239,10 @@ public extension DataStack {
                             
                             _ = try self.addStorageAndWait(storage)
                             
-                            completion(SetupResult(storage))
+                            DispatchQueue.main.async {
+                                
+                                completion(SetupResult(storage))
+                            }
                         }
                         catch {
                             
