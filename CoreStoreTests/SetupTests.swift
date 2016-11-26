@@ -29,7 +29,7 @@ import CoreStore
 
 // MARK: - SetupTests
 
-class SetupTests: BaseTestCase {
+class SetupTests: BaseTestDataTestCase {
     
     @objc
     dynamic func test_ThatDataStacks_ConfigureCorrectly() {
@@ -194,6 +194,62 @@ class SetupTests: BaseTestCase {
     }
     
     @objc
+    dynamic func test_ThatSQLiteStores_DeleteFilesCorrectly() {
+        
+        let fileManager = FileManager.default
+        let sqliteStore = SQLiteStore()
+        func createStore() throws -> [String: Any] {
+            
+            do {
+                
+                let stack = DataStack(
+                    modelName: "Model",
+                    bundle: Bundle(for: type(of: self))
+                )
+                try! stack.addStorageAndWait(sqliteStore)
+                self.prepareTestDataForStack(stack)
+            }
+            XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
+            XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
+            XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
+            
+            return try NSPersistentStoreCoordinator.metadataForPersistentStore(
+                ofType: type(of: sqliteStore).storeType,
+                at: sqliteStore.fileURL,
+                options: sqliteStore.storeOptions
+            )
+        }
+        do {
+            
+            let metadata = try createStore()
+            let stack = DataStack(
+                modelName: "Model",
+                bundle: Bundle(for: type(of: self))
+            )
+            try sqliteStore.eraseStorageAndWait(metadata: metadata, soureModelHint: stack.model[metadata])
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
+        }
+        catch {
+            
+            XCTFail()
+        }
+        do {
+            
+            let metadata = try createStore()
+            try sqliteStore.eraseStorageAndWait(metadata: metadata, soureModelHint: nil)
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
+        }
+        catch {
+            
+            XCTFail()
+        }
+    }
+    
+    @objc
     dynamic func test_ThatLegacySQLiteStores_SetupCorrectly() {
         
         let stack = DataStack(
@@ -202,7 +258,7 @@ class SetupTests: BaseTestCase {
         )
         do {
             
-            let sqliteStore = SQLiteStore()
+            let sqliteStore = LegacySQLiteStore()
             do {
                 
                 try stack.addStorageAndWait(sqliteStore)
@@ -217,7 +273,7 @@ class SetupTests: BaseTestCase {
         }
         do {
             
-            let sqliteStore = SQLiteStore(
+            let sqliteStore = LegacySQLiteStore(
                 fileName: "ConfigStore1.sqlite",
                 configuration: "Config1",
                 localStorageOptions: .recreateStoreOnModelMismatch
@@ -236,7 +292,7 @@ class SetupTests: BaseTestCase {
         }
         do {
             
-            let sqliteStore = SQLiteStore(
+            let sqliteStore = LegacySQLiteStore(
                 fileName: "ConfigStore2.sqlite",
                 configuration: "Config2",
                 localStorageOptions: .recreateStoreOnModelMismatch
@@ -252,6 +308,62 @@ class SetupTests: BaseTestCase {
             let persistentStore = stack.persistentStoreForStorage(sqliteStore)
             XCTAssertNotNil(persistentStore)
             XCTAssert(sqliteStore.matchesPersistentStore(persistentStore!))
+        }
+    }
+    
+    @objc
+    dynamic func test_ThatLegacySQLiteStores_DeleteFilesCorrectly() {
+        
+        let fileManager = FileManager.default
+        let sqliteStore = LegacySQLiteStore()
+        func createStore() throws -> [String: Any] {
+            
+            do {
+                
+                let stack = DataStack(
+                    modelName: "Model",
+                    bundle: Bundle(for: type(of: self))
+                )
+                try! stack.addStorageAndWait(sqliteStore)
+                self.prepareTestDataForStack(stack)
+            }
+            XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
+            XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
+            XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
+            
+            return try NSPersistentStoreCoordinator.metadataForPersistentStore(
+                ofType: type(of: sqliteStore).storeType,
+                at: sqliteStore.fileURL,
+                options: sqliteStore.storeOptions
+            )
+        }
+        do {
+            
+            let metadata = try createStore()
+            let stack = DataStack(
+                modelName: "Model",
+                bundle: Bundle(for: type(of: self))
+            )
+            try sqliteStore.eraseStorageAndWait(metadata: metadata, soureModelHint: stack.model[metadata])
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
+        }
+        catch {
+            
+            XCTFail()
+        }
+        do {
+            
+            let metadata = try createStore()
+            try sqliteStore.eraseStorageAndWait(metadata: metadata, soureModelHint: nil)
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
+            XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
+        }
+        catch {
+            
+            XCTFail()
         }
     }
 }

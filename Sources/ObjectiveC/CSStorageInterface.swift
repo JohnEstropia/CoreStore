@@ -121,5 +121,5 @@ public protocol CSLocalStorage: CSStorageInterface {
      Called by the `CSDataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
      */
     @objc
-    func eraseStorageAndWait(soureModel: NSManagedObjectModel, error: NSErrorPointer) -> Bool
+    func eraseStorageAndWait(metadata: NSDictionary, soureModelHint: NSManagedObjectModel?, error: NSErrorPointer) -> Bool
 }

@@ -162,44 +162,68 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
-    public func eraseStorageAndWait(soureModel: NSManagedObjectModel) throws {
+    public func eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws {
         
         // TODO: check if attached to persistent store
         
-        let fileURL = self.fileURL
-        try autoreleasepool {
-            
-            let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
-            let store = try journalUpdatingCoordinator.addPersistentStore(
-                ofType: type(of: self).storeType,
-                configurationName: self.configuration,
-                at: fileURL,
-                options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
-            )
-            try journalUpdatingCoordinator.remove(store)
+        func deleteFiles(storeURL: URL, extraFiles: [String] = []) throws {
             
             let fileManager = FileManager.default
+            let extraFiles: [String] = [
+                storeURL.path.appending("-wal"),
+                storeURL.path.appending("-shm")
+            ]
             do {
                 
-                let temporaryFile = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
+                let trashURL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
                     .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack", isDirectory: true)
                     .appendingPathComponent("trash", isDirectory: true)
-                    .appendingPathComponent(UUID().uuidString, isDirectory: false)
                 try fileManager.createDirectory(
-                    at: temporaryFile.deletingLastPathComponent(),
+                    at: trashURL,
                     withIntermediateDirectories: true,
                     attributes: nil
                 )
-                try fileManager.moveItem(at: fileURL, to: temporaryFile)
+                
+                let temporaryFileURL = trashURL.appendingPathComponent(UUID().uuidString, isDirectory: false)
+                try fileManager.moveItem(at: storeURL, to: temporaryFileURL)
+                
+                let extraTemporaryFiles = extraFiles.map { (extraFile) -> String in
+                    
+                    let temporaryFile = trashURL.appendingPathComponent(UUID().uuidString, isDirectory: false).path
+                    if let _ = try? fileManager.moveItem(atPath: extraFile, toPath: temporaryFile) {
+                        
+                        return temporaryFile
+                    }
+                    return extraFile
+                }
                 DispatchQueue.global(qos: .background).async {
                     
-                    _ = try? fileManager.removeItem(at: temporaryFile)
+                    _ = try? fileManager.removeItem(at: temporaryFileURL)
+                    extraTemporaryFiles.forEach({ _ = try? fileManager.removeItem(atPath: $0) })
                 }
             }
             catch {
                 
-                try fileManager.removeItem(at: fileURL)
+                try fileManager.removeItem(at: storeURL)
+                extraFiles.forEach({ _ = try? fileManager.removeItem(atPath: $0) })
             }
+        }
+        
+        let fileURL = self.fileURL
+        try autoreleasepool {
+            
+            if let soureModel = soureModelHint ?? NSManagedObjectModel.mergedModel(from: nil, forStoreMetadata: metadata) {
+                
+                let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
+                let store = try journalUpdatingCoordinator.addPersistentStore(
+                    ofType: type(of: self).storeType,
+                    configurationName: self.configuration,
+                    at: fileURL,
+                    options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
+                )
+                try journalUpdatingCoordinator.remove(store)
+            }
+            try deleteFiles(storeURL: fileURL)
         }
     }
     

@@ -216,7 +216,10 @@ public extension DataStack {
                                 
                                 do {
                                     
-                                    _ = try self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                                    try storage.eraseStorageAndWait(
+                                        metadata: metadata,
+                                        soureModelHint: self.model[metadata]
+                                    )
                                     _ = try self.addStorageAndWait(storage)
                                     
                                     DispatchQueue.main.async {
