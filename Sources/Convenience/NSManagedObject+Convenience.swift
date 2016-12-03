@@ -87,10 +87,29 @@ public extension NSManagedObject {
     public func accessValueForKVCKey(_ KVCKey: KeyPath) -> Any? {
         
         self.willAccessValue(forKey: KVCKey)
-        let primitiveValue: Any? = self.primitiveValue(forKey: KVCKey)
-        self.didAccessValue(forKey: KVCKey)
+        defer {
+            
+            self.didAccessValue(forKey: KVCKey)
+        }
+        return self.primitiveValue(forKey: KVCKey)
+    }
+    
+    /**
+     Provides a convenience wrapper for accessing `primitiveValueForKey(...)` with proper calls to `willAccessValueForKey(...)` and `didAccessValueForKey(...)`. This is useful when implementing accessor methods for transient attributes.
+     
+     - parameter KVCKey: the KVC key
+     - parameter accessing: the closure to access the value. This is called between `willAccessValueForKey(...)` and `didAccessValueForKey(...)`
+     - returns: the primitive value for the KVC key
+     */
+    @nonobjc
+    public func accessValueForKVCKey(_ KVCKey: KeyPath, _ accessing: (Any?) -> Void) {
         
-        return primitiveValue
+        self.willAccessValue(forKey: KVCKey)
+        defer {
+            
+            self.didAccessValue(forKey: KVCKey)
+        }
+        accessing(self.primitiveValue(forKey: KVCKey))
     }
     
     /**
@@ -98,13 +117,18 @@ public extension NSManagedObject {
      
      - parameter value: the value to set the KVC key with
      - parameter KVCKey: the KVC key
+     - parameter changing: the closure called between `willChangeValueForKey(...)` and `didChangeValueForKey(...)`
      */
     @nonobjc
-    public func setValue(_ value: Any?, forKVCKey KVCKey: KeyPath) {
+    public func setValue(_ value: Any?, forKVCKey KVCKey: KeyPath, _ changing: (Any?) -> Void = { _ in }) {
         
         self.willChangeValue(forKey: KVCKey)
+        defer {
+            
+            self.didChangeValue(forKey: KVCKey)
+        }
         self.setPrimitiveValue(value, forKey: KVCKey)
-        self.didChangeValue(forKey: KVCKey)
+        changing(value)
     }
     
     /**
