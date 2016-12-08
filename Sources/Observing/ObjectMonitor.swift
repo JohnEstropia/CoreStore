@@ -41,7 +41,7 @@ import CoreData
  
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
-public final class ObjectMonitor<EntityType: NSManagedObject> {
+public final class ObjectMonitor<EntityType: NSManagedObject>: Equatable {
     
     /**
      Returns the `NSManagedObject` instance being observed, or `nil` if the object was already deleted.
@@ -100,6 +100,19 @@ public final class ObjectMonitor<EntityType: NSManagedObject> {
     public func removeObserver<U: ObjectObserver>(_ observer: U) where U.ObjectEntityType == EntityType {
         
         self.unregisterObserver(observer)
+    }
+    
+    
+    // MARK: Equatable
+    
+    public static func == <T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
+        
+        return lhs === rhs
+    }
+    
+    public static func ~= <T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
+        
+        return lhs === rhs
     }
     
     
@@ -289,21 +302,6 @@ public final class ObjectMonitor<EntityType: NSManagedObject> {
         )
     }
 }
-
-
-// MARK: - ObjectMonitor: Equatable
-
-public func == <T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
-    
-    return lhs === rhs
-}
-
-public func ~= <T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
-    
-    return lhs === rhs
-}
-
-extension ObjectMonitor: Equatable { }
 
 
 // MARK: - ObjectMonitor: FetchedResultsControllerHandler

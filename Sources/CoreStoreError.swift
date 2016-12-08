@@ -120,6 +120,33 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: CoreStoreError, rhs: CoreStoreError) -> Bool {
+        
+        switch (lhs, rhs) {
+            
+        case (.unknown, .unknown):
+            return true
+            
+        case (.differentStorageExistsAtURL(let url1), .differentStorageExistsAtURL(let url2)):
+            return url1 == url2
+            
+        case (.mappingModelNotFound(let url1, let model1, let version1), .mappingModelNotFound(let url2, let model2, let version2)):
+            return url1 == url2 && model1 == model2 && version1 == version2
+            
+        case (.progressiveMigrationRequired(let url1), .progressiveMigrationRequired(let url2)):
+            return url1 == url2
+            
+        case (.internalError(let NSError1), .internalError(let NSError2)):
+            return NSError1 == NSError2
+            
+        default:
+            return false
+        }
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -150,33 +177,6 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
     internal init(_ error: Error?) {
         
         self = error.flatMap { $0.bridgeToSwift } ?? .unknown
-    }
-}
-
-
-// MARK: - CoreStoreError: Equatable
-
-public func == (lhs: CoreStoreError, rhs: CoreStoreError) -> Bool {
-    
-    switch (lhs, rhs) {
-        
-    case (.unknown, .unknown):
-        return true
-        
-    case (.differentStorageExistsAtURL(let url1), .differentStorageExistsAtURL(let url2)):
-        return url1 == url2
-        
-    case (.mappingModelNotFound(let url1, let model1, let version1), .mappingModelNotFound(let url2, let model2, let version2)):
-        return url1 == url2 && model1 == model2 && version1 == version2
-        
-    case (.progressiveMigrationRequired(let url1), .progressiveMigrationRequired(let url2)):
-        return url1 == url2
-        
-    case (.internalError(let NSError1), .internalError(let NSError2)):
-        return NSError1 == NSError2
-        
-    default:
-        return false
     }
 }
 

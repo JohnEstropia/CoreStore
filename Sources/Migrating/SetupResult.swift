@@ -86,6 +86,24 @@ public enum SetupResult<T: StorageInterface>: Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, rhs: SetupResult<U>) -> Bool {
+        
+        switch (lhs, rhs) {
+            
+        case (.success(let storage1), .success(let storage2)):
+            return storage1 === storage2
+            
+        case (.failure(let error1), .failure(let error2)):
+            return error1 == error2
+            
+        default:
+            return false
+        }
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -116,23 +134,5 @@ public enum SetupResult<T: StorageInterface>: Hashable {
     internal init(_ error: Error) {
         
         self = .failure(CoreStoreError(error))
-    }
-}
-
-
-// MARK: - SetupResult: Equatable
-
-public func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, rhs: SetupResult<U>) -> Bool {
-    
-    switch (lhs, rhs) {
-        
-    case (.success(let storage1), .success(let storage2)):
-        return storage1 === storage2
-        
-    case (.failure(let error1), .failure(let error2)):
-        return error1 == error2
-        
-    default:
-        return false
     }
 }

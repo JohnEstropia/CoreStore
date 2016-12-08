@@ -122,6 +122,27 @@ public enum MigrationType: Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: MigrationType, rhs: MigrationType) -> Bool {
+        
+        switch (lhs, rhs) {
+            
+        case (.none(let version1), .none(let version2)):
+            return version1 == version2
+            
+        case (.lightweight(let source1, let destination1), .lightweight(let source2, let destination2)):
+            return source1 == source2 && destination1 == destination2
+            
+        case (.heavyweight(let source1, let destination1), .heavyweight(let source2, let destination2)):
+            return source1 == source2 && destination1 == destination2
+            
+        default:
+            return false
+        }
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -138,26 +159,5 @@ public enum MigrationType: Hashable {
         case .heavyweight(let sourceVersion, let destinationVersion):
             return preHash ^ sourceVersion.hashValue ^ destinationVersion.hashValue
         }
-    }
-}
-
-
-// MARK: - MigrationType: Equatable
-
-public func == (lhs: MigrationType, rhs: MigrationType) -> Bool {
-    
-    switch (lhs, rhs) {
-        
-    case (.none(let version1), .none(let version2)):
-        return version1 == version2
-        
-    case (.lightweight(let source1, let destination1), .lightweight(let source2, let destination2)):
-        return source1 == source2 && destination1 == destination2
-        
-    case (.heavyweight(let source1, let destination1), .heavyweight(let source2, let destination2)):
-        return source1 == source2 && destination1 == destination2
-        
-    default:
-        return false
     }
 }

@@ -71,7 +71,6 @@ public extension CoreStore {
         )
     }
     
-    
     internal static func abort(_ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) -> Never  {
         
         self.logger.abort(

@@ -37,7 +37,7 @@ internal final class MigrationManager: NSMigrationManager, ProgressReporting {
         
         super.didChangeValue(forKey: key)
         
-        guard key == "migrationProgress" else {
+        guard key == #keyPath(NSMigrationManager.migrationProgress) else {
             
             return
         }

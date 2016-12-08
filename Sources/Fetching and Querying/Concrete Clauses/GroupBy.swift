@@ -85,18 +85,18 @@ public struct GroupBy: QueryClause, Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: GroupBy, rhs: GroupBy) -> Bool {
+        
+        return lhs.keyPaths == rhs.keyPaths
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
         
         return (self.keyPaths as NSArray).hashValue
     }
-}
-
-
-// MARK: - GroupBy: Equatable
-
-public func == (lhs: GroupBy, rhs: GroupBy) -> Bool {
-    
-    return lhs.keyPaths == rhs.keyPaths
 }

@@ -157,18 +157,18 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: Where, rhs: Where) -> Bool {
+        
+        return lhs.predicate == rhs.predicate
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
         
         return self.predicate.hashValue
     }
-}
-
-
-// MARK: - Where: Equatable
-
-public func == (lhs: Where, rhs: Where) -> Bool {
-    
-    return lhs.predicate == rhs.predicate
 }

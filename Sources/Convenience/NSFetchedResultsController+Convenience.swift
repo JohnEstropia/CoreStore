@@ -214,7 +214,7 @@ fileprivate func createFRC<T: NSManagedObject>(fromContext context: NSManagedObj
                 fetchRequest.sortDescriptors?.isEmpty == false,
                 "An \(cs_typeName(NSFetchedResultsController<NSManagedObject>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
             )
-    }
+        }
     )
     return controller.dynamicCast()
 }

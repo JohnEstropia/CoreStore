@@ -594,6 +594,29 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+        
+        return lhs === rhs
+    }
+    
+    public static func == <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+        
+        return lhs.fetchedResultsController === rhs.fetchedResultsController
+    }
+    
+    public static func ~= <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+        
+        return lhs === rhs
+    }
+    
+    public static func ~= <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+        
+        return lhs.fetchedResultsController === rhs.fetchedResultsController
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -1121,31 +1144,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         }
     }
 }
-
-
-// MARK: - ListMonitor: Equatable
-
-public func == <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
-    
-    return lhs === rhs
-}
-
-public func == <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
-    
-    return lhs.fetchedResultsController === rhs.fetchedResultsController
-}
-
-public func ~= <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
-    
-    return lhs === rhs
-}
-
-public func ~= <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
-    
-    return lhs.fetchedResultsController === rhs.fetchedResultsController
-}
-
-extension ListMonitor: Equatable { }
 
 
 // MARK: - ListMonitor: FetchedResultsControllerHandler

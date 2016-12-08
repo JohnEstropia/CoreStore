@@ -83,6 +83,24 @@ public enum MigrationResult: Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: MigrationResult, rhs: MigrationResult) -> Bool {
+        
+        switch (lhs, rhs) {
+            
+        case (.success(let migrationTypes1), .success(let migrationTypes2)):
+            return migrationTypes1 == migrationTypes2
+            
+        case (.failure(let error1), .failure(let error2)):
+            return error1 == error2
+            
+        default:
+            return false
+        }
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -114,23 +132,5 @@ public enum MigrationResult: Hashable {
     internal init(_ error: Error) {
         
         self = .failure(CoreStoreError(error))
-    }
-}
-
-
-// MARK: - SetupResult: Equatable
-
-public func == (lhs: MigrationResult, rhs: MigrationResult) -> Bool {
-    
-    switch (lhs, rhs) {
-        
-    case (.success(let migrationTypes1), .success(let migrationTypes2)):
-        return migrationTypes1 == migrationTypes2
-        
-    case (.failure(let error1), .failure(let error2)):
-        return error1 == error2
-        
-    default:
-        return false
     }
 }

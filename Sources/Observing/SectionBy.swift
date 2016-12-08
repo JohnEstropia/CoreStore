@@ -70,7 +70,7 @@ public struct SectionBy {
     // MARK: Internal
     
     internal let sectionKeyPath: KeyPath
-    internal let sectionIndexTransformer: (_ sectionName: KeyPath?) -> String?
+    internal let sectionIndexTransformer: (_ sectionName: String?) -> String?
 }
 
 #endif

@@ -134,6 +134,16 @@ public struct Into<T: NSManagedObject>: Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == <T: NSManagedObject, U: NSManagedObject>(lhs: Into<T>, rhs: Into<U>) -> Bool {
+        
+        return lhs.entityClass == rhs.entityClass
+            && lhs.configuration == rhs.configuration
+            && lhs.inferStoreIfPossible == rhs.inferStoreIfPossible
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -171,21 +181,4 @@ public struct Into<T: NSManagedObject>: Hashable {
         self.configuration = configuration
         self.inferStoreIfPossible = inferStoreIfPossible
     }
-}
-
-
-// MARK: - Into: Equatable
-
-public func == <T: NSManagedObject, U: NSManagedObject>(lhs: Into<T>, rhs: Into<U>) -> Bool {
-    
-    return lhs.entityClass == rhs.entityClass
-        && lhs.configuration == rhs.configuration
-        && lhs.inferStoreIfPossible == rhs.inferStoreIfPossible
-}
-
-public func != <T: NSManagedObject, U: NSManagedObject>(lhs: Into<T>, rhs: Into<U>) -> Bool {
-    
-    return lhs.entityClass == rhs.entityClass
-        && lhs.configuration == rhs.configuration
-        && lhs.inferStoreIfPossible == rhs.inferStoreIfPossible
 }

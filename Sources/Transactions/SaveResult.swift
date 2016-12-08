@@ -83,6 +83,24 @@ public enum SaveResult: Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: SaveResult, rhs: SaveResult) -> Bool {
+        
+        switch (lhs, rhs) {
+            
+        case (.success(let hasChanges1), .success(let hasChanges2)):
+            return hasChanges1 == hasChanges2
+            
+        case (.failure(let error1), .failure(let error2)):
+            return error1 == error2
+            
+        default:
+            return false
+        }
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -108,23 +126,5 @@ public enum SaveResult: Hashable {
     internal init(_ error: CoreStoreError) {
         
         self = .failure(error)
-    }
-}
-
-
-// MARK: - SaveResult: Equatable
-
-public func == (lhs: SaveResult, rhs: SaveResult) -> Bool {
-    
-    switch (lhs, rhs) {
-        
-    case (.success(let hasChanges1), .success(let hasChanges2)):
-        return hasChanges1 == hasChanges2
-        
-    case (.failure(let error1), .failure(let error2)):
-        return error1 == error2
-        
-    default:
-        return false
     }
 }

@@ -216,6 +216,17 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: MigrationChain, rhs: MigrationChain) -> Bool {
+        
+        return lhs.versionTree == rhs.versionTree
+            && lhs.rootVersions == rhs.rootVersions
+            && lhs.leafVersions == rhs.leafVersions
+            && lhs.valid == rhs.valid
+    }
+    
+    
     // MARK: Internal
     
     internal let rootVersions: Set<String>
@@ -247,16 +258,5 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
     // MARK: Private
     
     fileprivate let versionTree: [String: String]
-}
-
-
-// MARK: - MigrationChain: Equatable
-
-public func == (lhs: MigrationChain, rhs: MigrationChain) -> Bool {
-    
-    return lhs.versionTree == rhs.versionTree
-        && lhs.rootVersions == rhs.rootVersions
-        && lhs.leafVersions == rhs.leafVersions
-        && lhs.valid == rhs.valid
 }
 

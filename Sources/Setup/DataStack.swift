@@ -32,7 +32,7 @@ import CoreData
 /**
  The `DataStack` encapsulates the data model for the Core Data stack. Each `DataStack` can have multiple data stores, usually specified as a "Configuration" in the model editor. Behind the scenes, the DataStack manages its own `NSPersistentStoreCoordinator`, a root `NSManagedObjectContext` for disk saves, and a shared `NSManagedObjectContext` designed as a read-only model interface for `NSManagedObjects`.
  */
-public final class DataStack {
+public final class DataStack: Equatable {
     
     /**
      Initializes a `DataStack` from the model with the specified `modelName` in the specified `bundle`.
@@ -381,6 +381,14 @@ public final class DataStack {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: DataStack, rhs: DataStack) -> Bool {
+        
+        return lhs === rhs
+    }
+    
+    
     // MARK: Internal
     
     internal static let applicationName = (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData"
@@ -527,13 +535,3 @@ public final class DataStack {
         return self.objectID(forURIRepresentation: url)
     }
 }
-
-
-// MARK: - DataStack: Equatable
-
-public func == (lhs: DataStack, rhs: DataStack) -> Bool {
-    
-    return lhs === rhs
-}
-
-extension DataStack: Equatable {}

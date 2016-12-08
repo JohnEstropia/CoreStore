@@ -241,6 +241,31 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: SelectTerm, rhs: SelectTerm) -> Bool {
+        
+        switch (lhs, rhs) {
+            
+        case (._attribute(let keyPath1), ._attribute(let keyPath2)):
+            return keyPath1 == keyPath2
+            
+        case (._aggregate(let function1, let keyPath1, let alias1, let nativeType1),
+              ._aggregate(let function2, let keyPath2, let alias2, let nativeType2)):
+            return function1 == function2
+                && keyPath1 == keyPath2
+                && alias1 == alias2
+                && nativeType1 == nativeType2
+            
+        case (._identity(let alias1, let nativeType1), ._identity(let alias2, let nativeType2)):
+            return alias1 == alias2 && nativeType1 == nativeType2
+            
+        default:
+            return false
+        }
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -264,31 +289,6 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
     case _attribute(KeyPath)
     case _aggregate(function: String, keyPath: KeyPath, alias: String, nativeType: NSAttributeType)
     case _identity(alias: String, nativeType: NSAttributeType)
-}
-
-
-// MARK: - SelectTerm: Equatable
-
-public func == (lhs: SelectTerm, rhs: SelectTerm) -> Bool {
-    
-    switch (lhs, rhs) {
-        
-    case (._attribute(let keyPath1), ._attribute(let keyPath2)):
-        return keyPath1 == keyPath2
-        
-    case (._aggregate(let function1, let keyPath1, let alias1, let nativeType1),
-        ._aggregate(let function2, let keyPath2, let alias2, let nativeType2)):
-        return function1 == function2
-            && keyPath1 == keyPath2
-            && alias1 == alias2
-            && nativeType1 == nativeType2
-        
-    case (._identity(let alias1, let nativeType1), ._identity(let alias2, let nativeType2)):
-        return alias1 == alias2 && nativeType1 == nativeType2
-        
-    default:
-        return false
-    }
 }
 
 
@@ -364,6 +364,14 @@ public struct Select<T: SelectResultType>: Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == <T: SelectResultType, U: SelectResultType>(lhs: Select<T>, rhs: Select<U>) -> Bool {
+        
+        return lhs.selectTerms == rhs.selectTerms
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
@@ -383,14 +391,6 @@ public extension Select where T: NSManagedObjectID {
         
         self.init(.objectID())
     }
-}
-
-
-// MARK: - Select: Equatable
-
-public func == <T: SelectResultType, U: SelectResultType>(lhs: Select<T>, rhs: Select<U>) -> Bool {
-    
-    return lhs.selectTerms == rhs.selectTerms
 }
 
 

@@ -152,18 +152,18 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     }
     
     
+    // MARK: Equatable
+    
+    public static func == (lhs: OrderBy, rhs: OrderBy) -> Bool {
+        
+        return lhs.sortDescriptors == rhs.sortDescriptors
+    }
+    
+    
     // MARK: Hashable
     
     public var hashValue: Int {
         
         return (self.sortDescriptors as NSArray).hashValue
     }
-}
-
-
-// MARK: - OrderBy: Equatable
-
-public func == (lhs: OrderBy, rhs: OrderBy) -> Bool {
-    
-    return lhs.sortDescriptors == rhs.sortDescriptors
 }
