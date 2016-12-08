@@ -87,41 +87,67 @@ public extension NSManagedObject {
     public func accessValueForKVCKey(_ KVCKey: KeyPath) -> Any? {
         
         self.willAccessValue(forKey: KVCKey)
-        let primitiveValue: Any? = self.primitiveValue(forKey: KVCKey)
-        self.didAccessValue(forKey: KVCKey)
-        
-        return primitiveValue
+        defer {
+            
+            self.didAccessValue(forKey: KVCKey)
+        }
+        return self.primitiveValue(forKey: KVCKey)
     }
     
     /**
      Provides a convenience wrapper for accessing `primitiveValueForKey(...)` with proper calls to `willAccessValueForKey(...)` and `didAccessValueForKey(...)`. This is useful when implementing accessor methods for transient attributes.
      
      - parameter KVCKey: the KVC key
-     - parameter closure: a closure that receives the accessed value. This closure is executed between `willAccessValueForKey(...)` and `didAccessValueForKey(...)`
+     - parameter didAccessPrimitiveValue: the closure to access the value. This is called between `willAccessValueForKey(...)` and `didAccessValueForKey(...)`
      - returns: the primitive value for the KVC key
      */
+    @discardableResult
     @nonobjc
-    public func accessValueForKVCKey(_ KVCKey: KeyPath, _ closure: (Any?) -> Void) {
+    public func accessValueForKVCKey<T>(_ KVCKey: KeyPath, _ didAccessPrimitiveValue: (Any?) throws -> T) rethrows -> T {
         
         self.willAccessValue(forKey: KVCKey)
-        closure(self.primitiveValue(forKey: KVCKey))
-        self.didAccessValue(forKey: KVCKey)
+        defer {
+            
+            self.didAccessValue(forKey: KVCKey)
+        }
+        return try didAccessPrimitiveValue(self.primitiveValue(forKey: KVCKey))
     }
     
     /**
      Provides a convenience wrapper for setting `setPrimitiveValue(...)` with proper calls to `willChangeValueForKey(...)` and `didChangeValueForKey(...)`. This is useful when implementing mutator methods for transient attributes.
      
      - parameter value: the value to set the KVC key with
-     - parameter closure: a closure that receives the accessed value. This closure is executed between `willChangeValue(...)` and `didChangeValue(...)`
      - parameter KVCKey: the KVC key
      */
     @nonobjc
-    public func setValue(_ value: Any?, forKVCKey KVCKey: KeyPath, _ closure: () -> Void = {}) {
+    public func setValue(_ value: Any?, forKVCKey KVCKey: KeyPath) {
         
         self.willChangeValue(forKey: KVCKey)
+        defer {
+            
+            self.didChangeValue(forKey: KVCKey)
+        }
         self.setPrimitiveValue(value, forKey: KVCKey)
-        closure()
-        self.didChangeValue(forKey: KVCKey)
+    }
+    
+    /**
+     Provides a convenience wrapper for setting `setPrimitiveValue(...)` with proper calls to `willChangeValueForKey(...)` and `didChangeValueForKey(...)`. This is useful when implementing mutator methods for transient attributes.
+     
+     - parameter value: the value to set the KVC key with
+     - parameter KVCKey: the KVC key
+     - parameter didSetPrimitiveValue: the closure called between `willChangeValueForKey(...)` and `didChangeValueForKey(...)`
+     */
+    @discardableResult
+    @nonobjc
+    public func setValue<T>(_ value: Any?, forKVCKey KVCKey: KeyPath, _ didSetPrimitiveValue: (Any?) throws -> T) rethrows -> T {
+        
+        self.willChangeValue(forKey: KVCKey)
+        defer {
+            
+            self.didChangeValue(forKey: KVCKey)
+        }
+        self.setPrimitiveValue(value, forKey: KVCKey)
+        return try didSetPrimitiveValue(value)
     }
     
     /**
