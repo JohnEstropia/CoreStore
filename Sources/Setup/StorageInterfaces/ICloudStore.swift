@@ -58,14 +58,14 @@ public final class ICloudStore: CloudStorage {
      )
      ```
      - parameter ubiquitousContentName: the name of the store in iCloud. This is required and should not be empty, and should not contain periods (`.`).
-     - parameter ubiquitousContentTransactionLogsSubdirectory: an optional subdirectory path for the transaction logs
+     - parameter ubiquitousContentTransactionLogsSubdirectory: a required relative path for the transaction logs
      - parameter ubiquitousContainerID: a container if your app has multiple ubiquity container identifiers in its entitlements
      - parameter ubiquitousPeerToken: a per-application salt to allow multiple apps on the same device to share a Core Data store integrated with iCloud
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `ubiquitousContentName` explicitly for each of them.
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
      - parameter cloudStorageOptions: When the `ICloudStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public required init?(ubiquitousContentName: String, ubiquitousContentTransactionLogsSubdirectory: String? = nil, ubiquitousContainerID: String? = nil, ubiquitousPeerToken: String? = nil, configuration: String? = nil, cloudStorageOptions: CloudStorageOptions = nil) {
+    public required init?(ubiquitousContentName: String, ubiquitousContentTransactionLogsSubdirectory: String, ubiquitousContainerID: String? = nil, ubiquitousPeerToken: String? = nil, configuration: String? = nil, cloudStorageOptions: CloudStorageOptions = nil) {
         
         CoreStore.assert(
             !ubiquitousContentName.isEmpty,
@@ -76,8 +76,8 @@ public final class ICloudStore: CloudStorage {
             "The ubiquitousContentName cannot contain periods."
         )
         CoreStore.assert(
-            ubiquitousContentTransactionLogsSubdirectory?.isEmpty != true,
-            "The ubiquitousContentURLRelativePath should not be empty if provided."
+            !ubiquitousContentTransactionLogsSubdirectory.isEmpty,
+            "The ubiquitousContentURLRelativePath should not be empty."
         )
         CoreStore.assert(
             ubiquitousPeerToken?.isEmpty != true,
@@ -85,10 +85,11 @@ public final class ICloudStore: CloudStorage {
         )
         
         let fileManager = FileManager.default
-        guard let cacheFileURL = fileManager.url(forUbiquityContainerIdentifier: ubiquitousContainerID) else {
+        guard let cacheFolderURL = fileManager.url(forUbiquityContainerIdentifier: ubiquitousContainerID) else {
             
             return nil
         }
+        let cacheFileURL = cacheFolderURL.appendingPathComponent(ubiquitousContentTransactionLogsSubdirectory)
         
         var storeOptions: [String: Any] = [
             NSSQLitePragmasOption: ["journal_mode": "WAL"],
