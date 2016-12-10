@@ -446,7 +446,6 @@ public final class ICloudStore: CloudStorage {
                 at: cacheFileURL,
                 options: options
             )
-            try FileManager.default.removeItem(at: cacheFileURL)
         }
     }
     

@@ -265,10 +265,11 @@ public final class DataStack: Equatable {
                         metadata: metadata,
                         soureModelHint: self.model[metadata]
                     )
+                    let finalStoreOptions = storage.dictionary(forOptions: storage.localStorageOptions)
                     _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: fileURL,
-                        finalStoreOptions: storeOptions
+                        finalStoreOptions: finalStoreOptions
                     )
                     return storage
                 }
@@ -340,11 +341,6 @@ public final class DataStack: Equatable {
                 let storeOptions = storage.dictionary(forOptions: cloudStorageOptions)
                 do {
                     
-                    try FileManager.default.createDirectory(
-                        at: cacheFileURL.deletingLastPathComponent(),
-                        withIntermediateDirectories: true,
-                        attributes: nil
-                    )
                     _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,
@@ -354,6 +350,7 @@ public final class DataStack: Equatable {
                 }
                 catch let error as NSError where storage.cloudStorageOptions.contains(.recreateLocalStoreOnModelMismatch) && error.isCoreDataMigrationError {
                     
+                    let finalStoreOptions = storage.dictionary(forOptions: storage.cloudStorageOptions)
                     let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
                         ofType: type(of: storage).storeType,
                         at: cacheFileURL,
@@ -363,7 +360,7 @@ public final class DataStack: Equatable {
                     _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,
-                        finalStoreOptions: storeOptions
+                        finalStoreOptions: finalStoreOptions
                     )
                     return storage
                 }
