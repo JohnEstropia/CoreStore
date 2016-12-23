@@ -86,3 +86,8 @@ internal func cs_typeName(_ name: String?) -> String {
     
     return "<\(name ?? "unknown")>"
 }
+
+internal func cs_typeName(_ name: String) -> String {
+
+    return "<\(name)>"
+}
