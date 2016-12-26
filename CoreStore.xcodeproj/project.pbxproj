@@ -2257,7 +2257,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2275,7 +2275,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2295,7 +2295,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2310,7 +2310,7 @@
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2330,7 +2330,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Debug;
@@ -2351,7 +2351,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Release;
@@ -2369,7 +2369,7 @@
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Debug;
@@ -2387,7 +2387,7 @@
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Release;
@@ -2411,7 +2411,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2435,7 +2435,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2455,7 +2455,7 @@
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2475,7 +2475,7 @@
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -2496,7 +2496,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Debug;
@@ -2519,7 +2519,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 3.0.1;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Release;
