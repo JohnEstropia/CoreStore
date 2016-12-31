@@ -10,7 +10,7 @@ env:
   - LC_CTYPE=en_US.UTF-8
   - LANG=en_US.UTF-8
   matrix:
-    - DESTINATION="OS=10.2,name=iPhone 7"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.2  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=10.1,name=iPhone 7"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.2  RUN_TESTS="YES" POD_LINT="NO"
     - DESTINATION="OS=9.0,name=iPhone 6 Plus"      SCHEME="CoreStore iOS"     SDK=iphonesimulator10.2  RUN_TESTS="YES" POD_LINT="NO"
     - DESTINATION="OS=8.4,name=iPhone 6"           SCHEME="CoreStore iOS"     SDK=iphonesimulator10.2  RUN_TESTS="YES" POD_LINT="NO"
     - DESTINATION="OS=8.3,name=iPhone 5S"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.2  RUN_TESTS="YES" POD_LINT="NO"
@@ -37,8 +37,8 @@ script:
       xcodebuild -workspace CoreStore.xcworkspace -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
       xcodebuild -workspace CoreStore.xcworkspace -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
     fi
-  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStore iOS" -sdk "iphonesimulator10.2" -destination "OS=10.2,name=iPhone 7" -configuration Debug ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
-  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStore iOS" -sdk "iphonesimulator10.2" -destination "OS=10.2,name=iPhone 7" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
+  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStore iOS" -sdk "iphonesimulator10.2" -destination "OS=10.1,name=iPhone 7" -configuration Debug ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
+  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStore iOS" -sdk "iphonesimulator10.2" -destination "OS=10.1,name=iPhone 7" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
   - if [ $POD_LINT == "YES" ]; then
       pod lib lint --quick;
     fi
