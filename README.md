@@ -18,14 +18,11 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 </p>
 
-* iOS 7+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
-  - for Swift 2.2 (Xcode 7.3 and iOS 7): Use version [2.0.6](https://github.com/JohnEstropia/CoreStore/releases/tag/2.0.6) or the [master_ios_7_to_9](https://github.com/JohnEstropia/CoreStore/tree/master_ios_7_to_9) branch
-  - for Swift 2.3 (Xcode 8): Use version [2.1.0](https://github.com/JohnEstropia/CoreStore/releases/tag/2.1.0) or the [master](https://github.com/JohnEstropia/CoreStore/tree/master) branch
-  - for Swift 3 (Xcode 8): Use the [swift3_develop](https://github.com/JohnEstropia/CoreStore/tree/swift3_develop) branch
+* **Swift 3.0.1:** iOS 8+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
 
 * **New in CoreStore 2.0:** Objective-C support! All CoreStore types now have their corresponding Objective-C "bridging classes". Perfect for projects transitioning from Objective-C to Swift!
 
-Upgrading from CoreStore 1.x to 2.x? Check out the [new features](#new-in-corestore-20) and make sure to read the [Migration guide](#upgrading-from-1xx-to-2xx).
+Upgrading from CoreStore 2.x to 3.x? Check out the [new features](#new-in-corestore-20) and make sure to read the [Migration guide](#upgrading-from-2xx-to-3xx).
 
 
 ## Why use CoreStore?
@@ -44,12 +41,10 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 - **Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
 - **Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
 - **Full Documentation.** No magic here; all public classes, functions, properties, etc. have detailed *Apple Docs*. This *README* also introduces a lot of concepts and explains a lot of CoreStore's behavior.
-
-### New in CoreStore 2.0
 - **Informative (and pretty) logs.** All CoreStore and Core Data-related types now have very informative and pretty print outputs! *(See [Logging and error reporting](#logging-and-error-reporting))*
-- **Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore 2.0 is the answer to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types now have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
-- **iCloud storage (beta) support.** CoreStore now allows creation of iCloud persistent stores, as well as observing of iCloud-related events through the `ICloudStoreObserver`. *(See [iCloud storage](#icloud-storages))*
-- **More extensive Unit Tests.** Extending CoreStore is now safer without having to worry about breaking old behavior.
+- **Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore adjusts to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
+- **iCloud storage (beta) support.** CoreStore allows creation of iCloud persistent stores, as well as observing of iCloud-related events through the `ICloudStoreObserver`. *(See [iCloud storage](#icloud-storages))*
+- **More extensive Unit Tests.** Extending CoreStore is safe without having to worry about breaking old behavior.
 
 *Have ideas that may benefit other Core Data users? [Feature Request](https://github.com/JohnEstropia/CoreStore/issues)s are welcome!*
 
@@ -92,6 +87,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 - [Roadmap](#roadmap)
 - [Installation](#installation)
 - [Changesets](#changesets)
+    - [Upgrading from 2.x.x to 3.x.x](#upgrading-from-2xx-to-3xx)
     - [Upgrading from 1.x.x to 2.x.x](#upgrading-from-1xx-to-2xx)
 - [Contact](#contact)
 - [Who uses CoreStore?](#who-uses-corestore)
@@ -1157,7 +1153,7 @@ A couple of examples, `ListMonitor`:
 
 <img width="369" alt="screen shot 2016-07-10 at 22 56 44" src="https://cloud.githubusercontent.com/assets/3029684/16713994/ae06e702-46f1-11e6-83a8-dee48b480bab.png" />
 
-`CoreStoreError.MappingModelNotFoundError`:
+`CoreStoreError.mappingModelNotFoundError`:
 
 <img width="506" alt="MappingModelNotFoundError" src="https://cloud.githubusercontent.com/assets/3029684/16713962/e021f548-46f0-11e6-8100-f9b5ea6b4a08.png" />
 
@@ -1428,7 +1424,7 @@ To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C sour
 # Installation
 - Requires:
     - iOS 8 SDK and above
-    - Swift 3.0 (Xcode 8.1)
+    - Swift 3.0.1 (Xcode 8.2)
 - Dependencies:
     - *None*
 - Other notes:
@@ -1468,6 +1464,29 @@ Add all *.swift* files to your project.
 To use the Objective-C syntax sugars, import *CoreStoreBridge.h* in your *.m* source files.
 
 # Changesets
+### Upgrading from 2.x.x to 3.x.x
+**Obsoleted**
+- `UnsageDataTransaction.internalContext` was removed. Accessing the internal context (or more specifically, accessing context-level methods such as fetches) are now available through the `FetchableSource` and `QueryableProtocol` protocols, which are retrievable with `NSManagedObject.fetchSource()` and `NSManagedObject.querySource()` respectively. These protocols are implemented by `DataStack` and `BaseDataTransaction`.
+
+**Deprecated**
+Methods have been renamed to better fit the [Swift 3 naming conventions](https://swift.org/documentation/api-design-guidelines/).
+- `entityDescriptionForType(_:)` → `entityDescription(for:)`
+- `objectIDForURIRepresentation(_:)` → `objectID(for:)`
+- `ImportableObject` and `ImportableUniqueObject` protocol methods (and their variants) have been renamed. The old methods are still available, but will be removed in a future update.
+    - `shouldInsertFromImportSource(_:inTransaction:)` → `shouldInsert(from:in:)`
+    - `didInsertFromImportSource(_:inTransaction:)` → `didInsert(from:in:)`
+    - `shouldUpdateFromImportSource(_:inTransaction :)` → `shouldUpdate(from:in:)`
+    - `uniqueIDFromImportSource(_:inTransaction :)` → `uniqueID(from:in:)`
+    - `updateFromImportSource(_:inTransaction:)` → `update(from:in:)`
+
+**Miscellaneous**
+- APIs obsoleted from 2.0.0 have been removed.
+- CoreStore does not depend on [GCDKit](https://github.com/JohnEstropia/GCDKit) anymore, thanks to Swift 3's better Grand Central Dispatch API.
+- All enum cases are now lowercased
+- `CoreStoreError` now implements the new Swift `CustomNSError` protocol for better Objective-C 
+bridging.
+- Some methods may emit warnings for unused return values. `@discardableResult` annotations have been set to better reflect the responsibility of API users to use/inspect return values.
+
 ### Upgrading from 1.x.x to 2.x.x
 **Obsoleted**
 - `AsynchronousDataTransaction.rollback()` was removed. Undo and rollback functionality are now only allowed on `UnsafeDataTransaction`s
