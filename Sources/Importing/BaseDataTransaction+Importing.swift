@@ -154,7 +154,7 @@ public extension BaseDataTransaction {
                 
                 if let object = self.fetchOne(From(entityType), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
-                    guard entityType.shouldUpdate(from: source, in: self) else {
+                    guard object.shouldUpdate(from: source, in: self) else {
                         
                         return nil
                     }
@@ -231,7 +231,7 @@ public extension BaseDataTransaction {
                     try autoreleasepool {
 
                         if let object = existingObjectsByID[objectID] {
-                            guard entityType.shouldUpdate(from: source, in: self) else { return }
+                            guard object.shouldUpdate(from: source, in: self) else { return }
 
                             try object.update(from: source, in: self)
                             result.append(object)

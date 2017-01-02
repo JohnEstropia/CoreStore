@@ -72,7 +72,7 @@ public protocol ImportableUniqueObject: ImportableObject {
     var uniqueIDValue: UniqueIDType { get set }
     
     /**
-     Return `true` if an object should be created from `source`. Return `false` to ignore and skip `source`. The default implementation returns the value returned by the `shouldUpdate(from:in:)` implementation.
+     Return `true` if an object should be created from `source`. Return `false` to ignore and skip `source`. The default implementation returns `true`.
      
      - parameter source: the object to import from
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
@@ -87,7 +87,7 @@ public protocol ImportableUniqueObject: ImportableObject {
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      - returns: `true` if an object should be updated from `source`. Return `false` to ignore.
      */
-    static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
+    func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
     
     /**
      Return the unique ID as extracted from `source`. This method is called before `shouldInsert(from:in:)` or `shouldUpdate(from:in:)`. Return `nil` to skip importing from `source`. Note that throwing from this method will cause subsequent imports that are part of the same `importUniqueObjects(:sourceArray:)` call to be cancelled.
@@ -140,10 +140,10 @@ public extension ImportableUniqueObject {
     
     static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
         
-        return Self.shouldUpdate(from: source, in: transaction)
+        return true
     }
     
-    static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool{
+    func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool{
         
         return true
     }
@@ -163,7 +163,7 @@ public extension ImportableUniqueObject {
     
     static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
-        return Self.shouldUpdate(from: source, in: transaction)
+        return true
     }
     
     static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType? {
