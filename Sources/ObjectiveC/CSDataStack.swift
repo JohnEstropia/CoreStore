@@ -54,12 +54,12 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - parameter versionChain: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(modelName: String?, bundle: NSBundle?, versionChain: [String]?) {
+    public convenience init(modelName: String?, bundle: Bundle?, versionChain: [String]?) {
         
         self.init(
             DataStack(
                 modelName: modelName ?? DataStack.applicationName,
-                bundle: bundle ?? NSBundle.mainBundle(),
+                bundle: bundle ?? Bundle.main,
                 migrationChain: versionChain.flatMap { MigrationChain($0) } ?? nil
             )
         )
@@ -73,12 +73,12 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - parameter versionTree: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(modelName: String?, bundle: NSBundle?, versionTree: [String: String]?) {
+    public convenience init(modelName: String?, bundle: Bundle?, versionTree: [String: String]?) {
         
         self.init(
             DataStack(
                 modelName: modelName ?? DataStack.applicationName,
-                bundle: bundle ?? NSBundle.mainBundle(),
+                bundle: bundle ?? Bundle.main,
                 migrationChain: versionTree.flatMap { MigrationChain($0) } ?? nil
             )
         )
@@ -142,7 +142,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - returns: the `NSManagedObject` class for the given entity name, or `nil` if not found
      */
     @objc
-    public func entityClassWithName(name: String) -> NSManagedObject.Type? {
+    public func entityClassWithName(_ name: String) -> NSManagedObject.Type? {
         
         return self.bridgeToSwift.entityTypesByName[name]
     }
@@ -151,9 +151,9 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from stack's model.
      */
     @objc
-    public func entityDescriptionForClass(type: NSManagedObject.Type) -> NSEntityDescription? {
+    public func entityDescriptionForClass(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return self.bridgeToSwift.entityDescriptionForType(type)
+        return self.bridgeToSwift.entityDescription(for: type)
     }
     
     /**
@@ -161,16 +161,16 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      ```
      CSSQLiteStore *storage = [dataStack addInMemoryStorageAndWaitAndReturnError:&error];
      ```
-     
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSInMemoryStore` added to the stack
      */
     @objc
-    public func addInMemoryStorageAndWaitAndReturnError(error: NSErrorPointer) -> CSInMemoryStore? {
+    @discardableResult
+    public func addInMemoryStorageAndWaitAndReturnError(_ error: NSErrorPointer) -> CSInMemoryStore? {
         
         return bridge(error) {
             
-            try self.bridgeToSwift.addStorageAndWait(InMemoryStore)
+            try self.bridgeToSwift.addStorageAndWait(InMemoryStore.self)
         }
     }
     
@@ -179,16 +179,16 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      ```
      CSSQLiteStore *storage = [dataStack addSQLiteStorageAndWaitAndReturnError:&error];
      ```
-     
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSSQLiteStore` added to the stack
      */
     @objc
-    public func addSQLiteStorageAndWaitAndReturnError(error: NSErrorPointer) -> CSSQLiteStore? {
+    @discardableResult
+    public func addSQLiteStorageAndWaitAndReturnError(_ error: NSErrorPointer) -> CSSQLiteStore? {
         
         return bridge(error) {
             
-            try self.bridgeToSwift.addStorageAndWait(SQLiteStore)
+            try self.bridgeToSwift.addStorageAndWait(SQLiteStore.self)
         }
     }
     
@@ -200,13 +200,13 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
          addStorageAndWait: [[CSInMemoryStore alloc] initWithConfiguration: @"Config1"]
          error: &error];
      ```
-     
      - parameter storage: the `CSInMemoryStore`
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSInMemoryStore` added to the stack
      */
     @objc
-    public func addInMemoryStorageAndWait(storage: CSInMemoryStore, error: NSErrorPointer) -> CSInMemoryStore? {
+    @discardableResult
+    public func addInMemoryStorageAndWait(_ storage: CSInMemoryStore, error: NSErrorPointer) -> CSInMemoryStore? {
         
         return bridge(error) {
             
@@ -222,13 +222,13 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
          addStorageAndWait: [[CSSQLiteStore alloc] initWithConfiguration: @"Config1"]
          error: &error];
      ```
-     
      - parameter storage: the `CSSQLiteStore`
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: the `CSSQLiteStore` added to the stack
      */
     @objc
-    public func addSQLiteStorageAndWait(storage: CSSQLiteStore, error: NSErrorPointer) -> CSSQLiteStore? {
+    @discardableResult
+    public func addSQLiteStorageAndWait(_ storage: CSSQLiteStore, error: NSErrorPointer) -> CSSQLiteStore? {
         
         return bridge(error) {
             
@@ -244,7 +244,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSDataStack else {
             
@@ -255,7 +255,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

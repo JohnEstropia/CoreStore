@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - BaseDataTransaction
@@ -53,15 +50,15 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter into: the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
-    public func create<T: NSManagedObject>(into: Into<T>) -> T {
+    public func create<T: NSManagedObject>(_ into: Into<T>) -> T {
         
+        let entityClass = (into.entityClass as! T.Type)
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to create an entity of type \(cs_typeName(T)) outside its designated queue."
+            "Attempted to create an entity of type \(cs_typeName(entityClass)) outside its designated queue."
         )
         
         let context = self.context
-        let entityClass = (into.entityClass as! NSManagedObject.Type)
         if into.inferStoreIfPossible {
             
             switch context.parentStack!.persistentStoreForEntityClass(
@@ -71,8 +68,8 @@ public /*abstract*/ class BaseDataTransaction {
             ) {
                 
             case (let persistentStore?, _):
-                let object = entityClass.createInContext(context) as! T
-                context.assignObject(object, toPersistentStore: persistentStore)
+                let object = entityClass.createInContext(context)
+                context.assign(object, to: persistentStore)
                 return object
                 
             case (nil, true):
@@ -87,13 +84,13 @@ public /*abstract*/ class BaseDataTransaction {
             switch context.parentStack!.persistentStoreForEntityClass(
                 entityClass,
                 configuration: into.configuration
-                    ?? into.dynamicType.defaultConfigurationName,
+                    ?? type(of: into).defaultConfigurationName,
                 inferStoreIfPossible: false
             ) {
                 
             case (let persistentStore?, _):
-                let object = entityClass.createInContext(context) as! T
-                context.assignObject(object, toPersistentStore: persistentStore)
+                let object = entityClass.createInContext(context)
+                context.assign(object, to: persistentStore)
                 return object
                 
             case (nil, true):
@@ -118,8 +115,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object: the `NSManagedObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    @warn_unused_result
-    public func edit<T: NSManagedObject>(object: T?) -> T? {
+    public func edit<T: NSManagedObject>(_ object: T?) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -139,17 +135,16 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    @warn_unused_result
-    public func edit<T: NSManagedObject>(into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
+    public func edit<T: NSManagedObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to update an entity of type \(cs_typeName(T)) outside its designated queue."
+            "Attempted to update an entity of type \(cs_typeName(into.entityClass)) outside its designated queue."
         )
         CoreStore.assert(
             into.inferStoreIfPossible
                 || (into.configuration ?? Into.defaultConfigurationName) == objectID.persistentStore?.configurationName,
-            "Attempted to update an entity of type \(cs_typeName(T)) but the specified persistent store do not match the `NSManagedObjectID`."
+            "Attempted to update an entity of type \(cs_typeName(into.entityClass)) but the specified persistent store do not match the `NSManagedObjectID`."
         )
         return self.fetchExisting(objectID) as? T
     }
@@ -159,7 +154,7 @@ public /*abstract*/ class BaseDataTransaction {
      
      - parameter object: the `NSManagedObject` to be deleted
      */
-    public func delete(object: NSManagedObject?) {
+    public func delete(_ object: NSManagedObject?) {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -179,7 +174,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object2: another `NSManagedObject` to be deleted
      - parameter objects: other `NSManagedObject`s to be deleted
      */
-    public func delete(object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
+    public func delete(_ object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
         
         self.delete(([object1, object2] + objects).flatMap { $0 })
     }
@@ -189,7 +184,7 @@ public /*abstract*/ class BaseDataTransaction {
      
      - parameter objects: the `NSManagedObject`s to be deleted
      */
-    public func delete<S: SequenceType where S.Generator.Element: NSManagedObject>(objects: S) {
+    public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: NSManagedObject {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -221,11 +216,10 @@ public /*abstract*/ class BaseDataTransaction {
     
     - returns: a `Set` of pending `NSManagedObject`s that were inserted to the transaction.
      */
-    @warn_unused_result
     public func insertedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access inserted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -242,11 +236,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObject`s of the specified type that were inserted to the transaction.
      */
-    @warn_unused_result
-    public func insertedObjects<T: NSManagedObject>(entity: T.Type) -> Set<T> {
+    public func insertedObjects<T: NSManagedObject>(_ entity: T.Type) -> Set<T> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access inserted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -262,11 +255,10 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObjectID`s that were inserted to the transaction.
      */
-    @warn_unused_result
     public func insertedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access inserted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -283,11 +275,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were inserted to the transaction.
      */
-    @warn_unused_result
-    public func insertedObjectIDs<T: NSManagedObject>(entity: T.Type) -> Set<NSManagedObjectID> {
+    public func insertedObjectIDs<T: NSManagedObject>(_ entity: T.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access inserted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -295,7 +286,7 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access inserted objects IDs from an already committed \(cs_typeName(self))."
         )
         
-        return Set(self.context.insertedObjects.filter { $0.isKindOfClass(entity) }.map { $0.objectID })
+        return Set(self.context.insertedObjects.filter { $0.isKind(of: entity) }.map { $0.objectID })
     }
     
     /**
@@ -303,11 +294,10 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObject`s that were updated to the transaction.
      */
-    @warn_unused_result
     public func updatedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access updated objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -324,11 +314,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObject`s of the specified type that were updated in the transaction.
      */
-    @warn_unused_result
-    public func updatedObjects<T: NSManagedObject>(entity: T.Type) -> Set<T> {
+    public func updatedObjects<T: NSManagedObject>(_ entity: T.Type) -> Set<T> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access updated objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -336,7 +325,7 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access updated objects from an already committed \(cs_typeName(self))."
         )
         
-        return Set(self.context.updatedObjects.filter { $0.isKindOfClass(entity) }.map { $0 as! T })
+        return Set(self.context.updatedObjects.filter { $0.isKind(of: entity) }.map { $0 as! T })
     }
     
     /**
@@ -344,11 +333,10 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObjectID`s that were updated in the transaction.
      */
-    @warn_unused_result
     public func updatedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access updated object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -365,11 +353,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were updated in the transaction.
      */
-    @warn_unused_result
-    public func updatedObjectIDs<T: NSManagedObject>(entity: T.Type) -> Set<NSManagedObjectID> {
+    public func updatedObjectIDs<T: NSManagedObject>(_ entity: T.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access updated object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -377,7 +364,7 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access updated object IDs from an already committed \(cs_typeName(self))."
         )
         
-        return Set(self.context.updatedObjects.filter { $0.isKindOfClass(entity) }.map { $0.objectID })
+        return Set(self.context.updatedObjects.filter { $0.isKind(of: entity) }.map { $0.objectID })
     }
     
     /**
@@ -385,11 +372,10 @@ public /*abstract*/ class BaseDataTransaction {
      
      - returns: a `Set` of pending `NSManagedObject`s that were deleted from the transaction.
      */
-    @warn_unused_result
     public func deletedObjects() -> Set<NSManagedObject> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access deleted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -406,11 +392,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObject`s of the specified type that were deleted from the transaction.
      */
-    @warn_unused_result
-    public func deletedObjects<T: NSManagedObject>(entity: T.Type) -> Set<T> {
+    public func deletedObjects<T: NSManagedObject>(_ entity: T.Type) -> Set<T> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access deleted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -418,7 +403,7 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access deleted objects from an already committed \(cs_typeName(self))."
         )
         
-        return Set(self.context.deletedObjects.filter { $0.isKindOfClass(entity) }.map { $0 as! T })
+        return Set(self.context.deletedObjects.filter { $0.isKind(of: entity) }.map { $0 as! T })
     }
     
     /**
@@ -427,11 +412,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
-    @warn_unused_result
     public func deletedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access deleted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -448,11 +432,10 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `NSManagedObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
-    @warn_unused_result
-    public func deletedObjectIDs<T: NSManagedObject>(entity: T.Type) -> Set<NSManagedObjectID> {
+    public func deletedObjectIDs<T: NSManagedObject>(_ entity: T.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to access deleted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -460,28 +443,26 @@ public /*abstract*/ class BaseDataTransaction {
             "Attempted to access deleted object IDs from an already committed \(cs_typeName(self))."
         )
         
-        return Set(self.context.deletedObjects.filter { $0.isKindOfClass(entity) }.map { $0.objectID })
+        return Set(self.context.deletedObjects.filter { $0.isKind(of: entity) }.map { $0.objectID })
     }
     
     
     // MARK: Internal
     
     internal let context: NSManagedObjectContext
-    internal let transactionQueue: GCDQueue
-    internal let childTransactionQueue: GCDQueue = .createSerial("com.corestore.datastack.childtransactionqueue")
+    internal let transactionQueue: DispatchQueue
+    internal let childTransactionQueue = DispatchQueue.serial("com.corestore.datastack.childtransactionqueue")
     internal let supportsUndo: Bool
     internal let bypassesQueueing: Bool
-    
-    
     internal var isCommitted = false
     internal var result: SaveResult?
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, supportsUndo: Bool, bypassesQueueing: Bool) {
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, supportsUndo: Bool, bypassesQueueing: Bool) {
         
         let context = mainContext.temporaryContextInTransactionWithConcurrencyType(
-            queue == .Main
-                ? .MainQueueConcurrencyType
-                : .PrivateQueueConcurrencyType
+            queue == .main
+                ? .mainQueueConcurrencyType
+                : .privateQueueConcurrencyType
         )
         self.transactionQueue = queue
         self.context = context
@@ -489,18 +470,19 @@ public /*abstract*/ class BaseDataTransaction {
         self.bypassesQueueing = bypassesQueueing
         
         context.parentTransaction = self
+        context.isTransactionContext = true
         if !supportsUndo {
             
             context.undoManager = nil
         }
         else if context.undoManager == nil {
             
-            context.undoManager = NSUndoManager()
+            context.undoManager = UndoManager()
         }
     }
     
     internal func isRunningInAllowedQueue() -> Bool {
         
-        return self.bypassesQueueing || self.transactionQueue.isCurrentExecutionContext()
+        return self.bypassesQueueing || self.transactionQueue.cs_isCurrentExecutionContext()
     }
 }

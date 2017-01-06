@@ -36,11 +36,12 @@ class BaseTestCase: XCTestCase {
     // MARK: Internal
     
     @nonobjc
-    func prepareStack<T>(configurations configurations: [String?] = [nil], @noescape _ closure: (dataStack: DataStack) -> T) -> T {
+    @discardableResult
+    func prepareStack<T>(configurations: [String?] = [nil], _ closure: (_ dataStack: DataStack) -> T) -> T {
         
         let stack = DataStack(
             modelName: "Model",
-            bundle: NSBundle(forClass: self.dynamicType)
+            bundle: Bundle(for: type(of: self))
         )
         do {
             
@@ -49,10 +50,10 @@ class BaseTestCase: XCTestCase {
                 try stack.addStorageAndWait(
                     SQLiteStore(
                         fileURL: SQLiteStore.defaultRootDirectory
-                            .URLByAppendingPathComponent(NSUUID().UUIDString)!
-                            .URLByAppendingPathComponent("\(self.dynamicType)_\(($0 ?? "-null-")).sqlite")!,
+                            .appendingPathComponent(UUID().uuidString)
+                            .appendingPathComponent("\(type(of: self))_\(($0 ?? "-null-")).sqlite"),
                         configuration: $0,
-                        localStorageOptions: .RecreateStoreOnModelMismatch
+                        localStorageOptions: .recreateStoreOnModelMismatch
                     )
                 )
             }
@@ -61,11 +62,11 @@ class BaseTestCase: XCTestCase {
             
             XCTFail(error.coreStoreDumpString)
         }
-        return closure(dataStack: stack)
+        return closure(stack)
     }
     
     @nonobjc
-    func expectLogger<T>(expectations: [TestLogger.Expectation], @noescape closure: () -> T) -> T {
+    func expectLogger<T>(_ expectations: [TestLogger.Expectation], closure: () -> T) -> T {
         
         CoreStore.logger = TestLogger(self.prepareLoggerExpectations(expectations))
         defer {
@@ -77,18 +78,18 @@ class BaseTestCase: XCTestCase {
     }
     
     @nonobjc
-    func expectLogger(expectations: [TestLogger.Expectation: XCTestExpectation]) {
+    func expectLogger(_ expectations: [TestLogger.Expectation: XCTestExpectation]) {
         
         CoreStore.logger = TestLogger(expectations)
     }
     
     @nonobjc
-    func prepareLoggerExpectations(expectations: [TestLogger.Expectation]) -> [TestLogger.Expectation: XCTestExpectation] {
+    func prepareLoggerExpectations(_ expectations: [TestLogger.Expectation]) -> [TestLogger.Expectation: XCTestExpectation] {
         
         var testExpectations: [TestLogger.Expectation: XCTestExpectation] = [:]
         for expectation in expectations {
             
-            testExpectations[expectation] = self.expectationWithDescription("Logger Expectation: \(expectation)")
+            testExpectations[expectation] = self.expectation(description: "Logger Expectation: \(expectation)")
         }
         return testExpectations
     }
@@ -96,13 +97,13 @@ class BaseTestCase: XCTestCase {
     @nonobjc
     func checkExpectationsImmediately() {
         
-        self.waitForExpectationsWithTimeout(0, handler: nil)
+        self.waitForExpectations(timeout: 0, handler: { _ in })
     }
     
     @nonobjc
     func waitAndCheckExpectations() {
         
-        self.waitForExpectationsWithTimeout(10, handler: nil)
+        self.waitForExpectations(timeout: 10, handler: {_ in })
     }
     
     // MARK: XCTestCase
@@ -126,7 +127,7 @@ class BaseTestCase: XCTestCase {
     
     private func deleteStores() {
         
-        _ = try? NSFileManager.defaultManager().removeItemAtURL(SQLiteStore.defaultRootDirectory)
+        _ = try? FileManager.default.removeItem(at: SQLiteStore.defaultRootDirectory)
     }
 }
 
@@ -137,11 +138,11 @@ class TestLogger: CoreStoreLogger {
     
     enum Expectation {
         
-        case LogWarning
-        case LogFatal
-        case LogError
-        case AssertionFailure
-        case FatalError
+        case logWarning
+        case logFatal
+        case logError
+        case assertionFailure
+        case fatalError
     }
     
     init(_ expectations: [Expectation: XCTestExpectation]) {
@@ -152,33 +153,33 @@ class TestLogger: CoreStoreLogger {
     
     // MARK: CoreStoreLogger
     
-    func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         switch level {
             
-        case .Warning:  self.fulfill(.LogWarning)
-        case .Fatal:    self.fulfill(.LogFatal)
+        case .warning:  self.fulfill(.logWarning)
+        case .fatal:    self.fulfill(.logFatal)
         default:        break
         }
     }
     
-    func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        self.fulfill(.LogError)
+        self.fulfill(.logError)
     }
     
-    func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func assert(_ condition: @autoclosure () -> Bool, message: @autoclosure () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         if condition() {
             
             return
         }
-        self.fulfill(.AssertionFailure)
+        self.fulfill(.assertionFailure)
     }
     
-    func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        self.fulfill(.FatalError)
+        self.fulfill(.fatalError)
     }
     
     
@@ -186,7 +187,7 @@ class TestLogger: CoreStoreLogger {
     
     private var expectations: [Expectation: XCTestExpectation]
     
-    private func fulfill(expectation: Expectation) {
+    private func fulfill(_ expectation: Expectation) {
         
         if let instance = self.expectations[expectation] {
             

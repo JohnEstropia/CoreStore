@@ -36,8 +36,6 @@
 		B569651C1B30889A0075EE4A /* QueryingResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569651B1B30889A0075EE4A /* QueryingResultsViewController.swift */; };
 		B56965291B3582D30075EE4A /* MigrationDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B56965271B3582D30075EE4A /* MigrationDemo.xcdatamodeld */; };
 		B5E599321B5240F50084BD5F /* OrganismTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */; };
-		B5E89ACD1C52929C003B04A9 /* GCDKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9241C202429008147CD /* GCDKit.framework */; };
-		B5E89ACE1C52929C003B04A9 /* GCDKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9241C202429008147CD /* GCDKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5E89AD01C5292A2003B04A9 /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; };
 		B5E89AD11C5292A2003B04A9 /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5EE25851B36E23C0000406B /* OrganismV1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE25841B36E23C0000406B /* OrganismV1.swift */; };
@@ -54,7 +52,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B5E89ACE1C52929C003B04A9 /* GCDKit.framework in Embed Frameworks */,
 				B5E89AD11C5292A2003B04A9 /* CoreStore.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -94,7 +91,6 @@
 		B569651B1B30889A0075EE4A /* QueryingResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryingResultsViewController.swift; sourceTree = "<group>"; };
 		B56965281B3582D30075EE4A /* MigrationDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemo.xcdatamodel; sourceTree = "<group>"; };
 		B5BDC9211C202429008147CD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B5BDC9241C202429008147CD /* GCDKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GCDKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganismTableViewCell.swift; path = "CoreStoreDemo/MIgrations Demo/OrganismTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		B5EE25801B36E1B00000406B /* MigrationDemoV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemoV2.xcdatamodel; sourceTree = "<group>"; };
 		B5EE25841B36E23C0000406B /* OrganismV1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganismV1.swift; sourceTree = "<group>"; };
@@ -110,7 +106,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5E89ACD1C52929C003B04A9 /* GCDKit.framework in Frameworks */,
 				B5E89AD01C5292A2003B04A9 /* CoreStore.framework in Frameworks */,
 				B52977E11B120F8A003D50A5 /* CoreLocation.framework in Frameworks */,
 				B52977DF1B120F83003D50A5 /* MapKit.framework in Frameworks */,
@@ -146,7 +141,6 @@
 			children = (
 				B52977E01B120F8A003D50A5 /* CoreLocation.framework */,
 				B5BDC9211C202429008147CD /* CoreStore.framework */,
-				B5BDC9241C202429008147CD /* GCDKit.framework */,
 				B52977DE1B120F83003D50A5 /* MapKit.framework */,
 			);
 			name = Frameworks;
@@ -272,7 +266,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "John Rommel Estropia";
 				TargetAttributes = {
 					B54AAD481AF4D26E00848AE0 = {
@@ -462,7 +456,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.corestore.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -475,7 +469,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.corestore.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 2.3;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

@@ -39,7 +39,7 @@ final class OrderByTests: XCTestCase {
         do {
             
             let orderBy = OrderBy()
-            XCTAssertEqual(orderBy, OrderBy([] as [NSSortDescriptor]))
+            XCTAssertEqual(orderBy, OrderBy([NSSortDescriptor]()))
             XCTAssertNotEqual(orderBy, OrderBy(NSSortDescriptor(key: "key", ascending: false)))
             XCTAssertTrue(orderBy.sortDescriptors.isEmpty)
         }
@@ -48,9 +48,9 @@ final class OrderByTests: XCTestCase {
             let sortDescriptor = NSSortDescriptor(key: "key1", ascending: true)
             let orderBy = OrderBy(sortDescriptor)
             XCTAssertEqual(orderBy, OrderBy(sortDescriptor))
-            XCTAssertEqual(orderBy, OrderBy(.Ascending("key1")))
-            XCTAssertNotEqual(orderBy, OrderBy(.Ascending("key2")))
-            XCTAssertNotEqual(orderBy, OrderBy(.Descending("key1")))
+            XCTAssertEqual(orderBy, OrderBy(.ascending("key1")))
+            XCTAssertNotEqual(orderBy, OrderBy(.ascending("key2")))
+            XCTAssertNotEqual(orderBy, OrderBy(.descending("key1")))
             XCTAssertNotEqual(orderBy, OrderBy(NSSortDescriptor(key: "key1", ascending: false)))
             XCTAssertEqual(orderBy, OrderBy([sortDescriptor]))
             XCTAssertEqual(orderBy.sortDescriptors, [sortDescriptor])
@@ -63,7 +63,7 @@ final class OrderByTests: XCTestCase {
             ]
             let orderBy = OrderBy(sortDescriptors)
             XCTAssertEqual(orderBy, OrderBy(sortDescriptors))
-            XCTAssertEqual(orderBy, OrderBy(.Ascending("key1"), .Descending("key2")))
+            XCTAssertEqual(orderBy, OrderBy(.ascending("key1"), .descending("key2")))
             XCTAssertNotEqual(
                 orderBy,
                 OrderBy(
@@ -73,30 +73,30 @@ final class OrderByTests: XCTestCase {
                     ]
                 )
             )
-            XCTAssertNotEqual(orderBy, OrderBy(.Ascending("key1"), .Ascending("key2")))
-            XCTAssertNotEqual(orderBy, OrderBy(.Ascending("key1"), .Descending("key3")))
+            XCTAssertNotEqual(orderBy, OrderBy(.ascending("key1"), .ascending("key2")))
+            XCTAssertNotEqual(orderBy, OrderBy(.ascending("key1"), .descending("key3")))
             XCTAssertEqual(orderBy.sortDescriptors, sortDescriptors)
         }
         do {
             
-            let orderBy = OrderBy(.Ascending("key1"))
+            let orderBy = OrderBy(.ascending("key1"))
             let sortDescriptor = NSSortDescriptor(key: "key1", ascending: true)
             XCTAssertEqual(orderBy, OrderBy(sortDescriptor))
-            XCTAssertEqual(orderBy, OrderBy(.Ascending("key1")))
-            XCTAssertNotEqual(orderBy, OrderBy(.Descending("key1")))
-            XCTAssertNotEqual(orderBy, OrderBy(.Ascending("key2")))
+            XCTAssertEqual(orderBy, OrderBy(.ascending("key1")))
+            XCTAssertNotEqual(orderBy, OrderBy(.descending("key1")))
+            XCTAssertNotEqual(orderBy, OrderBy(.ascending("key2")))
             XCTAssertEqual(orderBy, OrderBy([sortDescriptor]))
             XCTAssertEqual(orderBy.sortDescriptors, [sortDescriptor])
         }
         do {
             
-            let orderBy = OrderBy(.Ascending("key1"), .Descending("key2"))
+            let orderBy = OrderBy(.ascending("key1"), .descending("key2"))
             let sortDescriptors = [
                 NSSortDescriptor(key: "key1", ascending: true),
                 NSSortDescriptor(key: "key2", ascending: false)
             ]
             XCTAssertEqual(orderBy, OrderBy(sortDescriptors))
-            XCTAssertEqual(orderBy, OrderBy(.Ascending("key1"), .Descending("key2")))
+            XCTAssertEqual(orderBy, OrderBy(.ascending("key1"), .descending("key2")))
             XCTAssertNotEqual(
                 orderBy,
                 OrderBy(
@@ -106,20 +106,20 @@ final class OrderByTests: XCTestCase {
                     ]
                 )
             )
-            XCTAssertNotEqual(orderBy, OrderBy(.Ascending("key1"), .Ascending("key2")))
-            XCTAssertNotEqual(orderBy, OrderBy(.Ascending("key1"), .Descending("key3")))
+            XCTAssertNotEqual(orderBy, OrderBy(.ascending("key1"), .ascending("key2")))
+            XCTAssertNotEqual(orderBy, OrderBy(.ascending("key1"), .descending("key3")))
             XCTAssertEqual(orderBy.sortDescriptors, sortDescriptors)
         }
         do {
             
-            let sortKeys: [SortKey] = [.Ascending("key1"), .Descending("key2")]
+            let sortKeys: [SortKey] = [.ascending("key1"), .descending("key2")]
             let orderBy = OrderBy(sortKeys)
             let sortDescriptors = [
                 NSSortDescriptor(key: "key1", ascending: true),
                 NSSortDescriptor(key: "key2", ascending: false)
             ]
             XCTAssertEqual(orderBy, OrderBy(sortDescriptors))
-            XCTAssertEqual(orderBy, OrderBy(.Ascending("key1"), .Descending("key2")))
+            XCTAssertEqual(orderBy, OrderBy(.ascending("key1"), .descending("key2")))
             XCTAssertNotEqual(
                 orderBy,
                 OrderBy(
@@ -129,8 +129,8 @@ final class OrderByTests: XCTestCase {
                     ]
                 )
             )
-            XCTAssertNotEqual(orderBy, OrderBy(.Ascending("key1"), .Ascending("key2")))
-            XCTAssertNotEqual(orderBy, OrderBy(.Ascending("key1"), .Descending("key3")))
+            XCTAssertNotEqual(orderBy, OrderBy(.ascending("key1"), .ascending("key2")))
+            XCTAssertNotEqual(orderBy, OrderBy(.ascending("key1"), .descending("key3")))
             XCTAssertEqual(orderBy.sortDescriptors, sortDescriptors)
         }
     }
@@ -138,15 +138,15 @@ final class OrderByTests: XCTestCase {
     @objc
     dynamic func test_ThatOrderByClauseOperations_ComputeCorrectly() {
         
-        let orderBy1 = OrderBy(.Ascending("key1"))
-        let orderBy2 = OrderBy(.Descending("key2"))
-        let orderBy3 = OrderBy(.Ascending("key3"))
+        let orderBy1 = OrderBy(.ascending("key1"))
+        let orderBy2 = OrderBy(.descending("key2"))
+        let orderBy3 = OrderBy(.ascending("key3"))
         
         do {
             
             let plusOrderBy = orderBy1 + orderBy2 + orderBy3
-            XCTAssertEqual(plusOrderBy, OrderBy(.Ascending("key1"), .Descending("key2"), .Ascending("key3")))
-            XCTAssertEqual(plusOrderBy, OrderBy(.Ascending("key1")) + OrderBy(.Descending("key2"), .Ascending("key3")))
+            XCTAssertEqual(plusOrderBy, OrderBy(.ascending("key1"), .descending("key2"), .ascending("key3")))
+            XCTAssertEqual(plusOrderBy, OrderBy(.ascending("key1")) + OrderBy(.descending("key2"), .ascending("key3")))
             XCTAssertNotEqual(plusOrderBy, orderBy1 + orderBy3 + orderBy2)
             XCTAssertNotEqual(plusOrderBy, orderBy2 + orderBy1 + orderBy3)
             XCTAssertNotEqual(plusOrderBy, orderBy2 + orderBy3 + orderBy1)
@@ -158,14 +158,14 @@ final class OrderByTests: XCTestCase {
             
             var plusOrderBy = orderBy1
             plusOrderBy += orderBy2
-            XCTAssertEqual(plusOrderBy, OrderBy(.Ascending("key1"), .Descending("key2")))
-            XCTAssertEqual(plusOrderBy, OrderBy(.Ascending("key1")) + OrderBy(.Descending("key2")))
+            XCTAssertEqual(plusOrderBy, OrderBy(.ascending("key1"), .descending("key2")))
+            XCTAssertEqual(plusOrderBy, OrderBy(.ascending("key1")) + OrderBy(.descending("key2")))
             XCTAssertNotEqual(plusOrderBy, orderBy2 + orderBy1)
             XCTAssertEqual(plusOrderBy.sortDescriptors, orderBy1.sortDescriptors + orderBy2.sortDescriptors)
             
             plusOrderBy += orderBy3
-            XCTAssertEqual(plusOrderBy, OrderBy(.Ascending("key1"), .Descending("key2"), .Ascending("key3")))
-            XCTAssertEqual(plusOrderBy, OrderBy(.Ascending("key1"), .Descending("key2")) + OrderBy(.Ascending("key3")))
+            XCTAssertEqual(plusOrderBy, OrderBy(.ascending("key1"), .descending("key2"), .ascending("key3")))
+            XCTAssertEqual(plusOrderBy, OrderBy(.ascending("key1"), .descending("key2")) + OrderBy(.ascending("key3")))
             XCTAssertNotEqual(plusOrderBy, orderBy1 + orderBy3 + orderBy2)
             XCTAssertNotEqual(plusOrderBy, orderBy2 + orderBy1 + orderBy3)
             XCTAssertNotEqual(plusOrderBy, orderBy2 + orderBy3 + orderBy1)
@@ -178,7 +178,7 @@ final class OrderByTests: XCTestCase {
     @objc
     dynamic func test_ThatOrderByClauses_ApplyToFetchRequestsCorrectly() {
         
-        let orderBy = OrderBy(.Ascending("key"))
+        let orderBy = OrderBy(.ascending("key"))
         let request = CoreStoreFetchRequest()
         orderBy.applyToFetchRequest(request)
         XCTAssertNotNil(request.sortDescriptors)

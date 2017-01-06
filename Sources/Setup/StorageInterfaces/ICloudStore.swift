@@ -34,7 +34,7 @@ import CoreData
 /**
  A storage interface backed by an SQLite database managed by iCloud.
  */
-public class ICloudStore: CloudStorage {
+public final class ICloudStore: CloudStorage {
     
     /**
      Initializes an iCloud store interface from the given ubiquitous store information. Returns `nil` if the container could not be located or if iCloud storage is unavailable for the current user or device
@@ -45,7 +45,7 @@ public class ICloudStore: CloudStorage {
          ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
          ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
          configuration: "Config1",
-         cloudStorageOptions: .RecreateLocalStoreOnModelMismatch
+         cloudStorageOptions: .recreateLocalStoreOnModelMismatch
      ) else {
          // iCloud is not available on the device
          return
@@ -57,41 +57,41 @@ public class ICloudStore: CloudStorage {
          }
      )
      ```
-     
      - parameter ubiquitousContentName: the name of the store in iCloud. This is required and should not be empty, and should not contain periods (`.`).
-     - parameter ubiquitousContentTransactionLogsSubdirectory: an optional subdirectory path for the transaction logs
+     - parameter ubiquitousContentTransactionLogsSubdirectory: a required relative path for the transaction logs
      - parameter ubiquitousContainerID: a container if your app has multiple ubiquity container identifiers in its entitlements
      - parameter ubiquitousPeerToken: a per-application salt to allow multiple apps on the same device to share a Core Data store integrated with iCloud
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `ubiquitousContentName` explicitly for each of them.
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
      - parameter cloudStorageOptions: When the `ICloudStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public required init?(ubiquitousContentName: String, ubiquitousContentTransactionLogsSubdirectory: String? = nil, ubiquitousContainerID: String? = nil, ubiquitousPeerToken: String? = nil, configuration: String? = nil, cloudStorageOptions: CloudStorageOptions = nil) {
+    public required init?(ubiquitousContentName: String, ubiquitousContentTransactionLogsSubdirectory: String, ubiquitousContainerID: String? = nil, ubiquitousPeerToken: String? = nil, configuration: String? = nil, cloudStorageOptions: CloudStorageOptions = nil) {
         
         CoreStore.assert(
             !ubiquitousContentName.isEmpty,
             "The ubiquitousContentName cannot be empty."
         )
         CoreStore.assert(
-            !ubiquitousContentName.containsString("."),
+            !ubiquitousContentName.contains("."),
             "The ubiquitousContentName cannot contain periods."
         )
         CoreStore.assert(
-            ubiquitousContentTransactionLogsSubdirectory?.isEmpty != true,
-            "The ubiquitousContentURLRelativePath should not be empty if provided."
+            !ubiquitousContentTransactionLogsSubdirectory.isEmpty,
+            "The ubiquitousContentURLRelativePath should not be empty."
         )
         CoreStore.assert(
             ubiquitousPeerToken?.isEmpty != true,
             "The ubiquitousPeerToken should not be empty if provided."
         )
         
-        let fileManager = NSFileManager.defaultManager()
-        guard let cacheFileURL = fileManager.URLForUbiquityContainerIdentifier(ubiquitousContainerID) else {
+        let fileManager = FileManager.default
+        guard let cacheFolderURL = fileManager.url(forUbiquityContainerIdentifier: ubiquitousContainerID) else {
             
             return nil
         }
+        let cacheFileURL = cacheFolderURL.appendingPathComponent(ubiquitousContentTransactionLogsSubdirectory)
         
-        var storeOptions: [String: AnyObject] = [
+        var storeOptions: [String: Any] = [
             NSSQLitePragmasOption: ["journal_mode": "WAL"],
             NSPersistentStoreUbiquitousContentNameKey: ubiquitousContentName
         ]
@@ -110,10 +110,10 @@ public class ICloudStore: CloudStorage {
      
      - parameter observer: the observer to start sending ubiquitous notifications to
      */
-    public func addObserver<T: ICloudStoreObserver>(observer: T) {
+    public func addObserver<T: ICloudStoreObserver>(_ observer: T) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to add an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         
@@ -121,7 +121,7 @@ public class ICloudStore: CloudStorage {
         
         self.registerNotification(
             &self.willFinishInitialImportKey,
-            name: ICloudUbiquitousStoreWillFinishInitialImportNotification,
+            name: Notification.Name.iCloudUbiquitousStoreWillFinishInitialImport,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -130,7 +130,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.didFinishInitialImportKey,
-            name: ICloudUbiquitousStoreDidFinishInitialImportNotification,
+            name: Notification.Name.iCloudUbiquitousStoreDidFinishInitialImport,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -139,7 +139,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.willAddAccountKey,
-            name: ICloudUbiquitousStoreWillAddAccountNotification,
+            name: Notification.Name.iCloudUbiquitousStoreWillAddAccount,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -148,7 +148,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.didAddAccountKey,
-            name: ICloudUbiquitousStoreDidAddAccountNotification,
+            name: Notification.Name.iCloudUbiquitousStoreDidAddAccount,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -157,7 +157,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.willRemoveAccountKey,
-            name: ICloudUbiquitousStoreWillRemoveAccountNotification,
+            name: Notification.Name.iCloudUbiquitousStoreWillRemoveAccount,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -166,7 +166,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.didRemoveAccountKey,
-            name: ICloudUbiquitousStoreDidRemoveAccountNotification,
+            name: Notification.Name.iCloudUbiquitousStoreDidRemoveAccount,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -175,7 +175,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.willRemoveContentKey,
-            name: ICloudUbiquitousStoreWillRemoveContentNotification,
+            name: Notification.Name.iCloudUbiquitousStoreWillRemoveContent,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
             
@@ -184,7 +184,7 @@ public class ICloudStore: CloudStorage {
         )
         self.registerNotification(
             &self.didRemoveContentKey,
-            name: ICloudUbiquitousStoreDidRemoveContentNotification,
+            name: Notification.Name.iCloudUbiquitousStoreDidRemoveContent,
             toObserver: observer,
             callback: { (observer, storage, dataStack) in
                 
@@ -198,10 +198,10 @@ public class ICloudStore: CloudStorage {
      
      - parameter observer: the observer to stop sending ubiquitous notifications to
      */
-    public func removeObserver(observer: ICloudStoreObserver) {
+    public func removeObserver(_ observer: ICloudStoreObserver) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to remove an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         let nilValue: AnyObject? = nil
@@ -266,12 +266,12 @@ public class ICloudStore: CloudStorage {
      [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
      ```
      */
-    public let storeOptions: [String: AnyObject]?
+    public let storeOptions: [AnyHashable: Any]?
     
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didAddToDataStack(dataStack: DataStack) {
+    public func didAddToDataStack(_ dataStack: DataStack) {
         
         self.didRemoveFromDataStack(dataStack)
         
@@ -280,7 +280,7 @@ public class ICloudStore: CloudStorage {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
-                notificationName: NSPersistentStoreCoordinatorStoresWillChangeNotification,
+                notificationName: Notification.Name.NSPersistentStoreCoordinatorStoresWillChange,
                 object: coordinator,
                 closure: { [weak self, weak dataStack] (note) -> Void in
                     
@@ -292,28 +292,28 @@ public class ICloudStore: CloudStorage {
                             return
                     }
                     
-                    let notification: String
-                    switch NSPersistentStoreUbiquitousTransitionType(rawValue: transitionType.unsignedIntegerValue) {
+                    let notification: Notification.Name
+                    switch NSPersistentStoreUbiquitousTransitionType(rawValue: transitionType.uintValue) {
                         
-                    case .InitialImportCompleted?:
-                        notification = ICloudUbiquitousStoreWillFinishInitialImportNotification
+                    case .initialImportCompleted?:
+                        notification = Notification.Name.iCloudUbiquitousStoreWillFinishInitialImport
                         
-                    case .AccountAdded?:
-                        notification = ICloudUbiquitousStoreWillAddAccountNotification
+                    case .accountAdded?:
+                        notification = Notification.Name.iCloudUbiquitousStoreWillAddAccount
                         
-                    case .AccountRemoved?:
-                        notification = ICloudUbiquitousStoreWillRemoveAccountNotification
+                    case .accountRemoved?:
+                        notification = Notification.Name.iCloudUbiquitousStoreWillRemoveAccount
                         
-                    case .ContentRemoved?:
-                        notification = ICloudUbiquitousStoreWillRemoveContentNotification
+                    case .contentRemoved?:
+                        notification = Notification.Name.iCloudUbiquitousStoreWillRemoveContent
                         
                     default:
                         return
                     }
-                    NSNotificationCenter.defaultCenter().postNotificationName(
-                        notification,
+                    NotificationCenter.default.post(
+                        name: notification,
                         object: self,
-                        userInfo: [UserInfoKeyDataStack: dataStack]
+                        userInfo: [String(describing: DataStack.self): dataStack]
                     )
                 }
             ),
@@ -322,7 +322,7 @@ public class ICloudStore: CloudStorage {
         )
         cs_setAssociatedRetainedObject(
             NotificationObserver(
-                notificationName: NSPersistentStoreCoordinatorStoresDidChangeNotification,
+                notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresDidChange,
                 object: coordinator,
                 closure: { [weak self, weak dataStack] (note) -> Void in
                     
@@ -334,28 +334,28 @@ public class ICloudStore: CloudStorage {
                             return
                     }
                     
-                    let notification: String
-                    switch NSPersistentStoreUbiquitousTransitionType(rawValue: transitionType.unsignedIntegerValue) {
+                    let notification: Notification.Name
+                    switch NSPersistentStoreUbiquitousTransitionType(rawValue: transitionType.uintValue) {
                         
-                    case .InitialImportCompleted?:
-                        notification = ICloudUbiquitousStoreDidFinishInitialImportNotification
+                    case .initialImportCompleted?:
+                        notification = Notification.Name.iCloudUbiquitousStoreDidFinishInitialImport
                         
-                    case .AccountAdded?:
-                        notification = ICloudUbiquitousStoreDidAddAccountNotification
+                    case .accountAdded?:
+                        notification = Notification.Name.iCloudUbiquitousStoreDidAddAccount
                         
-                    case .AccountRemoved?:
-                        notification = ICloudUbiquitousStoreDidRemoveAccountNotification
+                    case .accountRemoved?:
+                        notification = Notification.Name.iCloudUbiquitousStoreDidRemoveAccount
                         
-                    case .ContentRemoved?:
-                        notification = ICloudUbiquitousStoreDidRemoveContentNotification
+                    case .contentRemoved?:
+                        notification = Notification.Name.iCloudUbiquitousStoreDidRemoveContent
                         
                     default:
                         return
                     }
-                    NSNotificationCenter.defaultCenter().postNotificationName(
-                        notification,
+                    NotificationCenter.default.post(
+                        name: notification,
                         object: self,
-                        userInfo: [UserInfoKeyDataStack: dataStack]
+                        userInfo: [String(describing: DataStack.self): dataStack]
                     )
                 }
             ),
@@ -367,7 +367,7 @@ public class ICloudStore: CloudStorage {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didRemoveFromDataStack(dataStack: DataStack) {
+    public func didRemoveFromDataStack(_ dataStack: DataStack) {
         
         let coordinator = dataStack.coordinator
         let nilValue: AnyObject? = nil
@@ -391,7 +391,7 @@ public class ICloudStore: CloudStorage {
     /**
      The `NSURL` that points to the ubiquity container file
      */
-    public let cacheFileURL: NSURL
+    public let cacheFileURL: URL
     
     /**
      Options that tell the `DataStack` how to setup the persistent store
@@ -401,20 +401,20 @@ public class ICloudStore: CloudStorage {
     /**
      The options dictionary for the specified `CloudStorageOptions`
      */
-    public func storeOptionsForOptions(options: CloudStorageOptions) -> [String: AnyObject]? {
+    public func dictionary(forOptions options: CloudStorageOptions) -> [AnyHashable: Any]? {
         
-        if options == .None {
+        if options == .none {
             
             return self.storeOptions
         }
         
         var storeOptions = self.storeOptions ?? [:]
-        if options.contains(.AllowSynchronousLightweightMigration) {
+        if options.contains(.allowSynchronousLightweightMigration) {
             
             storeOptions[NSMigratePersistentStoresAutomaticallyOption] = true
             storeOptions[NSInferMappingModelAutomaticallyOption] = true
         }
-        if options.contains(.RecreateLocalStoreOnModelMismatch) {
+        if options.contains(.recreateLocalStoreOnModelMismatch) {
             
             storeOptions[NSPersistentStoreRebuildFromUbiquitousContentOption] = true
         }
@@ -424,48 +424,39 @@ public class ICloudStore: CloudStorage {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
-    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel?) throws {
+    public func eraseStorageAndWait(soureModel: NSManagedObjectModel) throws {
         
         // TODO: check if attached to persistent store
         
         let cacheFileURL = self.cacheFileURL
-        guard let soureModel = soureModel else {
-            
-            let fileManager = NSFileManager.defaultManager()
-            try fileManager.removeItemAtURL(cacheFileURL)
-            _ = try? fileManager.removeItemAtPath("\(cacheFileURL.absoluteString)-wal")
-            _ = try? fileManager.removeItemAtPath("\(cacheFileURL.absoluteString)-shm")
-            return
-        }
-        try cs_autoreleasepool {
+        try autoreleasepool {
             
             let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
             let options = [
                 NSSQLitePragmasOption: ["journal_mode": "DELETE"],
                 NSPersistentStoreRemoveUbiquitousMetadataOption: true
-            ]
-            let store = try journalUpdatingCoordinator.addPersistentStoreWithType(
-                self.dynamicType.storeType,
-                configuration: self.configuration,
-                URL: cacheFileURL,
+            ] as [String : Any]
+            let store = try journalUpdatingCoordinator.addPersistentStore(
+                ofType: type(of: self).storeType,
+                configurationName: self.configuration,
+                at: cacheFileURL,
                 options: options
             )
-            try journalUpdatingCoordinator.removePersistentStore(store)
-            try NSPersistentStoreCoordinator.removeUbiquitousContentAndPersistentStoreAtURL(
-                cacheFileURL,
+            try journalUpdatingCoordinator.remove(store)
+            try NSPersistentStoreCoordinator.removeUbiquitousContentAndPersistentStore(
+                at: cacheFileURL,
                 options: options
             )
-            try NSFileManager.defaultManager().removeItemAtURL(cacheFileURL)
         }
     }
     
     
     // MARK: Private
     
-    private struct Static {
+    fileprivate struct Static {
         
-        private static var persistentStoreCoordinatorWillChangeStores: Void?
-        private static var persistentStoreCoordinatorDidChangeStores: Void?
+        fileprivate static var persistentStoreCoordinatorWillChangeStores: Void?
+        fileprivate static var persistentStoreCoordinatorDidChangeStores: Void?
     }
     
     private var willFinishInitialImportKey: Void?
@@ -479,7 +470,7 @@ public class ICloudStore: CloudStorage {
     
     private weak var dataStack: DataStack?
     
-    private func registerNotification<T: ICloudStoreObserver>(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: T, callback: (observer: T, storage: ICloudStore, dataStack: DataStack) -> Void) {
+    private func registerNotification<T: ICloudStoreObserver>(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: T, callback: @escaping (_ observer: T, _ storage: ICloudStore, _ dataStack: DataStack) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -489,12 +480,12 @@ public class ICloudStore: CloudStorage {
                     
                     guard let `self` = self,
                         let observer = observer,
-                        let dataStack = note.userInfo?[UserInfoKeyDataStack] as? DataStack
-                        where self.dataStack === dataStack else {
+                        let dataStack = note.userInfo?[String(describing: DataStack.self)] as? DataStack,
+                        self.dataStack === dataStack else {
                             
                             return
                     }
-                    callback(observer: observer, storage: self, dataStack: dataStack)
+                    callback(observer, self, dataStack)
                 }
             ),
             forKey: notificationKey,
@@ -505,16 +496,17 @@ public class ICloudStore: CloudStorage {
 
 
 // MARK: - Notification Keys
-
-private let ICloudUbiquitousStoreWillFinishInitialImportNotification = "ICloudUbiquitousStoreWillFinishInitialImportNotification"
-private let ICloudUbiquitousStoreDidFinishInitialImportNotification = "ICloudUbiquitousStoreDidFinishInitialImportNotification"
-private let ICloudUbiquitousStoreWillAddAccountNotification = "ICloudUbiquitousStoreWillAddAccountNotification"
-private let ICloudUbiquitousStoreDidAddAccountNotification = "ICloudUbiquitousStoreDidAddAccountNotification"
-private let ICloudUbiquitousStoreWillRemoveAccountNotification = "ICloudUbiquitousStoreWillRemoveAccountNotification"
-private let ICloudUbiquitousStoreDidRemoveAccountNotification = "ICloudUbiquitousStoreDidRemoveAccountNotification"
-private let ICloudUbiquitousStoreWillRemoveContentNotification = "ICloudUbiquitousStoreWillRemoveContentNotification"
-private let ICloudUbiquitousStoreDidRemoveContentNotification = "ICloudUbiquitousStoreDidRemoveContentNotification"
-
-private let UserInfoKeyDataStack = "UserInfoKeyDataStack"
+    
+fileprivate extension Notification.Name {
+    
+    fileprivate static let iCloudUbiquitousStoreWillFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreWillFinishInitialImport")
+    fileprivate static let iCloudUbiquitousStoreDidFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreDidFinishInitialImport")
+    fileprivate static let iCloudUbiquitousStoreWillAddAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreWillAddAccount")
+    fileprivate static let iCloudUbiquitousStoreDidAddAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreDidAddAccount")
+    fileprivate static let iCloudUbiquitousStoreWillRemoveAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreWillRemoveAccount")
+    fileprivate static let iCloudUbiquitousStoreDidRemoveAccount = Notification.Name(rawValue: "iCloudUbiquitousStoreDidRemoveAccount")
+    fileprivate static let iCloudUbiquitousStoreWillRemoveContent = Notification.Name(rawValue: "iCloudUbiquitousStoreWillRemoveContent")
+    fileprivate static let iCloudUbiquitousStoreDidRemoveContent = Notification.Name(rawValue: "iCloudUbiquitousStoreDidRemoveContent")
+}
 
 #endif

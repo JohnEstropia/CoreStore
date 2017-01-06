@@ -40,8 +40,7 @@ public extension CSDataStack {
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
     @objc
-    @warn_unused_result
-    public func monitorObject(object: NSManagedObject) -> CSObjectMonitor {
+    public func monitorObject(_ object: NSManagedObject) -> CSObjectMonitor {
         
         return bridge {
             
@@ -57,11 +56,10 @@ public extension CSDataStack {
      - returns: a `CSListMonitor` instance that monitors changes to the list
      */
     @objc
-    @warn_unused_result
-    public func monitorListFrom(from: CSFrom, fetchClauses: [CSFetchClause]) -> CSListMonitor {
+    public func monitorListFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         CoreStore.assert(
@@ -74,9 +72,9 @@ public extension CSDataStack {
                 dataStack: self.bridgeToSwift,
                 from: from.bridgeToSwift,
                 sectionBy: nil,
-                applyFetchClauses: { fetchRequest in
+                applyFetchClauses: { (fetchRequest) in
                     
-                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
                 }
             )
         }
@@ -90,10 +88,10 @@ public extension CSDataStack {
      - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      */
     @objc
-    public func monitorListByCreatingAsynchronously(createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, fetchClauses: [CSFetchClause]) {
+    public func monitorListByCreatingAsynchronously(_ createAsynchronously: @escaping (CSListMonitor) -> Void, from: CSFrom, fetchClauses: [CSFetchClause]) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         CoreStore.assert(
@@ -104,9 +102,9 @@ public extension CSDataStack {
             dataStack: self.bridgeToSwift,
             from: from.bridgeToSwift,
             sectionBy: nil,
-            applyFetchClauses: { fetchRequest in
+            applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
             },
             createAsynchronously: {
                 
@@ -124,11 +122,10 @@ public extension CSDataStack {
      - returns: a `CSListMonitor` instance that monitors changes to the list
      */
     @objc
-    @warn_unused_result
-    public func monitorSectionedListFrom(from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> CSListMonitor {
+    public func monitorSectionedListFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         CoreStore.assert(
@@ -141,9 +138,9 @@ public extension CSDataStack {
                 dataStack: self.bridgeToSwift,
                 from: from.bridgeToSwift,
                 sectionBy: sectionBy.bridgeToSwift,
-                applyFetchClauses: { fetchRequest in
+                applyFetchClauses: { (fetchRequest) in
                     
-                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
                 }
             )
         }
@@ -157,10 +154,10 @@ public extension CSDataStack {
      - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      */
-    public func monitorSectionedListByCreatingAsynchronously(createAsynchronously: (CSListMonitor) -> Void, from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) {
+    public func monitorSectionedListByCreatingAsynchronously(_ createAsynchronously: @escaping (CSListMonitor) -> Void, from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
         )
         CoreStore.assert(
@@ -171,9 +168,9 @@ public extension CSDataStack {
             dataStack: self.bridgeToSwift,
             from: from.bridgeToSwift,
             sectionBy: sectionBy.bridgeToSwift,
-            applyFetchClauses: { fetchRequest in
+            applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
             },
             createAsynchronously: {
                 

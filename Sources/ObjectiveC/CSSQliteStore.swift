@@ -46,13 +46,13 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
      - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `CSLocalStorageOptionsNone`.
      */
     @objc
-    public convenience init(fileURL: NSURL, configuration: String?, mappingModelBundles: [NSBundle]?, localStorageOptions: Int) {
+    public convenience init(fileURL: URL, configuration: String?, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
         
         self.init(
             SQLiteStore(
                 fileURL: fileURL,
                 configuration: configuration,
-                mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
+                mappingModelBundles: mappingModelBundles ?? Bundle.allBundles,
                 localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions)
             )
         )
@@ -68,13 +68,13 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
      - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `[CSLocalStorageOptions none]`.
      */
     @objc
-    public convenience init(fileName: String, configuration: String?, mappingModelBundles: [NSBundle]?, localStorageOptions: Int) {
+    public convenience init(fileName: String, configuration: String?, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
         
         self.init(
             SQLiteStore(
                 fileName: fileName,
                 configuration: configuration,
-                mappingModelBundles: mappingModelBundles ?? NSBundle.allBundles(),
+                mappingModelBundles: mappingModelBundles ?? Bundle.allBundles,
                 localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions)
             )
         )
@@ -98,16 +98,16 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
      The `NSURL` that points to the SQLite file
      */
     @objc
-    public var fileURL: NSURL {
+    public var fileURL: URL {
      
-        return self.bridgeToSwift.fileURL
+        return self.bridgeToSwift.fileURL as URL
     }
     
     /**
      The `NSBundle`s from which to search mapping models for migrations
      */
     @objc
-    public var mappingModelBundles: [NSBundle] {
+    public var mappingModelBundles: [Bundle] {
         
         return self.bridgeToSwift.mappingModelBundles
     }
@@ -145,7 +145,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
      ```
      */
     @objc
-    public var storeOptions: [String: AnyObject]? {
+    public var storeOptions: [AnyHashable: Any]? {
         
         return self.bridgeToSwift.storeOptions
     }
@@ -154,11 +154,11 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
      Called by the `CSDataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `CSSQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
     @objc
-    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel?, error: NSErrorPointer) -> Bool {
+    public func eraseStorageAndWait(metadata: NSDictionary, soureModelHint: NSManagedObjectModel?, error: NSErrorPointer) -> Bool {
         
         return bridge(error) {
             
-            try self.bridgeToSwift.eraseStorageAndWait(soureModel: soureModel)
+            try self.bridgeToSwift.eraseStorageAndWait(metadata: metadata as! [String: Any], soureModelHint: soureModelHint)
         }
     }
     
@@ -170,7 +170,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
         return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSSQLiteStore else {
             
@@ -181,7 +181,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

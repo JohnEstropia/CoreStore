@@ -51,7 +51,7 @@ public protocol CSListObserver: class, AnyObject {
      - parameter monitor: the `CSListMonitor` monitoring the list being observed
      */
     @objc
-    optional func listMonitorWillChange(monitor: CSListMonitor)
+    optional func listMonitorWillChange(_ monitor: CSListMonitor)
     
     /**
      Handles processing right after a change to the observed list occurs
@@ -59,7 +59,7 @@ public protocol CSListObserver: class, AnyObject {
      - parameter monitor: the `CSListMonitor` monitoring the object being observed
      */
     @objc
-    optional func listMonitorDidChange(monitor: CSListMonitor)
+    optional func listMonitorDidChange(_ monitor: CSListMonitor)
     
     /**
      This method is broadcast from within the `CSListMonitor`'s `-refetchWithFetchClauses:` method to let observers prepare for the internal `NSFetchedResultsController`'s pending change to its predicate, sort descriptors, etc. Note that the actual refetch will happen after the `NSFetchedResultsController`'s last `-controllerDidChangeContent:` notification completes.
@@ -67,7 +67,7 @@ public protocol CSListObserver: class, AnyObject {
      - parameter monitor: the `CSListMonitor` monitoring the object being observed
      */
     @objc
-    optional func listMonitorWillRefetch(monitor: CSListMonitor)
+    optional func listMonitorWillRefetch(_ monitor: CSListMonitor)
     
     /**
      After the `CSListMonitor`'s `-refetchWithFetchClauses:` method is called, this method is broadcast after the `NSFetchedResultsController`'s last `-controllerDidChangeContent:` notification completes.
@@ -75,7 +75,7 @@ public protocol CSListObserver: class, AnyObject {
      - parameter monitor: the `CSListMonitor` monitoring the object being observed
      */
     @objc
-    optional func listMonitorDidRefetch(monitor: CSListMonitor)
+    optional func listMonitorDidRefetch(_ monitor: CSListMonitor)
 }
 
 
@@ -103,7 +103,7 @@ public protocol CSListObjectObserver: CSListObserver {
      - parameter indexPath: the new `NSIndexPath` for the inserted object
      */
     @objc
-    optional func listMonitor(monitor: CSListMonitor, didInsertObject object: AnyObject, toIndexPath indexPath: NSIndexPath)
+    optional func listMonitor(_ monitor: CSListMonitor, didInsertObject object: Any, toIndexPath indexPath: IndexPath)
     
     /**
      Notifies that an object was deleted from the specified `NSIndexPath` in the list
@@ -113,7 +113,7 @@ public protocol CSListObjectObserver: CSListObserver {
      - parameter indexPath: the `NSIndexPath` for the deleted object
      */
     @objc
-    optional func listMonitor(monitor: CSListMonitor, didDeleteObject object: AnyObject, fromIndexPath indexPath: NSIndexPath)
+    optional func listMonitor(_ monitor: CSListMonitor, didDeleteObject object: Any, fromIndexPath indexPath: IndexPath)
     
     /**
      Notifies that an object at the specified `NSIndexPath` was updated
@@ -123,7 +123,7 @@ public protocol CSListObjectObserver: CSListObserver {
      - parameter indexPath: the `NSIndexPath` for the updated object
      */
     @objc
-    optional func listMonitor(monitor: CSListMonitor, didUpdateObject object: AnyObject, atIndexPath indexPath: NSIndexPath)
+    optional func listMonitor(_ monitor: CSListMonitor, didUpdateObject object: Any, atIndexPath indexPath: IndexPath)
     
     /**
      Notifies that an object's index changed
@@ -134,7 +134,7 @@ public protocol CSListObjectObserver: CSListObserver {
      - parameter toIndexPath: the new `NSIndexPath` for the moved object
      */
     @objc
-    optional func listMonitor(monitor: CSListMonitor, didMoveObject object: AnyObject, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
+    optional func listMonitor(_ monitor: CSListMonitor, didMoveObject object: Any, fromIndexPath: IndexPath, toIndexPath: IndexPath)
 }
 
 
@@ -163,7 +163,7 @@ public protocol CSListSectionObserver: CSListObjectObserver {
      - parameter sectionIndex: the new section index for the new section
      */
     @objc
-    optional func listMonitor(monitor: CSListMonitor, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
+    optional func listMonitor(_ monitor: CSListMonitor, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
     
     /**
      Notifies that a section was inserted at the specified index
@@ -173,7 +173,7 @@ public protocol CSListSectionObserver: CSListObjectObserver {
      - parameter sectionIndex: the previous section index for the deleted section
      */
     @objc
-    optional func listMonitor(monitor: CSListMonitor, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
+    optional func listMonitor(_ monitor: CSListMonitor, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 }
 
 #endif

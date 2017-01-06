@@ -43,11 +43,11 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
      */
     @objc
-    public func commitWithCompletion(completion: ((result: CSSaveResult) -> Void)?) {
+    public func commitWithCompletion(_ completion: ((_ result: CSSaveResult) -> Void)?) {
         
         self.bridgeToSwift.commit { (result) in
             
-            completion?(result: result.bridgeToObjectiveC)
+            completion?(result.bridgeToObjectiveC)
         }
     }
     
@@ -58,13 +58,14 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @objc
-    public func beginSynchronous(closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    @discardableResult
+    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {
             
             self.bridgeToSwift.beginSynchronous { (transaction) in
                 
-                closure(transaction: transaction.bridgeToObjectiveC)
+                closure(transaction.bridgeToObjectiveC)
             }
         }
     }
@@ -74,7 +75,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     
@@ -87,7 +88,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
     @objc
-    public override func createInto(into: CSInto) -> AnyObject {
+    public override func createInto(_ into: CSInto) -> Any {
         
         return self.bridgeToSwift.create(into.bridgeToSwift)
     }
@@ -99,8 +100,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    @warn_unused_result
-    public override func editObject(object: NSManagedObject?) -> AnyObject? {
+    public override func editObject(_ object: NSManagedObject?) -> Any? {
         
         return self.bridgeToSwift.edit(object)
     }
@@ -113,8 +113,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    @warn_unused_result
-    public override func editInto(into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
+    public override func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> Any? {
         
         return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
     }
@@ -125,7 +124,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - parameter object: the `NSManagedObject` type to be deleted
      */
     @objc
-    public override func deleteObject(object: NSManagedObject?) {
+    public override func deleteObject(_ object: NSManagedObject?) {
         
         self.bridgeToSwift.delete(object)
     }
@@ -136,7 +135,7 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - parameter objects: the `NSManagedObject`s type to be deleted
      */
     @objc
-    public override func deleteObjects(objects: [NSManagedObject]) {
+    public override func deleteObjects(_ objects: [NSManagedObject]) {
         
         self.bridgeToSwift.delete(objects)
     }

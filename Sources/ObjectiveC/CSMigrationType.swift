@@ -43,7 +43,7 @@ public final class CSMigrationType: NSObject, CoreStoreObjectiveCType {
     @objc
     public var needsMigration: Bool {
         
-        return self.bridgeToSwift.boolValue
+        return self.bridgeToSwift.hasMigration
     }
     
     /**
@@ -90,7 +90,7 @@ public final class CSMigrationType: NSObject, CoreStoreObjectiveCType {
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSMigrationType else {
             
@@ -101,7 +101,7 @@ public final class CSMigrationType: NSObject, CoreStoreObjectiveCType {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

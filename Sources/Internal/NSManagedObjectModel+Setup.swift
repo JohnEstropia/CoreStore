@@ -34,32 +34,34 @@ internal extension NSManagedObjectModel {
     // MARK: Internal
     
     @nonobjc
-    internal static func fromBundle(bundle: NSBundle, modelName: String, modelVersionHints: Set<String> = []) -> NSManagedObjectModel {
+    internal static func fromBundle(_ bundle: Bundle, modelName: String, modelVersionHints: Set<String> = []) -> NSManagedObjectModel {
         
-        guard let modelFilePath = bundle.pathForResource(modelName, ofType: "momd") else {
+        guard let modelFilePath = bundle.path(forResource: modelName, ofType: "momd") else {
             
+            // For users migrating from very old Xcode versions: Old xcdatamodel files are not contained inside xcdatamodeld (with a "d"), and will thus fail this check. If that was the case, create a new xcdatamodeld file and copy all contents into the new model.
             CoreStore.abort("Could not find \"\(modelName).momd\" from the bundle. \(bundle)")
         }
         
-        let modelFileURL = NSURL(fileURLWithPath: modelFilePath)
-        let versionInfoPlistURL = modelFileURL.URLByAppendingPathComponent("VersionInfo.plist", isDirectory: false)!
+        let modelFileURL = URL(fileURLWithPath: modelFilePath)
+        let versionInfoPlistURL = modelFileURL.appendingPathComponent("VersionInfo.plist", isDirectory: false)
         
-        guard let versionInfo = NSDictionary(contentsOfURL: versionInfoPlistURL),
+        guard let versionInfo = NSDictionary(contentsOf: versionInfoPlistURL),
             let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
                 
-                CoreStore.abort("Could not load \(cs_typeName(NSManagedObjectModel)) metadata from path \"\(versionInfoPlistURL)\".")
+                CoreStore.abort("Could not load \(cs_typeName(NSManagedObjectModel.self)) metadata from path \"\(versionInfoPlistURL)\".")
         }
         
         let modelVersions = Set(versionHashes.keys)
         let currentModelVersion: String
-        if let plistModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String where modelVersionHints.isEmpty || modelVersionHints.contains(plistModelVersion) {
+        if let plistModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String,
+            modelVersionHints.isEmpty || modelVersionHints.contains(plistModelVersion) {
             
             currentModelVersion = plistModelVersion
         }
-        else if let resolvedVersion = modelVersions.intersect(modelVersionHints).first {
+        else if let resolvedVersion = modelVersions.intersection(modelVersionHints).first {
             
             CoreStore.log(
-                .Warning,
+                .warning,
                 message: "The MigrationChain leaf versions do not include the model file's current version. Resolving to version \"\(resolvedVersion)\"."
             )
             currentModelVersion = resolvedVersion
@@ -69,7 +71,7 @@ internal extension NSManagedObjectModel {
             if !modelVersionHints.isEmpty {
                 
                 CoreStore.log(
-                    .Warning,
+                    .warning,
                     message: "The MigrationChain leaf versions do not include any of the model file's embedded versions. Resolving to version \"\(resolvedVersion)\"."
                 )
             }
@@ -80,10 +82,10 @@ internal extension NSManagedObjectModel {
             CoreStore.abort("No model files were found in URL \"\(modelFileURL)\".")
         }
         
-        var modelVersionFileURL: NSURL?
+        var modelVersionFileURL: URL?
         for modelVersion in modelVersions {
             
-            let fileURL = modelFileURL.URLByAppendingPathComponent("\(modelVersion).mom", isDirectory: false)!
+            let fileURL = modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
             
             if modelVersion == currentModelVersion {
                 
@@ -92,13 +94,13 @@ internal extension NSManagedObjectModel {
             }
             
             precondition(
-                NSManagedObjectModel(contentsOfURL: fileURL) != nil,
+                NSManagedObjectModel(contentsOf: fileURL) != nil,
                 "Could not find the \"\(modelVersion).mom\" version file for the model at URL \"\(modelFileURL)\"."
             )
         }
         
         if let modelVersionFileURL = modelVersionFileURL,
-            let rootModel = NSManagedObjectModel(contentsOfURL: modelVersionFileURL) {
+            let rootModel = NSManagedObjectModel(contentsOf: modelVersionFileURL) {
                 
                 rootModel.modelVersionFileURL = modelVersionFileURL
                 rootModel.modelVersions = modelVersions
@@ -106,7 +108,7 @@ internal extension NSManagedObjectModel {
                 return rootModel
         }
         
-        CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel)) from the model at URL \"\(modelFileURL)\".")
+        CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel.self)) from the model at URL \"\(modelFileURL)\".")
     }
     
     @nonobjc
@@ -152,7 +154,7 @@ internal extension NSManagedObjectModel {
     }
     
     @nonobjc
-    internal func entityNameForClass(entityClass: AnyClass) -> String {
+    internal func entityNameForClass(_ entityClass: AnyClass) -> String {
         
         return self.entityNameMapping[NSStringFromClass(entityClass)]!
     }
@@ -183,14 +185,14 @@ internal extension NSManagedObjectModel {
         }
         
         guard let modelFileURL = self.modelFileURL,
-            let modelVersions = self.modelVersions
-            where modelVersions.contains(modelVersion) else {
+            let modelVersions = self.modelVersions,
+            modelVersions.contains(modelVersion) else {
                 
                 return nil
         }
         
-        let versionModelFileURL = modelFileURL.URLByAppendingPathComponent("\(modelVersion).mom", isDirectory: false)
-        guard let model = NSManagedObjectModel(contentsOfURL: versionModelFileURL!) else {
+        let versionModelFileURL = modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
+        guard let model = NSManagedObjectModel(contentsOf: versionModelFileURL) else {
             
             return nil
         }
@@ -202,15 +204,15 @@ internal extension NSManagedObjectModel {
     }
     
     @nonobjc
-    internal subscript(metadata: [String: AnyObject]) -> NSManagedObjectModel? {
+    internal subscript(metadata: [String: Any]) -> NSManagedObjectModel? {
         
-        guard let modelHashes = metadata[NSStoreModelVersionHashesKey] as? [String : NSData] else {
+        guard let modelHashes = metadata[NSStoreModelVersionHashesKey] as? [String : Data] else {
             
             return nil
         }
         for modelVersion in self.modelVersions ?? [] {
             
-            if let versionModel = self[modelVersion] where modelHashes == versionModel.entityVersionHashesByName {
+            if let versionModel = self[modelVersion], modelHashes == versionModel.entityVersionHashesByName {
                 
                 return versionModel
             }
@@ -222,16 +224,16 @@ internal extension NSManagedObjectModel {
     // MARK: Private
     
     @nonobjc
-    private var modelFileURL: NSURL? {
+    private var modelFileURL: URL? {
         
         get {
             
-            return self.modelVersionFileURL?.URLByDeletingLastPathComponent
+            return self.modelVersionFileURL?.deletingLastPathComponent()
         }
     }
     
     @nonobjc
-    private var modelVersionFileURL: NSURL? {
+    private var modelVersionFileURL: URL? {
         
         get {
             
@@ -239,12 +241,12 @@ internal extension NSManagedObjectModel {
                 &PropertyKeys.modelVersionFileURL,
                 inObject: self
             )
-            return value
+            return value as URL?
         }
         set {
             
             cs_setAssociatedCopiedObject(
-                newValue,
+                newValue as NSURL?,
                 forKey: &PropertyKeys.modelVersionFileURL,
                 inObject: self
             )
@@ -270,7 +272,7 @@ internal extension NSManagedObjectModel {
                 }
                 
                 let className = $0.managedObjectClassName
-                mapping[className] = entityName
+                mapping[className!] = entityName
             }
             cs_setAssociatedCopiedObject(
                 mapping as NSDictionary,

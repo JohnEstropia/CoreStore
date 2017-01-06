@@ -36,33 +36,33 @@ final class ErrorTests: XCTestCase {
     @objc
     dynamic func test_ThatUnknownErrors_BridgeCorrectly() {
         
-        let error = CoreStoreError.Unknown
+        let error = CoreStoreError.unknown
         XCTAssertEqual((error as NSError).domain, CoreStoreErrorDomain)
-        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.UnknownError.rawValue)
+        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.unknownError.rawValue)
         
         let userInfo: NSDictionary = [:]
         
         let objcError = error.bridgeToObjectiveC
         XCTAssertEqual(error, objcError.bridgeToSwift)
         XCTAssertEqual(objcError.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError.code, CoreStoreErrorCode.UnknownError.rawValue)
-        XCTAssertEqual(objcError.userInfo, userInfo)
+        XCTAssertEqual(objcError.code, CoreStoreErrorCode.unknownError.rawValue)
+        XCTAssertEqual(objcError.userInfo as NSDictionary, userInfo)
         
         let objcError2 = objcError.bridgeToSwift.bridgeToObjectiveC
         XCTAssertEqual(error, objcError2.bridgeToSwift)
         XCTAssertEqual(objcError2.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.UnknownError.rawValue)
-        XCTAssertEqual(objcError2.userInfo, userInfo)
+        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.unknownError.rawValue)
+        XCTAssertEqual(objcError2.userInfo as NSDictionary, userInfo)
     }
     
     @objc
     dynamic func test_ThatDifferentStorageExistsAtURLErrors_BridgeCorrectly() {
         
-        let dummyURL = NSURL(string: "file:///test1/test2.sqlite")!
+        let dummyURL = URL(string: "file:///test1/test2.sqlite")!
         
-        let error = CoreStoreError.DifferentStorageExistsAtURL(existingPersistentStoreURL: dummyURL)
+        let error = CoreStoreError.differentStorageExistsAtURL(existingPersistentStoreURL: dummyURL)
         XCTAssertEqual((error as NSError).domain, CoreStoreErrorDomain)
-        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.DifferentPersistentStoreExistsAtURL.rawValue)
+        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.differentStorageExistsAtURL.rawValue)
         
         let userInfo: NSDictionary = [
             "existingPersistentStoreURL": dummyURL
@@ -70,27 +70,27 @@ final class ErrorTests: XCTestCase {
         let objcError = error.bridgeToObjectiveC
         XCTAssertEqual(error, objcError.bridgeToSwift)
         XCTAssertEqual(objcError.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError.code, CoreStoreErrorCode.DifferentPersistentStoreExistsAtURL.rawValue)
-        XCTAssertEqual(objcError.userInfo, userInfo)
+        XCTAssertEqual(objcError.code, CoreStoreErrorCode.differentStorageExistsAtURL.rawValue)
+        XCTAssertEqual(objcError.userInfo as NSDictionary, userInfo)
         
         let objcError2 = objcError.bridgeToSwift.bridgeToObjectiveC
         XCTAssertEqual(error, objcError2.bridgeToSwift)
         XCTAssertEqual(objcError2.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.DifferentPersistentStoreExistsAtURL.rawValue)
-        XCTAssertEqual(objcError2.userInfo, userInfo)
+        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.differentStorageExistsAtURL.rawValue)
+        XCTAssertEqual(objcError2.userInfo as NSDictionary, userInfo)
     }
     
     @objc
     dynamic func test_ThatMappingModelNotFoundErrors_BridgeCorrectly() {
         
-        let dummyURL = NSURL(string: "file:///test1/test2.sqlite")!
+        let dummyURL = URL(string: "file:///test1/test2.sqlite")!
         
-        let model = NSManagedObjectModel.fromBundle(NSBundle(forClass: self.dynamicType), modelName: "Model")
+        let model = NSManagedObjectModel.fromBundle(Bundle(for: type(of: self)), modelName: "Model")
         let version = "1.0.0"
         
-        let error = CoreStoreError.MappingModelNotFound(localStoreURL: dummyURL, targetModel: model, targetModelVersion: version)
+        let error = CoreStoreError.mappingModelNotFound(localStoreURL: dummyURL, targetModel: model, targetModelVersion: version)
         XCTAssertEqual((error as NSError).domain, CoreStoreErrorDomain)
-        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.MappingModelNotFound.rawValue)
+        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.mappingModelNotFound.rawValue)
         
         let userInfo: NSDictionary = [
             "localStoreURL": dummyURL,
@@ -100,24 +100,24 @@ final class ErrorTests: XCTestCase {
         let objcError = error.bridgeToObjectiveC
         XCTAssertEqual(error, objcError.bridgeToSwift)
         XCTAssertEqual(objcError.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError.code, CoreStoreErrorCode.MappingModelNotFound.rawValue)
-        XCTAssertEqual(objcError.userInfo, userInfo)
+        XCTAssertEqual(objcError.code, CoreStoreErrorCode.mappingModelNotFound.rawValue)
+        XCTAssertEqual(objcError.userInfo as NSDictionary, userInfo)
         
         let objcError2 = objcError.bridgeToSwift.bridgeToObjectiveC
         XCTAssertEqual(error, objcError2.bridgeToSwift)
         XCTAssertEqual(objcError2.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.MappingModelNotFound.rawValue)
-        XCTAssertEqual(objcError2.userInfo, userInfo)
+        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.mappingModelNotFound.rawValue)
+        XCTAssertEqual(objcError2.userInfo as NSDictionary, userInfo)
     }
     
     @objc
     dynamic func test_ThatProgressiveMigrationRequiredErrors_BridgeCorrectly() {
         
-        let dummyURL = NSURL(string: "file:///test1/test2.sqlite")!
+        let dummyURL = URL(string: "file:///test1/test2.sqlite")!
         
-        let error = CoreStoreError.ProgressiveMigrationRequired(localStoreURL: dummyURL)
+        let error = CoreStoreError.progressiveMigrationRequired(localStoreURL: dummyURL)
         XCTAssertEqual((error as NSError).domain, CoreStoreErrorDomain)
-        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.ProgressiveMigrationRequired.rawValue)
+        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.progressiveMigrationRequired.rawValue)
         
         let userInfo: NSDictionary = [
             "localStoreURL": dummyURL
@@ -125,14 +125,14 @@ final class ErrorTests: XCTestCase {
         let objcError = error.bridgeToObjectiveC
         XCTAssertEqual(error, objcError.bridgeToSwift)
         XCTAssertEqual(objcError.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError.code, CoreStoreErrorCode.ProgressiveMigrationRequired.rawValue)
-        XCTAssertEqual(objcError.userInfo, userInfo)
+        XCTAssertEqual(objcError.code, CoreStoreErrorCode.progressiveMigrationRequired.rawValue)
+        XCTAssertEqual(objcError.userInfo as NSDictionary, userInfo)
         
         let objcError2 = objcError.bridgeToSwift.bridgeToObjectiveC
         XCTAssertEqual(error, objcError2.bridgeToSwift)
         XCTAssertEqual(objcError2.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.ProgressiveMigrationRequired.rawValue)
-        XCTAssertEqual(objcError2.userInfo, userInfo)
+        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.progressiveMigrationRequired.rawValue)
+        XCTAssertEqual(objcError2.userInfo as NSDictionary, userInfo)
     }
     
     @objc
@@ -144,12 +144,12 @@ final class ErrorTests: XCTestCase {
             userInfo: [
                 "key1": "value1",
                 "key2": 2,
-                "key3": NSDate()
+                "key3": Date()
             ]
         )
         let error = CoreStoreError(internalError)
         XCTAssertEqual((error as NSError).domain, CoreStoreErrorDomain)
-        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.InternalError.rawValue)
+        XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.internalError.rawValue)
         
         let userInfo: NSDictionary = [
             "NSError": internalError
@@ -157,13 +157,13 @@ final class ErrorTests: XCTestCase {
         let objcError = error.bridgeToObjectiveC
         XCTAssertEqual(error, objcError.bridgeToSwift)
         XCTAssertEqual(objcError.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError.code, CoreStoreErrorCode.InternalError.rawValue)
-        XCTAssertEqual(objcError.userInfo, userInfo)
+        XCTAssertEqual(objcError.code, CoreStoreErrorCode.internalError.rawValue)
+        XCTAssertEqual(objcError.userInfo as NSDictionary, userInfo)
         
         let objcError2 = objcError.bridgeToSwift.bridgeToObjectiveC
         XCTAssertEqual(error, objcError2.bridgeToSwift)
         XCTAssertEqual(objcError2.domain, CoreStoreErrorDomain)
-        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.InternalError.rawValue)
-        XCTAssertEqual(objcError2.userInfo, userInfo)
+        XCTAssertEqual(objcError2.code, CoreStoreErrorCode.internalError.rawValue)
+        XCTAssertEqual(objcError2.userInfo as NSDictionary, userInfo)
     }
 }

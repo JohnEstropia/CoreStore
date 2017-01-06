@@ -45,13 +45,12 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          select:CSSelectString(CSAttribute(@"fullname"))
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
-     
      - parameter keyPath: the attribute name
      */
     @objc
     public convenience init(keyPath: KeyPath) {
 
-        self.init(.Attribute(keyPath))
+        self.init(.attribute(keyPath))
     }
 
     /**
@@ -61,15 +60,14 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm average:@"age" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter `as`: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the average value of an attribute
      */
     @objc
-    public static func average(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
+    public static func average(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.Average(keyPath, As: alias))
+        return self.init(.average(keyPath, as: alias))
     }
 
     /**
@@ -79,15 +77,14 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm count:@"employeeID" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for a count query
      */
     @objc
-    public static func count(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
+    public static func count(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.Count(keyPath, As: alias))
+        return self.init(.count(keyPath, as: alias))
     }
 
     /**
@@ -97,15 +94,14 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm maximum:@"age" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the maximum value for an attribute
      */
     @objc
-    public static func maximum(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
+    public static func maximum(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.Maximum(keyPath, As: alias))
+        return self.init(.maximum(keyPath, as: alias))
     }
 
     /**
@@ -115,15 +111,14 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm minimum:@"age" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the minimum value for an attribute
      */
     @objc
-    public static func minimum(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
+    public static func minimum(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.Minimum(keyPath, As: alias))
+        return self.init(.minimum(keyPath, as: alias))
     }
 
     /**
@@ -133,15 +128,14 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect numberForTerm:[CSSelectTerm sum:@"age" as:nil]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the sum value for an attribute
      */
     @objc
-    public static func sum(keyPath: KeyPath, `as` alias: KeyPath?) -> CSSelectTerm {
+    public static func sum(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
         
-        return self.init(.Sum(keyPath, As: alias))
+        return self.init(.sum(keyPath, as: alias))
     }
     
     /**
@@ -152,15 +146,14 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
          select:[CSSelect objectIDForTerm:[CSSelectTerm objectIDAs:nil]]
          fetchClauses:@[[CSWhere keyPath:@"employeeID" isEqualTo: @1111]]];
      ```
-     
      - parameter keyPath: the attribute name
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
      */
     @objc
-    public static func objectIDAs(alias: KeyPath? = nil) -> CSSelectTerm {
+    public static func objectIDAs(_ alias: KeyPath? = nil) -> CSSelectTerm {
         
-        return self.init(.ObjectID(As: alias))
+        return self.init(.objectID(as: alias))
     }
 
     
@@ -171,7 +164,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSSelectTerm else {
             
@@ -221,7 +214,6 @@ public final class CSSelect: NSObject {
         select:CSSelectNumber(CSAggregateMax(@"age"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(numberTerm: CSSelectTerm) {
@@ -237,7 +229,6 @@ public final class CSSelect: NSObject {
         select:CSSelectDecimal(CSAggregateAverage(@"price"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(decimalTerm: CSSelectTerm) {
@@ -253,7 +244,6 @@ public final class CSSelect: NSObject {
         select:CSSelectString(CSAttribute(@"fullname"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(stringTerm: CSSelectTerm) {
@@ -269,12 +259,11 @@ public final class CSSelect: NSObject {
         select:CSSelectDate(CSAggregateMax(@"updatedDate"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(dateTerm: CSSelectTerm) {
         
-        self.init(Select<NSDate>(dateTerm.bridgeToSwift))
+        self.init(Select<Date>(dateTerm.bridgeToSwift))
     }
     
     /**
@@ -285,12 +274,11 @@ public final class CSSelect: NSObject {
         select:CSSelectData(CSAttribute(@"imageData"))
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(dataTerm: CSSelectTerm) {
         
-        self.init(Select<NSData>(dataTerm.bridgeToSwift))
+        self.init(Select<Data>(dataTerm.bridgeToSwift))
     }
     
     /**
@@ -301,12 +289,11 @@ public final class CSSelect: NSObject {
         select:CSSelectObjectID()
         // ...
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
     public convenience init(objectIDTerm: ()) {
         
-        self.init(Select<NSManagedObjectID>(.ObjectID()))
+        self.init(Select<NSManagedObjectID>(.objectID()))
     }
     
     /**
@@ -316,11 +303,10 @@ public final class CSSelect: NSObject {
          queryValueFrom:[CSFrom entityClass:[MyPersonEntity class]]
          select:[CSSelect dictionaryForTerm:[CSSelectTerm maximum:@"age" as:nil]]];
      ```
-     
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
-    public static func dictionaryForTerm(term: CSSelectTerm) -> CSSelect {
+    public static func dictionaryForTerm(_ term: CSSelectTerm) -> CSSelect {
         
         return self.init(Select<NSDictionary>(term.bridgeToSwift))
     }
@@ -335,11 +321,10 @@ public final class CSSelect: NSObject {
              [CSSelectTerm attribute:@"age" as:nil]
          ]]];
      ```
-     
      - parameter terms: the `CSSelectTerm`s specifying the attribute/aggregate values to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
-    public static func dictionaryForTerms(terms: [CSSelectTerm]) -> CSSelect {
+    public static func dictionaryForTerms(_ terms: [CSSelectTerm]) -> CSSelect {
         
         return self.init(Select<NSDictionary>(terms.map { $0.bridgeToSwift }))
     }
@@ -350,10 +335,10 @@ public final class CSSelect: NSObject {
     public override var hash: Int {
         
         return self.attributeType.hashValue
-            ^ self.selectTerms.map { $0.hashValue }.reduce(0, combine: ^)
+            ^ self.selectTerms.map { $0.hashValue }.reduce(0, ^)
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSSelect else {
             
@@ -365,7 +350,7 @@ public final class CSSelect: NSObject {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     
@@ -381,7 +366,7 @@ public final class CSSelect: NSObject {
     
     public init<T: SelectResultType>(_ swiftValue: Select<T>) {
         
-        self.attributeType = .UndefinedAttributeType
+        self.attributeType = .undefinedAttributeType
         self.selectTerms = swiftValue.selectTerms
         self.bridgeToSwift = swiftValue
         super.init()

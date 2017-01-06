@@ -24,9 +24,6 @@
 //
 
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - CoreStore
@@ -45,10 +42,10 @@ public enum CoreStore {
         
         get {
         
-            self.defaultStackBarrierQueue.barrierSync {
-        
+            self.defaultStackBarrierQueue.sync(flags: .barrier) {
+                
                 if self.defaultStackInstance == nil {
-        
+                    
                     self.defaultStackInstance = DataStack()
                 }
             }
@@ -56,7 +53,7 @@ public enum CoreStore {
         }
         set {
             
-            self.defaultStackBarrierQueue.barrierAsync {
+            self.defaultStackBarrierQueue.async(flags: .barrier) {
                 
                 self.defaultStackInstance = newValue
             }
@@ -66,7 +63,7 @@ public enum CoreStore {
     
     // MARK: Private
     
-    private static let defaultStackBarrierQueue = GCDQueue.createConcurrent("com.coreStore.defaultStackBarrierQueue")
+    private static let defaultStackBarrierQueue = DispatchQueue.concurrent("com.coreStore.defaultStackBarrierQueue")
     
     private static var defaultStackInstance: DataStack?
 }

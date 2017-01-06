@@ -34,7 +34,7 @@ import CoreData
  Sample usage:
  ```
  let employees = transaction.fetchAll(
-     From(MyPersonEntity),
+     From<MyPersonEntity>(),
      Tweak { (fetchRequest) -> Void in
          fetchRequest.includesPendingChanges = false
          fetchRequest.fetchLimit = 5
@@ -47,7 +47,7 @@ public struct Tweak: FetchClause, QueryClause, DeleteClause {
     /**
      The block to customize the `NSFetchRequest`
      */
-    public let closure: (fetchRequest: NSFetchRequest) -> Void
+    public let closure: (_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void
     
     /**
      Initializes a `Tweak` clause with a closure where the `NSFetchRequest` may be configured.
@@ -55,7 +55,7 @@ public struct Tweak: FetchClause, QueryClause, DeleteClause {
      - Important: `Tweak`'s closure is executed only just before the fetch occurs, so make sure that any values captured by the closure is not prone to race conditions. Also, some utilities (such as `ListMonitor`s) may keep `FetchClause`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
      - parameter closure: the block to customize the `NSFetchRequest`
      */
-    public init(_ closure: (fetchRequest: NSFetchRequest) -> Void) {
+    public init(_ closure: @escaping (_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Void) {
         
         self.closure = closure
     }
@@ -63,8 +63,8 @@ public struct Tweak: FetchClause, QueryClause, DeleteClause {
     
     // MARK: FetchClause, QueryClause, DeleteClause
     
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+    public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
-        self.closure(fetchRequest: fetchRequest)
+        self.closure(fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
     }
 }

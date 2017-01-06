@@ -22,20 +22,20 @@ private struct Static {
             SQLiteStore(
                 fileName: "AccountsDemo_FB_Male.sqlite",
                 configuration: maleConfiguration,
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         try! dataStack.addStorageAndWait(
             SQLiteStore(
                 fileName: "AccountsDemo_FB_Female.sqlite",
                 configuration: femaleConfiguration,
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         
-        dataStack.beginSynchronous { (transaction) -> Void in
+        _ = dataStack.beginSynchronous { (transaction) -> Void in
             
-            transaction.deleteAll(From(UserAccount))
+            transaction.deleteAll(From<UserAccount>())
             
             let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
             account1.accountType = "Facebook"
@@ -47,7 +47,7 @@ private struct Static {
             account2.name = "Jane Doe HCD"
             account2.friends = 314
             
-            transaction.commitAndWait()
+            _ = transaction.commitAndWait()
         }
         
         return dataStack
@@ -60,20 +60,20 @@ private struct Static {
             SQLiteStore(
                 fileName: "AccountsDemo_TW_Male.sqlite",
                 configuration: maleConfiguration,
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         try! dataStack.addStorageAndWait(
             SQLiteStore(
                 fileName: "AccountsDemo_TW_Female.sqlite",
                 configuration: femaleConfiguration,
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         
-        dataStack.beginSynchronous { (transaction) -> Void in
+        _ = dataStack.beginSynchronous { (transaction) -> Void in
             
-            transaction.deleteAll(From(UserAccount))
+            transaction.deleteAll(From<UserAccount>())
             
             let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
             account1.accountType = "Twitter"
@@ -85,7 +85,7 @@ private struct Static {
             account2.name = "#janedoe_hcd"
             account2.friends = 100
             
-            transaction.commitAndWait()
+            _ = transaction.commitAndWait()
         }
         
         return dataStack
@@ -100,53 +100,53 @@ private struct Static {
 class StackSetupDemoViewController: UITableViewController {
     
     let accounts = [
-        Static.facebookStack.fetchAll(From(UserAccount)) ?? [],
-        Static.twitterStack.fetchAll(From(UserAccount)) ?? []
+        Static.facebookStack.fetchAll(From(UserAccount.self)) ?? [],
+        Static.twitterStack.fetchAll(From(UserAccount.self)) ?? []
     ]
     
     
     // MARK: UIViewController
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
         
         self.tableView.reloadData()
         
-        let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        self.tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: .None)
-        self.updateDetailsWithAccount(self.accounts[indexPath.section][indexPath.row])
+        let indexPath = IndexPath(row: 0, section: 0)
+        self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        self.updateDetails(account: self.accounts[indexPath.section][indexPath.row])
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
         
         let alert = UIAlertController(
             title: "Setup Demo",
             message: "This demo shows how to initialize 2 DataStacks with 2 configurations each, for a total of 4 SQLite files, each with 1 instance of a \"UserAccount\" entity.",
-            preferredStyle: .Alert
+            preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     
     // MARK: UITableViewDataSource
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         
         return self.accounts.count
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.accounts[section].count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UITableViewCell")!
         
         let account = self.accounts[indexPath.section][indexPath.row]
         cell.textLabel?.text = account.name
@@ -158,13 +158,13 @@ class StackSetupDemoViewController: UITableViewController {
     
     // MARK: UITableViewDelegate
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let account = self.accounts[indexPath.section][indexPath.row]
-        self.updateDetailsWithAccount(account)
+        self.updateDetails(account: account)
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
         switch section {
             
@@ -188,7 +188,7 @@ class StackSetupDemoViewController: UITableViewController {
     @IBOutlet private dynamic weak var nameLabel: UILabel?
     @IBOutlet private dynamic weak var friendsLabel: UILabel?
     
-    private func updateDetailsWithAccount(account: UserAccount) {
+    private func updateDetails(account: UserAccount) {
         
         self.accountTypeLabel?.text = account.accountType
         self.nameLabel?.text = account.name

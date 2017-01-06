@@ -39,17 +39,17 @@ final class SelectTests: XCTestCase {
         do {
             
             let term: SelectTerm = "attribute"
-            XCTAssertEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            XCTAssertEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Attribute(let key):
+            case ._attribute(let key):
                 XCTAssertEqual(key, "attribute")
                 
             default:
@@ -58,17 +58,17 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.Attribute("attribute")
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.attribute("attribute")
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Attribute(let key):
+            case ._attribute(let key):
                 XCTAssertEqual(key, "attribute")
                 
             default:
@@ -82,23 +82,23 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.Average("attribute")
-            XCTAssertEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.average("attribute")
+            XCTAssertEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "average:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "average(attribute)")
-                XCTAssertTrue(nativeType == .DecimalAttributeType)
+                XCTAssertTrue(nativeType == .decimalAttributeType)
                 
             default:
                 XCTFail()
@@ -106,23 +106,23 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.Average("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.Average("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute", As: "alias2"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.average("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.average("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute", as: "alias2"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "average:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
-                XCTAssertTrue(nativeType == .DecimalAttributeType)
+                XCTAssertTrue(nativeType == .decimalAttributeType)
                 
             default:
                 XCTFail()
@@ -135,23 +135,23 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.Count("attribute")
-            XCTAssertEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.count("attribute")
+            XCTAssertEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "count:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "count(attribute)")
-                XCTAssertTrue(nativeType == .Integer64AttributeType)
+                XCTAssertTrue(nativeType == .integer64AttributeType)
                 
             default:
                 XCTFail()
@@ -159,23 +159,23 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.Count("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.Count("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute", As: "alias2"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.count("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.count("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute", as: "alias2"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "count:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
-                XCTAssertTrue(nativeType == .Integer64AttributeType)
+                XCTAssertTrue(nativeType == .integer64AttributeType)
                 
             default:
                 XCTFail()
@@ -188,23 +188,23 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.Maximum("attribute")
-            XCTAssertEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.maximum("attribute")
+            XCTAssertEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "max:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "max(attribute)")
-                XCTAssertTrue(nativeType == .UndefinedAttributeType)
+                XCTAssertTrue(nativeType == .undefinedAttributeType)
                 
             default:
                 XCTFail()
@@ -212,23 +212,23 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.Maximum("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.Maximum("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute", As: "alias2"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.maximum("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.maximum("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute", as: "alias2"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "max:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
-                XCTAssertTrue(nativeType == .UndefinedAttributeType)
+                XCTAssertTrue(nativeType == .undefinedAttributeType)
                 
             default:
                 XCTFail()
@@ -241,23 +241,23 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.Minimum("attribute")
-            XCTAssertEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.minimum("attribute")
+            XCTAssertEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "min:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "min(attribute)")
-                XCTAssertTrue(nativeType == .UndefinedAttributeType)
+                XCTAssertTrue(nativeType == .undefinedAttributeType)
                 
             default:
                 XCTFail()
@@ -265,23 +265,23 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.Minimum("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.Minimum("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute", As: "alias2"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.minimum("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.minimum("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute", as: "alias2"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "min:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
-                XCTAssertTrue(nativeType == .UndefinedAttributeType)
+                XCTAssertTrue(nativeType == .undefinedAttributeType)
                 
             default:
                 XCTFail()
@@ -294,23 +294,23 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.Sum("attribute")
-            XCTAssertEqual(term, SelectTerm.Sum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.sum("attribute")
+            XCTAssertEqual(term, SelectTerm.sum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "sum:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "sum(attribute)")
-                XCTAssertTrue(nativeType == .DecimalAttributeType)
+                XCTAssertTrue(nativeType == .decimalAttributeType)
                 
             default:
                 XCTFail()
@@ -318,23 +318,23 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.Sum("attribute", As: "alias")
-            XCTAssertEqual(term, SelectTerm.Sum("attribute", As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute", As: "alias2"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute2"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
+            let term = SelectTerm.sum("attribute", as: "alias")
+            XCTAssertEqual(term, SelectTerm.sum("attribute", as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute", as: "alias2"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute2"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
             switch term {
                 
-            case ._Aggregate(let function, let keyPath, let alias, let nativeType):
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 XCTAssertEqual(function, "sum:")
                 XCTAssertEqual(keyPath, "attribute")
                 XCTAssertEqual(alias, "alias")
-                XCTAssertTrue(nativeType == .DecimalAttributeType)
+                XCTAssertTrue(nativeType == .decimalAttributeType)
                 
             default:
                 XCTFail()
@@ -347,20 +347,20 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.ObjectID()
-            XCTAssertEqual(term, SelectTerm.ObjectID())
-            XCTAssertNotEqual(term, SelectTerm.ObjectID(As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
+            let term = SelectTerm.objectID()
+            XCTAssertEqual(term, SelectTerm.objectID())
+            XCTAssertNotEqual(term, SelectTerm.objectID(as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
             switch term {
                 
-            case ._Identity(let alias, let nativeType):
+            case ._identity(let alias, let nativeType):
                 XCTAssertEqual(alias, "objectID")
-                XCTAssertTrue(nativeType == .ObjectIDAttributeType)
+                XCTAssertTrue(nativeType == .objectIDAttributeType)
                 
             default:
                 XCTFail()
@@ -368,21 +368,21 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.ObjectID(As: "alias")
-            XCTAssertEqual(term, SelectTerm.ObjectID(As: "alias"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID(As: "alias2"))
-            XCTAssertNotEqual(term, SelectTerm.ObjectID())
-            XCTAssertNotEqual(term, SelectTerm.Attribute("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Average("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Count("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Maximum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Minimum("attribute"))
-            XCTAssertNotEqual(term, SelectTerm.Sum("attribute"))
+            let term = SelectTerm.objectID(as: "alias")
+            XCTAssertEqual(term, SelectTerm.objectID(as: "alias"))
+            XCTAssertNotEqual(term, SelectTerm.objectID(as: "alias2"))
+            XCTAssertNotEqual(term, SelectTerm.objectID())
+            XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.average("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.count("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.maximum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.minimum("attribute"))
+            XCTAssertNotEqual(term, SelectTerm.sum("attribute"))
             switch term {
                 
-            case ._Identity(let alias, let nativeType):
+            case ._identity(let alias, let nativeType):
                 XCTAssertEqual(alias, "alias")
-                XCTAssertTrue(nativeType == .ObjectIDAttributeType)
+                XCTAssertTrue(nativeType == .objectIDAttributeType)
                 
             default:
                 XCTFail()
@@ -393,9 +393,9 @@ final class SelectTests: XCTestCase {
     @objc
     dynamic func test_ThatSelectClauses_ConfigureCorrectly() {
         
-        let term1 = SelectTerm.Attribute("attribute1")
-        let term2 = SelectTerm.Attribute("attribute2")
-        let term3 = SelectTerm.Attribute("attribute3")
+        let term1 = SelectTerm.attribute("attribute1")
+        let term2 = SelectTerm.attribute("attribute2")
+        let term3 = SelectTerm.attribute("attribute3")
         do {
             
             let select = Select<Int>(term1, term2, term3)

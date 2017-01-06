@@ -55,7 +55,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
     @objc
-    public func createInto(into: CSInto) -> AnyObject {
+    public func createInto(_ into: CSInto) -> Any {
         
         return self.bridgeToSwift.create(into.bridgeToSwift)
     }
@@ -67,8 +67,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    @warn_unused_result
-    public func editObject(object: NSManagedObject?) -> AnyObject? {
+    public func editObject(_ object: NSManagedObject?) -> Any? {
         
         return self.bridgeToSwift.edit(object)
     }
@@ -81,8 +80,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
     @objc
-    @warn_unused_result
-    public func editInto(into: CSInto, objectID: NSManagedObjectID) -> AnyObject? {
+    public func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> Any? {
         
         return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
     }
@@ -93,7 +91,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - parameter object: the `NSManagedObject` to be deleted
      */
     @objc
-    public func deleteObject(object: NSManagedObject?) {
+    public func deleteObject(_ object: NSManagedObject?) {
         
         self.bridgeToSwift.delete(object)
     }
@@ -104,7 +102,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - parameter objects: the `NSManagedObject`s to be deleted
      */
     @objc
-    public func deleteObjects(objects: [NSManagedObject]) {
+    public func deleteObjects(_ objects: [NSManagedObject]) {
         
         self.bridgeToSwift.delete(objects)
     }
@@ -127,7 +125,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObject`s that were inserted to the transaction.
      */
     @objc
-    @warn_unused_result
     public func insertedObjects() -> Set<NSManagedObject> {
         
         return self.bridgeToSwift.insertedObjects()
@@ -140,8 +137,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObject`s of the specified type that were inserted to the transaction.
      */
     @objc
-    @warn_unused_result
-    public func insertedObjectsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObject> {
+    public func insertedObjectsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObject> {
         
         return self.bridgeToSwift.insertedObjects(entity)
     }
@@ -152,7 +148,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObjectID`s that were inserted to the transaction.
      */
     @objc
-    @warn_unused_result
     public func insertedObjectIDs() -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.insertedObjectIDs()
@@ -165,8 +160,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObjectID`s of the specified type that were inserted to the transaction.
      */
     @objc
-    @warn_unused_result
-    public func insertedObjectIDsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
+    public func insertedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.insertedObjectIDs(entity)
     }
@@ -177,7 +171,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObject`s that were updated to the transaction.
      */
     @objc
-    @warn_unused_result
     public func updatedObjects() -> Set<NSManagedObject> {
         
         return self.bridgeToSwift.updatedObjects()
@@ -190,8 +183,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObject`s of the specified type that were updated in the transaction.
      */
     @objc
-    @warn_unused_result
-    public func updatedObjectsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObject> {
+    public func updatedObjectsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObject> {
         
         return self.bridgeToSwift.updatedObjects(entity)
     }
@@ -202,7 +194,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObjectID`s that were updated in the transaction.
      */
     @objc
-    @warn_unused_result
     public func updatedObjectIDs() -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.updatedObjectIDs()
@@ -215,8 +206,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObjectID`s of the specified type that were updated in the transaction.
      */
     @objc
-    @warn_unused_result
-    public func updatedObjectIDsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
+    public func updatedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.updatedObjectIDs(entity)
     }
@@ -227,7 +217,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObject`s that were deleted from the transaction.
      */
     @objc
-    @warn_unused_result
     public func deletedObjects() -> Set<NSManagedObject> {
         
         return self.bridgeToSwift.deletedObjects()
@@ -240,8 +229,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObject`s of the specified type that were deleted from the transaction.
      */
     @objc
-    @warn_unused_result
-    public func deletedObjectsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObject> {
+    public func deletedObjectsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObject> {
         
         return self.bridgeToSwift.deletedObjects(entity)
     }
@@ -253,7 +241,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: an `NSSet` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
     @objc
-    @warn_unused_result
     public func deletedObjectIDs() -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.deletedObjectIDs()
@@ -266,8 +253,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
     @objc
-    @warn_unused_result
-    public func deletedObjectIDsOfType(entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
+    public func deletedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.deletedObjectIDs(entity)
     }
@@ -280,7 +266,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
         return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSBaseDataTransaction else {
             

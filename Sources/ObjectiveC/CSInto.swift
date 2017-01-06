@@ -62,7 +62,6 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
      MyPersonEntity *person = [transaction createInto:
         CSIntoClass([MyPersonEntity class])];
      ```
-     
      - parameter entityClass: the `NSManagedObject` class type to be created
      */
     @objc
@@ -77,7 +76,6 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
      MyPersonEntity *person = [transaction createInto:
         CSIntoClass([MyPersonEntity class])];
      ```
-     
      - parameter entityClass: the `NSManagedObject` class type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */
@@ -95,7 +93,7 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSInto else {
             
@@ -106,7 +104,7 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

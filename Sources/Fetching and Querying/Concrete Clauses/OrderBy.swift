@@ -27,12 +27,12 @@ import Foundation
 import CoreData
 
 
-public func +(left: OrderBy, right: OrderBy) -> OrderBy {
+public func + (left: OrderBy, right: OrderBy) -> OrderBy {
     
     return OrderBy(left.sortDescriptors + right.sortDescriptors)
 }
 
-public func +=(inout left: OrderBy, right: OrderBy) {
+public func += (left: inout OrderBy, right: OrderBy) {
     
     left = left + right
 }
@@ -53,12 +53,12 @@ public enum SortKey {
     /**
      Indicates that the `KeyPath` should be sorted in ascending order
      */
-    case Ascending(KeyPath)
+    case ascending(KeyPath)
     
     /**
      Indicates that the `KeyPath` should be sorted in descending order
      */
-    case Descending(KeyPath)
+    case descending(KeyPath)
 }
 
 
@@ -114,10 +114,10 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
                 
                 switch sortKey {
                     
-                case .Ascending(let keyPath):
+                case .ascending(let keyPath):
                     return NSSortDescriptor(key: keyPath, ascending: true)
                     
-                case .Descending(let keyPath):
+                case .descending(let keyPath):
                     return NSSortDescriptor(key: keyPath, ascending: false)
                 }
             }
@@ -138,17 +138,25 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     
     // MARK: FetchClause, QueryClause, DeleteClause
     
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+    public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
-        if let sortDescriptors = fetchRequest.sortDescriptors where sortDescriptors != self.sortDescriptors {
+        if let sortDescriptors = fetchRequest.sortDescriptors, sortDescriptors != self.sortDescriptors {
             
             CoreStore.log(
-                .Warning,
-                message: "Existing sortDescriptors for the \(cs_typeName(NSFetchRequest)) was overwritten by \(cs_typeName(self)) query clause."
+                .warning,
+                message: "Existing sortDescriptors for the \(cs_typeName(fetchRequest)) was overwritten by \(cs_typeName(self)) query clause."
             )
         }
         
         fetchRequest.sortDescriptors = self.sortDescriptors
+    }
+    
+    
+    // MARK: Equatable
+    
+    public static func == (lhs: OrderBy, rhs: OrderBy) -> Bool {
+        
+        return lhs.sortDescriptors == rhs.sortDescriptors
     }
     
     
@@ -158,13 +166,4 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
         
         return (self.sortDescriptors as NSArray).hashValue
     }
-}
-
-
-// MARK: - OrderBy: Equatable
-
-@warn_unused_result
-public func == (lhs: OrderBy, rhs: OrderBy) -> Bool {
-    
-    return lhs.sortDescriptors == rhs.sortDescriptors
 }

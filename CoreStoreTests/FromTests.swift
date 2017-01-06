@@ -90,7 +90,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
@@ -146,7 +146,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
@@ -164,7 +164,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>()
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
@@ -182,7 +182,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
@@ -200,7 +200,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
@@ -256,7 +256,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
@@ -289,7 +289,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
@@ -307,7 +307,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
@@ -363,7 +363,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
@@ -396,7 +396,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.LogWarning]) {
+                let storesFound = self.expectLogger([.logWarning]) {
                     
                     from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }

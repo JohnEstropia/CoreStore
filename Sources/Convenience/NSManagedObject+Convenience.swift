@@ -32,20 +32,85 @@ import CoreData
 public extension NSManagedObject {
     
     /**
+     Exposes a `FetchableSource` that can fetch sibling objects of this `NSManagedObject` instance. This may be the `DataStack`, a `BaseDataTransaction`, the `NSManagedObjectContext` itself, or `nil` if the obejct's parent is already deallocated.
+     - Warning: Future implementations may change the instance returned by this method depending on the timing or condition that `fetchSource()` was called. Do not make assumptions that the instance will be a specific instance. If the `NSManagedObjectContext` instance is desired, use the `FetchableSource.internalContext()` method to get the correct instance. Also, do not assume that the `fetchSource()` and `querySource()` return the same instance all the time.
+     - returns: a `FetchableSource` that can fetch sibling objects of this `NSManagedObject` instance. This may be the `DataStack`, a `BaseDataTransaction`, the `NSManagedObjectContext` itself, or `nil` if the object's parent is already deallocated.
+     */
+    @nonobjc
+    public func fetchSource() -> FetchableSource? {
+        
+        guard let context = self.managedObjectContext else {
+            
+            return nil
+        }
+        if context.isTransactionContext {
+            
+            return context.parentTransaction
+        }
+        if context.isDataStackContext {
+            
+            return context.parentStack
+        }
+        return context
+    }
+    
+    /**
+     Exposes a `QueryableSource` that can query attributes and aggregate values. This may be the `DataStack`, a `BaseDataTransaction`, the `NSManagedObjectContext` itself, or `nil` if the obejct's parent is already deallocated.
+     - Warning: Future implementations may change the instance returned by this method depending on the timing or condition that `querySource()` was called. Do not make assumptions that the instance will be a specific instance. If the `NSManagedObjectContext` instance is desired, use the `QueryableSource.internalContext()` method to get the correct instance. Also, do not assume that the `fetchSource()` and `querySource()` return the same instance all the time.
+     - returns: a `QueryableSource` that can query attributes and aggregate values. This may be the `DataStack`, a `BaseDataTransaction`, the `NSManagedObjectContext` itself, or `nil` if the object's parent is already deallocated.
+     */
+    @nonobjc
+    public func querySource() -> QueryableSource? {
+        
+        guard let context = self.managedObjectContext else {
+            
+            return nil
+        }
+        if context.isTransactionContext {
+            
+            return context.parentTransaction
+        }
+        if context.isDataStackContext {
+            
+            return context.parentStack
+        }
+        return context
+    }
+    
+    /**
      Provides a convenience wrapper for accessing `primitiveValueForKey(...)` with proper calls to `willAccessValueForKey(...)` and `didAccessValueForKey(...)`. This is useful when implementing accessor methods for transient attributes.
      
      - parameter KVCKey: the KVC key
      - returns: the primitive value for the KVC key
      */
     @nonobjc
-    @warn_unused_result
-    public func accessValueForKVCKey(KVCKey: KeyPath) -> AnyObject? {
+    public func accessValueForKVCKey(_ KVCKey: KeyPath) -> Any? {
         
-        self.willAccessValueForKey(KVCKey)
-        let primitiveValue: AnyObject? = self.primitiveValueForKey(KVCKey)
-        self.didAccessValueForKey(KVCKey)
+        self.willAccessValue(forKey: KVCKey)
+        defer {
+            
+            self.didAccessValue(forKey: KVCKey)
+        }
+        return self.primitiveValue(forKey: KVCKey)
+    }
+    
+    /**
+     Provides a convenience wrapper for accessing `primitiveValueForKey(...)` with proper calls to `willAccessValueForKey(...)` and `didAccessValueForKey(...)`. This is useful when implementing accessor methods for transient attributes.
+     
+     - parameter KVCKey: the KVC key
+     - parameter didAccessPrimitiveValue: the closure to access the value. This is called between `willAccessValueForKey(...)` and `didAccessValueForKey(...)`
+     - returns: the primitive value for the KVC key
+     */
+    @discardableResult
+    @nonobjc
+    public func accessValueForKVCKey<T>(_ KVCKey: KeyPath, _ didAccessPrimitiveValue: (Any?) throws -> T) rethrows -> T {
         
-        return primitiveValue
+        self.willAccessValue(forKey: KVCKey)
+        defer {
+            
+            self.didAccessValue(forKey: KVCKey)
+        }
+        return try didAccessPrimitiveValue(self.primitiveValue(forKey: KVCKey))
     }
     
     /**
@@ -55,11 +120,34 @@ public extension NSManagedObject {
      - parameter KVCKey: the KVC key
      */
     @nonobjc
-    public func setValue(value: AnyObject?, forKVCKey KVCKey: KeyPath) {
+    public func setValue(_ value: Any?, forKVCKey KVCKey: KeyPath) {
         
-        self.willChangeValueForKey(KVCKey)
+        self.willChangeValue(forKey: KVCKey)
+        defer {
+            
+            self.didChangeValue(forKey: KVCKey)
+        }
         self.setPrimitiveValue(value, forKey: KVCKey)
-        self.didChangeValueForKey(KVCKey)
+    }
+    
+    /**
+     Provides a convenience wrapper for setting `setPrimitiveValue(...)` with proper calls to `willChangeValueForKey(...)` and `didChangeValueForKey(...)`. This is useful when implementing mutator methods for transient attributes.
+     
+     - parameter value: the value to set the KVC key with
+     - parameter KVCKey: the KVC key
+     - parameter didSetPrimitiveValue: the closure called between `willChangeValueForKey(...)` and `didChangeValueForKey(...)`
+     */
+    @discardableResult
+    @nonobjc
+    public func setValue<T>(_ value: Any?, forKVCKey KVCKey: KeyPath, _ didSetPrimitiveValue: (Any?) throws -> T) rethrows -> T {
+        
+        self.willChangeValue(forKey: KVCKey)
+        defer {
+            
+            self.didChangeValue(forKey: KVCKey)
+        }
+        self.setPrimitiveValue(value, forKey: KVCKey)
+        return try didSetPrimitiveValue(value)
     }
     
     /**
@@ -68,7 +156,7 @@ public extension NSManagedObject {
     @nonobjc
     public func refreshAsFault() {
         
-        self.managedObjectContext?.refreshObject(self, mergeChanges: false)
+        self.managedObjectContext?.refresh(self, mergeChanges: false)
     }
     
     /**
@@ -77,6 +165,6 @@ public extension NSManagedObject {
     @nonobjc
     public func refreshAndMerge() {
         
-        self.managedObjectContext?.refreshObject(self, mergeChanges: true)
+        self.managedObjectContext?.refresh(self, mergeChanges: true)
     }
 }

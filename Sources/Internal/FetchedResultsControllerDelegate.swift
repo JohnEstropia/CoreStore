@@ -33,21 +33,21 @@ import CoreData
 
 internal protocol FetchedResultsControllerHandler: class {
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?)
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?)
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType)
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType)
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController)
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>)
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController)
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>)
     
-    func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String?
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String?
 }
 
 
 // MARK: - FetchedResultsControllerDelegate
 
-internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
+internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Internal
     
@@ -58,7 +58,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     internal weak var handler: FetchedResultsControllerHandler?
     
     @nonobjc
-    internal weak var fetchedResultsController: NSFetchedResultsController? {
+    internal weak var fetchedResultsController: CoreStoreFetchedResultsController? {
         
         didSet {
             
@@ -76,7 +76,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     // MARK: NSFetchedResultsControllerDelegate
     
     @objc
-    dynamic func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    dynamic func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
         guard self.enabled else {
             
@@ -90,7 +90,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     }
     
     @objc
-    dynamic func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    dynamic func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
         guard self.enabled else {
             
@@ -101,7 +101,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     }
     
     @objc
-    dynamic func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         guard self.enabled else {
             
@@ -120,21 +120,32 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
         // http://stackoverflow.com/questions/31383760/ios-9-attempt-to-delete-and-reload-the-same-index-path/31384014#31384014
         // https://forums.developer.apple.com/message/9998#9998
         // https://forums.developer.apple.com/message/31849#31849
+
+        if #available(iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
+         
+            // I don't know if iOS 10 even attempted to fix this mess...
+            if case .update = actualType,
+                indexPath != nil,
+                newIndexPath != nil {
+                
+                actualType = .move
+            }
+        }
         
         if #available(iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
             
             // I don't know if iOS 10 even attempted to fix this mess...
-            if case .Update = actualType
-                where indexPath != nil && newIndexPath != nil {
+            if case .update = actualType,
+                indexPath != nil && newIndexPath != nil {
                 
-                actualType = .Move
+                actualType = .move
             }
         }
         
         switch actualType {
             
-        case .Update:
-            guard let section = indexPath?.indexAtPosition(0) else {
+        case .update:
+            guard let section = indexPath?[0] else {
                 
                 return
             }
@@ -144,7 +155,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
                 return
             }
             
-        case .Move:
+        case .move:
             guard let indexPath = indexPath, let newIndexPath = newIndexPath else {
                 
                 return
@@ -153,25 +164,25 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
                 
                 break
             }
-            if self.insertedSections.contains(indexPath.indexAtPosition(0)) {
+            if self.insertedSections.contains(indexPath[0]) {
                 
                 // Observers that handle the .Move change are advised to delete then reinsert the object instead of just moving. This is especially true when indexPath and newIndexPath are equal. For example, calling tableView.moveRowAtIndexPath(_:toIndexPath) when both indexPaths are the same will crash the tableView.
                 self.handler?.controller(
                     controller,
                     didChangeObject: anObject,
                     atIndexPath: indexPath,
-                    forChangeType: .Move,
+                    forChangeType: .move,
                     newIndexPath: newIndexPath
                 )
                 return
             }
-            if self.deletedSections.contains(indexPath.indexAtPosition(0)) {
+            if self.deletedSections.contains(indexPath[0]) {
                 
                 self.handler?.controller(
                     controller,
                     didChangeObject: anObject,
                     atIndexPath: nil,
-                    forChangeType: .Insert,
+                    forChangeType: .insert,
                     newIndexPath: indexPath
                 )
                 return
@@ -180,7 +191,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
                 controller,
                 didChangeObject: anObject,
                 atIndexPath: indexPath,
-                forChangeType: .Update,
+                forChangeType: .update,
                 newIndexPath: nil
             )
             return
@@ -199,7 +210,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     }
     
     @objc
-    dynamic func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         
         guard self.enabled else {
             
@@ -208,8 +219,8 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
         
         switch type {
             
-        case .Delete:   self.deletedSections.insert(sectionIndex)
-        case .Insert:   self.insertedSections.insert(sectionIndex)
+        case .delete:   self.deletedSections.insert(sectionIndex)
+        case .insert:   self.insertedSections.insert(sectionIndex)
         default: break
         }
         
@@ -222,7 +233,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     }
     
     @objc
-    dynamic func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String) -> String? {
+    dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String) -> String? {
         
         return self.handler?.controller(
             controller,

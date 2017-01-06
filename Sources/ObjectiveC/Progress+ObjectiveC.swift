@@ -1,5 +1,5 @@
 //
-//  NSProgress+ObjectiveC.swift
+//  Progress+ObjectiveC.swift
 //  CoreStore
 //
 //  Copyright © 2016 John Rommel Estropia
@@ -26,9 +26,9 @@
 import Foundation
 
 
-// MARK: - NSProgress
+// MARK: - Progress
 
-public extension NSProgress {
+public extension Progress {
     
     /**
      Sets a closure that the `NSProgress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
@@ -36,7 +36,7 @@ public extension NSProgress {
      - parameter closure: the closure to execute on progress change
      */
     @objc
-    public func cs_setProgressHandler(closure: ((progress: NSProgress) -> Void)?) {
+    public func cs_setProgressHandler(_ closure: ((_ progress: Progress) -> Void)?) {
         
         self.setProgressHandler(closure)
     }

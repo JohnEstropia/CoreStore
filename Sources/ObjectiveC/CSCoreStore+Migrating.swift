@@ -44,11 +44,10 @@ public extension CSCoreStore {
          }
          error: &error];
      ```
-     
      - parameter storage: the `CSInMemoryStore` instance
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously.
      */
-    public static func addInMemoryStorage(storage: CSInMemoryStore, completion: (CSSetupResult) -> Void) {
+    public static func addInMemoryStorage(_ storage: CSInMemoryStore, completion: @escaping (CSSetupResult) -> Void) {
         
         self.defaultStack.addInMemoryStorage(storage, completion: completion)
     }
@@ -68,13 +67,12 @@ public extension CSCoreStore {
          }
          error: &error];
      ```
-     
      - parameter storage: the `CSSQLiteStore` instance
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `CSSetupResult` argument indicates the result. This closure is NOT executed if an error is thrown, but will be executed with a failure `CSSetupResult` result if an error occurs asynchronously. Note that the `CSLocalStorage` associated to the `-[CSSetupResult storage]` may not always be the same instance as the parameter argument if a previous `CSLocalStorage` was already added at the same URL and with the same configuration.
      - parameter error: the `NSError` pointer that indicates the reason in case of an failure
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
-    public static func addSQLiteStorage(storage: CSSQLiteStore, completion: (CSSetupResult) -> Void, error: NSErrorPointer) -> NSProgress? {
+    public static func addSQLiteStorage(_ storage: CSSQLiteStore, completion: @escaping (CSSetupResult) -> Void, error: NSErrorPointer) -> Progress? {
         
         return self.defaultStack.addSQLiteStorage(storage, completion: completion, error: error)
     }
@@ -88,7 +86,7 @@ public extension CSCoreStore {
      - returns: an `NSProgress` instance if a migration has started. `nil` if no migrations are required or if `error` was set.
      */
     @objc
-    public static func upgradeStorageIfNeeded(storage: CSSQLiteStore, completion: (CSMigrationResult) -> Void, error: NSErrorPointer) -> NSProgress? {
+    public static func upgradeStorageIfNeeded(_ storage: CSSQLiteStore, completion: @escaping (CSMigrationResult) -> Void, error: NSErrorPointer) -> Progress? {
         
         return self.defaultStack.upgradeStorageIfNeeded(storage, completion: completion, error: error)
     }
@@ -101,8 +99,7 @@ public extension CSCoreStore {
      - returns: a `CSMigrationType` array indicating the migration steps required for the store, or an empty array if the file does not exist yet. Otherwise, `nil` is returned and the `error` argument is set if either inspection of the store failed, or if no mapping model was found/inferred.
      */
     @objc
-    @warn_unused_result
-    public static func requiredMigrationsForSQLiteStore(storage: CSSQLiteStore, error: NSErrorPointer) -> [CSMigrationType]? {
+    public static func requiredMigrationsForSQLiteStore(_ storage: CSSQLiteStore, error: NSErrorPointer) -> [CSMigrationType]? {
         
         return self.defaultStack.requiredMigrationsForSQLiteStore(storage, error: error)
     }

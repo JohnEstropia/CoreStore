@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - CoreStore
@@ -53,9 +50,9 @@ public extension CoreStore {
     /**
      Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from `defaultStack`'s model.
      */
-    public static func entityDescriptionForType(type: NSManagedObject.Type) -> NSEntityDescription? {
+    public static func entityDescription(for type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return self.defaultStack.entityDescriptionForType(type)
+        return self.defaultStack.entityDescription(for: type)
     }
     
     /**
@@ -63,25 +60,25 @@ public extension CoreStore {
      ```
      try CoreStore.addStorageAndWait()
      ```
-     
      - returns: the local SQLite storage added to the `defaultStack`
      */
+    @discardableResult
     public static func addStorageAndWait() throws -> SQLiteStore {
         
-        return try self.defaultStack.addStorageAndWait(SQLiteStore)
+        return try self.defaultStack.addStorageAndWait(SQLiteStore.self)
     }
     
     /**
      Creates a `StorageInterface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
      ```
-     try CoreStore.addStorageAndWait(InMemoryStore)
+     try CoreStore.addStorageAndWait(InMemoryStore.self)
      ```
-     
      - parameter storeType: the `StorageInterface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the `defaultStack`
      */
-    public static func addStorageAndWait<T: StorageInterface where T: DefaultInitializableStore>(storeType: T.Type) throws -> T {
+    @discardableResult
+    public static func addStorageAndWait<T: StorageInterface>(_ storeType: T.Type) throws -> T where T: DefaultInitializableStore {
         
         return try self.defaultStack.addStorageAndWait(storeType.init())
     }
@@ -91,27 +88,27 @@ public extension CoreStore {
      ```
      try CoreStore.addStorageAndWait(InMemoryStore(configuration: "Config1"))
      ```
-     
      - parameter storage: the `StorageInterface`
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the `StorageInterface` added to the `defaultStack`
      */
-    public static func addStorageAndWait<T: StorageInterface>(storage: T) throws -> T {
+    @discardableResult
+    public static func addStorageAndWait<T: StorageInterface>(_ storage: T) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storage)
     }
     
     /**
-     Creates a `LocalStorageface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
+     Creates a `LocalStorageInterface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
      ```
-     try CoreStore.addStorageAndWait(SQLiteStore)
+     try CoreStore.addStorageAndWait(SQLiteStore.self)
      ```
-     
-     - parameter storeType: the `LocalStorageface` type
+     - parameter storeType: the `LocalStorageInterface` type
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the `defaultStack`
      */
-    public static func addStorageAndWait<T: LocalStorage where T: DefaultInitializableStore>(storageType: T.Type) throws -> T {
+    @discardableResult
+    public static func addStorageAndWait<T: LocalStorage>(_ storageType: T.Type) throws -> T where T: DefaultInitializableStore {
         
         return try self.defaultStack.addStorageAndWait(storageType.init())
     }
@@ -121,12 +118,12 @@ public extension CoreStore {
      ```
      try CoreStore.addStorageAndWait(SQLiteStore(configuration: "Config1"))
      ```
-     
      - parameter storage: the local storage
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the local storage added to the `defaultStack`. Note that this may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
      */
-    public static func addStorageAndWait<T: LocalStorage>(storage: T) throws -> T {
+    @discardableResult
+    public static func addStorageAndWait<T: LocalStorage>(_ storage: T) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storage)
     }
@@ -140,19 +137,19 @@ public extension CoreStore {
          ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
          ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
          configuration: "Config1",
-         cloudStorageOptions: .RecreateLocalStoreOnModelMismatch
+         cloudStorageOptions: .recreateLocalStoreOnModelMismatch
      ) else {
          // iCloud is not available on the device
          return
      }
      try CoreStore.addStorageAndWait(storage)
      ```
-     
      - parameter storage: the local storage
      - throws: a `CoreStoreError` value indicating the failure
      - returns: the cloud storage added to the stack. Note that this may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
      */
-    public static func addStorageAndWait<T: CloudStorage>(storage: T) throws -> T {
+    @discardableResult
+    public static func addStorageAndWait<T: CloudStorage>(_ storage: T) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storage)
     }
@@ -161,60 +158,11 @@ public extension CoreStore {
     // MARK: Deprecated
     
     /**
-     Deprecated. Use `addStorageAndWait(_:)` by passing a `InMemoryStore` instance.
-     ```
-     try CoreStore.addStorage(InMemoryStore(configuration: configuration))
-     ```
+     Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from `defaultStack`'s model.
      */
-    @available(*, deprecated=2.0.0, obsoleted=2.0.0, message="Use addStorageAndWait(_:) by passing an InMemoryStore instance.")
-    public static func addInMemoryStoreAndWait(configuration configuration: String? = nil) throws -> NSPersistentStore {
+    @available(*, deprecated: 3.0.0, renamed: "entityDescription(for:)")
+    public static func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return try self.defaultStack.addInMemoryStoreAndWait(configuration: configuration)
-    }
-    
-    /**
-     Deprecated. Use `addStorageAndWait(_:)` by passing a `LegacySQLiteStore` instance.
-     ```
-     try CoreStore.addStorage(
-         LegacySQLiteStore(
-             fileName: fileName,
-             configuration: configuration,
-             localStorageOptions: .RecreateStoreOnModelMismatch
-         )
-     )
-     ```
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    public static func addSQLiteStoreAndWait(fileName fileName: String, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
-        
-        return try self.defaultStack.addSQLiteStoreAndWait(
-            fileName: fileName,
-            configuration: configuration,
-            resetStoreOnModelMismatch: resetStoreOnModelMismatch
-        )
-    }
-    
-    /**
-     Deprecated. Use `addStorageAndWait(_:)` by passing a `LegacySQLiteStore` instance.
-     ```
-     try CoreStore.addStorage(
-         LegacySQLiteStore(
-             fileURL: fileURL,
-             configuration: configuration,
-             localStorageOptions: .RecreateStoreOnModelMismatch
-         )
-     )
-     ```
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was using this method prior to 2.0.0, make sure to use `LegacySQLiteStore`.
-     */
-    @available(*, deprecated=2.0.0, message="Use addStorageAndWait(_:) by passing a LegacySQLiteStore instance. Warning: The default SQLite file location for the LegacySQLiteStore and SQLiteStore are different. If the app was using this method prior to 2.0.0, make sure to use LegacySQLiteStore.")
-    public static func addSQLiteStoreAndWait(fileURL fileURL: NSURL = LegacySQLiteStore.defaultFileURL, configuration: String? = nil, resetStoreOnModelMismatch: Bool = false) throws -> NSPersistentStore {
-        
-        return try self.defaultStack.addSQLiteStoreAndWait(
-            fileURL: fileURL,
-            configuration: configuration,
-            resetStoreOnModelMismatch: resetStoreOnModelMismatch
-        )
+        return self.entityDescription(for: type)
     }
 }

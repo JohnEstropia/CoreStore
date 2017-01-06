@@ -30,10 +30,6 @@ import Foundation
 
 /**
  The `DefaultLogger` is a basic implementation of the `CoreStoreLogger` protocol.
- 
- - The `log(...)` method calls `print(...)` to print the level, source file name, line number, function name, and the log message.
- - The `handleError(...)` method calls `print(...)` to print the source file name, line number, function name, and the error message.
- - The `assert(...)` method calls `assert(...)` on the arguments.
  */
 public final class DefaultLogger: CoreStoreLogger {
     
@@ -51,30 +47,30 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func log(level level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
             let icon: String
             let levelString: String
             switch level {
                 
-            case .Trace:
+            case .trace:
                 icon = "🔹"
                 levelString = "Trace"
                 
-            case .Notice:
+            case .notice:
                 icon = "🔸"
                 levelString = "Notice"
                 
-            case .Warning:
+            case .warning:
                 icon = "⚠️"
                 levelString = "Warning"
                 
-            case .Fatal:
+            case .fatal:
                 icon = "❗"
                 levelString = "Fatal"
             }
-            Swift.print("\(icon) [CoreStore: \(levelString)] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+            Swift.print("\(icon) [CoreStore: \(levelString)] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         #endif
     }
     
@@ -87,10 +83,10 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func log(error error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func log(error: CoreStoreError, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
-            Swift.print("⚠️ [CoreStore: Error] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
+            Swift.print("⚠️ [CoreStore: Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n    \(error)\n")
         #endif
     }
     
@@ -103,30 +99,30 @@ public final class DefaultLogger: CoreStoreLogger {
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func assert(@autoclosure condition: () -> Bool, @autoclosure message: () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func assert(_ condition: @autoclosure () -> Bool, message: @autoclosure () -> String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         #if DEBUG
             if condition() {
                 
                 return
             }
-            Swift.print("❗ [CoreStore: Assertion Failure] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message())\n")
+            Swift.print("❗ [CoreStore: Assertion Failure] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message())\n")
             Swift.fatalError(file: fileName, line: UInt(lineNumber))
         #endif
     }
     
     /**
      Handles fatal errors made throughout the `CoreStore` framework.
-     - Important: This method should be marked `@noreturn` and implementers should guarantee that the function doesn't, either by calling another `@noreturn` function such as `fatalError()` or `abort()`, or by raising an exception.
+     - Important: Implementers should guarantee that this function doesn't return, either by calling another `Never` function such as `fatalError()` or `abort()`, or by raising an exception.
      
      - parameter message: the fatal error message
      - parameter fileName: the source file name
      - parameter lineNumber: the source line number
      - parameter functionName: the source function name
      */
-    public func abort(message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
+    public func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
-        Swift.print("❗ [CoreStore: Fatal Error] \((fileName.stringValue as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
+        Swift.print("❗ [CoreStore: Fatal Error] \((String(describing: fileName) as NSString).lastPathComponent):\(lineNumber) \(functionName)\n  ↪︎ \(message)\n")
         Swift.fatalError(file: fileName, line: UInt(lineNumber))
     }
 }

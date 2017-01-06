@@ -1,8 +1,8 @@
 //
-//  TestEntity1.swift
+//  CoreStoreFetchRequest+CoreStore.swift
 //  CoreStore
 //
-//  Copyright © 2014 John Rommel Estropia
+//  Copyright © 2016 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -26,14 +26,16 @@
 import Foundation
 import CoreData
 
-class TestEntity2: NSManagedObject {
+
+// MARK: - CoreStoreFetchRequest
+
+internal extension CoreStoreFetchRequest {
     
-    @NSManaged var testEntityID: NSNumber?
-    @NSManaged var testString: String?
-    @NSManaged var testNumber: NSNumber?
-    @NSManaged var testDate: Date?
-    @NSManaged var testBoolean: NSNumber?
-    @NSManaged var testDecimal: NSDecimalNumber?
-    @NSManaged var testData: Data?
-    @NSManaged var testNil: String?
+    // MARK: Internal
+    
+    @nonobjc
+    internal func dynamicCast<U: NSFetchRequestResult>() -> NSFetchRequest<U> {
+        
+        return unsafeBitCast(self, to: NSFetchRequest<U>.self)
+    }
 }

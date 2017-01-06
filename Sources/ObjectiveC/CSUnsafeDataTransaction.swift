@@ -43,11 +43,11 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
      */
     @objc
-    public func commit(completion: ((result: CSSaveResult) -> Void)?) {
+    public func commit(_ completion: ((_ result: CSSaveResult) -> Void)?) {
         
         self.bridgeToSwift.commit { (result) in
             
-            completion?(result: result.bridgeToObjectiveC)
+            completion?(result.bridgeToObjectiveC)
         }
     }
     
@@ -110,7 +110,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
      - parameter closure: the closure where changes can be made prior to the flush
      */
     @objc
-    public func flush(block: () -> Void) {
+    public func flush(_ block: () -> Void) {
         
         self.bridgeToSwift.flush {
             
@@ -125,7 +125,6 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    @warn_unused_result
     public func beginUnsafe() -> CSUnsafeDataTransaction {
         
         return bridge {
@@ -141,8 +140,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    @warn_unused_result
-    public func beginUnsafeWithSupportsUndo(supportsUndo: Bool) -> CSUnsafeDataTransaction {
+    public func beginUnsafeWithSupportsUndo(_ supportsUndo: Bool) -> CSUnsafeDataTransaction {
         
         return bridge {
             
@@ -168,7 +166,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

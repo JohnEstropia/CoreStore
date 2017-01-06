@@ -24,7 +24,6 @@
 //
 
 import XCTest
-import GCDKit
 
 @testable
 import CoreStore
@@ -39,21 +38,29 @@ final class TransactionTests: BaseTestCase {
         
         self.prepareStack { (stack) in
             
-            let testDate = NSDate()
+            let testDate = Date()
             do {
                 
-                let createExpectation = self.expectationWithDescription("create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginSynchronous { (transaction) in
                     
-                    let object = transaction.create(Into(TestEntity1))
-                    object.testEntityID = NSNumber(integer: 1)
+                    XCTAssertEqual(transaction.context, transaction.internalContext())
+                    XCTAssertTrue(transaction.context.isTransactionContext)
+                    XCTAssertFalse(transaction.context.isDataStackContext)
+                    
+                    let object = transaction.create(Into<TestEntity1>())
+                    XCTAssertEqual(object.fetchSource()?.internalContext(), transaction.context)
+                    XCTAssertEqual(object.querySource()?.internalContext(), transaction.context)
+                    
+                    object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
                     object.testDate = testDate
                     
+                    
                     switch transaction.commitAndWait() {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         createExpectation.fulfill()
                         
@@ -63,32 +70,35 @@ final class TransactionTests: BaseTestCase {
                 }
                 self.checkExpectationsImmediately()
                 
-                XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
+                XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                 
-                let object = stack.fetchOne(From(TestEntity1))
+                let object = stack.fetchOne(From<TestEntity1>())
                 XCTAssertNotNil(object)
-                XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                XCTAssertEqual(object?.fetchSource()?.internalContext(), stack.mainContext)
+                XCTAssertEqual(object?.querySource()?.internalContext(), stack.mainContext)
+
+                XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                 XCTAssertEqual(object?.testString, "string1")
                 XCTAssertEqual(object?.testNumber, 100)
                 XCTAssertEqual(object?.testDate, testDate)
             }
             do {
                 
-                let updateExpectation = self.expectationWithDescription("update")
+                let updateExpectation = self.expectation(description: "update")
                 stack.beginSynchronous { (transaction) in
                     
-                    guard let object = transaction.fetchOne(From(TestEntity1)) else {
+                    guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                         
                         XCTFail()
                         return
                     }
                     object.testString = "string1_edit"
                     object.testNumber = 200
-                    object.testDate = NSDate.distantFuture()
+                    object.testDate = Date.distantFuture
                     
                     switch transaction.commitAndWait() {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         updateExpectation.fulfill()
                         
@@ -98,26 +108,26 @@ final class TransactionTests: BaseTestCase {
                 }
                 self.checkExpectationsImmediately()
                 
-                XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
+                XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                 
-                let object = stack.fetchOne(From(TestEntity1))
+                let object = stack.fetchOne(From<TestEntity1>())
                 XCTAssertNotNil(object)
-                XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                 XCTAssertEqual(object?.testString, "string1_edit")
                 XCTAssertEqual(object?.testNumber, 200)
-                XCTAssertEqual(object?.testDate, NSDate.distantFuture())
+                XCTAssertEqual(object?.testDate, Date.distantFuture)
             }
             do {
                 
-                let deleteExpectation = self.expectationWithDescription("delete")
+                let deleteExpectation = self.expectation(description: "delete")
                 stack.beginSynchronous { (transaction) in
                     
-                    let object = transaction.fetchOne(From(TestEntity1))
+                    let object = transaction.fetchOne(From<TestEntity1>())
                     transaction.delete(object)
                     
                     switch transaction.commitAndWait() {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         deleteExpectation.fulfill()
                         
@@ -127,9 +137,9 @@ final class TransactionTests: BaseTestCase {
                 }
                 self.checkExpectationsImmediately()
                 
-                XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 0)
+                XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 0)
                 
-                let object = stack.fetchOne(From(TestEntity1))
+                let object = stack.fetchOne(From<TestEntity1>())
                 XCTAssertNil(object)
             }
         }
@@ -140,21 +150,21 @@ final class TransactionTests: BaseTestCase {
         
         self.prepareStack(configurations: [nil, "Config1"]) { (stack) in
             
-            let testDate = NSDate()
+            let testDate = Date()
             do {
                 
-                let createExpectation = self.expectationWithDescription("create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>("Config1"))
-                    object.testEntityID = NSNumber(integer: 1)
+                    object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
                     object.testDate = testDate
                     
                     switch transaction.commitAndWait() {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         createExpectation.fulfill()
                         
@@ -169,14 +179,14 @@ final class TransactionTests: BaseTestCase {
                 
                 let object = stack.fetchOne(From<TestEntity1>("Config1"))
                 XCTAssertNotNil(object)
-                XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                 XCTAssertEqual(object?.testString, "string1")
                 XCTAssertEqual(object?.testNumber, 100)
                 XCTAssertEqual(object?.testDate, testDate)
             }
             do {
                 
-                let updateExpectation = self.expectationWithDescription("update")
+                let updateExpectation = self.expectation(description: "update")
                 stack.beginSynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>("Config1")) else {
@@ -186,11 +196,11 @@ final class TransactionTests: BaseTestCase {
                     }
                     object.testString = "string1_edit"
                     object.testNumber = 200
-                    object.testDate = NSDate.distantFuture()
+                    object.testDate = Date.distantFuture
                     
                     switch transaction.commitAndWait() {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         updateExpectation.fulfill()
                         
@@ -205,14 +215,14 @@ final class TransactionTests: BaseTestCase {
                 
                 let object = stack.fetchOne(From<TestEntity1>("Config1"))
                 XCTAssertNotNil(object)
-                XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                 XCTAssertEqual(object?.testString, "string1_edit")
                 XCTAssertEqual(object?.testNumber, 200)
-                XCTAssertEqual(object?.testDate, NSDate.distantFuture())
+                XCTAssertEqual(object?.testDate, Date.distantFuture)
             }
             do {
                 
-                let deleteExpectation = self.expectationWithDescription("delete")
+                let deleteExpectation = self.expectation(description: "delete")
                 stack.beginSynchronous { (transaction) in
                     
                     let object = transaction.fetchOne(From<TestEntity1>("Config1"))
@@ -220,7 +230,7 @@ final class TransactionTests: BaseTestCase {
                     
                     switch transaction.commitAndWait() {
                         
-                    case .Success(let hasChanges):
+                    case .success(let hasChanges):
                         XCTAssertTrue(hasChanges)
                         deleteExpectation.fulfill()
                         
@@ -243,41 +253,41 @@ final class TransactionTests: BaseTestCase {
             
             do {
                 
-                let createDiscardExpectation = self.expectationWithDescription("create-discard")
-                let loggerExpectations = self.prepareLoggerExpectations([.LogWarning])
+                let createDiscardExpectation = self.expectation(description: "create-discard")
+                let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginSynchronous { (transaction) in
                     
-                    let object = transaction.create(Into(TestEntity1))
-                    object.testEntityID = NSNumber(integer: 1)
+                    let object = transaction.create(Into<TestEntity1>())
+                    object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
-                    object.testDate = NSDate()
+                    object.testDate = Date()
                     
                     createDiscardExpectation.fulfill()
                     self.expectLogger(loggerExpectations)
                 }
                 self.checkExpectationsImmediately()
                 
-                XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 0)
+                XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 0)
                 
-                let object = stack.fetchOne(From(TestEntity1))
+                let object = stack.fetchOne(From<TestEntity1>())
                 XCTAssertNil(object)
             }
-            let testDate = NSDate()
+            let testDate = Date()
             do {
                 
-                let createExpectation = self.expectationWithDescription("create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginSynchronous { (transaction) in
                     
-                    let object = transaction.create(Into(TestEntity1))
-                    object.testEntityID = NSNumber(integer: 1)
+                    let object = transaction.create(Into<TestEntity1>())
+                    object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
                     object.testDate = testDate
                     
                     switch transaction.commitAndWait() {
                         
-                    case .Success(true):
+                    case .success(true):
                         createExpectation.fulfill()
                         
                     default:
@@ -288,40 +298,40 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateDiscardExpectation = self.expectationWithDescription("update-discard")
-                let loggerExpectations = self.prepareLoggerExpectations([.LogWarning])
+                let updateDiscardExpectation = self.expectation(description: "update-discard")
+                let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginSynchronous { (transaction) in
                     
-                    guard let object = transaction.fetchOne(From(TestEntity1)) else {
+                    guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                         
                         XCTFail()
                         return
                     }
                     object.testString = "string1_edit"
                     object.testNumber = 200
-                    object.testDate = NSDate.distantFuture()
+                    object.testDate = Date.distantFuture
                     
                     updateDiscardExpectation.fulfill()
                     self.expectLogger(loggerExpectations)
                 }
                 self.checkExpectationsImmediately()
                 
-                XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
+                XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                 
-                let object = stack.fetchOne(From(TestEntity1))
+                let object = stack.fetchOne(From<TestEntity1>())
                 XCTAssertNotNil(object)
-                XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                 XCTAssertEqual(object?.testString, "string1")
                 XCTAssertEqual(object?.testNumber, 100)
                 XCTAssertEqual(object?.testDate, testDate)
             }
             do {
                 
-                let deleteDiscardExpectation = self.expectationWithDescription("delete-discard")
-                let loggerExpectations = self.prepareLoggerExpectations([.LogWarning])
+                let deleteDiscardExpectation = self.expectation(description: "delete-discard")
+                let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginSynchronous { (transaction) in
                     
-                    guard let object = transaction.fetchOne(From(TestEntity1)) else {
+                    guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                         
                         XCTFail()
                         return
@@ -333,11 +343,11 @@ final class TransactionTests: BaseTestCase {
                 }
                 self.checkExpectationsImmediately()
                 
-                XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
+                XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                 
-                let object = stack.fetchOne(From(TestEntity1))
+                let object = stack.fetchOne(From<TestEntity1>())
                 XCTAssertNotNil(object)
-                XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                 XCTAssertEqual(object?.testString, "string1")
                 XCTAssertEqual(object?.testNumber, 100)
                 XCTAssertEqual(object?.testDate, testDate)
@@ -451,14 +461,21 @@ final class TransactionTests: BaseTestCase {
         
         self.prepareStack { (stack) in
             
-            let testDate = NSDate()
+            let testDate = Date()
             do {
                 
-                let createExpectation = self.expectationWithDescription("create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginAsynchronous { (transaction) in
                     
-                    let object = transaction.create(Into(TestEntity1))
-                    object.testEntityID = NSNumber(integer: 1)
+                    XCTAssertEqual(transaction.context, transaction.internalContext())
+                    XCTAssertTrue(transaction.context.isTransactionContext)
+                    XCTAssertFalse(transaction.context.isDataStackContext)
+                    
+                    let object = transaction.create(Into<TestEntity1>())
+                    XCTAssertEqual(object.fetchSource()?.internalContext(), transaction.context)
+                    XCTAssertEqual(object.querySource()?.internalContext(), transaction.context)
+                    
+                    object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
                     object.testDate = testDate
@@ -467,14 +484,17 @@ final class TransactionTests: BaseTestCase {
                         
                         switch result {
                             
-                        case .Success(let hasChanges):
+                        case .success(let hasChanges):
                             XCTAssertTrue(hasChanges)
                             
-                            XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
+                            XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                             
-                            let object = stack.fetchOne(From(TestEntity1))
+                            let object = stack.fetchOne(From<TestEntity1>())
                             XCTAssertNotNil(object)
-                            XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                            XCTAssertEqual(object?.fetchSource()?.internalContext(), stack.mainContext)
+                            XCTAssertEqual(object?.querySource()?.internalContext(), stack.mainContext)
+                            
+                            XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                             XCTAssertEqual(object?.testString, "string1")
                             XCTAssertEqual(object?.testNumber, 100)
                             XCTAssertEqual(object?.testDate, testDate)
@@ -488,33 +508,33 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateExpectation = self.expectationWithDescription("update")
+                let updateExpectation = self.expectation(description: "update")
                 stack.beginAsynchronous { (transaction) in
                     
-                    guard let object = transaction.fetchOne(From(TestEntity1)) else {
+                    guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                         
                         XCTFail()
                         return
                     }
                     object.testString = "string1_edit"
                     object.testNumber = 200
-                    object.testDate = NSDate.distantFuture()
+                    object.testDate = Date.distantFuture
                     
                     transaction.commit { (result) in
                         
                         switch result {
                             
-                        case .Success(let hasChanges):
+                        case .success(let hasChanges):
                             XCTAssertTrue(hasChanges)
                             
-                            XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
+                            XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                             
-                            let object = stack.fetchOne(From(TestEntity1))
+                            let object = stack.fetchOne(From<TestEntity1>())
                             XCTAssertNotNil(object)
-                            XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                            XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                             XCTAssertEqual(object?.testString, "string1_edit")
                             XCTAssertEqual(object?.testNumber, 200)
-                            XCTAssertEqual(object?.testDate, NSDate.distantFuture())
+                            XCTAssertEqual(object?.testDate, Date.distantFuture)
                             updateExpectation.fulfill()
                             
                         default:
@@ -525,22 +545,22 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let deleteExpectation = self.expectationWithDescription("delete")
+                let deleteExpectation = self.expectation(description: "delete")
                 stack.beginAsynchronous { (transaction) in
                     
-                    let object = transaction.fetchOne(From(TestEntity1))
+                    let object = transaction.fetchOne(From<TestEntity1>())
                     transaction.delete(object)
                     
                     transaction.commit { (result) in
                         
                         switch result {
                             
-                        case .Success(let hasChanges):
+                        case .success(let hasChanges):
                             XCTAssertTrue(hasChanges)
                             
-                            XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 0)
+                            XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 0)
                             
-                            let object = stack.fetchOne(From(TestEntity1))
+                            let object = stack.fetchOne(From<TestEntity1>())
                             XCTAssertNil(object)
                             deleteExpectation.fulfill()
                             
@@ -559,14 +579,14 @@ final class TransactionTests: BaseTestCase {
         
         self.prepareStack(configurations: [nil, "Config1"]) { (stack) in
             
-            let testDate = NSDate()
+            let testDate = Date()
             do {
                 
-                let createExpectation = self.expectationWithDescription("create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginAsynchronous { (transaction) in
                     
                     let object = transaction.create(Into<TestEntity1>("Config1"))
-                    object.testEntityID = NSNumber(integer: 1)
+                    object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
                     object.testDate = testDate
@@ -575,7 +595,7 @@ final class TransactionTests: BaseTestCase {
                         
                         switch result {
                             
-                        case .Success(let hasChanges):
+                        case .success(let hasChanges):
                             XCTAssertTrue(hasChanges)
                             
                             XCTAssertEqual(stack.fetchCount(From<TestEntity1>("Config1")), 1)
@@ -583,7 +603,7 @@ final class TransactionTests: BaseTestCase {
                             
                             let object = stack.fetchOne(From<TestEntity1>("Config1"))
                             XCTAssertNotNil(object)
-                            XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                            XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                             XCTAssertEqual(object?.testString, "string1")
                             XCTAssertEqual(object?.testNumber, 100)
                             XCTAssertEqual(object?.testDate, testDate)
@@ -597,7 +617,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateExpectation = self.expectationWithDescription("update")
+                let updateExpectation = self.expectation(description: "update")
                 stack.beginAsynchronous { (transaction) in
                     
                     guard let object = transaction.fetchOne(From<TestEntity1>("Config1")) else {
@@ -607,13 +627,13 @@ final class TransactionTests: BaseTestCase {
                     }
                     object.testString = "string1_edit"
                     object.testNumber = 200
-                    object.testDate = NSDate.distantFuture()
+                    object.testDate = Date.distantFuture
                     
                     transaction.commit { (result) in
                         
                         switch result {
                             
-                        case .Success(let hasChanges):
+                        case .success(let hasChanges):
                             XCTAssertTrue(hasChanges)
                             
                             XCTAssertEqual(stack.fetchCount(From<TestEntity1>("Config1")), 1)
@@ -621,10 +641,10 @@ final class TransactionTests: BaseTestCase {
                             
                             let object = stack.fetchOne(From<TestEntity1>("Config1"))
                             XCTAssertNotNil(object)
-                            XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                            XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                             XCTAssertEqual(object?.testString, "string1_edit")
                             XCTAssertEqual(object?.testNumber, 200)
-                            XCTAssertEqual(object?.testDate, NSDate.distantFuture())
+                            XCTAssertEqual(object?.testDate, Date.distantFuture)
                             updateExpectation.fulfill()
                             
                         default:
@@ -635,7 +655,7 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let deleteExpectation = self.expectationWithDescription("delete")
+                let deleteExpectation = self.expectation(description: "delete")
                 stack.beginAsynchronous { (transaction) in
                     
                     let object = transaction.fetchOne(From<TestEntity1>("Config1"))
@@ -645,7 +665,7 @@ final class TransactionTests: BaseTestCase {
                         
                         switch result {
                             
-                        case .Success(let hasChanges):
+                        case .success(let hasChanges):
                             XCTAssertTrue(hasChanges)
                             
                             XCTAssertEqual(stack.fetchCount(From<TestEntity1>("Config1")), 0)
@@ -670,31 +690,31 @@ final class TransactionTests: BaseTestCase {
             
             do {
                 
-                let createDiscardExpectation = self.expectationWithDescription("create-discard")
-                let loggerExpectations = self.prepareLoggerExpectations([.LogWarning])
+                let createDiscardExpectation = self.expectation(description: "create-discard")
+                let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginAsynchronous { (transaction) in
                     
-                    let object = transaction.create(Into(TestEntity1))
-                    object.testEntityID = NSNumber(integer: 1)
+                    let object = transaction.create(Into<TestEntity1>())
+                    object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
-                    object.testDate = NSDate()
+                    object.testDate = Date()
                     
                     createDiscardExpectation.fulfill()
                     self.expectLogger(loggerExpectations)
                 }
             }
-            let testDate = NSDate()
+            let testDate = Date()
             do {
                 
-                let createExpectation = self.expectationWithDescription("create")
+                let createExpectation = self.expectation(description: "create")
                 stack.beginAsynchronous { (transaction) in
                     
-                    XCTAssertEqual(transaction.fetchCount(From(TestEntity1)), 0)
-                    XCTAssertNil(transaction.fetchOne(From(TestEntity1)))
+                    XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 0)
+                    XCTAssertNil(transaction.fetchOne(From<TestEntity1>()))
                     
-                    let object = transaction.create(Into(TestEntity1))
-                    object.testEntityID = NSNumber(integer: 1)
+                    let object = transaction.create(Into<TestEntity1>())
+                    object.testEntityID = NSNumber(value: 1)
                     object.testString = "string1"
                     object.testNumber = 100
                     object.testDate = testDate
@@ -703,7 +723,7 @@ final class TransactionTests: BaseTestCase {
                         
                         switch result {
                             
-                        case .Success(true):
+                        case .success(true):
                             createExpectation.fulfill()
                             
                         default:
@@ -714,18 +734,18 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let updateDiscardExpectation = self.expectationWithDescription("update-discard")
-                let loggerExpectations = self.prepareLoggerExpectations([.LogWarning])
+                let updateDiscardExpectation = self.expectation(description: "update-discard")
+                let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginAsynchronous { (transaction) in
                     
-                    guard let object = transaction.fetchOne(From(TestEntity1)) else {
+                    guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                         
                         XCTFail()
                         return
                     }
                     object.testString = "string1_edit"
                     object.testNumber = 200
-                    object.testDate = NSDate.distantFuture()
+                    object.testDate = Date.distantFuture
                     
                     updateDiscardExpectation.fulfill()
                     self.expectLogger(loggerExpectations)
@@ -733,32 +753,32 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let deleteDiscardExpectation = self.expectationWithDescription("delete-discard")
-                let loggerExpectations = self.prepareLoggerExpectations([.LogWarning])
+                let deleteDiscardExpectation = self.expectation(description: "delete-discard")
+                let loggerExpectations = self.prepareLoggerExpectations([.logWarning])
                 stack.beginAsynchronous { (transaction) in
                     
-                    XCTAssertEqual(transaction.fetchCount(From(TestEntity1)), 1)
+                    XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 1)
                     
-                    guard let object = transaction.fetchOne(From(TestEntity1)) else {
+                    guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                         
                         XCTFail()
                         return
                     }
                     XCTAssertNotNil(object)
-                    XCTAssertEqual(object.testEntityID, NSNumber(integer: 1))
+                    XCTAssertEqual(object.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object.testString, "string1")
                     XCTAssertEqual(object.testNumber, 100)
                     XCTAssertEqual(object.testDate, testDate)
                     
                     transaction.delete(object)
                     
-                    GCDQueue.Main.async {
+                    DispatchQueue.main.async {
                         
-                        XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
+                        XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                         
-                        let object = stack.fetchOne(From(TestEntity1))
+                        let object = stack.fetchOne(From<TestEntity1>())
                         XCTAssertNotNil(object)
-                        XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                        XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                         XCTAssertEqual(object?.testString, "string1")
                         XCTAssertEqual(object?.testNumber, 100)
                         XCTAssertEqual(object?.testDate, testDate)
@@ -777,25 +797,34 @@ final class TransactionTests: BaseTestCase {
         self.prepareStack { (stack) in
             
             let transaction = stack.beginUnsafe()
+            XCTAssertEqual(transaction.context, transaction.internalContext())
+            XCTAssertTrue(transaction.context.isTransactionContext)
+            XCTAssertFalse(transaction.context.isDataStackContext)
             
-            let testDate = NSDate()
+            let testDate = Date()
             do {
                 
-                let object = transaction.create(Into(TestEntity1))
-                object.testEntityID = NSNumber(integer: 1)
+                let object = transaction.create(Into<TestEntity1>())
+                XCTAssertEqual(object.fetchSource()?.internalContext(), transaction.context)
+                XCTAssertEqual(object.querySource()?.internalContext(), transaction.context)
+                
+                object.testEntityID = NSNumber(value: 1)
                 object.testString = "string1"
                 object.testNumber = 100
                 object.testDate = testDate
                 
                 switch transaction.commitAndWait() {
                     
-                case .Success(let hasChanges):
+                case .success(let hasChanges):
                     XCTAssertTrue(hasChanges)
-                    XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
+                    XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                     
-                    let object = stack.fetchOne(From(TestEntity1))
+                    let object = stack.fetchOne(From<TestEntity1>())
                     XCTAssertNotNil(object)
-                    XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                    XCTAssertEqual(object?.fetchSource()?.internalContext(), stack.mainContext)
+                    XCTAssertEqual(object?.querySource()?.internalContext(), stack.mainContext)
+                    
+                    XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object?.testString, "string1")
                     XCTAssertEqual(object?.testNumber, 100)
                     XCTAssertEqual(object?.testDate, testDate)
@@ -806,27 +835,27 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                guard let object = transaction.fetchOne(From(TestEntity1)) else {
+                guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                     
                     XCTFail()
                     return
                 }
                 object.testString = "string1_edit"
                 object.testNumber = 200
-                object.testDate = NSDate.distantFuture()
+                object.testDate = Date.distantFuture
                 
                 switch transaction.commitAndWait() {
                     
-                case .Success(let hasChanges):
+                case .success(let hasChanges):
                     XCTAssertTrue(hasChanges)
-                    XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
+                    XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                     
-                    let object = stack.fetchOne(From(TestEntity1))
+                    let object = stack.fetchOne(From<TestEntity1>())
                     XCTAssertNotNil(object)
-                    XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                    XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object?.testString, "string1_edit")
                     XCTAssertEqual(object?.testNumber, 200)
-                    XCTAssertEqual(object?.testDate, NSDate.distantFuture())
+                    XCTAssertEqual(object?.testDate, Date.distantFuture)
                     
                 default:
                     XCTFail()
@@ -834,16 +863,16 @@ final class TransactionTests: BaseTestCase {
             }
             do {
                 
-                let object = transaction.fetchOne(From(TestEntity1))
+                let object = transaction.fetchOne(From<TestEntity1>())
                 transaction.delete(object)
                 
                 switch transaction.commitAndWait() {
                     
-                case .Success(let hasChanges):
+                case .success(let hasChanges):
                     XCTAssertTrue(hasChanges)
                     
-                    XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 0)
-                    XCTAssertNil(stack.fetchOne(From(TestEntity1)))
+                    XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 0)
+                    XCTAssertNil(stack.fetchOne(From<TestEntity1>()))
                     
                 default:
                     XCTFail()
@@ -859,25 +888,25 @@ final class TransactionTests: BaseTestCase {
             
             let transaction = stack.beginUnsafe()
             
-            let testDate = NSDate()
+            let testDate = Date()
             do {
                 
                 let object = transaction.create(Into<TestEntity1>("Config1"))
-                object.testEntityID = NSNumber(integer: 1)
+                object.testEntityID = NSNumber(value: 1)
                 object.testString = "string1"
                 object.testNumber = 100
                 object.testDate = testDate
                 
                 switch transaction.commitAndWait() {
                     
-                case .Success(let hasChanges):
+                case .success(let hasChanges):
                     XCTAssertTrue(hasChanges)
                     XCTAssertEqual(stack.fetchCount(From<TestEntity1>("Config1")), 1)
                     XCTAssertEqual(stack.fetchCount(From<TestEntity1>(nil)), 0)
                     
                     let object = stack.fetchOne(From<TestEntity1>("Config1"))
                     XCTAssertNotNil(object)
-                    XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                    XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object?.testString, "string1")
                     XCTAssertEqual(object?.testNumber, 100)
                     XCTAssertEqual(object?.testDate, testDate)
@@ -895,21 +924,21 @@ final class TransactionTests: BaseTestCase {
                 }
                 object.testString = "string1_edit"
                 object.testNumber = 200
-                object.testDate = NSDate.distantFuture()
+                object.testDate = Date.distantFuture
                 
                 switch transaction.commitAndWait() {
                     
-                case .Success(let hasChanges):
+                case .success(let hasChanges):
                     XCTAssertTrue(hasChanges)
                     XCTAssertEqual(stack.fetchCount(From<TestEntity1>("Config1")), 1)
                     XCTAssertEqual(stack.fetchCount(From<TestEntity1>(nil)), 0)
                     
                     let object = stack.fetchOne(From<TestEntity1>("Config1"))
                     XCTAssertNotNil(object)
-                    XCTAssertEqual(object?.testEntityID, NSNumber(integer: 1))
+                    XCTAssertEqual(object?.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object?.testString, "string1_edit")
                     XCTAssertEqual(object?.testNumber, 200)
-                    XCTAssertEqual(object?.testDate, NSDate.distantFuture())
+                    XCTAssertEqual(object?.testDate, Date.distantFuture)
                     
                 default:
                     XCTFail()
@@ -922,7 +951,7 @@ final class TransactionTests: BaseTestCase {
                 
                 switch transaction.commitAndWait() {
                     
-                case .Success(let hasChanges):
+                case .success(let hasChanges):
                     XCTAssertTrue(hasChanges)
                     
                     XCTAssertEqual(stack.fetchCount(From<TestEntity1>("Config1")), 0)
@@ -943,33 +972,33 @@ final class TransactionTests: BaseTestCase {
             let transaction = stack.beginUnsafe(supportsUndo: true)
             do {
                 
-                let object = transaction.create(Into(TestEntity1))
-                object.testEntityID = NSNumber(integer: 1)
+                let object = transaction.create(Into<TestEntity1>())
+                object.testEntityID = NSNumber(value: 1)
                 object.testString = "string1"
                 object.testNumber = 100
-                object.testDate = NSDate()
+                object.testDate = Date()
                 
                 transaction.rollback()
                 
-                XCTAssertEqual(transaction.fetchCount(From(TestEntity1)), 0)
-                XCTAssertNil(transaction.fetchOne(From(TestEntity1)))
+                XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 0)
+                XCTAssertNil(transaction.fetchOne(From<TestEntity1>()))
                 
-                XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 0)
-                XCTAssertNil(stack.fetchOne(From(TestEntity1)))
+                XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 0)
+                XCTAssertNil(stack.fetchOne(From<TestEntity1>()))
             }
             
-            let testDate = NSDate()
+            let testDate = Date()
             do {
                 
-                let object = transaction.create(Into(TestEntity1))
-                object.testEntityID = NSNumber(integer: 1)
+                let object = transaction.create(Into<TestEntity1>())
+                object.testEntityID = NSNumber(value: 1)
                 object.testString = "string1"
                 object.testNumber = 100
                 object.testDate = testDate
                 
                 switch transaction.commitAndWait() {
                     
-                case .Success(true):
+                case .success(true):
                     break
                     
                 default:
@@ -979,21 +1008,21 @@ final class TransactionTests: BaseTestCase {
             
             do {
                 
-                guard let object = transaction.fetchOne(From(TestEntity1)) else {
+                guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                     
                     XCTFail()
                     return
                 }
                 object.testString = "string1_edit"
                 object.testNumber = 200
-                object.testDate = NSDate.distantFuture()
+                object.testDate = Date.distantFuture
                 
                 transaction.rollback()
                 
-                XCTAssertEqual(transaction.fetchCount(From(TestEntity1)), 1)
-                if let object = transaction.fetchOne(From(TestEntity1)) {
+                XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 1)
+                if let object = transaction.fetchOne(From<TestEntity1>()) {
                     
-                    XCTAssertEqual(object.testEntityID, NSNumber(integer: 1))
+                    XCTAssertEqual(object.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object.testString, "string1")
                     XCTAssertEqual(object.testNumber, 100)
                     XCTAssertEqual(object.testDate, testDate)
@@ -1003,10 +1032,10 @@ final class TransactionTests: BaseTestCase {
                     XCTFail()
                 }
                 
-                XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
-                if let object = stack.fetchOne(From(TestEntity1)) {
+                XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
+                if let object = stack.fetchOne(From<TestEntity1>()) {
                     
-                    XCTAssertEqual(object.testEntityID, NSNumber(integer: 1))
+                    XCTAssertEqual(object.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object.testString, "string1")
                     XCTAssertEqual(object.testNumber, 100)
                     XCTAssertEqual(object.testDate, testDate)
@@ -1019,7 +1048,7 @@ final class TransactionTests: BaseTestCase {
             
             do {
                 
-                guard let object = transaction.fetchOne(From(TestEntity1)) else {
+                guard let object = transaction.fetchOne(From<TestEntity1>()) else {
                     
                     XCTFail()
                     return
@@ -1028,10 +1057,10 @@ final class TransactionTests: BaseTestCase {
                 
                 transaction.rollback()
                 
-                XCTAssertEqual(transaction.fetchCount(From(TestEntity1)), 1)
-                if let object = transaction.fetchOne(From(TestEntity1)) {
+                XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 1)
+                if let object = transaction.fetchOne(From<TestEntity1>()) {
                     
-                    XCTAssertEqual(object.testEntityID, NSNumber(integer: 1))
+                    XCTAssertEqual(object.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object.testString, "string1")
                     XCTAssertEqual(object.testNumber, 100)
                     XCTAssertEqual(object.testDate, testDate)
@@ -1041,10 +1070,10 @@ final class TransactionTests: BaseTestCase {
                     XCTFail()
                 }
                 
-                XCTAssertEqual(stack.fetchCount(From(TestEntity1)), 1)
-                if let object = stack.fetchOne(From(TestEntity1)) {
+                XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
+                if let object = stack.fetchOne(From<TestEntity1>()) {
                     
-                    XCTAssertEqual(object.testEntityID, NSNumber(integer: 1))
+                    XCTAssertEqual(object.testEntityID, NSNumber(value: 1))
                     XCTAssertEqual(object.testString, "string1")
                     XCTAssertEqual(object.testNumber, 100)
                     XCTAssertEqual(object.testDate, testDate)

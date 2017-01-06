@@ -79,7 +79,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
      The options dictionary for the `NSPersistentStore`. For `CSInMemoryStore`s, this is always set to `nil`.
      */
     @objc
-    public var storeOptions: [String: AnyObject]? {
+    public var storeOptions: [AnyHashable: Any]? {
         
         return self.bridgeToSwift.storeOptions
     }
@@ -92,7 +92,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
         return ObjectIdentifier(self.bridgeToSwift).hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSInMemoryStore else {
             
@@ -103,7 +103,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

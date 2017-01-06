@@ -51,36 +51,55 @@ import CoreData
      SQLiteStore(),
      completion: { (result: SetupResult) -> Void in
          switch result {
-         case .Success(let storage):
+         case .success(let storage):
              // storage is the related StorageInterface instance
-         case .Failure(let error):
+         case .failure(let error):
              // error is the CoreStoreError enum value for the failure
          }
      }
  )
  ```
  */
-public enum SetupResult<T: StorageInterface>: BooleanType, Hashable {
+public enum SetupResult<T: StorageInterface>: Hashable {
     
     /**
-     `SetupResult.Success` indicates that the storage setup succeeded. The associated object for this `enum` value is the related `StorageInterface` instance.
+     `SetupResult.success` indicates that the storage setup succeeded. The associated object for this `enum` value is the related `StorageInterface` instance.
      */
-    case Success(T)
+    case success(T)
     
     /**
-     `SetupResult.Failure` indicates that the storage setup failed. The associated object for this value is the related `CoreStoreError` enum value.
+     `SetupResult.failure` indicates that the storage setup failed. The associated object for this value is the related `CoreStoreError` enum value.
      */
-    case Failure(CoreStoreError)
+    case failure(CoreStoreError)
     
     
-    // MARK: BooleanType
-    
-    public var boolValue: Bool {
+    /**
+     Returns `true` if the result indicates `.success`, `false` if the result is `.failure`.
+     */
+    public var isSuccess: Bool {
         
         switch self {
             
-        case .Success: return true
-        case .Failure: return false
+        case .success: return true
+        case .failure: return false
+        }
+    }
+    
+    
+    // MARK: Equatable
+    
+    public static func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, rhs: SetupResult<U>) -> Bool {
+        
+        switch (lhs, rhs) {
+            
+        case (.success(let storage1), .success(let storage2)):
+            return storage1 === storage2
+            
+        case (.failure(let error1), .failure(let error2)):
+            return error1 == error2
+            
+        default:
+            return false
         }
     }
     
@@ -91,11 +110,11 @@ public enum SetupResult<T: StorageInterface>: BooleanType, Hashable {
         
         switch self {
             
-        case .Success(let storage):
-            return self.boolValue.hashValue ^ ObjectIdentifier(storage).hashValue
+        case .success(let storage):
+            return true.hashValue ^ ObjectIdentifier(storage).hashValue
             
-        case .Failure(let error):
-            return self.boolValue.hashValue ^ error.hashValue
+        case .failure(let error):
+            return false.hashValue ^ error.hashValue
         }
     }
     
@@ -104,80 +123,16 @@ public enum SetupResult<T: StorageInterface>: BooleanType, Hashable {
     
     internal init(_ storage: T) {
         
-        self = .Success(storage)
+        self = .success(storage)
     }
     
     internal init(_ error: CoreStoreError) {
         
-        self = .Failure(error)
+        self = .failure(error)
     }
     
-    internal init(_ error: ErrorType) {
+    internal init(_ error: Error) {
         
-        self = .Failure(CoreStoreError(error))
-    }
-}
-
-
-// MARK: - SetupResult: Equatable
-
-@warn_unused_result
-public func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, rhs: SetupResult<U>) -> Bool {
-    
-    switch (lhs, rhs) {
-        
-    case (.Success(let storage1), .Success(let storage2)):
-        return storage1 === storage2
-        
-    case (.Failure(let error1), .Failure(let error2)):
-        return error1 == error2
-        
-    default:
-        return false
-    }
-}
-
-
-// MARK: - Deprecated
-
-/**
- Deprecated. Replaced by `SetupResult<T>` when using the new `addStorage(_:completion:)` method variants.
- */
-@available(*, deprecated=2.0.0, message="Replaced by SetupResult by using the new addStorage(_:completion:) method variants.")
-public enum PersistentStoreResult: BooleanType {
-    
-    /**
-     Deprecated. Replaced by `SetupResult.Success` when using the new `addStorage(_:completion:)` method variants.
-     */
-    case Success(NSPersistentStore)
-    
-    /**
-     Deprecated. Replaced by `SetupResult.Failure` when using the new `addStorage(_:completion:)` method variants.
-     */
-    case Failure(NSError)
-    
-    
-    // MARK: BooleanType
-    
-    public var boolValue: Bool {
-        
-        switch self {
-            
-        case .Success: return true
-        case .Failure: return false
-        }
-    }
-    
-    
-    // MARK: Internal
-    
-    internal init(_ store: NSPersistentStore) {
-        
-        self = .Success(store)
-    }
-    
-    internal init(_ error: NSError) {
-        
-        self = .Failure(error)
+        self = .failure(CoreStoreError(error))
     }
 }

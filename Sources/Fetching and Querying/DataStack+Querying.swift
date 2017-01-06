@@ -25,14 +25,13 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - DataStack
 
-public extension DataStack {
+extension DataStack: FetchableSource, QueryableSource {
+    
+    // MARK: FetchableSource
     
     /**
      Fetches the `NSManagedObject` instance in the `DataStack`'s context from a reference created from a transaction or from a different managed object context.
@@ -40,17 +39,9 @@ public extension DataStack {
      - parameter object: a reference to the object created/fetched outside the `DataStack`
      - returns: the `NSManagedObject` instance if the object exists in the `DataStack`, or `nil` if not found.
      */
-    @warn_unused_result
-    public func fetchExisting<T: NSManagedObject>(object: T) -> T? {
+    public func fetchExisting<T: NSManagedObject>(_ object: T) -> T? {
         
-        do {
-            
-            return (try self.mainContext.existingObjectWithID(object.objectID) as! T)
-        }
-        catch _ {
-            
-            return nil
-        }
+        return self.mainContext.fetchExisting(object)
     }
     
     /**
@@ -59,17 +50,9 @@ public extension DataStack {
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `NSManagedObject` instance if the object exists in the `DataStack`, or `nil` if not found.
      */
-    @warn_unused_result
-    public func fetchExisting<T: NSManagedObject>(objectID: NSManagedObjectID) -> T? {
+    public func fetchExisting<T: NSManagedObject>(_ objectID: NSManagedObjectID) -> T? {
         
-        do {
-            
-            return (try self.mainContext.existingObjectWithID(objectID) as! T)
-        }
-        catch _ {
-            
-            return nil
-        }
+        return self.mainContext.fetchExisting(objectID)
     }
     
     /**
@@ -78,10 +61,9 @@ public extension DataStack {
      - parameter objects: an array of `NSManagedObject`s created/fetched outside the `DataStack`
      - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
      */
-    @warn_unused_result
-    public func fetchExisting<T: NSManagedObject, S: SequenceType where S.Generator.Element == T>(objects: S) -> [T] {
+    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
         
-        return objects.flatMap { (try? self.mainContext.existingObjectWithID($0.objectID)) as? T }
+        return self.mainContext.fetchExisting(objects)
     }
     
     /**
@@ -90,10 +72,9 @@ public extension DataStack {
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
      */
-    @warn_unused_result
-    public func fetchExisting<T: NSManagedObject, S: SequenceType where S.Generator.Element == NSManagedObjectID>(objectIDs: S) -> [T] {
+    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
         
-        return objectIDs.flatMap { (try? self.mainContext.existingObjectWithID($0)) as? T }
+        return self.mainContext.fetchExisting(objectIDs)
     }
     
     /**
@@ -103,11 +84,10 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
+    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchOne(from, fetchClauses)
@@ -120,11 +100,10 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
+    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchOne(from, fetchClauses)
@@ -137,11 +116,10 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchAll(from, fetchClauses)
@@ -154,11 +132,10 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchAll(from, fetchClauses)
@@ -171,11 +148,10 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
+    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchCount(from, fetchClauses)
@@ -188,11 +164,10 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
+    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchCount(from, fetchClauses)
@@ -205,11 +180,10 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchObjectID(from, fetchClauses)
@@ -222,11 +196,10 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchObjectID(from, fetchClauses)
@@ -239,11 +212,10 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchObjectIDs(from, fetchClauses)
@@ -256,15 +228,17 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.fetchObjectIDs(from, fetchClauses)
     }
+    
+    
+    // MARK: QueryableSource
     
     /**
      Queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
@@ -276,11 +250,10 @@ public extension DataStack {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
-    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.queryValue(from, selectClause, queryClauses)
@@ -296,11 +269,10 @@ public extension DataStack {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
-    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.queryValue(from, selectClause, queryClauses)
@@ -316,11 +288,10 @@ public extension DataStack {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
-    public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
+    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.queryAttributes(from, selectClause, queryClauses)
@@ -336,13 +307,23 @@ public extension DataStack {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
-    public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
+    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
         return self.mainContext.queryAttributes(from, selectClause, queryClauses)
+    }
+    
+    
+    // MARK: FetchableSource, QueryableSource
+    
+    /**
+     The internal `NSManagedObjectContext` managed by this instance. Using this context directly should typically be avoided, and is provided by CoreStore only for extremely specialized cases.
+     */
+    public func internalContext() -> NSManagedObjectContext {
+        
+        return self.mainContext
     }
 }

@@ -36,11 +36,11 @@ public extension CSDataStack {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
     @objc
-    public func beginAsynchronous(closure: (transaction: CSAsynchronousDataTransaction) -> Void) {
+    public func beginAsynchronous(_ closure: @escaping (_ transaction: CSAsynchronousDataTransaction) -> Void) {
         
         return self.bridgeToSwift.beginAsynchronous { (transaction) in
             
-            closure(transaction: transaction.bridgeToObjectiveC)
+            closure(transaction.bridgeToObjectiveC)
         }
     }
     
@@ -51,13 +51,14 @@ public extension CSDataStack {
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @objc
-    public func beginSynchronous(closure: (transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    @discardableResult
+    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
         
         return bridge {
             
             self.bridgeToSwift.beginSynchronous { (transaction) in
                 
-                closure(transaction: transaction.bridgeToObjectiveC)
+                closure(transaction.bridgeToObjectiveC)
             }
         }
     }
@@ -69,7 +70,6 @@ public extension CSDataStack {
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    @warn_unused_result
     public func beginUnsafe() -> CSUnsafeDataTransaction {
         
         return bridge {
@@ -85,8 +85,7 @@ public extension CSDataStack {
      - returns: a `CSUnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
     @objc
-    @warn_unused_result
-    public func beginUnsafeWithSupportsUndo(supportsUndo: Bool) -> CSUnsafeDataTransaction {
+    public func beginUnsafeWithSupportsUndo(_ supportsUndo: Bool) -> CSUnsafeDataTransaction {
         
         return bridge {
             

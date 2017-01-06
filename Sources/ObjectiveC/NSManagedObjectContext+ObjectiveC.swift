@@ -34,41 +34,41 @@ internal extension NSManagedObjectContext {
     // MARK: Internal
     
     @nonobjc
-    internal func fetchOne(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObject? {
+    internal func fetchOne(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObject? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
-        fetchRequest.resultType = .ManagedObjectResultType
+        fetchRequest.resultType = .managedObjectResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
         guard storeFound else {
             
             return nil
         }
-        return self.fetchOne(fetchRequest)
+        return self.fetchOne(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func fetchAll(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [NSManagedObject]? {
+    internal func fetchAll<T: NSManagedObject>(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [T]? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
-        fetchRequest.resultType = .ManagedObjectResultType
+        fetchRequest.resultType = .managedObjectResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
         guard storeFound else {
             
             return nil
         }
-        return self.fetchAll(fetchRequest)
+        return self.fetchAll(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func fetchCount(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> Int? {
+    internal func fetchCount(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> Int? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
@@ -78,51 +78,51 @@ internal extension NSManagedObjectContext {
             
             return nil
         }
-        return self.fetchCount(fetchRequest)
+        return self.fetchCount(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func fetchObjectID(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
+    internal func fetchObjectID(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
-        fetchRequest.resultType = .ManagedObjectIDResultType
+        fetchRequest.resultType = .managedObjectIDResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
         guard storeFound else {
             
             return nil
         }
-        return self.fetchObjectID(fetchRequest)
+        return self.fetchObjectID(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func fetchObjectIDs(from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
+    internal func fetchObjectIDs(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
-        fetchRequest.resultType = .ManagedObjectIDResultType
+        fetchRequest.resultType = .managedObjectIDResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
         guard storeFound else {
             
             return nil
         }
-        return self.fetchObjectIDs(fetchRequest)
+        return self.fetchObjectIDs(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func deleteAll(from: CSFrom, _ deleteClauses: [CSDeleteClause]) -> Int? {
+    internal func deleteAll(_ from: CSFrom, _ deleteClauses: [CSDeleteClause]) -> Int? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
-        fetchRequest.resultType = .ManagedObjectResultType
+        fetchRequest.resultType = .managedObjectResultType
         fetchRequest.returnsObjectsAsFaults = true
         fetchRequest.includesPropertyValues = false
         deleteClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
@@ -131,11 +131,11 @@ internal extension NSManagedObjectContext {
             
             return nil
         }
-        return self.deleteAll(fetchRequest)
+        return self.deleteAll(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func queryValue(from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> AnyObject? {
+    internal func queryValue(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> Any? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
@@ -150,11 +150,11 @@ internal extension NSManagedObjectContext {
             
             return nil
         }
-        return self.queryValue(selectTerms, fetchRequest: fetchRequest)
+        return self.queryValue(selectTerms, fetchRequest: fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func queryAttributes(from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> [[NSString: AnyObject]]? {
+    internal func queryAttributes(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> [[String: Any]]? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
@@ -168,6 +168,6 @@ internal extension NSManagedObjectContext {
             
             return nil
         }
-        return self.queryAttributes(fetchRequest)
+        return self.queryAttributes(fetchRequest.dynamicCast())
     }
 }

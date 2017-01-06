@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - UnsafeDataTransaction
@@ -42,12 +39,12 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
      */
-    public func commit(completion: (result: SaveResult) -> Void) {
+    public func commit(_ completion: @escaping (_ result: SaveResult) -> Void) {
         
         self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             
             self.result = result
-            completion(result: result)
+            completion(result)
         }
     }
     
@@ -105,7 +102,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - parameter closure: the closure where changes can be made prior to the flush
      - throws: an error thrown from `closure`, or an error thrown by Core Data (usually validation errors or conflict errors)
      */
-    public func flush(@noescape closure: () throws -> Void) rethrows {
+    public func flush(closure: () throws -> Void) rethrows {
         
         try closure()
         self.context.processPendingChanges()
@@ -129,8 +126,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
      - prameter supportsUndo: `undo()`, `redo()`, and `rollback()` methods are only available when this parameter is `true`, otherwise those method will raise an exception. Defaults to `false`. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
      - returns: an `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.
      */
-    @warn_unused_result
-    public func beginUnsafe(supportsUndo supportsUndo: Bool = false) -> UnsafeDataTransaction {
+    public func beginUnsafe(supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
         return UnsafeDataTransaction(
             mainContext: self.context,
@@ -139,39 +135,20 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
         )
     }
     
-    /**
-     Returns the `NSManagedObjectContext` for this unsafe transaction. Use only for cases where external frameworks need an `NSManagedObjectContext` instance to work with.
-     
-     - Important: It is the developer's responsibility to ensure the following:
-     - that the `UnsafeDataTransaction` that owns this context should be strongly referenced and prevented from being deallocated during the context's lifetime
-     - that all saves will be done either through the `UnsafeDataTransaction`'s `commit(...)` method, or by calling `save()` manually on the context, its parent, and all other ancestor contexts if there are any.
-     */
-    public var internalContext: NSManagedObjectContext {
-        
-        return self.context
-    }
-    
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, supportsUndo: Bool) {
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, supportsUndo: Bool) {
         
         super.init(mainContext: mainContext, queue: queue, supportsUndo: supportsUndo, bypassesQueueing: true)
     }
     
     
-    // MARK: Deprecated
+    // MARK: Obsolete
     
-    @available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="beginUnsafe")
-    @warn_unused_result
-    public func beginDetached() -> UnsafeDataTransaction {
+    @available(*, obsoleted: 3.0.0, message: "Transaction contexts are now exposed through the FetchableSource and QueryableSource protocols.", renamed: "internalContext()")
+    public var internalContext: NSManagedObjectContext {
         
-        return self.beginUnsafe()
+        fatalError()
     }
 }
-
-
-// MARK: Deprecated
-
-@available(*, deprecated=1.3.1, obsoleted=2.0.0, renamed="UnsafeDataTransaction")
-public typealias DetachedDataTransaction = UnsafeDataTransaction

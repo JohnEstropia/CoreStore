@@ -18,14 +18,11 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 </p>
 
-* iOS 7+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
-  - for Swift 2.2 (Xcode 7.3 and iOS 7): Use version [2.0.6](https://github.com/JohnEstropia/CoreStore/releases/tag/2.0.6) or the [master_ios_7_to_9](https://github.com/JohnEstropia/CoreStore/tree/master_ios_7_to_9) branch
-  - for Swift 2.3 (Xcode 8): Use version [2.1.0](https://github.com/JohnEstropia/CoreStore/releases/tag/2.1.0) or the [master](https://github.com/JohnEstropia/CoreStore/tree/master) branch
-  - for Swift 3 (Xcode 8): Use the [swift3_develop](https://github.com/JohnEstropia/CoreStore/tree/swift3_develop) branch
+* **Swift 3.0.1:** iOS 8+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
 
 * **New in CoreStore 2.0:** Objective-C support! All CoreStore types now have their corresponding Objective-C "bridging classes". Perfect for projects transitioning from Objective-C to Swift!
 
-Upgrading from CoreStore 1.x to 2.x? Check out the [new features](#new-in-corestore-20) and make sure to read the [Migration guide](#upgrading-from-1xx-to-2xx).
+Upgrading from CoreStore 2.x to 3.x? Check out the [new features](#new-in-corestore-20) and make sure to read the [Migration guide](#upgrading-from-2xx-to-3xx).
 
 
 ## Why use CoreStore?
@@ -44,12 +41,10 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 - **Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
 - **Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
 - **Full Documentation.** No magic here; all public classes, functions, properties, etc. have detailed *Apple Docs*. This *README* also introduces a lot of concepts and explains a lot of CoreStore's behavior.
-
-### New in CoreStore 2.0
 - **Informative (and pretty) logs.** All CoreStore and Core Data-related types now have very informative and pretty print outputs! *(See [Logging and error reporting](#logging-and-error-reporting))*
-- **Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore 2.0 is the answer to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types now have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
-- **iCloud storage (beta) support.** CoreStore now allows creation of iCloud persistent stores, as well as observing of iCloud-related events through the `ICloudStoreObserver`. *(See [iCloud storage](#icloud-storages))*
-- **More extensive Unit Tests.** Extending CoreStore is now safer without having to worry about breaking old behavior.
+- **Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore adjusts to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
+- **iCloud storage (beta) support.** CoreStore allows creation of iCloud persistent stores, as well as observing of iCloud-related events through the `ICloudStoreObserver`. *(See [iCloud storage](#icloud-storages))*
+- **More extensive Unit Tests.** Extending CoreStore is safe without having to worry about breaking old behavior.
 
 *Have ideas that may benefit other Core Data users? [Feature Request](https://github.com/JohnEstropia/CoreStore/issues)s are welcome!*
 
@@ -92,6 +87,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 - [Roadmap](#roadmap)
 - [Installation](#installation)
 - [Changesets](#changesets)
+    - [Upgrading from 2.x.x to 3.x.x](#upgrading-from-2xx-to-3xx)
     - [Upgrading from 1.x.x to 2.x.x](#upgrading-from-1xx-to-2xx)
 - [Contact](#contact)
 - [Who uses CoreStore?](#who-uses-corestore)
@@ -122,14 +118,14 @@ CoreStore.addStorage(
 Starting transactions:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    let person = transaction.create(Into(MyPersonEntity))
+    let person = transaction.create(Into<MyPersonEntity>())
     person.name = "John Smith"
     person.age = 42
 
     transaction.commit { (result) -> Void in
         switch result {
-            case .Success(let hasChanges): print("success!")
-            case .Failure(let error): print(error)
+            case .success(let hasChanges): print("success!")
+            case .failure(let error): print(error)
         }
     }
 }
@@ -137,15 +133,15 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
 
 Fetching objects (simple):
 ```swift
-let people = CoreStore.fetchAll(From(MyPersonEntity))
+let people = CoreStore.fetchAll(From<MyPersonEntity>())
 ```
 
 Fetching objects (complex):
 ```swift
 let people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("age > 30"),
-    OrderBy(.Ascending("name"), .Descending("age")),
+    OrderBy(.ascending("name"), .descending("age")),
     Tweak { (fetchRequest) -> Void in
         fetchRequest.includesPendingChanges = false
     }
@@ -155,8 +151,8 @@ let people = CoreStore.fetchAll(
 Querying values:
 ```swift
 let maxAge = CoreStore.queryValue(
-    From(MyPersonEntity),
-    Select<Int>(.Maximum("age"))
+    From<MyPersonEntity>(),
+    Select<Int>(.maximum("age"))
 )
 ```
 
@@ -210,13 +206,13 @@ let migrationProgress = dataStack.addStorage(
     SQLiteStore(
         fileURL: sqliteFileURL, // set the target file URL for the sqlite file
         configuration: "Config2", // use entities from the "Config2" configuration in the .xcdatamodeld file
-        localStorageOptions: .RecreateStoreOnModelMismatch // if migration paths cannot be resolved, recreate the sqlite file
+        localStorageOptions: .recreateStoreOnModelMismatch // if migration paths cannot be resolved, recreate the sqlite file
     ),
     completion: { (result) -> Void in
         switch result {
-        case .Success(let storage):
+        case .success(let storage):
             print("Successfully added sqlite store: \(storage)"
-        case .Failure(let error):
+        case .failure(let error):
             print("Failed adding sqlite store with error: \(error)"
         }
     }
@@ -235,7 +231,7 @@ class MyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
-            try self.dataStack.addStorageAndWait(SQLiteStore)
+            try self.dataStack.addStorageAndWait(SQLiteStore.self)
         }
         catch { // ...
         }
@@ -253,7 +249,7 @@ class MyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         do {
-            try CoreStore.addStorageAndWait(SQLiteStore)
+            try CoreStore.addStorageAndWait(SQLiteStore.self)
         }
         catch { // ...
         }
@@ -278,7 +274,7 @@ try CoreStore.addStorageAndWait(
 ```
 `InMemoryStore`s also implement the `DefaultInitializableStore` sugar protocol which tells CoreStore that this store can initialize without any arguments (`init()`). This lets us provide just the type instead of an instance:
 ```swift
-try CoreStore.addStorageAndWait(InMemoryStore)
+try CoreStore.addStorageAndWait(InMemoryStore.self)
 ```
 
 ### Local Store
@@ -289,7 +285,7 @@ let migrationProgress = CoreStore.addStorage(
         fileName: "MyStore.sqlite",
         configuration: "Config2", // optional. Use entities from the "Config2" configuration in the .xcdatamodeld file
         mappingModelBundles: [NSBundle.mainBundle()], // optional. The bundles that contain required .xcmappingmodel files, if any
-        localStorageOptions: .RecreateStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
+        localStorageOptions: .recreateStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
     ),
     completion: { /* ... */ }
 )
@@ -298,7 +294,7 @@ Refer to the *SQLiteStore.swift* source documentation for detailed explanations 
 
 CoreStore can decide the default values for these properties, so `SQLiteStore`s also implement the `DefaultInitializableStore` sugar protocol which lets us write:
 ```swift
-try CoreStore.addStorageAndWait(SQLiteStore)
+try CoreStore.addStorageAndWait(SQLiteStore.self)
 ```
 or
 ```swift
@@ -311,8 +307,8 @@ public protocol LocalStorage: StorageInterface {
     var fileURL: NSURL { get }
     var mappingModelBundles: [NSBundle] { get }
     var localStorageOptions: LocalStorageOptions { get }
-    func storeOptionsForOptions(options: LocalStorageOptions) -> [String: AnyObject]?
-    func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel?) throws
+    func dictionary(forOptions: LocalStorageOptions) -> [String: AnyObject]?
+    func eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws
 }
 ```
 If you have custom `NSIncrementalStore` or `NSAtomicStore` subclasses, you can implement this protocol and use it similarly to `SQLiteStore`.
@@ -328,7 +324,7 @@ guard let storage = ICloudStore(
     ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername", // optional. The container if your app has multiple ubiquity container identifiers in its entitlements
     ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0", // optional. A per-application salt to allow multiple apps on the same device to share a Core Data store integrated with iCloud
     configuration: "Config1", // optional. Use entities from the "Config1" configuration in the .xcdatamodeld file
-    cloudStorageOptions: .RecreateLocalStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
+    cloudStorageOptions: .recreateLocalStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
 ) else {
     // The iCloud container could not be located or if iCloud is not available on the device.
     // Handle appropriately
@@ -338,8 +334,8 @@ CoreStore.addStorage(,
     storage,
     completion: { result in
         switch result {
-        case .Success(let storage): // ...
-        case .Failure(let error): // ...
+        case .success(let storage): // ...
+        case .failure(let error): // ...
         }
     }
 )
@@ -369,8 +365,8 @@ CoreStore.addStorage(,
     storage,
     completion: { result in
         switch result {
-        case .Success(let storage): // ... You may also call storage.addObserver(_:) here
-        case .Failure(let error): // ...
+        case .success(let storage): // ... You may also call storage.addObserver(_:) here
+        case .failure(let error): // ...
         }
     }
 )
@@ -379,12 +375,12 @@ The `ICloudStore` only keeps weak references of the registered observers. You ma
 
 
 ## Migrations
-We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests though, this method blocks so it should not do long tasks such as store migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.AllowSynchronousLightweightMigration` option:
+We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's "AndWait" suffix suggests though, this method blocks so it should not do long tasks such as store migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.allowSynchronousLightweightMigration` option:
 ```swift
 try dataStack.addStorageAndWait(
     SQLiteStore(
         fileURL: sqliteFileURL,
-        localStorageOptions: .AllowSynchronousLightweightMigration
+        localStorageOptions: .allowSynchronousLightweightMigration
     )
 }
 ```
@@ -392,16 +388,16 @@ if you do so, any model mismatch will be thrown as an error.
 
 In general though, if migrations are expected the asynchronous variant `addStorage(_:completion:)` method is recommended instead:
 ```swift
-let migrationProgress: NSProgress? = try dataStack.addStorage(
+let migrationProgress: Progress? = try dataStack.addStorage(
     SQLiteStore(
         fileName: "MyStore.sqlite",
         configuration: "Config2"
     ),
     completion: { (result) -> Void in
         switch result {
-        case .Success(let storage):
+        case .success(let storage):
             print("Successfully added sqlite store: \(storage)")
-        case .Failure(let error):
+        case .failure(let error):
             print("Failed adding sqlite store with error: \(error)")
         }
     }
@@ -409,7 +405,7 @@ let migrationProgress: NSProgress? = try dataStack.addStorage(
 ```
 The `completion` block reports a `SetupResult` that indicates success or failure.
 
-Notice that this method also returns an optional `NSProgress`. If `nil`, no migrations are needed, thus progress reporting is unnecessary as well. If not `nil`, you can use this to track migration progress by using standard KVO on the `"fractionCompleted"` key, or by using a closure-based utility exposed in *NSProgress+Convenience.swift*:
+Notice that this method also returns an optional `Progress`. If `nil`, no migrations are needed, thus progress reporting is unnecessary as well. If not `nil`, you can use this to track migration progress by using standard KVO on the `"fractionCompleted"` key, or by using a closure-based utility exposed in *Progress+Convenience.swift*:
 ```swift
 migrationProgress?.setProgressHandler { [weak self] (progress) -> Void in
     self?.progressView?.setProgress(Float(progress.fractionCompleted), animated: true)
@@ -559,7 +555,7 @@ You've seen how to create transactions, but we have yet to see how to make *crea
 
 The `create(...)` method accepts an `Into` clause which specifies the entity for the object you want to create:
 ```swift
-let person = transaction.create(Into(MyPersonEntity))
+let person = transaction.create(Into<MyPersonEntity>())
 ```
 While the syntax is straightforward, CoreStore does not just naively insert a new object. This single line does the following:
 - Checks that the entity type exists in any of the transaction's parent persistent store
@@ -582,7 +578,7 @@ Note that if you do explicitly specify the configuration name, CoreStore will on
 After creating an object from the transaction, you can simply update its properties as normal:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
-    let person = transaction.create(Into(MyPersonEntity))
+    let person = transaction.create(Into<MyPersonEntity>())
     person.name = "John Smith"
     person.age = 30
     transaction.commit()
@@ -592,7 +588,7 @@ To update an existing object, fetch the object's instance from the transaction:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let person = transaction.fetchOne(
-        From(MyPersonEntity),
+        From<MyPersonEntity>(),
         Where("name", isEqualTo: "Jane Smith")
     )
     person.age = person.age + 1
@@ -654,7 +650,7 @@ If you do not have references yet to the objects to be deleted, transactions hav
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     transaction.deleteAll(
-        From(MyPersonEntity)
+        From<MyPersonEntity>(),
         Where("age > 30")
     )
     transaction.commit()
@@ -692,7 +688,7 @@ var peopleIDs: [NSManagedObjectID] = // ...
 
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let jane = transaction.fetchOne(
-        From(MyPersonEntity),
+        From<MyPersonEntity>(),
         Where("name", isEqualTo: "Jane Smith")
     )
     jane.friends = NSSet(array: transaction.fetchExisting(peopleIDs)!)
@@ -714,7 +710,7 @@ If you have many attributes, you don't want to keep repeating this mapping every
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let json: [String: AnyObject] = // ...
     try! transaction.importObject(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         source: json
     )
     transaction.commit()
@@ -741,8 +737,8 @@ You can even use external types from popular 3rd-party JSON libraries ([SwiftyJS
 ```swift
 public protocol ImportableObject: class {
     typealias ImportSource
-    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
+    func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws
 }
 ```
 First, set `ImportSource` to the expected type of the data source:
@@ -754,15 +750,15 @@ This lets us call `importObject(_:source:)` with any `[String: AnyObject]` type 
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let json: [String: AnyObject] = // ...
     try! transaction.importObject(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         source: json
     )
     // ...
 }
 ```
-The actual extraction and assignment of values should be implemented in the `didInsertFromImportSource(...)` method of the `ImportableObject` protocol:
+The actual extraction and assignment of values should be implemented in the `didInsert(from:in:)` method of the `ImportableObject` protocol:
 ```swift
-func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws {
     self.name = source["name"] as? NSString
     self.age = source["age"] as? NSNumber
     // ...
@@ -773,17 +769,17 @@ Transactions also let you import multiple objects at once using the `importObjec
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let jsonArray: [[String: AnyObject]] = // ...
     try! transaction.importObjects(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         sourceArray: jsonArray
     )
     // ...
 }
 ```
-Doing so tells the transaction to iterate through the array of import sources and calls `shouldInsertFromImportSource(...)` on the `ImportableObject` to determine which instances should be created. You can do validations and return `false` from `shouldInsertFromImportSource(...)` if you want to skip importing from a source and continue on with the other sources in the array.
+Doing so tells the transaction to iterate through the array of import sources and calls `shouldInsert(from:in:)` on the `ImportableObject` to determine which instances should be created. You can do validations and return `false` from `shouldInsert(from:in:)` if you want to skip importing from a source and continue on with the other sources in the array.
 
-If on the other hand, your validation in one of the sources failed in such a manner that all other sources should also be cancelled, you can `throw` from within `didInsertFromImportSource(...)`:
+If on the other hand, your validation in one of the sources failed in such a manner that all other sources should also be cancelled, you can `throw` from within `didInsert(from:in:)`:
 ```swift
-func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws {
     self.name = source["name"] as? NSString
     self.age = source["age"] as? NSNumber
     // ...
@@ -798,7 +794,7 @@ CoreStore.beginAsynchronous { (transaction) -> Void in
     let jsonArray: [[String: AnyObject]] = // ...
     do {
         try transaction.importObjects(
-            Into(MyPersonEntity),
+            Into<MyPersonEntity>(),
             sourceArray: jsonArray
         )
     }
@@ -821,11 +817,11 @@ public protocol ImportableUniqueObject: ImportableObject {
     static var uniqueIDKeyPath: String { get }
     var uniqueIDValue: UniqueIDType { get set }
 
-    static func shouldInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    static func shouldUpdateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    static func uniqueIDFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType?
-    func didInsertFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
-    func updateFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
+    static func shouldInsert(from source: ImportSource, inn transaction: BaseDataTransaction) -> Bool
+    static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
+    static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> UniqueIDType?
+    func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws
+    func update(from source: ImportSource, in transaction: BaseDataTransaction) throws
 }
 ```
 Notice that it has the same insert methods as `ImportableObject`, with additional methods for updates and for specifying the unique ID:
@@ -837,18 +833,18 @@ var uniqueIDValue: NSNumber {
     get { return self.personID }
     set { self.personID = newValue }
 }
-class func uniqueIDFromImportSource(source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> NSNumber? {
+class func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> NSNumber? {
     return source["id"] as? NSNumber
 }
 ```
-For `ImportableUniqueObject`, the extraction and assignment of values should be implemented from the `updateFromImportSource(...)` method. The `didInsertFromImportSource(...)` by default calls `updateFromImportSource(...)`, but you can separate the implementation for inserts and updates if needed.
+For `ImportableUniqueObject`, the extraction and assignment of values should be implemented from the `update(from:in:)` method. The `didInsert(from:in:)` by default calls `update(from:in:)`, but you can separate the implementation for inserts and updates if needed.
 
 You can then create/update an object by calling a transaction's `importUniqueObject(...)` method:
 ```swift
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let json: [String: AnyObject] = // ...
     try! transaction.importUniqueObject(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         source: json
     )
     // ...
@@ -860,14 +856,14 @@ or multiple objects at once with the `importUniqueObjects(...)` method:
 CoreStore.beginAsynchronous { (transaction) -> Void in
     let jsonArray: [[String: AnyObject]] = // ...
     try! transaction.importUniqueObjects(
-        Into(MyPersonEntity),
+        Into<MyPersonEntity>(),
         sourceArray: jsonArray
     )
     // ...
 }
 ```
 As with `ImportableObject`, you can control wether to skip importing an object by implementing 
-`shouldInsertFromImportSource(...)` and `shouldUpdateFromImportSource(...)`, or to cancel all objects by `throw`ing an error from the `uniqueIDFromImportSource(...)`, `didInsertFromImportSource(...)` or `updateFromImportSource(...)` methods.
+`shouldInsert(from:in:)` and `shouldUpdate(from:in:)`, or to cancel all objects by `throw`ing an error from the `uniqueID(from:in:)`, `didInsert(from:in:)` or `update(from:in:)` methods.
 
 
 ## Fetching and Querying
@@ -884,10 +880,10 @@ Before we dive in, be aware that CoreStore distinguishes between *fetching* and 
 #### `From` clause
 The search conditions for fetches and queries are specified using *clauses*. All fetches and queries require a `From` clause that indicates the target entity type:
 ```swift
-let people = CoreStore.fetchAll(From(MyPersonEntity))
+let people = CoreStore.fetchAll(From<MyPersonEntity>())
 // CoreStore.fetchAll(From<MyPersonEntity>()) works as well
 ```
-`people` in the example above will be of type `[MyPersonEntity]`. The `From(MyPersonEntity)` clause indicates a fetch to all persistent stores that `MyPersonEntity` belong to.
+`people` in the example above will be of type `[MyPersonEntity]`. The `From<MyPersonEntity>()` clause indicates a fetch to all persistent stores that `MyPersonEntity` belong to.
 
 If the entity exists in multiple configurations and you need to only search from a particular configuration, indicate in the `From` clause the configuration name for the destination persistent store:
 ```swift
@@ -916,11 +912,11 @@ Each method's purpose is straightforward, but we need to understand how to set t
 The `Where` clause is CoreStore's `NSPredicate` wrapper. It specifies the search filter to use when fetching (or querying). It implements all initializers that `NSPredicate` does (except for `-predicateWithBlock:`, which Core Data does not support):
 ```swift
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("%K > %d", "age", 30) // string format initializer
 )
 people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where(true) // boolean initializer
 )
 ```
@@ -928,14 +924,14 @@ If you do have an existing `NSPredicate` instance already, you can pass that to 
 ```swift
 let predicate = NSPredicate(...)
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where(predicate) // predicate initializer
 )
 ```
 `Where` clauses also implement the `&&`, `||`, and `!` logic operators, so you can provide logical conditions without writing too much `AND`, `OR`, and `NOT` strings:
 ```swift
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("age > %d", 30) && Where("gender == %@", "M")
 )
 ```
@@ -946,20 +942,20 @@ If you do not provide a `Where` clause, all objects that belong to the specified
 The `OrderBy` clause is CoreStore's `NSSortDescriptor` wrapper. Use it to specify attribute keys in which to sort the fetch (or query) results with.
 ```swift
 var mostValuablePeople = CoreStore.fetchAll(
-    From(MyPersonEntity),
-    OrderBy(.Descending("rating"), .Ascending("surname"))
+    From<MyPersonEntity>(),
+    OrderBy(.descending("rating"), .ascending("surname"))
 )
 ```
-As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.Ascending` or `.Descending`.
+As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.ascending` or `.descending`.
 
 You can use the `+` and `+=` operator to append `OrderBy`s together. This is useful when sorting conditionally:
 ```swift
-var orderBy = OrderBy(.Descending("rating"))
+var orderBy = OrderBy(.descending("rating"))
 if sortFromYoungest {
-    orderBy += OrderBy(.Ascending("age"))
+    orderBy += OrderBy(.ascending("age"))
 }
 var mostValuablePeople = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     orderBy
 )
 ```
@@ -969,9 +965,9 @@ var mostValuablePeople = CoreStore.fetchAll(
 The `Tweak` clause lets you, uh, *tweak* the fetch (or query). `Tweak` exposes the `NSFetchRequest` in a closure where you can make changes to its properties:
 ```swift
 var people = CoreStore.fetchAll(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("age > %d", 30),
-    OrderBy(.Ascending("surname")),
+    OrderBy(.ascending("surname")),
     Tweak { (fetchRequest) -> Void in
         fetchRequest.includesPendingChanges = false
         fetchRequest.returnsObjectsAsFaults = false
@@ -1000,7 +996,7 @@ Setting up the `From`, `Where`, `OrderBy`, and `Tweak` clauses is similar to how
 The `Select<T>` clause specifies the target attribute/aggregate key, as well as the expected return type: 
 ```swift
 let johnsAge = CoreStore.queryValue(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Select<Int>("age"),
     Where("name == %@", "John Smith")
 )
@@ -1025,29 +1021,29 @@ The example above queries the "age" property for the first object that matches t
 For `queryAttributes(...)`, only `NSDictionary` is valid for `Select`, thus you are allowed to omit the generic type:
 ```swift
 let allAges = CoreStore.queryAttributes(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Select("age")
 )
 ```
 
 If you only need a value for a particular attribute, you can just specify the key name (like we did with `Select<Int>("age")`), but several aggregate functions can also be used as parameter to `Select`:
-- `.Average(...)`
-- `.Count(...)`
-- `.Maximum(...)`
-- `.Minimum(...)`
-- `.Sum(...)`
+- `.average(...)`
+- `.count(...)`
+- `.maximum(...)`
+- `.minimum(...)`
+- `.sum(...)`
 
 ```swift
 let oldestAge = CoreStore.queryValue(
-    From(MyPersonEntity),
-    Select<Int>(.Maximum("age"))
+    From<MyPersonEntity>(),
+    Select<Int>(.maximum("age"))
 )
 ```
 
 For `queryAttributes(...)` which returns an array of dictionaries, you can specify multiple attributes/aggregates to `Select`:
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Select("name", "age")
 )
 ```
@@ -1067,8 +1063,8 @@ let personJSON = CoreStore.queryAttributes(
 You can also include an aggregate as well:
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("name", .Count("friends"))
+    From<MyPersonEntity>(),
+    Select("name", .count("friends"))
 )
 ```
 which returns:
@@ -1087,8 +1083,8 @@ which returns:
 The `"count(friends)"` key name was automatically used by CoreStore, but you can specify your own key alias if you need:
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("name", .Count("friends", As: "friendsCount"))
+    From<MyPersonEntity>(),
+    Select("name", .count("friends", as: "friendsCount"))
 )
 ```
 which now returns:
@@ -1110,8 +1106,8 @@ which now returns:
 The `GroupBy` clause lets you group results by a specified attribute/aggregate. This is useful only for `queryAttributes(...)` since `queryValue(...)` just returns the first value.
 ```swift
 let personJSON = CoreStore.queryAttributes(
-    From(MyPersonEntity),
-    Select("age", .Count("age", As: "count")),
+    From<MyPersonEntity>(),
+    Select("age", .count("age", as: "count")),
     GroupBy("age")
 )
 ```
@@ -1157,7 +1153,7 @@ A couple of examples, `ListMonitor`:
 
 <img width="369" alt="screen shot 2016-07-10 at 22 56 44" src="https://cloud.githubusercontent.com/assets/3029684/16713994/ae06e702-46f1-11e6-83a8-dee48b480bab.png" />
 
-`CoreStoreError.MappingModelNotFoundError`:
+`CoreStoreError.mappingModelNotFoundError`:
 
 <img width="506" alt="MappingModelNotFoundError" src="https://cloud.githubusercontent.com/assets/3029684/16713962/e021f548-46f0-11e6-8100-f9b5ea6b4a08.png" />
 
@@ -1236,9 +1232,9 @@ Including `ListObserver`, there are 3 observer protocols you can implement depen
 We then need to create a `ListMonitor` instance and register our `ListObserver` as an observer:
 ```swift
 self.monitor = CoreStore.monitorList(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     Where("age > 30"),
-    OrderBy(.Ascending("name")),
+    OrderBy(.ascending("name")),
     Tweak { (fetchRequest) -> Void in
         fetchRequest.fetchBatchSize = 20
     }
@@ -1257,10 +1253,10 @@ let firstPerson = self.monitor[0]
 If the list needs to be grouped into sections, create the `ListMonitor` instance with the `monitorSectionedList(...)` method and a `SectionBy` clause:
 ```swift
 self.monitor = CoreStore.monitorSectionedList(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     SectionBy("age"),
     Where("gender", isEqualTo: "M"),
-    OrderBy(.Ascending("age"), .Ascending("name")),
+    OrderBy(.ascending("age"), .ascending("name")),
     Tweak { (fetchRequest) -> Void in
         fetchRequest.fetchBatchSize = 20
     }
@@ -1271,11 +1267,11 @@ A list controller created this way will group the objects by the attribute key i
 The `SectionBy` clause can also be passed a closure to transform the section name into a displayable string:
 ```swift
 self.monitor = CoreStore.monitorSectionedList(
-    From(MyPersonEntity),
+    From<MyPersonEntity>(),
     SectionBy("age") { (sectionName) -> String? in
         "\(sectionName) years old"
     },
-    OrderBy(.Ascending("age"), .Ascending("name"))
+    OrderBy(.ascending("age"), .ascending("name"))
 )
 ```
 This is useful when implementing a `UITableViewDelegate`'s section header:
@@ -1304,7 +1300,7 @@ With 2.0, all CoreStore types are still written in pure Swift, but they now have
 <tr><th>Swift</th><th>Objective-C</th></tr>
 <tr>
 <td><pre lang=swift>
-try CoreStore.addStorageAndWait(SQLiteStore)
+try CoreStore.addStorageAndWait(SQLiteStore.self)
 </pre></td>
 <td><pre lang=objc>
 NSError *error
@@ -1317,8 +1313,8 @@ CoreStore.beginAsynchronous { (transaction) in
     // ...
     transaction.commit { (result) in
         switch result {
-        case .Success(let hasChanges): print(hasChanges)
-        case .Failure(let error): print(error)
+        case .success(let hasChanges): print(hasChanges)
+        case .failure(let error): print(error)
         }
     }
 }
@@ -1428,9 +1424,9 @@ To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C sour
 # Installation
 - Requires:
     - iOS 8 SDK and above
-    - Swift 2.3 (Xcode 8)
+    - Swift 3.0.1 (Xcode 8.2)
 - Dependencies:
-    - [GCDKit](https://github.com/JohnEstropia/GCDKit)
+    - *None*
 - Other notes:
     - The `com.apple.CoreData.ConcurrencyDebug` debug argument should be turned off for the app. CoreStore already guarantees safety for you by making the main context read-only, and by only executing transactions serially.
 
@@ -1443,8 +1439,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 2.1.0
-github "JohnEstropia/GCDKit" >= 1.3.0
+github "JohnEstropia/CoreStore" >= 3.0.0
 ```
 and run 
 ```
@@ -1469,6 +1464,29 @@ Add all *.swift* files to your project.
 To use the Objective-C syntax sugars, import *CoreStoreBridge.h* in your *.m* source files.
 
 # Changesets
+### Upgrading from 2.x.x to 3.x.x
+**Obsoleted**
+- `UnsageDataTransaction.internalContext` was removed. Accessing the internal context (or more specifically, accessing context-level methods such as fetches) are now available through the `FetchableSource` and `QueryableProtocol` protocols, which are retrievable with `NSManagedObject.fetchSource()` and `NSManagedObject.querySource()` respectively. These protocols are implemented by `DataStack` and `BaseDataTransaction`.
+
+**Deprecated**
+Methods have been renamed to better fit the [Swift 3 naming conventions](https://swift.org/documentation/api-design-guidelines/).
+- `entityDescriptionForType(_:)` → `entityDescription(for:)`
+- `objectIDForURIRepresentation(_:)` → `objectID(for:)`
+- `ImportableObject` and `ImportableUniqueObject` protocol methods (and their variants) have been renamed. The old methods are still available, but will be removed in a future update.
+    - `shouldInsertFromImportSource(_:inTransaction:)` → `shouldInsert(from:in:)`
+    - `didInsertFromImportSource(_:inTransaction:)` → `didInsert(from:in:)`
+    - `shouldUpdateFromImportSource(_:inTransaction :)` → `shouldUpdate(from:in:)`
+    - `uniqueIDFromImportSource(_:inTransaction :)` → `uniqueID(from:in:)`
+    - `updateFromImportSource(_:inTransaction:)` → `update(from:in:)`
+
+**Miscellaneous**
+- APIs obsoleted from 2.0.0 have been removed.
+- CoreStore does not depend on [GCDKit](https://github.com/JohnEstropia/GCDKit) anymore, thanks to Swift 3's better Grand Central Dispatch API.
+- All enum cases are now lowercased
+- `CoreStoreError` now implements the new Swift `CustomNSError` protocol for better Objective-C 
+bridging.
+- Some methods may emit warnings for unused return values. `@discardableResult` annotations have been set to better reflect the responsibility of API users to use/inspect return values.
+
 ### Upgrading from 1.x.x to 2.x.x
 **Obsoleted**
 - `AsynchronousDataTransaction.rollback()` was removed. Undo and rollback functionality are now only allowed on `UnsafeDataTransaction`s

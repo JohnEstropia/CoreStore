@@ -36,27 +36,29 @@ public extension BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter source: the object to import values from
-     - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
+     - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
      */
-    public func importObject<T where T: NSManagedObject, T: ImportableObject>(
-        into: Into<T>,
-        source: T.ImportSource) throws -> T? {
+    public func importObject<T>(
+        _ into: Into<T>,
+        source: T.ImportSource) throws -> T? where T: NSManagedObject, T: ImportableObject {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
             )
-            
-            return try cs_autoreleasepool {
+        
+            return try autoreleasepool {
                 
-                guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                let entityType = into.entityClass as! T.Type
+                
+                guard entityType.shouldInsert(from: source, in: self) else {
                     
                     return nil
                 }
                 
                 let object = self.create(into)
-                try object.didInsertFromImportSource(source, inTransaction: self)
+                try object.didInsert(from: source, in: self)
                 return object
             }
     }
@@ -66,25 +68,25 @@ public extension BaseDataTransaction {
      
      - parameter object: the `NSManagedObject` to update
      - parameter source: the object to import values from
-     - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
+     - throws: an `Error` thrown from any of the `ImportableObject` methods
      */
-    public func importObject<T where T: NSManagedObject, T: ImportableObject>(
-        object: T,
-        source: T.ImportSource) throws {
+    public func importObject<T>(
+        _ object: T,
+        source: T.ImportSource) throws where T: NSManagedObject, T: ImportableObject {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(cs_typeName(object)) outside the transaction's designated queue."
             )
             
-            try cs_autoreleasepool {
-                
-                guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+            try autoreleasepool {
+              
+                let entityType = type(of: object)
+                guard entityType.shouldInsert(from: source, in: self) else {
                     
                     return
                 }
-                
-                try object.didInsertFromImportSource(source, inTransaction: self)
+                try object.didInsert(from: source, in: self)
             }
     }
     
@@ -93,31 +95,31 @@ public extension BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from
-     - throws: an `ErrorType` thrown from any of the `ImportableObject` methods
+     - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the array of created `ImportableObject` instances
      */
-    public func importObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableObject, S.Generator.Element == T.ImportSource>(
-        into: Into<T>,
-        sourceArray: S) throws -> [T] {
+    public func importObjects<T, S: Sequence>(
+        _ into: Into<T>,
+        sourceArray: S) throws -> [T] where T: NSManagedObject, T: ImportableObject, S.Iterator.Element == T.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            return try cs_autoreleasepool {
+            return try autoreleasepool {
                 
                 return try sourceArray.flatMap { (source) -> T? in
-                    
-                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                  
+                    let entityType = into.entityClass as! T.Type
+                    guard entityType.shouldInsert(from: source, in: self) else {
                         
                         return nil
                     }
-                    
-                    return try cs_autoreleasepool {
+                    return try autoreleasepool {
                         
                         let object = self.create(into)
-                        try object.didInsertFromImportSource(source, inTransaction: self)
+                        try object.didInsert(from: source, in: self)
                         return object
                     }
                 }
@@ -129,46 +131,45 @@ public extension BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter source: the object to import values from
-     - throws: an `ErrorType` thrown from any of the `ImportableUniqueObject` methods
+     - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
      */
-    public func importUniqueObject<T where T: NSManagedObject, T: ImportableUniqueObject>(
-        into: Into<T>,
-        source: T.ImportSource) throws -> T?  {
+    public func importUniqueObject<T>(
+        _ into: Into<T>,
+        source: T.ImportSource) throws -> T? where T: NSManagedObject, T: ImportableUniqueObject  {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            return try cs_autoreleasepool {
-                
-                let uniqueIDKeyPath = T.uniqueIDKeyPath
-                guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
+            return try autoreleasepool {
+              
+                let entityType = into.entityClass as! T.Type
+                let uniqueIDKeyPath = entityType.uniqueIDKeyPath
+                guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
                     
                     return nil
                 }
                 
-                if let object = self.fetchOne(From(T), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
+                if let object = self.fetchOne(From(entityType), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
-                    guard T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                    guard entityType.shouldUpdate(from: source, in: self) else {
                         
                         return nil
                     }
-                    
-                    try object.updateFromImportSource(source, inTransaction: self)
+                    try object.update(from: source, in: self)
                     return object
                 }
                 else {
                     
-                    guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                    guard entityType.shouldInsert(from: source, in: self) else {
                         
                         return nil
                     }
-                    
                     let object = self.create(into)
                     object.uniqueIDValue = uniqueIDValue
-                    try object.didInsertFromImportSource(source, inTransaction: self)
+                    try object.didInsert(from: source, in: self)
                     return object
                 }
             }
@@ -176,79 +177,79 @@ public extension BaseDataTransaction {
     
     /**
      Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources.
-     - Warning: While the array returned from `importUniqueObjects(...)` correctly maps to the order of `sourceArray`, the order of objects called with `ImportableUniqueObject` methods is arbitrary. Do not make assumptions that any particular object will be imported ahead or after another object.
+     `ImportableUniqueObject` methods are called on the objects in the same order as they are in the `sourceArray`, and are returned in an array with that same order.
+     - Warning: If `sourceArray` contains multiple import sources with same ID, no merging will occur and ONLY THE LAST duplicate will be imported.
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from
      - parameter preProcess: a closure that lets the caller tweak the internal `UniqueIDType`-to-`ImportSource` mapping to be used for importing. Callers can remove from/add to/update `mapping` and return the updated array from the closure.
-     - throws: an `ErrorType` thrown from any of the `ImportableUniqueObject` methods
+     - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the array of created/updated `ImportableUniqueObject` instances
      */
-    public func importUniqueObjects<T, S: SequenceType where T: NSManagedObject, T: ImportableUniqueObject, S.Generator.Element == T.ImportSource>(
-        into: Into<T>,
+    public func importUniqueObjects<T, S: Sequence>(
+        _ into: Into<T>,
         sourceArray: S,
-        @noescape preProcess: (mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] {
+        preProcess: @escaping (_ mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] where T: NSManagedObject, T: ImportableUniqueObject, S.Iterator.Element == T.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
                 "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
-            return try cs_autoreleasepool {
-                
-                var mapping = Dictionary<T.UniqueIDType, T.ImportSource>()
-                let sortedIDs = try cs_autoreleasepool {
-                    
+            return try autoreleasepool {
+              
+                let entityType = into.entityClass as! T.Type
+                var importSourceByID = Dictionary<T.UniqueIDType, T.ImportSource>()
+                let sortedIDs = try autoreleasepool {
+                  
                     return try sourceArray.flatMap { (source) -> T.UniqueIDType? in
                         
-                        guard let uniqueIDValue = try T.uniqueIDFromImportSource(source, inTransaction: self) else {
+                        guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
                             
                             return nil
                         }
-                        
-                        mapping[uniqueIDValue] = source
+                        importSourceByID[uniqueIDValue] = source // effectively replaces duplicate with the latest
                         return uniqueIDValue
                     }
                 }
                 
-                mapping = try cs_autoreleasepool { try preProcess(mapping: mapping) }
-                
-                var objects = Dictionary<T.UniqueIDType, T>()
-                for object in self.fetchAll(From(T), Where(T.uniqueIDKeyPath, isMemberOf: sortedIDs)) ?? [] {
+                importSourceByID = try autoreleasepool { try preProcess(importSourceByID) }
+
+                var existingObjectsByID = Dictionary<T.UniqueIDType, T>()
+                self.fetchAll(From(entityType), Where(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))?
+                    .forEach { existingObjectsByID[$0.uniqueIDValue] = $0 }
+              
+                var processedObjectIDs = Set<T.UniqueIDType>()
+                var result = [T]()
+              
+                for objectID in sortedIDs where !processedObjectIDs.contains(objectID) {
                     
-                    try cs_autoreleasepool {
+                    guard let source = importSourceByID[objectID] else {
                         
-                        let uniqueIDValue = object.uniqueIDValue
-                        
-                        guard let source = mapping.removeValueForKey(uniqueIDValue)
-                            where T.shouldUpdateFromImportSource(source, inTransaction: self) else {
+                        continue
+                    }
+                    try autoreleasepool {
+
+                        if let object = existingObjectsByID[objectID] {
+                            
+                            guard entityType.shouldUpdate(from: source, in: self) else {
                                 
                                 return
+                            }
+                            try object.update(from: source, in: self)
+                            result.append(object)
                         }
-                        
-                        try object.updateFromImportSource(source, inTransaction: self)
-                        objects[uniqueIDValue] = object
-                    }
-                }
-                
-                for (uniqueIDValue, source) in mapping {
-                    
-                    try cs_autoreleasepool {
-                        
-                        guard T.shouldInsertFromImportSource(source, inTransaction: self) else {
+                        else if entityType.shouldInsert(from: source, in: self) {
                             
-                            return
+                            let object = self.create(into)
+                            object.uniqueIDValue = objectID
+                            try object.didInsert(from: source, in: self)
+                            result.append(object)
                         }
-                        
-                        let object = self.create(into)
-                        object.uniqueIDValue = uniqueIDValue
-                        try object.didInsertFromImportSource(source, inTransaction: self)
-                        
-                        objects[uniqueIDValue] = object
+                        processedObjectIDs.insert(objectID)
                     }
                 }
-                
-                return sortedIDs.flatMap { objects[$0] }
+                return result
             }
     }
 }

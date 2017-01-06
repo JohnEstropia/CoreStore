@@ -38,7 +38,7 @@ public extension CoreStore {
     
     // MARK: Internal
     
-    internal static func log(level: LogLevel, message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
+    internal static func log(_ level: LogLevel, message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
         
         self.logger.log(
             level: level,
@@ -49,7 +49,7 @@ public extension CoreStore {
         )
     }
     
-    internal static func log(error: CoreStoreError, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
+    internal static func log(_ error: CoreStoreError, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
         
         self.logger.log(
             error: error,
@@ -60,7 +60,7 @@ public extension CoreStore {
         )
     }
     
-    internal static func assert(@autoclosure condition: () -> Bool, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
+    internal static func assert( _ condition: @autoclosure () -> Bool, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
         
         self.logger.assert(
             condition,
@@ -71,8 +71,7 @@ public extension CoreStore {
         )
     }
     
-    @noreturn
-    internal static func abort(message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
+    internal static func abort(_ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) -> Never  {
         
         self.logger.abort(
             message,

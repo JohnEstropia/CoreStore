@@ -1,5 +1,5 @@
 //
-//  NSProgress+Convenience.swift
+//  Progress+Convenience.swift
 //  CoreStore
 //
 //  Copyright © 2015 John Rommel Estropia
@@ -24,22 +24,19 @@
 //
 
 import Foundation
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
-// MARK: - NSProgress
+// MARK: - Progress
 
-public extension NSProgress {
+public extension Progress {
     
     /**
-     Sets a closure that the `NSProgress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
+     Sets a closure that the `Progress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
      
      - parameter closure: the closure to execute on progress change
      */
     @nonobjc
-    public func setProgressHandler(closure: ((progress: NSProgress) -> Void)?) {
+    public func setProgressHandler(_ closure: ((_ progress: Progress) -> Void)?) {
         
         self.progressObserver.progressHandler = closure
     }
@@ -81,8 +78,9 @@ public extension NSProgress {
 @objc
 private final class ProgressObserver: NSObject {
     
-    private unowned let progress: NSProgress
-    private var progressHandler: ((progress: NSProgress) -> Void)? {
+    private unowned let progress: Progress
+    
+    fileprivate var progressHandler: ((_ progress: Progress) -> Void)? {
         
         didSet {
             
@@ -96,19 +94,19 @@ private final class ProgressObserver: NSObject {
                 
                 self.progress.addObserver(
                     self,
-                    forKeyPath: "fractionCompleted",
-                    options: [.Initial, .New],
+                    forKeyPath: #keyPath(Progress.fractionCompleted),
+                    options: [.initial, .new],
                     context: nil
                 )
             }
             else {
                 
-                self.progress.removeObserver(self, forKeyPath: "fractionCompleted")
+                self.progress.removeObserver(self, forKeyPath: #keyPath(Progress.fractionCompleted))
             }
         }
     }
     
-    private init(_ progress: NSProgress) {
+    fileprivate init(_ progress: Progress) {
         
         self.progress = progress
         super.init()
@@ -119,20 +117,22 @@ private final class ProgressObserver: NSObject {
         if let _ = self.progressHandler {
             
             self.progressHandler = nil
-            self.progress.removeObserver(self, forKeyPath: "fractionCompleted")
+            self.progress.removeObserver(self, forKeyPath: #keyPath(Progress.fractionCompleted))
         }
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
-        guard let progress = object as? NSProgress where progress == self.progress && keyPath == "fractionCompleted" else {
-            
-            return
+        guard let progress = object as? Progress,
+            progress == self.progress,
+            keyPath == #keyPath(Progress.fractionCompleted) else {
+                
+                return
         }
         
-        GCDQueue.Main.async { [weak self] () -> Void in
+        DispatchQueue.main.async { [weak self] () -> Void in
             
-            self?.progressHandler?(progress: progress)
+            self?.progressHandler?(progress)
         }
     }
 }

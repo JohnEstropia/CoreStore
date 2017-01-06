@@ -11,7 +11,6 @@ import CoreLocation
 import MapKit
 import AddressBookUI
 import CoreStore
-import GCDKit
 
 
 private struct Static {
@@ -22,21 +21,21 @@ private struct Static {
             SQLiteStore(
                 fileName: "PlaceDemo.sqlite",
                 configuration: "TransactionsDemo",
-                localStorageOptions: .RecreateStoreOnModelMismatch
+                localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
         
-        var place = CoreStore.fetchOne(From(Place))
+        var place = CoreStore.fetchOne(From<Place>())
         if place == nil {
             
-            CoreStore.beginSynchronous { (transaction) -> Void in
+            _ = CoreStore.beginSynchronous { (transaction) -> Void in
                 
-                let place = transaction.create(Into(Place))
+                let place = transaction.create(Into<Place>())
                 place.setInitialValues()
                 
-                transaction.commitAndWait()
+                _ = transaction.commitAndWait()
             }
-            place = CoreStore.fetchOne(From(Place))
+            place = CoreStore.fetchOne(From<Place>())
         }
         
         return CoreStore.monitorObject(place!)
@@ -71,33 +70,33 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         Static.placeController.addObserver(self)
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .Refresh,
+            barButtonSystemItem: .refresh,
             target: self,
             action: #selector(self.refreshButtonTapped(_:))
         )
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
         
         let alert = UIAlertController(
             title: "Transactions Demo",
             message: "This demo shows how to use the 3 types of transactions to save updates: synchronous, asynchronous, and unsafe.\n\nTap and hold on the map to change the pin location.",
-            preferredStyle: .Alert
+            preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "OK", style: .Cancel, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         super.viewWillAppear(animated)
         
         if let mapView = self.mapView, let place = Static.placeController.object {
             
             mapView.addAnnotation(place)
-            mapView.setCenterCoordinate(place.coordinate, animated: false)
+            mapView.setCenter(place.coordinate, animated: false)
             mapView.selectAnnotation(place, animated: false)
         }
     }
@@ -105,14 +104,14 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
     
     // MARK: MKMapViewDelegate
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         let identifier = "MKAnnotationView"
-        var annotationView: MKPinAnnotationView! = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier) as? MKPinAnnotationView
+        var annotationView: MKPinAnnotationView! = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
         if annotationView == nil {
             
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-            annotationView.enabled = true
+            annotationView.isEnabled = true
             annotationView.canShowCallout = true
             annotationView.animatesDrop = true
         }
@@ -127,28 +126,28 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
     
     // MARK: ObjectObserver
     
-    func objectMonitor(monitor: ObjectMonitor<Place>, willUpdateObject object: Place) {
+    func objectMonitor(_ monitor: ObjectMonitor<Place>, willUpdateObject object: Place) {
         
         // none
     }
     
-    func objectMonitor(monitor: ObjectMonitor<Place>, didUpdateObject object: Place, changedPersistentKeys: Set<KeyPath>) {
+    func objectMonitor(_ monitor: ObjectMonitor<Place>, didUpdateObject object: Place, changedPersistentKeys: Set<KeyPath>) {
         
         if let mapView = self.mapView {
             
-            mapView.removeAnnotations(mapView.annotations ?? [])
+            mapView.removeAnnotations(mapView.annotations)
             mapView.addAnnotation(object)
-            mapView.setCenterCoordinate(object.coordinate, animated: true)
+            mapView.setCenter(object.coordinate, animated: true)
             mapView.selectAnnotation(object, animated: true)
             
-            if changedPersistentKeys.contains("latitude") || changedPersistentKeys.contains("longitude") {
+            if changedPersistentKeys.contains(#keyPath(Place.latitude)) || changedPersistentKeys.contains(#keyPath(Place.longitude)) {
                 
-                self.geocodePlace(object)
+                self.geocode(place: object)
             }
         }
     }
     
-    func objectMonitor(monitor: ObjectMonitor<Place>, didDeleteObject object: Place) {
+    func objectMonitor(_ monitor: ObjectMonitor<Place>, didDeleteObject object: Place) {
         
         // none
     }
@@ -160,13 +159,15 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
     
     @IBOutlet weak var mapView: MKMapView?
     
-    @IBAction dynamic func longPressGestureRecognized(sender: AnyObject?) {
+    @IBAction dynamic func longPressGestureRecognized(_ sender: AnyObject?) {
         
-        if let mapView = self.mapView, let gesture = sender as? UILongPressGestureRecognizer where gesture.state == .Began {
+        if let mapView = self.mapView,
+            let gesture = sender as? UILongPressGestureRecognizer,
+            gesture.state == .began {
             
-            let coordinate = mapView.convertPoint(
-                gesture.locationInView(mapView),
-                toCoordinateFromView: mapView
+            let coordinate = mapView.convert(
+                gesture.location(in: mapView),
+                toCoordinateFrom: mapView
             )
             CoreStore.beginAsynchronous { (transaction) -> Void in
                 
@@ -177,17 +178,17 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         }
     }
     
-    @IBAction dynamic func refreshButtonTapped(sender: AnyObject?) {
+    @IBAction dynamic func refreshButtonTapped(_ sender: AnyObject?) {
         
-        CoreStore.beginSynchronous { (transaction) -> Void in
+        _ = CoreStore.beginSynchronous { (transaction) -> Void in
             
             let place = transaction.edit(Static.placeController.object)
             place?.setInitialValues()
-            transaction.commitAndWait()
+            _ = transaction.commitAndWait()
         }
     }
     
-    func geocodePlace(place: Place) {
+    func geocode(place: Place) {
         
         let transaction = CoreStore.beginUnsafe()
         

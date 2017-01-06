@@ -43,7 +43,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models (*.xcmappingmodel) for migration.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public init(fileURL: NSURL, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), localStorageOptions: LocalStorageOptions = nil) {
+    public init(fileURL: URL, configuration: String? = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
         
         self.fileURL = fileURL
         self.configuration = configuration
@@ -60,10 +60,10 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models (*.xcmappingmodel) for migration
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public init(fileName: String, configuration: String? = nil, mappingModelBundles: [NSBundle] = NSBundle.allBundles(), localStorageOptions: LocalStorageOptions = nil) {
+    public init(fileName: String, configuration: String? = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
         
         self.fileURL = SQLiteStore.defaultRootDirectory
-            .URLByAppendingPathComponent(fileName, isDirectory: false)!
+            .appendingPathComponent(fileName, isDirectory: false)
         self.configuration = configuration
         self.mappingModelBundles = mappingModelBundles
         self.localStorageOptions = localStorageOptions
@@ -79,9 +79,9 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
      */
     public init() {
         
-        self.fileURL = SQLiteStore.defaultFileURL!
+        self.fileURL = SQLiteStore.defaultFileURL
         self.configuration = nil
-        self.mappingModelBundles = NSBundle.allBundles()
+        self.mappingModelBundles = Bundle.allBundles
         self.localStorageOptions = nil
     }
     
@@ -104,12 +104,12 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
      [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
      ```
      */
-    public let storeOptions: [String: AnyObject]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+    public let storeOptions: [AnyHashable: Any]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
     
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didAddToDataStack(dataStack: DataStack) {
+    public func didAddToDataStack(_ dataStack: DataStack) {
         
         self.dataStack = dataStack
     }
@@ -117,7 +117,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didRemoveFromDataStack(dataStack: DataStack) {
+    public func didRemoveFromDataStack(_ dataStack: DataStack) {
         
         self.dataStack = nil
     }
@@ -128,12 +128,12 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      The `NSURL` that points to the SQLite file
      */
-    public let fileURL: NSURL
+    public let fileURL: URL
     
     /**
      The `NSBundle`s from which to search mapping models for migrations
      */
-    public let mappingModelBundles: [NSBundle]
+    public let mappingModelBundles: [Bundle]
     
     /**
      Options that tell the `DataStack` how to setup the persistent store
@@ -143,15 +143,15 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      The options dictionary for the specified `LocalStorageOptions`
      */
-    public func storeOptionsForOptions(options: LocalStorageOptions) -> [String: AnyObject]? {
+    public func dictionary(forOptions options: LocalStorageOptions) -> [AnyHashable: Any]? {
         
-        if options == .None {
+        if options == .none {
             
             return self.storeOptions
         }
         
         var storeOptions = self.storeOptions ?? [:]
-        if options.contains(.AllowSynchronousLightweightMigration) {
+        if options.contains(.allowSynchronousLightweightMigration) {
             
             storeOptions[NSMigratePersistentStoresAutomaticallyOption] = true
             storeOptions[NSInferMappingModelAutomaticallyOption] = true
@@ -162,58 +162,98 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
-    public func eraseStorageAndWait(soureModel soureModel: NSManagedObjectModel?) throws {
+    public func eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws {
         
         // TODO: check if attached to persistent store
         
-        let fileURL = self.fileURL
-        guard let soureModel = soureModel else {
+        func deleteFiles(storeURL: URL, extraFiles: [String] = []) throws {
             
-            let fileManager = NSFileManager.defaultManager()
-            try fileManager.removeItemAtURL(fileURL)
-            _ = try? fileManager.removeItemAtPath("\(fileURL.absoluteString)-wal")
-            _ = try? fileManager.removeItemAtPath("\(fileURL.absoluteString)-shm")
-            return
+            let fileManager = FileManager.default
+            let extraFiles: [String] = [
+                storeURL.path.appending("-wal"),
+                storeURL.path.appending("-shm")
+            ]
+            do {
+                
+                let trashURL = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!)
+                    .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack", isDirectory: true)
+                    .appendingPathComponent("trash", isDirectory: true)
+                try fileManager.createDirectory(
+                    at: trashURL,
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
+                
+                let temporaryFileURL = trashURL.appendingPathComponent(UUID().uuidString, isDirectory: false)
+                try fileManager.moveItem(at: storeURL, to: temporaryFileURL)
+                
+                let extraTemporaryFiles = extraFiles.map { (extraFile) -> String in
+                    
+                    let temporaryFile = trashURL.appendingPathComponent(UUID().uuidString, isDirectory: false).path
+                    if let _ = try? fileManager.moveItem(atPath: extraFile, toPath: temporaryFile) {
+                        
+                        return temporaryFile
+                    }
+                    return extraFile
+                }
+                DispatchQueue.global(qos: .background).async {
+                    
+                    _ = try? fileManager.removeItem(at: temporaryFileURL)
+                    extraTemporaryFiles.forEach({ _ = try? fileManager.removeItem(atPath: $0) })
+                }
+            }
+            catch {
+                
+                try fileManager.removeItem(at: storeURL)
+                extraFiles.forEach({ _ = try? fileManager.removeItem(atPath: $0) })
+            }
         }
-        try cs_autoreleasepool {
+        
+        let fileURL = self.fileURL
+        try autoreleasepool {
             
-            let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
-            let store = try journalUpdatingCoordinator.addPersistentStoreWithType(
-                self.dynamicType.storeType,
-                configuration: self.configuration,
-                URL: fileURL,
-                options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
-            )
-            try journalUpdatingCoordinator.removePersistentStore(store)
-            try NSFileManager.defaultManager().removeItemAtURL(fileURL)
+            if let soureModel = soureModelHint ?? NSManagedObjectModel.mergedModel(from: nil, forStoreMetadata: metadata) {
+                
+                let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
+                let store = try journalUpdatingCoordinator.addPersistentStore(
+                    ofType: type(of: self).storeType,
+                    configurationName: self.configuration,
+                    at: fileURL,
+                    options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
+                )
+                try journalUpdatingCoordinator.remove(store)
+            }
+            try deleteFiles(storeURL: fileURL)
         }
     }
     
     
     // MARK: Internal
     
-    internal static let defaultRootDirectory: NSURL = {
+    internal static let defaultRootDirectory: URL = {
         
         #if os(tvOS)
-            let systemDirectorySearchPath = NSSearchPathDirectory.CachesDirectory
+            let systemDirectorySearchPath = FileManager.SearchPathDirectory.cachesDirectory
         #else
-            let systemDirectorySearchPath = NSSearchPathDirectory.ApplicationSupportDirectory
+            let systemDirectorySearchPath = FileManager.SearchPathDirectory.applicationSupportDirectory
         #endif
         
-        let defaultSystemDirectory = NSFileManager
-            .defaultManager()
-            .URLsForDirectory(systemDirectorySearchPath, inDomains: .UserDomainMask).first!
+        let defaultSystemDirectory = FileManager.default.urls(
+                for: systemDirectorySearchPath,
+                in: .userDomainMask).first!
         
-        return defaultSystemDirectory.URLByAppendingPathComponent(
-            NSBundle.mainBundle().bundleIdentifier ?? "com.CoreStore.DataStack",
-            isDirectory: true)!
+        return defaultSystemDirectory.appendingPathComponent(
+            Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack",
+            isDirectory: true
+        )
     }()
     
     internal static let defaultFileURL = SQLiteStore.defaultRootDirectory
-        .URLByAppendingPathComponent(
-            (NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleName") as? String) ?? "CoreData",
-            isDirectory: false)!
-        .URLByAppendingPathExtension("sqlite")
+        .appendingPathComponent(
+            (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData",
+            isDirectory: false
+        )
+        .appendingPathExtension("sqlite")
     
     
     // MARK: Private

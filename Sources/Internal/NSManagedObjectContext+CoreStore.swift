@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - NSManagedObjectContext
@@ -50,7 +47,7 @@ internal extension NSManagedObjectContext {
         set {
             
             cs_setAssociatedCopiedObject(
-                NSNumber(bool: newValue),
+                NSNumber(value: newValue),
                 forKey: &PropertyKeys.shouldCascadeSavesToParent,
                 inObject: self
             )
@@ -58,40 +55,30 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func entityDescriptionForEntityType(entity: NSManagedObject.Type) -> NSEntityDescription? {
+    internal func entityDescriptionForEntityType(_ entity: NSManagedObject.Type) -> NSEntityDescription? {
         
         return self.entityDescriptionForEntityClass(entity)
     }
     
     @nonobjc
-    internal func entityDescriptionForEntityClass(entity: AnyClass) -> NSEntityDescription? {
+    internal func entityDescriptionForEntityClass(_ entity: AnyClass) -> NSEntityDescription? {
         
         guard let entityName = self.parentStack?.entityNameForEntityClass(entity) else {
             
             return nil
         }
-        return NSEntityDescription.entityForName(
-            entityName,
-            inManagedObjectContext: self
+        return NSEntityDescription.entity(
+            forEntityName: entityName,
+            in: self
         )
     }
     
     @nonobjc
-    internal func setupForCoreStoreWithContextName(contextName: String) {
-
-        #if USE_FRAMEWORKS
-            
-            self.name = contextName
-        #else
-            
-            if #available(iOS 8.0, *) {
-                
-                self.name = contextName
-            }
-        #endif
+    internal func setupForCoreStoreWithContextName(_ contextName: String) {
         
+        self.name = contextName
         self.observerForWillSaveNotification = NotificationObserver(
-            notificationName: NSManagedObjectContextWillSaveNotification,
+            notificationName: NSNotification.Name.NSManagedObjectContextWillSave,
             object: self,
             closure: { (note) -> Void in
                 
@@ -105,7 +92,7 @@ internal extension NSManagedObjectContext {
                 
                 do {
                     
-                    try context.obtainPermanentIDsForObjects(Array(insertedObjects))
+                    try context.obtainPermanentIDs(for: Array(insertedObjects))
                 }
                 catch {
                     

@@ -32,7 +32,7 @@ import CoreData
 /**
  An `Into` clause contains the destination entity and destination persistent store for a `create(...)` method. A common usage is to just indicate the entity:
  ```
- let person = transaction.create(Into(MyPersonEntity))
+ let person = transaction.create(Into<MyPersonEntity>())
  ```
  For cases where multiple `NSPersistentStore`s contain the same entity, the destination configuration's name needs to be specified as well:
  ```
@@ -66,9 +66,8 @@ public struct Into<T: NSManagedObject>: Hashable {
     /**
      Initializes an `Into` clause with the specified entity type.
      ```
-     let person = transaction.create(Into(MyPersonEntity))
+     let person = transaction.create(Into(MyPersonEntity.self))
      ```
-     
      - parameter entity: the `NSManagedObject` type to be created
      */
     public init(_ entity: T.Type) {
@@ -79,16 +78,15 @@ public struct Into<T: NSManagedObject>: Hashable {
     /**
      Initializes an `Into` clause with the specified entity class.
      ```
-     let person = transaction.create(Into(MyPersonEntity))
+     let person = transaction.create(Into(MyPersonEntity.self))
      ```
-     
      - parameter entityClass: the `NSManagedObject` class type to be created
      */
     public init(_ entityClass: AnyClass) {
         
         CoreStore.assert(
             entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(Into<T>)) with entity class \(cs_typeName(entityClass))"
+            "Attempted to create generic type \(cs_typeName(Into<T>.self)) with entity class \(cs_typeName(entityClass))"
         )
         self.init(entityClass: entityClass, configuration: nil, inferStoreIfPossible: true)
     }
@@ -98,7 +96,6 @@ public struct Into<T: NSManagedObject>: Hashable {
      ```
      let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
      ```
-     
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */
     public init(_ configuration: String?) {
@@ -111,7 +108,6 @@ public struct Into<T: NSManagedObject>: Hashable {
      ```
      let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
      ```
-     
      - parameter entity: the `NSManagedObject` type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */
@@ -125,7 +121,6 @@ public struct Into<T: NSManagedObject>: Hashable {
      ```
      let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
      ```
-     
      - parameter entityClass: the `NSManagedObject` class type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */
@@ -133,9 +128,19 @@ public struct Into<T: NSManagedObject>: Hashable {
         
         CoreStore.assert(
             entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(Into<T>)) with entity class \(cs_typeName(entityClass))"
+            "Attempted to create generic type \(cs_typeName(Into<T>.self)) with entity class \(cs_typeName(entityClass))"
         )
         self.init(entityClass: entityClass, configuration: configuration, inferStoreIfPossible: false)
+    }
+    
+    
+    // MARK: Equatable
+    
+    public static func == <T: NSManagedObject, U: NSManagedObject>(lhs: Into<T>, rhs: Into<U>) -> Bool {
+        
+        return lhs.entityClass == rhs.entityClass
+            && lhs.configuration == rhs.configuration
+            && lhs.inferStoreIfPossible == rhs.inferStoreIfPossible
     }
     
     
@@ -176,23 +181,4 @@ public struct Into<T: NSManagedObject>: Hashable {
         self.configuration = configuration
         self.inferStoreIfPossible = inferStoreIfPossible
     }
-}
-
-
-// MARK: - Into: Equatable
-
-@warn_unused_result
-public func == <T: NSManagedObject, U: NSManagedObject>(lhs: Into<T>, rhs: Into<U>) -> Bool {
-    
-    return lhs.entityClass == rhs.entityClass
-        && lhs.configuration == rhs.configuration
-        && lhs.inferStoreIfPossible == rhs.inferStoreIfPossible
-}
-
-@warn_unused_result
-public func != <T: NSManagedObject, U: NSManagedObject>(lhs: Into<T>, rhs: Into<U>) -> Bool {
-    
-    return lhs.entityClass == rhs.entityClass
-        && lhs.configuration == rhs.configuration
-        && lhs.inferStoreIfPossible == rhs.inferStoreIfPossible
 }

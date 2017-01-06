@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = "CoreStore"
-    s.version = "2.1.3"
+    s.version = "3.0.0"
     s.license = "MIT"
     s.summary = "Unleashing the real power of Core Data with the elegance and safety of Swift"
     s.homepage = "https://github.com/JohnEstropia/CoreStore"
@@ -19,6 +19,4 @@ Pod::Spec.new do |s|
     s.pod_target_xcconfig = { 'OTHER_SWIFT_FLAGS[config=Debug]' => '-D USE_FRAMEWORKS -D DEBUG',
                               'OTHER_SWIFT_FLAGS[config=Release]' => '-D USE_FRAMEWORKS',
                               'GCC_PREPROCESSOR_DEFINITIONS' => 'USE_FRAMEWORKS=1' }
-
-    s.dependency "GCDKit", "1.3.0"
 end

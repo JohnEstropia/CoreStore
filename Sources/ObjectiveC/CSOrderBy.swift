@@ -53,7 +53,6 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
         fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSOrderByKey(CSSortAscending(@"fullname"))]]];
      ```
-     
      - parameter sortDescriptor: a `NSSortDescriptor`
      */
     @objc
@@ -69,7 +68,6 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
         fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSOrderByKeys(CSSortAscending(@"fullname"), CSSortDescending(@"age"), nil))]]];
      ```
-     
      - parameter sortDescriptors: an array of `NSSortDescriptor`s
      */
     @objc
@@ -86,7 +84,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSOrderBy else {
             
@@ -97,14 +95,14 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     
     // MARK: CSFetchClause, CSQueryClause, CSDeleteClause
     
     @objc
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+    public func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
         
         self.bridgeToSwift.applyToFetchRequest(fetchRequest)
     }

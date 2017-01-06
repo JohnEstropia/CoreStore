@@ -29,15 +29,15 @@ import CoreData
 
 // MARK: - MigrationManager
 
-internal final class MigrationManager: NSMigrationManager, NSProgressReporting {
+internal final class MigrationManager: NSMigrationManager, ProgressReporting {
     
     // MARK: NSObject
     
-    override func didChangeValueForKey(key: String) {
+    override func didChangeValue(forKey key: String) {
         
-        super.didChangeValueForKey(key)
+        super.didChangeValue(forKey: key)
         
-        guard key == "migrationProgress" else {
+        guard key == #keyPath(NSMigrationManager.migrationProgress) else {
             
             return
         }
@@ -48,7 +48,7 @@ internal final class MigrationManager: NSMigrationManager, NSProgressReporting {
     
     // MARK: NSMigrationManager
 
-    init(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, progress: NSProgress) {
+    init(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, progress: Progress) {
         
         self.progress = progress
         
@@ -56,7 +56,7 @@ internal final class MigrationManager: NSMigrationManager, NSProgressReporting {
     }
     
 
-    // MARK: NSProgressReporting
+    // MARK: ProgressReporting
     
-    let progress: NSProgress
+    let progress: Progress
 }

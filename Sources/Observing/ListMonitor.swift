@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 #if os(iOS) || os(watchOS) || os(tvOS)
@@ -38,9 +35,9 @@ import CoreData
  The `ListMonitor` monitors changes to a list of `NSManagedObject` instances. Observers that implement the `ListObserver` protocol may then register themselves to the `ListMonitor`'s `addObserver(_:)` method:
  ```
  let monitor = CoreStore.monitorList(
-     From(MyPersonEntity),
+     From<MyPersonEntity>(),
      Where("title", isEqualTo: "Engineer"),
-     OrderBy(.Ascending("lastName"))
+     OrderBy(.ascending("lastName"))
  )
  monitor.addObserver(self)
  ```
@@ -56,10 +53,10 @@ import CoreData
  Creating a sectioned-list is also possible with the `monitorSectionedList(...)` method:
  ```
  let monitor = CoreStore.monitorSectionedList(
-     From(MyPersonEntity),
+     From<MyPersonEntity>(),
      SectionBy("age") { "Age \($0)" },
      Where("title", isEqualTo: "Engineer"),
-     OrderBy(.Ascending("lastName"))
+     OrderBy(.ascending("lastName"))
  )
  monitor.addObserver(self)
  ```
@@ -111,7 +108,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      */
     public subscript(sectionIndex: Int, itemIndex: Int) -> T {
         
-        return self[NSIndexPath(indexes: [sectionIndex, itemIndex], length: 2)]
+        return self[NSIndexPath(indexes: [sectionIndex, itemIndex], length: 2) as IndexPath]
     }
     
     /**
@@ -140,13 +137,13 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will raise an exception.
      - returns: the `NSManagedObject` at the specified index path
      */
-    public subscript(indexPath: NSIndexPath) -> T {
+    public subscript(indexPath: IndexPath) -> T {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return self.fetchedResultsController.objectAtIndexPath(indexPath) as! T
+        return self.fetchedResultsController.object(at: indexPath) as! T
     }
     
     /**
@@ -155,11 +152,11 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will return `nil`.
      - returns: the `NSManagedObject` at the specified index path, or `nil` if out of bounds
      */
-    public subscript(safeIndexPath indexPath: NSIndexPath) -> T? {
+    public subscript(safeIndexPath indexPath: IndexPath) -> T? {
         
         return self[
-            safeSectionIndex: indexPath.indexAtPosition(0),
-            safeItemIndex: indexPath.indexAtPosition(1)
+            safeSectionIndex: indexPath[0],
+            safeItemIndex: indexPath[1]
         ]
     }
     
@@ -168,7 +165,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - returns: `true` if at least one section exists, `false` otherwise
      */
-    @warn_unused_result
     public func hasSections() -> Bool {
         
         return self.sections().count > 0
@@ -179,7 +175,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - returns: `true` if at least one object in any section exists, `false` otherwise
      */
-    @warn_unused_result
     public func hasObjects() -> Bool {
         
         return self.numberOfObjects() > 0
@@ -191,10 +186,9 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter section: the section index. Using an index outside the valid range will return `false`.
      - returns: `true` if at least one object in the specified section exists, `false` otherwise
      */
-    @warn_unused_result
-    public func hasObjectsInSection(section: Int) -> Bool {
+    public func hasObjectsInSection(_ section: Int) -> Bool {
         
-        return self.numberOfObjectsInSection(safeSectionIndex: section) > 0
+        return self.numberOfObjectsInSection(safeSectionIndex: section)! > 0
     }
     
     /**
@@ -202,11 +196,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - returns: all objects in all sections
      */
-    @warn_unused_result
     public func objectsInAllSections() -> [T] {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
         return (self.fetchedResultsController.fetchedObjects as? [T]) ?? []
@@ -218,8 +211,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter section: the section index. Using an index outside the valid range will raise an exception.
      - returns: all objects in the specified section
      */
-    @warn_unused_result
-    public func objectsInSection(section: Int) -> [T] {
+    public func objectsInSection(_ section: Int) -> [T] {
         
         return (self.sectionInfoAtIndex(section).objects as? [T]) ?? []
     }
@@ -230,7 +222,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter section: the section index. Using an index outside the valid range will return `nil`.
      - returns: all objects in the specified section
      */
-    @warn_unused_result
     public func objectsInSection(safeSectionIndex section: Int) -> [T]? {
         
         return (self.sectionInfoAtIndex(safeSectionIndex: section)?.objects as? [T]) ?? []
@@ -241,11 +232,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - returns: the number of sections
      */
-    @warn_unused_result
     public func numberOfSections() -> Int {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
         return self.fetchedResultsController.sections?.count ?? 0
@@ -256,11 +246,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - returns: the number of objects in all sections
      */
-    @warn_unused_result
     public func numberOfObjects() -> Int {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
         return self.fetchedResultsController.fetchedObjects?.count ?? 0
@@ -272,8 +261,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter section: the section index. Using an index outside the valid range will raise an exception.
      - returns: the number of objects in the specified section
      */
-    @warn_unused_result
-    public func numberOfObjectsInSection(section: Int) -> Int {
+    public func numberOfObjectsInSection(_ section: Int) -> Int {
         
         return self.sectionInfoAtIndex(section).numberOfObjects
     }
@@ -284,7 +272,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter section: the section index. Using an index outside the valid range will return `nil`.
      - returns: the number of objects in the specified section
      */
-    @warn_unused_result
     public func numberOfObjectsInSection(safeSectionIndex section: Int) -> Int? {
         
         return self.sectionInfoAtIndex(safeSectionIndex: section)?.numberOfObjects
@@ -296,11 +283,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter section: the section index. Using an index outside the valid range will raise an exception.
      - returns: the `NSFetchedResultsSectionInfo` for the specified section
      */
-    @warn_unused_result
-    public func sectionInfoAtIndex(section: Int) -> NSFetchedResultsSectionInfo {
+    public func sectionInfoAtIndex(_ section: Int) -> NSFetchedResultsSectionInfo {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
         return self.fetchedResultsController.sections![section]
@@ -312,21 +298,19 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter section: the section index. Using an index outside the valid range will return `nil`.
      - returns: the `NSFetchedResultsSectionInfo` for the specified section, or `nil` if the section index is out of bounds.
      */
-    @warn_unused_result
     public func sectionInfoAtIndex(safeSectionIndex section: Int) -> NSFetchedResultsSectionInfo? {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
         guard section >= 0 else {
             
             return nil
         }
-        guard let sections = self.fetchedResultsController.sections
-            where section < sections.count else {
-                
-                return nil
+        guard let sections = self.fetchedResultsController.sections, section < sections.count else {
+            
+            return nil
         }
         return sections[section]
     }
@@ -336,11 +320,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - returns: the `NSFetchedResultsSectionInfo`s for all sections
      */
-    @warn_unused_result
     public func sections() -> [NSFetchedResultsSectionInfo] {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
         return self.fetchedResultsController.sections ?? []
@@ -353,14 +336,13 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter index: the index of the Section Index
      - returns: the target section for the specified "Section Index" title and index.
      */
-    @warn_unused_result
-    public func targetSectionForSectionIndex(title title: String, index: Int) -> Int {
+    public func targetSectionForSectionIndex(title: String, index: Int) -> Int {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return self.fetchedResultsController.sectionForSectionIndexTitle(title, atIndex: index)
+        return self.fetchedResultsController.section(forSectionIndexTitle: title, at: index)
     }
     
     /**
@@ -368,11 +350,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - returns: the section index titles for all sections
      */
-    @warn_unused_result
     public func sectionIndexTitles() -> [String] {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
         return self.fetchedResultsController.sectionIndexTitles
@@ -384,14 +365,13 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter object: the `NSManagedObject` to search the index of
      - returns: the index of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
      */
-    @warn_unused_result
-    public func indexOf(object: T) -> Int? {
+    public func indexOf(_ object: T) -> Int? {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return (self.fetchedResultsController.fetchedObjects as? [T] ?? []).indexOf(object)
+        return (self.fetchedResultsController.fetchedObjects as? [T] ?? []).index(of: object)
     }
     
     /**
@@ -400,14 +380,13 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      - parameter object: the `NSManagedObject` to search the index of
      - returns: the `NSIndexPath` of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
      */
-    @warn_unused_result
-    public func indexPathOf(object: T) -> NSIndexPath? {
+    public func indexPathOf(_ object: T) -> IndexPath? {
         
         CoreStore.assert(
-            !self.isPendingRefetch || NSThread.isMainThread(),
+            !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return self.fetchedResultsController.indexPathForObject(object)
+        return self.fetchedResultsController.indexPath(forObject: object)
     }
     
     
@@ -424,7 +403,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - parameter observer: a `ListObserver` to send change notifications to
      */
-    public func addObserver<U: ListObserver where U.ListEntityType == T>(observer: U) {
+    public func addObserver<U: ListObserver>(_ observer: U) where U.ListEntityType == T {
         
         self.unregisterObserver(observer)
         self.registerObserver(
@@ -459,7 +438,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - parameter observer: a `ListObjectObserver` to send change notifications to
      */
-    public func addObserver<U: ListObjectObserver where U.ListEntityType == T>(observer: U) {
+    public func addObserver<U: ListObjectObserver>(_ observer: U) where U.ListEntityType == T {
         
         self.unregisterObserver(observer)
         self.registerObserver(
@@ -513,7 +492,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - parameter observer: a `ListSectionObserver` to send change notifications to
      */
-    public func addObserver<U: ListSectionObserver where U.ListEntityType == T>(observer: U) {
+    public func addObserver<U: ListSectionObserver>(_ observer: U) where U.ListEntityType == T {
         
         self.unregisterObserver(observer)
         self.registerObserver(
@@ -574,7 +553,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - parameter observer: a `ListObserver` to unregister notifications to
      */
-    public func removeObserver<U: ListObserver where U.ListEntityType == T>(observer: U) {
+    public func removeObserver<U: ListObserver>(_ observer: U) where U.ListEntityType == T {
         
         self.unregisterObserver(observer)
     }
@@ -594,7 +573,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Note that only specified clauses will be changed; unspecified clauses will use previous values.
      */
-    public func refetch(fetchClauses: FetchClause...) {
+    public func refetch(_ fetchClauses: FetchClause...) {
         
         self.refetch(fetchClauses)
     }
@@ -606,12 +585,35 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Note that only specified clauses will be changed; unspecified clauses will use previous values.
      */
-    public func refetch(fetchClauses: [FetchClause]) {
+    public func refetch(_ fetchClauses: [FetchClause]) {
         
         self.refetch { (fetchRequest) in
             
             fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         }
+    }
+    
+    
+    // MARK: Equatable
+    
+    public static func == <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+        
+        return lhs === rhs
+    }
+    
+    public static func == <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+        
+        return lhs.fetchedResultsController === rhs.fetchedResultsController
+    }
+    
+    public static func ~= <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+        
+        return lhs === rhs
+    }
+    
+    public static func ~= <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+        
+        return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
     
@@ -625,7 +627,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     // MARK: Internal
     
-    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -637,7 +639,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
     }
     
-    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void, createAsynchronously: (ListMonitor<T>) -> Void) {
+    internal convenience init(dataStack: DataStack, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<T>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -649,7 +651,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -661,7 +663,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void, createAsynchronously: (ListMonitor<T>) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<T>) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -675,10 +677,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     internal func upcast() -> ListMonitor<NSManagedObject> {
         
-        return unsafeBitCast(self, ListMonitor<NSManagedObject>.self)
+        return unsafeBitCast(self, to: ListMonitor<NSManagedObject>.self)
     }
     
-    internal func registerChangeNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>) -> Void) {
+    internal func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<T>) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -690,7 +692,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                         
                         return
                     }
-                    callback(monitor: self)
+                    callback(self)
                 }
             ),
             forKey: notificationKey,
@@ -698,7 +700,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
     }
     
-    internal func registerObjectNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>, object: T, indexPath: NSIndexPath?, newIndexPath: NSIndexPath?) -> Void) {
+    internal func registerObjectNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<T>, _ object: T, _ indexPath: IndexPath?, _ newIndexPath: IndexPath?) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -708,15 +710,15 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     guard let `self` = self,
                         let userInfo = note.userInfo,
-                        let object = userInfo[UserInfoKeyObject] as? T else {
+                        let object = userInfo[String(describing: NSManagedObject.self)] as? T else {
                             
                             return
                     }
                     callback(
-                        monitor: self,
-                        object: object,
-                        indexPath: userInfo[UserInfoKeyIndexPath] as? NSIndexPath,
-                        newIndexPath: userInfo[UserInfoKeyNewIndexPath] as? NSIndexPath
+                        self,
+                        object,
+                        userInfo[String(describing: IndexPath.self)] as? IndexPath,
+                        userInfo["\(String(describing: IndexPath.self)).New"] as? IndexPath
                     )
                 }
             ),
@@ -725,7 +727,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
     }
     
-    internal func registerSectionNotification(notificationKey: UnsafePointer<Void>, name: String, toObserver observer: AnyObject, callback: (monitor: ListMonitor<T>, sectionInfo: NSFetchedResultsSectionInfo, sectionIndex: Int) -> Void) {
+    internal func registerSectionNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<T>, _ sectionInfo: NSFetchedResultsSectionInfo, _ sectionIndex: Int) -> Void) {
         
         cs_setAssociatedRetainedObject(
             NotificationObserver(
@@ -735,16 +737,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     guard let `self` = self,
                         let userInfo = note.userInfo,
-                        let sectionInfo = userInfo[UserInfoKeySectionInfo] as? NSFetchedResultsSectionInfo,
-                        let sectionIndex = (userInfo[UserInfoKeySectionIndex] as? NSNumber)?.integerValue else {
+                        let sectionInfo = userInfo[String(describing: NSFetchedResultsSectionInfo.self)] as? NSFetchedResultsSectionInfo,
+                        let sectionIndex = (userInfo[String(describing: NSNumber.self)] as? NSNumber)?.intValue else {
                             
                             return
                     }
-                    callback(
-                        monitor: self,
-                        sectionInfo: sectionInfo,
-                        sectionIndex: sectionIndex
-                    )
+                    callback(self, sectionInfo, sectionIndex)
                 }
             ),
             forKey: notificationKey,
@@ -752,15 +750,15 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(observer: U, willChange: (observer: U, monitor: ListMonitor<T>) -> Void, didChange: (observer: U, monitor: ListMonitor<T>) -> Void, willRefetch: (observer: U, monitor: ListMonitor<T>) -> Void, didRefetch: (observer: U, monitor: ListMonitor<T>) -> Void) {
+    internal func registerObserver<U: AnyObject>(_ observer: U, willChange: @escaping (_ observer: U, _ monitor: ListMonitor<T>) -> Void, didChange: @escaping (_ observer: U, _ monitor: ListMonitor<T>) -> Void, willRefetch: @escaping (_ observer: U, _ monitor: ListMonitor<T>) -> Void, didRefetch: @escaping (_ observer: U, _ monitor: ListMonitor<T>) -> Void) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to add an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         self.registerChangeNotification(
             &self.willChangeListKey,
-            name: ListMonitorWillChangeListNotification,
+            name: Notification.Name.listMonitorWillChangeList,
             toObserver: observer,
             callback: { [weak observer] (monitor) -> Void in
                 
@@ -768,12 +766,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                willChange(observer: observer, monitor: monitor)
+                willChange(observer, monitor)
             }
         )
         self.registerChangeNotification(
             &self.didChangeListKey,
-            name: ListMonitorDidChangeListNotification,
+            name: Notification.Name.listMonitorDidChangeList,
             toObserver: observer,
             callback: { [weak observer] (monitor) -> Void in
                 
@@ -781,12 +779,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didChange(observer: observer, monitor: monitor)
+                didChange(observer, monitor)
             }
         )
         self.registerChangeNotification(
             &self.willRefetchListKey,
-            name: ListMonitorWillRefetchListNotification,
+            name: Notification.Name.listMonitorWillRefetchList,
             toObserver: observer,
             callback: { [weak observer] (monitor) -> Void in
                 
@@ -794,12 +792,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                willRefetch(observer: observer, monitor: monitor)
+                willRefetch(observer, monitor)
             }
         )
         self.registerChangeNotification(
             &self.didRefetchListKey,
-            name: ListMonitorDidRefetchListNotification,
+            name: Notification.Name.listMonitorDidRefetchList,
             toObserver: observer,
             callback: { [weak observer] (monitor) -> Void in
                 
@@ -807,21 +805,21 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didRefetch(observer: observer, monitor: monitor)
+                didRefetch(observer, monitor)
             }
         )
     }
     
-    internal func registerObserver<U: AnyObject>(observer: U, didInsertObject: (observer: U, monitor: ListMonitor<T>, object: T, toIndexPath: NSIndexPath) -> Void, didDeleteObject: (observer: U, monitor: ListMonitor<T>, object: T, fromIndexPath: NSIndexPath) -> Void, didUpdateObject: (observer: U, monitor: ListMonitor<T>, object: T, atIndexPath: NSIndexPath) -> Void, didMoveObject: (observer: U, monitor: ListMonitor<T>, object: T, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) -> Void) {
+    internal func registerObserver<U: AnyObject>(_ observer: U, didInsertObject: @escaping (_ observer: U, _ monitor: ListMonitor<T>, _ object: T, _ toIndexPath: IndexPath) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ListMonitor<T>, _ object: T, _ fromIndexPath: IndexPath) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ListMonitor<T>, _ object: T, _ atIndexPath: IndexPath) -> Void, didMoveObject: @escaping (_ observer: U, _ monitor: ListMonitor<T>, _ object: T, _ fromIndexPath: IndexPath, _ toIndexPath: IndexPath) -> Void) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to add an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         
         self.registerObjectNotification(
             &self.didInsertObjectKey,
-            name: ListMonitorDidInsertObjectNotification,
+            name: Notification.Name.listMonitorDidInsertObject,
             toObserver: observer,
             callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
@@ -829,17 +827,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didInsertObject(
-                    observer: observer,
-                    monitor: monitor,
-                    object: object,
-                    toIndexPath: newIndexPath!
-                )
+                didInsertObject(observer, monitor, object, newIndexPath!)
             }
         )
         self.registerObjectNotification(
             &self.didDeleteObjectKey,
-            name: ListMonitorDidDeleteObjectNotification,
+            name: Notification.Name.listMonitorDidDeleteObject,
             toObserver: observer,
             callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
@@ -847,17 +840,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didDeleteObject(
-                    observer: observer,
-                    monitor: monitor,
-                    object: object,
-                    fromIndexPath: indexPath!
-                )
+                didDeleteObject(observer, monitor, object, indexPath!)
             }
         )
         self.registerObjectNotification(
             &self.didUpdateObjectKey,
-            name: ListMonitorDidUpdateObjectNotification,
+            name: Notification.Name.listMonitorDidUpdateObject,
             toObserver: observer,
             callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
@@ -865,17 +853,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didUpdateObject(
-                    observer: observer,
-                    monitor: monitor,
-                    object: object,
-                    atIndexPath: indexPath!
-                )
+                didUpdateObject(observer, monitor, object, indexPath!)
             }
         )
         self.registerObjectNotification(
             &self.didMoveObjectKey,
-            name: ListMonitorDidMoveObjectNotification,
+            name: Notification.Name.listMonitorDidMoveObject,
             toObserver: observer,
             callback: { [weak observer] (monitor, object, indexPath, newIndexPath) -> Void in
                 
@@ -883,27 +866,21 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didMoveObject(
-                    observer: observer,
-                    monitor: monitor,
-                    object: object,
-                    fromIndexPath: indexPath!,
-                    toIndexPath: newIndexPath!
-                )
+                didMoveObject(observer, monitor, object, indexPath!, newIndexPath!)
             }
         )
     }
     
-    internal func registerObserver<U: AnyObject>(observer: U, didInsertSection: (observer: U, monitor: ListMonitor<T>, sectionInfo: NSFetchedResultsSectionInfo, toIndex: Int) -> Void, didDeleteSection: (observer: U, monitor: ListMonitor<T>, sectionInfo: NSFetchedResultsSectionInfo, fromIndex: Int) -> Void) {
+    internal func registerObserver<U: AnyObject>(_ observer: U, didInsertSection: @escaping (_ observer: U, _ monitor: ListMonitor<T>, _ sectionInfo: NSFetchedResultsSectionInfo, _ toIndex: Int) -> Void, didDeleteSection: @escaping (_ observer: U, _ monitor: ListMonitor<T>, _ sectionInfo: NSFetchedResultsSectionInfo, _ fromIndex: Int) -> Void) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to add an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         
         self.registerSectionNotification(
             &self.didInsertSectionKey,
-            name: ListMonitorDidInsertSectionNotification,
+            name: Notification.Name.listMonitorDidInsertSection,
             toObserver: observer,
             callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
                 
@@ -911,17 +888,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didInsertSection(
-                    observer: observer,
-                    monitor: monitor,
-                    sectionInfo: sectionInfo,
-                    toIndex: sectionIndex
-                )
+                didInsertSection(observer, monitor, sectionInfo, sectionIndex)
             }
         )
         self.registerSectionNotification(
             &self.didDeleteSectionKey,
-            name: ListMonitorDidDeleteSectionNotification,
+            name: Notification.Name.listMonitorDidDeleteSection,
             toObserver: observer,
             callback: { [weak observer] (monitor, sectionInfo, sectionIndex) -> Void in
                 
@@ -929,20 +901,15 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     
                     return
                 }
-                didDeleteSection(
-                    observer: observer,
-                    monitor: monitor,
-                    sectionInfo: sectionInfo,
-                    fromIndex: sectionIndex
-                )
+                didDeleteSection(observer, monitor, sectionInfo, sectionIndex)
             }
         )
     }
     
-    internal func unregisterObserver(observer: AnyObject) {
+    internal func unregisterObserver(_ observer: AnyObject) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to remove an observer of type \(cs_typeName(observer)) outside the main thread."
         )
         let nilValue: AnyObject? = nil
@@ -960,10 +927,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         cs_setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteSectionKey, inObject: observer)
     }
     
-    internal func refetch(applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void) {
+    internal func refetch(_ applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         CoreStore.assert(
-            NSThread.isMainThread(),
+            Thread.isMainThread,
             "Attempted to refetch a \(cs_typeName(self)) outside the main thread."
         )
         
@@ -971,14 +938,14 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             
             self.isPendingRefetch = true
             
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ListMonitorWillRefetchListNotification,
+            NotificationCenter.default.post(
+                name: Notification.Name.listMonitorWillRefetchList,
                 object: self
             )
         }
         self.applyFetchClauses = applyFetchClauses
         
-        self.taskGroup.notify(.Main) { [weak self] () -> Void in
+        self.taskGroup.notify(queue: .main) { [weak self] () -> Void in
             
             guard let `self` = self else {
                 
@@ -986,7 +953,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             }
             
             self.fetchedResultsControllerDelegate.enabled = false
-            self.applyFetchClauses(fetchRequest: self.fetchedResultsController.fetchRequest)
+            self.applyFetchClauses(self.fetchedResultsController.fetchRequest)
             
             self.transactionQueue.async { [weak self] in
                 
@@ -997,7 +964,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                 
                 try! self.fetchedResultsController.performFetchFromSpecifiedStores()
                 
-                GCDQueue.Main.async { [weak self] () -> Void in
+                DispatchQueue.main.async { [weak self] () -> Void in
                     
                     guard let `self` = self else {
                         
@@ -1007,8 +974,8 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                     self.fetchedResultsControllerDelegate.enabled = true
                     self.isPendingRefetch = false
                     
-                    NSNotificationCenter.defaultCenter().postNotificationName(
-                        ListMonitorDidRefetchListNotification,
+                    NotificationCenter.default.post(
+                        name: Notification.Name.listMonitorDidRefetchList,
                         object: self
                     )
                 }
@@ -1025,6 +992,10 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     // MARK: Private
     
+    fileprivate let fetchedResultsController: CoreStoreFetchedResultsController
+    fileprivate let taskGroup = DispatchGroup()
+    fileprivate let sectionIndexTransformer: (_ sectionName: KeyPath?) -> String?
+    
     private var willChangeListKey: Void?
     private var didChangeListKey: Void?
     private var willRefetchListKey: Void?
@@ -1038,14 +1009,11 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     private var didInsertSectionKey: Void?
     private var didDeleteSectionKey: Void?
     
-    private let fetchedResultsController: CoreStoreFetchedResultsController
-    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
-    private let sectionIndexTransformer: (sectionName: KeyPath?) -> String?
+    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate<T>
     private var observerForWillChangePersistentStore: NotificationObserver!
     private var observerForDidChangePersistentStore: NotificationObserver!
-    private let taskGroup = GCDGroup()
-    private let transactionQueue: GCDQueue
-    private var applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void
+    private let transactionQueue: DispatchQueue
+    private var applyFetchClauses: (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void
     
     private var isPersistentStoreChanging: Bool = false {
         
@@ -1068,24 +1036,24 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         }
     }
     
-    private init(context: NSManagedObjectContext, transactionQueue: GCDQueue, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: (fetchRequest: NSFetchRequest) -> Void, createAsynchronously: ((ListMonitor<T>) -> Void)?) {
+    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<T>) -> Void)?) {
         
         let fetchRequest = CoreStoreFetchRequest()
         fetchRequest.fetchLimit = 0
-        fetchRequest.resultType = .ManagedObjectResultType
+        fetchRequest.resultType = .managedObjectResultType
         fetchRequest.fetchBatchSize = 20
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
         let fetchedResultsController = CoreStoreFetchedResultsController(
             context: context,
-            fetchRequest: fetchRequest,
+            fetchRequest: fetchRequest.dynamicCast(),
             from: from,
             sectionBy: sectionBy,
             applyFetchClauses: applyFetchClauses
         )
         
-        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
+        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate<T>()
         
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
@@ -1110,9 +1078,9 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         }
         
         self.observerForWillChangePersistentStore = NotificationObserver(
-            notificationName: NSPersistentStoreCoordinatorStoresWillChangeNotification,
+            notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresWillChange,
             object: coordinator,
-            queue: NSOperationQueue.mainQueue(),
+            queue: OperationQueue.main,
             closure: { [weak self] (note) -> Void in
                 
                 guard let `self` = self else {
@@ -1122,8 +1090,8 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                 
                 self.isPersistentStoreChanging = true
                 
-                guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init)
-                    where !Set((self.fetchedResultsController.fetchRequest as! CoreStoreFetchRequest).safeAffectedStores ?? []).intersect(removedStores).isEmpty else {
+                guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init),
+                    !Set((self.fetchedResultsController.fetchRequest as Any as! CoreStoreFetchRequest).safeAffectedStores ?? []).intersection(removedStores).isEmpty else {
                         
                         return
                 }
@@ -1132,9 +1100,9 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
         )
         
         self.observerForDidChangePersistentStore = NotificationObserver(
-            notificationName: NSPersistentStoreCoordinatorStoresDidChangeNotification,
+            notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresDidChange,
             object: coordinator,
-            queue: NSOperationQueue.mainQueue(),
+            queue: OperationQueue.main,
             closure: { [weak self] (note) -> Void in
                 
                 guard let `self` = self else {
@@ -1144,9 +1112,9 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
                 
                 if !self.isPendingRefetch {
                     
-                    let previousStores = Set((self.fetchedResultsController.fetchRequest as! CoreStoreFetchRequest).safeAffectedStores ?? [])
+                    let previousStores = Set((self.fetchedResultsController.fetchRequest as Any as! CoreStoreFetchRequest).safeAffectedStores ?? [])
                     let currentStores = previousStores
-                        .subtract(note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore] ?? [])
+                        .subtracting(note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore] ?? [])
                         .union(note.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore] ?? [])
                     
                     if previousStores != currentStores {
@@ -1164,7 +1132,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             transactionQueue.async {
                 
                 try! fetchedResultsController.performFetchFromSpecifiedStores()
-                self.taskGroup.notify(.Main) {
+                self.taskGroup.notify(queue: .main) {
                     
                     createAsynchronously(self)
                 }
@@ -1178,109 +1146,80 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
 }
 
 
-// MARK: - ListMonitor: Equatable
-
-@warn_unused_result
-public func == <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
-    
-    return lhs === rhs
-}
-
-@warn_unused_result
-public func == <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
-    
-    return lhs.fetchedResultsController === rhs.fetchedResultsController
-}
-
-@warn_unused_result
-public func ~= <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
-    
-    return lhs === rhs
-}
-
-@warn_unused_result
-public func ~= <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
-    
-    return lhs.fetchedResultsController === rhs.fetchedResultsController
-}
-
-extension ListMonitor: Equatable { }
-
-
 // MARK: - ListMonitor: FetchedResultsControllerHandler
 
 extension ListMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
     
-    internal func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         switch type {
             
-        case .Insert:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ListMonitorDidInsertObjectNotification,
+        case .insert:
+            NotificationCenter.default.post(
+                name: Notification.Name.listMonitorDidInsertObject,
                 object: self,
                 userInfo: [
-                    UserInfoKeyObject: anObject,
-                    UserInfoKeyNewIndexPath: newIndexPath!
+                    String(describing: NSManagedObject.self): anObject,
+                    "\(String(describing: IndexPath.self)).New": newIndexPath!
                 ]
             )
             
-        case .Delete:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ListMonitorDidDeleteObjectNotification,
+        case .delete:
+            NotificationCenter.default.post(
+                name: Notification.Name.listMonitorDidDeleteObject,
                 object: self,
                 userInfo: [
-                    UserInfoKeyObject: anObject,
-                    UserInfoKeyIndexPath: indexPath!
+                    String(describing: NSManagedObject.self): anObject,
+                    String(describing: IndexPath.self): indexPath!
                 ]
             )
             
-        case .Update:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ListMonitorDidUpdateObjectNotification,
+        case .update:
+            NotificationCenter.default.post(
+                name: Notification.Name.listMonitorDidUpdateObject,
                 object: self,
                 userInfo: [
-                    UserInfoKeyObject: anObject,
-                    UserInfoKeyIndexPath: indexPath!
+                    String(describing: NSManagedObject.self): anObject,
+                    String(describing: IndexPath.self): indexPath!
                 ]
             )
             
-        case .Move:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ListMonitorDidMoveObjectNotification,
+        case .move:
+            NotificationCenter.default.post(
+                name: Notification.Name.listMonitorDidMoveObject,
                 object: self,
                 userInfo: [
-                    UserInfoKeyObject: anObject,
-                    UserInfoKeyIndexPath: indexPath!,
-                    UserInfoKeyNewIndexPath: newIndexPath!
+                    String(describing: NSManagedObject.self): anObject,
+                    String(describing: IndexPath.self): indexPath!,
+                    "\(String(describing: IndexPath.self)).New": newIndexPath!
                 ]
             )
         }
     }
     
-    internal func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         
         switch type {
             
-        case .Insert:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ListMonitorDidInsertSectionNotification,
+        case .insert:
+            NotificationCenter.default.post(
+                name: Notification.Name.listMonitorDidInsertSection,
                 object: self,
                 userInfo: [
-                    UserInfoKeySectionInfo: sectionInfo,
-                    UserInfoKeySectionIndex: NSNumber(integer: sectionIndex)
+                    String(describing: NSFetchedResultsSectionInfo.self): sectionInfo,
+                    String(describing: NSNumber.self): NSNumber(value: sectionIndex)
                 ]
             )
             
-        case .Delete:
-            NSNotificationCenter.defaultCenter().postNotificationName(
-                ListMonitorDidDeleteSectionNotification,
+        case .delete:
+            NotificationCenter.default.post(
+                name: Notification.Name.listMonitorDidDeleteSection,
                 object: self,
                 userInfo: [
-                    UserInfoKeySectionInfo: sectionInfo,
-                    UserInfoKeySectionIndex: NSNumber(integer: sectionIndex)
+                    String(describing: NSFetchedResultsSectionInfo.self): sectionInfo,
+                    String(describing: NSNumber.self): NSNumber(value: sectionIndex)
                 ]
             )
             
@@ -1289,51 +1228,45 @@ extension ListMonitor: FetchedResultsControllerHandler {
         }
     }
     
-    internal func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    internal func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
         self.taskGroup.enter()
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            ListMonitorWillChangeListNotification,
+        NotificationCenter.default.post(
+            name: Notification.Name.listMonitorWillChangeList,
             object: self
         )
     }
     
-   internal func controllerDidChangeContent(controller: NSFetchedResultsController) {
+   internal func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(
-            ListMonitorDidChangeListNotification,
+        NotificationCenter.default.post(
+            name: Notification.Name.listMonitorDidChangeList,
             object: self
         )
         self.taskGroup.leave()
     }
     
-   internal func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+   internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
     
-        return self.sectionIndexTransformer(sectionName: sectionName)
+        return self.sectionIndexTransformer(sectionName)
     }
 }
 
 
 // MARK: - Notification Keys
-
-private let ListMonitorWillChangeListNotification = "ListMonitorWillChangeListNotification"
-private let ListMonitorDidChangeListNotification = "ListMonitorDidChangeListNotification"
-private let ListMonitorWillRefetchListNotification = "ListMonitorWillRefetchListNotification"
-private let ListMonitorDidRefetchListNotification = "ListMonitorDidRefetchListNotification"
-
-private let ListMonitorDidInsertObjectNotification = "ListMonitorDidInsertObjectNotification"
-private let ListMonitorDidDeleteObjectNotification = "ListMonitorDidDeleteObjectNotification"
-private let ListMonitorDidUpdateObjectNotification = "ListMonitorDidUpdateObjectNotification"
-private let ListMonitorDidMoveObjectNotification = "ListMonitorDidMoveObjectNotification"
-
-private let ListMonitorDidInsertSectionNotification = "ListMonitorDidInsertSectionNotification"
-private let ListMonitorDidDeleteSectionNotification = "ListMonitorDidDeleteSectionNotification"
-
-private let UserInfoKeyObject = "UserInfoKeyObject"
-private let UserInfoKeyIndexPath = "UserInfoKeyIndexPath"
-private let UserInfoKeyNewIndexPath = "UserInfoKeyNewIndexPath"
-
-private let UserInfoKeySectionInfo = "UserInfoKeySectionInfo"
-private let UserInfoKeySectionIndex = "UserInfoKeySectionIndex"
+    
+fileprivate extension Notification.Name {
+    
+    fileprivate static let listMonitorWillChangeList = Notification.Name(rawValue: "listMonitorWillChangeList")
+    fileprivate static let listMonitorDidChangeList = Notification.Name(rawValue: "listMonitorDidChangeList")
+    fileprivate static let listMonitorWillRefetchList = Notification.Name(rawValue: "listMonitorWillRefetchList")
+    fileprivate static let listMonitorDidRefetchList = Notification.Name(rawValue: "listMonitorDidRefetchList")
+    fileprivate static let listMonitorDidInsertObject = Notification.Name(rawValue: "listMonitorDidInsertObject")
+    fileprivate static let listMonitorDidDeleteObject = Notification.Name(rawValue: "listMonitorDidDeleteObject")
+    fileprivate static let listMonitorDidUpdateObject = Notification.Name(rawValue: "listMonitorDidUpdateObject")
+    fileprivate static let listMonitorDidMoveObject = Notification.Name(rawValue: "listMonitorDidMoveObject")
+    fileprivate static let listMonitorDidInsertSection = Notification.Name(rawValue: "listMonitorDidInsertSection")
+    fileprivate static let listMonitorDidDeleteSection = Notification.Name(rawValue: "listMonitorDidDeleteSection")
+}
 
 #endif

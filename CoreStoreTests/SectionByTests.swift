@@ -42,14 +42,14 @@ final class SectionByTests: XCTestCase {
             
             let sectionBy = SectionBy("key")
             XCTAssertEqual(sectionBy.sectionKeyPath, "key")
-            XCTAssertEqual(sectionBy.sectionIndexTransformer(sectionName: "key"), "key")
+            XCTAssertEqual(sectionBy.sectionIndexTransformer("key"), "key")
         }
         do {
             
             let sectionBy = SectionBy("key") { $0.flatMap { "\($0):suffix" } }
             XCTAssertEqual(sectionBy.sectionKeyPath, "key")
-            XCTAssertEqual(sectionBy.sectionIndexTransformer(sectionName: "key"), "key:suffix")
-            XCTAssertNil(sectionBy.sectionIndexTransformer(sectionName: nil))
+            XCTAssertEqual(sectionBy.sectionIndexTransformer("key"), "key:suffix")
+            XCTAssertNil(sectionBy.sectionIndexTransformer(nil))
         }
     }
 }

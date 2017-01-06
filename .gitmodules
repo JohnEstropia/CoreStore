@@ -1,3 +1,0 @@
-[submodule "Carthage/Checkouts/GCDKit"]
-	path = Carthage/Checkouts/GCDKit
-	url = https://github.com/JohnEstropia/GCDKit.git

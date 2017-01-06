@@ -25,9 +25,6 @@
 
 import Foundation
 import CoreData
-#if USE_FRAMEWORKS
-    import GCDKit
-#endif
 
 
 // MARK: - SynchronousDataTransaction
@@ -46,7 +43,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     public func commitAndWait() -> SaveResult {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -91,10 +88,11 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
-    public func beginSynchronous(closure: (transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+    @discardableResult
+    public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to begin a child transaction from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -117,11 +115,11 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter into: the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
      - returns: a new `NSManagedObject` instance of the specified entity type.
      */
-    public override func create<T: NSManagedObject>(into: Into<T>) -> T {
+    public override func create<T: NSManagedObject>(_ into: Into<T>) -> T {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to create an entity of type \(cs_typeName(T)) from an already committed \(cs_typeName(self))."
+            "Attempted to create an entity of type \(cs_typeName(into.entityClass)) from an already committed \(cs_typeName(self))."
         )
         
         return super.create(into)
@@ -133,8 +131,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter object: the `NSManagedObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    @warn_unused_result
-    public override func edit<T: NSManagedObject>(object: T?) -> T? {
+    public override func edit<T: NSManagedObject>(_ object: T?) -> T? {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -151,12 +148,11 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    @warn_unused_result
-    public override func edit<T: NSManagedObject>(into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
+    public override func edit<T: NSManagedObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
         CoreStore.assert(
             !self.isCommitted,
-            "Attempted to update an entity of type \(cs_typeName(T)) from an already committed \(cs_typeName(self))."
+            "Attempted to update an entity of type \(cs_typeName(into.entityClass)) from an already committed \(cs_typeName(self))."
         )
         
         return super.edit(into, objectID)
@@ -167,7 +163,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      
      - parameter object: the `NSManagedObject` type to be deleted
      */
-    public override func delete(object: NSManagedObject?) {
+    public override func delete(_ object: NSManagedObject?) {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -184,7 +180,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter object2: another `NSManagedObject` to be deleted
      - parameter objects: other `NSManagedObject`s to be deleted
      */
-    public override func delete(object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
+    public override func delete(_ object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -199,7 +195,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      
      - parameter objects: the `NSManagedObject`s to be deleted
      */
-    public override func delete<S: SequenceType where S.Generator.Element: NSManagedObject>(objects: S) {
+    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: NSManagedObject {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -212,7 +208,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: GCDQueue, closure: (transaction: SynchronousDataTransaction) -> Void) {
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) {
         
         self.closure = closure
         
@@ -223,12 +219,12 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         
         self.transactionQueue.sync {
             
-            self.closure(transaction: self)
+            self.closure(self)
             
             if !self.isCommitted && self.hasChanges {
                 
                 CoreStore.log(
-                    .Warning,
+                    .warning,
                     message: "The closure for the \(cs_typeName(self)) completed without being committed. All changes made within the transaction were discarded."
                 )
             }
@@ -239,29 +235,5 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Private
     
-    private let closure: (transaction: SynchronousDataTransaction) -> Void
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated=1.3.4, obsoleted=2.0.0, message="Resetting the context is inherently unsafe. This method will be removed in the near future. Use `beginUnsafe()` to create transactions with `undo` support.")
-    public func rollback() {
-        
-        CoreStore.assert(
-            !self.isCommitted,
-            "Attempted to rollback an already committed \(cs_typeName(self))."
-        )
-        CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
-            "Attempted to rollback a \(cs_typeName(self)) outside its designated queue."
-        )
-        
-        self.context.reset()
-    }
-    
-    @available(*, deprecated=1.5.2, obsoleted=2.0.0, renamed="commitAndWait")
-    public func commit() {
-        
-        self.commitAndWait()
-    }
+    private let closure: (_ transaction: SynchronousDataTransaction) -> Void
 }

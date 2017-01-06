@@ -53,7 +53,6 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
         fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSWhereValue(YES)]]];
      ```
-     
      - parameter value: the boolean value for the predicate
      */
     @objc
@@ -70,7 +69,6 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
         fetchAllFrom:CSFromClass([MyPersonEntity class])
         fetchClauses:@[CSWherePredicate(predicate)]];
      ```
-     
      - parameter format: the format string for the predicate
      - parameter argumentArray: the arguments for `format`
      */
@@ -123,7 +121,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
         return self.bridgeToSwift.hashValue
     }
     
-    public override func isEqual(object: AnyObject?) -> Bool {
+    public override func isEqual(_ object: Any?) -> Bool {
         
         guard let object = object as? CSWhere else {
             
@@ -134,14 +132,14 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     
     public override var description: String {
         
-        return "(\(String(reflecting: self.dynamicType))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     
     // MARK: CSFetchClause, CSQueryClause, CSDeleteClause
     
     @objc
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+    public func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
         
         self.bridgeToSwift.applyToFetchRequest(fetchRequest)
     }

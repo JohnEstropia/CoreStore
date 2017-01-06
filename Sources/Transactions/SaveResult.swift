@@ -49,9 +49,9 @@ import Foundation
      // ...
      let result = transaction.commit()
      switch result {
-     case .Success(let hasChanges):
+     case .success(let hasChanges):
         // hasChanges indicates if there were changes or not
-     case .Failure(let error):
+     case .failure(let error):
         // error is a CoreStoreError enum value
      }
  }
@@ -60,14 +60,45 @@ import Foundation
 public enum SaveResult: Hashable {
     
     /**
-     `SaveResult.Success` indicates that the `commit()` for the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated value `hasChanges` indicates if there were saved changes or not.
+     `SaveResult.success` indicates that the `commit()` for the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated value `hasChanges` indicates if there were saved changes or not.
      */
-    case Success(hasChanges: Bool)
+    case success(hasChanges: Bool)
     
     /**
-     `SaveResult.Failure` indicates that the `commit()` for the transaction failed. The associated object for this value is a `CoreStoreError` enum value.
+     `SaveResult.failure` indicates that the `commit()` for the transaction failed. The associated object for this value is a `CoreStoreError` enum value.
      */
-    case Failure(CoreStoreError)
+    case failure(CoreStoreError)
+    
+    
+    /**
+     Returns `true` if the result indicates `.success`, `false` if the result is `.failure`.
+     */
+    public var boolValue: Bool {
+        
+        switch self {
+            
+        case .success: return true
+        case .failure: return false
+        }
+    }
+    
+    
+    // MARK: Equatable
+    
+    public static func == (lhs: SaveResult, rhs: SaveResult) -> Bool {
+        
+        switch (lhs, rhs) {
+            
+        case (.success(let hasChanges1), .success(let hasChanges2)):
+            return hasChanges1 == hasChanges2
+            
+        case (.failure(let error1), .failure(let error2)):
+            return error1 == error2
+            
+        default:
+            return false
+        }
+    }
     
     
     // MARK: Hashable
@@ -76,10 +107,10 @@ public enum SaveResult: Hashable {
         
         switch self {
             
-        case .Success(let hasChanges):
+        case .success(let hasChanges):
             return self.boolValue.hashValue ^ hasChanges.hashValue
             
-        case .Failure(let error):
+        case .failure(let error):
             return self.boolValue.hashValue ^ error.hashValue
         }
     }
@@ -89,45 +120,11 @@ public enum SaveResult: Hashable {
     
     internal init(hasChanges: Bool) {
         
-        self = .Success(hasChanges: hasChanges)
+        self = .success(hasChanges: hasChanges)
     }
     
     internal init(_ error: CoreStoreError) {
         
-        self = .Failure(error)
-    }
-}
-
-
-// MARK: - SaveResult: BooleanType
-
-extension SaveResult: BooleanType {
-    
-    public var boolValue: Bool {
-        
-        switch self {
-            
-        case .Success: return true
-        case .Failure: return false
-        }
-    }
-}
-
-
-// MARK: - SaveResult: Equatable
-
-@warn_unused_result
-public func == (lhs: SaveResult, rhs: SaveResult) -> Bool {
-    
-    switch (lhs, rhs) {
-        
-    case (.Success(let hasChanges1), .Success(let hasChanges2)):
-        return hasChanges1 == hasChanges2
-        
-    case (.Failure(let error1), .Failure(let error2)):
-        return error1 == error2
-        
-    default:
-        return false
+        self = .failure(error)
     }
 }

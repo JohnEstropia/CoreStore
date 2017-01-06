@@ -45,7 +45,7 @@ public protocol ICloudStoreObserver: class {
      - parameter storage: the `ICloudStore` instance being observed
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
-    func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage: ICloudStore, dataStack: DataStack)
     
     /**
      Notifies that the initial ubiquitous store import completed
@@ -53,7 +53,7 @@ public protocol ICloudStoreObserver: class {
      - parameter storage: the `ICloudStore` instance being observed
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
-    func iCloudStoreDidFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreDidFinishUbiquitousStoreInitialImport(storage: ICloudStore, dataStack: DataStack)
     
     /**
      Notifies that an iCloud account will be added to the coordinator
@@ -61,7 +61,7 @@ public protocol ICloudStoreObserver: class {
      - parameter storage: the `ICloudStore` instance being observed
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
-    func iCloudStoreWillAddAccount(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreWillAddAccount(storage: ICloudStore, dataStack: DataStack)
     
     /**
      Notifies that an iCloud account was added to the coordinator
@@ -69,7 +69,7 @@ public protocol ICloudStoreObserver: class {
      - parameter storage: the `ICloudStore` instance being observed
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
-    func iCloudStoreDidAddAccount(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreDidAddAccount(storage: ICloudStore, dataStack: DataStack)
     
     /**
      Notifies that an iCloud account will be removed from the coordinator
@@ -77,7 +77,7 @@ public protocol ICloudStoreObserver: class {
      - parameter storage: the `ICloudStore` instance being observed
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
-    func iCloudStoreWillRemoveAccount(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreWillRemoveAccount(storage: ICloudStore, dataStack: DataStack)
     
     /**
      Notifies that an iCloud account was removed from the coordinator
@@ -85,7 +85,7 @@ public protocol ICloudStoreObserver: class {
      - parameter storage: the `ICloudStore` instance being observed
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
-    func iCloudStoreDidRemoveAccount(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreDidRemoveAccount(storage: ICloudStore, dataStack: DataStack)
     
     /**
      Notifies that iCloud contents will be deleted
@@ -93,7 +93,7 @@ public protocol ICloudStoreObserver: class {
      - parameter storage: the `ICloudStore` instance being observed
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
-    func iCloudStoreWillRemoveContent(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreWillRemoveContent(storage: ICloudStore, dataStack: DataStack)
     
     /**
      Notifies that iCloud contents were deleted
@@ -101,26 +101,26 @@ public protocol ICloudStoreObserver: class {
      - parameter storage: the `ICloudStore` instance being observed
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
-    func iCloudStoreDidRemoveContent(storage storage: ICloudStore, dataStack: DataStack)
+    func iCloudStoreDidRemoveContent(storage: ICloudStore, dataStack: DataStack)
 }
 
 public extension ICloudStoreObserver {
     
-    public func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack) {}
+    public func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage: ICloudStore, dataStack: DataStack) {}
     
-    public func iCloudStoreDidFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack) {}
+    public func iCloudStoreDidFinishUbiquitousStoreInitialImport(storage: ICloudStore, dataStack: DataStack) {}
     
-    public func iCloudStoreWillAddAccount(storage storage: ICloudStore, dataStack: DataStack) {}
+    public func iCloudStoreWillAddAccount(storage: ICloudStore, dataStack: DataStack) {}
     
-    public func iCloudStoreDidAddAccount(storage storage: ICloudStore, dataStack: DataStack) {}
+    public func iCloudStoreDidAddAccount(storage: ICloudStore, dataStack: DataStack) {}
     
-    public func iCloudStoreWillRemoveAccount(storage storage: ICloudStore, dataStack: DataStack) {}
+    public func iCloudStoreWillRemoveAccount(storage: ICloudStore, dataStack: DataStack) {}
     
-    public func iCloudStoreDidRemoveAccount(storage storage: ICloudStore, dataStack: DataStack) {}
+    public func iCloudStoreDidRemoveAccount(storage: ICloudStore, dataStack: DataStack) {}
     
-    public func iCloudStoreWillRemoveContent(storage storage: ICloudStore, dataStack: DataStack) {}
+    public func iCloudStoreWillRemoveContent(storage: ICloudStore, dataStack: DataStack) {}
     
-    public func iCloudStoreDidRemoveContent(storage storage: ICloudStore, dataStack: DataStack) {}
+    public func iCloudStoreDidRemoveContent(storage: ICloudStore, dataStack: DataStack) {}
 }
 
 #endif

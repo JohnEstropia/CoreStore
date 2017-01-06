@@ -29,7 +29,46 @@ import CoreData
 
 // MARK: - DataTransaction
 
-public extension BaseDataTransaction {
+extension BaseDataTransaction: FetchableSource, QueryableSource {
+    
+    /**
+     Deletes all `NSManagedObject`s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     
+     - parameter from: a `From` clause indicating the entity type
+     - parameter deleteClauses: a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: the number of `NSManagedObject`s deleted
+     */
+    @discardableResult
+    public func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
+        
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to delete from a \(cs_typeName(self)) outside its designated queue."
+        )
+        
+        return self.context.deleteAll(from, deleteClauses)
+    }
+    
+    /**
+     Deletes all `NSManagedObject`s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     
+     - parameter from: a `From` clause indicating the entity type
+     - parameter deleteClauses: a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: the number of `NSManagedObject`s deleted
+     */
+    @discardableResult
+    public func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
+        
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to delete from a \(cs_typeName(self)) outside its designated queue."
+        )
+        
+        return self.context.deleteAll(from, deleteClauses)
+    }
+    
+    
+    // MARK: FetchableSource
     
     /**
      Fetches the `NSManagedObject` instance in the transaction's context from a reference created from a transaction or from a different managed object context.
@@ -37,17 +76,9 @@ public extension BaseDataTransaction {
      - parameter object: a reference to the object created/fetched outside the transaction
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
-    @warn_unused_result
-    public func fetchExisting<T: NSManagedObject>(object: T) -> T? {
+    public func fetchExisting<T: NSManagedObject>(_ object: T) -> T? {
         
-        do {
-            
-            return (try self.context.existingObjectWithID(object.objectID) as! T)
-        }
-        catch _ {
-            
-            return nil
-        }
+        return self.context.fetchExisting(object)
     }
     
     /**
@@ -56,17 +87,9 @@ public extension BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
-    @warn_unused_result
-    public func fetchExisting<T: NSManagedObject>(objectID: NSManagedObjectID) -> T? {
+    public func fetchExisting<T: NSManagedObject>(_ objectID: NSManagedObjectID) -> T? {
         
-        do {
-            
-            return (try self.context.existingObjectWithID(objectID) as! T)
-        }
-        catch _ {
-            
-            return nil
-        }
+        return self.context.fetchExisting(objectID)
     }
     
     /**
@@ -75,10 +98,9 @@ public extension BaseDataTransaction {
      - parameter objects: an array of `NSManagedObject`s created/fetched outside the transaction
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
-    @warn_unused_result
-    public func fetchExisting<T: NSManagedObject, S: SequenceType where S.Generator.Element == T>(objects: S) -> [T] {
+    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
         
-        return objects.flatMap { (try? self.context.existingObjectWithID($0.objectID)) as? T }
+        return self.context.fetchExisting(objects)
     }
     
     /**
@@ -87,10 +109,9 @@ public extension BaseDataTransaction {
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
-    @warn_unused_result
-    public func fetchExisting<T: NSManagedObject, S: SequenceType where S.Generator.Element == NSManagedObjectID>(objectIDs: S) -> [T] {
+    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
         
-        return objectIDs.flatMap { (try? self.context.existingObjectWithID($0)) as? T }
+        return self.context.fetchExisting(objectIDs)
     }
     
     /**
@@ -100,10 +121,13 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> T? {
+    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
-        return self.fetchOne(from, fetchClauses)
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+        )
+        return self.context.fetchOne(from, fetchClauses)
     }
     
     /**
@@ -113,8 +137,7 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchOne<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
+    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -130,10 +153,13 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
-        return self.fetchAll(from, fetchClauses)
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+        )
+        return self.context.fetchAll(from, fetchClauses)
     }
     
     /**
@@ -143,8 +169,7 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchAll<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
+    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -160,10 +185,13 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
+    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
-        return self.fetchCount(from, fetchClauses)
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+        )
+        return self.context.fetchCount(from, fetchClauses)
     }
     
     /**
@@ -173,14 +201,12 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchCount<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
+    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        
         return self.context.fetchCount(from, fetchClauses)
     }
     
@@ -191,10 +217,13 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
-        return self.fetchObjectID(from, fetchClauses)
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+        )
+        return self.context.fetchObjectID(from, fetchClauses)
     }
     
     /**
@@ -204,8 +233,7 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchObjectID<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -221,21 +249,7 @@ public extension BaseDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    @warn_unused_result
-    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
-        
-        return self.fetchObjectIDs(from, fetchClauses)
-    }
-    
-    /**
-     Fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     
-     - parameter from: a `From` clause indicating the entity type
-     - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
-     */
-    @warn_unused_result
-    public func fetchObjectIDs<T: NSManagedObject>(from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -245,38 +259,23 @@ public extension BaseDataTransaction {
     }
     
     /**
-     Deletes all `NSManagedObject`s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
-     - parameter deleteClauses: a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the number of `NSManagedObject`s deleted
+     - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    public func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
+    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to delete from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        
-        return self.context.deleteAll(from, deleteClauses)
+        return self.context.fetchObjectIDs(from, fetchClauses)
     }
     
-    /**
-     Deletes all `NSManagedObject`s that satisfy the specified `DeleteClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     
-     - parameter from: a `From` clause indicating the entity type
-     - parameter deleteClauses: a series of `DeleteClause` instances for the delete request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the number of `NSManagedObject`s deleted
-     */
-    public func deleteAll<T: NSManagedObject>(from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
-        
-        CoreStore.assert(
-            self.isRunningInAllowedQueue(),
-            "Attempted to delete from a \(cs_typeName(self)) outside its designated queue."
-        )
-        
-        return self.context.deleteAll(from, deleteClauses)
-    }
+    
+    // MARK: QueryableSource
     
     /**
      Queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
@@ -288,14 +287,12 @@ public extension BaseDataTransaction {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
-    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
-        
         return self.context.queryValue(from, selectClause, queryClauses)
     }
     
@@ -309,14 +306,12 @@ public extension BaseDataTransaction {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
-    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
+    public func queryValue<T: NSManagedObject, U: SelectValueResultType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
-        
         return self.context.queryValue(from, selectClause, queryClauses)
     }
     
@@ -330,14 +325,12 @@ public extension BaseDataTransaction {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
-    public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[NSString: AnyObject]]? {
+    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
-        
         return self.context.queryAttributes(from, selectClause, queryClauses)
     }
     
@@ -351,14 +344,23 @@ public extension BaseDataTransaction {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    @warn_unused_result
-    public func queryAttributes<T: NSManagedObject>(from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[NSString: AnyObject]]? {
+    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
-        
         return self.context.queryAttributes(from, selectClause, queryClauses)
+    }
+    
+    
+    // MARK: FetchableSource, QueryableSource
+    
+    /**
+     The internal `NSManagedObjectContext` managed by this instance. Using this context directly should typically be avoided, and is provided by CoreStore only for extremely specialized cases.
+     */
+    public func internalContext() -> NSManagedObjectContext {
+        
+        return self.context
     }
 }

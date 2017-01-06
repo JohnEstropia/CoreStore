@@ -50,7 +50,7 @@ public protocol CSObjectObserver: class, AnyObject {
      - parameter object: the `NSManagedObject` instance being observed
      */
     @objc
-    optional func objectMonitor(monitor: CSObjectMonitor, willUpdateObject object: AnyObject)
+    optional func objectMonitor(_ monitor: CSObjectMonitor, willUpdateObject object: Any)
     
     /**
      Handles processing right after a change to the observed `object` occurs
@@ -60,7 +60,7 @@ public protocol CSObjectObserver: class, AnyObject {
      - parameter changedPersistentKeys: an `NSSet` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
      */
     @objc
-    optional func objectMonitor(monitor: CSObjectMonitor, didUpdateObject object: AnyObject, changedPersistentKeys: Set<String>)
+    optional func objectMonitor(_ monitor: CSObjectMonitor, didUpdateObject object: Any, changedPersistentKeys: Set<String>)
     
     /**
      Handles processing right after `object` is deleted
@@ -69,7 +69,7 @@ public protocol CSObjectObserver: class, AnyObject {
      - parameter object: the `NSManagedObject` instance being observed
      */
     @objc
-    optional func objectMonitor(monitor: CSObjectMonitor, didDeleteObject object: AnyObject)
+    optional func objectMonitor(_ monitor: CSObjectMonitor, didDeleteObject object: Any)
 }
 
 #endif

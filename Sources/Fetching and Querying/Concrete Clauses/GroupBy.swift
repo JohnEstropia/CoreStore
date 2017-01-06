@@ -71,17 +71,25 @@ public struct GroupBy: QueryClause, Hashable {
     
     // MARK: QueryClause
     
-    public func applyToFetchRequest(fetchRequest: NSFetchRequest) {
+    public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
-        if let keyPaths = fetchRequest.propertiesToGroupBy as? [String] where keyPaths != self.keyPaths {
+        if let keyPaths = fetchRequest.propertiesToGroupBy as? [String], keyPaths != self.keyPaths {
             
             CoreStore.log(
-                .Warning,
-                message: "An existing \"propertiesToGroupBy\" for the \(cs_typeName(NSFetchRequest)) was overwritten by \(cs_typeName(self)) query clause."
+                .warning,
+                message: "An existing \"propertiesToGroupBy\" for the \(cs_typeName(NSFetchRequest<ResultType>.self)) was overwritten by \(cs_typeName(self)) query clause."
             )
         }
         
         fetchRequest.propertiesToGroupBy = self.keyPaths
+    }
+    
+    
+    // MARK: Equatable
+    
+    public static func == (lhs: GroupBy, rhs: GroupBy) -> Bool {
+        
+        return lhs.keyPaths == rhs.keyPaths
     }
     
     
@@ -91,13 +99,4 @@ public struct GroupBy: QueryClause, Hashable {
         
         return (self.keyPaths as NSArray).hashValue
     }
-}
-
-
-// MARK: - GroupBy: Equatable
-
-@warn_unused_result
-public func == (lhs: GroupBy, rhs: GroupBy) -> Bool {
-    
-    return lhs.keyPaths == rhs.keyPaths
 }
