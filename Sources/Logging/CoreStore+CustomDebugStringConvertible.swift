@@ -117,8 +117,8 @@ extension CoreStoreError: CustomDebugStringConvertible, CoreStoreDebugStringConv
         
         let firstLine: String
         var info: DumpInfo = [
-            ("_domain", self._domain),
-            ("_code", self._code),
+            ("errorDomain", type(of: self).errorDomain),
+            ("errorCode", self.errorCode),
         ]
         switch self {
             

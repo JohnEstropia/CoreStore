@@ -231,8 +231,11 @@ public extension BaseDataTransaction {
                     try autoreleasepool {
 
                         if let object = existingObjectsByID[objectID] {
-                            guard entityType.shouldUpdate(from: source, in: self) else { return }
-
+                            
+                            guard entityType.shouldUpdate(from: source, in: self) else {
+                                
+                                return
+                            }
                             try object.update(from: source, in: self)
                             result.append(object)
                         }
