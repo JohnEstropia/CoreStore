@@ -20,9 +20,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 
 * **Swift 3.0.1:** iOS 8+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
 
-* **New in CoreStore 2.0:** Objective-C support! All CoreStore types now have their corresponding Objective-C "bridging classes". Perfect for projects transitioning from Objective-C to Swift!
-
-Upgrading from CoreStore 2.x to 3.x? Check out the [new features](#new-in-corestore-20) and make sure to read the [Migration guide](#upgrading-from-2xx-to-3xx).
+Upgrading from CoreStore 2.x to 3.x? Check out the [new features](#features) and make sure to read the [Migration guide](#upgrading-from-2xx-to-3xx).
 
 
 ## Why use CoreStore?

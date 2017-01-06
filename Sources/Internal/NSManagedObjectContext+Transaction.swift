@@ -140,7 +140,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func saveSynchronously(waitForMerge waitForMerge: Bool) -> SaveResult {
+    internal func saveSynchronously(waitForMerge: Bool) -> SaveResult {
       
         var result = SaveResult(hasChanges: false)
         

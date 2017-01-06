@@ -67,7 +67,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     public func commit() -> SaveResult {
         
         CoreStore.assert(
-            self.transactionQueue.isCurrentExecutionContext(),
+            self.transactionQueue.cs_isCurrentExecutionContext(),
             "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(

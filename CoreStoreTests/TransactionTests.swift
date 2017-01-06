@@ -364,21 +364,21 @@ final class TransactionTests: BaseTestCase {
             
             let observer = TestListObserver()
             let monitor = stack.monitorList(
-                From(TestEntity1),
-                OrderBy(.Ascending("testEntityID"))
+                From<TestEntity1>(),
+                OrderBy(.ascending("testEntityID"))
             )
             monitor.addObserver(observer)
             
             XCTAssertFalse(monitor.hasObjects())
             
             var events = 0
-            let willChangeExpectation = self.expectationForNotification(
-                "listMonitorWillChange:",
+            let willChangeExpectation = self.expectation(
+                forNotification: "listMonitorWillChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
                     XCTAssertEqual(events, 0)
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertTrue(note.userInfo?.isEmpty != false)
                     defer {
                         
                         events += 1
@@ -386,8 +386,8 @@ final class TransactionTests: BaseTestCase {
                     return events == 0
                 }
             )
-            let didInsertObjectExpectation = self.expectationForNotification(
-                "listMonitor:didInsertObject:toIndexPath:",
+            let didInsertObjectExpectation = self.expectation(
+                forNotification: "listMonitor:didInsertObject:toIndexPath:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -405,8 +405,8 @@ final class TransactionTests: BaseTestCase {
                     XCTAssertEqual(indexPath?.row, 0)
                     
                     let object = userInfo?["object"] as? TestEntity1
-                    XCTAssertEqual(object?.testBoolean, NSNumber(bool: true))
-                    XCTAssertEqual(object?.testNumber, NSNumber(integer: 1))
+                    XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
+                    XCTAssertEqual(object?.testNumber, NSNumber(value: 1))
                     XCTAssertEqual(object?.testDecimal, NSDecimalNumber(string: "1"))
                     XCTAssertEqual(object?.testString, "nil:TestEntity1:1")
                     defer {
@@ -416,12 +416,12 @@ final class TransactionTests: BaseTestCase {
                     return events == 1
                 }
             )
-            let didChangeExpectation = self.expectationForNotification(
-                "listMonitorDidChange:",
+            let didChangeExpectation = self.expectation(
+                forNotification: "listMonitorDidChange:",
                 object: observer,
                 handler: { (note) -> Bool in
                     
-                    XCTAssertEqual((note.userInfo ?? [:]), NSDictionary())
+                    XCTAssertTrue(note.userInfo?.isEmpty != false)
                     defer {
                         
                         events += 1
@@ -429,22 +429,22 @@ final class TransactionTests: BaseTestCase {
                     return events == 2
                 }
             )
-            let saveExpectation = self.expectationWithDescription("save")
+            let saveExpectation = self.expectation(description: "save")
             stack.beginSynchronous { (transaction) in
                 
-                let object = transaction.create(Into(TestEntity1))
-                object.testBoolean = NSNumber(bool: true)
-                object.testNumber = NSNumber(integer: 1)
+                let object = transaction.create(Into<TestEntity1>())
+                object.testBoolean = NSNumber(value: true)
+                object.testNumber = NSNumber(value: 1)
                 object.testDecimal = NSDecimalNumber(string: "1")
                 object.testString = "nil:TestEntity1:1"
                 
                 switch transaction.commit() {
                     
-                case .Success(let hasChanges):
+                case .success(let hasChanges):
                     XCTAssertTrue(hasChanges)
                     saveExpectation.fulfill()
                     
-                default:
+                case .failure:
                     XCTFail()
                 }
             }
