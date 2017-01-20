@@ -48,7 +48,7 @@ import CoreData
  }
  ```
  */
-public protocol ImportableObject: class {
+public protocol ImportableObject: class, NSObjectProtocol, AnyObject {
     
     /**
      The data type for the import source. This is most commonly an `NSDictionary` or another external source such as an `NSUserDefaults`.

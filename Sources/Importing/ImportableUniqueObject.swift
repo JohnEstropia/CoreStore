@@ -59,7 +59,7 @@ public protocol ImportableUniqueObject: ImportableObject {
     /**
      The data type for the entity's unique ID attribute
      */
-    associatedtype UniqueIDType: NSObject
+    associatedtype UniqueIDType: CoreStoreSupportedAttributeType
     
     /**
      The keyPath to the entity's unique ID attribute
@@ -67,7 +67,8 @@ public protocol ImportableUniqueObject: ImportableObject {
     static var uniqueIDKeyPath: String { get }
     
     /**
-     The object's unique ID value
+     The object's unique ID value. The default implementation returns the value of the attribute pertained to by `uniqueIDKeyPath`
+     - Important: It is the developer's responsibility to ensure that the attribute value pertained by `uniqueIDKeyPath` is not `nil` during the call to `uniqueIDValue`.
      */
     var uniqueIDValue: UniqueIDType { get set }
     
@@ -179,5 +180,28 @@ public extension ImportableUniqueObject {
     func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.update(from: source, in: transaction)
+    }
+}
+
+
+// MARK: - ImportableUniqueObject (Default Implementations)
+
+public extension ImportableUniqueObject where Self: NSManagedObject {
+    
+    var uniqueIDValue: UniqueIDType {
+        
+        get {
+            
+            return UniqueIDType.cs_fromNativeType(
+                self.value(forKey: type(of: self).uniqueIDKeyPath) as! UniqueIDType.CoreStoreNativeType
+            )!
+        }
+        set {
+            
+            self.setValue(
+                newValue.cs_toNativeType(),
+                forKey: type(of: self).uniqueIDKeyPath
+            )
+        }
     }
 }
