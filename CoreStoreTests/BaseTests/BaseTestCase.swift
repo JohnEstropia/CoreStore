@@ -153,6 +153,8 @@ class TestLogger: CoreStoreLogger {
     
     // MARK: CoreStoreLogger
     
+    var enableObjectConcurrencyDebugging: Bool = true
+    
     func log(level: LogLevel, message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         
         switch level {

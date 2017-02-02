@@ -34,6 +34,11 @@ import Foundation
 public final class DefaultLogger: CoreStoreLogger {
     
     /**
+     When `true`, all `NSManagedObject` attribute and relationship access will raise an assertion when executed on the wrong transaction/datastack queue. Defaults to `false`.
+     */
+    public var enableObjectConcurrencyDebugging: Bool = false
+    
+    /**
      Creates a `DefaultLogger`.
      */
     public init() { }

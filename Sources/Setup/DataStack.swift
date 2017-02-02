@@ -59,6 +59,8 @@ public final class DataStack: Equatable {
      */
     public required init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {
         
+        _ = DataStack.isGloballyInitialized
+        
         CoreStore.assert(
             migrationChain.valid,
             "Invalid migration chain passed to the \(cs_typeName(DataStack.self)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
@@ -498,6 +500,12 @@ public final class DataStack: Equatable {
     
     
     // MARK: Private
+    
+    private static let isGloballyInitialized: Bool = {
+        
+        NSManagedObject.cs_swizzleMethodsForLogging()
+        return true
+    }()
     
     private var configurationStoreMapping = [String: NSPersistentStore]()
     private var entityConfigurationsMapping = [String: Set<String>]()
