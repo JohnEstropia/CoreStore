@@ -169,7 +169,7 @@ extension Bool: CoreStoreSupportedAttributeType {
     
     public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Bool? {
         
-        return value as Bool
+        return value.boolValue
     }
     
     public func cs_toNativeType() -> CoreStoreNativeType {
@@ -184,7 +184,7 @@ extension Int16: CoreStoreSupportedAttributeType {
     
     public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Int16? {
         
-        return value as Int16
+        return value.int16Value
     }
     
     public func cs_toNativeType() -> CoreStoreNativeType {
@@ -199,7 +199,7 @@ extension Int32: CoreStoreSupportedAttributeType {
     
     public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Int32? {
         
-        return value as Int32
+        return value.int32Value
     }
     
     public func cs_toNativeType() -> CoreStoreNativeType {
@@ -214,7 +214,7 @@ extension Int64: CoreStoreSupportedAttributeType {
     
     public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Int64? {
         
-        return value as Int64
+        return value.int64Value
     }
     
     public func cs_toNativeType() -> CoreStoreNativeType {
@@ -229,7 +229,7 @@ extension Double: CoreStoreSupportedAttributeType {
     
     public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Double? {
         
-        return value as Double
+        return value.doubleValue
     }
     
     public func cs_toNativeType() -> CoreStoreNativeType {
@@ -244,7 +244,7 @@ extension Float: CoreStoreSupportedAttributeType {
     
     public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Float? {
         
-        return value as Float
+        return value.floatValue
     }
     
     public func cs_toNativeType() -> CoreStoreNativeType {

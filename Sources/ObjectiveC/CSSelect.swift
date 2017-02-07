@@ -192,7 +192,10 @@ extension SelectTerm: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSSelectTerm
+    public var bridgeToObjectiveC: CSSelectTerm {
+        
+        return CSSelectTerm(self)
+    }
 }
 
 

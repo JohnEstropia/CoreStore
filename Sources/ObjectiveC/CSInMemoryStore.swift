@@ -125,5 +125,8 @@ extension InMemoryStore: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSInMemoryStore
+    public var bridgeToObjectiveC: CSInMemoryStore {
+        
+        return CSInMemoryStore(self)
+    }
 }

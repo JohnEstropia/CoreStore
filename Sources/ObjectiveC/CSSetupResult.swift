@@ -181,8 +181,6 @@ extension SetupResult where T: CoreStoreSwiftType, T.ObjectiveCType: CSStorageIn
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSSetupResult
-    
     public var bridgeToObjectiveC: CSSetupResult {
         
         return CSSetupResult(self)

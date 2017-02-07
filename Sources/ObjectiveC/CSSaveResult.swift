@@ -177,5 +177,8 @@ extension SaveResult: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSSaveResult
+    public var bridgeToObjectiveC: CSSaveResult {
+        
+        return CSSaveResult(self)
+    }
 }

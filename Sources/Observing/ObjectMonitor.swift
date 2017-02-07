@@ -210,9 +210,9 @@ public final class ObjectMonitor<EntityType: NSManagedObject>: Equatable {
         cs_setAssociatedRetainedObject(nilValue, forKey: &self.didUpdateObjectKey, inObject: observer)
     }
     
-    internal func upcast() -> ObjectMonitor<NSManagedObject> {
+    internal func downcast() -> ObjectMonitor<NSManagedObject> {
         
-        return unsafeBitCast(self, to: ObjectMonitor<NSManagedObject>.self)
+        return unsafeDowncast(self, to: ObjectMonitor<NSManagedObject>.self)
     }
     
     deinit {

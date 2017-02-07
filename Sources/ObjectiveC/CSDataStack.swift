@@ -277,5 +277,8 @@ extension DataStack: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSDataStack
+    public var bridgeToObjectiveC: CSDataStack {
+        
+        return CSDataStack(self)
+    }
 }

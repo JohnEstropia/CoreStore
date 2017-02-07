@@ -130,7 +130,7 @@ public final class CSObjectMonitor: NSObject, CoreStoreObjectiveCType {
     @nonobjc
     public required init<T: NSManagedObject>(_ swiftValue: ObjectMonitor<T>) {
         
-        self.bridgeToSwift = swiftValue.upcast()
+        self.bridgeToSwift = swiftValue.downcast()
         super.init()
     }
 }

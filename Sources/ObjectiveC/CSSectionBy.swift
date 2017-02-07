@@ -91,7 +91,10 @@ extension SectionBy: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSSectionBy
+    public var bridgeToObjectiveC: CSSectionBy {
+        
+        return CSSectionBy(self)
+    }
 }
 
 #endif

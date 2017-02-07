@@ -538,7 +538,7 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
     @nonobjc
     public required init<T: NSManagedObject>(_ swiftValue: ListMonitor<T>) {
         
-        self.bridgeToSwift = swiftValue.upcast()
+        self.bridgeToSwift = swiftValue.downcast()
         super.init()
     }
 }

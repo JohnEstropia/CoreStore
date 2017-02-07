@@ -203,5 +203,8 @@ extension SQLiteStore: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSSQLiteStore
+    public var bridgeToObjectiveC: CSSQLiteStore {
+        
+        return CSSQLiteStore(self)
+    }
 }

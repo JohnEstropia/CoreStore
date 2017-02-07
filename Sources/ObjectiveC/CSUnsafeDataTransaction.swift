@@ -197,5 +197,8 @@ extension UnsafeDataTransaction: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSUnsafeDataTransaction
+    public var bridgeToObjectiveC: CSUnsafeDataTransaction {
+        
+        return CSUnsafeDataTransaction(self)
+    }
 }

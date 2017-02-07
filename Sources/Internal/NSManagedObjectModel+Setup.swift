@@ -123,7 +123,7 @@ internal extension NSManagedObjectModel {
                 &PropertyKeys.currentModelVersion,
                 inObject: self
             )
-            return value as? String
+            return value as String?
         }
         set {
             

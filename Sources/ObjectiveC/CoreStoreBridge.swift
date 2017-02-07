@@ -68,28 +68,20 @@ public protocol CoreStoreSwiftType {
     var bridgeToObjectiveC: ObjectiveCType { get }
 }
 
-public extension CoreStoreSwiftType where ObjectiveCType: CoreStoreObjectiveCType, Self == ObjectiveCType.SwiftType {
-    
-    public var bridgeToObjectiveC: ObjectiveCType {
-        
-        return ObjectiveCType(self)
-    }
-}
-
 
 // MARK: - Internal
 
-internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T) -> T.ObjectiveCType where T.ObjectiveCType: CoreStoreObjectiveCType, T == T.ObjectiveCType.SwiftType {
+internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T) -> T.ObjectiveCType {
     
     return closure().bridgeToObjectiveC
 }
 
-internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T?) -> T.ObjectiveCType? where T.ObjectiveCType: CoreStoreObjectiveCType, T == T.ObjectiveCType.SwiftType {
+internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T?) -> T.ObjectiveCType? {
     
     return closure()?.bridgeToObjectiveC
 }
 
-internal func bridge<T: CoreStoreSwiftType>(_ closure: () throws -> T) throws -> T.ObjectiveCType where T.ObjectiveCType: CoreStoreObjectiveCType, T == T.ObjectiveCType.SwiftType {
+internal func bridge<T: CoreStoreSwiftType>(_ closure: () throws -> T) throws -> T.ObjectiveCType {
     
     do {
         

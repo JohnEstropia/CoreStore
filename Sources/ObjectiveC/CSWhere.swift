@@ -163,5 +163,8 @@ extension Where: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSWhere
+    public var bridgeToObjectiveC: CSWhere {
+        
+        return CSWhere(self)
+    }
 }

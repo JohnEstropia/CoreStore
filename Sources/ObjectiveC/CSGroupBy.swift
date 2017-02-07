@@ -118,5 +118,8 @@ extension GroupBy: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSGroupBy
+    public var bridgeToObjectiveC: CSGroupBy {
+        
+        return CSGroupBy(self)
+    }
 }

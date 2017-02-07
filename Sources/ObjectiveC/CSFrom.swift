@@ -146,7 +146,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
     
     public init<T: NSManagedObject>(_ swiftValue: From<T>) {
         
-        self.bridgeToSwift = swiftValue.upcast()
+        self.bridgeToSwift = swiftValue.downcast()
         super.init()
     }
 }

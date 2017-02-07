@@ -114,7 +114,7 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
     
     public required init<T: NSManagedObject>(_ swiftValue: Into<T>) {
         
-        self.bridgeToSwift = swiftValue.upcast()
+        self.bridgeToSwift = swiftValue.downcast()
         super.init()
     }
 }

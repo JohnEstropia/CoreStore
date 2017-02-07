@@ -94,5 +94,8 @@ extension Tweak: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSTweak
+    public var bridgeToObjectiveC: CSTweak {
+        
+        return CSTweak(self)
+    }
 }

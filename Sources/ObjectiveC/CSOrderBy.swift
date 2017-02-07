@@ -126,5 +126,8 @@ extension OrderBy: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSOrderBy
+    public var bridgeToObjectiveC: CSOrderBy {
+        
+        return CSOrderBy(self)
+    }
 }

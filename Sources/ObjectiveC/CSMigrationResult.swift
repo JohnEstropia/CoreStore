@@ -177,5 +177,8 @@ extension MigrationResult: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSMigrationResult
+    public var bridgeToObjectiveC: CSMigrationResult {
+        
+        return CSMigrationResult(self)
+    }
 }

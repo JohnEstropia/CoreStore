@@ -167,5 +167,8 @@ extension SynchronousDataTransaction: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public typealias ObjectiveCType = CSSynchronousDataTransaction
+    public var bridgeToObjectiveC: CSSynchronousDataTransaction {
+        
+        return CSSynchronousDataTransaction(self)
+    }
 }

@@ -163,7 +163,7 @@ public struct Into<T: NSManagedObject>: Hashable {
     
     internal let inferStoreIfPossible: Bool
     
-    internal func upcast() -> Into<NSManagedObject> {
+    internal func downcast() -> Into<NSManagedObject> {
         
         return Into<NSManagedObject>(
             entityClass: self.entityClass,

@@ -294,13 +294,3 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     
     private let swiftTransaction: BaseDataTransaction
 }
-
-
-//// MARK: - BaseDataTransaction
-//
-//extension BaseDataTransaction: CoreStoreSwiftType {
-//    
-//    // MARK: CoreStoreSwiftType
-//    
-//    public typealias ObjectiveCType = CSBaseDataTransaction
-//}

@@ -206,7 +206,7 @@ public struct From<T: NSManagedObject> {
         return stores?.isEmpty == false
     }
     
-    internal func upcast() -> From<NSManagedObject> {
+    internal func downcast() -> From<NSManagedObject> {
         
         return From<NSManagedObject>(
             entityClass: self.entityClass,
