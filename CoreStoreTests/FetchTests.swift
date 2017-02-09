@@ -394,7 +394,7 @@ final class FetchTests: BaseTestDataTestCase {
                     ]
                     let object = stack.fetchOne(from, fetchClauses)
                     XCTAssertNotNil(object)
-                    XCTAssertEqual(object?.testNumber, 3) // configuration
+                    XCTAssertEqual(object?.testNumber, 3) // configuration ambiguous
                     
                     let objectID = stack.fetchObjectID(from, fetchClauses)
                     XCTAssertNotNil(objectID)
