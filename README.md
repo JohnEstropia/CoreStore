@@ -519,7 +519,7 @@ are created from `beginSynchronous(...)`. While the syntax is similar to its asy
 ```swift
 CoreStore.beginSynchronous { (transaction) -> Void in
     // make changes
-    transaction.commit()
+    _ = transaction.commit()
 } 
 ```
 `transaction` above is a `SynchronousDataTransaction` instance.

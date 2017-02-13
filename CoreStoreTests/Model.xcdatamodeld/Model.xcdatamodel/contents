@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Xcode 4.3">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="TestEntity1AAA" representedClassName="CoreStoreTests.TestEntity1" syncable="YES">
-        <attribute name="testBoolean" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="testBoolean" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testData" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="testDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="testDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testDecimal" optional="YES" attributeType="Decimal" syncable="YES"/>
-        <attribute name="testEntityID" optional="YES" attributeType="Integer 64" syncable="YES"/>
+        <attribute name="testEntityID" optional="YES" attributeType="Integer 64" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testNil" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="testNumber" optional="YES" attributeType="Integer 32" syncable="YES"/>
+        <attribute name="testNumber" optional="YES" attributeType="Integer 32" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testString" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="TestEntity2" representedClassName="CoreStoreTests.TestEntity2" syncable="YES">
-        <attribute name="testBoolean" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="testBoolean" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testData" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="testDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="testDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testDecimal" optional="YES" attributeType="Decimal" syncable="YES"/>
-        <attribute name="testEntityID" optional="YES" attributeType="Integer 64" syncable="YES"/>
+        <attribute name="testEntityID" optional="YES" attributeType="Integer 64" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testNil" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="testNumber" optional="YES" attributeType="Integer 32" syncable="YES"/>
+        <attribute name="testNumber" optional="YES" attributeType="Integer 32" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testString" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <configuration name="Config1">

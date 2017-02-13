@@ -1083,28 +1083,11 @@ extension TestEntity1: ImportableUniqueObject {
     
     // MARK: ImportableUniqueObject
     
-    typealias UniqueIDType = NSNumber
+    typealias UniqueIDType = Int64
     
     static var uniqueIDKeyPath: String {
         
         return #keyPath(TestEntity1.testEntityID)
-    }
-    
-    var uniqueIDValue: NSNumber {
-        
-        get {
-            
-            guard let ID = self.testEntityID else {
-                
-                XCTFail()
-                return 0
-            }
-            return ID
-        }
-        set {
-            
-            self.testEntityID = newValue
-        }
     }
     
     static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
@@ -1112,13 +1095,13 @@ extension TestEntity1: ImportableUniqueObject {
         return source["skip_update"] == nil
     }
     
-    static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> NSNumber? {
+    static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> Int64? {
         
         if let _ = source["throw_on_id"] {
             
             throw TestIDError()
         }
-        return source[(#keyPath(TestEntity1.testEntityID))] as? NSNumber
+        return source[(#keyPath(TestEntity1.testEntityID))] as? Int64
     }
     
     func update(from source: ImportSource, in transaction: BaseDataTransaction) throws {
