@@ -101,46 +101,17 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init(_ keyPath: KeyPath, isEqualTo value: CoreDataNativeType?) {
+    public init<T: CoreStoreQueryingAttributeType>(_ keyPath: KeyPath, isEqualTo value: T?) {
         
-        self.init(value == nil
-            ? NSPredicate(format: "\(keyPath) == nil")
-            : NSPredicate(format: "\(keyPath) == %@", argumentArray: [value!]))
-    }
-    
-    /**
-     Initializes a `Where` clause that compares equality
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter value: the arguments for the `==` operator
-     */
-    public init<T: CoreStoreSupportedAttributeType>(_ keyPath: KeyPath, isEqualTo value: T?) {
-        
-        self.init(value == nil
-            ? NSPredicate(format: "\(keyPath) == nil")
-            : NSPredicate(format: "\(keyPath) == %@", argumentArray: [value!.cs_toNativeType()]))
-    }
-    
-    /**
-     Initializes a `Where` clause that compares membership
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter list: the array to check membership of
-     */
-    public init(_ keyPath: KeyPath, isMemberOf list: [CoreDataNativeType]) {
-        
-        self.init(NSPredicate(format: "\(keyPath) IN %@", list))
-    }
-    
-    /**
-     Initializes a `Where` clause that compares membership
-     
-     - parameter keyPath: the keyPath to compare with
-     - parameter list: the array to check membership of
-     */
-    public init<T: CoreStoreSupportedAttributeType>(_ keyPath: KeyPath, isMemberOf list: [T]) {
-        
-        self.init(NSPredicate(format: "\(keyPath) IN %@", list))
+        switch value {
+            
+        case nil,
+             is NSNull:
+            self.init(NSPredicate(format: "\(keyPath) == nil"))
+            
+        case let value?:
+            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [value.cs_toQueryingNativeType()]))
+        }
     }
     
     /**
@@ -149,9 +120,9 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: CoreStoreSupportedAttributeType {
+    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: CoreStoreQueryingAttributeType {
         
-        self.init(NSPredicate(format: "\(keyPath) IN %@", Array(list) as NSArray))
+        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toQueryingNativeType() }) as NSArray))
     }
     
     /**

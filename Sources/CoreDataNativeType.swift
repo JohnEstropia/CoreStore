@@ -70,3 +70,8 @@ extension NSManagedObject: CoreDataNativeType {}
 // MARK: - NSManagedObjectID
 
 extension NSManagedObjectID: CoreDataNativeType {}
+
+
+// MARK: - NSNull
+
+extension NSNull: CoreDataNativeType {}

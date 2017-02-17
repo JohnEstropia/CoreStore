@@ -29,6 +29,25 @@ import XCTest
 import CoreStore
 
 
+// MARK: - XCTAssertAllEqual
+
+private func XCTAssertAllEqual(_ whereClauses: Where...) {
+    
+    XCTAssertAllEqual(whereClauses)
+}
+
+private func XCTAssertAllEqual(_ whereClauses: [Where]) {
+    
+    for i in whereClauses.indices {
+        
+        for j in whereClauses.indices where j != i {
+            
+            XCTAssertEqual(whereClauses[i], whereClauses[j])
+        }
+    }
+}
+
+
 //MARK: - WhereTests
 
 final class WhereTests: XCTestCase {
@@ -93,202 +112,114 @@ final class WhereTests: XCTestCase {
         do {
             
             let value: Int = 100
-            let whereClause1 = Where("%K == %d", "key", value)
-            let whereClause2 = Where("%K == %d", "key", value as AnyObject)
-            let whereClause3 = Where("%K == %d", "key", NSNumber(value: value))
-            let whereClause4 = Where("%K == %@", "key", value)
-            let whereClause5 = Where("%K == %@", "key", value as AnyObject)
-            let whereClause6 = Where("%K == %@", "key", NSNumber(value: value))
-            XCTAssertEqual(whereClause1, whereClause2)
-            XCTAssertEqual(whereClause1, whereClause3)
-            XCTAssertEqual(whereClause1, whereClause4)
-            XCTAssertEqual(whereClause1, whereClause5)
-            XCTAssertEqual(whereClause1, whereClause6)
-            XCTAssertEqual(whereClause2, whereClause3)
-            XCTAssertEqual(whereClause2, whereClause4)
-            XCTAssertEqual(whereClause2, whereClause5)
-            XCTAssertEqual(whereClause2, whereClause6)
-            XCTAssertEqual(whereClause3, whereClause4)
-            XCTAssertEqual(whereClause3, whereClause5)
-            XCTAssertEqual(whereClause3, whereClause6)
-            XCTAssertEqual(whereClause4, whereClause5)
-            XCTAssertEqual(whereClause4, whereClause6)
-            XCTAssertEqual(whereClause5, whereClause6)
+            XCTAssertAllEqual(
+                Where("%K == %d", "key", value),
+                Where("%K == %d", "key", value as AnyObject),
+                Where("%K == %d", "key", NSNumber(value: value)),
+                Where("%K == %@", "key", value),
+                Where("%K == %@", "key", value as AnyObject),
+                Where("%K == %@", "key", NSNumber(value: value)),
+                Where("key", isEqualTo: value),
+                Where("key", isEqualTo: NSNumber(value: value))
+            )
         }
         do {
             
             let value = NSNumber(value: 100)
-            let whereClause1 = Where("%K == %d", "key", value)
-            let whereClause2 = Where("%K == %d", "key", value as AnyObject)
-            let whereClause3 = Where("%K == %d", "key", value.intValue)
-            let whereClause4 = Where("%K == %@", "key", value)
-            let whereClause5 = Where("%K == %@", "key", value as AnyObject)
-            let whereClause6 = Where("%K == %@", "key", value.intValue)
-            XCTAssertEqual(whereClause1, whereClause2)
-            XCTAssertEqual(whereClause1, whereClause3)
-            XCTAssertEqual(whereClause1, whereClause4)
-            XCTAssertEqual(whereClause1, whereClause5)
-            XCTAssertEqual(whereClause1, whereClause6)
-            XCTAssertEqual(whereClause2, whereClause3)
-            XCTAssertEqual(whereClause2, whereClause4)
-            XCTAssertEqual(whereClause2, whereClause5)
-            XCTAssertEqual(whereClause2, whereClause6)
-            XCTAssertEqual(whereClause3, whereClause4)
-            XCTAssertEqual(whereClause3, whereClause5)
-            XCTAssertEqual(whereClause3, whereClause6)
-            XCTAssertEqual(whereClause4, whereClause5)
-            XCTAssertEqual(whereClause4, whereClause6)
-            XCTAssertEqual(whereClause5, whereClause6)
+            XCTAssertAllEqual(
+                Where("%K == %d", "key", value),
+                Where("%K == %d", "key", value as AnyObject),
+                Where("%K == %d", "key", value.intValue),
+                Where("%K == %@", "key", value),
+                Where("%K == %@", "key", value as AnyObject),
+                Where("%K == %@", "key", value.intValue),
+                Where("key", isEqualTo: value),
+                Where("key", isEqualTo: value.intValue)
+            )
         }
         do {
             
             let value: Int64 = Int64.max
-            let whereClause1 = Where("%K == %d", "key", value)
-            let whereClause2 = Where("%K == %d", "key", value as AnyObject)
-            let whereClause3 = Where("%K == %d", "key", NSNumber(value: value))
-            let whereClause4 = Where("%K == %@", "key", value)
-            let whereClause5 = Where("%K == %@", "key", value as AnyObject)
-            let whereClause6 = Where("%K == %@", "key", NSNumber(value: value))
-            XCTAssertEqual(whereClause1, whereClause2)
-            XCTAssertEqual(whereClause1, whereClause3)
-            XCTAssertEqual(whereClause1, whereClause4)
-            XCTAssertEqual(whereClause1, whereClause5)
-            XCTAssertEqual(whereClause1, whereClause6)
-            XCTAssertEqual(whereClause2, whereClause3)
-            XCTAssertEqual(whereClause2, whereClause4)
-            XCTAssertEqual(whereClause2, whereClause5)
-            XCTAssertEqual(whereClause2, whereClause6)
-            XCTAssertEqual(whereClause3, whereClause4)
-            XCTAssertEqual(whereClause3, whereClause5)
-            XCTAssertEqual(whereClause3, whereClause6)
-            XCTAssertEqual(whereClause4, whereClause5)
-            XCTAssertEqual(whereClause4, whereClause6)
-            XCTAssertEqual(whereClause5, whereClause6)
+            XCTAssertAllEqual(
+                Where("%K == %d", "key", value),
+                Where("%K == %d", "key", value as AnyObject),
+                Where("%K == %d", "key", NSNumber(value: value)),
+                Where("%K == %@", "key", value),
+                Where("%K == %@", "key", value as AnyObject),
+                Where("%K == %@", "key", NSNumber(value: value)),
+                Where("key", isEqualTo: value),
+                Where("key", isEqualTo: NSNumber(value: value))
+            )
         }
         do {
             
             let value = NSNumber(value: Int64.max)
-            let whereClause1 = Where("%K == %d", "key", value)
-            let whereClause2 = Where("%K == %d", "key", value as AnyObject)
-            let whereClause3 = Where("%K == %d", "key", value.int64Value)
-            let whereClause4 = Where("%K == %@", "key", value)
-            let whereClause5 = Where("%K == %@", "key", value as AnyObject)
-            let whereClause6 = Where("%K == %@", "key", value.int64Value)
-            XCTAssertEqual(whereClause1, whereClause2)
-            XCTAssertEqual(whereClause1, whereClause3)
-            XCTAssertEqual(whereClause1, whereClause4)
-            XCTAssertEqual(whereClause1, whereClause5)
-            XCTAssertEqual(whereClause1, whereClause6)
-            XCTAssertEqual(whereClause2, whereClause3)
-            XCTAssertEqual(whereClause2, whereClause4)
-            XCTAssertEqual(whereClause2, whereClause5)
-            XCTAssertEqual(whereClause2, whereClause6)
-            XCTAssertEqual(whereClause3, whereClause4)
-            XCTAssertEqual(whereClause3, whereClause5)
-            XCTAssertEqual(whereClause3, whereClause6)
-            XCTAssertEqual(whereClause4, whereClause5)
-            XCTAssertEqual(whereClause4, whereClause6)
-            XCTAssertEqual(whereClause5, whereClause6)
+            XCTAssertAllEqual(
+                Where("%K == %d", "key", value),
+                Where("%K == %d", "key", value as AnyObject),
+                Where("%K == %d", "key", value.int64Value),
+                Where("%K == %@", "key", value),
+                Where("%K == %@", "key", value as AnyObject),
+                Where("%K == %@", "key", value.int64Value),
+                Where("key", isEqualTo: value),
+                Where("key", isEqualTo: value.int64Value)
+            )
         }
         do {
             
             let value: String = "value"
-            let whereClause1 = Where("%K == %s", "key", value)
-            let whereClause2 = Where("%K == %s", "key", value as AnyObject)
-            let whereClause3 = Where("%K == %s", "key", NSString(string: value))
-            let whereClause4 = Where("%K == %@", "key", value)
-            let whereClause5 = Where("%K == %@", "key", value as AnyObject)
-            let whereClause6 = Where("%K == %@", "key", NSString(string: value))
-            XCTAssertEqual(whereClause1, whereClause2)
-            XCTAssertEqual(whereClause1, whereClause3)
-            XCTAssertEqual(whereClause1, whereClause4)
-            XCTAssertEqual(whereClause1, whereClause5)
-            XCTAssertEqual(whereClause1, whereClause6)
-            XCTAssertEqual(whereClause2, whereClause3)
-            XCTAssertEqual(whereClause2, whereClause4)
-            XCTAssertEqual(whereClause2, whereClause5)
-            XCTAssertEqual(whereClause2, whereClause6)
-            XCTAssertEqual(whereClause3, whereClause4)
-            XCTAssertEqual(whereClause3, whereClause5)
-            XCTAssertEqual(whereClause3, whereClause6)
-            XCTAssertEqual(whereClause4, whereClause5)
-            XCTAssertEqual(whereClause4, whereClause6)
-            XCTAssertEqual(whereClause5, whereClause6)
+            XCTAssertAllEqual(
+                Where("%K == %s", "key", value),
+                Where("%K == %s", "key", value as AnyObject),
+                Where("%K == %s", "key", NSString(string: value)),
+                Where("%K == %@", "key", value),
+                Where("%K == %@", "key", value as AnyObject),
+                Where("%K == %@", "key", NSString(string: value)),
+                Where("key", isEqualTo: value),
+                Where("key", isEqualTo: value as NSString),
+                Where("key", isEqualTo: NSString(string: value))
+            )
         }
         do {
             
             let value = NSString(string: "value")
-            let whereClause1 = Where("%K == %s", "key", value)
-            let whereClause2 = Where("%K == %s", "key", value as String)
-            let whereClause3 = Where("%K == %s", "key", value as String as AnyObject)
-            let whereClause4 = Where("%K == %@", "key", value)
-            let whereClause5 = Where("%K == %@", "key", value as String)
-            let whereClause6 = Where("%K == %@", "key", value as String as AnyObject)
-            XCTAssertEqual(whereClause1, whereClause2)
-            XCTAssertEqual(whereClause1, whereClause3)
-            XCTAssertEqual(whereClause1, whereClause4)
-            XCTAssertEqual(whereClause1, whereClause5)
-            XCTAssertEqual(whereClause1, whereClause6)
-            XCTAssertEqual(whereClause2, whereClause3)
-            XCTAssertEqual(whereClause2, whereClause4)
-            XCTAssertEqual(whereClause2, whereClause5)
-            XCTAssertEqual(whereClause2, whereClause6)
-            XCTAssertEqual(whereClause3, whereClause4)
-            XCTAssertEqual(whereClause3, whereClause5)
-            XCTAssertEqual(whereClause3, whereClause6)
-            XCTAssertEqual(whereClause4, whereClause5)
-            XCTAssertEqual(whereClause4, whereClause6)
-            XCTAssertEqual(whereClause5, whereClause6)
+            XCTAssertAllEqual(
+                Where("%K == %s", "key", value),
+                Where("%K == %s", "key", value as String),
+                Where("%K == %s", "key", value as String as AnyObject),
+                Where("%K == %@", "key", value),
+                Where("%K == %@", "key", value as String),
+                Where("%K == %@", "key", value as String as AnyObject),
+                Where("key", isEqualTo: value),
+                Where("key", isEqualTo: value as String),
+                Where("key", isEqualTo: value as String as NSString)
+            )
         }
         do {
             
             let value: [Int] = [100, 200]
-            let whereClause1 = Where("%K == %@", "key", value)
-            let whereClause2 = Where("%K == %@", "key", value as AnyObject)
-            let whereClause3 = Where("%K == %@", "key", value as [AnyObject])
-            let whereClause4 = Where("%K == %@", "key", value as NSArray)
-            let whereClause5 = Where("%K == %@", "key", NSArray(array: value))
-            let whereClause6 = Where("%K == %@", "key", value as AnyObject as! NSArray)
-            XCTAssertEqual(whereClause1, whereClause2)
-            XCTAssertEqual(whereClause1, whereClause3)
-            XCTAssertEqual(whereClause1, whereClause4)
-            XCTAssertEqual(whereClause1, whereClause5)
-            XCTAssertEqual(whereClause1, whereClause6)
-            XCTAssertEqual(whereClause2, whereClause3)
-            XCTAssertEqual(whereClause2, whereClause4)
-            XCTAssertEqual(whereClause2, whereClause5)
-            XCTAssertEqual(whereClause2, whereClause6)
-            XCTAssertEqual(whereClause3, whereClause4)
-            XCTAssertEqual(whereClause3, whereClause5)
-            XCTAssertEqual(whereClause3, whereClause6)
-            XCTAssertEqual(whereClause4, whereClause5)
-            XCTAssertEqual(whereClause4, whereClause6)
-            XCTAssertEqual(whereClause5, whereClause6)
+            XCTAssertAllEqual(
+                Where("%K IN %@", "key", value),
+                Where("%K IN %@", "key", value as AnyObject),
+                Where("%K IN %@", "key", value as [AnyObject]),
+                Where("%K IN %@", "key", value as NSArray),
+                Where("%K IN %@", "key", NSArray(array: value)),
+                Where("%K IN %@", "key", value as AnyObject as! NSArray),
+                Where("key", isMemberOf: value)
+            )
         }
         do {
             
             let value: [Int64] = [Int64.min, 100, Int64.max]
-            let whereClause1 = Where("%K == %@", "key", value)
-            let whereClause2 = Where("%K == %@", "key", value as AnyObject)
-            let whereClause3 = Where("%K == %@", "key", value as [AnyObject])
-            let whereClause4 = Where("%K == %@", "key", value as NSArray)
-            let whereClause5 = Where("%K == %@", "key", NSArray(array: value))
-            let whereClause6 = Where("%K == %@", "key", value as AnyObject as! NSArray)
-            XCTAssertEqual(whereClause1, whereClause2)
-            XCTAssertEqual(whereClause1, whereClause3)
-            XCTAssertEqual(whereClause1, whereClause4)
-            XCTAssertEqual(whereClause1, whereClause5)
-            XCTAssertEqual(whereClause1, whereClause6)
-            XCTAssertEqual(whereClause2, whereClause3)
-            XCTAssertEqual(whereClause2, whereClause4)
-            XCTAssertEqual(whereClause2, whereClause5)
-            XCTAssertEqual(whereClause2, whereClause6)
-            XCTAssertEqual(whereClause3, whereClause4)
-            XCTAssertEqual(whereClause3, whereClause5)
-            XCTAssertEqual(whereClause3, whereClause6)
-            XCTAssertEqual(whereClause4, whereClause5)
-            XCTAssertEqual(whereClause4, whereClause6)
-            XCTAssertEqual(whereClause5, whereClause6)
+            XCTAssertAllEqual(
+                Where("%K IN %@", "key", value),
+                Where("%K IN %@", "key", value as AnyObject),
+                Where("%K IN %@", "key", value as [AnyObject]),
+                Where("%K IN %@", "key", value as NSArray),
+                Where("%K IN %@", "key", NSArray(array: value)),
+                Where("%K IN %@", "key", value as AnyObject as! NSArray),
+                Where("key", isMemberOf: value)
+            )
         }
     }
     

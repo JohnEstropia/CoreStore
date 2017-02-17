@@ -87,7 +87,9 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     @objc
     public convenience init(keyPath: KeyPath, isEqualTo value: CoreDataNativeType?) {
         
-        self.init(Where(keyPath, isEqualTo: value))
+        self.init(value == nil || value is NSNull
+            ? Where("\(keyPath) == nil")
+            : Where("\(keyPath) == %@", value!))
     }
     
     /**
@@ -99,7 +101,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     @objc
     public convenience init(keyPath: KeyPath, isMemberOf list: [CoreDataNativeType]) {
         
-        self.init(Where(keyPath, isMemberOf: list))
+        self.init(Where("\(keyPath) IN %@", list as NSArray))
     }
     
     /**
