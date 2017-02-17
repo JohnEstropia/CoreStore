@@ -29,288 +29,44 @@ import CoreData
 
 // MARK: - CoreDataNativeType
 
-public protocol CoreDataNativeType: class, NSObjectProtocol, AnyObject {}
+@objc public protocol CoreDataNativeType: class, NSObjectProtocol, AnyObject {}
+
+
+// MARK: - NSNumber
 
 extension NSNumber: CoreDataNativeType {}
+
+
+// MARK: - NSString
+
 extension NSString: CoreDataNativeType {}
+
+
+// MARK: - NSDate
+
 extension NSDate: CoreDataNativeType {}
+
+
+// MARK: - NSData
+
 extension NSData: CoreDataNativeType {}
+
+
+// MARK: - NSSet
+
 extension NSSet: CoreDataNativeType {}
+
+
+// MARK: - NSOrderedSet
+
 extension NSOrderedSet: CoreDataNativeType {}
 
 
-public protocol CoreStoreSupportedAttributeType {
-    
-    associatedtype CoreStoreNativeType: CoreDataNativeType
-    
-    static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Self?
-    func cs_toNativeType() -> CoreStoreNativeType
-}
+// MARK: - NSManagedObject
 
-extension NSNumber: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSNumber
-    
-    public class func cs_fromNativeType(_ value: CoreStoreNativeType) -> Self? {
-        
-        func forceCast<T: NSNumber>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self
-    }
-}
-
-extension NSString: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSString
-    
-    public class func cs_fromNativeType(_ value: CoreStoreNativeType) -> Self? {
-        
-        func forceCast<T: NSString>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self
-    }
-}
-
-extension NSDate: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSDate
-    
-    public class func cs_fromNativeType(_ value: CoreStoreNativeType) -> Self? {
-        
-        func forceCast<T: NSDate>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self
-    }
-}
-
-extension NSData: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSData
-    
-    public class func cs_fromNativeType(_ value: CoreStoreNativeType) -> Self? {
-        
-        func forceCast<T: NSData>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self
-    }
-}
-
-extension NSSet: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSSet
-    
-    public class func cs_fromNativeType(_ value: CoreStoreNativeType) -> Self? {
-        
-        func forceCast<T: NSSet>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self
-    }
-}
-
-extension NSOrderedSet: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSOrderedSet
-    
-    public class func cs_fromNativeType(_ value: CoreStoreNativeType) -> Self? {
-        
-        func forceCast<T: NSOrderedSet>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self
-    }
-}
+extension NSManagedObject: CoreDataNativeType {}
 
 
+// MARK: - NSManagedObjectID
 
-extension Bool: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSNumber
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Bool? {
-        
-        return value.boolValue
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSNumber
-    }
-}
-
-extension Int16: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSNumber
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Int16? {
-        
-        return value.int16Value
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSNumber
-    }
-}
-
-extension Int32: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSNumber
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Int32? {
-        
-        return value.int32Value
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSNumber
-    }
-}
-
-extension Int64: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSNumber
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Int64? {
-        
-        return value.int64Value
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSNumber
-    }
-}
-
-extension Double: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSNumber
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Double? {
-        
-        return value.doubleValue
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSNumber
-    }
-}
-
-extension Float: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSNumber
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Float? {
-        
-        return value.floatValue
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSNumber
-    }
-}
-
-extension Date: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSDate
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Date? {
-        
-        return value as Date
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSDate
-    }
-}
-
-extension String: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSString
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> String? {
-        
-        return value as String
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSString
-    }
-}
-
-extension Data: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSData
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Data? {
-        
-        return value as Data
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSData
-    }
-}
-
-extension Set: CoreStoreSupportedAttributeType {
-    
-    public typealias CoreStoreNativeType = NSSet
-    
-    public static func cs_fromNativeType(_ value: CoreStoreNativeType) -> Set? {
-        
-        return value as? Set
-    }
-    
-    public func cs_toNativeType() -> CoreStoreNativeType {
-        
-        return self as NSSet
-    }
-}
-
-
+extension NSManagedObjectID: CoreDataNativeType {}
