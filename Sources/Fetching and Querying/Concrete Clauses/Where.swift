@@ -27,28 +27,36 @@ import Foundation
 import CoreData
 
 
-public func && (left: Where, right: Where) -> Where {
-    
-    return Where(NSCompoundPredicate(type: .and, subpredicates: [left.predicate, right.predicate]))
-}
-
-public func || (left: Where, right: Where) -> Where {
-    
-    return Where(NSCompoundPredicate(type: .or, subpredicates: [left.predicate, right.predicate]))
-}
-
-public prefix func ! (clause: Where) -> Where {
-    
-    return Where(NSCompoundPredicate(type: .not, subpredicates: [clause.predicate]))
-}
-
-
 // MARK: - Where
 
 /**
  The `Where` clause specifies the conditions for a fetch or a query.
  */
 public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
+    
+    /**
+     Combines two `Where` predicates together using `AND` operator
+     */
+    public static func && (left: Where, right: Where) -> Where {
+        
+        return Where(NSCompoundPredicate(type: .and, subpredicates: [left.predicate, right.predicate]))
+    }
+    
+    /**
+     Combines two `Where` predicates together using `OR` operator
+     */
+    public static func || (left: Where, right: Where) -> Where {
+        
+        return Where(NSCompoundPredicate(type: .or, subpredicates: [left.predicate, right.predicate]))
+    }
+    
+    /**
+     Inverts the predicate of a `Where` clause using `NOT` operator
+     */
+    public static prefix func ! (clause: Where) -> Where {
+        
+        return Where(NSCompoundPredicate(type: .not, subpredicates: [clause.predicate]))
+    }
     
     /**
      The `NSPredicate` for the fetch or query

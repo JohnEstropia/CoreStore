@@ -27,17 +27,6 @@ import Foundation
 import CoreData
 
 
-public func + (left: OrderBy, right: OrderBy) -> OrderBy {
-    
-    return OrderBy(left.sortDescriptors + right.sortDescriptors)
-}
-
-public func += (left: inout OrderBy, right: OrderBy) {
-    
-    left = left + right
-}
-
-
 // MARK: - KeyPath
     
 public typealias KeyPath = String
@@ -68,6 +57,22 @@ public enum SortKey {
  The `OrderBy` clause specifies the sort order for results for a fetch or a query.
  */
 public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
+    
+    /**
+     Combines two `OrderBy` sort descriptors together
+     */
+    public static func + (left: OrderBy, right: OrderBy) -> OrderBy {
+        
+        return OrderBy(left.sortDescriptors + right.sortDescriptors)
+    }
+    
+    /**
+     Combines two `OrderBy` sort descriptors together and stores the result to the left operand
+     */
+    public static func += (left: inout OrderBy, right: OrderBy) {
+        
+        left = left + right
+    }
     
     /**
      The list of sort descriptors
