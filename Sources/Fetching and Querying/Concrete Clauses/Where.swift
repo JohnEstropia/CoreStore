@@ -104,12 +104,23 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     }
     
     /**
+     Initializes a `Where` clause that compares equality to `nil`
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    public init(_ keyPath: KeyPath, isEqualTo value: Void?) {
+        
+        self.init(NSPredicate(format: "\(keyPath) == nil"))
+    }
+    
+    /**
      Initializes a `Where` clause that compares equality
      
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init<T: CoreStoreQueryingAttributeType>(_ keyPath: KeyPath, isEqualTo value: T?) {
+    public init<T: CoreStoreQueryableAttributeType>(_ keyPath: KeyPath, isEqualTo value: T?) {
         
         switch value {
             
@@ -118,7 +129,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
             self.init(NSPredicate(format: "\(keyPath) == nil"))
             
         case let value?:
-            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [value.cs_toQueryingNativeType()]))
+            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [value.cs_toQueryableNativeType()]))
         }
     }
     
@@ -128,9 +139,9 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: CoreStoreQueryingAttributeType {
+    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: CoreStoreQueryableAttributeType {
         
-        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toQueryingNativeType() }) as NSArray))
+        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toQueryableNativeType() }) as NSArray))
     }
     
     /**

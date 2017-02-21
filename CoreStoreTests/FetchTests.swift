@@ -874,6 +874,24 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(objectIDs)
                 }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where(#keyPath(TestEntity1.testNumber), isEqualTo: nil),
+                        OrderBy(.descending(#keyPath(TestEntity1.testEntityID)))
+                    ]
+                    let objects = self.expectLogger([.logWarning]) {
+                        
+                        stack.fetchAll(from, fetchClauses)
+                    }
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = self.expectLogger([.logWarning]) {
+                        
+                        stack.fetchObjectIDs(from, fetchClauses)
+                    }
+                    XCTAssertNil(objectIDs)
+                }
             }
         }
     }
@@ -1445,6 +1463,18 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(count)
                 }
+                do {
+                    
+                    let count = self.expectLogger([.logWarning]) {
+                        
+                        stack.fetchCount(
+                            from,
+                            Where(#keyPath(TestEntity1.testNumber), isEqualTo: nil),
+                            OrderBy(.descending(#keyPath(TestEntity1.testEntityID)))
+                        )
+                    }
+                    XCTAssertNil(count)
+                }
             }
         }
     }
@@ -1587,6 +1617,18 @@ final class FetchTests: BaseTestDataTestCase {
                         stack.fetchCount(
                             from,
                             Where(#keyPath(TestEntity1.testNumber), isEqualTo: 0),
+                            OrderBy(.descending(#keyPath(TestEntity1.testEntityID)))
+                        )
+                    }
+                    XCTAssertNil(count)
+                }
+                do {
+                    
+                    let count = self.expectLogger([.logWarning]) {
+                        
+                        stack.fetchCount(
+                            from,
+                            Where(#keyPath(TestEntity1.testNumber), isEqualTo: nil),
                             OrderBy(.descending(#keyPath(TestEntity1.testEntityID)))
                         )
                     }
@@ -2367,6 +2409,24 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(objectIDs)
                 }
+                do {
+                    
+                    let fetchClauses: [FetchClause] = [
+                        Where(#keyPath(TestEntity1.testNumber), isEqualTo: nil),
+                        OrderBy(.descending(#keyPath(TestEntity1.testEntityID)))
+                    ]
+                    let objects = self.expectLogger([.logWarning]) {
+                        
+                        transaction.fetchAll(from, fetchClauses)
+                    }
+                    XCTAssertNil(objects)
+                    
+                    let objectIDs = self.expectLogger([.logWarning]) {
+                        
+                        transaction.fetchObjectIDs(from, fetchClauses)
+                    }
+                    XCTAssertNil(objectIDs)
+                }
             }
         }
     }
@@ -2938,6 +2998,18 @@ final class FetchTests: BaseTestDataTestCase {
                     }
                     XCTAssertNil(count)
                 }
+                do {
+                    
+                    let count = self.expectLogger([.logWarning]) {
+                        
+                        transaction.fetchCount(
+                            from,
+                            Where(#keyPath(TestEntity1.testNumber), isEqualTo: nil),
+                            OrderBy(.descending(#keyPath(TestEntity1.testEntityID)))
+                        )
+                    }
+                    XCTAssertNil(count)
+                }
             }
         }
     }
@@ -3080,6 +3152,18 @@ final class FetchTests: BaseTestDataTestCase {
                         transaction.fetchCount(
                             from,
                             Where(#keyPath(TestEntity1.testNumber), isEqualTo: 0),
+                            OrderBy(.descending(#keyPath(TestEntity1.testEntityID)))
+                        )
+                    }
+                    XCTAssertNil(count)
+                }
+                do {
+                    
+                    let count = self.expectLogger([.logWarning]) {
+                        
+                        transaction.fetchCount(
+                            from,
+                            Where(#keyPath(TestEntity1.testNumber), isEqualTo: nil),
                             OrderBy(.descending(#keyPath(TestEntity1.testEntityID)))
                         )
                     }
