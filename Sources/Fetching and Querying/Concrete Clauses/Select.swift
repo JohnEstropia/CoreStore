@@ -32,31 +32,34 @@ import CoreData
 /**
  The `SelectResultType` protocol is implemented by return types supported by the `Select` clause.
  */
-public protocol SelectResultType {}
+public protocol SelectResultType: CoreStoreQueryableAttributeType {
 
-
-// MARK: - SelectValueResultType
-
-/**
- The `SelectValueResultType` protocol is implemented by return types supported by the `queryValue(...)` methods.
- */
-public protocol SelectValueResultType: SelectResultType {
     
-    static var attributeType: NSAttributeType { get }
-    
-    static func fromResultObject(_ result: Any) -> Self?
 }
 
 
-// MARK: - SelectAttributesResultType
+//// MARK: - SelectValueResultType
+//
+///**
+// The `SelectValueResultType` protocol is implemented by return types supported by the `queryValue(...)` methods.
+// */
+//public protocol SelectValueResultType: SelectResultType {
+//    
+//    static var attributeType: NSAttributeType { get }
+//    
+//    static func fromResultObject(_ result: Any) -> Self?
+//}
 
-/**
- The `SelectValueResultType` protocol is implemented by return types supported by the `queryAttributes(...)` methods.
- */
-public protocol SelectAttributesResultType: SelectResultType {
-    
-    static func fromResultObjects(_ result: [Any]) -> [[String: Any]]
-}
+
+//// MARK: - SelectAttributesResultType
+//
+///**
+// The `SelectValueResultType` protocol is implemented by return types supported by the `queryAttributes(...)` methods.
+// */
+//public protocol SelectAttributesResultType: SelectResultType {
+//    
+//    static func fromResultObjects(_ result: [Any]) -> [[String: Any]]
+//}
 
 
 // MARK: - SelectTerm
@@ -335,7 +338,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
  
  - parameter sortDescriptors: a series of `NSSortDescriptor`s
  */
-public struct Select<T: SelectResultType>: Hashable {
+public struct Select<T: CoreStoreQueryableAttributeType>: Hashable {
     
     /**
      The `SelectResultType` type for the query's return value
@@ -366,7 +369,7 @@ public struct Select<T: SelectResultType>: Hashable {
     
     // MARK: Equatable
     
-    public static func == <T: SelectResultType, U: SelectResultType>(lhs: Select<T>, rhs: Select<U>) -> Bool {
+    public static func == <T: CoreStoreQueryableAttributeType, U: CoreStoreQueryableAttributeType>(lhs: Select<T>, rhs: Select<U>) -> Bool {
         
         return lhs.selectTerms == rhs.selectTerms
     }
@@ -394,340 +397,340 @@ public extension Select where T: NSManagedObjectID {
 }
 
 
-// MARK: - Bool: SelectValueResultType
-
-extension Bool: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .booleanAttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Bool? {
-        switch result {
-            
-        case let decimal as NSDecimalNumber:
-            // iOS: NSDecimalNumber(string: "0.5").boolValue // true
-            // OSX: NSDecimalNumber(string: "0.5").boolValue // false
-            return NSNumber(value: decimal.doubleValue).boolValue
-            
-        case let number as NSNumber:
-            return number.boolValue
-            
-        default:
-            return nil
-        }
-    }
-}
-
-
-// MARK: - Int8: SelectValueResultType
-
-extension Int8: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .integer64AttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Int8? {
-        
-        guard let value = (result as? NSNumber)?.int64Value else {
-            
-            return nil
-        }
-        return numericCast(value) as Int8
-    }
-}
-
-
-// MARK: - Int16: SelectValueResultType
-
-extension Int16: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .integer64AttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Int16? {
-        
-        guard let value = (result as? NSNumber)?.int64Value else {
-            
-            return nil
-        }
-        return numericCast(value) as Int16
-    }
-}
-
-
-// MARK: - Int32: SelectValueResultType
-
-extension Int32: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .integer64AttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Int32? {
-        
-        guard let value = (result as? NSNumber)?.int64Value else {
-            
-            return nil
-        }
-        return numericCast(value) as Int32
-    }
-}
-
-
-// MARK: - Int64: SelectValueResultType
-
-extension Int64: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .integer64AttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Int64? {
-        
-        return (result as? NSNumber)?.int64Value
-    }
-}
-
-
-// MARK: - Int: SelectValueResultType
-
-extension Int: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .integer64AttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Int? {
-        
-        guard let value = (result as? NSNumber)?.int64Value else {
-            
-            return nil
-        }
-        return numericCast(value) as Int
-    }
-}
-
-
-// MARK: - Double : SelectValueResultType
-
-extension Double: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .doubleAttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Double? {
-        
-        return (result as? NSNumber)?.doubleValue
-    }
-}
-
-
-// MARK: - Float: SelectValueResultType
-
-extension Float: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .floatAttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Float? {
-        
-        return (result as? NSNumber)?.floatValue
-    }
-}
-
-
-// MARK: - String: SelectValueResultType
-
-extension String: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .stringAttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> String? {
-        
-        return result as? String
-    }
-}
-
-
-// MARK: - Date: SelectValueResultType
-
-extension Date: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .dateAttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Date? {
-        
-        return result as? Date
-    }
-}
-
-
-// MARK: - Data: SelectValueResultType
-
-extension Data: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .binaryDataAttributeType
-    }
-    
-    public static func fromResultObject(_ result: Any) -> Data? {
-        
-        return result as? Data
-    }
-}
-
-
-// MARK: - NSNumber: SelectValueResultType
-
-extension NSNumber: SelectValueResultType {
-    
-    public class var attributeType: NSAttributeType {
-        
-        return .integer64AttributeType
-    }
-    
-    public class func fromResultObject(_ result: Any) -> Self? {
-        
-        func forceCast<T: NSNumber>(_ object: Any) -> T? {
-            
-            return (object as? T)
-        }
-        return forceCast(result)
-    }
-}
-
-
-// MARK: - NSString: SelectValueResultType
-
-extension NSString: SelectValueResultType {
-    
-    public class var attributeType: NSAttributeType {
-        
-        return .stringAttributeType
-    }
-    
-    public class func fromResultObject(_ result: Any) -> Self? {
-        
-        func forceCast<T: NSString>(_ object: Any) -> T? {
-            
-            return (object as? T)
-        }
-        return forceCast(result)
-    }
-}
-
-
-// MARK: - NSDecimalNumber: SelectValueResultType
-
-extension NSDecimalNumber {
-    
-    public override class var attributeType: NSAttributeType {
-        
-        return .decimalAttributeType
-    }
-    
-    public override class func fromResultObject(_ result: Any) -> Self? {
-        
-        func forceCast<T: NSDecimalNumber>(_ object: Any) -> T? {
-            
-            return (object as? T)
-        }
-        return forceCast(result)
-    }
-}
-
-
-// MARK: - NSDate: SelectValueResultType
-
-extension NSDate: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .dateAttributeType
-    }
-    
-    public class func fromResultObject(_ result: Any) -> Self? {
-        
-        func forceCast<T: NSDate>(_ object: Any) -> T? {
-            
-            return (object as? T)
-        }
-        return forceCast(result)
-    }
-}
-
-
-// MARK: - NSData: SelectValueResultType
-
-extension NSData: SelectValueResultType {
-    
-    public static var attributeType: NSAttributeType {
-        
-        return .binaryDataAttributeType
-    }
-    
-    public class func fromResultObject(_ result: Any) -> Self? {
-        
-        func forceCast<T: NSData>(_ object: Any) -> T? {
-            
-            return (object as? T)
-        }
-        return forceCast(result)
-    }
-}
-
-
-// MARK: - NSManagedObjectID: SelectValueResultType
-
-extension NSManagedObjectID: SelectValueResultType {
-    
-    public class var attributeType: NSAttributeType {
-        
-        return .objectIDAttributeType
-    }
-    
-    public class func fromResultObject(_ result: Any) -> Self? {
-        
-        func forceCast<T: NSManagedObjectID>(_ object: Any) -> T? {
-            
-            return (object as? T)
-        }
-        return forceCast(result)
-    }
-}
-
-
-// MARK: - NSManagedObjectID: SelectAttributesResultType
-
-extension NSDictionary: SelectAttributesResultType {
-    
-    // MARK: SelectAttributesResultType
-    
-    public class func fromResultObjects(_ result: [Any]) -> [[String: Any]] {
-        
-        return result as! [[String: Any]]
-    }
-}
+//// MARK: - Bool: SelectValueResultType
+//
+//extension Bool: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .booleanAttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Bool? {
+//        switch result {
+//            
+//        case let decimal as NSDecimalNumber:
+//            // iOS: NSDecimalNumber(string: "0.5").boolValue // true
+//            // OSX: NSDecimalNumber(string: "0.5").boolValue // false
+//            return NSNumber(value: decimal.doubleValue).boolValue
+//            
+//        case let number as NSNumber:
+//            return number.boolValue
+//            
+//        default:
+//            return nil
+//        }
+//    }
+//}
+//
+//
+//// MARK: - Int8: SelectValueResultType
+//
+//extension Int8: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .integer64AttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Int8? {
+//        
+//        guard let value = (result as? NSNumber)?.int64Value else {
+//            
+//            return nil
+//        }
+//        return numericCast(value) as Int8
+//    }
+//}
+//
+//
+//// MARK: - Int16: SelectValueResultType
+//
+//extension Int16: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .integer64AttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Int16? {
+//        
+//        guard let value = (result as? NSNumber)?.int64Value else {
+//            
+//            return nil
+//        }
+//        return numericCast(value) as Int16
+//    }
+//}
+//
+//
+//// MARK: - Int32: SelectValueResultType
+//
+//extension Int32: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .integer64AttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Int32? {
+//        
+//        guard let value = (result as? NSNumber)?.int64Value else {
+//            
+//            return nil
+//        }
+//        return numericCast(value) as Int32
+//    }
+//}
+//
+//
+//// MARK: - Int64: SelectValueResultType
+//
+//extension Int64: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .integer64AttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Int64? {
+//        
+//        return (result as? NSNumber)?.int64Value
+//    }
+//}
+//
+//
+//// MARK: - Int: SelectValueResultType
+//
+//extension Int: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .integer64AttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Int? {
+//        
+//        guard let value = (result as? NSNumber)?.int64Value else {
+//            
+//            return nil
+//        }
+//        return numericCast(value) as Int
+//    }
+//}
+//
+//
+//// MARK: - Double : SelectValueResultType
+//
+//extension Double: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .doubleAttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Double? {
+//        
+//        return (result as? NSNumber)?.doubleValue
+//    }
+//}
+//
+//
+//// MARK: - Float: SelectValueResultType
+//
+//extension Float: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .floatAttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Float? {
+//        
+//        return (result as? NSNumber)?.floatValue
+//    }
+//}
+//
+//
+//// MARK: - String: SelectValueResultType
+//
+//extension String: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .stringAttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> String? {
+//        
+//        return result as? String
+//    }
+//}
+//
+//
+//// MARK: - Date: SelectValueResultType
+//
+//extension Date: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .dateAttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Date? {
+//        
+//        return result as? Date
+//    }
+//}
+//
+//
+//// MARK: - Data: SelectValueResultType
+//
+//extension Data: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .binaryDataAttributeType
+//    }
+//    
+//    public static func fromResultObject(_ result: Any) -> Data? {
+//        
+//        return result as? Data
+//    }
+//}
+//
+//
+//// MARK: - NSNumber: SelectValueResultType
+//
+//extension NSNumber: SelectValueResultType {
+//    
+//    public class var attributeType: NSAttributeType {
+//        
+//        return .integer64AttributeType
+//    }
+//    
+//    public class func fromResultObject(_ result: Any) -> Self? {
+//        
+//        func forceCast<T: NSNumber>(_ object: Any) -> T? {
+//            
+//            return (object as? T)
+//        }
+//        return forceCast(result)
+//    }
+//}
+//
+//
+//// MARK: - NSString: SelectValueResultType
+//
+//extension NSString: SelectValueResultType {
+//    
+//    public class var attributeType: NSAttributeType {
+//        
+//        return .stringAttributeType
+//    }
+//    
+//    public class func fromResultObject(_ result: Any) -> Self? {
+//        
+//        func forceCast<T: NSString>(_ object: Any) -> T? {
+//            
+//            return (object as? T)
+//        }
+//        return forceCast(result)
+//    }
+//}
+//
+//
+//// MARK: - NSDecimalNumber: SelectValueResultType
+//
+//extension NSDecimalNumber {
+//    
+//    public override class var attributeType: NSAttributeType {
+//        
+//        return .decimalAttributeType
+//    }
+//    
+//    public override class func fromResultObject(_ result: Any) -> Self? {
+//        
+//        func forceCast<T: NSDecimalNumber>(_ object: Any) -> T? {
+//            
+//            return (object as? T)
+//        }
+//        return forceCast(result)
+//    }
+//}
+//
+//
+//// MARK: - NSDate: SelectValueResultType
+//
+//extension NSDate: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .dateAttributeType
+//    }
+//    
+//    public class func fromResultObject(_ result: Any) -> Self? {
+//        
+//        func forceCast<T: NSDate>(_ object: Any) -> T? {
+//            
+//            return (object as? T)
+//        }
+//        return forceCast(result)
+//    }
+//}
+//
+//
+//// MARK: - NSData: SelectValueResultType
+//
+//extension NSData: SelectValueResultType {
+//    
+//    public static var attributeType: NSAttributeType {
+//        
+//        return .binaryDataAttributeType
+//    }
+//    
+//    public class func fromResultObject(_ result: Any) -> Self? {
+//        
+//        func forceCast<T: NSData>(_ object: Any) -> T? {
+//            
+//            return (object as? T)
+//        }
+//        return forceCast(result)
+//    }
+//}
+//
+//
+//// MARK: - NSManagedObjectID: SelectValueResultType
+//
+//extension NSManagedObjectID: SelectValueResultType {
+//    
+//    public class var attributeType: NSAttributeType {
+//        
+//        return .objectIDAttributeType
+//    }
+//    
+//    public class func fromResultObject(_ result: Any) -> Self? {
+//        
+//        func forceCast<T: NSManagedObjectID>(_ object: Any) -> T? {
+//            
+//            return (object as? T)
+//        }
+//        return forceCast(result)
+//    }
+//}
+//
+//
+//// MARK: - NSManagedObjectID: SelectAttributesResultType
+//
+//extension NSDictionary: SelectAttributesResultType {
+//    
+//    // MARK: SelectAttributesResultType
+//    
+//    public class func fromResultObjects(_ result: [Any]) -> [[String: Any]] {
+//        
+//        return result as! [[String: Any]]
+//    }
+//}
 
 
 // MARK: - Internal

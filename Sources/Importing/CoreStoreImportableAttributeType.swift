@@ -152,7 +152,16 @@ extension Bool: CoreStoreImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Bool? {
         
-        return value.boolValue
+        switch value {
+            
+        case let decimal as NSDecimalNumber:
+            // iOS: NSDecimalNumber(string: "0.5").boolValue // true
+            // OSX: NSDecimalNumber(string: "0.5").boolValue // false
+            return NSNumber(value: decimal.doubleValue).boolValue
+            
+        default:
+            return value.boolValue
+        }
     }
 }
 
