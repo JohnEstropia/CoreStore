@@ -234,6 +234,28 @@ extension Bool: CoreStoreQueryableAttributeType {
 }
 
 
+// MARK: - Int8
+
+extension Int8: CoreStoreQueryableAttributeType {
+    
+    public typealias QueryableNativeType = NSNumber
+    
+    public static let cs_rawAttributeType: NSAttributeType = .integer16AttributeType
+    
+    @inline(__always)
+    public static func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Int8? {
+        
+        return value.int8Value
+    }
+    
+    @inline(__always)
+    public func cs_toQueryableNativeType() -> QueryableNativeType {
+        
+        return self as NSNumber
+    }
+}
+
+
 // MARK: - Int16
 
 extension Int16: CoreStoreQueryableAttributeType {

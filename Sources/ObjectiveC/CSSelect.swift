@@ -361,7 +361,7 @@ public final class CSSelect: NSObject {
     
     public init<T: SelectValueResultType>(_ swiftValue: Select<T>) {
         
-        self.attributeType = T.attributeType
+        self.attributeType = T.cs_rawAttributeType
         self.selectTerms = swiftValue.selectTerms
         self.bridgeToSwift = swiftValue
         super.init()
