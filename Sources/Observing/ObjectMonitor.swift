@@ -212,7 +212,7 @@ public final class ObjectMonitor<EntityType: NSManagedObject>: Equatable {
     
     internal func downcast() -> ObjectMonitor<NSManagedObject> {
         
-        return unsafeDowncast(self, to: ObjectMonitor<NSManagedObject>.self)
+        return unsafeBitCast(self, to: ObjectMonitor<NSManagedObject>.self)
     }
     
     deinit {
