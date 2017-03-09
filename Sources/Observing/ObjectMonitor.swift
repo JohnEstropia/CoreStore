@@ -110,9 +110,19 @@ public final class ObjectMonitor<EntityType: NSManagedObject>: Equatable {
         return lhs === rhs
     }
     
+    public static func == <T: NSManagedObject, U: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<U>) -> Bool {
+        
+        return lhs.fetchedResultsController === rhs.fetchedResultsController
+    }
+    
     public static func ~= <T: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<T>) -> Bool {
         
         return lhs === rhs
+    }
+    
+    public static func ~= <T: NSManagedObject, U: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<U>) -> Bool {
+        
+        return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
     
@@ -212,7 +222,12 @@ public final class ObjectMonitor<EntityType: NSManagedObject>: Equatable {
     
     internal func downcast() -> ObjectMonitor<NSManagedObject> {
         
-        return unsafeBitCast(self, to: ObjectMonitor<NSManagedObject>.self)
+        @inline(__always)
+        func noWarnUnsafeBitCast<T, U>(_ x: T, to type: U.Type) -> U {
+            
+            return unsafeBitCast(x, to: type)
+        }
+        return noWarnUnsafeBitCast(self, to: ObjectMonitor<NSManagedObject>.self)
     }
     
     deinit {

@@ -677,7 +677,12 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     internal func downcast() -> ListMonitor<NSManagedObject> {
         
-        return unsafeBitCast(self, to: ListMonitor<NSManagedObject>.self)
+        @inline(__always)
+        func noWarnUnsafeBitCast<T, U>(_ x: T, to type: U.Type) -> U {
+         
+            return unsafeBitCast(x, to: type)
+        }
+        return noWarnUnsafeBitCast(self, to: ListMonitor<NSManagedObject>.self)
     }
     
     internal func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<T>) -> Void) {
