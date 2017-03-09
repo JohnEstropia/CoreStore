@@ -33,7 +33,27 @@ import CoreStore
 
 // MARK: - ObjectObserverTests
 
-class ObjectObserverTests: BaseTestDataTestCase {
+    class ObjectObserverTests: BaseTestDataTestCase {
+        
+        @objc
+        dynamic func test_ThatObjectObservers_CanDowncast() {
+            
+            self.prepareStack { (stack) in
+                
+                self.prepareTestDataForStack(stack)
+                
+                guard let object = stack.fetchOne(
+                    From<TestEntity1>(),
+                    Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
+                        
+                        XCTFail()
+                        return
+                }
+                let monitor = stack.monitorObject(object)
+                let downcast = monitor.downcast()
+                XCTAssertTrue(monitor == downcast)
+            }
+        }
     
     @objc
     dynamic func test_ThatObjectObservers_CanReceiveUpdateNotifications() {

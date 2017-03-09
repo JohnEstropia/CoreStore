@@ -36,6 +36,21 @@ import CoreStore
 class ListObserverTests: BaseTestDataTestCase {
     
     @objc
+    dynamic func test_ThatListObservers_CanDowncast() {
+        
+        self.prepareStack { (stack) in
+            
+            let monitor = stack.monitorSectionedList(
+                From<TestEntity1>(),
+                SectionBy(#keyPath(TestEntity1.testBoolean)),
+                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
+            )
+            let downcast = monitor.downcast()
+            XCTAssertTrue(monitor == downcast)
+        }
+    }
+    
+    @objc
     dynamic func test_ThatListObservers_CanReceiveInsertNotifications() {
         
         self.prepareStack { (stack) in
