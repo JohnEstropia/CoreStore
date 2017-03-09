@@ -359,7 +359,7 @@ public final class CSSelect: NSObject {
     
     // MARK: CoreStoreObjectiveCType
     
-    public init<T: SelectValueResultType>(_ swiftValue: Select<T>) {
+    public init<T: QueryableAttributeType>(_ swiftValue: Select<T>) {
         
         self.attributeType = T.cs_rawAttributeType
         self.selectTerms = swiftValue.selectTerms

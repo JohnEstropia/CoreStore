@@ -59,7 +59,7 @@ public protocol ImportableUniqueObject: ImportableObject {
     /**
      The data type for the entity's unique ID attribute
      */
-    associatedtype UniqueIDType: CoreStoreImportableAttributeType
+    associatedtype UniqueIDType: ImportableAttributeType
     
     /**
      The keyPath to the entity's unique ID attribute
@@ -199,7 +199,7 @@ public extension ImportableUniqueObject where Self: NSManagedObject {
         set {
             
             self.setValue(
-                newValue.cs_toQueryableNativeType(),
+                newValue.cs_toImportableNativeType(),
                 forKey: type(of: self).uniqueIDKeyPath
             )
         }

@@ -1,5 +1,5 @@
 //
-//  CoreStoreQueryableAttributeType.swift
+//  QueryableAttributeType.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -28,9 +28,9 @@ import CoreGraphics
 import CoreData
 
 
-// MARK: - CoreStoreQueryableAttributeType
+// MARK: - QueryableAttributeType
 
-public protocol CoreStoreQueryableAttributeType: Hashable {
+public protocol QueryableAttributeType: Hashable, SelectResultType {
     
     associatedtype QueryableNativeType: CoreDataNativeType
     
@@ -44,25 +44,9 @@ public protocol CoreStoreQueryableAttributeType: Hashable {
 }
 
 
-//// MARK: - NSManagedObject
-//
-//extension NSManagedObject: CoreStoreQueryableAttributeType {
-//    
-//    public typealias QueryableNativeType = NSManagedObjectID
-//    
-//    public static let cs_rawAttributeType: NSAttributeType = .objectIDAttributeType
-//    
-//    @inline(__always)
-//    public func cs_toQueryableNativeType() -> QueryableNativeType {
-//        
-//        return self.objectID
-//    }
-//}
-
-
 // MARK: - NSManagedObjectID
 
-extension NSManagedObjectID: CoreStoreQueryableAttributeType {
+extension NSManagedObjectID: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSManagedObjectID
     
@@ -78,7 +62,7 @@ extension NSManagedObjectID: CoreStoreQueryableAttributeType {
         return forceCast(value)
     }
     
-    @inline(__always)
+    @nonobjc @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self
@@ -88,7 +72,7 @@ extension NSManagedObjectID: CoreStoreQueryableAttributeType {
 
 // MARK: - NSNumber
 
-extension NSNumber: CoreStoreQueryableAttributeType {
+extension NSNumber: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -107,6 +91,7 @@ extension NSNumber: CoreStoreQueryableAttributeType {
         return forceCast(value)
     }
     
+    @nonobjc @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self
@@ -116,7 +101,7 @@ extension NSNumber: CoreStoreQueryableAttributeType {
 
 // MARK: - NSNumber
 
-extension NSDecimalNumber /*: CoreStoreQueryableAttributeType */ {
+extension NSDecimalNumber /*: QueryableAttributeType */ {
     
     public override class var cs_rawAttributeType: NSAttributeType {
         
@@ -127,7 +112,7 @@ extension NSDecimalNumber /*: CoreStoreQueryableAttributeType */ {
 
 // MARK: - NSString
 
-extension NSString: CoreStoreQueryableAttributeType {
+extension NSString: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSString
     
@@ -143,7 +128,7 @@ extension NSString: CoreStoreQueryableAttributeType {
         return forceCast(value)
     }
     
-    @inline(__always)
+    @nonobjc @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self
@@ -153,7 +138,7 @@ extension NSString: CoreStoreQueryableAttributeType {
 
 // MARK: - NSDate
 
-extension NSDate: CoreStoreQueryableAttributeType {
+extension NSDate: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSDate
     
@@ -169,7 +154,7 @@ extension NSDate: CoreStoreQueryableAttributeType {
         return forceCast(value)
     }
     
-    @inline(__always)
+    @nonobjc @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self
@@ -179,7 +164,7 @@ extension NSDate: CoreStoreQueryableAttributeType {
 
 // MARK: - NSData
 
-extension NSData: CoreStoreQueryableAttributeType {
+extension NSData: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSData
     
@@ -195,7 +180,7 @@ extension NSData: CoreStoreQueryableAttributeType {
         return forceCast(value)
     }
     
-    @inline(__always)
+    @nonobjc @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self
@@ -205,7 +190,7 @@ extension NSData: CoreStoreQueryableAttributeType {
 
 // MARK: - Bool
 
-extension Bool: CoreStoreQueryableAttributeType {
+extension Bool: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -236,7 +221,7 @@ extension Bool: CoreStoreQueryableAttributeType {
 
 // MARK: - Int8
 
-extension Int8: CoreStoreQueryableAttributeType {
+extension Int8: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -258,7 +243,7 @@ extension Int8: CoreStoreQueryableAttributeType {
 
 // MARK: - Int16
 
-extension Int16: CoreStoreQueryableAttributeType {
+extension Int16: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -280,7 +265,7 @@ extension Int16: CoreStoreQueryableAttributeType {
 
 // MARK: - Int32
 
-extension Int32: CoreStoreQueryableAttributeType {
+extension Int32: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -302,7 +287,7 @@ extension Int32: CoreStoreQueryableAttributeType {
 
 // MARK: - Int64
 
-extension Int64: CoreStoreQueryableAttributeType {
+extension Int64: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -324,7 +309,7 @@ extension Int64: CoreStoreQueryableAttributeType {
 
 // MARK: - Int
 
-extension Int: CoreStoreQueryableAttributeType {
+extension Int: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -346,7 +331,7 @@ extension Int: CoreStoreQueryableAttributeType {
 
 // MARK: - Double
 
-extension Double: CoreStoreQueryableAttributeType {
+extension Double: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -368,7 +353,7 @@ extension Double: CoreStoreQueryableAttributeType {
 
 // MARK: - Float
 
-extension Float: CoreStoreQueryableAttributeType {
+extension Float: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -390,7 +375,7 @@ extension Float: CoreStoreQueryableAttributeType {
 
 // MARK: - CGFloat
 
-extension CGFloat: CoreStoreQueryableAttributeType {
+extension CGFloat: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
@@ -412,7 +397,7 @@ extension CGFloat: CoreStoreQueryableAttributeType {
 
 // MARK: - Date
 
-extension Date: CoreStoreQueryableAttributeType {
+extension Date: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSDate
     
@@ -434,7 +419,7 @@ extension Date: CoreStoreQueryableAttributeType {
 
 // MARK: - String
 
-extension String: CoreStoreQueryableAttributeType {
+extension String: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSString
     
@@ -456,7 +441,7 @@ extension String: CoreStoreQueryableAttributeType {
 
 // MARK: - Data
 
-extension Data: CoreStoreQueryableAttributeType {
+extension Data: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSData
     
@@ -478,19 +463,19 @@ extension Data: CoreStoreQueryableAttributeType {
 
 // MARK: - NSNull
 
-extension NSNull: CoreStoreQueryableAttributeType {
+extension NSNull: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNull
     
     public static let cs_rawAttributeType: NSAttributeType = .undefinedAttributeType
     
-    @inline(__always)
+    @nonobjc @inline(__always)
     public static func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
         return self.init()
     }
     
-    @inline(__always)
+    @nonobjc @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self

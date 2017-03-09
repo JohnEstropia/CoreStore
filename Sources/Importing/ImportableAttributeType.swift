@@ -1,5 +1,5 @@
 //
-//  CoreStoreImportableAttributeType.swift
+//  ImportableAttributeType.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,9 +27,9 @@ import Foundation
 import CoreData
 
 
-// MARK: - CoreStoreImportableAttributeType
+// MARK: - ImportableAttributeType
 
-public protocol CoreStoreImportableAttributeType: CoreStoreQueryableAttributeType {
+public protocol ImportableAttributeType: QueryableAttributeType {
     
     associatedtype ImportableNativeType: QueryableNativeType
     
@@ -38,12 +38,15 @@ public protocol CoreStoreImportableAttributeType: CoreStoreQueryableAttributeTyp
     
     @inline(__always)
     static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self?
+    
+    @inline(__always)
+    func cs_toImportableNativeType() -> ImportableNativeType
 }
 
 
 // MARK: - NSNumber
 
-extension NSNumber: CoreStoreImportableAttributeType {
+extension NSNumber: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSNumber
     
@@ -62,12 +65,18 @@ extension NSNumber: CoreStoreImportableAttributeType {
         }
         return forceCast(value)
     }
+    
+    @nonobjc @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self
+    }
 }
 
 
 // MARK: - NSString
 
-extension NSString: CoreStoreImportableAttributeType {
+extension NSString: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSString
     
@@ -86,12 +95,18 @@ extension NSString: CoreStoreImportableAttributeType {
         }
         return forceCast(value)
     }
+    
+    @nonobjc @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self
+    }
 }
 
 
 // MARK: - NSDate
 
-extension NSDate: CoreStoreImportableAttributeType {
+extension NSDate: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSDate
     
@@ -110,12 +125,18 @@ extension NSDate: CoreStoreImportableAttributeType {
         }
         return forceCast(value)
     }
+    
+    @nonobjc @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self
+    }
 }
 
 
 // MARK: - NSData
 
-extension NSData: CoreStoreImportableAttributeType {
+extension NSData: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSData
     
@@ -134,12 +155,18 @@ extension NSData: CoreStoreImportableAttributeType {
         }
         return forceCast(value)
     }
+    
+    @nonobjc @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self
+    }
 }
 
 
 // MARK: - Bool
 
-extension Bool: CoreStoreImportableAttributeType {
+extension Bool: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSNumber
     
@@ -157,18 +184,24 @@ extension Bool: CoreStoreImportableAttributeType {
         case let decimal as NSDecimalNumber:
             // iOS: NSDecimalNumber(string: "0.5").boolValue // true
             // OSX: NSDecimalNumber(string: "0.5").boolValue // false
-            return NSNumber(value: decimal.doubleValue).boolValue
+            return decimal != NSDecimalNumber.zero
             
         default:
             return value.boolValue
         }
+    }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self as NSNumber
     }
 }
 
 
 // MARK: - Int16
 
-extension Int16: CoreStoreImportableAttributeType {
+extension Int16: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSNumber
     
@@ -183,12 +216,18 @@ extension Int16: CoreStoreImportableAttributeType {
         
         return value.int16Value
     }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self as NSNumber
+    }
 }
 
 
 // MARK: - Int32
 
-extension Int32: CoreStoreImportableAttributeType {
+extension Int32: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSNumber
     
@@ -203,12 +242,18 @@ extension Int32: CoreStoreImportableAttributeType {
         
         return value.int32Value
     }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self as NSNumber
+    }
 }
 
 
 // MARK: - Int64
 
-extension Int64: CoreStoreImportableAttributeType {
+extension Int64: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSNumber
     
@@ -223,12 +268,18 @@ extension Int64: CoreStoreImportableAttributeType {
         
         return value.int64Value
     }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self as NSNumber
+    }
 }
 
 
 // MARK: - Double
 
-extension Double: CoreStoreImportableAttributeType {
+extension Double: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSNumber
     
@@ -243,12 +294,18 @@ extension Double: CoreStoreImportableAttributeType {
         
         return value.doubleValue
     }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self as NSNumber
+    }
 }
 
 
 // MARK: - Float
 
-extension Float: CoreStoreImportableAttributeType {
+extension Float: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSNumber
     
@@ -263,12 +320,18 @@ extension Float: CoreStoreImportableAttributeType {
         
         return value.floatValue
     }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self as NSNumber
+    }
 }
 
 
 // MARK: - Date
 
-extension Date: CoreStoreImportableAttributeType {
+extension Date: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSDate
     
@@ -283,12 +346,18 @@ extension Date: CoreStoreImportableAttributeType {
         
         return value as Date
     }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self as NSDate
+    }
 }
 
 
 // MARK: - String
 
-extension String: CoreStoreImportableAttributeType {
+extension String: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSString
     
@@ -303,12 +372,18 @@ extension String: CoreStoreImportableAttributeType {
         
         return value as String
     }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self as NSString
+    }
 }
 
 
 // MARK: - Data
 
-extension Data: CoreStoreImportableAttributeType {
+extension Data: ImportableAttributeType {
     
     public typealias ImportableNativeType = NSData
     
@@ -322,5 +397,11 @@ extension Data: CoreStoreImportableAttributeType {
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Data? {
         
         return value as Data
+    }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self as NSData
     }
 }
