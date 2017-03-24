@@ -36,6 +36,6 @@ internal extension CoreStoreFetchRequest {
     @nonobjc
     internal func dynamicCast<U: NSFetchRequestResult>() -> NSFetchRequest<U> {
         
-        return unsafeBitCast(self, to: NSFetchRequest<U>.self)
+        return unsafeDowncast(self, to: NSFetchRequest<U>.self)
     }
 }
