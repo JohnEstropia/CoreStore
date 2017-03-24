@@ -202,7 +202,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return (self.fetchedResultsController.fetchedObjects as? [T]) ?? []
+        return self.fetchedResultsController.dynamicCast().fetchedObjects ?? []
     }
     
     /**
@@ -371,7 +371,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return (self.fetchedResultsController.fetchedObjects as? [T] ?? []).index(of: object)
+        return (self.fetchedResultsController.dynamicCast().fetchedObjects ?? []).index(of: object)
     }
     
     /**
