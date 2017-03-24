@@ -142,6 +142,13 @@ extension CoreStoreError: CustomDebugStringConvertible, CoreStoreDebugStringConv
         case .internalError(let NSError):
             firstLine = ".internalError"
             info.append(("NSError", NSError))
+            
+        case .userError(error: let error):
+            firstLine = ".userError"
+            info.append(("Error", error))
+            
+        case .userCancelled:
+            firstLine = ".userCancelled"
         }
         
         return createFormattedString(

@@ -42,33 +42,32 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let createExpectation = self.expectation(description: "create")
-                stack.beginSynchronous { (transaction) in
+                let hasChanges: Bool = stack.perform(
+                    synchronous: { (transaction) in
                     
-                    XCTAssertEqual(transaction.context, transaction.internalContext())
-                    XCTAssertTrue(transaction.context.isTransactionContext)
-                    XCTAssertFalse(transaction.context.isDataStackContext)
-                    
-                    let object = transaction.create(Into<TestEntity1>())
-                    XCTAssertEqual(object.fetchSource()?.internalContext(), transaction.context)
-                    XCTAssertEqual(object.querySource()?.internalContext(), transaction.context)
-                    
-                    object.testEntityID = NSNumber(value: 1)
-                    object.testString = "string1"
-                    object.testNumber = 100
-                    object.testDate = testDate
-                    
-                    
-                    switch transaction.commitAndWait() {
+                        defer {
+                            
+                            createExpectation.fulfill()
+                        }
+                        XCTAssertEqual(transaction.context, transaction.internalContext())
+                        XCTAssertTrue(transaction.context.isTransactionContext)
+                        XCTAssertFalse(transaction.context.isDataStackContext)
                         
-                    case .success(let hasChanges):
-                        XCTAssertTrue(hasChanges)
-                        createExpectation.fulfill()
+                        let object = transaction.create(Into<TestEntity1>())
+                        XCTAssertEqual(object.fetchSource()?.internalContext(), transaction.context)
+                        XCTAssertEqual(object.querySource()?.internalContext(), transaction.context)
                         
-                    default:
-                        XCTFail()
-                    }
-                }
+                        object.testEntityID = NSNumber(value: 1)
+                        object.testString = "string1"
+                        object.testNumber = 100
+                        object.testDate = testDate
+                        
+                        return transaction.hasChanges
+                    },
+                    waitForObserverNotifications: true
+                )
                 self.checkExpectationsImmediately()
+                XCTAssertTrue(hasChanges)
                 
                 XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                 
@@ -85,28 +84,28 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let updateExpectation = self.expectation(description: "update")
-                stack.beginSynchronous { (transaction) in
-                    
-                    guard let object = transaction.fetchOne(From<TestEntity1>()) else {
+                let hasChanges: Bool = stack.perform(
+                    synchronous: { (transaction) in
                         
-                        XCTFail()
-                        return
-                    }
-                    object.testString = "string1_edit"
-                    object.testNumber = 200
-                    object.testDate = Date.distantFuture
-                    
-                    switch transaction.commitAndWait() {
+                        defer {
+                            
+                            updateExpectation.fulfill()
+                        }
+                        guard let object = transaction.fetchOne(From<TestEntity1>()) else {
+                            
+                            XCTFail()
+                            return // TODO: convert fetch methods to throwing methods
+                        }
+                        object.testString = "string1_edit"
+                        object.testNumber = 200
+                        object.testDate = Date.distantFuture
                         
-                    case .success(let hasChanges):
-                        XCTAssertTrue(hasChanges)
-                        updateExpectation.fulfill()
-                        
-                    default:
-                        XCTFail()
-                    }
-                }
+                        return transaction.hasChanges
+                    },
+                    waitForObserverNotifications: true
+                )
                 self.checkExpectationsImmediately()
+                XCTAssertTrue(hasChanges)
                 
                 XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 1)
                 

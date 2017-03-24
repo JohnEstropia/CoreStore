@@ -59,6 +59,16 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
      */
     case internalError(NSError: NSError)
     
+    /**
+     The transaction was terminated by a user-thrown `Error`.
+     */
+    case userError(error: Error)
+    
+    /**
+     The transaction was cancelled by the user.
+     */
+    case userCancelled
+    
     
     // MARK: CustomNSError
     
@@ -85,6 +95,12 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             
         case .internalError:
             return CoreStoreErrorCode.internalError.rawValue
+            
+        case .userError:
+            return CoreStoreErrorCode.userError.rawValue
+            
+        case .userCancelled:
+            return CoreStoreErrorCode.userCancelled.rawValue
         }
     }
     
@@ -112,10 +128,18 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
                 "localStoreURL": localStoreURL
             ]
             
-        case .internalError(let NSError):
+        case .internalError(let nsError):
             return [
-                "NSError": NSError
+                "NSError": nsError
             ]
+            
+        case .userError(let error):
+            return [
+                "Error": error
+            ]
+            
+        case .userCancelled:
+            return [:]
         }
     }
     
@@ -139,7 +163,23 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             return url1 == url2
             
         case (.internalError(let NSError1), .internalError(let NSError2)):
-            return NSError1 == NSError2
+            return NSError1.isEqual(NSError2)
+            
+        case (.userError(let error1), .userError(let error2)):
+            switch (error1, error2) {
+                
+            case (let error1 as AnyHashable, let error2 as AnyHashable):
+                return error1 == error2
+            
+            case (let error1 as NSError, let error2 as NSError):
+                return error1.isEqual(error2)
+                
+            default:
+                return false // shouldn't happen
+            }
+            
+        case (.userCancelled, .userCancelled):
+            return true
             
         default:
             return false
@@ -166,8 +206,14 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
         case .progressiveMigrationRequired(let localStoreURL):
             return code.hashValue ^ localStoreURL.hashValue
             
-        case .internalError(let NSError):
-            return code.hashValue ^ NSError.hashValue
+        case .internalError(let nsError):
+            return code.hashValue ^ nsError.hashValue
+            
+        case .userError(let error):
+            return code.hashValue ^ (error as NSError).hashValue
+            
+        case .userCancelled:
+            return code.hashValue
         }
     }
     
@@ -221,6 +267,16 @@ public enum CoreStoreErrorCode: Int {
      An internal SDK call failed with the specified "NSError" userInfo key.
      */
     case internalError
+    
+    /**
+     The transaction was terminated by a user-thrown `Error` specified by "Error" userInfo key.
+     */
+    case userError
+    
+    /**
+     The transaction was cancelled by the user.
+     */
+    case userCancelled
 }
 
 

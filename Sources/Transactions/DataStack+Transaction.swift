@@ -31,6 +31,79 @@ import CoreData
 
 public extension DataStack {
     
+    public func perform<T>(asynchronous task: @escaping (_ transaction: AsynchronousDataTransaction) throws -> T, success: @escaping (T) -> Void, failure: @escaping (CoreStoreError) -> Void) {
+        
+        let transaction = AsynchronousDataTransaction(
+            mainContext: self.rootSavingContext,
+            queue: self.childTransactionQueue,
+            closure: { _ in }
+        )
+        transaction.transactionQueue.cs_async {
+            
+            do {
+                
+                let extraInfo = try task(transaction)
+                transaction.commit { (result) in
+                    
+                    switch result {
+                        
+                    case .success:
+                        success(extraInfo)
+                        
+                    case .failure(let error):
+                        failure(error)
+                    }
+                }
+            }
+            catch let error as CoreStoreError {
+                
+                DispatchQueue.main.async { failure(error) }
+            }
+            catch let error {
+                
+                DispatchQueue.main.async { failure(.userError(error: error)) }
+            }
+        }
+    }
+    
+    public func perform<T>(synchronous task: ((_ transaction: SynchronousDataTransaction) throws -> T), waitForObserverNotifications: Bool = true) throws -> T {
+        
+        let transaction = SynchronousDataTransaction(
+            mainContext: self.rootSavingContext,
+            queue: self.childTransactionQueue,
+            closure: { _ in }
+        )
+        return try transaction.transactionQueue.cs_sync {
+            
+            let extraInfo: T
+            do {
+                
+                extraInfo = try task(transaction)
+            }
+            catch let error as CoreStoreError {
+                
+                throw error
+            }
+            catch let error {
+                
+                throw CoreStoreError.userError(error: error)
+            }
+            
+            let result = waitForObserverNotifications
+                ? transaction.commitAndWait()
+                : transaction.commit()
+            switch result {
+                
+            case .success:
+                return extraInfo
+                
+            case .failure(let error):
+                throw error
+            }
+        }
+    }
+    
+    
     /**
      Begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.
      
@@ -83,7 +156,6 @@ public extension DataStack {
             Thread.isMainThread,
             "Attempted to refresh entities outside their designated queue."
         )
-        
         self.mainContext.refreshAndMergeAllObjects()
     }
 }

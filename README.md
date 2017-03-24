@@ -815,7 +815,7 @@ public protocol ImportableUniqueObject: ImportableObject {
     static var uniqueIDKeyPath: String { get }
     var uniqueIDValue: UniqueIDType { get set }
 
-    static func shouldInsert(from source: ImportSource, inn transaction: BaseDataTransaction) -> Bool
+    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
     static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
     static func uniqueID(from source: ImportSource, in transaction: BaseDataTransaction) throws -> UniqueIDType?
     func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws

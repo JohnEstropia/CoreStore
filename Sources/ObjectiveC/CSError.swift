@@ -137,6 +137,16 @@ public enum CSErrorCode: Int {
      An internal SDK call failed with the specified "NSError" userInfo key.
      */
     case internalError
+    
+    /**
+     The transaction was terminated by a user-thrown error with the specified "Error" userInfo key.
+     */
+    case userError
+    
+    /**
+     The transaction was cancelled by the user.
+     */
+    case userCancelled
 }
 
 
@@ -209,12 +219,23 @@ extension CoreStoreError: CoreStoreSwiftType, _ObjectiveCBridgeableError {
             self = .progressiveMigrationRequired(localStoreURL: localStoreURL)
             
         case .internalError:
-            guard case let NSError as NSError = info["NSError"] else {
+            guard case let nsError as NSError = info["NSError"] else {
                 
                 self = .unknown
                 return
             }
-            self = .internalError(NSError: NSError)
+            self = .internalError(NSError: nsError)
+            
+        case .userError:
+            guard case let error as Error = info["Error"] else {
+                
+                self = .unknown
+                return
+            }
+            self = .userError(error: error)
+            
+        case .userCancelled:
+            self = .userCancelled
         }
     }
 }

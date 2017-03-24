@@ -36,6 +36,12 @@ public /*abstract*/ class BaseDataTransaction {
     
     // MARK: Object management
     
+    
+    public func cancel() throws -> Never {
+        
+        throw CoreStoreError.userCancelled
+    }
+    
     /**
      Indicates if the transaction has pending changes
      */
