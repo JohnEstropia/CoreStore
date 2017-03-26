@@ -27,6 +27,7 @@ import Foundation
 
 // MARK: Associated Objects
 
+@inline(__always)
 internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafeRawPointer, inObject object: Any) -> T? {
     
     switch objc_getAssociatedObject(object, key) {
@@ -42,16 +43,19 @@ internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafeRawPointer
     }
 }
 
+@inline(__always)
 internal func cs_setAssociatedRetainedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: Any) {
     
     objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 }
 
+@inline(__always)
 internal func cs_setAssociatedCopiedObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: Any) {
     
     objc_setAssociatedObject(object, key, associatedObject, .OBJC_ASSOCIATION_COPY_NONATOMIC)
 }
 
+@inline(__always)
 internal func cs_setAssociatedWeakObject<T: AnyObject>(_ associatedObject: T?, forKey key: UnsafeRawPointer, inObject object: Any) {
     
     if let associatedObject = associatedObject {
@@ -67,26 +71,31 @@ internal func cs_setAssociatedWeakObject<T: AnyObject>(_ associatedObject: T?, f
 
 // MARK: Printing Utilities
 
+@inline(__always)
 internal func cs_typeName<T>(_ value: T) -> String {
     
     return "'\(String(reflecting: type(of: value)))'"
 }
 
+@inline(__always)
 internal func cs_typeName<T>(_ value: T.Type) -> String {
     
     return "'\(value)'"
 }
 
+@inline(__always)
 internal func cs_typeName(_ value: AnyClass) -> String {
     
     return "'\(value)'"
 }
 
+@inline(__always)
 internal func cs_typeName(_ name: String) -> String {
     
     return "<\(name)>"
 }
 
+@inline(__always)
 internal func cs_typeName(_ name: String?) -> String {
     
     return "<\(name ?? "unknown")>"

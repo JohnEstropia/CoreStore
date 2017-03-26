@@ -31,6 +31,16 @@ import CoreData
 
 public extension DataStack {
     
+    
+    public func perform<T>(asynchronous task: @escaping (_ transaction: AsynchronousDataTransaction) throws -> T, completion: @escaping (TransactionResult<T>) -> Void) {
+        
+        self.perform(
+            asynchronous: task,
+            success: { completion(TransactionResult(userInfo: $0)) },
+            failure: { completion(TransactionResult(error: $0)) }
+        )
+    }
+    
     public func perform<T>(asynchronous task: @escaping (_ transaction: AsynchronousDataTransaction) throws -> T, success: @escaping (T) -> Void, failure: @escaping (CoreStoreError) -> Void) {
         
         let transaction = AsynchronousDataTransaction(
@@ -40,28 +50,28 @@ public extension DataStack {
         )
         transaction.transactionQueue.cs_async {
             
+            let userInfo: T
             do {
                 
-                let extraInfo = try task(transaction)
-                transaction.commit { (result) in
-                    
-                    switch result {
-                        
-                    case .success:
-                        success(extraInfo)
-                        
-                    case .failure(let error):
-                        failure(error)
-                    }
-                }
+                userInfo = try task(transaction)
             }
             catch let error as CoreStoreError {
                 
                 DispatchQueue.main.async { failure(error) }
+                return
             }
             catch let error {
                 
                 DispatchQueue.main.async { failure(.userError(error: error)) }
+                return
+            }
+            transaction.commit { (result) in
+                
+                switch result {
+                    
+                case .success: success(userInfo)
+                case .failure(let error): failure(error)
+                }
             }
         }
     }
@@ -75,10 +85,10 @@ public extension DataStack {
         )
         return try transaction.transactionQueue.cs_sync {
             
-            let extraInfo: T
+            let userInfo: T
             do {
                 
-                extraInfo = try task(transaction)
+                userInfo = try task(transaction)
             }
             catch let error as CoreStoreError {
                 
@@ -88,17 +98,13 @@ public extension DataStack {
                 
                 throw CoreStoreError.userError(error: error)
             }
-            
             let result = waitForObserverNotifications
                 ? transaction.commitAndWait()
                 : transaction.commit()
             switch result {
                 
-            case .success:
-                return extraInfo
-                
-            case .failure(let error):
-                throw error
+            case .success: return userInfo
+            case .failure(let error): throw error
             }
         }
     }

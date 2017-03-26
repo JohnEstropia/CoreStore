@@ -1,8 +1,8 @@
 //
-//  CoreStoreFetchRequest+CoreStore.swift
+//  TransactionResult.swift
 //  CoreStore
 //
-//  Copyright © 2016 John Rommel Estropia
+//  Copyright © 2017 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,35 @@
 //
 
 import Foundation
-import CoreData
 
 
-// MARK: - CoreStoreFetchRequest
+// MARK: - TransactionResult
 
-internal extension CoreStoreFetchRequest {
-    
+public enum TransactionResult<T> {
+
+    case success(T)
+
+    case failure(CoreStoreError)
+
+    public var boolValue: Bool {
+
+        switch self {
+
+        case .success: return true
+        case .failure: return false
+        }
+    }
+
+
     // MARK: Internal
-    
-    @nonobjc @inline(__always)
-    internal func dynamicCast<U: NSFetchRequestResult>() -> NSFetchRequest<U> {
-        
-        return unsafeBitCast(self, to: NSFetchRequest<U>.self)
+
+    internal init(userInfo: T) {
+
+        self = .success(userInfo)
+    }
+
+    internal init(error: CoreStoreError) {
+
+        self = .failure(error)
     }
 }

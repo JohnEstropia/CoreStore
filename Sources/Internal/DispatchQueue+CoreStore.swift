@@ -30,7 +30,7 @@ import Foundation
 
 internal extension DispatchQueue {
     
-    @nonobjc
+    @nonobjc @inline(__always)
     internal static func serial(_ label: String, qos: DispatchQoS = .default) -> DispatchQueue {
         
         return DispatchQueue(
@@ -42,7 +42,7 @@ internal extension DispatchQueue {
         )
     }
     
-    @nonobjc
+    @nonobjc @inline(__always)
     internal static func concurrent(_ label: String, qos: DispatchQoS = .default) -> DispatchQueue {
         
         return DispatchQueue(
@@ -54,7 +54,7 @@ internal extension DispatchQueue {
         )
     }
     
-    @nonobjc
+    @nonobjc @inline(__always)
     internal func cs_isCurrentExecutionContext() -> Bool {
         
         let specific = ObjectIdentifier(self)
@@ -63,25 +63,25 @@ internal extension DispatchQueue {
         return DispatchQueue.getSpecific(key: Static.specificKey) == specific
     }
     
-    @nonobjc
+    @nonobjc @inline(__always)
     internal func cs_sync<T>(_ closure: () throws -> T) rethrows -> T {
         
         return try self.sync { try autoreleasepool(invoking: closure) }
     }
     
-    @nonobjc
+    @nonobjc @inline(__always)
     internal func cs_async(_ closure: @escaping () -> Void) {
         
         self.async { autoreleasepool(invoking: closure) }
     }
     
-    @nonobjc
+    @nonobjc @inline(__always)
     internal func cs_barrierSync<T>(_ closure: () throws -> T) rethrows -> T {
         
         return try self.sync(flags: .barrier) { try autoreleasepool(invoking: closure) }
     }
     
-    @nonobjc
+    @nonobjc @inline(__always)
     internal func cs_barrierAsync(_ closure: @escaping () -> Void) {
         
         self.async(flags: .barrier) { autoreleasepool(invoking: closure) }

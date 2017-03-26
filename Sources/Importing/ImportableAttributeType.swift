@@ -59,17 +59,13 @@ extension NSNumber: ImportableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
         
-        func forceCast<T: NSNumber>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @nonobjc @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -89,17 +85,13 @@ extension NSString: ImportableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
         
-        func forceCast<T: NSString>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @nonobjc @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -119,17 +111,13 @@ extension NSDate: ImportableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
         
-        func forceCast<T: NSDate>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @nonobjc @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -149,17 +137,13 @@ extension NSData: ImportableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
         
-        func forceCast<T: NSData>(_ value: Any) -> T? {
-            
-            return value as? T
-        }
-        return forceCast(value)
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @nonobjc @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -179,22 +163,13 @@ extension Bool: ImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Bool? {
         
-        switch value {
-            
-        case let decimal as NSDecimalNumber:
-            // iOS: NSDecimalNumber(string: "0.5").boolValue // true
-            // OSX: NSDecimalNumber(string: "0.5").boolValue // false
-            return decimal != NSDecimalNumber.zero
-            
-        default:
-            return value.boolValue
-        }
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self as NSNumber
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -214,13 +189,13 @@ extension Int16: ImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Int16? {
         
-        return value.int16Value
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self as NSNumber
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -240,13 +215,13 @@ extension Int32: ImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Int32? {
         
-        return value.int32Value
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self as NSNumber
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -266,13 +241,13 @@ extension Int64: ImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Int64? {
         
-        return value.int64Value
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self as NSNumber
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -292,13 +267,13 @@ extension Double: ImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Double? {
         
-        return value.doubleValue
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self as NSNumber
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -318,13 +293,13 @@ extension Float: ImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Float? {
         
-        return value.floatValue
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self as NSNumber
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -344,13 +319,13 @@ extension Date: ImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Date? {
         
-        return value as Date
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self as NSDate
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -370,13 +345,13 @@ extension String: ImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> String? {
         
-        return value as String
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self as NSString
+        return self.cs_toQueryableNativeType()
     }
 }
 
@@ -396,12 +371,12 @@ extension Data: ImportableAttributeType {
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Data? {
         
-        return value as Data
+        return self.cs_fromQueryableNativeType(value)
     }
     
     @inline(__always)
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
-        return self as NSData
+        return self.cs_toQueryableNativeType()
     }
 }

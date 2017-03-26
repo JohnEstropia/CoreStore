@@ -34,6 +34,11 @@ import CoreData
  */
 public final class SynchronousDataTransaction: BaseDataTransaction {
     
+    public func cancel() throws -> Never {
+        
+        throw CoreStoreError.userCancelled
+    }
+    
     /**
      Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` or `commitAndWait()` method was already called once.
      - Important: Unlike `SynchronousDataTransaction.commit()`, this method waits for all observers to be notified of the changes before returning. This results in more predictable data update order, but may risk triggering deadlocks.

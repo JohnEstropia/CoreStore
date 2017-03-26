@@ -34,6 +34,11 @@ import CoreData
  */
 public final class AsynchronousDataTransaction: BaseDataTransaction {
     
+    public func cancel() throws -> Never {
+        
+        throw CoreStoreError.userCancelled
+    }
+    
     /**
      Saves the transaction changes. This method should not be used after the `commit()` method was already called once.
      

@@ -42,7 +42,7 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let createExpectation = self.expectation(description: "create")
-                let hasChanges: Bool = stack.perform(
+                let hasChanges: Bool = try! stack.perform(
                     synchronous: { (transaction) in
                     
                         defer {
@@ -84,7 +84,7 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let updateExpectation = self.expectation(description: "update")
-                let hasChanges: Bool = stack.perform(
+                let hasChanges: Bool = try! stack.perform(
                     synchronous: { (transaction) in
                         
                         defer {
@@ -92,9 +92,9 @@ final class TransactionTests: BaseTestCase {
                             updateExpectation.fulfill()
                         }
                         guard let object = transaction.fetchOne(From<TestEntity1>()) else {
-                            
-                            XCTFail()
-                            return // TODO: convert fetch methods to throwing methods
+                            // TODO: convert fetch methods to throwing methods
+                            XCTFail() 
+                            try transaction.cancel()
                         }
                         object.testString = "string1_edit"
                         object.testNumber = 200
