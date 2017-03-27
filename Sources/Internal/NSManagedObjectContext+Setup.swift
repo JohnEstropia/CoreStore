@@ -99,7 +99,7 @@ internal extension NSManagedObjectContext {
     internal static func mainContextForRootContext(_ rootContext: NSManagedObjectContext) -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        context.parent = rootContext
+        context.persistentStoreCoordinator = rootContext.persistentStoreCoordinator!
         context.mergePolicy = NSRollbackMergePolicy
         context.undoManager = nil
         context.setupForCoreStoreWithContextName("com.corestore.maincontext")
