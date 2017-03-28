@@ -101,7 +101,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     @nonobjc
     internal func dynamicCast<U: NSFetchRequestResult>() -> NSFetchedResultsController<U> {
         
-        return unsafeBitCast(self, to: NSFetchedResultsController<U>.self)
+        return unsafeDowncast(self, to: NSFetchedResultsController<U>.self)
     }
     
     deinit {
