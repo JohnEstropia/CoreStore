@@ -74,7 +74,6 @@ public final class DataStack: Equatable {
         self.migrationChain = migrationChain
         
         self.rootSavingContext.parentStack = self
-        self.mainContext.parentStack = self
         
         self.mainContext.isDataStackContext = true
     }
