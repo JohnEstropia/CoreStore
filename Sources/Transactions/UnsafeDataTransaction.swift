@@ -34,30 +34,33 @@ import CoreData
  */
 public final class UnsafeDataTransaction: BaseDataTransaction {
     
+    // MARK: -
+    
     /**
      Saves the transaction changes asynchronously. For an `UnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
      
-     - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
+     - parameter completion: the block executed after the save completes. Success or failure is reported by the optional `error` argument of the block.
      */
-    public func commit(_ completion: @escaping (_ result: SaveResult) -> Void) {
+    public func commit(_ completion: @escaping (_ error: CoreStoreError?) -> Void) {
         
-        self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
+        self.context.saveAsynchronouslyWithCompletion { (_, error) in
             
-            self.result = result
-            completion(result)
+            completion(error)
+            withExtendedLifetime(self, {})
         }
     }
     
     /**
      Saves the transaction changes and waits for completion synchronously. For an `UnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
      
-     - returns: a `SaveResult` containing the success or failure information
+     - throws: a `CoreStoreError` value indicating the failure.
      */
-    public func commitAndWait() -> SaveResult {
+    public func commitAndWait() throws {
         
-        let result = self.context.saveSynchronously(waitForMerge: true)
-        self.result = result
-        return result
+        if case (_, let error?) = self.context.saveSynchronously(waitForMerge: true) {
+            
+            throw error
+        }
     }
     
     /**
@@ -141,14 +144,5 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, supportsUndo: Bool) {
         
         super.init(mainContext: mainContext, queue: queue, supportsUndo: supportsUndo, bypassesQueueing: true)
-    }
-    
-    
-    // MARK: Obsolete
-    
-    @available(*, obsoleted: 3.0.0, message: "Transaction contexts are now exposed through the FetchableSource and QueryableSource protocols.", renamed: "internalContext()")
-    public var internalContext: NSManagedObjectContext {
-        
-        fatalError()
     }
 }

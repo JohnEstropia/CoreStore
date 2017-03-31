@@ -202,7 +202,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return self.fetchedResultsController.dynamicCast().fetchedObjects ?? []
+        return (self.fetchedResultsController.dynamicCast() as NSFetchedResultsController<T>).fetchedObjects ?? []
     }
     
     /**
@@ -213,7 +213,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      */
     public func objectsInSection(_ section: Int) -> [T] {
         
-        return (self.sectionInfoAtIndex(section).objects as? [T]) ?? []
+        return (self.sectionInfoAtIndex(section).objects as! [T]?) ?? []
     }
     
     /**
@@ -224,7 +224,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      */
     public func objectsInSection(safeSectionIndex section: Int) -> [T]? {
         
-        return (self.sectionInfoAtIndex(safeSectionIndex: section)?.objects as? [T]) ?? []
+        return self.sectionInfoAtIndex(safeSectionIndex: section)?.objects as! [T]?
     }
     
     /**
@@ -371,7 +371,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return (self.fetchedResultsController.dynamicCast().fetchedObjects ?? []).index(of: object)
+        return (self.fetchedResultsController.dynamicCast() as NSFetchedResultsController<T>).fetchedObjects?.index(of: object)
     }
     
     /**

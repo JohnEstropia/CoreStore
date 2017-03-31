@@ -38,10 +38,7 @@ public extension CSCoreStore {
     @objc
     public static func beginAsynchronous(_ closure: @escaping (_ transaction: CSAsynchronousDataTransaction) -> Void) {
         
-        return CoreStore.beginAsynchronous { (transaction) in
-            
-            closure(transaction.bridgeToObjectiveC)
-        }
+        self.defaultStack.beginAsynchronous(closure)
     }
     
     /**
@@ -51,16 +48,9 @@ public extension CSCoreStore {
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
     @objc
-    @discardableResult
-    public static func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    public static func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void, error: NSErrorPointer) -> Bool {
         
-        return bridge {
-            
-            CoreStore.beginSynchronous { (transaction) in
-                
-                closure(transaction.bridgeToObjectiveC)
-            }
-        }
+        return self.defaultStack.beginSynchronous(closure, error: error)
     }
     
     /**
@@ -100,5 +90,22 @@ public extension CSCoreStore {
     public static func refreshAndMergeAllObjects() {
         
         CoreStore.refreshAndMergeAllObjects()
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Using the `defaultStack`, begins a transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
+     */
+    @available(*, deprecated: 4.0.0, message: "Use the new +[CSCoreStore beginSynchronous:error:] API that reports failure using an error instance.")
+    @objc
+    @discardableResult
+    public static func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+        
+        return self.defaultStack.beginSynchronous(closure)
     }
 }

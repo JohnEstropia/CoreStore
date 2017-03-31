@@ -54,8 +54,13 @@ internal extension DispatchQueue {
         )
     }
     
-    @nonobjc @inline(__always)
+    @nonobjc
     internal func cs_isCurrentExecutionContext() -> Bool {
+        
+        enum Static {
+            
+            static let specificKey = DispatchSpecificKey<ObjectIdentifier>()
+        }
         
         let specific = ObjectIdentifier(self)
         
@@ -89,9 +94,4 @@ internal extension DispatchQueue {
     
     
     // MARK: Private
-    
-    private enum Static {
-        
-        static let specificKey = DispatchSpecificKey<ObjectIdentifier>()
-    }
 }

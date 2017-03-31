@@ -73,7 +73,7 @@ public protocol ImportableObject: class, NSObjectProtocol, AnyObject {
     func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws
     
     
-    // MARK: Deprecated
+    // MARK: Obsolete (`deprecated` only for reference, please use new methods)
     
     @available(*, deprecated: 3.0.0, renamed: "shouldInsert(from:in:)")
     static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
@@ -93,13 +93,15 @@ public extension ImportableObject {
     }
     
     
-    // MARK: Deprecated
+    // MARK: Obsolete
     
+    @available(*, obsoleted: 4.0.0, renamed: "shouldInsert(from:in:)")
     static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldInsert(from: source, in: transaction)
     }
     
+    @available(*, obsoleted: 4.0.0, renamed: "didInsert(from:in:)")
     func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.didInsert(from: source, in: transaction)

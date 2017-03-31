@@ -34,61 +34,49 @@ import CoreData
  */
 public final class AsynchronousDataTransaction: BaseDataTransaction {
     
+    // MARK: - Result
+    
+    public enum Result<T> {
+        
+        case success(userInfo: T)
+        case failure(error: CoreStoreError)
+        
+        public var boolValue: Bool {
+            
+            switch self {
+                
+            case .success: return true
+            case .failure: return false
+            }
+        }
+        
+        
+        // MARK: Internal
+        
+        internal init(userInfo: T) {
+            
+            self = .success(userInfo: userInfo)
+        }
+        
+        internal init(error: CoreStoreError) {
+            
+            self = .failure(error: error)
+        }
+    }
+    
+    
+    // MARK: -
+    
+    /**
+     Cancels a transaction by throwing `CoreStoreError.userCancelled`.
+     ```
+     try transaction.cancel()
+     ```
+     - Important: Never use `try?` or `try!` on a `cancel()` call. Always use `try`. Using `try?` will swallow the cancellation and the transaction will proceed to commit as normal. Using `try!` will crash the app as `cancel()` will *always* throw an error.
+     */
     public func cancel() throws -> Never {
         
         throw CoreStoreError.userCancelled
-    }
-    
-    /**
-     Saves the transaction changes. This method should not be used after the `commit()` method was already called once.
-     
-     - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
-     */
-    public func commit(_ completion: @escaping (_ result: SaveResult) -> Void = { _ in }) {
-        
-        CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
-        )
-        CoreStore.assert(
-            !self.isCommitted,
-            "Attempted to commit a \(cs_typeName(self)) more than once."
-        )
-        
-        self.isCommitted = true
-        let group = DispatchGroup()
-        group.enter()
-        self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
-            
-            self.result = result
-            completion(result)
-            group.leave()
-        }
-        group.wait()
-    }
-    
-    /**
-     Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
-     */
-    @discardableResult
-    public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
-        
-        CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to begin a child transaction from a \(cs_typeName(self)) outside its designated queue."
-        )
-        CoreStore.assert(
-            !self.isCommitted,
-            "Attempted to begin a child transaction from an already committed \(cs_typeName(self))."
-        )
-        
-        return SynchronousDataTransaction(
-            mainContext: self.context,
-            queue: self.childTransactionQueue,
-            closure: closure).performAndWait()
     }
     
     
@@ -193,47 +181,93 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, closure: @escaping (_ transaction: AsynchronousDataTransaction) -> Void) {
-        
-        self.closure = closure
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue) {
         
         super.init(mainContext: mainContext, queue: queue, supportsUndo: false, bypassesQueueing: false)
     }
     
-    internal func perform() {
+    internal func autoCommit(_ completion: @escaping (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void) {
         
-        self.transactionQueue.async {
+        self.isCommitted = true
+        let group = DispatchGroup()
+        group.enter()
+        self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
             
-            self.closure(self)
-            if !self.isCommitted && self.hasChanges {
+            completion(result.0, result.1)
+            self.result = result
+            group.leave()
+        }
+        group.wait()
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Saves the transaction changes. This method should not be used after the `commit()` method was already called once.
+     
+     - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
+     */
+    @available(*, deprecated: 4.0.0, message: "Use the new auto-commiting methods `DataStack.perform(asynchronous:completion:)` or `DataStack.perform(asynchronous:success:failure:)`. Please read the documentation on the behavior of the new methods.")
+    public func commit(_ completion: @escaping (_ result: SaveResult) -> Void = { _ in }) {
+        
+        CoreStore.assert(
+            self.transactionQueue.cs_isCurrentExecutionContext(),
+            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to commit a \(cs_typeName(self)) more than once."
+        )
+        self.autoCommit { (result) in
+            
+            switch result {
                 
-                CoreStore.log(
-                    .warning,
-                    message: "The closure for the \(cs_typeName(self)) completed without being committed. All changes made within the transaction were discarded."
-                )
+            case (let hasChanges, nil): completion(SaveResult(hasChanges: hasChanges))
+            case (_, let error?):       completion(SaveResult(error))
             }
         }
     }
     
-    internal func performAndWait() -> SaveResult? {
+    /**
+     Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
+     */
+    @available(*, deprecated: 4.0.0, message: "Secondary tasks spawned from AsynchronousDataTransactions and SynchronousDataTransactions are no longer supported. ")
+    @discardableResult
+    public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         
-        self.transactionQueue.sync {
+        CoreStore.assert(
+            self.transactionQueue.cs_isCurrentExecutionContext(),
+            "Attempted to begin a child transaction from a \(cs_typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to begin a child transaction from an already committed \(cs_typeName(self))."
+        )
+        let childTransaction = SynchronousDataTransaction(
+            mainContext: self.context,
+            queue: self.childTransactionQueue
+        )
+        childTransaction.transactionQueue.cs_sync {
             
-            self.closure(self)
+            closure(childTransaction)
             
-            if !self.isCommitted && self.hasChanges {
+            if !childTransaction.isCommitted && childTransaction.hasChanges {
                 
                 CoreStore.log(
                     .warning,
-                    message: "The closure for the \(cs_typeName(self)) completed without being committed. All changes made within the transaction were discarded."
+                    message: "The closure for the \(cs_typeName(childTransaction)) completed without being committed. All changes made within the transaction were discarded."
                 )
             }
         }
-        return self.result
+        switch childTransaction.result {
+            
+        case nil:                       return nil
+        case (let hasChanges, nil)?:    return SaveResult(hasChanges: hasChanges)
+        case (_, let error?)?:          return SaveResult(error)
+        }
     }
-    
-    
-    // MARK: Private
-    
-    private let closure: (_ transaction: AsynchronousDataTransaction) -> Void
 }

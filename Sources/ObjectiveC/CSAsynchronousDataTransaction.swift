@@ -43,29 +43,22 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
      */
     @objc
-    public func commitWithCompletion(_ completion: ((_ result: CSSaveResult) -> Void)?) {
+    public func commitWithSuccess(_ success: (() -> Void)?, failure: ((CSError) -> Void)?) {
         
-        self.bridgeToSwift.commit { (result) in
+        CoreStore.assert(
+            self.bridgeToSwift.transactionQueue.cs_isCurrentExecutionContext(),
+            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.bridgeToSwift.isCommitted,
+            "Attempted to commit a \(cs_typeName(self)) more than once."
+        )
+        self.bridgeToSwift.autoCommit { (result) in
             
-            completion?(result.bridgeToObjectiveC)
-        }
-    }
-    
-    /**
-     Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `-commitWithCompletion:` method was already called once.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
-     */
-    @objc
-    @discardableResult
-    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginSynchronous { (transaction) in
+            switch result {
                 
-                closure(transaction.bridgeToObjectiveC)
+            case (_, nil):          success?()
+            case (_, let error?):   failure?(error.bridgeToObjectiveC)
             }
         }
     }
@@ -158,6 +151,52 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     public required init(_ swiftValue: BaseDataTransaction) {
         
         super.init(swiftValue as! AsynchronousDataTransaction)
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Saves the transaction changes. This method should not be used after the `-commitWithCompletion:` method was already called once.
+     
+     - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
+     */
+    @available(*, deprecated: 4.0.0, message: "Use the new -[CSAsynchronousDataTransaction commitWithSuccess:failure:] method.")
+    @objc
+    public func commitWithCompletion(_ completion: ((_ result: CSSaveResult) -> Void)?) {
+        
+        CoreStore.assert(
+            self.bridgeToSwift.transactionQueue.cs_isCurrentExecutionContext(),
+            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.bridgeToSwift.isCommitted,
+            "Attempted to commit a \(cs_typeName(self)) more than once."
+        )
+        self.bridgeToSwift.commit { (result) in
+            
+            completion?(result.bridgeToObjectiveC)
+        }
+    }
+    
+    /**
+     Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `-commitWithCompletion:` method was already called once.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
+     */
+    @available(*, deprecated: 4.0.0, message: "Secondary tasks spawned from CSAsynchronousDataTransactions and CSSynchronousDataTransactions are no longer supported. ")
+    @objc
+    @discardableResult
+    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+        
+        return bridge {
+            
+            self.bridgeToSwift.beginSynchronous { (transaction) in
+                
+                closure(transaction.bridgeToObjectiveC)
+            }
+        }
     }
 }
 

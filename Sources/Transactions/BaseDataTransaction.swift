@@ -455,7 +455,7 @@ public /*abstract*/ class BaseDataTransaction {
     internal let supportsUndo: Bool
     internal let bypassesQueueing: Bool
     internal var isCommitted = false
-    internal var result: SaveResult?
+    internal var result: (hasChanges: Bool, error: CoreStoreError?)?
     
     internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, supportsUndo: Bool, bypassesQueueing: Bool) {
         

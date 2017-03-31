@@ -34,81 +34,16 @@ import CoreData
  */
 public final class SynchronousDataTransaction: BaseDataTransaction {
     
+    /**
+     Cancels a transaction by throwing `CoreStoreError.userCancelled`.
+     ```
+     try transaction.cancel()
+     ```
+     - Important: Never use `try?` or `try!` on a `cancel()` call. Always use `try`. Using `try?` will swallow the cancellation and the transaction will proceed to commit as normal. Using `try!` will crash the app as `cancel()` will *always* throw an error.
+     */
     public func cancel() throws -> Never {
         
         throw CoreStoreError.userCancelled
-    }
-    
-    /**
-     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` or `commitAndWait()` method was already called once.
-     - Important: Unlike `SynchronousDataTransaction.commit()`, this method waits for all observers to be notified of the changes before returning. This results in more predictable data update order, but may risk triggering deadlocks.
-     
-     - returns: a `SaveResult` containing the success or failure information
-     */
-    public func commitAndWait() -> SaveResult {
-        
-        CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
-        )
-        CoreStore.assert(
-            !self.isCommitted,
-            "Attempted to commit a \(cs_typeName(self)) more than once."
-        )
-        
-        self.isCommitted = true
-        
-        let result = self.context.saveSynchronously(waitForMerge: true)
-        self.result = result
-        return result
-    }
-    
-    /**
-     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` or `commitAndWait()` method was already called once.
-     - Important: Unlike `SynchronousDataTransaction.commitAndWait()`, this method does not wait for observers to be notified of the changes before returning. This results in lower risk for deadlocks, but the updated data may not have been propagated to the `DataStack` after returning.
-     
-     - returns: a `SaveResult` containing the success or failure information
-     */
-    public func commit() -> SaveResult {
-        
-        CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
-        )
-        CoreStore.assert(
-            !self.isCommitted,
-            "Attempted to commit a \(cs_typeName(self)) more than once."
-        )
-        
-        self.isCommitted = true
-        
-        let result = self.context.saveSynchronously(waitForMerge: false)
-        self.result = result
-        return result
-    }
-  
-    /**
-     Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
-     */
-    @discardableResult
-    public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
-        
-        CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to begin a child transaction from a \(cs_typeName(self)) outside its designated queue."
-        )
-        CoreStore.assert(
-            !self.isCommitted,
-            "Attempted to begin a child transaction from an already committed \(cs_typeName(self))."
-        )
-        
-        return SynchronousDataTransaction(
-            mainContext: self.context,
-            queue: self.childTransactionQueue,
-            closure: closure).performAndWait()
     }
     
     
@@ -213,32 +148,109 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Internal
     
-    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue, closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) {
-        
-        self.closure = closure
+    internal init(mainContext: NSManagedObjectContext, queue: DispatchQueue) {
         
         super.init(mainContext: mainContext, queue: queue, supportsUndo: false, bypassesQueueing: false)
     }
     
-    internal func performAndWait() -> SaveResult? {
+    internal func autoCommit(waitForMerge: Bool) -> (hasChanges: Bool, error: CoreStoreError?) {
         
-        self.transactionQueue.sync {
-            
-            self.closure(self)
-            
-            if !self.isCommitted && self.hasChanges {
-                
-                CoreStore.log(
-                    .warning,
-                    message: "The closure for the \(cs_typeName(self)) completed without being committed. All changes made within the transaction were discarded."
-                )
-            }
-        }
-        return self.result
+        self.isCommitted = true
+        let result = self.context.saveSynchronously(waitForMerge: waitForMerge)
+        self.result = result
+        return result
     }
     
     
-    // MARK: Private
+    // MARK: Deprecated
     
-    private let closure: (_ transaction: SynchronousDataTransaction) -> Void
+    /**
+     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` or `commitAndWait()` method was already called once.
+     - Important: Unlike `SynchronousDataTransaction.commit()`, this method waits for all observers to be notified of the changes before returning. This results in more predictable data update order, but may risk triggering deadlocks.
+     
+     - returns: a `SaveResult` containing the success or failure information
+     */
+    @available(*, deprecated: 4.0.0, message: "Use the new auto-commit method DataStack.perform(synchronous:waitForAllObservers:)")
+    public func commitAndWait() -> SaveResult {
+        
+        CoreStore.assert(
+            self.transactionQueue.cs_isCurrentExecutionContext(),
+            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to commit a \(cs_typeName(self)) more than once."
+        )
+        switch self.autoCommit(waitForMerge: true) {
+            
+        case (let hasChanges, nil): return SaveResult(hasChanges: hasChanges)
+        case (_, let error?):       return SaveResult(error)
+        }
+    }
+    
+    /**
+     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` or `commitAndWait()` method was already called once.
+     - Important: Unlike `SynchronousDataTransaction.commitAndWait()`, this method does not wait for observers to be notified of the changes before returning. This results in lower risk for deadlocks, but the updated data may not have been propagated to the `DataStack` after returning.
+     
+     - returns: a `SaveResult` containing the success or failure information
+     */
+    @available(*, deprecated: 4.0.0, message: "Use the new auto-commit method DataStack.perform(synchronous:waitForAllObservers:)")
+    public func commit() -> SaveResult {
+        
+        CoreStore.assert(
+            self.transactionQueue.cs_isCurrentExecutionContext(),
+            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to commit a \(cs_typeName(self)) more than once."
+        )
+        switch self.autoCommit(waitForMerge: false) {
+            
+        case (let hasChanges, nil): return SaveResult(hasChanges: hasChanges)
+        case (_, let error?):       return SaveResult(error)
+        }
+    }
+    
+    /**
+     Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
+     */
+    @available(*, deprecated: 4.0.0, message: "Secondary tasks spawned from AsynchronousDataTransactions and SynchronousDataTransactions are no longer supported. ")
+    @discardableResult
+    public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
+        
+        CoreStore.assert(
+            self.transactionQueue.cs_isCurrentExecutionContext(),
+            "Attempted to begin a child transaction from a \(cs_typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to begin a child transaction from an already committed \(cs_typeName(self))."
+        )
+        let childTransaction = SynchronousDataTransaction(
+            mainContext: self.context,
+            queue: self.childTransactionQueue
+        )
+        childTransaction.transactionQueue.cs_sync {
+            
+            closure(childTransaction)
+            
+            if !childTransaction.isCommitted && childTransaction.hasChanges {
+                
+                CoreStore.log(
+                    .warning,
+                    message: "The closure for the \(cs_typeName(childTransaction)) completed without being committed. All changes made within the transaction were discarded."
+                )
+            }
+        }
+        switch childTransaction.result {
+            
+        case nil:                       return nil
+        case (let hasChanges, nil)?:    return SaveResult(hasChanges: hasChanges)
+        case (_, let error?)?:          return SaveResult(error)
+        }
+    }
 }

@@ -38,27 +38,57 @@ public extension CSDataStack {
     @objc
     public func beginAsynchronous(_ closure: @escaping (_ transaction: CSAsynchronousDataTransaction) -> Void) {
         
-        return self.bridgeToSwift.beginAsynchronous { (transaction) in
-            
-            closure(transaction.bridgeToObjectiveC)
-        }
+        self.bridgeToSwift.perform(
+            asynchronous: { (transaction) in
+                
+                let csTransaction = transaction.bridgeToObjectiveC
+                closure(csTransaction)
+                if !transaction.isCommitted && transaction.hasChanges {
+                    
+                    CoreStore.log(
+                        .warning,
+                        message: "The closure for the \(cs_typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
+                    )
+                }
+                try transaction.cancel()
+            },
+            completion: { _ in }
+        )
     }
     
     /**
      Begins a transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made.
      
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
+     - parameter error: the `CSError` pointer that indicates the reason in case of an failure
+     - returns: `YES` if the commit succeeded, `NO` if the commit failed. If `NO`, the `error` argument will hold error information.
      */
     @objc
-    @discardableResult
-    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void, error: NSErrorPointer) -> Bool {
         
-        return bridge {
+        return bridge(error) {
             
-            self.bridgeToSwift.beginSynchronous { (transaction) in
+            do {
                 
-                closure(transaction.bridgeToObjectiveC)
+                try self.bridgeToSwift.perform(
+                    synchronous: { (transaction) in
+                        
+                        let csTransaction = transaction.bridgeToObjectiveC
+                        closure(csTransaction)
+                        if !transaction.isCommitted && transaction.hasChanges {
+                            
+                            CoreStore.log(
+                                .warning,
+                                message: "The closure for the \(cs_typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
+                            )
+                        }
+                        try transaction.cancel()
+                    }
+                )
+            }
+            catch CoreStoreError.userCancelled {
+                
+                return
             }
         }
     }
@@ -100,5 +130,28 @@ public extension CSDataStack {
     public func refreshAndMergeAllObjects() {
         
         self.bridgeToSwift.refreshAndMergeAllObjects()
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Begins a transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made.
+     
+     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
+     - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
+     */
+    @available(*, deprecated: 4.0.0, message: "Use the new -[CSDataStack beginSynchronous:error:] API that reports failure using an error instance.")
+    @objc
+    @discardableResult
+    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
+        
+        return bridge {
+            
+            self.bridgeToSwift.beginSynchronous { (transaction) in
+                
+                closure(transaction.bridgeToObjectiveC)
+            }
+        }
     }
 }

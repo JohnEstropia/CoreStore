@@ -125,29 +125,29 @@ import CoreStore
                 }
             )
             let saveExpectation = self.expectation(description: "save")
-            stack.beginAsynchronous { (transaction) in
-                
-                guard let object = transaction.edit(object) else {
+            stack.perform(
+                asynchronous: { (transaction) -> Bool in
+                    
+                    guard let object = transaction.edit(object) else {
+                        
+                        XCTFail()
+                        try transaction.cancel()
+                    }
+                    object.testNumber = NSNumber(value: 10)
+                    object.testString = "nil:TestEntity1:10"
+                    
+                    return transaction.hasChanges
+                },
+                success: { (hasChanges) in
+                    
+                    XCTAssertTrue(hasChanges)
+                    saveExpectation.fulfill()
+                },
+                failure: { _ in
                     
                     XCTFail()
-                    return
                 }
-                object.testNumber = NSNumber(value: 10)
-                object.testString = "nil:TestEntity1:10"
-                
-                transaction.commit { (result) in
-                    
-                    switch result {
-                        
-                    case .success(let hasChanges):
-                        XCTAssertTrue(hasChanges)
-                        saveExpectation.fulfill()
-                        
-                    case .failure:
-                        XCTFail()
-                    }
-                }
-            }
+            )
             self.waitAndCheckExpectations()
         }
     }
@@ -193,29 +193,29 @@ import CoreStore
                 }
             )
             let saveExpectation = self.expectation(description: "save")
-            stack.beginAsynchronous { (transaction) in
-                
-                guard let object = transaction.edit(object) else {
+            stack.perform(
+                asynchronous: { (transaction) -> Bool in
+                    
+                    guard let object = transaction.edit(object) else {
+                        
+                        XCTFail()
+                        try transaction.cancel()
+                    }
+                    transaction.delete(object)
+                    
+                    return transaction.hasChanges
+                },
+                success: { (hasChanges) in
+                    
+                    XCTAssertTrue(hasChanges)
+                    XCTAssertTrue(monitor.isObjectDeleted)
+                    saveExpectation.fulfill()
+                },
+                failure: { _ in
                     
                     XCTFail()
-                    return
                 }
-                transaction.delete(object)
-                
-                transaction.commit { (result) in
-                    
-                    switch result {
-                        
-                    case .success(let hasChanges):
-                        XCTAssertTrue(hasChanges)
-                        XCTAssertTrue(monitor.isObjectDeleted)
-                        saveExpectation.fulfill()
-                        
-                    case .failure:
-                        XCTFail()
-                    }
-                }
-            }
+            )
             self.waitAndCheckExpectations()
         }
     }

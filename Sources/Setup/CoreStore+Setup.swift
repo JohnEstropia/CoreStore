@@ -155,12 +155,9 @@ public extension CoreStore {
     }
     
     
-    // MARK: Deprecated
+    // MARK: Obsolete
     
-    /**
-     Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from `defaultStack`'s model.
-     */
-    @available(*, deprecated: 3.0.0, renamed: "entityDescription(for:)")
+    @available(*, obsoleted: 4.0.0, renamed: "entityDescription(for:)")
     public static func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
         return self.entityDescription(for: type)

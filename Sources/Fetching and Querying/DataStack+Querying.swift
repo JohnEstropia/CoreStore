@@ -322,8 +322,17 @@ extension DataStack: FetchableSource, QueryableSource {
     /**
      The internal `NSManagedObjectContext` managed by this instance. Using this context directly should typically be avoided, and is provided by CoreStore only for extremely specialized cases.
      */
-    public func internalContext() -> NSManagedObjectContext {
+    public func unsafeContext() -> NSManagedObjectContext {
         
         return self.mainContext
+    }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated: 4.0.0, renamed: "unsafeContext()")
+    public func internalContext() -> NSManagedObjectContext {
+        
+        return self.unsafeContext()
     }
 }

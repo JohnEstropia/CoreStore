@@ -290,9 +290,18 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     // MARK: FetchableSource, QueryableSource
     
     @nonobjc
-    public func internalContext() -> NSManagedObjectContext {
+    public func unsafeContext() -> NSManagedObjectContext {
         
         return self
+    }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated: 4.0.0, renamed: "unsafeContext()")
+    public func internalContext() -> NSManagedObjectContext {
+        
+        return self.unsafeContext()
     }
 }
 

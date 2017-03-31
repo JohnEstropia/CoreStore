@@ -48,8 +48,7 @@ extension AsynchronousDataTransaction: CustomDebugStringConvertible, CoreStoreDe
             ("context", self.context),
             ("supportsUndo", self.supportsUndo),
             ("bypassesQueueing", self.bypassesQueueing),
-            ("isCommitted", self.isCommitted),
-            ("result", self.result as Any)
+            ("isCommitted", self.isCommitted)
         )
     }
 }
@@ -614,6 +613,7 @@ extension OrderBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible
 
 // MARK: - SaveResult
 
+@available(*, deprecated: 4.0.0, message: "Use the new DataStack.perform(asynchronous:...) and DataStack.perform(synchronous:...) family of APIs")
 extension SaveResult: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -824,8 +824,7 @@ extension SynchronousDataTransaction: CustomDebugStringConvertible, CoreStoreDeb
             ("context", self.context),
             ("supportsUndo", self.supportsUndo),
             ("bypassesQueueing", self.bypassesQueueing),
-            ("isCommitted", self.isCommitted),
-            ("result", self.result as Any)
+            ("isCommitted", self.isCommitted)
         )
     }
 }

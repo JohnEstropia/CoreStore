@@ -82,7 +82,7 @@ internal extension NSManagedObjectContext {
                         
                         for objectID in updatedObjectIDs {
                             
-                            context?.object(with: objectID).willAccessValue(forKey: nil)
+                            context?.registeredObject(for: objectID)?.willAccessValue(forKey: nil)
                         }
                     }
                     context?.mergeChanges(fromContextDidSave: note)

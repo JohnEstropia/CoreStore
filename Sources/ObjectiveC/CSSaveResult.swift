@@ -34,6 +34,7 @@ import CoreData
  
  - SeeAlso: `SaveResult`
  */
+@available(*, deprecated: 4.0.0, message: "Use APIs that report failures with `CSError`s instead.")
 @objc
 public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     
@@ -173,6 +174,7 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
 
 // MARK: - SaveResult
 
+@available(*, deprecated: 4.0.0, message: "Use the new DataStack.perform(asynchronous:...) and DataStack.perform(synchronous:...) family of APIs")
 extension SaveResult: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType

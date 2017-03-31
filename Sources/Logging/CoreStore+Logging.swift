@@ -38,6 +38,7 @@ public extension CoreStore {
     
     // MARK: Internal
     
+    @inline(__always)
     internal static func log(_ level: LogLevel, message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
         
         self.logger.log(
@@ -49,6 +50,7 @@ public extension CoreStore {
         )
     }
     
+    @inline(__always)
     internal static func log(_ error: CoreStoreError, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
         
         self.logger.log(
@@ -60,6 +62,7 @@ public extension CoreStore {
         )
     }
     
+    @inline(__always)
     internal static func assert( _ condition: @autoclosure () -> Bool, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
         
         self.logger.assert(
@@ -71,6 +74,7 @@ public extension CoreStore {
         )
     }
     
+    @inline(__always)
     internal static func abort(_ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) -> Never  {
         
         self.logger.abort(

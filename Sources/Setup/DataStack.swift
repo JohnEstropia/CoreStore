@@ -529,15 +529,15 @@ public final class DataStack: Equatable {
     }
     
     
-    // MARK: Deprecated
+    // MARK: Obsolete
     
-    @available(*, deprecated: 3.0.0, renamed: "entityDescription(for:)")
+    @available(*, obsoleted: 4.0.0, renamed: "entityDescription(for:)")
     public func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
         return self.entityDescription(for: type)
     }
     
-    @available(*, deprecated: 3.0.0, renamed: "objectID(forURIRepresentation:)")
+    @available(*, obsoleted: 4.0.0, renamed: "objectID(forURIRepresentation:)")
     public func objectIDForURIRepresentation(_ url: URL) -> NSManagedObjectID? {
         
         return self.objectID(forURIRepresentation: url)

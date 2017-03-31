@@ -140,17 +140,15 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func saveSynchronously(waitForMerge: Bool) -> SaveResult {
+    internal func saveSynchronously(waitForMerge: Bool) -> (hasChanges: Bool, error: CoreStoreError?) {
       
-        var result = SaveResult(hasChanges: false)
-        
+        var result: (hasChanges: Bool, error: CoreStoreError?) = (false, nil)
         self.performAndWait {
             
             guard self.hasChanges else {
                 
                 return
             }
-            
             do {
                 
                 self.isSavingSynchronously = waitForMerge
@@ -164,32 +162,24 @@ internal extension NSManagedObjectContext {
                     saveError,
                     "Failed to save \(cs_typeName(NSManagedObjectContext.self))."
                 )
-                result = SaveResult(saveError)
+                result = (true, saveError)
                 return
             }
-            
             if let parentContext = self.parent, self.shouldCascadeSavesToParent {
                 
-                switch parentContext.saveSynchronously(waitForMerge: waitForMerge) {
-                    
-                case .success:
-                    result = SaveResult(hasChanges: true)
-                    
-                case .failure(let error):
-                    result = SaveResult(error)
-                }
+                let (_, error) = parentContext.saveSynchronously(waitForMerge: waitForMerge)
+                result = (true, error)
             }
             else {
                 
-                result = SaveResult(hasChanges: true)
+                result = (true, nil)
             }
         }
-        
         return result
     }
     
     @nonobjc
-    internal func saveAsynchronouslyWithCompletion(_ completion: @escaping ((_ result: SaveResult) -> Void) = { _ in }) {
+    internal func saveAsynchronouslyWithCompletion(_ completion: @escaping (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void = { _ in }) {
         
         self.perform {
             
@@ -197,11 +187,10 @@ internal extension NSManagedObjectContext {
                 
                 DispatchQueue.main.async {
                     
-                    completion(SaveResult(hasChanges: false))
+                    completion(false, nil)
                 }
                 return
             }
-            
             do {
                 
                 self.isSavingSynchronously = false
@@ -216,21 +205,23 @@ internal extension NSManagedObjectContext {
                     "Failed to save \(cs_typeName(NSManagedObjectContext.self))."
                 )
                 DispatchQueue.main.async {
-                    
-                    completion(SaveResult(saveError))
+    
+                    completion(true, saveError)
                 }
                 return
             }
-            
             if self.shouldCascadeSavesToParent, let parentContext = self.parent {
                 
-                parentContext.saveAsynchronouslyWithCompletion(completion)
+                parentContext.saveAsynchronouslyWithCompletion { (_, error) in
+                    
+                    completion(true, error)
+                }
             }
             else {
                 
                 DispatchQueue.main.async {
-                    
-                    completion(SaveResult(hasChanges: true))
+    
+                    completion(true, nil)
                 }
             }
         }

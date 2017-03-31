@@ -212,6 +212,9 @@
         CSUnsafeDataTransaction *transaction = [CSCoreStore beginUnsafe];
         XCTAssertNotNil(transaction);
         XCTAssert([transaction isKindOfClass:[CSUnsafeDataTransaction class]]);
+        NSError *error;
+        XCTAssertTrue([transaction commitAndWaitWithError:&error]);
+        XCTAssertNil(error);
     }
     {
         XCTestExpectation *expectation = [self expectationWithDescription:@"sync"];
@@ -219,6 +222,9 @@
             
             XCTAssertNotNil(transaction);
             XCTAssert([transaction isKindOfClass:[CSSynchronousDataTransaction class]]);
+            NSError *error;
+            XCTAssertTrue([transaction commitAndWaitWithError:&error]);
+            XCTAssertNil(error);
             [expectation fulfill];
         }];
     }
@@ -228,7 +234,15 @@
             
             XCTAssertNotNil(transaction);
             XCTAssert([transaction isKindOfClass:[CSAsynchronousDataTransaction class]]);
-            [expectation fulfill];
+            [transaction
+             commitWithSuccess:^{
+                 
+                 [expectation fulfill];
+             }
+             failure:^(CSError *error){
+                 
+                 XCTFail();
+             }];
         }];
     }
     [self waitForExpectationsWithTimeout:10 handler:nil];

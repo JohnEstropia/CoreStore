@@ -36,32 +36,43 @@ import CoreData
  */
 @objc
 public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
-    
     /**
      Saves the transaction changes asynchronously. For a `CSUnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
      
-     - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
+     - parameter completion: the block executed after the save completes. Success or failure is reported by the `error` argument of the block.
      */
     @objc
-    public func commit(_ completion: ((_ result: CSSaveResult) -> Void)?) {
+    public func commitWithSuccess(_ success: (() -> Void)?, _ failure: ((CSError) -> Void)?) {
         
-        self.bridgeToSwift.commit { (result) in
+        self.bridgeToSwift.context.saveAsynchronouslyWithCompletion { (_, error) in
             
-            completion?(result.bridgeToObjectiveC)
+            if let error = error {
+                
+                failure?(error.bridgeToObjectiveC)
+            }
+            else {
+                
+                success?()
+            }
+            withExtendedLifetime(self, {})
         }
     }
     
     /**
      Saves the transaction changes and waits for completion synchronously. For a `CSUnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
      
-     - returns: a `CSSaveResult` containing the success or failure information
+     - parameter error: the `CSError` pointer that indicates the reason in case of an failure
+     - returns: `YES` if the commit succeeded, `NO` if the commit failed. If `NO`, the `error` argument will hold error information.
      */
     @objc
-    public func commitAndWait() -> CSSaveResult {
+    public func commitAndWait(error: NSErrorPointer) -> Bool {
         
-        return bridge {
+        return bridge(error) {
             
-            self.bridgeToSwift.commitAndWait()
+            if case (_, let error?) = self.bridgeToSwift.context.saveSynchronously(waitForMerge: true) {
+                
+                throw error
+            }
         }
     }
     
@@ -156,7 +167,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
      - that all saves will be done either through the `CSUnsafeDataTransaction`'s `-commit:` or `-commitAndWait` method, or by calling `-save:` manually on the context, its parent, and all other ancestor contexts if there are any.
      */
     @objc
-    public var internalContext: NSManagedObjectContext {
+    public func unsafeContext() -> NSManagedObjectContext {
         
         return self.bridgeToSwift.context
     }
@@ -187,6 +198,58 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     public required init(_ swiftValue: BaseDataTransaction) {
         
         super.init(swiftValue as! UnsafeDataTransaction)
+    }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated: 4.0.0, renamed: "unsafeContext()")
+    @objc
+    public var internalContext: NSManagedObjectContext {
+        
+        return self.bridgeToSwift.context
+    }
+    
+    /**
+     Saves the transaction changes asynchronously. For a `CSUnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
+     
+     - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
+     */
+    @available(*, deprecated: 4.0.0, message: "Use the new -[CSUnsafeDataTransaction commitWithSuccess:failure:] method")
+    @objc
+    public func commit(_ completion: ((_ result: CSSaveResult) -> Void)?) {
+        
+        self.bridgeToSwift.context.saveAsynchronouslyWithCompletion { (hasChanges, error) in
+            
+            if let error = error {
+                
+                completion?(SaveResult(error).bridgeToObjectiveC)
+            }
+            else {
+                
+                completion?(SaveResult(hasChanges: hasChanges).bridgeToObjectiveC)
+            }
+            withExtendedLifetime(self, {})
+        }
+    }
+    
+    /**
+     Saves the transaction changes and waits for completion synchronously. For a `CSUnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
+     
+     - returns: a `CSSaveResult` containing the success or failure information
+     */
+    @available(*, deprecated: 4.0.0, message: "Use the new -[CSUnsafeDataTransaction commitAndWaitWithError:] method")
+    @objc
+    public func commitAndWait() -> CSSaveResult {
+        
+        return bridge { () -> SaveResult in
+            
+            switch self.bridgeToSwift.context.saveSynchronously(waitForMerge: true) {
+                
+            case (let hasChanges, nil): return SaveResult(hasChanges: hasChanges)
+            case (_, let error?):       return SaveResult(error)
+            }
+        }
     }
 }
 

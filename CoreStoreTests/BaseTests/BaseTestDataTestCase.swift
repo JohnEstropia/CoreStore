@@ -30,47 +30,48 @@ class BaseTestDataTestCase: BaseTestCase {
     @nonobjc
     func prepareTestDataForStack(_ stack: DataStack, configurations: [String?] = [nil]) {
         
-        stack.beginSynchronous { (transaction) in
-            
-            for (configurationIndex, configuration) in configurations.enumerated() {
+        try! stack.perform(
+            synchronous: { (transaction) in
                 
-                let configurationOrdinal = configurationIndex + 1
-                if configuration == nil || configuration == "Config1" {
+                for (configurationIndex, configuration) in configurations.enumerated() {
                     
-                    for idIndex in 1 ... 5 {
+                    let configurationOrdinal = configurationIndex + 1
+                    if configuration == nil || configuration == "Config1" {
                         
-                        let object = transaction.create(Into<TestEntity1>(configuration))
-                        object.testEntityID = NSNumber(value: (configurationOrdinal * 100) + idIndex)
-                        
-                        object.testNumber = NSNumber(value: idIndex)
-                        object.testDate = self.dateFormatter.date(from: "2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
-                        object.testBoolean = NSNumber(value: (idIndex % 2) == 1)
-                        object.testDecimal = NSDecimalNumber(string: "\(idIndex)")
-                        
-                        let string = "\(configuration ?? "nil"):TestEntity1:\(idIndex)"
-                        object.testString = string
-                        object.testData = (string as NSString).data(using: String.Encoding.utf8.rawValue)
+                        for idIndex in 1 ... 5 {
+                            
+                            let object = transaction.create(Into<TestEntity1>(configuration))
+                            object.testEntityID = NSNumber(value: (configurationOrdinal * 100) + idIndex)
+                            
+                            object.testNumber = NSNumber(value: idIndex)
+                            object.testDate = self.dateFormatter.date(from: "2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
+                            object.testBoolean = NSNumber(value: (idIndex % 2) == 1)
+                            object.testDecimal = NSDecimalNumber(string: "\(idIndex)")
+                            
+                            let string = "\(configuration ?? "nil"):TestEntity1:\(idIndex)"
+                            object.testString = string
+                            object.testData = (string as NSString).data(using: String.Encoding.utf8.rawValue)
+                        }
                     }
-                }
-                if configuration == nil || configuration == "Config2" {
-                    
-                    for idIndex in 1 ... 5 {
+                    if configuration == nil || configuration == "Config2" {
                         
-                        let object = transaction.create(Into<TestEntity2>(configuration))
-                        object.testEntityID = NSNumber(value: (configurationOrdinal * 200) + idIndex)
-                        
-                        object.testNumber = NSNumber(value: idIndex)
-                        object.testDate = self.dateFormatter.date(from: "2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
-                        object.testBoolean = NSNumber(value: (idIndex % 2) == 1)
-                        object.testDecimal = NSDecimalNumber(string: "\(idIndex)")
-                        
-                        let string = "\(configuration ?? "nil"):TestEntity2:\(idIndex)"
-                        object.testString = string
-                        object.testData = (string as NSString).data(using: String.Encoding.utf8.rawValue)
+                        for idIndex in 1 ... 5 {
+                            
+                            let object = transaction.create(Into<TestEntity2>(configuration))
+                            object.testEntityID = NSNumber(value: (configurationOrdinal * 200) + idIndex)
+                            
+                            object.testNumber = NSNumber(value: idIndex)
+                            object.testDate = self.dateFormatter.date(from: "2000-\(configurationOrdinal)-\(idIndex)T00:00:00Z")
+                            object.testBoolean = NSNumber(value: (idIndex % 2) == 1)
+                            object.testDecimal = NSDecimalNumber(string: "\(idIndex)")
+                            
+                            let string = "\(configuration ?? "nil"):TestEntity2:\(idIndex)"
+                            object.testString = string
+                            object.testData = (string as NSString).data(using: String.Encoding.utf8.rawValue)
+                        }
                     }
                 }
             }
-            _ = transaction.commitAndWait()
-        }
+        )
     }
 }

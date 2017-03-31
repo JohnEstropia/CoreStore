@@ -149,29 +149,29 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let saveExpectation = self.expectation(description: "save")
-            stack.beginAsynchronous { (transaction) in
-                
-                let object = transaction.create(Into<TestEntity1>())
-                object.testBoolean = NSNumber(value: true)
-                object.testNumber = NSNumber(value: 1)
-                object.testDecimal = NSDecimalNumber(string: "1")
-                object.testString = "nil:TestEntity1:1"
-                object.testData = ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!
-                object.testDate = self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!
-                
-                transaction.commit { (result) in
+            stack.perform(
+                asynchronous: { (transaction) -> Bool in
                     
-                    switch result {
-                        
-                    case .success(let hasChanges):
-                        XCTAssertTrue(hasChanges)
-                        saveExpectation.fulfill()
-                        
-                    case .failure:
-                        XCTFail()
-                    }
+                    let object = transaction.create(Into<TestEntity1>())
+                    object.testBoolean = NSNumber(value: true)
+                    object.testNumber = NSNumber(value: 1)
+                    object.testDecimal = NSDecimalNumber(string: "1")
+                    object.testString = "nil:TestEntity1:1"
+                    object.testData = ("nil:TestEntity1:1" as NSString).data(using: String.Encoding.utf8.rawValue)!
+                    object.testDate = self.dateFormatter.date(from: "2000-01-01T00:00:00Z")!
+                    
+                    return transaction.hasChanges
+                },
+                success: { (hasChanges) in
+                    
+                    XCTAssertTrue(hasChanges)
+                    saveExpectation.fulfill()
+                },
+                failure: { _ in
+                    
+                    XCTFail()
                 }
-            }
+            )
             self.waitAndCheckExpectations()
         }
     }
@@ -283,49 +283,49 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let saveExpectation = self.expectation(description: "save")
-            stack.beginAsynchronous { (transaction) in
-                
-                if let object = transaction.fetchOne(
-                    From<TestEntity1>(),
-                    Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) {
+            stack.perform(
+                asynchronous: { (transaction) -> Bool in
                     
-                    object.testNumber = NSNumber(value: 11)
-                    object.testDecimal = NSDecimalNumber(string: "11")
-                    object.testString = "nil:TestEntity1:11"
-                    object.testData = ("nil:TestEntity1:11" as NSString).data(using: String.Encoding.utf8.rawValue)!
-                    object.testDate = self.dateFormatter.date(from: "2000-01-11T00:00:00Z")!
-                }
-                else {
-                    
-                    XCTFail()
-                }
-                if let object = transaction.fetchOne(
-                    From<TestEntity1>(),
-                    Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
-                    
-                    object.testNumber = NSNumber(value: 22)
-                    object.testDecimal = NSDecimalNumber(string: "22")
-                    object.testString = "nil:TestEntity1:22"
-                    object.testData = ("nil:TestEntity1:22" as NSString).data(using: String.Encoding.utf8.rawValue)!
-                    object.testDate = self.dateFormatter.date(from: "2000-01-22T00:00:00Z")!
-                }
-                else {
-                    
-                    XCTFail()
-                }
-                transaction.commit { (result) in
-                    
-                    switch result {
+                    if let object = transaction.fetchOne(
+                        From<TestEntity1>(),
+                        Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) {
                         
-                    case .success(let hasChanges):
-                        XCTAssertTrue(hasChanges)
-                        saveExpectation.fulfill()
+                        object.testNumber = NSNumber(value: 11)
+                        object.testDecimal = NSDecimalNumber(string: "11")
+                        object.testString = "nil:TestEntity1:11"
+                        object.testData = ("nil:TestEntity1:11" as NSString).data(using: String.Encoding.utf8.rawValue)!
+                        object.testDate = self.dateFormatter.date(from: "2000-01-11T00:00:00Z")!
+                    }
+                    else {
                         
-                    case .failure:
                         XCTFail()
                     }
+                    if let object = transaction.fetchOne(
+                        From<TestEntity1>(),
+                        Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
+                        
+                        object.testNumber = NSNumber(value: 22)
+                        object.testDecimal = NSDecimalNumber(string: "22")
+                        object.testString = "nil:TestEntity1:22"
+                        object.testData = ("nil:TestEntity1:22" as NSString).data(using: String.Encoding.utf8.rawValue)!
+                        object.testDate = self.dateFormatter.date(from: "2000-01-22T00:00:00Z")!
+                    }
+                    else {
+                        
+                        XCTFail()
+                    }
+                    return transaction.hasChanges
+                },
+                success: { (hasChanges) in
+                    
+                    XCTAssertTrue(hasChanges)
+                    saveExpectation.fulfill()
+                },
+                failure: { _ in
+                    
+                    XCTFail()
                 }
-            }
+            )
             self.waitAndCheckExpectations()
         }
     }
@@ -409,31 +409,31 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let saveExpectation = self.expectation(description: "save")
-            stack.beginAsynchronous { (transaction) in
-                
-                if let object = transaction.fetchOne(
-                    From<TestEntity1>(),
-                    Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
+            stack.perform(
+                asynchronous: { (transaction) -> Bool in
                     
-                    object.testBoolean = NSNumber(value: true)
-                }
-                else {
+                    if let object = transaction.fetchOne(
+                        From<TestEntity1>(),
+                        Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
+                        
+                        object.testBoolean = NSNumber(value: true)
+                    }
+                    else {
+                        
+                        XCTFail()
+                    }
+                    return transaction.hasChanges
+                },
+                success: { (hasChanges) in
+                    
+                    XCTAssertTrue(hasChanges)
+                    saveExpectation.fulfill()
+                },
+                failure: { _ in
                     
                     XCTFail()
                 }
-                transaction.commit { (result) in
-                    
-                    switch result {
-                        
-                    case .success(let hasChanges):
-                        XCTAssertTrue(hasChanges)
-                        saveExpectation.fulfill()
-                        
-                    case .failure:
-                        XCTFail()
-                    }
-                }
-            }
+            )
             self.waitAndCheckExpectations()
         }
     }
@@ -544,25 +544,25 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let saveExpectation = self.expectation(description: "save")
-            stack.beginAsynchronous { (transaction) in
-                
-                transaction.deleteAll(
-                    From<TestEntity1>(),
-                    Where(#keyPath(TestEntity1.testBoolean), isEqualTo: false)
-                )
-                transaction.commit { (result) in
+            stack.perform(
+                asynchronous: { (transaction) -> Bool in
                     
-                    switch result {
-                        
-                    case .success(let hasChanges):
-                        XCTAssertTrue(hasChanges)
-                        saveExpectation.fulfill()
-                        
-                    case .failure:
-                        XCTFail()
-                    }
+                    transaction.deleteAll(
+                        From<TestEntity1>(),
+                        Where(#keyPath(TestEntity1.testBoolean), isEqualTo: false)
+                    )
+                    return transaction.hasChanges
+                },
+                success: { (hasChanges) in
+                    
+                    XCTAssertTrue(hasChanges)
+                    saveExpectation.fulfill()
+                },
+                failure: { _ in
+                    
+                    XCTFail()
                 }
-            }
+            )
             self.waitAndCheckExpectations()
         }
     }

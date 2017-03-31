@@ -288,10 +288,19 @@ public extension NSError {
     
     internal var isCoreDataMigrationError: Bool {
         
-        let code = self.code
-        return (code == NSPersistentStoreIncompatibleVersionHashError
-            || code == NSMigrationMissingSourceModelError
-            || code == NSMigrationError)
-            && self.domain == NSCocoaErrorDomain
+        guard self.domain == CocoaError.errorDomain else {
+            
+            return false
+        }
+        switch CocoaError.Code(rawValue: self.code) {
+            
+        case CocoaError.Code.persistentStoreIncompatibleVersionHash,
+             CocoaError.Code.migrationMissingSourceModel,
+             CocoaError.Code.migration:
+            return true
+            
+        default:
+            return false
+        }
     }
 }

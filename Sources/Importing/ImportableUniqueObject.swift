@@ -116,7 +116,7 @@ public protocol ImportableUniqueObject: ImportableObject {
     func update(from source: ImportSource, in transaction: BaseDataTransaction) throws
     
     
-    // MARK: Deprecated
+    // MARK: Obsolete (`deprecated` only for reference, please use new methods)
     
     @available(*, deprecated: 3.0.0, renamed: "shouldInsert(from:in:)")
     static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
@@ -155,28 +155,33 @@ public extension ImportableUniqueObject {
     }
     
     
-    // MARK: Deprecated
+    // MARK: Obsolete
     
+    @available(*, obsoleted: 4.0.0, renamed: "shouldInsert(from:in:)")
     static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldInsert(from: source, in: transaction)
     }
     
+    @available(*, obsoleted: 4.0.0, renamed: "shouldUpdate(from:in:)")
     static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldUpdate(from: source, in: transaction)
     }
     
+    @available(*, obsoleted: 4.0.0, renamed: "uniqueID(from:in:)")
     static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType? {
         
         return try Self.uniqueID(from: source, in: transaction)
     }
     
+    @available(*, obsoleted: 4.0.0, renamed: "didInsert(from:in:)")
     func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.didInsert(from: source, in: transaction)
     }
     
+    @available(*, obsoleted: 4.0.0, renamed: "update(from:in:)")
     func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.update(from: source, in: transaction)
