@@ -172,11 +172,13 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
             
         case .delete:
             let palette = Static.palettes[indexPath]
-            CoreStore.beginAsynchronous{ (transaction) -> Void in
-                
-                transaction.delete(palette)
-                transaction.commit { (result) -> Void in }
-            }
+            CoreStore.perform(
+                asynchronous: { (transaction) in
+                    
+                    transaction.delete(palette)
+                },
+                completion: { _ in }
+            )
             
         default:
             break
@@ -263,11 +265,13 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     @IBAction private dynamic func resetBarButtonItemTouched(_ sender: AnyObject?) {
         
-        CoreStore.beginAsynchronous { (transaction) -> Void in
-            
-            transaction.deleteAll(From<Palette>())
-            transaction.commit()
-        }
+        CoreStore.perform(
+            asynchronous: { (transaction) in
+                
+                transaction.deleteAll(From<Palette>())
+            },
+            completion: { _ in }
+        )
     }
     
     @IBAction private dynamic func filterBarButtonItemTouched(_ sender: AnyObject?) {
@@ -277,13 +281,14 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     @IBAction private dynamic func addBarButtonItemTouched(_ sender: AnyObject?) {
         
-        CoreStore.beginAsynchronous { (transaction) -> Void in
-            
-            let palette = transaction.create(Into<Palette>())
-            palette.setInitialValues()
-            
-            transaction.commit()
-        }
+        CoreStore.perform(
+            asynchronous: { (transaction) in
+                
+                let palette = transaction.create(Into<Palette>())
+                palette.setInitialValues()
+            },
+            completion: { _ in }
+        )
     }
     
     private func setTable(enabled: Bool) {

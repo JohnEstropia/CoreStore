@@ -95,13 +95,13 @@ public extension ImportableObject {
     
     // MARK: Obsolete
     
-    @available(*, obsoleted: 4.0.0, renamed: "shouldInsert(from:in:)")
+    @available(*, obsoleted: 3.0.0, renamed: "shouldInsert(from:in:)")
     static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldInsert(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 4.0.0, renamed: "didInsert(from:in:)")
+    @available(*, obsoleted: 3.0.0, renamed: "didInsert(from:in:)")
     func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.didInsert(from: source, in: transaction)

@@ -330,7 +330,7 @@ extension DataStack: FetchableSource, QueryableSource {
     
     // MARK: Deprecated
     
-    @available(*, deprecated: 4.0.0, renamed: "unsafeContext()")
+    @available(*, deprecated, renamed: "unsafeContext()")
     public func internalContext() -> NSManagedObjectContext {
         
         return self.unsafeContext()

@@ -22,26 +22,24 @@ private struct Static {
                 localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
-    
-        _ = dataStack.beginSynchronous { (transaction) -> Void in
-            
-            transaction.deleteAll(From<TimeZone>())
-            
-            for name in NSTimeZone.knownTimeZoneNames {
+        _ = try? dataStack.perform(
+            synchronous: { (transaction) in
                 
-                let rawTimeZone = NSTimeZone(name: name)!
-                let cachedTimeZone = transaction.create(Into<TimeZone>())
+                transaction.deleteAll(From<TimeZone>())
                 
-                cachedTimeZone.name = rawTimeZone.name
-                cachedTimeZone.abbreviation = rawTimeZone.abbreviation ?? ""
-                cachedTimeZone.secondsFromGMT = Int32(rawTimeZone.secondsFromGMT)
-                cachedTimeZone.hasDaylightSavingTime = rawTimeZone.isDaylightSavingTime
-                cachedTimeZone.daylightSavingTimeOffset = rawTimeZone.daylightSavingTimeOffset
+                for name in NSTimeZone.knownTimeZoneNames {
+                    
+                    let rawTimeZone = NSTimeZone(name: name)!
+                    let cachedTimeZone = transaction.create(Into<TimeZone>())
+                    
+                    cachedTimeZone.name = rawTimeZone.name
+                    cachedTimeZone.abbreviation = rawTimeZone.abbreviation ?? ""
+                    cachedTimeZone.secondsFromGMT = Int32(rawTimeZone.secondsFromGMT)
+                    cachedTimeZone.hasDaylightSavingTime = rawTimeZone.isDaylightSavingTime
+                    cachedTimeZone.daylightSavingTimeOffset = rawTimeZone.daylightSavingTimeOffset
+                }
             }
-            
-            _ = transaction.commitAndWait()
-        }
-        
+        )
         return dataStack
     }()
 }

@@ -56,13 +56,13 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         }
         else {
             
-            CoreStore.beginSynchronous { (transaction) -> Void in
-                
-                let palette = transaction.create(Into(Palette.self))
-                palette.setInitialValues()
-                
-                _ = transaction.commitAndWait()
-            }
+            _ = try? CoreStore.perform(
+                synchronous: { (transaction) in
+                    
+                    let palette = transaction.create(Into(Palette.self))
+                    palette.setInitialValues()
+                }
+            )
             
             let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending(#keyPath(Palette.hue))))!
             self.monitor = CoreStore.monitorObject(palette)
@@ -121,49 +121,57 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     @IBAction dynamic func hueSliderValueDidChange(_ sender: AnyObject?) {
         
         let hue = self.hueSlider?.value ?? 0
-        CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
-            
-            if let palette = transaction.edit(self?.monitor?.object) {
+        CoreStore.perform(
+            asynchronous: { [weak self] (transaction) in
                 
-                palette.hue = Int32(hue)
-                transaction.commit()
-            }
-        }
+                if let palette = transaction.edit(self?.monitor?.object) {
+                    
+                    palette.hue = Int32(hue)
+                }
+            },
+            completion: { _ in }
+        )
     }
     
     @IBAction dynamic func saturationSliderValueDidChange(_ sender: AnyObject?) {
         
         let saturation = self.saturationSlider?.value ?? 0
-        CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
-            
-            if let palette = transaction.edit(self?.monitor?.object) {
+        CoreStore.perform(
+            asynchronous: { [weak self] (transaction) in
                 
-                palette.saturation = saturation
-                transaction.commit()
-            }
-        }
+                if let palette = transaction.edit(self?.monitor?.object) {
+                    
+                    palette.saturation = saturation
+                }
+            },
+            completion: { _ in }
+        )
     }
     
     @IBAction dynamic func brightnessSliderValueDidChange(_ sender: AnyObject?) {
         
         let brightness = self.brightnessSlider?.value ?? 0
-        CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
-            
-            if let palette = transaction.edit(self?.monitor?.object) {
+        CoreStore.perform(
+            asynchronous: { [weak self] (transaction) in
                 
-                palette.brightness = brightness
-                transaction.commit()
-            }
-        }
+                if let palette = transaction.edit(self?.monitor?.object) {
+                    
+                    palette.brightness = brightness
+                }
+            },
+            completion: { _ in }
+        )
     }
     
     @IBAction dynamic func deleteBarButtonTapped(_ sender: AnyObject?) {
         
-        CoreStore.beginAsynchronous { [weak self] (transaction) -> Void in
-            
-            transaction.delete(self?.monitor?.object)
-            transaction.commit()
-        }
+        CoreStore.perform(
+            asynchronous: { [weak self] (transaction) in
+                
+                transaction.delete(self?.monitor?.object)
+            },
+            completion: { _ in }
+        )
     }
     
     func reloadPaletteInfo(_ palette: Palette, changedKeys: Set<String>?) {

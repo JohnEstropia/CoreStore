@@ -33,22 +33,22 @@ private struct Static {
             )
         )
         
-        _ = dataStack.beginSynchronous { (transaction) -> Void in
-            
-            transaction.deleteAll(From<UserAccount>())
-            
-            let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
-            account1.accountType = "Facebook"
-            account1.name = "John Smith HCD"
-            account1.friends = 42
-            
-            let account2 = transaction.create(Into<FemaleAccount>(femaleConfiguration))
-            account2.accountType = "Facebook"
-            account2.name = "Jane Doe HCD"
-            account2.friends = 314
-            
-            _ = transaction.commitAndWait()
-        }
+        _ = try? dataStack.perform(
+            synchronous: { (transaction) in
+                
+                transaction.deleteAll(From<UserAccount>())
+                
+                let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
+                account1.accountType = "Facebook"
+                account1.name = "John Smith HCD"
+                account1.friends = 42
+                
+                let account2 = transaction.create(Into<FemaleAccount>(femaleConfiguration))
+                account2.accountType = "Facebook"
+                account2.name = "Jane Doe HCD"
+                account2.friends = 314
+            }
+        )
         
         return dataStack
     }()
@@ -71,23 +71,22 @@ private struct Static {
             )
         )
         
-        _ = dataStack.beginSynchronous { (transaction) -> Void in
-            
-            transaction.deleteAll(From<UserAccount>())
-            
-            let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
-            account1.accountType = "Twitter"
-            account1.name = "#johnsmith_hcd"
-            account1.friends = 7
-            
-            let account2 = transaction.create(Into<FemaleAccount>(femaleConfiguration))
-            account2.accountType = "Twitter"
-            account2.name = "#janedoe_hcd"
-            account2.friends = 100
-            
-            _ = transaction.commitAndWait()
-        }
-        
+        _ = try? dataStack.perform(
+            synchronous: { (transaction) in
+                
+                transaction.deleteAll(From<UserAccount>())
+                
+                let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
+                account1.accountType = "Twitter"
+                account1.name = "#johnsmith_hcd"
+                account1.friends = 7
+                
+                let account2 = transaction.create(Into<FemaleAccount>(femaleConfiguration))
+                account2.accountType = "Twitter"
+                account2.name = "#janedoe_hcd"
+                account2.friends = 100
+            }
+        )
         return dataStack
     }()
 }

@@ -115,16 +115,17 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
             
             self.setSelectedIndexPath(indexPath, scrollToSelection: false)
             self.setEnabled(false)
-            dataStack.beginAsynchronous { [weak self] (transaction) -> Void in
-                
-                let organism = transaction.edit(organism) as! OrganismProtocol
-                organism.mutate()
-                
-                transaction.commit { _ -> Void in
+            dataStack.perform(
+                asynchronous: { (transaction) in
+                    
+                    let organism = transaction.edit(organism) as! OrganismProtocol
+                    organism.mutate()
+                },
+                completion: { [weak self] _ in
                     
                     self?.setEnabled(true)
                 }
-            }
+            )
         }
         return cell
     }
@@ -250,25 +251,26 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
                     
                     for i: Int64 in 0 ..< 20 {
                         
-                        dataStack.beginAsynchronous { (transaction) -> Void in
-                            
-                            for j: Int64 in 0 ..< 500 {
+                        dataStack.perform(
+                            asynchronous: { (transaction) in
                                 
-                                let organism = transaction.create(Into(model.entityType)) as! OrganismProtocol
-                                organism.dna = (i * 500) + j + 1
-                                organism.mutate()
-                            }
-                            
-                            transaction.commit()
-                        }
+                                for j: Int64 in 0 ..< 500 {
+                                    
+                                    let organism = transaction.create(Into(model.entityType)) as! OrganismProtocol
+                                    organism.dna = (i * 500) + j + 1
+                                    organism.mutate()
+                                }
+                            },
+                            completion: { _ in }
+                        )
                     }
-                    dataStack.beginAsynchronous { [weak self] (transaction) -> Void in
-                        
-                        transaction.commit { _ in
-                            
+                    dataStack.perform(
+                        asynchronous: { _ in },
+                        completion: { [weak self] _ in
+                    
                             self?.setEnabled(true)
                         }
-                    }
+                    )
                 }
             }
         )

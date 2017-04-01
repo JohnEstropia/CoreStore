@@ -208,7 +208,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
      */
-    @available(*, deprecated: 4.0.0, message: "Use the new auto-commiting methods `DataStack.perform(asynchronous:completion:)` or `DataStack.perform(asynchronous:success:failure:)`. Please read the documentation on the behavior of the new methods.")
+    @available(*, deprecated, message: "Use the new auto-commiting methods `DataStack.perform(asynchronous:completion:)` or `DataStack.perform(asynchronous:success:failure:)`. Please read the documentation on the behavior of the new methods.")
     public func commit(_ completion: @escaping (_ result: SaveResult) -> Void = { _ in }) {
         
         CoreStore.assert(
@@ -235,7 +235,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
-    @available(*, deprecated: 4.0.0, message: "Secondary tasks spawned from AsynchronousDataTransactions and SynchronousDataTransactions are no longer supported. ")
+    @available(*, deprecated, message: "Secondary tasks spawned from AsynchronousDataTransactions and SynchronousDataTransactions are no longer supported. ")
     @discardableResult
     public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         

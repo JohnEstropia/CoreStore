@@ -213,20 +213,26 @@
         XCTAssertNotNil(transaction);
         XCTAssert([transaction isKindOfClass:[CSUnsafeDataTransaction class]]);
         NSError *error;
-        XCTAssertTrue([transaction commitAndWaitWithError:&error]);
+        BOOL result = [transaction commitAndWaitWithError:&error];
+        XCTAssertTrue(result);
         XCTAssertNil(error);
     }
     {
         XCTestExpectation *expectation = [self expectationWithDescription:@"sync"];
-        [CSCoreStore beginSynchronous:^(CSSynchronousDataTransaction * _Nonnull transaction) {
-            
-            XCTAssertNotNil(transaction);
-            XCTAssert([transaction isKindOfClass:[CSSynchronousDataTransaction class]]);
-            NSError *error;
-            XCTAssertTrue([transaction commitAndWaitWithError:&error]);
-            XCTAssertNil(error);
-            [expectation fulfill];
-        }];
+        NSError *error;
+        BOOL result = [CSCoreStore
+         beginSynchronous:^(CSSynchronousDataTransaction * _Nonnull transaction) {
+             
+             XCTAssertNotNil(transaction);
+             XCTAssert([transaction isKindOfClass:[CSSynchronousDataTransaction class]]);
+             NSError *error;
+             XCTAssertTrue([transaction commitAndWaitWithError:&error]);
+             XCTAssertNil(error);
+             [expectation fulfill];
+         }
+                       error:&error];
+        XCTAssertTrue(result);
+        XCTAssertNil(error);
     }
     {
         XCTestExpectation *expectation = [self expectationWithDescription:@"async"];

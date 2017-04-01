@@ -98,10 +98,9 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         switch self.segmentedControl?.selectedSegmentIndex {
             
         case 0?:
-            self.dataStack.beginAsynchronous { (transaction) -> Void in
-                
-                _ = transaction.create(Into<Palette>())
-            }
+            let request = NSFetchRequest<NSFetchRequestResult>()
+            Where(true).applyToFetchRequest(request)
+            Where(false).applyToFetchRequest(request)
             
         case 1?:
             _ = try? dataStack.addStorageAndWait(
@@ -112,10 +111,9 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
             )
             
         case 2?:
-            self.dataStack.beginAsynchronous { (transaction) -> Void in
+            DispatchQueue.global(qos: .background).async {
                 
-                transaction.commit()
-                transaction.commit()
+                _ = self.dataStack.fetchOne(From<Palette>())
             }
             
         default:

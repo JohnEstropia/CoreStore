@@ -164,6 +164,6 @@ public protocol FetchableSource: class {
     
     // MARK: Deprecated
     
-    @available(*, deprecated: 4.0.0, renamed: "unsafeContext()")
+    @available(*, deprecated, renamed: "unsafeContext()")
     func internalContext() -> NSManagedObjectContext
 }

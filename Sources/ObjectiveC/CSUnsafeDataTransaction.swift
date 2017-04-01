@@ -203,7 +203,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     
     // MARK: Deprecated
     
-    @available(*, deprecated: 4.0.0, renamed: "unsafeContext()")
+    @available(*, deprecated, renamed: "unsafeContext()")
     @objc
     public var internalContext: NSManagedObjectContext {
         
@@ -215,7 +215,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
      
      - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
      */
-    @available(*, deprecated: 4.0.0, message: "Use the new -[CSUnsafeDataTransaction commitWithSuccess:failure:] method")
+    @available(*, deprecated, message: "Use the new -[CSUnsafeDataTransaction commitWithSuccess:failure:] method")
     @objc
     public func commit(_ completion: ((_ result: CSSaveResult) -> Void)?) {
         
@@ -238,7 +238,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
      
      - returns: a `CSSaveResult` containing the success or failure information
      */
-    @available(*, deprecated: 4.0.0, message: "Use the new -[CSUnsafeDataTransaction commitAndWaitWithError:] method")
+    @available(*, deprecated, message: "Use the new -[CSUnsafeDataTransaction commitAndWaitWithError:] method")
     @objc
     public func commitAndWait() -> CSSaveResult {
         

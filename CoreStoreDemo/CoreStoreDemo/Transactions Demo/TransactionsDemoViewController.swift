@@ -28,13 +28,13 @@ private struct Static {
         var place = CoreStore.fetchOne(From<Place>())
         if place == nil {
             
-            _ = CoreStore.beginSynchronous { (transaction) -> Void in
-                
-                let place = transaction.create(Into<Place>())
-                place.setInitialValues()
-                
-                _ = transaction.commitAndWait()
-            }
+            _ = try? CoreStore.perform(
+                synchronous: { (transaction) in
+                    
+                    let place = transaction.create(Into<Place>())
+                    place.setInitialValues()
+                }
+            )
             place = CoreStore.fetchOne(From<Place>())
         }
         
@@ -169,23 +169,26 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
                 gesture.location(in: mapView),
                 toCoordinateFrom: mapView
             )
-            CoreStore.beginAsynchronous { (transaction) -> Void in
-                
-                let place = transaction.edit(Static.placeController.object)
-                place?.coordinate = coordinate
-                transaction.commit { (_) -> Void in }
-            }
+            CoreStore.perform(
+                asynchronous: { (transaction) in
+                    
+                    let place = transaction.edit(Static.placeController.object)
+                    place?.coordinate = coordinate
+                },
+                completion: { _ in }
+            )
         }
     }
     
     @IBAction dynamic func refreshButtonTapped(_ sender: AnyObject?) {
         
-        _ = CoreStore.beginSynchronous { (transaction) -> Void in
-            
-            let place = transaction.edit(Static.placeController.object)
-            place?.setInitialValues()
-            _ = transaction.commitAndWait()
-        }
+        _ = try? CoreStore.perform(
+            synchronous: { (transaction) in
+                
+                let place = transaction.edit(Static.placeController.object)
+                place?.setInitialValues()
+            }
+        )
     }
     
     func geocode(place: Place) {

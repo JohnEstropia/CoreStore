@@ -152,7 +152,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
      
      - returns: a `CSSaveResult` containing the success or failure information
      */
-    @available(*, deprecated: 4.0.0, message: "Use the new -[CSSynchronousDataTransaction commitAndWaitWithError:] method")
+    @available(*, deprecated, message: "Use the new -[CSSynchronousDataTransaction commitAndWaitWithError:] method")
     @objc
     public func commitAndWait() -> CSSaveResult {
         
@@ -168,7 +168,7 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
-    @available(*, deprecated: 4.0.0, message: "Secondary tasks spawned from CSAsynchronousDataTransactions and CSSynchronousDataTransactions are no longer supported. ")
+    @available(*, deprecated, message: "Secondary tasks spawned from CSAsynchronousDataTransactions and CSSynchronousDataTransactions are no longer supported. ")
     @objc
     @discardableResult
     public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {

@@ -165,7 +165,7 @@ public extension DataStack {
      
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      */
-    @available(*, deprecated: 4.0.0, message: "Use the new auto-commiting methods `perform(asynchronous:completion:)` or `perform(asynchronous:success:failure:)`. Please read the documentation on the behavior of the new methods.")
+    @available(*, deprecated, message: "Use the new auto-commiting methods `perform(asynchronous:completion:)` or `perform(asynchronous:success:failure:)`. Please read the documentation on the behavior of the new methods.")
     public func beginAsynchronous(_ closure: @escaping (_ transaction: AsynchronousDataTransaction) -> Void) {
         
         let transaction = AsynchronousDataTransaction(
@@ -192,7 +192,7 @@ public extension DataStack {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
-    @available(*, deprecated: 4.0.0, message: "Use the new auto-commiting method `perform(synchronous:)`. Please read the documentation on the behavior of the new methods.")
+    @available(*, deprecated, message: "Use the new auto-commiting method `perform(synchronous:)`. Please read the documentation on the behavior of the new methods.")
     @discardableResult
     public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         

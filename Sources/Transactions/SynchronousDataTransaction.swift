@@ -170,7 +170,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      
      - returns: a `SaveResult` containing the success or failure information
      */
-    @available(*, deprecated: 4.0.0, message: "Use the new auto-commit method DataStack.perform(synchronous:waitForAllObservers:)")
+    @available(*, deprecated, message: "Use the new auto-commit method DataStack.perform(synchronous:waitForAllObservers:)")
     public func commitAndWait() -> SaveResult {
         
         CoreStore.assert(
@@ -194,7 +194,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      
      - returns: a `SaveResult` containing the success or failure information
      */
-    @available(*, deprecated: 4.0.0, message: "Use the new auto-commit method DataStack.perform(synchronous:waitForAllObservers:)")
+    @available(*, deprecated, message: "Use the new auto-commit method DataStack.perform(synchronous:waitForAllObservers:)")
     public func commit() -> SaveResult {
         
         CoreStore.assert(
@@ -218,7 +218,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
      */
-    @available(*, deprecated: 4.0.0, message: "Secondary tasks spawned from AsynchronousDataTransactions and SynchronousDataTransactions are no longer supported. ")
+    @available(*, deprecated, message: "Secondary tasks spawned from AsynchronousDataTransactions and SynchronousDataTransactions are no longer supported. ")
     @discardableResult
     public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
         

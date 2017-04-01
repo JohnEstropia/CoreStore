@@ -613,7 +613,7 @@ extension OrderBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible
 
 // MARK: - SaveResult
 
-@available(*, deprecated: 4.0.0, message: "Use the new DataStack.perform(asynchronous:...) and DataStack.perform(synchronous:...) family of APIs")
+@available(*, deprecated, message: "Use the new DataStack.perform(asynchronous:...) and DataStack.perform(synchronous:...) family of APIs")
 extension SaveResult: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
