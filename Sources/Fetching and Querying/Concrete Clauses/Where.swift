@@ -134,6 +134,25 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     }
     
     /**
+     Initializes a `Where` clause that compares equality
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter object: the arguments for the `==` operator
+     */
+    public init<T: NSManagedObject>(_ keyPath: KeyPath, isEqualTo object: T?) {
+        
+        switch object {
+            
+        case nil,
+             is NSNull:
+            self.init(NSPredicate(format: "\(keyPath) == nil"))
+            
+        case let object?:
+            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [object.objectID]))
+        }
+    }
+    
+    /**
      Initializes a `Where` clause that compares membership
      
      - parameter keyPath: the keyPath to compare with
@@ -142,6 +161,17 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: QueryableAttributeType {
         
         self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toQueryableNativeType() }) as NSArray))
+    }
+    
+    /**
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
+    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: NSManagedObject {
+        
+        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.objectID }) as NSArray))
     }
     
     /**
