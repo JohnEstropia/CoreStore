@@ -72,10 +72,13 @@ class DynamicModelTests: XCTestCase {
         XCTAssertEqual(mascot.nickname*, "Riko")
         
         
-        let p1 = (Bird.meta.species == "Swift")
-        XCTAssertEqual(p1, Where("%K == %@", "species", "Swift").predicate)
+        let p1 = Bird.where({ $0.species == "Swift" })
+        XCTAssertEqual(p1.predicate, Where("%K == %@", "species", "Swift").predicate)
 
-        let p2 = (Mascot.meta.nickname == "Riko")
-        XCTAssertEqual(p2, Where("%K == %@", "nickname", "Riko").predicate)
+        let p2 = Mascot.where({ $0.nickname == "Riko" })
+        XCTAssertEqual(p2.predicate, Where("%K == %@", "nickname", "Riko").predicate)
+        
+        let p3 = Mascot.where({ $0.year == 2016 })
+        XCTAssertEqual(p3.predicate, Where("%K == %@", "year", 2016).predicate)
     }
 }

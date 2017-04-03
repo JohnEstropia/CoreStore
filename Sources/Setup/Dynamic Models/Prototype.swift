@@ -168,7 +168,7 @@ public extension ManagedObjectProtocol where Self: CoreStoreManagedObject {
     
     public typealias Attribute = AttributeContainer<Self>
     
-    public static var meta: Self {
+    static var meta: Self {
         
         return self.init(nil)
     }
@@ -183,6 +183,12 @@ public extension ManagedObjectProtocol where Self: CoreStoreManagedObject {
     public static func keyPath<O: CoreStoreManagedObject, V: ImportableAttributeType>(_ attribute: (Self) -> AttributeContainer<O>.Optional<V>) -> String  {
         
         return attribute(self.meta).keyPath
+    }
+    
+    @inline(__always)
+    public static func `where`(_ condition: (Self) -> Where) -> Where  {
+        
+        return condition(self.meta)
     }
 }
 
@@ -211,43 +217,36 @@ public postfix func * <O: ManagedObjectProtocol, V: ImportableAttributeType>(_ a
 
 public extension AttributeContainer.Required where V: CVarArg {
     
-    public static func == (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> NSPredicate {
+    public static func == (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
         
-        return NSPredicate(format: "%K == %@", argumentArray: [attribute.keyPath, value])
+        return Where(attribute.keyPath, isEqualTo: value)
     }
-    public static func < (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> NSPredicate {
+    public static func < (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
         
-        return NSPredicate(format: "%K < %@", argumentArray: [attribute.keyPath, value])
+        return Where("%K < %@", attribute.keyPath, value)
     }
-    public static func > (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> NSPredicate {
+    public static func > (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
         
-        return NSPredicate(format: "%K > %@", argumentArray: [attribute.keyPath, value])
+        return Where("%K > %@", attribute.keyPath, value)
     }
-    public static func <= (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> NSPredicate {
+    public static func <= (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
         
-        return NSPredicate(format: "%K <= %@", argumentArray: [attribute.keyPath, value])
+        return Where("%K <= %@", attribute.keyPath, value)
     }
-    public static func >= (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> NSPredicate {
+    public static func >= (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
         
-        return NSPredicate(format: "%K >= %@", argumentArray: [attribute.keyPath, value])
+        return Where("%K >= %@", attribute.keyPath, value)
     }
-    public static func != (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> NSPredicate {
+    public static func != (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
         
-        return NSPredicate(format: "%K != %@", argumentArray: [attribute.keyPath, value])
+        return Where("%K != %@", attribute.keyPath, value)
     }
 }
 public extension AttributeContainer.Optional where V: CVarArg {
     
-    public static func == (_ attribute: AttributeContainer<O>.Optional<V>, _ value: V?) -> NSPredicate {
+    public static func == (_ attribute: AttributeContainer<O>.Optional<V>, _ value: V?) -> Where {
         
-        if let value = value {
-            
-            return NSPredicate(format: "%K == %@", argumentArray: [attribute.keyPath, value])
-        }
-        else {
-            
-            return NSPredicate(format: "%K == nil", attribute.keyPath)
-        }
+        return Where(attribute.keyPath, isEqualTo: value)
     }
 }
 
