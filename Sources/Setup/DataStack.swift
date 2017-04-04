@@ -51,6 +51,23 @@ public final class DataStack: Equatable {
         self.init(model: model, migrationChain: migrationChain)
     }
     
+    public convenience init(dynamicModel: ModelVersion) {
+        
+        self.init(model: dynamicModel.createModel())
+    }
+    
+    public convenience init(dynamicModels: [ModelVersion], migrationChain: MigrationChain = nil) {
+        
+        CoreStore.assert(
+            migrationChain.valid,
+            "Invalid migration chain passed to the \(cs_typeName(DataStack.self)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
+        )
+        self.init(
+            model: NSManagedObjectModel(byMerging: dynamicModels.map({ $0.createModel() }))!,
+            migrationChain: migrationChain
+        )
+    }
+    
     /**
      Initializes a `DataStack` from an `NSManagedObjectModel`.
      
@@ -510,7 +527,7 @@ public final class DataStack: Equatable {
 //    }()
     
     private var configurationStoreMapping = [String: NSPersistentStore]()
-    private var entityConfigurationsMapping = [String: Set<String>]()
+    private var entityConfigurationsMapping = [String: Set<String>]() // TODO: change key to AnyEntity
     
     deinit {
         

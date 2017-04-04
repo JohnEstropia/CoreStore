@@ -267,7 +267,7 @@ internal extension NSManagedObjectModel {
             }
             
             var mapping = [String: String]()
-            self.entities.forEach {
+            self.entities.forEach { // TODO: use AnyEntity as mapping key
                 
                 guard let entityName = $0.name else {
                     

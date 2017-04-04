@@ -8,6 +8,7 @@
 
 import CoreGraphics
 import Foundation
+import ObjectiveC
 
 
 public protocol ManagedObjectProtocol: class {}
@@ -17,7 +18,7 @@ public protocol EntityProtocol {
     var entityDescription: NSEntityDescription { get }
 }
 
-protocol AttributeProtocol: class {
+internal protocol AttributeProtocol: class {
     
     static var attributeType: NSAttributeType { get }
     var keyPath: String { get }
@@ -27,8 +28,8 @@ protocol AttributeProtocol: class {
 
 open class CoreStoreManagedObject: ManagedObjectProtocol {
     
-    let rawObject: NSManagedObject?
-    let isMeta: Bool
+    internal let rawObject: NSManagedObject?
+    internal let isMeta: Bool
     
     public required init(_ object: NSManagedObject?) {
         
@@ -59,12 +60,42 @@ open class CoreStoreManagedObject: ManagedObjectProtocol {
 public struct Entity<O: CoreStoreManagedObject>: EntityProtocol {
     
     public let entityDescription: NSEntityDescription
+    internal var dynamicClass: AnyClass {
+        
+        return NSClassFromString(self.entityDescription.managedObjectClassName!)!
+    }
     
     public init(_ entityName: String) {
         
+        let dynamicClassName = String(reflecting: O.self)
+            .appending("__\(entityName)")
+            .replacingOccurrences(of: ".", with: "_")
+            .replacingOccurrences(of: "<", with: "_")
+            .replacingOccurrences(of: ">", with: "_")
+        // TODO: assign entityName through ModelVersion and
+        // TODO: set NSEntityDescription.userInfo AnyEntity
+        let newClass: AnyClass?
+            
+        if NSClassFromString(dynamicClassName) == nil {
+            
+            newClass = objc_allocateClassPair(NSManagedObject.self, dynamicClassName, 0)
+        }
+        else {
+            
+            newClass = nil
+        }
+        
+        defer {
+            
+            if let newClass = newClass {
+                
+                objc_registerClassPair(newClass)
+            }
+        }
+        
         let entityDescription = NSEntityDescription()
         entityDescription.name = entityName
-        entityDescription.managedObjectClassName = NSStringFromClass(NSManagedObject.self)
+        entityDescription.managedObjectClassName = dynamicClassName // TODO: return to NSManagedObject
         entityDescription.properties = type(of: self).initializeAttributes(Mirror(reflecting: O.meta))
         
         self.entityDescription = entityDescription
@@ -168,7 +199,7 @@ public extension ManagedObjectProtocol where Self: CoreStoreManagedObject {
     
     public typealias Attribute = AttributeContainer<Self>
     
-    static var meta: Self {
+    internal static var meta: Self {
         
         return self.init(nil)
     }
@@ -250,16 +281,44 @@ public extension AttributeContainer.Optional where V: CVarArg {
     }
 }
 
-protocol ModelVersionProtocol: class {
+public final class ModelVersion {
     
-    static var version: String { get }
-    static var entities: [EntityProtocol] { get }
-}
-
-extension ModelVersionProtocol {
+    public let version: String
+    internal let entities: Set<NSEntityDescription>
+    internal let entityConfigurations: [String: Set<NSEntityDescription>]
     
-    static func entity<O: CoreStoreManagedObject>(for type: O.Type) -> Entity<O> {
+    public convenience init(version: String, entities: [EntityProtocol]) {
         
-        return self.entities.first(where: { $0 is Entity<O> })! as! Entity<O>
+        self.init(version: version, configurationEntities: [Into.defaultConfigurationName: entities])
+    }
+    
+    public required init(version: String, configurationEntities: [String: [EntityProtocol]]) {
+        
+        self.version = version
+        
+        var entityConfigurations: [String: Set<NSEntityDescription>] = [:]
+        for (configuration, entities) in configurationEntities {
+            
+            entityConfigurations[configuration] = Set(entities.map({ $0.entityDescription }))
+        }
+        let allEntities = Set(entityConfigurations.map({ $0.value }).joined())
+        entityConfigurations[Into.defaultConfigurationName] = allEntities
+        
+        self.entityConfigurations = entityConfigurations
+        self.entities = allEntities
+    }
+    
+    internal func createModel() -> NSManagedObjectModel {
+        
+        let model = NSManagedObjectModel()
+        model.entities = self.entities.sorted(by: { $0.name! < $1.name! })
+        for (configuration, entities) in self.entityConfigurations {
+            
+            model.setEntities(
+                entities.sorted(by: { $0.name! < $1.name! }),
+                forConfigurationName: configuration
+            )
+        }
+        return model
     }
 }
