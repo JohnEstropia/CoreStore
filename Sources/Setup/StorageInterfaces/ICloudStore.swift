@@ -65,7 +65,7 @@ public final class ICloudStore: CloudStorage {
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
      - parameter cloudStorageOptions: When the `ICloudStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public required init?(ubiquitousContentName: String, ubiquitousContentTransactionLogsSubdirectory: String, ubiquitousContainerID: String? = nil, ubiquitousPeerToken: String? = nil, configuration: String? = nil, cloudStorageOptions: CloudStorageOptions = nil) {
+    public required init?(ubiquitousContentName: String, ubiquitousContentTransactionLogsSubdirectory: String, ubiquitousContainerID: String? = nil, ubiquitousPeerToken: String? = nil, configuration: ModelConfiguration = nil, cloudStorageOptions: CloudStorageOptions = nil) {
         
         CoreStore.assert(
             !ubiquitousContentName.isEmpty,
@@ -258,7 +258,7 @@ public final class ICloudStore: CloudStorage {
     /**
      The configuration name in the model file
      */
-    public let configuration: String?
+    public let configuration: ModelConfiguration
     
     /**
      The options dictionary for the `NSPersistentStore`. For `SQLiteStore`s, this is always set to

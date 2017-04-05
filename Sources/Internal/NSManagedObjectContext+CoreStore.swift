@@ -55,25 +55,6 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func entityDescriptionForEntityType(_ entity: NSManagedObject.Type) -> NSEntityDescription? {
-        
-        return self.entityDescriptionForEntityClass(entity)
-    }
-    
-    @nonobjc
-    internal func entityDescriptionForEntityClass(_ entity: AnyClass) -> NSEntityDescription? {
-        
-        guard let entityName = self.parentStack?.entityNameForEntityClass(entity) else {
-            
-            return nil
-        }
-        return NSEntityDescription.entity(
-            forEntityName: entityName,
-            in: self
-        )
-    }
-    
-    @nonobjc
     internal func setupForCoreStoreWithContextName(_ contextName: String) {
         
         self.name = contextName

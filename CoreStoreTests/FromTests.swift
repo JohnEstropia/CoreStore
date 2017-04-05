@@ -38,7 +38,7 @@ final class FromTests: BaseTestCase {
         
         do {
             
-            let from = From()
+            let from = From<NSManagedObject>()
             XCTAssert(from.entityClass === NSManagedObject.self)
             XCTAssertNil(from.configurations)
         }

@@ -45,32 +45,36 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-     Creates a new `NSManagedObject` with the specified entity type.
+     Creates a new `NSManagedObject` or `ManagedObject` with the specified entity type.
      
-     - parameter into: the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
-     - returns: a new `NSManagedObject` instance of the specified entity type.
+     - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `ManagedObject` entity type and the destination configuration
+     - returns: a new `NSManagedObject` or `ManagedObject` instance of the specified entity type.
      */
-    public func create<T: NSManagedObject>(_ into: Into<T>) -> T {
+    public func create<T: ManagedObjectProtocol>(_ into: Into<T>) -> T {
         
-        let entityClass = (into.entityClass as! T.Type)
+        let entityClass = into.entityClass
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to create an entity of type \(cs_typeName(entityClass)) outside its designated queue."
         )
         
         let context = self.context
+        let dataStack = context.parentStack!
+        let entityIdentifier = EntityIdentifier(entityClass)
         if into.inferStoreIfPossible {
             
-            switch context.parentStack!.persistentStoreForEntityClass(
-                entityClass,
+            switch dataStack.persistentStore(
+                for: entityIdentifier,
                 configuration: nil,
                 inferStoreIfPossible: true
             ) {
                 
             case (let persistentStore?, _):
-                let object = entityClass.createInContext(context)
-                context.assign(object, to: persistentStore)
-                return object
+                return entityClass.cs_forceCreate(
+                    entityDescription: dataStack.entityDescription(for: entityIdentifier)!,
+                    into: context,
+                    assignTo: persistentStore
+                )
                 
             case (nil, true):
                 CoreStore.abort("Attempted to create an entity of type \(cs_typeName(entityClass)) with ambiguous destination persistent store, but the configuration name was not specified.")
@@ -81,17 +85,19 @@ public /*abstract*/ class BaseDataTransaction {
         }
         else {
             
-            switch context.parentStack!.persistentStoreForEntityClass(
-                entityClass,
+            switch dataStack.persistentStore(
+                for: entityIdentifier,
                 configuration: into.configuration
-                    ?? type(of: into).defaultConfigurationName,
+                    ?? DataStack.defaultConfigurationName,
                 inferStoreIfPossible: false
             ) {
                 
             case (let persistentStore?, _):
-                let object = entityClass.createInContext(context)
-                context.assign(object, to: persistentStore)
-                return object
+                return entityClass.cs_forceCreate(
+                    entityDescription: dataStack.entityDescription(for: entityIdentifier)!,
+                    into: context,
+                    assignTo: persistentStore
+                )
                 
             case (nil, true):
                 CoreStore.abort("Attempted to create an entity of type \(cs_typeName(entityClass)) with ambiguous destination persistent store, but the configuration name was not specified.")
@@ -143,7 +149,7 @@ public /*abstract*/ class BaseDataTransaction {
         )
         CoreStore.assert(
             into.inferStoreIfPossible
-                || (into.configuration ?? Into.defaultConfigurationName) == objectID.persistentStore?.configurationName,
+                || (into.configuration ?? DataStack.defaultConfigurationName) == objectID.persistentStore?.configurationName,
             "Attempted to update an entity of type \(cs_typeName(into.entityClass)) but the specified persistent store do not match the `NSManagedObjectID`."
         )
         return self.fetchExisting(objectID) as? T
@@ -160,11 +166,10 @@ public /*abstract*/ class BaseDataTransaction {
             self.isRunningInAllowedQueue(),
             "Attempted to delete an entity outside its designated queue."
         )
-        guard let object = object else {
-            
-            return
-        }
-        self.context.fetchExisting(object)?.deleteFromContext()
+        let context = self.context
+        object
+            .flatMap(context.fetchExisting)
+            .flatMap(context.delete)
     }
     
     /**
@@ -192,7 +197,7 @@ public /*abstract*/ class BaseDataTransaction {
         )
         
         let context = self.context
-        objects.forEach { context.fetchExisting($0)?.deleteFromContext() }
+        objects.forEach { context.fetchExisting($0).flatMap(context.delete) }
     }
     
     /**

@@ -41,7 +41,7 @@ public final class DataStack: Equatable {
      - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    public convenience init(modelName: String = DataStack.applicationName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
+    public convenience init(modelName: XcdatamodelFilename = DataStack.applicationName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
         
         let model = NSManagedObjectModel.fromBundle(
             bundle,
@@ -51,12 +51,12 @@ public final class DataStack: Equatable {
         self.init(model: model, migrationChain: migrationChain)
     }
     
-    public convenience init(dynamicModel: ModelVersion) {
+    public convenience init(dynamicModel: ObjectModel) {
         
         self.init(model: dynamicModel.createModel())
     }
     
-    public convenience init(dynamicModels: [ModelVersion], migrationChain: MigrationChain = nil) {
+    public convenience init(dynamicModels: [ObjectModel], migrationChain: MigrationChain = nil) {
         
         CoreStore.assert(
             migrationChain.valid,
@@ -106,9 +106,49 @@ public final class DataStack: Equatable {
     /**
      Returns the entity name-to-class type mapping from the `DataStack`'s model.
      */
-    public var entityTypesByName: [String: NSManagedObject.Type] {
+    public func entityTypesByName(for type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {
         
-        return self.model.entityTypesMapping()
+        var entityTypesByName: [EntityName: NSManagedObject.Type] = [:]
+        for (entityIdentifier, entityDescription) in self.model.entityDescriptionsByEntityIdentifier {
+            
+            switch entityIdentifier.category {
+                
+            case .coreData:
+                let actualType = NSClassFromString(entityDescription.managedObjectClassName!)! as! NSManagedObject.Type
+                if (actualType as AnyClass).isSubclass(of: type) {
+                    
+                    entityTypesByName[entityDescription.name!] = actualType
+                }
+                
+            case .coreStore:
+                continue
+            }
+        }
+        return entityTypesByName
+    }
+    
+    /**
+     Returns the entity name-to-class type mapping from the `DataStack`'s model.
+     */
+    public func entityTypesByName(for type: ManagedObject.Type) -> [EntityName: ManagedObject.Type] {
+        
+        var entityTypesByName: [EntityName: ManagedObject.Type] = [:]
+        for (entityIdentifier, entityDescription) in self.model.entityDescriptionsByEntityIdentifier {
+            
+            switch entityIdentifier.category {
+                
+            case .coreData:
+                continue
+                
+            case .coreStore:
+                let actualType = NSClassFromString(entityDescription.managedObjectClassName!)! as! ManagedObject.Type
+                if (actualType as AnyClass).isSubclass(of: type) {
+                    
+                    entityTypesByName[entityDescription.name!] = actualType
+                }
+            }
+        }
+        return entityTypesByName
     }
     
     /**
@@ -116,10 +156,15 @@ public final class DataStack: Equatable {
      */
     public func entityDescription(for type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return NSEntityDescription.entity(
-            forEntityName: self.model.entityNameForClass(type),
-            in: self.mainContext
-        )
+        return self.entityDescription(for: EntityIdentifier(type))
+    }
+    
+    /**
+     Returns the `NSEntityDescription` for the specified `ManagedObject` subclass.
+     */
+    public func entityDescription(for type: ManagedObject.Type) -> NSEntityDescription? {
+        
+        return self.entityDescription(for: EntityIdentifier(type))
     }
     
     /**
@@ -408,6 +453,8 @@ public final class DataStack: Equatable {
     
     // MARK: Internal
     
+    internal static var defaultConfigurationName = "PF_DEFAULT_CONFIGURATION_NAME"
+    
     internal static let applicationName = (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData"
     
     internal let coordinator: NSPersistentStoreCoordinator
@@ -434,34 +481,27 @@ public final class DataStack: Equatable {
             .first
     }
     
-    internal func entityNameForEntityClass(_ entityClass: AnyClass) -> String? {
-        
-        return self.model.entityNameForClass(entityClass)
-    }
-    
-    internal func persistentStoresForEntityClass(_ entityClass: AnyClass) -> [NSPersistentStore]? {
+    internal func persistentStores(for entityIdentifier: EntityIdentifier) -> [NSPersistentStore]? {
         
         var returnValue: [NSPersistentStore]? = nil
         self.storeMetadataUpdateQueue.sync(flags: .barrier) {
             
-            returnValue = self.entityConfigurationsMapping[NSStringFromClass(entityClass)]?.map {
-                
-                return self.configurationStoreMapping[$0]!
-            } ?? []
+            returnValue = self.finalConfigurationsByEntityIdentifier[entityIdentifier]?
+                .map({ self.persistentStoresByFinalConfiguration[$0]! }) ?? []
         }
         return returnValue
     }
     
-    internal func persistentStoreForEntityClass(_ entityClass: AnyClass, configuration: String?, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
+    internal func persistentStore(for entityIdentifier: EntityIdentifier, configuration: ModelConfiguration, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
         
         return self.storeMetadataUpdateQueue.sync(flags: .barrier) { () -> (store: NSPersistentStore?, isAmbiguous: Bool) in
             
-            let configurationsForEntity = self.entityConfigurationsMapping[NSStringFromClass(entityClass)] ?? []
+            let configurationsForEntity = self.finalConfigurationsByEntityIdentifier[entityIdentifier] ?? []
             if let configuration = configuration {
                 
                 if configurationsForEntity.contains(configuration) {
                     
-                    return (store: self.configurationStoreMapping[configuration], isAmbiguous: false)
+                    return (store: self.persistentStoresByFinalConfiguration[configuration], isAmbiguous: false)
                 }
                 else if !inferStoreIfPossible {
                     
@@ -475,7 +515,7 @@ public final class DataStack: Equatable {
                 return (store: nil, isAmbiguous: false)
                 
             case 1 where inferStoreIfPossible:
-                return (store: self.configurationStoreMapping[configurationsForEntity.first!], isAmbiguous: false)
+                return (store: self.persistentStoresByFinalConfiguration[configurationsForEntity.first!], isAmbiguous: false)
                 
             default:
                 return (store: nil, isAmbiguous: true)
@@ -496,7 +536,7 @@ public final class DataStack: Equatable {
         self.storeMetadataUpdateQueue.async(flags: .barrier) {
             
             let configurationName = persistentStore.configurationName
-            self.configurationStoreMapping[configurationName] = persistentStore
+            self.persistentStoresByFinalConfiguration[configurationName] = persistentStore
             for entityDescription in (self.coordinator.managedObjectModel.entities(forConfigurationName: configurationName) ?? []) {
                 
                 let managedObjectClassName = entityDescription.managedObjectClassName!
@@ -504,16 +544,21 @@ public final class DataStack: Equatable {
                     NSClassFromString(managedObjectClassName) != nil,
                     "The class \(cs_typeName(managedObjectClassName)) for the entity \(cs_typeName(entityDescription.name)) does not exist. Check if the subclass type and module name are properly configured."
                 )
-                
-                if self.entityConfigurationsMapping[managedObjectClassName] == nil {
+                let entityIdentifier = EntityIdentifier(entityDescription)
+                if self.finalConfigurationsByEntityIdentifier[entityIdentifier] == nil {
                     
-                    self.entityConfigurationsMapping[managedObjectClassName] = []
+                    self.finalConfigurationsByEntityIdentifier[entityIdentifier] = []
                 }
-                self.entityConfigurationsMapping[managedObjectClassName]?.insert(configurationName)
+                self.finalConfigurationsByEntityIdentifier[entityIdentifier]?.insert(configurationName)
             }
         }
         storage.didAddToDataStack(self)
         return persistentStore
+    }
+    
+    internal func entityDescription(for entityIdentifier: EntityIdentifier) -> NSEntityDescription? {
+        
+        return self.model.entityDescriptionsByEntityIdentifier[entityIdentifier]
     }
     
     
@@ -526,8 +571,8 @@ public final class DataStack: Equatable {
 //        return true
 //    }()
     
-    private var configurationStoreMapping = [String: NSPersistentStore]()
-    private var entityConfigurationsMapping = [String: Set<String>]() // TODO: change key to AnyEntity
+    private var persistentStoresByFinalConfiguration = [String: NSPersistentStore]()
+    private var finalConfigurationsByEntityIdentifier = [EntityIdentifier: Set<String>]()
     
     deinit {
         
@@ -542,6 +587,18 @@ public final class DataStack: Equatable {
                 }
             }
         }
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Returns the entity name-to-class type mapping from the `DataStack`'s model.
+     */
+    @available(*, deprecated: 3.1, message: "Use the new DataStack.entityTypesByName(for:) method passing `NSManagedObject.self` as argument.")
+    public var entityTypesByName: [EntityName: NSManagedObject.Type] {
+        
+        return self.entityTypesByName(for: NSManagedObject.self)
     }
     
     

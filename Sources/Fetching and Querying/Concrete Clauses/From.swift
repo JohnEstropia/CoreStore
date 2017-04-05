@@ -39,18 +39,18 @@ import CoreData
  let person = transaction.fetchOne(From<MyPersonEntity>("Configuration1"))
  ```
  */
-public struct From<T: NSManagedObject> {
+public struct From<T: ManagedObjectProtocol> {
     
     /**
-     The associated `NSManagedObject` entity class
+     The associated `NSManagedObject` or `ManagedObject` entity class
      */
-    public let entityClass: AnyClass
+    public let entityClass: T.Type
     
     /**
      The `NSPersistentStore` configuration names to associate objects from.
      May contain `String`s to pertain to named configurations, or `nil` to pertain to the default configuration
      */
-    public let configurations: [String?]?
+    public let configurations: [ModelConfiguration]?
     
     /**
      Initializes a `From` clause.
@@ -68,7 +68,7 @@ public struct From<T: NSManagedObject> {
      ```
      let people = transaction.fetchAll(From<MyPersonEntity>())
      ```
-     - parameter entity: the associated `NSManagedObject` type
+     - parameter entity: the associated `NSManagedObject` or `ManagedObject` type
      */
     public init(_ entity: T.Type) {
         
@@ -76,30 +76,14 @@ public struct From<T: NSManagedObject> {
     }
     
     /**
-     Initializes a `From` clause with the specified entity class.
-     ```
-     let people = transaction.fetchAll(From<MyPersonEntity>())
-     ```
-     - parameter entityClass: the associated `NSManagedObject` entity class
-     */
-    public init(_ entityClass: AnyClass) {
-        
-        CoreStore.assert(
-            entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>.self)) with entity class \(cs_typeName(entityClass))"
-        )
-        self.init(entityClass: entityClass, configurations: nil)
-    }
-    
-    /**
      Initializes a `From` clause with the specified configurations.
      ```
      let people = transaction.fetchAll(From<MyPersonEntity>(nil, "Configuration1"))
      ```
-     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `ManagedObject`'s entity type. Set to `nil` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      */
-    public init(_ configuration: String?, _ otherConfigurations: String?...) {
+    public init(_ configuration: ModelConfiguration, _ otherConfigurations: ModelConfiguration...) {
         
         self.init(entityClass: T.self, configurations: [configuration] + otherConfigurations)
     }
@@ -109,9 +93,9 @@ public struct From<T: NSManagedObject> {
      ```
      let people = transaction.fetchAll(From<MyPersonEntity>(["Configuration1", "Configuration2"]))
      ```
-     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `ManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */
-    public init(_ configurations: [String?]) {
+    public init(_ configurations: [ModelConfiguration]) {
         
         self.init(entityClass: T.self, configurations: configurations)
     }
@@ -121,11 +105,11 @@ public struct From<T: NSManagedObject> {
      ```
      let people = transaction.fetchAll(From(MyPersonEntity.self, nil, "Configuration1"))
      ```
-     - parameter entity: the associated `NSManagedObject` type
-     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter entity: the associated `NSManagedObject` or `ManagedObject` type
+     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `ManagedObject`'s entity type. Set to `nil` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      */
-    public init(_ entity: T.Type, _ configuration: String?, _ otherConfigurations: String?...) {
+    public init(_ entity: T.Type, _ configuration: ModelConfiguration, _ otherConfigurations: ModelConfiguration...) {
         
         self.init(entityClass: entity, configurations: [configuration] + otherConfigurations)
     }
@@ -135,55 +119,29 @@ public struct From<T: NSManagedObject> {
      ```
      let people = transaction.fetchAll(From(MyPersonEntity.self, ["Configuration1", "Configuration1"]))
      ```
-     - parameter entity: the associated `NSManagedObject` type
-     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter entity: the associated `NSManagedObject` or `ManagedObject` type
+     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `ManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */
-    public init(_ entity: T.Type, _ configurations: [String?]) {
+    public init(_ entity: T.Type, _ configurations: [ModelConfiguration]) {
         
         self.init(entityClass: entity, configurations: configurations)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified configurations.
-     ```
-     let people = transaction.fetchAll(From(MyPersonEntity.self, nil, "Configuration1"))
-     ```
-     - parameter entity: the associated `NSManagedObject` entity class
-     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
-     - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
-     */
-    public init(_ entityClass: AnyClass, _ configuration: String?, _ otherConfigurations: String?...) {
-        
-        CoreStore.assert(
-            entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>.self)) with entity class \(cs_typeName(entityClass))"
-        )
-        self.init(entityClass: entityClass, configurations: [configuration] + otherConfigurations)
-    }
-    
-    /**
-     Initializes a `From` clause with the specified configurations.
-     ```
-     let people = transaction.fetchAll(From(MyPersonEntity.self, ["Configuration1", "Configuration1"]))
-     ```
-     - parameter entity: the associated `NSManagedObject` entity class
-     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
-     */
-    public init(_ entityClass: AnyClass, _ configurations: [String?]) {
-        
-        CoreStore.assert(
-            entityClass is T.Type,
-            "Attempted to create generic type \(cs_typeName(From<T>.self)) with entity class \(cs_typeName(entityClass))"
-        )
-        self.init(entityClass: entityClass, configurations: configurations)
     }
     
     
     // MARK: Internal
     
+    internal let findPersistentStores: (_ context: NSManagedObjectContext) -> [NSPersistentStore]?
+    
+    internal init(entityClass: T.Type, configurations: [ModelConfiguration]?, findPersistentStores: @escaping (_ context: NSManagedObjectContext) -> [NSPersistentStore]?) {
+        
+        self.entityClass = entityClass
+        self.configurations = configurations
+        self.findPersistentStores = findPersistentStores
+    }
+    
     internal func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) -> Bool {
         
-        fetchRequest.entity = context.entityDescriptionForEntityClass(self.entityClass)
+        fetchRequest.entity = context.parentStack!.entityDescription(for: EntityIdentifier(self.entityClass))!
         guard applyAffectedStores else {
             
             return true
@@ -206,30 +164,21 @@ public struct From<T: NSManagedObject> {
         return stores?.isEmpty == false
     }
     
-    internal func downcast() -> From<NSManagedObject> {
-        
-        return From<NSManagedObject>(
-            entityClass: self.entityClass,
-            configurations: self.configurations,
-            findPersistentStores: self.findPersistentStores
-        )
-    }
-    
     
     // MARK: Private
     
-    private let findPersistentStores: (_ context: NSManagedObjectContext) -> [NSPersistentStore]?
-    
-    private init(entityClass: AnyClass, configurations: [String?]?) {
+    private init(entityClass: T.Type, configurations: [ModelConfiguration]?) {
         
         self.entityClass = entityClass
         self.configurations = configurations
+        
+        let entityIdentifier = EntityIdentifier(entityClass)
         if let configurations = configurations {
             
-            let configurationsSet = Set(configurations.map { $0 ?? Into.defaultConfigurationName })
+            let configurationsSet = Set(configurations.map({ $0 ?? DataStack.defaultConfigurationName }))
             self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
-                return context.parentStack?.persistentStoresForEntityClass(entityClass)?.filter {
+                return context.parentStack?.persistentStores(for: entityIdentifier)?.filter {
                     
                     return configurationsSet.contains($0.configurationName)
                 }
@@ -239,15 +188,8 @@ public struct From<T: NSManagedObject> {
             
             self.findPersistentStores = { (context: NSManagedObjectContext) -> [NSPersistentStore]? in
                 
-                return context.parentStack?.persistentStoresForEntityClass(entityClass)
+                return context.parentStack?.persistentStores(for: entityIdentifier)
             }
         }
-    }
-    
-    private init(entityClass: AnyClass, configurations: [String?]?, findPersistentStores: @escaping (_ context: NSManagedObjectContext) -> [NSPersistentStore]?) {
-        
-        self.entityClass = entityClass
-        self.configurations = configurations
-        self.findPersistentStores = findPersistentStores
     }
 }

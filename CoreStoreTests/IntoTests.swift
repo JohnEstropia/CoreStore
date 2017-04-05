@@ -36,7 +36,7 @@ final class IntoTests: XCTestCase {
     @objc
     dynamic func test_ThatIntoClauseConstants_AreCorrect() {
         
-        XCTAssertEqual(Into<NSManagedObject>.defaultConfigurationName, "PF_DEFAULT_CONFIGURATION_NAME")
+        XCTAssertEqual(DataStack.defaultConfigurationName, "PF_DEFAULT_CONFIGURATION_NAME")
     }
     
     @objc
@@ -44,7 +44,7 @@ final class IntoTests: XCTestCase {
         
         do {
             
-            let into = Into()
+            let into = Into<NSManagedObject>()
             XCTAssert(into.entityClass === NSManagedObject.self)
             XCTAssertNil(into.configuration)
             XCTAssertTrue(into.inferStoreIfPossible)
@@ -58,14 +58,7 @@ final class IntoTests: XCTestCase {
         }
         do {
             
-            let into = Into<TestEntity1>()
-            XCTAssert(into.entityClass === TestEntity1.self)
-            XCTAssertNil(into.configuration)
-            XCTAssertTrue(into.inferStoreIfPossible)
-        }
-        do {
-            
-            let into = Into(TestEntity1.self as AnyClass)
+            let into = Into(TestEntity1.self)
             XCTAssert(into.entityClass === TestEntity1.self)
             XCTAssertNil(into.configuration)
             XCTAssertTrue(into.inferStoreIfPossible)
@@ -80,13 +73,6 @@ final class IntoTests: XCTestCase {
         do {
             
             let into = Into(TestEntity1.self, "Config1")
-            XCTAssert(into.entityClass === TestEntity1.self)
-            XCTAssertEqual(into.configuration, "Config1")
-            XCTAssertFalse(into.inferStoreIfPossible)
-        }
-        do {
-            
-            let into = Into(TestEntity1.self as AnyClass, "Config1")
             XCTAssert(into.entityClass === TestEntity1.self)
             XCTAssertEqual(into.configuration, "Config1")
             XCTAssertFalse(into.inferStoreIfPossible)
@@ -98,43 +84,30 @@ final class IntoTests: XCTestCase {
         
         do {
             
-            let into = Into()
-            XCTAssertEqual(into, Into())
+            let into = Into<NSManagedObject>()
             XCTAssertEqual(into, Into<NSManagedObject>())
-            XCTAssertEqual(into, Into(NSManagedObject.self as AnyClass))
-            XCTAssertFalse(into == Into<TestEntity1>())
+            XCTAssertEqual(into, Into(NSManagedObject.self))
+            XCTAssertNotEqual(into, Into<NSManagedObject>(TestEntity1.self))
             XCTAssertNotEqual(into, Into<NSManagedObject>("Config1"))
         }
         do {
             
             let into = Into<TestEntity1>()
             XCTAssertEqual(into, Into<TestEntity1>())
-            XCTAssertEqual(into, Into(TestEntity1.self as AnyClass))
-            XCTAssertFalse(into == Into<TestEntity2>())
+            XCTAssertEqual(into, Into(TestEntity1.self))
             XCTAssertNotEqual(into, Into<TestEntity1>("Config1"))
         }
         do {
             
-            let into = Into<TestEntity1>()
-            XCTAssertEqual(into, Into<TestEntity1>())
-            XCTAssertEqual(into, Into(TestEntity1.self as AnyClass))
-            XCTAssertFalse(into == Into<TestEntity2>())
-            XCTAssertNotEqual(into, Into<TestEntity1>("Config1"))
-        }
-        do {
-            
-            let into = Into(TestEntity1.self as AnyClass)
+            let into = Into(TestEntity1.self)
             XCTAssert(into == Into<TestEntity1>())
             XCTAssertEqual(into, Into(TestEntity1.self))
-            XCTAssertFalse(into == Into<TestEntity2>())
             XCTAssertFalse(into == Into<TestEntity1>("Config1"))
         }
         do {
             
             let into = Into<TestEntity1>("Config1")
             XCTAssertEqual(into, Into(TestEntity1.self, "Config1"))
-            XCTAssertEqual(into, Into(TestEntity1.self as AnyClass, "Config1"))
-            XCTAssertFalse(into == Into<TestEntity2>("Config1"))
             XCTAssertNotEqual(into, Into<TestEntity1>("Config2"))
         }
         do {
@@ -142,16 +115,14 @@ final class IntoTests: XCTestCase {
             let into = Into(TestEntity1.self, "Config1")
             XCTAssertEqual(into, Into(TestEntity1.self, "Config1"))
             XCTAssertEqual(into, Into<TestEntity1>("Config1"))
-            XCTAssertFalse(into == Into<TestEntity2>("Config1"))
             XCTAssertNotEqual(into, Into<TestEntity1>("Config2"))
         }
         do {
             
-            let into = Into(TestEntity1.self as AnyClass, "Config1")
-            XCTAssert(into == Into<TestEntity1>("Config1"))
+            let into = Into(TestEntity1.self, "Config1")
+            XCTAssertEqual(into, Into<TestEntity1>("Config1"))
             XCTAssertEqual(into, Into(TestEntity1.self, "Config1"))
-            XCTAssertFalse(into == Into<TestEntity2>("Config1"))
-            XCTAssertFalse(into == Into<TestEntity1>("Config2"))
+            XCTAssertNotEqual(into, Into<TestEntity1>("Config2"))
         }
     }
     
@@ -160,45 +131,9 @@ final class IntoTests: XCTestCase {
         
         do {
             
-            let into = Into()
+            let into = Into<NSManagedObject>()
             let objcInto = into.bridgeToObjectiveC
             XCTAssertEqual(into, objcInto.bridgeToSwift)
-        }
-        do {
-            
-            let into = Into<TestEntity1>()
-            let objcInto = into.bridgeToObjectiveC
-            XCTAssertTrue(into == objcInto.bridgeToSwift)
-        }
-        do {
-            
-            let into = Into(TestEntity1.self as AnyClass)
-            let objcInto = into.bridgeToObjectiveC
-            XCTAssertEqual(into, objcInto.bridgeToSwift)
-        }
-        do {
-            
-            let into = Into(TestEntity1.self as AnyClass)
-            let objcInto = into.bridgeToObjectiveC
-            XCTAssertEqual(into, objcInto.bridgeToSwift)
-        }
-        do {
-            
-            let into = Into<TestEntity1>("Config1")
-            let objcInto = into.bridgeToObjectiveC
-            XCTAssertTrue(into == objcInto.bridgeToSwift)
-        }
-        do {
-            
-            let into = Into(TestEntity1.self, "Config1")
-            let objcInto = into.bridgeToObjectiveC
-            XCTAssertTrue(into == objcInto.bridgeToSwift)
-        }
-        do {
-            
-            let into = Into(TestEntity1.self as AnyClass, "Config1")
-            let objcInto = into.bridgeToObjectiveC
-            XCTAssertTrue(into == objcInto.bridgeToSwift)
         }
     }
 }

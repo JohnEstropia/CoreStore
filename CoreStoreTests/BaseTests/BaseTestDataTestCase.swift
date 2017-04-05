@@ -28,7 +28,7 @@ class BaseTestDataTestCase: BaseTestCase {
     }()
     
     @nonobjc
-    func prepareTestDataForStack(_ stack: DataStack, configurations: [String?] = [nil]) {
+    func prepareTestDataForStack(_ stack: DataStack, configurations: [ModelConfiguration] = [nil]) {
         
         try! stack.perform(
             synchronous: { (transaction) in

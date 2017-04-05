@@ -1,8 +1,8 @@
 //
-//  NSManagedObject+Transaction.swift
+//  CoreStoreStrings.swift
 //  CoreStore
 //
-//  Copyright © 2016 John Rommel Estropia
+//  Copyright © 2017 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,23 +24,43 @@
 //
 
 import Foundation
-import CoreData
 
 
-// MARK: - NSManagedObject
+// MARK: - XcdatamodelFilename
 
-public extension NSManagedObject {
-    
-    /**
-     Returns this object's parent `UnsafeDataTransaction` instance if it was created from one. Returns `nil` if the parent transaction is either an `AsynchronousDataTransaction` or a `SynchronousDataTransaction`, or if the object is not managed by CoreStore.
-     
-     When using an `UnsafeDataTransaction` and passing around a temporary object, you can use this property to execute fetches and updates to the transaction without having to pass around both the object and the transaction instances.
-     
-     - Important: The internal reference to the transaction is `weak`, and it is still the developer's responsibility to retain a strong reference to the `UnsafeDataTransaction`.
-     */
-    @nonobjc
-    public var unsafeDataTransaction: UnsafeDataTransaction? {
-        
-        return self.managedObjectContext?.parentTransaction as? UnsafeDataTransaction
-    }
-}
+/**
+ A `String` that pertains to the name of an *.xcdatamodeld file (without the file extension).
+ */
+public typealias XcdatamodelFilename = String
+
+
+// MARK: - ModelConfiguration
+
+/**
+ An `Optional<String>` that pertains to the name of a "Configuration" which particular groups of entities may belong to. When `nil`, pertains to the default configuration which includes all entities.
+ */
+public typealias ModelConfiguration = String?
+
+
+// MARK: - ModelVersion
+
+/**
+ An `String` that pertains to the name of a versioned *.xcdatamodeld file (without the file extension).
+ */
+public typealias ModelVersion = String
+
+
+// MARK: - EntityName
+
+/**
+ An `String` that pertains to an Entity name.
+ */
+public typealias EntityName = String
+
+
+// MARK: - ClassName
+
+/**
+ An `String` that pertains to a dynamically-accessable class name (usable with NSClassFromString(...)).
+ */
+public typealias ClassName = String

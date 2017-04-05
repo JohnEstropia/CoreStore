@@ -44,7 +44,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public init(fileURL: URL, configuration: String? = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
+    public init(fileURL: URL, configuration: ModelConfiguration = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
         
         self.fileURL = fileURL
         self.configuration = configuration
@@ -61,7 +61,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
      - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
-    public init(fileName: String, configuration: String? = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
+    public init(fileName: String, configuration: ModelConfiguration = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
         
         self.fileURL = LegacySQLiteStore.defaultRootDirectory.appendingPathComponent(
             fileName,
@@ -118,7 +118,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     /**
      The configuration name in the model file
      */
-    public let configuration: String?
+    public let configuration: ModelConfiguration
     
     /**
      The options dictionary for the `NSPersistentStore`. For `SQLiteStore`s, this is always set to

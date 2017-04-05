@@ -46,7 +46,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
      - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `CSLocalStorageOptionsNone`.
      */
     @objc
-    public convenience init(fileURL: URL, configuration: String?, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
+    public convenience init(fileURL: URL, configuration: ModelConfiguration, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
         
         self.init(
             SQLiteStore(
@@ -68,7 +68,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
      - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `[CSLocalStorageOptions none]`.
      */
     @objc
-    public convenience init(fileName: String, configuration: String?, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
+    public convenience init(fileName: String, configuration: ModelConfiguration, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
         
         self.init(
             SQLiteStore(
@@ -133,7 +133,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
     /**
      The configuration name in the model file
      */
-    public var configuration: String? {
+    public var configuration: ModelConfiguration {
         
         return self.bridgeToSwift.configuration
     }

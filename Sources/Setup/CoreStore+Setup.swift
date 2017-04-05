@@ -42,15 +42,31 @@ public extension CoreStore {
     /**
      Returns the entity name-to-class type mapping from the `defaultStack`'s model.
      */
-    public static var entityTypesByName: [String: NSManagedObject.Type] {
+    public static func entityTypesByName(for type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {
         
-        return self.defaultStack.entityTypesByName
+        return self.defaultStack.entityTypesByName(for: type)
+    }
+    
+    /**
+     Returns the entity name-to-class type mapping from the `defaultStack`'s model.
+     */
+    public static func entityTypesByName(for type: ManagedObject.Type) -> [EntityName: ManagedObject.Type] {
+        
+        return self.defaultStack.entityTypesByName(for: type)
     }
     
     /**
      Returns the `NSEntityDescription` for the specified `NSManagedObject` subclass from `defaultStack`'s model.
      */
     public static func entityDescription(for type: NSManagedObject.Type) -> NSEntityDescription? {
+        
+        return self.defaultStack.entityDescription(for: type)
+    }
+    
+    /**
+     Returns the `NSEntityDescription` for the specified `ManagedObject` subclass from `defaultStack`'s model.
+     */
+    public static func entityDescription(for type: ManagedObject.Type) -> NSEntityDescription? {
         
         return self.defaultStack.entityDescription(for: type)
     }
@@ -152,6 +168,18 @@ public extension CoreStore {
     public static func addStorageAndWait<T: CloudStorage>(_ storage: T) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storage)
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Returns the entity name-to-class type mapping from the `defaultStack`'s model.
+     */
+    @available(*, deprecated: 3.1, message: "Use the new CoreStore.entityTypesByName(for:) method passing `NSManagedObject.self` as argument.")
+    public static var entityTypesByName: [EntityName: NSManagedObject.Type] {
+        
+        return self.defaultStack.entityTypesByName
     }
     
     

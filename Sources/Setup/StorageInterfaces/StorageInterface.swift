@@ -41,7 +41,7 @@ public protocol StorageInterface: class {
     /**
      The configuration name in the model file
      */
-    var configuration: String? { get }
+    var configuration: ModelConfiguration { get }
     
     /**
      The options dictionary for the `NSPersistentStore`
@@ -166,7 +166,7 @@ internal extension LocalStorage {
     internal func matchesPersistentStore(_ persistentStore: NSPersistentStore) -> Bool {
         
         return persistentStore.type == type(of: self).storeType
-            && persistentStore.configurationName == (self.configuration ?? Into.defaultConfigurationName)
+            && persistentStore.configurationName == (self.configuration ?? DataStack.defaultConfigurationName)
             && persistentStore.url == self.fileURL
     }
 }
@@ -250,7 +250,7 @@ internal extension CloudStorage {
     internal func matchesPersistentStore(_ persistentStore: NSPersistentStore) -> Bool {
         
         guard persistentStore.type == type(of: self).storeType
-            && persistentStore.configurationName == (self.configuration ?? Into.defaultConfigurationName) else {
+            && persistentStore.configurationName == (self.configuration ?? DataStack.defaultConfigurationName) else {
                 
                 return false
         }

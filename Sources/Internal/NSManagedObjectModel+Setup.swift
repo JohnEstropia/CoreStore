@@ -157,21 +157,49 @@ internal extension NSManagedObjectModel {
     }
     
     @nonobjc
-    internal func entityNameForClass(_ entityClass: AnyClass) -> String {
+    internal var entityDescriptionsByEntityIdentifier: [EntityIdentifier: NSEntityDescription] {
         
-        return self.entityNameMapping[NSStringFromClass(entityClass)]!
-    }
-    
-    @nonobjc
-    internal func entityTypesMapping() -> [String: NSManagedObject.Type] {
-        
-        var mapping = [String: NSManagedObject.Type]()
-        self.entityNameMapping.forEach { (className, entityName) in
+        if let mapping: NSDictionary = cs_getAssociatedObjectForKey(&PropertyKeys.objectClassNamesByEntityName, inObject: self) {
             
-            mapping[entityName] = (NSClassFromString(className)! as! NSManagedObject.Type)
+            return mapping as! [EntityIdentifier: NSEntityDescription]
         }
+        
+        var mapping: [EntityIdentifier: NSEntityDescription] = [:]
+        self.entities.forEach { (entityDescription) in
+            
+            let entityIdentifier = EntityIdentifier(entityDescription)
+            mapping[entityIdentifier] = entityDescription
+        }
+        cs_setAssociatedCopiedObject(
+            mapping as NSDictionary,
+            forKey: &PropertyKeys.objectClassNamesByEntityName,
+            inObject: self
+        )
         return mapping
     }
+    
+    // TODO: remove
+//    @nonobjc
+//    internal func entityNames(for type: NSManagedObject.Type) -> Set<EntityName> {
+//        
+//        let className = NSStringFromClass(type)
+//        return Set(
+//            self.objectClassNamesByEntityName
+//                .filter({ $0.value == className })
+//                .map({ $0.key })
+//        )
+//    }
+//    
+//    @nonobjc
+//    internal func entityTypesMapping() -> [EntityName: NSManagedObject.Type] {
+//        
+//        var mapping = [EntityName: NSManagedObject.Type]()
+//        self.objectClassNamesByEntityName.forEach { (entityName, className) in
+//            
+//            mapping[entityName] = (NSClassFromString(className)! as! NSManagedObject.Type)
+//        }
+//        return mapping
+//    }
     
     @nonobjc
     internal func mergedModels() -> [NSManagedObjectModel] {
@@ -256,39 +284,9 @@ internal extension NSManagedObjectModel {
         }
     }
     
-    @nonobjc
-    private var entityNameMapping: [String: String] {
-        
-        get {
-            
-            if let mapping: NSDictionary = cs_getAssociatedObjectForKey(&PropertyKeys.entityNameMapping, inObject: self) {
-                
-                return mapping as! [String: String]
-            }
-            
-            var mapping = [String: String]()
-            self.entities.forEach { // TODO: use AnyEntity as mapping key
-                
-                guard let entityName = $0.name else {
-                    
-                    return
-                }
-                
-                let className = $0.managedObjectClassName
-                mapping[className!] = entityName
-            }
-            cs_setAssociatedCopiedObject(
-                mapping as NSDictionary,
-                forKey: &PropertyKeys.entityNameMapping,
-                inObject: self
-            )
-            return mapping
-        }
-    }
-    
     private struct PropertyKeys {
         
-        static var entityNameMapping: Void?
+        static var objectClassNamesByEntityName: Void?
         
         static var modelVersionFileURL: Void?
         static var modelVersions: Void?

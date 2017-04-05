@@ -1,8 +1,8 @@
 //
-//  NSManagedObject+Transaction.swift
+//  ManagedObject.swift
 //  CoreStore
 //
-//  Copyright © 2016 John Rommel Estropia
+//  Copyright © 2017 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,46 @@
 //  SOFTWARE.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 
-// MARK: - NSManagedObject
+// MARK: - ManagedObject
 
-public extension NSManagedObject {
+open class ManagedObject: ManagedObjectProtocol {
     
-    /**
-     Returns this object's parent `UnsafeDataTransaction` instance if it was created from one. Returns `nil` if the parent transaction is either an `AsynchronousDataTransaction` or a `SynchronousDataTransaction`, or if the object is not managed by CoreStore.
-     
-     When using an `UnsafeDataTransaction` and passing around a temporary object, you can use this property to execute fetches and updates to the transaction without having to pass around both the object and the transaction instances.
-     
-     - Important: The internal reference to the transaction is `weak`, and it is still the developer's responsibility to retain a strong reference to the `UnsafeDataTransaction`.
-     */
-    @nonobjc
-    public var unsafeDataTransaction: UnsafeDataTransaction? {
+    public required init(_ object: NSManagedObject) {
         
-        return self.managedObjectContext?.parentTransaction as? UnsafeDataTransaction
+        self.isMeta = false
+        self.rawObject = object
+        self.initializeAttributes(Mirror(reflecting: self), { [unowned object] in object })
+    }
+    
+    public required init(asMeta: Void) {
+        
+        self.isMeta = true
+        self.rawObject = nil
+    }
+    
+    
+    // MARK: Internal
+    
+    internal let rawObject: NSManagedObject?
+    internal let isMeta: Bool
+    
+    
+    // MARK: Private
+    
+    private func initializeAttributes(_ mirror: Mirror, _ accessRawObject: @escaping () -> NSManagedObject) {
+        
+        _ = mirror.superclassMirror.flatMap({ self.initializeAttributes($0, accessRawObject) })
+        for child in mirror.children {
+            
+            guard case let property as AttributeProtocol = child.value else {
+                
+                continue
+            }
+            property.accessRawObject = accessRawObject
+        }
     }
 }

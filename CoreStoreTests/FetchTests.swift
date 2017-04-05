@@ -36,7 +36,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacksAndTransactions_CanFetchOneExisting() {
         
-        let configurations: [String?] = ["Config1"]
+        let configurations: [ModelConfiguration] = ["Config1"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -139,7 +139,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacksAndTransactions_CanFetchAllExisting() {
         
-        let configurations: [String?] = ["Config1"]
+        let configurations: [ModelConfiguration] = ["Config1"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -274,7 +274,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanFetchOneFromDefaultConfiguration() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -413,7 +413,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanFetchOneFromSingleConfiguration() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -596,7 +596,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanFetchOneFromMultipleConfigurations() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -739,7 +739,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanFetchAllFromDefaultConfiguration() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -948,7 +948,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanFetchAllFromSingleConfiguration() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -1185,7 +1185,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanFetchAllFromMultipleConfigurations() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -1384,7 +1384,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanFetchCountFromDefaultConfiguration() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -1507,7 +1507,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanFetchCountFromSingleConfiguration() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -1666,7 +1666,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanFetchCountFromMultipleConfigurations() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -1785,7 +1785,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatTransactions_CanFetchOneFromDefaultConfiguration() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -1932,7 +1932,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatTransactions_CanFetchOneFromSingleConfiguration() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -2126,7 +2126,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatTransactions_CanFetchOneFromMultipleConfigurations() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -2277,7 +2277,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatTransactions_CanFetchAllFromDefaultConfiguration() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -2494,7 +2494,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatTransactions_CanFetchAllFromSingleConfiguration() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -2754,7 +2754,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatTransactions_CanFetchAllFromMultipleConfigurations() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -2973,7 +2973,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatTransactions_CanFetchCountFromDefaultConfiguration() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -3104,7 +3104,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatTransactions_CanFetchCountFromSingleConfiguration() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -3274,7 +3274,7 @@ final class FetchTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatTransactions_CanFetchCountFromMultipleConfigurations() {
         
-        let configurations: [String?] = [nil, "Config1", "Config2"]
+        let configurations: [ModelConfiguration] = [nil, "Config1", "Config2"]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)

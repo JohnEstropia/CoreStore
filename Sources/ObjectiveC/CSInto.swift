@@ -35,13 +35,13 @@ import CoreData
  - SeeAlso: `Into`
  */
 @objc
-public final class CSInto: NSObject, CoreStoreObjectiveCType {
+public final class CSInto: NSObject {
     
     /**
      The associated `NSManagedObject` entity class
      */
     @objc
-    public var entityClass: AnyClass {
+    public var entityClass: NSManagedObject.Type {
         
         return self.bridgeToSwift.entityClass
     }
@@ -51,7 +51,7 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
      May contain a `String` to pertain to a named configuration, or `nil` to pertain to the default configuration
      */
     @objc
-    public var configuration: String? {
+    public var configuration: ModelConfiguration {
         
         return self.bridgeToSwift.configuration
     }
@@ -65,7 +65,7 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
      - parameter entityClass: the `NSManagedObject` class type to be created
      */
     @objc
-    public convenience init(entityClass: AnyClass) {
+    public convenience init(entityClass: NSManagedObject.Type) {
         
         self.init(Into(entityClass))
     }
@@ -80,7 +80,7 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
      */
     @objc
-    public convenience init(entityClass: AnyClass, configuration: String?) {
+    public convenience init(entityClass: NSManagedObject.Type, configuration: ModelConfiguration) {
         
         self.init(Into(entityClass, configuration))
     }
@@ -122,12 +122,24 @@ public final class CSInto: NSObject, CoreStoreObjectiveCType {
 
 // MARK: - Into
 
-extension Into: CoreStoreSwiftType {
+extension Into where T: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSInto {
         
         return CSInto(self)
+    }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> Into<NSManagedObject> {
+        
+        return Into<NSManagedObject>(
+            entityClass: self.entityClass,
+            configuration: self.configuration,
+            inferStoreIfPossible: self.inferStoreIfPossible
+        )
     }
 }

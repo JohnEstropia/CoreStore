@@ -66,7 +66,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         }
         else {
             
-            guard let from = (fetchRequest.entity.flatMap { $0.managedObjectClassName }).flatMap(NSClassFromString).flatMap(From.init) else {
+            guard let from = (fetchRequest.entity.flatMap { $0.managedObjectClassName }).flatMap(NSClassFromString).flatMap({ From<T>($0 as! T.Type) }) else {
                 
                 CoreStore.abort("Attempted to create a \(CoreStoreFetchedResultsController.self) without a \(cs_typeName(From<T>.self)) clause or an \(cs_typeName(NSEntityDescription.self)).")
             }

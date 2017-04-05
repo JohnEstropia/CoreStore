@@ -95,14 +95,13 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     }
     
     @nonobjc
-    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
-        
+    public func fetchOne<T: ManagedObjectProtocol>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         return self.fetchOne(from, fetchClauses)
     }
     
     @nonobjc
-    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
+    public func fetchOne<T: ManagedObjectProtocol>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -116,6 +115,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
             return nil
         }
         return self.fetchOne(fetchRequest.dynamicCast())
+            .flatMap(from.entityClass.cs_from)
     }
     
     @nonobjc

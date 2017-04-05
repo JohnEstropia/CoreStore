@@ -44,21 +44,9 @@ public extension CSCoreStore {
      Returns the entity name-to-class type mapping from the `defaultStack`'s model.
      */
     @objc
-    public static var entityClassesByName: [String: NSManagedObject.Type] {
+    public static func entityTypesByNameForType(_ type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {
         
-        return CoreStore.entityTypesByName
-    }
-    
-    /**
-     Returns the entity class for the given entity name from the `defaultStack`'s model.
-     
-     - parameter name: the entity name
-     - returns: the `NSManagedObject` class for the given entity name, or `nil` if not found
-     */
-    @objc
-    public static func entityClassWithName(_ name: String) -> NSManagedObject.Type? {
-        
-        return CoreStore.entityTypesByName[name]
+        return CoreStore.entityTypesByName(for: type)
     }
     
     /**
@@ -136,5 +124,31 @@ public extension CSCoreStore {
     public static func addSQLiteStorageAndWait(_ storage: CSSQLiteStore, error: NSErrorPointer) -> CSSQLiteStore? {
         
         return self.defaultStack.addSQLiteStorageAndWait(storage, error: error)
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Returns the entity name-to-class type mapping from the `defaultStack`'s model.
+     */
+    @available(*, deprecated: 3.1, message: "Use the new +entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
+    @objc
+    public static var entityClassesByName: [EntityName: NSManagedObject.Type] {
+        
+        return CoreStore.entityTypesByName
+    }
+    
+    /**
+     Returns the entity class for the given entity name from the `defaultStack`'s model.
+     
+     - parameter name: the entity name
+     - returns: the `NSManagedObject` class for the given entity name, or `nil` if not found
+     */
+    @available(*, deprecated: 3.1, message: "Use the new +entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
+    @objc
+    public static func entityClassWithName(_ name: EntityName) -> NSManagedObject.Type? {
+        
+        return CoreStore.entityTypesByName[name]
     }
 }

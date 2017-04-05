@@ -83,12 +83,12 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     // MARK: BaseDataTransaction
     
     /**
-     Creates a new `NSManagedObject` with the specified entity type.
+     Creates a new `NSManagedObject` or `ManagedObject` with the specified entity type.
      
-     - parameter into: the `Into` clause indicating the destination `NSManagedObject` entity type and the destination configuration
-     - returns: a new `NSManagedObject` instance of the specified entity type.
+     - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `ManagedObject` entity type and the destination configuration
+     - returns: a new `NSManagedObject` or `ManagedObject` instance of the specified entity type.
      */
-    public override func create<T: NSManagedObject>(_ into: Into<T>) -> T {
+    public override func create<T: ManagedObjectProtocol>(_ into: Into<T>) -> T {
         
         CoreStore.assert(
             !self.isCommitted,

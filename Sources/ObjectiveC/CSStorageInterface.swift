@@ -47,7 +47,7 @@ public protocol CSStorageInterface {
      The configuration name in the model file
      */
     @objc
-    var configuration: String? { get }
+    var configuration: ModelConfiguration { get }
     
     /**
      The options dictionary for the `NSPersistentStore`

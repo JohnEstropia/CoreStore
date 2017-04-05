@@ -43,7 +43,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration.
      */
     @objc
-    public convenience init(configuration: String?) {
+    public convenience init(configuration: ModelConfiguration) {
         
         self.init(InMemoryStore(configuration: configuration))
     }
@@ -70,7 +70,7 @@ public final class CSInMemoryStore: NSObject, CSStorageInterface, CoreStoreObjec
      The configuration name in the model file
      */
     @objc
-    public var configuration: String? {
+    public var configuration: ModelConfiguration {
         
         return self.bridgeToSwift.configuration
     }

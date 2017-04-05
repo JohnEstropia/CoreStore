@@ -37,7 +37,7 @@ class BaseTestCase: XCTestCase {
     
     @nonobjc
     @discardableResult
-    func prepareStack<T>(configurations: [String?] = [nil], _ closure: (_ dataStack: DataStack) -> T) -> T {
+    func prepareStack<T>(configurations: [ModelConfiguration] = [nil], _ closure: (_ dataStack: DataStack) -> T) -> T {
         
         let stack = DataStack(
             modelName: "Model",

@@ -54,7 +54,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - parameter versionChain: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(modelName: String?, bundle: Bundle?, versionChain: [String]?) {
+    public convenience init(modelName: XcdatamodelFilename?, bundle: Bundle?, versionChain: [String]?) {
         
         self.init(
             DataStack(
@@ -73,7 +73,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - parameter versionTree: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(modelName: String?, bundle: Bundle?, versionTree: [String: String]?) {
+    public convenience init(modelName: XcdatamodelFilename?, bundle: Bundle?, versionTree: [String: String]?) {
         
         self.init(
             DataStack(
@@ -128,23 +128,12 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     }
     
     /**
-     Returns the entity name-to-class type mapping from the stack's model.
+     Returns the entity name-to-class type mapping from the `CSDataStack`'s model.
      */
     @objc
-    public var entityClassesByName: [String: NSManagedObject.Type] {
+    public func entityTypesByNameForType(_ type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {
         
-        return self.bridgeToSwift.entityTypesByName
-    }
-    
-    /**
-     Returns the entity class for the given entity name from the stack's's model.
-     - parameter name: the entity name
-     - returns: the `NSManagedObject` class for the given entity name, or `nil` if not found
-     */
-    @objc
-    public func entityClassWithName(_ name: String) -> NSManagedObject.Type? {
-        
-        return self.bridgeToSwift.entityTypesByName[name]
+        return self.bridgeToSwift.entityTypesByName(for: type)
     }
     
     /**
@@ -267,6 +256,31 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         
         self.bridgeToSwift = swiftValue
         super.init()
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Returns the entity name-to-class type mapping from the stack's model.
+     */
+    @available(*, deprecated: 3.1, message: "Use the new -entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
+    @objc
+    public var entityClassesByName: [EntityName: NSManagedObject.Type] {
+        
+        return self.bridgeToSwift.entityTypesByName
+    }
+    
+    /**
+     Returns the entity class for the given entity name from the stack's's model.
+     - parameter name: the entity name
+     - returns: the `NSManagedObject` class for the given entity name, or `nil` if not found
+     */
+    @available(*, deprecated: 3.1, message: "Use the new -entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
+    @objc
+    public func entityClassWithName(_ name: EntityName) -> NSManagedObject.Type? {
+        
+        return self.bridgeToSwift.entityTypesByName[name]
     }
 }
 

@@ -35,7 +35,7 @@ import CoreData
  - SeeAlso: `From`
  */
 @objc
-public final class CSFrom: NSObject, CoreStoreObjectiveCType {
+public final class CSFrom: NSObject {
     
     /**
      The associated `NSManagedObject` entity class
@@ -71,7 +71,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      - parameter entityClass: the `NSManagedObject` class type to be created
      */
     @objc
-    public convenience init(entityClass: AnyClass) {
+    public convenience init(entityClass: NSManagedObject.Type) {
         
         self.init(From(entityClass))
     }
@@ -85,7 +85,7 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
      */
     @objc
-    public convenience init(entityClass: AnyClass, configuration: Any) {
+    public convenience init(entityClass: NSManagedObject.Type, configuration: Any) {
         
         switch configuration {
             
@@ -111,9 +111,9 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
      - parameter configurations: an array of the `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
      */
     @objc
-    public convenience init(entityClass: AnyClass, configurations: [Any]) {
+    public convenience init(entityClass: NSManagedObject.Type, configurations: [Any]) {
         
-        var arguments = [String?]()
+        var arguments = [ModelConfiguration]()
         for configuration in configurations {
             
             switch configuration {
@@ -154,12 +154,24 @@ public final class CSFrom: NSObject, CoreStoreObjectiveCType {
 
 // MARK: - From
 
-extension From: CoreStoreSwiftType {
+extension From where T: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSFrom {
         
         return CSFrom(self)
+    }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> From<NSManagedObject> {
+        
+        return From<NSManagedObject>(
+            entityClass: self.entityClass,
+            configurations: self.configurations,
+            findPersistentStores: self.findPersistentStores
+        )
     }
 }

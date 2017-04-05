@@ -13,7 +13,7 @@ import CoreData
 @testable import CoreStore
 
 
-class Bird: CoreStoreManagedObject {
+class Bird: ManagedObject {
     
     let species = Attribute.Required<String>("species", default: "Swift")
 }
@@ -28,10 +28,8 @@ class DynamicModelTests: BaseTestDataTestCase {
     
     func testDynamicModels_CanBeDeclaredCorrectly() {
         
-        let birdEntity = Entity<Bird>("Bird")
-        let mascotEntity = Entity<Mascot>("Mascot")
         let dataStack = DataStack(
-            dynamicModel: ModelVersion(
+            dynamicModel: ObjectModel(
                 version: "V1",
                 entities: [
                     Entity<Bird>("Bird"),
@@ -54,14 +52,14 @@ class DynamicModelTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) in
                     
-                    let bird = Bird(transaction.create(Into<NSManagedObject>(birdEntity.dynamicClass)))
+                    let bird = transaction.create(Into<Bird>())
                     XCTAssertEqual(bird.species*, "Swift")
                     XCTAssertTrue(type(of: bird.species*) == String.self)
                     
                     bird.species .= "Sparrow"
                     XCTAssertEqual(bird.species*, "Sparrow")
                     
-                    let mascot = Mascot(transaction.create(Into<NSManagedObject>(mascotEntity.dynamicClass)))
+                    let mascot = transaction.create(Into<Mascot>())
                     XCTAssertEqual(mascot.species*, "Swift")
                     XCTAssertEqual(mascot.nickname*, nil)
                     
@@ -83,20 +81,16 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let p1 = Bird.where({ $0.species == "Sparrow" })
                     XCTAssertEqual(p1.predicate, Where("%K == %@", "species", "Sparrow").predicate)
                     
-                    let rawBird = transaction.fetchOne(From<NSManagedObject>(birdEntity.dynamicClass), p1)
-                    XCTAssertNotNil(rawBird)
-                    
-                    let bird = Bird(rawBird)
-                    XCTAssertEqual(bird.species*, "Sparrow")
+                    let bird = transaction.fetchOne(From<Bird>())
+                    XCTAssertNotNil(bird)
+                    XCTAssertEqual(bird!.species*, "Sparrow")
                     
                     let p2 = Mascot.where({ $0.nickname == "Riko" })
                     XCTAssertEqual(p2.predicate, Where("%K == %@", "nickname", "Riko").predicate)
                     
-                    let rawMascot = transaction.fetchOne(From<NSManagedObject>(mascotEntity.dynamicClass), p2)
-                    XCTAssertNotNil(rawMascot)
-                    
-                    let mascot = Mascot(rawMascot)
-                    XCTAssertEqual(mascot.nickname*, "Riko")
+                    let mascot = transaction.fetchOne(From<Mascot>())
+                    XCTAssertNotNil(mascot)
+                    XCTAssertEqual(mascot!.nickname*, "Riko")
                     
                     let p3 = Mascot.where({ $0.year == 2016 })
                     XCTAssertEqual(p3.predicate, Where("%K == %@", "year", 2016).predicate)
@@ -116,7 +110,7 @@ class DynamicModelTests: BaseTestDataTestCase {
     }
     
     @nonobjc
-    func prepareStack(_ dataStack: DataStack, configurations: [String?] = [nil], _ closure: (_ dataStack: DataStack) -> Void) {
+    func prepareStack(_ dataStack: DataStack, configurations: [ModelConfiguration] = [nil], _ closure: (_ dataStack: DataStack) -> Void) {
         
         do {
             

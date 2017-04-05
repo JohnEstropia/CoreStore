@@ -72,7 +72,7 @@ internal extension NSPersistentStoreCoordinator {
     }
     
     @nonobjc
-    internal func addPersistentStoreSynchronously(_ storeType: String, configuration: String?, URL storeURL: URL?, options: [NSObject : AnyObject]?) throws -> NSPersistentStore {
+    internal func addPersistentStoreSynchronously(_ storeType: String, configuration: ModelConfiguration, URL storeURL: URL?, options: [NSObject : AnyObject]?) throws -> NSPersistentStore {
         
         var store: NSPersistentStore?
         var storeError: NSError?

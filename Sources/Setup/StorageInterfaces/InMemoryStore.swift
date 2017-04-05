@@ -37,7 +37,7 @@ public final class InMemoryStore: StorageInterface, DefaultInitializableStore {
      Initializes an `InMemoryStore` for the specified configuration
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration.
      */
-    public init(configuration: String?) {
+    public init(configuration: ModelConfiguration) {
     
         self.configuration = configuration
     }
@@ -64,7 +64,7 @@ public final class InMemoryStore: StorageInterface, DefaultInitializableStore {
     /**
      The configuration name in the model file
      */
-    public let configuration: String?
+    public let configuration: ModelConfiguration
     
     /**
      The options dictionary for the `NSPersistentStore`. For `InMemoryStore`s, this is always set to `nil`.

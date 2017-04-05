@@ -36,7 +36,7 @@ class QueryTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanQueryAttributeValue() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -220,7 +220,7 @@ class QueryTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanQueryAverageValue() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -399,7 +399,7 @@ class QueryTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanQueryCountValue() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -576,7 +576,7 @@ class QueryTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanQueryMaximumValue() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -760,7 +760,7 @@ class QueryTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanQueryMinimumValue() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -944,7 +944,7 @@ class QueryTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanQuerySumValue() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -1122,7 +1122,7 @@ class QueryTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanQueryObjectIDValue() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -1290,7 +1290,7 @@ class QueryTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanQueryAttributes() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)
@@ -1344,7 +1344,7 @@ class QueryTests: BaseTestDataTestCase {
     @objc
     dynamic func test_ThatDataStacks_CanQueryAggregates() {
         
-        let configurations: [String?] = [nil]
+        let configurations: [ModelConfiguration] = [nil]
         self.prepareStack(configurations: configurations) { (stack) in
             
             self.prepareTestDataForStack(stack, configurations: configurations)

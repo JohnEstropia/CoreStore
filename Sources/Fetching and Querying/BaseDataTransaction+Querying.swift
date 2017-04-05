@@ -121,7 +121,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
+    public func fetchOne<T: ManagedObjectProtocol>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -137,7 +137,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    public func fetchOne<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
+    public func fetchOne<T: ManagedObjectProtocol>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
