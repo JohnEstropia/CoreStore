@@ -13,20 +13,22 @@ import CoreData
 @testable import CoreStore
 
 
-class Bird: ManagedObject {
+class Animal: ManagedObject {
     
     let species = Attribute.Required<String>("species", default: "Swift")
-    let enemy = Relationship.ToOne<Cat>("enemy", inverse: { $0.toy })
+    let master = Relationship.ToOne<Person>("master", inverse: { $0.pet })
 }
-class Mascot: Bird {
+
+class Dog: Animal {
     
     let nickname = Attribute.Optional<String>("nickname")
-    let year = Attribute.Required<Int>("year", default: 2016)
+    let age = Attribute.Required<Int>("age", default: 1)
 }
-class Cat: ManagedObject {
+
+class Person: ManagedObject {
     
     let name = Attribute.Required<String>("name")
-    let toy = Relationship.ToOne<Bird>("toy")
+    let pet = Relationship.ToOne<Animal>("pet")
 }
 
 
@@ -38,51 +40,52 @@ class DynamicModelTests: BaseTestDataTestCase {
             dynamicModel: ObjectModel(
                 version: "V1",
                 entities: [
-                    Entity<Bird>("Bird"),
-                    Entity<Mascot>("Mascot"),
-                    Entity<Cat>("Cat")
+                    Entity<Animal>("Animal"),
+                    Entity<Dog>("Dog"),
+                    Entity<Person>("Person")
                 ]
             )
         )
         self.prepareStack(dataStack, configurations: [nil]) { (stack) in
             
-            let k1 = Bird.keyPath({ $0.species })
+            let k1 = Animal.keyPath({ $0.species })
             XCTAssertEqual(k1, "species")
             
-            let k2 = Mascot.keyPath({ $0.species })
+            let k2 = Dog.keyPath({ $0.species })
             XCTAssertEqual(k2, "species")
             
-            let k3 = Mascot.keyPath({ $0.nickname })
+            let k3 = Dog.keyPath({ $0.nickname })
             XCTAssertEqual(k3, "nickname")
             
             let expectation = self.expectation(description: "done")
             stack.perform(
                 asynchronous: { (transaction) in
                     
-                    let bird = transaction.create(Into<Bird>())
-                    XCTAssertEqual(bird.species*, "Swift")
-                    XCTAssertTrue(type(of: bird.species*) == String.self)
+                    let animal = transaction.create(Into<Animal>())
+                    XCTAssertEqual(animal.species*, "Swift")
+                    XCTAssertTrue(type(of: animal.species*) == String.self)
                     
-                    bird.species .= "Sparrow"
-                    XCTAssertEqual(bird.species*, "Sparrow")
+                    animal.species .= "Sparrow"
+                    XCTAssertEqual(animal.species*, "Sparrow")
                     
-                    let mascot = transaction.create(Into<Mascot>())
-                    XCTAssertEqual(mascot.species*, "Swift")
-                    XCTAssertEqual(mascot.nickname*, nil)
+                    let dog = transaction.create(Into<Dog>())
+                    XCTAssertEqual(dog.species*, "Swift")
+                    XCTAssertEqual(dog.nickname*, nil)
                     
-                    mascot.species .= "Swift3"
-                    XCTAssertEqual(mascot.species*, "Swift3")
+                    dog.species .= "Dog"
+                    XCTAssertEqual(dog.species*, "Dog")
                     
-                    mascot.nickname .= "Riko"
-                    XCTAssertEqual(mascot.nickname*, "Riko")
+                    dog.nickname .= "Spot"
+                    XCTAssertEqual(dog.nickname*, "Spot")
                     
-                    let cat = transaction.create(Into<Cat>())
-                    XCTAssertNil(cat.toy.value)
+                    let person = transaction.create(Into<Person>())
+                    XCTAssertNil(person.pet.value)
                     
-                    cat.toy .= mascot
-                    XCTAssertEqual(cat.toy.value, mascot)
-                    XCTAssertEqual(cat.toy.value?.enemy.value, cat)
-                    XCTAssertEqual(mascot.enemy.value, cat)
+                    person.pet .= dog
+                    XCTAssertEqual(person.pet.value, dog)
+                    XCTAssertEqual(person.pet.value?.master.value, person)
+                    XCTAssertEqual(dog.master.value, person)
+                    XCTAssertEqual(dog.master.value?.pet.value, dog)
                 },
                 success: {
                     
@@ -96,29 +99,27 @@ class DynamicModelTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) in
                     
-                    let p1 = Bird.where({ $0.species == "Sparrow" })
-                    XCTAssertEqual(p1.predicate, Where("%K == %@", "species", "Sparrow").predicate)
+                    let p1 = Animal.where({ $0.species == "Sparrow" })
+                    XCTAssertEqual(p1.predicate, NSPredicate(format: "%K == %@", "species", "Sparrow"))
                     
-                    let bird = transaction.fetchOne(
-                        From<Bird>(),
-                        Tweak({ $0.includesSubentities = false })
-                    )
+                    let bird = transaction.fetchOne(From<Animal>(), p1)
                     XCTAssertNotNil(bird)
                     XCTAssertEqual(bird!.species*, "Sparrow")
                     
-                    let p2 = Mascot.where({ $0.nickname == "Riko" })
-                    XCTAssertEqual(p2.predicate, Where("%K == %@", "nickname", "Riko").predicate)
+                    let p2 = Dog.where({ $0.nickname == "Spot" })
+                    XCTAssertEqual(p2.predicate, NSPredicate(format: "%K == %@", "nickname", "Spot"))
                     
-                    let mascot = transaction.fetchOne(From<Mascot>())
-                    XCTAssertNotNil(mascot)
-                    XCTAssertEqual(mascot!.nickname*, "Riko")
-                    XCTAssertEqual(mascot!.species*, "Swift3")
+                    let dog = transaction.fetchOne(From<Dog>(), p2)
+                    XCTAssertNotNil(dog)
+                    XCTAssertEqual(dog!.nickname*, "Spot")
+                    XCTAssertEqual(dog!.species*, "Dog")
                     
-                    let cat = transaction.fetchOne(From<Cat>())
-                    XCTAssertEqual(cat?.toy.value, mascot)
+                    let person = transaction.fetchOne(From<Person>())
+                    XCTAssertNotNil(person)
+                    XCTAssertEqual(person!.pet.value, dog)
                     
-                    let p3 = Mascot.where({ $0.year == 2016 })
-                    XCTAssertEqual(p3.predicate, Where("%K == %@", "year", 2016).predicate)
+                    let p3 = Dog.where({ $0.age == 10 })
+                    XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))
                 },
                 success: {
             
