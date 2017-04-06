@@ -16,11 +16,17 @@ import CoreData
 class Bird: ManagedObject {
     
     let species = Attribute.Required<String>("species", default: "Swift")
+    let enemy = Relationship.ToOne<Cat>("enemy", inverse: { $0.toy })
 }
 class Mascot: Bird {
     
     let nickname = Attribute.Optional<String>("nickname")
     let year = Attribute.Required<Int>("year", default: 2016)
+}
+class Cat: ManagedObject {
+    
+    let name = Attribute.Required<String>("name")
+    let toy = Relationship.ToOne<Bird>("toy")
 }
 
 
@@ -33,7 +39,8 @@ class DynamicModelTests: BaseTestDataTestCase {
                 version: "V1",
                 entities: [
                     Entity<Bird>("Bird"),
-                    Entity<Mascot>("Mascot")
+                    Entity<Mascot>("Mascot"),
+                    Entity<Cat>("Cat")
                 ]
             )
         )
@@ -63,8 +70,19 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(mascot.species*, "Swift")
                     XCTAssertEqual(mascot.nickname*, nil)
                     
+                    mascot.species .= "Swift3"
+                    XCTAssertEqual(mascot.species*, "Swift3")
+                    
                     mascot.nickname .= "Riko"
                     XCTAssertEqual(mascot.nickname*, "Riko")
+                    
+                    let cat = transaction.create(Into<Cat>())
+                    XCTAssertNil(cat.toy.value)
+                    
+                    cat.toy .= mascot
+                    XCTAssertEqual(cat.toy.value, mascot)
+                    XCTAssertEqual(cat.toy.value?.enemy.value, cat)
+                    XCTAssertEqual(mascot.enemy.value, cat)
                 },
                 success: {
                     
@@ -81,7 +99,10 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let p1 = Bird.where({ $0.species == "Sparrow" })
                     XCTAssertEqual(p1.predicate, Where("%K == %@", "species", "Sparrow").predicate)
                     
-                    let bird = transaction.fetchOne(From<Bird>())
+                    let bird = transaction.fetchOne(
+                        From<Bird>(),
+                        Tweak({ $0.includesSubentities = false })
+                    )
                     XCTAssertNotNil(bird)
                     XCTAssertEqual(bird!.species*, "Sparrow")
                     
@@ -91,6 +112,10 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let mascot = transaction.fetchOne(From<Mascot>())
                     XCTAssertNotNil(mascot)
                     XCTAssertEqual(mascot!.nickname*, "Riko")
+                    XCTAssertEqual(mascot!.species*, "Swift3")
+                    
+                    let cat = transaction.fetchOne(From<Cat>())
+                    XCTAssertEqual(cat?.toy.value, mascot)
                     
                     let p3 = Mascot.where({ $0.year == 2016 })
                     XCTAssertEqual(p3.predicate, Where("%K == %@", "year", 2016).predicate)

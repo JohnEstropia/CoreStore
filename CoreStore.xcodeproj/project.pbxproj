@@ -444,6 +444,10 @@
 		B5D339F21E94AF5800C880DE /* CoreStoreStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D339F01E94AF5800C880DE /* CoreStoreStrings.swift */; };
 		B5D339F31E94AF5800C880DE /* CoreStoreStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D339F01E94AF5800C880DE /* CoreStoreStrings.swift */; };
 		B5D339F41E94AF5800C880DE /* CoreStoreStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D339F01E94AF5800C880DE /* CoreStoreStrings.swift */; };
+		B5D33A011E96012400C880DE /* Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D33A001E96012400C880DE /* Relationship.swift */; };
+		B5D33A021E96012400C880DE /* Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D33A001E96012400C880DE /* Relationship.swift */; };
+		B5D33A031E96012400C880DE /* Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D33A001E96012400C880DE /* Relationship.swift */; };
+		B5D33A041E96012400C880DE /* Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D33A001E96012400C880DE /* Relationship.swift */; };
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D39A0119FD00C9000E91BB /* Foundation.framework */; };
 		B5D3F6451C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */; };
@@ -732,6 +736,7 @@
 		B5D339E61E9493A500C880DE /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		B5D339EB1E9495E500C880DE /* Attribute+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Attribute+Querying.swift"; sourceTree = "<group>"; };
 		B5D339F01E94AF5800C880DE /* CoreStoreStrings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreStrings.swift; sourceTree = "<group>"; };
+		B5D33A001E96012400C880DE /* Relationship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Relationship.swift; sourceTree = "<group>"; };
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		B5D39A0119FD00C9000E91BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B5D3F6441C887C0A00C7492A /* LegacySQLiteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacySQLiteStore.swift; sourceTree = "<group>"; };
@@ -1082,6 +1087,7 @@
 			isa = PBXGroup;
 			children = (
 				B5D339E11E948C3600C880DE /* Attribute.swift */,
+				B5D33A001E96012400C880DE /* Relationship.swift */,
 				B5D339D71E9489AB00C880DE /* ManagedObject.swift */,
 				B5D339E61E9493A500C880DE /* Entity.swift */,
 				B5D339DC1E9489C700C880DE /* ManagedObjectProtocol.swift */,
@@ -1712,6 +1718,7 @@
 				B5AEFAB51C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				B5E2222A1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				B5E84F391AFF85470064E85B /* NSManagedObjectContext+Querying.swift in Sources */,
+				B5D33A011E96012400C880DE /* Relationship.swift in Sources */,
 				B5E84EE81AFF84610064E85B /* CoreStoreLogger.swift in Sources */,
 				B533C4DB1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */,
 				B559CD491CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
@@ -1876,6 +1883,7 @@
 				B5E2222C1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				82BA18A71C4BBD2900A0916E /* CoreStore+Logging.swift in Sources */,
 				82BA18D81C4BBD7100A0916E /* WeakObject.swift in Sources */,
+				B5D33A021E96012400C880DE /* Relationship.swift in Sources */,
 				B559CD4B1CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
 				B533C4DC1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */,
 				B5ECDC311CA81CDC00C7F112 /* CSCoreStore+Transaction.swift in Sources */,
@@ -2040,6 +2048,7 @@
 				B52DD19A1BE1F92800949AFE /* CoreStore+Logging.swift in Sources */,
 				B52DD1A71BE1F93200949AFE /* BaseDataTransaction+Querying.swift in Sources */,
 				B546F96C1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
+				B5D33A041E96012400C880DE /* Relationship.swift in Sources */,
 				B52DD1C61BE1F94600949AFE /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				B533C4DE1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */,
 				B5220E141D130614009BC71E /* DataStack+Observing.swift in Sources */,
@@ -2204,6 +2213,7 @@
 				B5E2222D1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
 				B563219F1BD65216006C9394 /* ObjectMonitor.swift in Sources */,
 				B56321B61BD6521C006C9394 /* WeakObject.swift in Sources */,
+				B5D33A031E96012400C880DE /* Relationship.swift in Sources */,
 				B559CD4C1CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
 				B533C4DD1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift in Sources */,
 				B5ECDC321CA81CDC00C7F112 /* CSCoreStore+Transaction.swift in Sources */,

@@ -32,7 +32,8 @@ import ObjectiveC
 
 public protocol EntityProtocol {
     
-    var entityDescription: NSEntityDescription { get }
+    var type: ManagedObject.Type { get }
+    var entityName: EntityName { get }
 }
 
 
@@ -40,74 +41,16 @@ public protocol EntityProtocol {
 
 public struct Entity<O: ManagedObject>: EntityProtocol {
     
-    public let entityDescription: NSEntityDescription
-    internal var dynamicClass: AnyClass {
-        
-        return NSClassFromString(self.entityDescription.managedObjectClassName!)!
-    }
-    
     public init(_ entityName: String) {
         
-        let dynamicClassName = String(reflecting: O.self)
-            .appending("__\(entityName)")
-            .replacingOccurrences(of: ".", with: "_")
-            .replacingOccurrences(of: "<", with: "_")
-            .replacingOccurrences(of: ">", with: "_")
-        // TODO: assign entityName through ModelVersion and
-        // TODO: set NSEntityDescription.userInfo AnyEntity
-        let newClass: AnyClass?
-        
-        if NSClassFromString(dynamicClassName) == nil {
-            
-            newClass = objc_allocateClassPair(NSManagedObject.self, dynamicClassName, 0)
-        }
-        else {
-            
-            newClass = nil
-        }
-        
-        defer {
-            
-            if let newClass = newClass {
-                
-                objc_registerClassPair(newClass)
-            }
-        }
-        
-        let entityDescription = NSEntityDescription()
-        entityDescription.userInfo = [
-            EntityIdentifier.UserInfoKey.CoreStoreManagedObjectName: String(reflecting: O.self)
-        ]
-        entityDescription.name = entityName
-        entityDescription.managedObjectClassName = NSStringFromClass(NSManagedObject.self)
-//        entityDescription.managedObjectClassName = dynamicClassName // TODO: return to NSManagedObject
-        entityDescription.properties = type(of: self).initializeAttributes(Mirror(reflecting: O.meta))
-        
-        self.entityDescription = entityDescription
+        self.type = O.self
+        self.entityName = entityName
     }
     
-    private static func initializeAttributes(_ mirror: Mirror) -> [NSAttributeDescription] {
-        
-        var attributeDescriptions: [NSAttributeDescription] = []
-        for child in mirror.children {
-            
-            guard case let property as AttributeProtocol = child.value else {
-                
-                continue
-            }
-            let attributeDescription = NSAttributeDescription()
-            attributeDescription.name = property.keyPath
-            attributeDescription.attributeType = type(of: property).attributeType
-            attributeDescription.isOptional = property.isOptional
-            attributeDescription.defaultValue = property.defaultValue
-            attributeDescriptions.append(attributeDescription)
-        }
-        if let baseEntityAttributeDescriptions = mirror.superclassMirror.flatMap(self.initializeAttributes) {
-            
-            attributeDescriptions.append(contentsOf: baseEntityAttributeDescriptions)
-        }
-        return attributeDescriptions
-    }
+    // MARK: EntityProtocol
+    
+    public let type: ManagedObject.Type
+    public let entityName: EntityName
 }
 
 
@@ -158,10 +101,10 @@ internal struct EntityIdentifier: Hashable {
     
     internal init(_ entityDescription: NSEntityDescription) {
         
-        if let coreStoreManagedObjectName = entityDescription.userInfo?[EntityIdentifier.UserInfoKey.CoreStoreManagedObjectName] as! String? {
+        if let entity = entityDescription.anyEntity {
             
             self.category = .coreStore
-            self.interfacedClassName = coreStoreManagedObjectName
+            self.interfacedClassName = NSStringFromClass(entity.type)
         }
         else {
             
@@ -187,12 +130,53 @@ internal struct EntityIdentifier: Hashable {
         return self.category.hashValue
             ^ self.interfacedClassName.hashValue
     }
+}
+
+
+// MARK: - NSEntityDescription
+
+internal extension NSEntityDescription {
+    
+    @nonobjc
+    internal var anyEntity: ObjectModel.AnyEntity? {
+        
+        get {
+            
+            guard let userInfo = self.userInfo,
+                let typeName = userInfo[UserInfoKey.CoreStoreManagedObjectTypeName] as! String?,
+                let entityName = userInfo[UserInfoKey.CoreStoreManagedObjectEntityName] as! String? else {
+                
+                return nil
+            }
+            return ObjectModel.AnyEntity(
+                type: NSClassFromString(typeName) as! ManagedObject.Type,
+                entityName: entityName
+            )
+        }
+        set {
+         
+            if let newValue = newValue {
+                
+                self.userInfo = [
+                    UserInfoKey.CoreStoreManagedObjectTypeName: NSStringFromClass(newValue.type),
+                    UserInfoKey.CoreStoreManagedObjectEntityName: newValue.entityName
+                ]
+            }
+            else {
+                
+                self.userInfo = [:]
+            }
+        }
+    }
     
     
-    // MARK: FilePrivate
+    // MARK: Private
+    
+    // MARK: - UserInfoKey
     
     fileprivate enum UserInfoKey {
         
-        fileprivate static let CoreStoreManagedObjectName = "CoreStoreManagedObjectName"
+        fileprivate static let CoreStoreManagedObjectTypeName = "CoreStoreManagedObjectTypeName"
+        fileprivate static let CoreStoreManagedObjectEntityName = "CoreStoreManagedObjectEntityName"
     }
 }

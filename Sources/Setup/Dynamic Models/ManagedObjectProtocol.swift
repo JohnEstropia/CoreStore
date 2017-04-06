@@ -37,8 +37,6 @@ public protocol ManagedObjectProtocol: class {
 
 public extension ManagedObjectProtocol where Self: ManagedObject {
     
-    public typealias Attribute = AttributeContainer<Self>
-    
     @inline(__always)
     public static func keyPath<O: ManagedObject, V: ImportableAttributeType>(_ attribute: (Self) -> AttributeContainer<O>.Required<V>) -> String  {
         
@@ -73,7 +71,7 @@ extension NSManagedObject: ManagedObjectProtocol {
     
     // MARK: ManagedObjectProtocol
     
-    public static func cs_from(object: NSManagedObject) -> Self {
+    public class func cs_from(object: NSManagedObject) -> Self {
         
         @inline(__always)
         func forceCast<T: NSManagedObject>(_ value: Any) -> T {
@@ -83,7 +81,7 @@ extension NSManagedObject: ManagedObjectProtocol {
         return forceCast(object)
     }
     
-    public static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self {
+    public class func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self {
         
         let object = self.init(entity: entityDescription, insertInto: context)
         defer {
@@ -101,12 +99,12 @@ extension ManagedObject {
     
     // MARK: ManagedObjectProtocol
     
-    public static func cs_from(object: NSManagedObject) -> Self {
+    public class func cs_from(object: NSManagedObject) -> Self {
         
         return self.init(object)
     }
     
-    public static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self {
+    public class func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self {
         
         let type = NSClassFromString(entityDescription.managedObjectClassName!)! as! NSManagedObject.Type
         let object = type.init(entity: entityDescription, insertInto: context)

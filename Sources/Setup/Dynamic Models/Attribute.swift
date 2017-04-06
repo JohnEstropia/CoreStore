@@ -33,9 +33,17 @@ infix operator .= : AssignmentPrecedence
 postfix operator *
 
 
+// MARK: - ManagedObjectProtocol
+
+public extension ManagedObjectProtocol where Self: ManagedObject {
+    
+    public typealias Attribute = AttributeContainer<Self>
+}
+
+
 // MARK: - AttributeContainer
 
-public enum AttributeContainer<O: ManagedObjectProtocol> {
+public enum AttributeContainer<O: ManagedObject> {
     
     // MARK: - Required
     
@@ -51,12 +59,11 @@ public enum AttributeContainer<O: ManagedObjectProtocol> {
             return attribute.value
         }
         
-        public let keyPath: String
-        
-        public init(_ keyPath: String, `default`: V = V.cs_emptyValue()) {
+        public init(_ keyPath: String, `default`: V = V.cs_emptyValue(), isIndexed: Bool = false) {
             
             self.keyPath = keyPath
             self.defaultValue = `default`.cs_toImportableNativeType()
+            self.isIndexed = isIndexed
         }
         
         public var value: V {
@@ -76,19 +83,23 @@ public enum AttributeContainer<O: ManagedObjectProtocol> {
             }
         }
         
-        // MARK: Internal
+        
+        // MARK: AttributeProtocol
         
         internal static var attributeType: NSAttributeType {
             
             return V.cs_rawAttributeType
         }
         
-        internal let defaultValue: Any?
+        public let keyPath: String
+        
         internal let isOptional = false
+        internal let isIndexed: Bool
+        internal let defaultValue: Any?
         
         internal var accessRawObject: () -> NSManagedObject = {
             
-            fatalError("\(O.self) property values should not be accessed")
+            fatalError("\(O.self) attribute values should not be accessed")
         }
     }
     
@@ -106,8 +117,6 @@ public enum AttributeContainer<O: ManagedObjectProtocol> {
             
             return attribute.value
         }
-        
-        public let keyPath: String
         
         public init(_ keyPath: String, `default`: V? = nil) {
             
@@ -136,18 +145,21 @@ public enum AttributeContainer<O: ManagedObjectProtocol> {
         }
         
         
-        // MARK: Internal
+        // MARK: AttributeProtocol
         
         internal static var attributeType: NSAttributeType {
             
             return V.cs_rawAttributeType
         }
         
-        internal let defaultValue: Any?
+        public let keyPath: String
         internal let isOptional = true
+        internal let isIndexed = false
+        internal let defaultValue: Any?
+        
         internal var accessRawObject: () -> NSManagedObject = {
             
-            fatalError("\(O.self) property values should not be accessed")
+            fatalError("\(O.self) attribute values should not be accessed")
         }
     }
 }
@@ -161,6 +173,7 @@ internal protocol AttributeProtocol: class {
     
     var keyPath: String { get }
     var isOptional: Bool { get }
+    var isIndexed: Bool { get }
     var defaultValue: Any? { get }
     var accessRawObject: () -> NSManagedObject { get set }
 }

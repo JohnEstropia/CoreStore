@@ -29,7 +29,7 @@ import Foundation
 
 // MARK: - ManagedObject
 
-open class ManagedObject: ManagedObjectProtocol {
+open class ManagedObject: ManagedObjectProtocol, Hashable {
     
     public required init(_ object: NSManagedObject) {
         
@@ -42,6 +42,31 @@ open class ManagedObject: ManagedObjectProtocol {
         
         self.isMeta = true
         self.rawObject = nil
+    }
+    
+    
+    // MARK: Equatable
+    
+    public static func == (lhs: ManagedObject, rhs: ManagedObject) -> Bool {
+        
+        guard lhs.isMeta == rhs.isMeta else {
+            
+            return false
+        }
+        if lhs.isMeta {
+            
+            return type(of: lhs) == type(of: rhs)
+        }
+        return lhs.rawObject!.isEqual(rhs.rawObject!)
+    }
+    
+    
+    // MARK: Hashable
+    
+    public var hashValue: Int {
+    
+        return ObjectIdentifier(self).hashValue
+            ^ (self.isMeta ? 0 : self.rawObject!.hashValue)
     }
     
     
@@ -58,11 +83,17 @@ open class ManagedObject: ManagedObjectProtocol {
         _ = mirror.superclassMirror.flatMap({ self.initializeAttributes($0, accessRawObject) })
         for child in mirror.children {
             
-            guard case let property as AttributeProtocol = child.value else {
+            switch child.value {
                 
+            case let property as AttributeProtocol:
+                property.accessRawObject = accessRawObject
+                    
+            case let property as RelationshipProtocol:
+                property.accessRawObject = accessRawObject
+                
+            default:
                 continue
             }
-            property.accessRawObject = accessRawObject
         }
     }
 }
