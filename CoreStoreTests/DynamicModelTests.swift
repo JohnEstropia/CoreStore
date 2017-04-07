@@ -2,42 +2,62 @@
 //  DynamicModelTests.swift
 //  CoreStore
 //
-//  Created by John Estropia on 2017/04/03.
-//  Copyright © 2017 John Rommel Estropia. All rights reserved.
+//  Copyright © 2017 John Rommel Estropia
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 //
 
 import XCTest
 
-import CoreData
+@testable
+import CoreStore
 
-@testable import CoreStore
 
-
-class Animal: ManagedObject {
+class Animal: CoreStoreObject {
     
-    let species = Attribute.Required<String>("species", default: "Swift")
-    let master = Relationship.ToOne<Person>("master", inverse: { $0.pet })
+    let species = Value.Required<String>("species", default: "Swift")
+    let master = Relationship.ToOne<Person>("master")
 }
 
 class Dog: Animal {
     
-    let nickname = Attribute.Optional<String>("nickname")
-    let age = Attribute.Required<Int>("age", default: 1)
+    let nickname = Value.Optional<String>("nickname")
+    let age = Value.Required<Int>("age", default: 1)
+    let friends = Relationship.ToManyUnordered<Dog>("friends")
+    let friends2 = Relationship.ToManyUnordered<Dog>("friends2", inverse: { $0.friends })
 }
 
-class Person: ManagedObject {
+class Person: CoreStoreObject {
     
-    let name = Attribute.Required<String>("name")
-    let pet = Relationship.ToOne<Animal>("pet")
+    let name = Value.Required<String>("name")
+    let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
 }
 
+
+// MARK: - DynamicModelTests
 
 class DynamicModelTests: BaseTestDataTestCase {
     
     func testDynamicModels_CanBeDeclaredCorrectly() {
         
         let dataStack = DataStack(
-            dynamicModel: ObjectModel(
+            dynamicModel: DynamicModel(
                 version: "V1",
                 entities: [
                     Entity<Animal>("Animal"),
@@ -57,26 +77,28 @@ class DynamicModelTests: BaseTestDataTestCase {
             let k3 = Dog.keyPath({ $0.nickname })
             XCTAssertEqual(k3, "nickname")
             
-            let expectation = self.expectation(description: "done")
+            let updateDone = self.expectation(description: "update-done")
+            let fetchDone = self.expectation(description: "fetch-done")
             stack.perform(
                 asynchronous: { (transaction) in
                     
                     let animal = transaction.create(Into<Animal>())
-                    XCTAssertEqual(animal.species*, "Swift")
-                    XCTAssertTrue(type(of: animal.species*) == String.self)
+                    XCTAssertEqual(animal.species.value, "Swift")
+                    XCTAssertTrue(type(of: animal.species.value) == String.self)
                     
                     animal.species .= "Sparrow"
-                    XCTAssertEqual(animal.species*, "Sparrow")
+                    XCTAssertEqual(animal.species.value, "Sparrow")
                     
                     let dog = transaction.create(Into<Dog>())
-                    XCTAssertEqual(dog.species*, "Swift")
-                    XCTAssertEqual(dog.nickname*, nil)
+                    XCTAssertEqual(dog.species.value, "Swift")
+                    XCTAssertEqual(dog.nickname.value, nil)
+                    XCTAssertEqual(dog.age.value, 1)
                     
                     dog.species .= "Dog"
-                    XCTAssertEqual(dog.species*, "Dog")
+                    XCTAssertEqual(dog.species.value, "Dog")
                     
                     dog.nickname .= "Spot"
-                    XCTAssertEqual(dog.nickname*, "Spot")
+                    XCTAssertEqual(dog.nickname.value, "Spot")
                     
                     let person = transaction.create(Into<Person>())
                     XCTAssertNil(person.pet.value)
@@ -89,7 +111,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                 },
                 success: {
                     
-                    print("done")
+                    updateDone.fulfill()
                 },
                 failure: { _ in
                     
@@ -104,15 +126,15 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     let bird = transaction.fetchOne(From<Animal>(), p1)
                     XCTAssertNotNil(bird)
-                    XCTAssertEqual(bird!.species*, "Sparrow")
+                    XCTAssertEqual(bird!.species.value, "Sparrow")
                     
                     let p2 = Dog.where({ $0.nickname == "Spot" })
                     XCTAssertEqual(p2.predicate, NSPredicate(format: "%K == %@", "nickname", "Spot"))
                     
                     let dog = transaction.fetchOne(From<Dog>(), p2)
                     XCTAssertNotNil(dog)
-                    XCTAssertEqual(dog!.nickname*, "Spot")
-                    XCTAssertEqual(dog!.species*, "Dog")
+                    XCTAssertEqual(dog!.nickname.value, "Spot")
+                    XCTAssertEqual(dog!.species.value, "Dog")
                     
                     let person = transaction.fetchOne(From<Person>())
                     XCTAssertNotNil(person)
@@ -123,7 +145,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                 },
                 success: {
             
-                    expectation.fulfill()
+                    fetchDone.fulfill()
                     withExtendedLifetime(stack, {})
                 },
                 failure: { _ in

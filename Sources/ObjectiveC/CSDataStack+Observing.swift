@@ -27,10 +27,9 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - CSDataStack
 
+@available(OSX 10.12, *)
 public extension CSDataStack {
     
     /**
@@ -42,10 +41,7 @@ public extension CSDataStack {
     @objc
     public func monitorObject(_ object: NSManagedObject) -> CSObjectMonitor {
         
-        return bridge {
-            
-            self.bridgeToSwift.monitorObject(object)
-        }
+        return self.bridgeToSwift.monitorObject(object).bridgeToObjectiveC
     }
     
     /**
@@ -66,18 +62,15 @@ public extension CSDataStack {
             fetchClauses.contains { $0 is CSOrderBy },
             "A CSListMonitor requires a CSOrderBy clause."
         )
-        return bridge {
-            
-            ListMonitor(
-                dataStack: self.bridgeToSwift,
-                from: from.bridgeToSwift,
-                sectionBy: nil,
-                applyFetchClauses: { (fetchRequest) in
-                    
-                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
-                }
-            )
-        }
+        return ListMonitor(
+            dataStack: self.bridgeToSwift,
+            from: from.bridgeToSwift,
+            sectionBy: nil,
+            applyFetchClauses: { (fetchRequest) in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+            }
+        ).bridgeToObjectiveC
     }
     
     /**
@@ -132,18 +125,15 @@ public extension CSDataStack {
             fetchClauses.contains { $0 is CSOrderBy },
             "A CSListMonitor requires an CSOrderBy clause."
         )
-        return bridge {
-            
-            ListMonitor(
-                dataStack: self.bridgeToSwift,
-                from: from.bridgeToSwift,
-                sectionBy: sectionBy.bridgeToSwift,
-                applyFetchClauses: { (fetchRequest) in
-                    
-                    fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
-                }
-            )
-        }
+        return ListMonitor(
+            dataStack: self.bridgeToSwift,
+            from: from.bridgeToSwift,
+            sectionBy: sectionBy.bridgeToSwift,
+            applyFetchClauses: { (fetchRequest) in
+                
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+            }
+        ).bridgeToObjectiveC
     }
     
     /**
@@ -179,5 +169,3 @@ public extension CSDataStack {
         )
     }
 }
-
-#endif

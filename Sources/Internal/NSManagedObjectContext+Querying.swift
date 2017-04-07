@@ -34,15 +34,16 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     // MARK: FetchableSource
     
     @nonobjc
-    public func fetchExisting<T: NSManagedObject>(_ object: T) -> T? {
+    public func fetchExisting<T: DynamicObject>(_ object: T) -> T? {
         
-        if object.objectID.isTemporaryID {
+        let rawObject = object.cs_toRaw()
+        if rawObject.objectID.isTemporaryID {
             
             do {
                 
                 try withExtendedLifetime(self) { (context: NSManagedObjectContext) -> Void in
                     
-                    try context.obtainPermanentIDs(for: [object])
+                    try context.obtainPermanentIDs(for: [rawObject])
                 }
             }
             catch {
@@ -56,8 +57,12 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
         }
         do {
             
-            let existingObject = try self.existingObject(with: object.objectID)
-            return (existingObject as! T)
+            let existingRawObject = try self.existingObject(with: rawObject.objectID)
+            if existingRawObject === rawObject {
+                
+                return object
+            }
+            return T.cs_fromRaw(object: existingRawObject)
         }
         catch {
             
@@ -70,11 +75,12 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     }
     
     @nonobjc
-    public func fetchExisting<T: NSManagedObject>(_ objectID: NSManagedObjectID) -> T? {
+    public func fetchExisting<T: DynamicObject>(_ objectID: NSManagedObjectID) -> T? {
         
         do {
             
-            return (try self.existingObject(with: objectID) as! T)
+            let existingObject = try self.existingObject(with: objectID)
+            return T.cs_fromRaw(object: existingObject)
         }
         catch _ {
             
@@ -83,25 +89,25 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     }
     
     @nonobjc
-    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
+    public func fetchExisting<T: DynamicObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
         
-        return objects.flatMap { (try? self.existingObject(with: $0.objectID)) as? T }
+        return objects.flatMap({ self.fetchExisting($0.cs_toRaw().objectID) })
     }
     
     @nonobjc
-    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
+    public func fetchExisting<T: DynamicObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
         
-        return objectIDs.flatMap { (try? self.existingObject(with: $0)) as? T }
+        return objectIDs.flatMap({ self.fetchExisting($0) })
     }
     
     @nonobjc
-    public func fetchOne<T: ManagedObjectProtocol>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
+    public func fetchOne<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         return self.fetchOne(from, fetchClauses)
     }
     
     @nonobjc
-    public func fetchOne<T: ManagedObjectProtocol>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
+    public func fetchOne<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -114,18 +120,17 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
             
             return nil
         }
-        return self.fetchOne(fetchRequest.dynamicCast())
-            .flatMap(from.entityClass.cs_from)
+        return self.fetchOne(fetchRequest.dynamicCast()).flatMap(from.entityClass.cs_fromRaw)
     }
     
     @nonobjc
-    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
+    public func fetchAll<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
         return self.fetchAll(from, fetchClauses)
     }
     
     @nonobjc
-    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
+    public func fetchAll<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -138,17 +143,18 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
             
             return nil
         }
-        return self.fetchAll(fetchRequest.dynamicCast())
+        let entityClass = from.entityClass
+        return self.fetchAll(fetchRequest.dynamicCast())?.map(entityClass.cs_fromRaw)
     }
     
     @nonobjc
-    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
+    public func fetchCount<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
     
         return self.fetchCount(from, fetchClauses)
     }
     
     @nonobjc
-    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
+    public func fetchCount<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -162,13 +168,13 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     }
     
     @nonobjc
-    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
+    public func fetchObjectID<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
         return self.fetchObjectID(from, fetchClauses)
     }
     
     @nonobjc
-    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectID<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -185,13 +191,13 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     }
     
     @nonobjc
-    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         return self.fetchObjectIDs(from, fetchClauses)
     }
     
     @nonobjc
-    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -238,13 +244,13 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     // MARK: QueryableSource
     
     @nonobjc
-    public func queryValue<T: NSManagedObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
+    public func queryValue<T: DynamicObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         return self.queryValue(from, selectClause, queryClauses)
     }
     
     @nonobjc
-    public func queryValue<T: NSManagedObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
+    public func queryValue<T: DynamicObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -263,13 +269,13 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     }
     
     @nonobjc
-    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
+    public func queryAttributes<T: DynamicObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
         
         return self.queryAttributes(from, selectClause, queryClauses)
     }
     
     @nonobjc
-    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
+    public func queryAttributes<T: DynamicObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
@@ -293,6 +299,34 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     public func unsafeContext() -> NSManagedObjectContext {
         
         return self
+    }
+    
+    
+    // MARK: Deleting
+    
+    @nonobjc
+    internal func deleteAll<T: DynamicObject>(_ from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
+        
+        return self.deleteAll(from, deleteClauses)
+    }
+    
+    @nonobjc
+    internal func deleteAll<T: DynamicObject>(_ from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
+        
+        let fetchRequest = CoreStoreFetchRequest()
+        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
+        
+        fetchRequest.fetchLimit = 0
+        fetchRequest.resultType = .managedObjectResultType
+        fetchRequest.returnsObjectsAsFaults = true
+        fetchRequest.includesPropertyValues = false
+        deleteClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+        
+        guard storeFound else {
+            
+            return nil
+        }
+        return self.deleteAll(fetchRequest.dynamicCast())
     }
     
     
@@ -519,31 +553,6 @@ internal extension NSManagedObjectContext {
     
     
     // MARK: Deleting
-    
-    @nonobjc
-    internal func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
-        
-        return self.deleteAll(from, deleteClauses)
-    }
-    
-    @nonobjc
-    internal func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
-        
-        let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
-        
-        fetchRequest.fetchLimit = 0
-        fetchRequest.resultType = .managedObjectResultType
-        fetchRequest.returnsObjectsAsFaults = true
-        fetchRequest.includesPropertyValues = false
-        deleteClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.deleteAll(fetchRequest.dynamicCast())
-    }
     
     @nonobjc
     internal func deleteAll<T: NSManagedObject>(_ fetchRequest: NSFetchRequest<T>) -> Int? {

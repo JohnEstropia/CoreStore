@@ -27,10 +27,9 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - DataStack
 
+@available(OSX 10.12, *)
 public extension DataStack {
     
     /**
@@ -220,5 +219,3 @@ public extension DataStack {
         )
     }
 }
-
-#endif

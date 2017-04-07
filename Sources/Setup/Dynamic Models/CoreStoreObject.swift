@@ -1,5 +1,5 @@
 //
-//  ManagedObject.swift
+//  CoreStoreObject.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,9 +27,9 @@ import CoreData
 import Foundation
 
 
-// MARK: - ManagedObject
+// MARK: - CoreStoreObject
 
-open class ManagedObject: ManagedObjectProtocol, Hashable {
+open class CoreStoreObject: DynamicObject, Hashable {
     
     public required init(_ object: NSManagedObject) {
         
@@ -47,7 +47,7 @@ open class ManagedObject: ManagedObjectProtocol, Hashable {
     
     // MARK: Equatable
     
-    public static func == (lhs: ManagedObject, rhs: ManagedObject) -> Bool {
+    public static func == (lhs: CoreStoreObject, rhs: CoreStoreObject) -> Bool {
         
         guard lhs.isMeta == rhs.isMeta else {
             

@@ -27,8 +27,6 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - CSObjectObserver
 
 /**
@@ -40,6 +38,7 @@ import CoreData
  
  - SeeAlso: `ObjectObserver`
  */
+@available(OSX 10.12, *)
 @objc
 public protocol CSObjectObserver: class, AnyObject {
     
@@ -71,5 +70,3 @@ public protocol CSObjectObserver: class, AnyObject {
     @objc
     optional func objectMonitor(_ monitor: CSObjectMonitor, didDeleteObject object: Any)
 }
-
-#endif

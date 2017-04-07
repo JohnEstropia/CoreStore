@@ -29,31 +29,10 @@ import XCTest
 import CoreStore
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - ObjectObserverTests
 
-    class ObjectObserverTests: BaseTestDataTestCase {
-        
-        @objc
-        dynamic func test_ThatObjectObservers_CanDowncast() {
-            
-            self.prepareStack { (stack) in
-                
-                self.prepareTestDataForStack(stack)
-                
-                guard let object = stack.fetchOne(
-                    From<TestEntity1>(),
-                    Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
-                        
-                        XCTFail()
-                        return
-                }
-                let monitor = stack.monitorObject(object)
-                let downcast = monitor.downcast()
-                XCTAssertTrue(monitor == downcast)
-            }
-        }
+@available(OSX 10.12, *)
+class ObjectObserverTests: BaseTestDataTestCase {
     
     @objc
     dynamic func test_ThatObjectObservers_CanReceiveUpdateNotifications() {
@@ -224,6 +203,7 @@ import CoreStore
 
 // MARK: TestObjectObserver
 
+@available(OSX 10.12, *)
 class TestObjectObserver: ObjectObserver {
     
     typealias ObjectEntityType = TestEntity1
@@ -262,5 +242,3 @@ class TestObjectObserver: ObjectObserver {
         )
     }
 }
-
-#endif

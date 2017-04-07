@@ -39,7 +39,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - returns: the number of `NSManagedObject`s deleted
      */
     @discardableResult
-    public func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
+    public func deleteAll<T: DynamicObject>(_ from: From<T>, _ deleteClauses: DeleteClause...) -> Int? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -57,7 +57,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - returns: the number of `NSManagedObject`s deleted
      */
     @discardableResult
-    public func deleteAll<T: NSManagedObject>(_ from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
+    public func deleteAll<T: DynamicObject>(_ from: From<T>, _ deleteClauses: [DeleteClause]) -> Int? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -76,7 +76,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter object: a reference to the object created/fetched outside the transaction
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
-    public func fetchExisting<T: NSManagedObject>(_ object: T) -> T? {
+    public func fetchExisting<T: DynamicObject>(_ object: T) -> T? {
         
         return self.context.fetchExisting(object)
     }
@@ -87,7 +87,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `NSManagedObject` instance if the object exists in the transaction, or `nil` if not found.
      */
-    public func fetchExisting<T: NSManagedObject>(_ objectID: NSManagedObjectID) -> T? {
+    public func fetchExisting<T: DynamicObject>(_ objectID: NSManagedObjectID) -> T? {
         
         return self.context.fetchExisting(objectID)
     }
@@ -98,7 +98,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter objects: an array of `NSManagedObject`s created/fetched outside the transaction
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
-    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
+    public func fetchExisting<T: DynamicObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
         
         return self.context.fetchExisting(objects)
     }
@@ -109,7 +109,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `NSManagedObject` array for objects that exists in the transaction
      */
-    public func fetchExisting<T: NSManagedObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
+    public func fetchExisting<T: DynamicObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
         
         return self.context.fetchExisting(objectIDs)
     }
@@ -121,7 +121,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    public func fetchOne<T: ManagedObjectProtocol>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
+    public func fetchOne<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -137,7 +137,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
      */
-    public func fetchOne<T: ManagedObjectProtocol>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
+    public func fetchOne<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -153,7 +153,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
+    public func fetchAll<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -169,7 +169,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
      */
-    public func fetchAll<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
+    public func fetchAll<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -185,7 +185,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
+    public func fetchCount<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -201,7 +201,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    public func fetchCount<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
+    public func fetchCount<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -217,7 +217,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
+    public func fetchObjectID<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -233,7 +233,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
      */
-    public func fetchObjectID<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectID<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -249,7 +249,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -265,7 +265,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
      */
-    public func fetchObjectIDs<T: NSManagedObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -287,7 +287,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public func queryValue<T: NSManagedObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
+    public func queryValue<T: DynamicObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -306,7 +306,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public func queryValue<T: NSManagedObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
+    public func queryValue<T: DynamicObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -325,7 +325,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
+    public func queryAttributes<T: DynamicObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -344,7 +344,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public func queryAttributes<T: NSManagedObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
+    public func queryAttributes<T: DynamicObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),

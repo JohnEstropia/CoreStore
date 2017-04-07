@@ -40,7 +40,7 @@ public extension CSBaseDataTransaction {
     @objc
     public func fetchExistingObject(_ object: NSManagedObject) -> Any? {
         
-        return self.bridgeToSwift.context.fetchExisting(object)
+        return self.bridgeToSwift.context.fetchExisting(object) as NSManagedObject?
     }
     
     /**
@@ -52,7 +52,7 @@ public extension CSBaseDataTransaction {
     @objc
     public func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> Any? {
         
-        return self.bridgeToSwift.context.fetchExisting(objectID)
+        return self.bridgeToSwift.context.fetchExisting(objectID) as NSManagedObject?
     }
     
     /**
@@ -64,7 +64,7 @@ public extension CSBaseDataTransaction {
     @objc
     public func fetchExistingObjects(_ objects: [NSManagedObject]) -> [Any] {
         
-        return self.bridgeToSwift.context.fetchExisting(objects)
+        return self.bridgeToSwift.context.fetchExisting(objects) as [NSManagedObject]
     }
     
     /**
@@ -76,7 +76,7 @@ public extension CSBaseDataTransaction {
     @objc
     public func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [Any] {
         
-        return self.bridgeToSwift.context.fetchExisting(objectIDs)
+        return self.bridgeToSwift.context.fetchExisting(objectIDs) as [NSManagedObject]
     }
     
     /**

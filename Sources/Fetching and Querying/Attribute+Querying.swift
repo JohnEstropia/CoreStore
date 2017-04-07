@@ -27,43 +27,48 @@ import CoreData
 import Foundation
 
 
-// MARK: - AttributeContainer.Required
+// MARK: - ValueContainer.Required
 
-public extension AttributeContainer.Required where V: CVarArg {
+public extension ValueContainer.Required {
     
-    public static func == (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func == (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where(attribute.keyPath, isEqualTo: value)
     }
-    public static func < (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func < (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where("%K < %@", attribute.keyPath, value)
     }
-    public static func > (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func > (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where("%K > %@", attribute.keyPath, value)
     }
-    public static func <= (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func <= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where("%K <= %@", attribute.keyPath, value)
     }
-    public static func >= (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func >= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where("%K >= %@", attribute.keyPath, value)
     }
-    public static func != (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func != (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
-        return Where("%K != %@", attribute.keyPath, value)
+        return !Where(attribute.keyPath, isEqualTo: value)
     }
 }
 
 
-// MARK: - AttributeContainer.Optional
+// MARK: - ValueContainer.Optional
 
-public extension AttributeContainer.Optional where V: CVarArg {
+public extension ValueContainer.Optional {
     
-    public static func == (_ attribute: AttributeContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func == (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
         
         return Where(attribute.keyPath, isEqualTo: value)
+    }
+    
+    public static func != (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+        
+        return !Where(attribute.keyPath, isEqualTo: value)
     }
 }

@@ -41,7 +41,7 @@ public extension BaseDataTransaction {
      */
     public func importObject<T>(
         _ into: Into<T>,
-        source: T.ImportSource) throws -> T? where T: NSManagedObject, T: ImportableObject {
+        source: T.ImportSource) throws -> T? where T: DynamicObject, T: ImportableObject {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -71,7 +71,7 @@ public extension BaseDataTransaction {
      */
     public func importObject<T>(
         _ object: T,
-        source: T.ImportSource) throws where T: NSManagedObject, T: ImportableObject {
+        source: T.ImportSource) throws where T: DynamicObject, T: ImportableObject {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -99,7 +99,7 @@ public extension BaseDataTransaction {
      */
     public func importObjects<T, S: Sequence>(
         _ into: Into<T>,
-        sourceArray: S) throws -> [T] where T: NSManagedObject, T: ImportableObject, S.Iterator.Element == T.ImportSource {
+        sourceArray: S) throws -> [T] where T: DynamicObject, T: ImportableObject, S.Iterator.Element == T.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -135,7 +135,7 @@ public extension BaseDataTransaction {
      */
     public func importUniqueObject<T>(
         _ into: Into<T>,
-        source: T.ImportSource) throws -> T? where T: NSManagedObject, T: ImportableUniqueObject  {
+        source: T.ImportSource) throws -> T? where T: DynamicObject, T: ImportableUniqueObject  {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -188,7 +188,7 @@ public extension BaseDataTransaction {
     public func importUniqueObjects<T, S: Sequence>(
         _ into: Into<T>,
         sourceArray: S,
-        preProcess: @escaping (_ mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] where T: NSManagedObject, T: ImportableUniqueObject, S.Iterator.Element == T.ImportSource {
+        preProcess: @escaping (_ mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] where T: DynamicObject, T: ImportableUniqueObject, S.Iterator.Element == T.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),

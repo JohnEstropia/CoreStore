@@ -32,14 +32,14 @@ import ObjectiveC
 
 public protocol EntityProtocol {
     
-    var type: ManagedObject.Type { get }
+    var type: CoreStoreObject.Type { get }
     var entityName: EntityName { get }
 }
 
 
 // MARK: Entity
 
-public struct Entity<O: ManagedObject>: EntityProtocol {
+public struct Entity<O: CoreStoreObject>: EntityProtocol {
     
     public init(_ entityName: String) {
         
@@ -49,7 +49,7 @@ public struct Entity<O: ManagedObject>: EntityProtocol {
     
     // MARK: EntityProtocol
     
-    public let type: ManagedObject.Type
+    public let type: CoreStoreObject.Type
     public let entityName: EntityName
 }
 
@@ -78,24 +78,24 @@ internal struct EntityIdentifier: Hashable {
         self.interfacedClassName = String(reflecting: type)
     }
     
-    internal init(_ type: ManagedObject.Type) {
+    internal init(_ type: CoreStoreObject.Type) {
         
         self.category = .coreStore
         self.interfacedClassName = String(reflecting: type)
     }
     
-    internal init(_ type: ManagedObjectProtocol.Type) {
+    internal init(_ type: DynamicObject.Type) {
         
         switch type {
             
         case let type as NSManagedObject.Type:
             self.init(type)
             
-        case let type as ManagedObject.Type:
+        case let type as CoreStoreObject.Type:
             self.init(type)
             
         default:
-            CoreStore.abort("\(cs_typeName(ManagedObjectProtocol.self)) is not meant to be implemented by external types.")
+            CoreStore.abort("\(cs_typeName(DynamicObject.self)) is not meant to be implemented by external types.")
         }
     }
     
@@ -138,7 +138,7 @@ internal struct EntityIdentifier: Hashable {
 internal extension NSEntityDescription {
     
     @nonobjc
-    internal var anyEntity: ObjectModel.AnyEntity? {
+    internal var anyEntity: DynamicModel.AnyEntity? {
         
         get {
             
@@ -148,8 +148,8 @@ internal extension NSEntityDescription {
                 
                 return nil
             }
-            return ObjectModel.AnyEntity(
-                type: NSClassFromString(typeName) as! ManagedObject.Type,
+            return DynamicModel.AnyEntity(
+                type: NSClassFromString(typeName) as! CoreStoreObject.Type,
                 entityName: entityName
             )
         }

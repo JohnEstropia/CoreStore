@@ -27,8 +27,6 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - ObjectObserver
 
 /**
@@ -38,12 +36,13 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
+@available(OSX 10.12, *)
 public protocol ObjectObserver: class {
     
     /**
      The `NSManagedObject` type for the observed object
      */
-    associatedtype ObjectEntityType: NSManagedObject
+    associatedtype ObjectEntityType: DynamicObject
     
     /**
      Handles processing just before a change to the observed `object` occurs. (Optional)
@@ -77,6 +76,7 @@ public protocol ObjectObserver: class {
 
 // MARK: - ObjectObserver (Default Implementations)
 
+@available(OSX 10.12, *)
 public extension ObjectObserver {
     
     public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) { }
@@ -85,5 +85,3 @@ public extension ObjectObserver {
     
     public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType) { }
 }
-
-#endif

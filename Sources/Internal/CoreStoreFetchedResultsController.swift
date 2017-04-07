@@ -27,16 +27,15 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - CoreStoreFetchedResultsController
 
+@available(OSX 10.12, *)
 internal final class CoreStoreFetchedResultsController: NSFetchedResultsController<NSManagedObject> {
     
     // MARK: Internal
     
     @nonobjc
-    internal convenience init<T: NSManagedObject>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init<T: DynamicObject>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>?, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -48,7 +47,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     }
     
     @nonobjc
-    internal init<T: NSManagedObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>? = nil, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal init<T: DynamicObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>?, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         _ = from?.applyToFetchRequest(
             fetchRequest,
@@ -115,5 +114,3 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     @nonobjc
     private let reapplyAffectedStores: (_ fetchRequest: NSFetchRequest<NSManagedObject>, _ context: NSManagedObjectContext) -> Bool
 }
-
-#endif

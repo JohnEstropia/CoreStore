@@ -386,8 +386,8 @@ final class TransactionTests: BaseTestCase {
         }
     }
     
-    #if os(iOS) || os(watchOS) || os(tvOS)
     
+    @available(OSX 10.12, *)
     @objc
     dynamic func test_ThatSynchronousTransactions_CanCommitWithoutWaitingForMerges() {
         
@@ -432,8 +432,8 @@ final class TransactionTests: BaseTestCase {
                     )
                     
                     let indexPath = userInfo?["indexPath"] as? NSIndexPath
-                    XCTAssertEqual(indexPath?.section, 0)
-                    XCTAssertEqual(indexPath?.row, 0)
+                    XCTAssertEqual(indexPath?.index(atPosition: 0), 0)
+                    XCTAssertEqual(indexPath?.index(atPosition: 1), 0)
                     
                     let object = userInfo?["object"] as? TestEntity1
                     XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
@@ -489,7 +489,6 @@ final class TransactionTests: BaseTestCase {
         }
     }
     
-    #endif
     
     @objc
     dynamic func test_ThatAsynchronousTransactions_CanPerformCRUDs() {

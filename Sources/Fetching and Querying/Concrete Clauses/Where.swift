@@ -139,7 +139,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter object: the arguments for the `==` operator
      */
-    public init<T: NSManagedObject>(_ keyPath: KeyPath, isEqualTo object: T?) {
+    public init<T: DynamicObject>(_ keyPath: KeyPath, isEqualTo object: T?) {
         
         switch object {
             
@@ -148,7 +148,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
             self.init(NSPredicate(format: "\(keyPath) == nil"))
             
         case let object?:
-            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [object.objectID]))
+            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [object.cs_toRaw().objectID]))
         }
     }
     
@@ -169,9 +169,9 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: NSManagedObject {
+    public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: DynamicObject {
         
-        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.objectID }) as NSArray))
+        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toRaw().objectID }) as NSArray))
     }
     
     /**

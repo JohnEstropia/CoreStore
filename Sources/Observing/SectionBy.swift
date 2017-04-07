@@ -27,8 +27,6 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - SectionBy
 
 /**
@@ -41,6 +39,7 @@ import CoreData
  )
  ```
  */
+@available(OSX 10.12, *)
 public struct SectionBy {
     
     /**
@@ -72,5 +71,3 @@ public struct SectionBy {
     internal let sectionKeyPath: KeyPath
     internal let sectionIndexTransformer: (_ sectionName: String?) -> String?
 }
-
-#endif

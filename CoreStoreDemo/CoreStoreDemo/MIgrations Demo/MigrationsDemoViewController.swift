@@ -141,7 +141,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
     
     // MARK: Private
     
-    private typealias ModelMetadata = (label: String, version: String, entityType: AnyClass, migrationChain: MigrationChain)
+    private typealias ModelMetadata = (label: String, version: String, entityType: NSManagedObject.Type, migrationChain: MigrationChain)
     
     private let models: [ModelMetadata] = [
         (

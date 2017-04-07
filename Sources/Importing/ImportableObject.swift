@@ -48,7 +48,7 @@ import CoreData
  }
  ```
  */
-public protocol ImportableObject: class, NSObjectProtocol, AnyObject {
+public protocol ImportableObject: class {
     
     /**
      The data type for the import source. This is most commonly an `NSDictionary` or another external source such as an `NSUserDefaults`.
@@ -71,15 +71,6 @@ public protocol ImportableObject: class, NSObjectProtocol, AnyObject {
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      */
     func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws
-    
-    
-    // MARK: Obsolete (`deprecated` only for reference, please use new methods)
-    
-    @available(*, deprecated: 3.0.0, renamed: "shouldInsert(from:in:)")
-    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    
-    @available(*, deprecated: 3.0.0, renamed: "didInsert(from:in:)")
-    func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
 }
 
 

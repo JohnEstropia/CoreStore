@@ -51,12 +51,12 @@ public final class DataStack: Equatable {
         self.init(model: model, migrationChain: migrationChain)
     }
     
-    public convenience init(dynamicModel: ObjectModel) {
+    public convenience init(dynamicModel: DynamicModel) {
         
         self.init(model: dynamicModel.createModel())
     }
     
-    public convenience init(dynamicModels: [ObjectModel], migrationChain: MigrationChain = nil) {
+    public convenience init(dynamicModels: [DynamicModel], migrationChain: MigrationChain = nil) {
         
         CoreStore.assert(
             migrationChain.valid,
@@ -130,9 +130,9 @@ public final class DataStack: Equatable {
     /**
      Returns the entity name-to-class type mapping from the `DataStack`'s model.
      */
-    public func entityTypesByName(for type: ManagedObject.Type) -> [EntityName: ManagedObject.Type] {
+    public func entityTypesByName(for type: CoreStoreObject.Type) -> [EntityName: CoreStoreObject.Type] {
         
-        var entityTypesByName: [EntityName: ManagedObject.Type] = [:]
+        var entityTypesByName: [EntityName: CoreStoreObject.Type] = [:]
         for (entityIdentifier, entityDescription) in self.model.entityDescriptionsByEntityIdentifier {
             
             switch entityIdentifier.category {
@@ -141,7 +141,11 @@ public final class DataStack: Equatable {
                 continue
                 
             case .coreStore:
-                let actualType = NSClassFromString(entityDescription.managedObjectClassName!)! as! ManagedObject.Type
+                guard let anyEntity = entityDescription.anyEntity else {
+                    
+                    continue
+                }
+                let actualType = anyEntity.type
                 if (actualType as AnyClass).isSubclass(of: type) {
                     
                     entityTypesByName[entityDescription.name!] = actualType
@@ -160,9 +164,9 @@ public final class DataStack: Equatable {
     }
     
     /**
-     Returns the `NSEntityDescription` for the specified `ManagedObject` subclass.
+     Returns the `NSEntityDescription` for the specified `CoreStoreObject` subclass.
      */
-    public func entityDescription(for type: ManagedObject.Type) -> NSEntityDescription? {
+    public func entityDescription(for type: CoreStoreObject.Type) -> NSEntityDescription? {
         
         return self.entityDescription(for: EntityIdentifier(type))
     }

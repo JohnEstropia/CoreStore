@@ -39,10 +39,10 @@ import CoreData
  let person = transaction.fetchOne(From<MyPersonEntity>("Configuration1"))
  ```
  */
-public struct From<T: ManagedObjectProtocol> {
+public struct From<T: DynamicObject> {
     
     /**
-     The associated `NSManagedObject` or `ManagedObject` entity class
+     The associated `NSManagedObject` or `CoreStoreObject` entity class
      */
     public let entityClass: T.Type
     
@@ -68,7 +68,7 @@ public struct From<T: ManagedObjectProtocol> {
      ```
      let people = transaction.fetchAll(From<MyPersonEntity>())
      ```
-     - parameter entity: the associated `NSManagedObject` or `ManagedObject` type
+     - parameter entity: the associated `NSManagedObject` or `CoreStoreObject` type
      */
     public init(_ entity: T.Type) {
         
@@ -80,7 +80,7 @@ public struct From<T: ManagedObjectProtocol> {
      ```
      let people = transaction.fetchAll(From<MyPersonEntity>(nil, "Configuration1"))
      ```
-     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `ManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      */
     public init(_ configuration: ModelConfiguration, _ otherConfigurations: ModelConfiguration...) {
@@ -93,7 +93,7 @@ public struct From<T: ManagedObjectProtocol> {
      ```
      let people = transaction.fetchAll(From<MyPersonEntity>(["Configuration1", "Configuration2"]))
      ```
-     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `ManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      */
     public init(_ configurations: [ModelConfiguration]) {
         
@@ -105,8 +105,8 @@ public struct From<T: ManagedObjectProtocol> {
      ```
      let people = transaction.fetchAll(From(MyPersonEntity.self, nil, "Configuration1"))
      ```
-     - parameter entity: the associated `NSManagedObject` or `ManagedObject` type
-     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `ManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter entity: the associated `NSManagedObject` or `CoreStoreObject` type
+     - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      */
     public init(_ entity: T.Type, _ configuration: ModelConfiguration, _ otherConfigurations: ModelConfiguration...) {
@@ -119,8 +119,8 @@ public struct From<T: ManagedObjectProtocol> {
      ```
      let people = transaction.fetchAll(From(MyPersonEntity.self, ["Configuration1", "Configuration1"]))
      ```
-     - parameter entity: the associated `NSManagedObject` or `ManagedObject` type
-     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `ManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter entity: the associated `NSManagedObject` or `CoreStoreObject` type
+     - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      */
     public init(_ entity: T.Type, _ configurations: [ModelConfiguration]) {
         

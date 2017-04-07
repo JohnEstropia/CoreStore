@@ -29,10 +29,9 @@ import XCTest
 import CoreStore
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 //MARK: - SectionByTests
 
+@available(OSX 10.12, *)
 final class SectionByTests: XCTestCase {
     
     @objc
@@ -53,5 +52,3 @@ final class SectionByTests: XCTestCase {
         }
     }
 }
-
-#endif

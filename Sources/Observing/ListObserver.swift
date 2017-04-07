@@ -27,8 +27,6 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - ListObserver
 
 /**
@@ -41,12 +39,13 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
+@available(OSX 10.12, *)
 public protocol ListObserver: class {
     
     /**
      The `NSManagedObject` type for the observed list
      */
-    associatedtype ListEntityType: NSManagedObject
+    associatedtype ListEntityType: DynamicObject
     
     /**
      Handles processing just before a change to the observed list occurs. (Optional)
@@ -85,6 +84,7 @@ public protocol ListObserver: class {
 
 // MARK: - ListObserver (Default Implementations)
 
+@available(OSX 10.12, *)
 public extension ListObserver {
     
     public func listMonitorWillChange(_ monitor: ListMonitor<ListEntityType>) { }
@@ -109,6 +109,7 @@ public extension ListObserver {
  monitor.addObserver(self)
  ```
  */
+@available(OSX 10.12, *)
 public protocol ListObjectObserver: ListObserver {
     
     /**
@@ -156,6 +157,7 @@ public protocol ListObjectObserver: ListObserver {
 
 // MARK: - ListObjectObserver (Default Implementations)
 
+@available(OSX 10.12, *)
 public extension ListObjectObserver {
     
     public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: IndexPath) { }
@@ -181,6 +183,7 @@ public extension ListObjectObserver {
  monitor.addObserver(self)
  ```
  */
+@available(OSX 10.12, *)
 public protocol ListSectionObserver: ListObjectObserver {
     
     /**
@@ -207,11 +210,10 @@ public protocol ListSectionObserver: ListObjectObserver {
 
 // MARK: - ListSectionObserver (Default Implementations)
 
+@available(OSX 10.12, *)
 public extension ListSectionObserver {
     
     public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) { }
     
     public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) { }
 }
-
-#endif

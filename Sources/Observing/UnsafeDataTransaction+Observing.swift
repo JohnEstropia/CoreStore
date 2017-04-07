@@ -27,10 +27,9 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - UnsafeDataTransaction
 
+@available(OSX 10.12, *)
 public extension UnsafeDataTransaction {
     
     /**
@@ -201,5 +200,3 @@ public extension UnsafeDataTransaction {
         )
     }
 }
-
-#endif

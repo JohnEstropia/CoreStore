@@ -27,10 +27,9 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - FetchedResultsControllerHandler
 
+@available(OSX 10.12, *)
 internal protocol FetchedResultsControllerHandler: class {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?)
@@ -47,7 +46,8 @@ internal protocol FetchedResultsControllerHandler: class {
 
 // MARK: - FetchedResultsControllerDelegate
 
-internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
+@available(OSX 10.12, *)
+internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: Internal
     
@@ -240,5 +240,3 @@ internal final class FetchedResultsControllerDelegate<EntityType: NSManagedObjec
     @nonobjc
     private var insertedSections = Set<Int>()
 }
-
-#endif

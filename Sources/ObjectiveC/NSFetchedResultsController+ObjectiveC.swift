@@ -27,10 +27,9 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - CSDataStack
 
+@available(OSX 10.12, *)
 public extension CSDataStack {
     
     /**
@@ -57,6 +56,7 @@ public extension CSDataStack {
     
 // MARK: - CSUnsafeDataTransaction
 
+@available(OSX 10.12, *)
 public extension CSUnsafeDataTransaction {
     
     /**
@@ -83,6 +83,7 @@ public extension CSUnsafeDataTransaction {
     
 // MARK: - Private
 
+@available(OSX 10.12, *)
 fileprivate func createFRC(fromContext context: NSManagedObjectContext, from: CSFrom? = nil, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
     
     let controller = CoreStoreFetchedResultsController(
@@ -102,5 +103,3 @@ fileprivate func createFRC(fromContext context: NSManagedObjectContext, from: CS
     )
     return controller.dynamicCast()
 }
-
-#endif

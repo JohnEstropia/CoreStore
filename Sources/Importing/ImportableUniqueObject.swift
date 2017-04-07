@@ -114,24 +114,6 @@ public protocol ImportableUniqueObject: ImportableObject {
      - parameter transaction: the transaction that invoked the import. Use the transaction to fetch or create related objects if needed.
      */
     func update(from source: ImportSource, in transaction: BaseDataTransaction) throws
-    
-    
-    // MARK: Obsolete (`deprecated` only for reference, please use new methods)
-    
-    @available(*, deprecated: 3.0.0, renamed: "shouldInsert(from:in:)")
-    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    
-    @available(*, deprecated: 3.0.0, renamed: "shouldUpdate(from:in:)")
-    static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool
-    
-    @available(*, deprecated: 3.0.0, renamed: "uniqueID(from:in:)")
-    static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType?
-    
-    @available(*, deprecated: 3.0.0, renamed: "didInsert(from:in:)")
-    func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
-    
-    @available(*, deprecated: 3.0.0, renamed: "update(from:in:)")
-    func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws
 }
 
 
@@ -191,22 +173,25 @@ public extension ImportableUniqueObject {
 
 // MARK: - ImportableUniqueObject (Default Implementations)
 
-public extension ImportableUniqueObject where Self: NSManagedObject {
+public extension ImportableUniqueObject where Self: DynamicObject {
     
     var uniqueIDValue: UniqueIDType {
         
         get {
             
-            return UniqueIDType.cs_fromImportableNativeType(
-                self.value(forKey: type(of: self).uniqueIDKeyPath) as! UniqueIDType.ImportableNativeType
-            )!
+            return self.cs_toRaw().getValue(
+                forKvcKey: type(of: self).uniqueIDKeyPath,
+                didGetValue: { UniqueIDType.cs_fromImportableNativeType($0 as! UniqueIDType.ImportableNativeType)! }
+            )
         }
         set {
             
-            self.setValue(
-                newValue.cs_toImportableNativeType(),
-                forKey: type(of: self).uniqueIDKeyPath
-            )
+            self.cs_toRaw()
+                .setValue(
+                    newValue,
+                    forKvcKey: type(of: self).uniqueIDKeyPath,
+                    willSetValue: { $0.cs_toImportableNativeType() }
+                )
         }
     }
 }

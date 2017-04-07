@@ -1,5 +1,5 @@
 //
-//  ObjectModel.swift
+//  DynamicModel.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,9 +27,9 @@ import CoreGraphics
 import Foundation
 
 
-// MARK: - ObjectModel
+// MARK: - DynamicModel
 
-public final class ObjectModel {
+public final class DynamicModel {
     
     public convenience init(version: String, entities: [EntityProtocol]) {
         
@@ -74,7 +74,7 @@ public final class ObjectModel {
             self.entityName = entity.entityName
         }
         
-        internal init(type: ManagedObject.Type, entityName: String) {
+        internal init(type: CoreStoreObject.Type, entityName: String) {
             
             self.type = type
             self.entityName = entityName
@@ -99,7 +99,7 @@ public final class ObjectModel {
         
         // MARK: EntityProtocol
         
-        internal let type: ManagedObject.Type
+        internal let type: CoreStoreObject.Type
         internal let entityName: EntityName
     }
     
@@ -116,12 +116,12 @@ public final class ObjectModel {
                 
                 let entityDescription = ModelCache.entityDescription(
                     for: entity,
-                    initializer: ObjectModel.firstPassCreateEntityDescription
+                    initializer: DynamicModel.firstPassCreateEntityDescription
                 )
                 entityDescriptionsByEntity[entity] = entityDescription
             }
-            ObjectModel.secondPassConnectRelationshipAttributes(for: entityDescriptionsByEntity)
-            ObjectModel.thirdPassConnectInheritanceTree(for: entityDescriptionsByEntity)
+            DynamicModel.secondPassConnectRelationshipAttributes(for: entityDescriptionsByEntity)
+            DynamicModel.thirdPassConnectInheritanceTree(for: entityDescriptionsByEntity)
             return entityDescriptionsByEntity
         }
         model.entities = entityDescriptionsByEntity.values.sorted(by: { $0.name! < $1.name! })
@@ -147,7 +147,7 @@ public final class ObjectModel {
         entityDescription.name = entity.entityName
         entityDescription.managedObjectClassName = NSStringFromClass(NSManagedObject.self)
         
-        func createProperties(for type: ManagedObject.Type) -> [NSPropertyDescription] {
+        func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
             
             var propertyDescriptions: [NSPropertyDescription] = []
             for child in Mirror(reflecting: type.meta).children {
@@ -161,9 +161,8 @@ public final class ObjectModel {
                     description.isOptional = attribute.isOptional
                     description.isIndexed = attribute.isIndexed
                     description.defaultValue = attribute.defaultValue
-                    description.isTransient = false
+                    description.isTransient = attribute.isTransient
                     // TODO: versionHash, renamingIdentifier, etc
-                    // TODO: Separate attributes for Value, Transient, Relationship
                     propertyDescriptions.append(description)
                     
                 case let relationship as RelationshipProtocol:
@@ -174,7 +173,6 @@ public final class ObjectModel {
                     description.isOrdered = relationship.isOrdered
                     description.deleteRule = relationship.deleteRule
                     // TODO: versionHash, renamingIdentifier, etc
-                    // TODO: Separate attributes for Value, Transient, Relationship
                     propertyDescriptions.append(description)
                     
                 default:
@@ -195,7 +193,7 @@ public final class ObjectModel {
             
             relationshipsByNameByEntity[entity] = entityDescription.relationshipsByName
         }
-        func findEntity(for type: ManagedObject.Type) -> AnyEntity {
+        func findEntity(for type: CoreStoreObject.Type) -> AnyEntity {
             
             var matchedEntities: Set<AnyEntity> = []
             for (entity, _) in entityDescriptionsByEntity where entity.type == type {
@@ -209,7 +207,7 @@ public final class ObjectModel {
             if matchedEntities.isEmpty {
                 
                 CoreStore.abort(
-                    "No \(cs_typeName("Entity<\(type)>")) instance found in the \(cs_typeName(ObjectModel.self))."
+                    "No \(cs_typeName("Entity<\(type)>")) instance found in the \(cs_typeName(DynamicModel.self))."
                 )
             }
             else {
@@ -244,7 +242,7 @@ public final class ObjectModel {
                     let description = relationshipsByName[relationship.keyPath]!
                     description.destinationEntity = entityDescriptionsByEntity[destinationEntity]!
                     
-                    if let destinationKeyPath = destinationKeyPath {
+                    if let destinationKeyPath = destinationKeyPath() {
                         
                         let inverseRelationshipDescription = findInverseRelationshipMatching(
                             destinationEntity: destinationEntity,
@@ -284,8 +282,8 @@ public final class ObjectModel {
         func connectBaseEntity(mirror: Mirror, entityDescription: NSEntityDescription) {
             
             guard let superclassMirror = mirror.superclassMirror,
-                let superType = superclassMirror.subjectType as? ManagedObject.Type,
-                superType != ManagedObject.self else {
+                let superType = superclassMirror.subjectType as? CoreStoreObject.Type,
+                superType != CoreStoreObject.self else {
                     
                     return
             }
@@ -325,7 +323,7 @@ fileprivate enum ModelCache {
         return self.barrierQueue.cs_barrierSync(closure)
     }
     
-    fileprivate static func entityDescription(for entity: ObjectModel.AnyEntity, initializer: (ObjectModel.AnyEntity) -> NSEntityDescription) -> NSEntityDescription {
+    fileprivate static func entityDescription(for entity: DynamicModel.AnyEntity, initializer: (DynamicModel.AnyEntity) -> NSEntityDescription) -> NSEntityDescription {
         
         if let cachedEntityDescription = self.entityDescriptionsByEntity[entity] {
             
@@ -341,5 +339,5 @@ fileprivate enum ModelCache {
     
     private static let barrierQueue = DispatchQueue.concurrent("com.coreStore.modelCacheBarrierQueue")
     
-    private static var entityDescriptionsByEntity: [ObjectModel.AnyEntity: NSEntityDescription] = [:]
+    private static var entityDescriptionsByEntity: [DynamicModel.AnyEntity: NSEntityDescription] = [:]
 }

@@ -27,9 +27,14 @@ import CoreData
 import Foundation
 
 
-// MARK: - ManagedObjectProtocol
+// MARK: Operators
 
-public extension ManagedObjectProtocol where Self: ManagedObject {
+infix operator .= : AssignmentPrecedence
+
+
+// MARK: - DynamicObject
+
+public extension DynamicObject where Self: CoreStoreObject {
     
     public typealias Relationship = RelationshipContainer<Self>
 }
@@ -37,11 +42,11 @@ public extension ManagedObjectProtocol where Self: ManagedObject {
 
 // MARK: - RelationshipContainer
 
-public enum RelationshipContainer<O: ManagedObject> {
+public enum RelationshipContainer<O: CoreStoreObject> {
     
     // MARK: - ToOne
     
-    public final class ToOne<D: ManagedObject>: RelationshipProtocol {
+    public final class ToOne<D: CoreStoreObject>: RelationshipProtocol {
         
         // MARK: -
         
@@ -49,65 +54,83 @@ public enum RelationshipContainer<O: ManagedObject> {
             
             relationship.value = value
         }
-
-        public static postfix func * (_ relationship: RelationshipContainer<O>.ToOne<D>) -> D? {
+        
+        public static func .=<O2: CoreStoreObject> (_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) {
             
-            return relationship.value
+            relationship.value = relationship2.value
         }
         
-        public init(_ keyPath: String, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify) {
             
-            self.keyPath = keyPath
-            self.deleteRule = deleteRule.nativeValue
-            self.inverse = (D.self, nil)
+            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule)
         }
         
-        public init(_ keyPath: String, inverse: (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify) {
             
-            self.keyPath = keyPath
-            self.deleteRule = deleteRule.nativeValue
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+        }
+        
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify) {
             
-            let inverseRelationship = inverse(D.meta)
-            self.inverse = (D.self, inverseRelationship.keyPath)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+        }
+        
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify) {
+            
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
         }
         
         public var value: D? {
             
             get {
                 
-                let object = self.accessRawObject()
-                let key = self.keyPath
-                return object.value(forKey: key)
-                    .flatMap({ D.cs_from(object: $0 as! NSManagedObject) })
+                return self.accessRawObject()
+                    .getValue(
+                        forKvcKey: self.keyPath,
+                        didGetValue: { $0.flatMap({ D.cs_fromRaw(object: $0 as! NSManagedObject) }) }
+                    )
             }
             set {
                 
-                let object = self.accessRawObject()
-                let key = self.keyPath
-                object.setValue(newValue?.rawObject, forKey: key)
+                self.accessRawObject()
+                    .setValue(
+                        newValue,
+                        forKvcKey: self.keyPath,
+                        willSetValue: { $0?.rawObject }
+                    )
             }
         }
         
         
         // MARK: RelationshipProtocol
         
-        public let keyPath: String
+        public let keyPath: KeyPath
         
         internal let isToMany = false
         internal let isOrdered = false
         internal let deleteRule: NSDeleteRule
-        internal let inverse: (type: ManagedObject.Type, keyPath: String?)
+        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         
         internal var accessRawObject: () -> NSManagedObject = {
             
-            fatalError("\(O.self) relationship values should not be accessed")
+            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
+        }
+        
+        
+        // MARK: Private
+        
+        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule) {
+            
+            self.keyPath = keyPath
+            self.deleteRule = deleteRule.nativeValue
+            self.inverse = (D.self, inverseKeyPath)
         }
     }
     
     
     // MARK: - ToManyOrdered
     
-    public final class ToManyOrdered<D: ManagedObject>: RelationshipProtocol {
+    public final class ToManyOrdered<D: CoreStoreObject>: RelationshipProtocol {
         
         // MARK: -
         
@@ -116,52 +139,194 @@ public enum RelationshipContainer<O: ManagedObject> {
             relationship.value = value
         }
         
-        public static postfix func * (_ relationship: RelationshipContainer<O>.ToManyOrdered<D>) -> [D] {
+        public static func .=<C: Collection> (_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ value: C) where C.Iterator.Element == D {
             
-            return relationship.value
+            relationship.value = Array(value)
         }
         
-        public init(_ keyPath: String, deleteRule: DeleteRule = .nullify) {
+        public static func .=<O2: CoreStoreObject> (_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
             
-            self.keyPath = keyPath
-            self.deleteRule = deleteRule.nativeValue
-            self.inverse = (D.self, nil)
+            relationship.value = relationship2.value
         }
+        
+        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify) {
+            
+            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule)
+        }
+        
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify) {
+            
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+        }
+        
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify) {
+            
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+        }
+        
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify) {
+            
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+        }
+        
+        // TODO: add subscripts, indexed operations for more performant single updates
         
         public var value: [D] {
             
             get {
                 
-                let object = self.accessRawObject()
-                let key = self.keyPath
-                guard let orderedSet = object.value(forKey: key) as! NSOrderedSet? else {
-                    
-                    return []
-                }
-                return orderedSet.array as! [D]
+                return self.accessRawObject()
+                    .getValue(
+                        forKvcKey: self.keyPath,
+                        didGetValue: {
+                            
+                            guard let orderedSet = $0 as! NSOrderedSet? else {
+                                
+                                return []
+                            }
+                            return orderedSet.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) })
+                        }
+                    )
             }
             set {
                 
-                let object = self.accessRawObject()
-                let key = self.keyPath
-                object.setValue(NSOrderedSet(array: newValue), forKey: key)
+                self.accessRawObject()
+                    .setValue(
+                        newValue,
+                        forKvcKey: self.keyPath,
+                        willSetValue: { NSOrderedSet(array: $0.map({ $0.rawObject! })) }
+                    )
             }
         }
         
         
         // MARK: RelationshipProtocol
         
-        public let keyPath: String
+        public let keyPath: KeyPath
         
         internal let isToMany = true
         internal let isOptional = true
         internal let isOrdered = true
         internal let deleteRule: NSDeleteRule
-        internal let inverse: (type: ManagedObject.Type, keyPath: String?)
+        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         
         internal var accessRawObject: () -> NSManagedObject = {
             
-            fatalError("\(O.self) relationship values should not be accessed")
+            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
+        }
+        
+        
+        // MARK: Private
+        
+        private init(keyPath: String, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule) {
+            
+            self.keyPath = keyPath
+            self.deleteRule = deleteRule.nativeValue
+            self.inverse = (D.self, inverseKeyPath)
+        }
+    }
+    
+    
+    // MARK: - ToManyUnordered
+    
+    public final class ToManyUnordered<D: CoreStoreObject>: RelationshipProtocol {
+        
+        // MARK: -
+        
+        public static func .= (_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ value: Set<D>) {
+            
+            relationship.value = value
+        }
+        
+        public static func .=<C: Collection> (_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ value: C) where C.Iterator.Element == D {
+            
+            relationship.value = Set(value)
+        }
+        
+        public static func .=<O2: CoreStoreObject> (_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) {
+            
+            relationship.value = relationship2.value
+        }
+        
+        public static func .=<O2: CoreStoreObject> (_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
+            
+            relationship.value = Set(relationship2.value)
+        }
+        
+        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify) {
+            
+            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule)
+        }
+        
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify) {
+            
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+        }
+        
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify) {
+            
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+        }
+        
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify) {
+            
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+        }
+        
+        // TODO: add subscripts, indexed operations for more performant single updates
+        
+        public var value: Set<D> {
+            
+            get {
+                
+                return self.accessRawObject()
+                    .getValue(
+                        forKvcKey: self.keyPath,
+                        didGetValue: {
+                            
+                            guard let set = $0 as! NSSet? else {
+                                
+                                return []
+                            }
+                            return Set(set.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) }))
+                        }
+                    )
+            }
+            set {
+                
+                self.accessRawObject()
+                    .setValue(
+                        newValue,
+                        forKvcKey: self.keyPath,
+                        willSetValue: { NSSet(array: $0.map({ $0.rawObject! })) }
+                    )
+            }
+        }
+        
+        
+        // MARK: RelationshipProtocol
+        
+        public let keyPath: KeyPath
+        
+        internal let isToMany = true
+        internal let isOptional = true
+        internal let isOrdered = true
+        internal let deleteRule: NSDeleteRule
+        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
+        
+        internal var accessRawObject: () -> NSManagedObject = {
+            
+            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
+        }
+        
+        
+        // MARK: Private
+        
+        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule) {
+            
+            self.keyPath = keyPath
+            self.deleteRule = deleteRule.nativeValue
+            self.inverse = (D.self, inverseKeyPath)
         }
     }
     
@@ -191,10 +356,10 @@ public enum RelationshipContainer<O: ManagedObject> {
 
 internal protocol RelationshipProtocol: class {
     
-    var keyPath: String { get }
+    var keyPath: KeyPath { get }
     var isToMany: Bool { get }
     var isOrdered: Bool { get }
     var deleteRule: NSDeleteRule { get }
-    var inverse: (type: ManagedObject.Type, keyPath: String?) { get }
+    var inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?) { get }
     var accessRawObject: () -> NSManagedObject { get set }
 }

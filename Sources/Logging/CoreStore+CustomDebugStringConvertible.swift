@@ -350,10 +350,9 @@ extension LegacySQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringC
 }
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - ListMonitor
 
+@available(OSX 10.12, *)
 private struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertible {
     
     let sectionInfo: NSFetchedResultsSectionInfo
@@ -368,6 +367,7 @@ private struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertib
     }
 }
 
+@available(OSX 10.12, *)
 extension ListMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -390,7 +390,6 @@ extension ListMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvert
         )
     }
 }
-#endif
 
 
 // MARK: - LocalStorageOptions
@@ -560,10 +559,9 @@ extension MigrationType: CustomDebugStringConvertible, CoreStoreDebugStringConve
 }
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - ObjectMonitor
 
+@available(OSX 10.12, *)
 extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -585,7 +583,7 @@ extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConve
         )
     }
 }
-#endif
+
 
 // MARK: - OrderBy
 
@@ -646,10 +644,9 @@ extension SaveResult: CustomDebugStringConvertible, CoreStoreDebugStringConverti
 }
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - SectionBy
 
+@available(OSX 10.12, *)
 extension SectionBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -670,7 +667,6 @@ extension SectionBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertib
         )
     }
 }
-#endif
 
 
 // MARK: - Select

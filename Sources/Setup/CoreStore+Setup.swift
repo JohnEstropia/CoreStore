@@ -50,7 +50,7 @@ public extension CoreStore {
     /**
      Returns the entity name-to-class type mapping from the `defaultStack`'s model.
      */
-    public static func entityTypesByName(for type: ManagedObject.Type) -> [EntityName: ManagedObject.Type] {
+    public static func entityTypesByName(for type: CoreStoreObject.Type) -> [EntityName: CoreStoreObject.Type] {
         
         return self.defaultStack.entityTypesByName(for: type)
     }
@@ -64,9 +64,9 @@ public extension CoreStore {
     }
     
     /**
-     Returns the `NSEntityDescription` for the specified `ManagedObject` subclass from `defaultStack`'s model.
+     Returns the `NSEntityDescription` for the specified `CoreStoreObject` subclass from `defaultStack`'s model.
      */
-    public static func entityDescription(for type: ManagedObject.Type) -> NSEntityDescription? {
+    public static func entityDescription(for type: CoreStoreObject.Type) -> NSEntityDescription? {
         
         return self.defaultStack.entityDescription(for: type)
     }

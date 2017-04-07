@@ -27,8 +27,6 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - ListMonitor
 
 /**
@@ -68,7 +66,8 @@ import CoreData
  ```
  In the example above, both `person1` and `person2` will contain the object at section=2, index=3.
  */
-public final class ListMonitor<T: NSManagedObject>: Hashable {
+@available(OSX 10.12, *)
+public final class ListMonitor<T: DynamicObject>: Hashable {
     
     // MARK: Public (Accessors)
     
@@ -80,7 +79,15 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      */
     public subscript(index: Int) -> T {
         
-        return self.objectsInAllSections()[index]
+        CoreStore.assert(
+            !self.isPendingRefetch || Thread.isMainThread,
+            "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
+        )
+        if self.isSectioned {
+            
+            return T.cs_fromRaw(object: self.fetchedResultsController.fetchedObjects![index])
+        }
+        return self[0, index]
     }
     
     /**
@@ -91,12 +98,16 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
      */
     public subscript(safeIndex index: Int) -> T? {
         
-        let objects = self.objectsInAllSections()
-        guard objects.indices.contains(index) else {
+        if self.isSectioned {
             
+            let fetchedObjects = self.fetchedResultsController.fetchedObjects!
+            if index < fetchedObjects.count && index >= 0 {
+                
+                return T.cs_fromRaw(object: fetchedObjects[index])
+            }
             return nil
         }
-        return objects[index]
+        return self[safeSectionIndex: 0, safeItemIndex: index]
     }
     
     /**
@@ -128,7 +139,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             
             return nil
         }
-        return section.objects?[itemIndex] as? T
+        return T.cs_fromRaw(object: section.objects![itemIndex] as! NSManagedObject)
     }
     
     /**
@@ -143,7 +154,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return self.fetchedResultsController.object(at: indexPath) as! T
+        return T.cs_fromRaw(object: self.fetchedResultsController.object(at: indexPath))
     }
     
     /**
@@ -189,42 +200,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     public func hasObjectsInSection(_ section: Int) -> Bool {
         
         return self.numberOfObjectsInSection(safeSectionIndex: section)! > 0
-    }
-    
-    /**
-     Returns all objects in all sections
-     
-     - returns: all objects in all sections
-     */
-    public func objectsInAllSections() -> [T] {
-        
-        CoreStore.assert(
-            !self.isPendingRefetch || Thread.isMainThread,
-            "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
-        )
-        return (self.fetchedResultsController.dynamicCast() as NSFetchedResultsController<T>).fetchedObjects ?? []
-    }
-    
-    /**
-     Returns all objects in the specified section
-     
-     - parameter section: the section index. Using an index outside the valid range will raise an exception.
-     - returns: all objects in the specified section
-     */
-    public func objectsInSection(_ section: Int) -> [T] {
-        
-        return (self.sectionInfoAtIndex(section).objects as! [T]?) ?? []
-    }
-    
-    /**
-     Returns all objects in the specified section, or `nil` if out of bounds.
-     
-     - parameter section: the section index. Using an index outside the valid range will return `nil`.
-     - returns: all objects in the specified section
-     */
-    public func objectsInSection(safeSectionIndex section: Int) -> [T]? {
-        
-        return self.sectionInfoAtIndex(safeSectionIndex: section)?.objects as! [T]?
     }
     
     /**
@@ -371,7 +346,11 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return (self.fetchedResultsController.dynamicCast() as NSFetchedResultsController<T>).fetchedObjects?.index(of: object)
+        if self.isSectioned {
+            
+            return self.fetchedResultsController.fetchedObjects?.index(of: object.cs_toRaw())
+        }
+        return self.fetchedResultsController.indexPath(forObject: object.cs_toRaw())?[1]
     }
     
     /**
@@ -386,7 +365,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return self.fetchedResultsController.indexPath(forObject: object)
+        return self.fetchedResultsController.indexPath(forObject: object.cs_toRaw())
     }
     
     
@@ -596,22 +575,22 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     // MARK: Equatable
     
-    public static func == <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
-        
-        return lhs === rhs
-    }
-    
-    public static func == <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+    public static func == (lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
-    public static func ~= <T: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+    public static func == <T: DynamicObject, U: DynamicObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
         
-        return lhs === rhs
+        return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
-    public static func ~= <T: NSManagedObject, U: NSManagedObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+    public static func ~= (lhs: ListMonitor<T>, rhs: ListMonitor<T>) -> Bool {
+        
+        return lhs.fetchedResultsController === rhs.fetchedResultsController
+    }
+    
+    public static func ~= <T: DynamicObject, U: DynamicObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
@@ -673,16 +652,6 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             applyFetchClauses: applyFetchClauses,
             createAsynchronously: createAsynchronously
         )
-    }
-    
-    internal func downcast() -> ListMonitor<NSManagedObject> {
-        
-        @inline(__always)
-        func noWarnUnsafeBitCast<T, U>(_ x: T, to type: U.Type) -> U {
-         
-            return unsafeBitCast(x, to: type)
-        }
-        return noWarnUnsafeBitCast(self, to: ListMonitor<NSManagedObject>.self)
     }
     
     internal func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<T>) -> Void) {
@@ -1001,6 +970,8 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     fileprivate let taskGroup = DispatchGroup()
     fileprivate let sectionIndexTransformer: (_ sectionName: KeyPath?) -> String?
     
+    private let isSectioned: Bool
+    
     private var willChangeListKey: Void?
     private var didChangeListKey: Void?
     private var willRefetchListKey: Void?
@@ -1014,7 +985,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     private var didInsertSectionKey: Void?
     private var didDeleteSectionKey: Void?
     
-    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate<T>
+    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private var observerForWillChangePersistentStore: NotificationObserver!
     private var observerForDidChangePersistentStore: NotificationObserver!
     private let transactionQueue: DispatchQueue
@@ -1043,6 +1014,8 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     
     private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<T>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<T>) -> Void)?) {
         
+        self.isSectioned = (sectionBy != nil)
+        
         let fetchRequest = CoreStoreFetchRequest()
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
@@ -1058,7 +1031,7 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
             applyFetchClauses: applyFetchClauses
         )
         
-        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate<T>()
+        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
         
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
@@ -1150,9 +1123,99 @@ public final class ListMonitor<T: NSManagedObject>: Hashable {
     }
 }
 
+    
+// MARK: - ListMonitor where T: NSManagedObject
+
+@available(OSX 10.12, *)
+extension ListMonitor where T: NSManagedObject {
+    
+    /**
+     Returns all objects in all sections
+     
+     - returns: all objects in all sections
+     */
+    public func objectsInAllSections() -> [T] {
+        
+        CoreStore.assert(
+            !self.isPendingRefetch || Thread.isMainThread,
+            "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
+        )
+        return (self.fetchedResultsController.dynamicCast() as NSFetchedResultsController<T>).fetchedObjects ?? []
+    }
+    
+    /**
+     Returns all objects in the specified section
+     
+     - parameter section: the section index. Using an index outside the valid range will raise an exception.
+     - returns: all objects in the specified section
+     */
+    public func objectsInSection(_ section: Int) -> [T] {
+        
+        return (self.sectionInfoAtIndex(section).objects as! [T]?) ?? []
+    }
+    
+    /**
+     Returns all objects in the specified section, or `nil` if out of bounds.
+     
+     - parameter section: the section index. Using an index outside the valid range will return `nil`.
+     - returns: all objects in the specified section
+     */
+    public func objectsInSection(safeSectionIndex section: Int) -> [T]? {
+        
+        return self.sectionInfoAtIndex(safeSectionIndex: section)?.objects as! [T]?
+    }
+}
+
+
+// MARK: - ListMonitor where T: CoreStoreObject
+
+@available(OSX 10.12, *)
+extension ListMonitor where T: CoreStoreObject {
+    
+    /**
+     Returns all objects in all sections
+     
+     - returns: all objects in all sections
+     */
+    public func objectsInAllSections() -> [T] {
+        
+        CoreStore.assert(
+            !self.isPendingRefetch || Thread.isMainThread,
+            "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
+        )
+        return (self.fetchedResultsController.fetchedObjects ?? [])
+            .map(T.cs_fromRaw)
+    }
+    
+    /**
+     Returns all objects in the specified section
+     
+     - parameter section: the section index. Using an index outside the valid range will raise an exception.
+     - returns: all objects in the specified section
+     */
+    public func objectsInSection(_ section: Int) -> [T] {
+        
+        return (self.sectionInfoAtIndex(section).objects ?? [])
+            .map({ T.cs_fromRaw(object: $0 as! NSManagedObject) })
+    }
+    
+    /**
+     Returns all objects in the specified section, or `nil` if out of bounds.
+     
+     - parameter section: the section index. Using an index outside the valid range will return `nil`.
+     - returns: all objects in the specified section
+     */
+    public func objectsInSection(safeSectionIndex section: Int) -> [T]? {
+        
+        return (self.sectionInfoAtIndex(safeSectionIndex: section)?.objects)?
+            .map({ T.cs_fromRaw(object: $0 as! NSManagedObject) })
+    }
+}
+
 
 // MARK: - ListMonitor: FetchedResultsControllerHandler
 
+@available(OSX 10.12, *)
 extension ListMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
@@ -1259,7 +1322,8 @@ extension ListMonitor: FetchedResultsControllerHandler {
 
 
 // MARK: - Notification Keys
-    
+
+@available(OSX 10.12, *)
 fileprivate extension Notification.Name {
     
     fileprivate static let listMonitorWillChangeList = Notification.Name(rawValue: "listMonitorWillChangeList")
@@ -1273,5 +1337,3 @@ fileprivate extension Notification.Name {
     fileprivate static let listMonitorDidInsertSection = Notification.Name(rawValue: "listMonitorDidInsertSection")
     fileprivate static let listMonitorDidDeleteSection = Notification.Name(rawValue: "listMonitorDidDeleteSection")
 }
-
-#endif

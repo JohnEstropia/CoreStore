@@ -27,8 +27,6 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - CSListMonitor
 
 /**
@@ -36,8 +34,9 @@ import CoreData
  
  - SeeAlso: `ListMonitor`
  */
+@available(OSX 10.12, *)
 @objc
-public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
+public final class CSListMonitor: NSObject {
     
     // MARK: Public (Accessors)
     
@@ -546,7 +545,8 @@ public final class CSListMonitor: NSObject, CoreStoreObjectiveCType {
 
 // MARK: - ListMonitor
 
-extension ListMonitor: CoreStoreSwiftType {
+@available(OSX 10.12, *)
+extension ListMonitor where T: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
@@ -554,6 +554,17 @@ extension ListMonitor: CoreStoreSwiftType {
         
         return CSListMonitor(self)
     }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> ListMonitor<NSManagedObject> {
+        
+        @inline(__always)
+        func noWarnUnsafeBitCast<T, U>(_ x: T, to type: U.Type) -> U {
+            
+            return unsafeBitCast(x, to: type)
+        }
+        return noWarnUnsafeBitCast(self, to: ListMonitor<NSManagedObject>.self)
+    }
 }
-
-#endif

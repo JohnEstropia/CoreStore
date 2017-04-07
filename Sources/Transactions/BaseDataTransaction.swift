@@ -45,12 +45,12 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-     Creates a new `NSManagedObject` or `ManagedObject` with the specified entity type.
+     Creates a new `NSManagedObject` or `CoreStoreObject` with the specified entity type.
      
-     - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `ManagedObject` entity type and the destination configuration
-     - returns: a new `NSManagedObject` or `ManagedObject` instance of the specified entity type.
+     - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `CoreStoreObject` entity type and the destination configuration
+     - returns: a new `NSManagedObject` or `CoreStoreObject` instance of the specified entity type.
      */
-    public func create<T: ManagedObjectProtocol>(_ into: Into<T>) -> T {
+    public func create<T: DynamicObject>(_ into: Into<T>) -> T {
         
         let entityClass = into.entityClass
         CoreStore.assert(
@@ -121,7 +121,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object: the `NSManagedObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    public func edit<T: NSManagedObject>(_ object: T?) -> T? {
+    public func edit<T: DynamicObject>(_ object: T?) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -141,7 +141,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    public func edit<T: NSManagedObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
+    public func edit<T: DynamicObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -152,7 +152,7 @@ public /*abstract*/ class BaseDataTransaction {
                 || (into.configuration ?? DataStack.defaultConfigurationName) == objectID.persistentStore?.configurationName,
             "Attempted to update an entity of type \(cs_typeName(into.entityClass)) but the specified persistent store do not match the `NSManagedObjectID`."
         )
-        return self.fetchExisting(objectID) as? T
+        return self.fetchExisting(objectID)
     }
     
     /**
@@ -160,7 +160,7 @@ public /*abstract*/ class BaseDataTransaction {
      
      - parameter object: the `NSManagedObject` to be deleted
      */
-    public func delete(_ object: NSManagedObject?) {
+    public func delete<T: DynamicObject>(_ object: T?) {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
@@ -169,7 +169,7 @@ public /*abstract*/ class BaseDataTransaction {
         let context = self.context
         object
             .flatMap(context.fetchExisting)
-            .flatMap(context.delete)
+            .flatMap({ context.delete($0.cs_toRaw()) })
     }
     
     /**
@@ -179,7 +179,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object2: another `NSManagedObject` to be deleted
      - parameter objects: other `NSManagedObject`s to be deleted
      */
-    public func delete(_ object1: NSManagedObject?, _ object2: NSManagedObject?, _ objects: NSManagedObject?...) {
+    public func delete<T: DynamicObject>(_ object1: T?, _ object2: T?, _ objects: T?...) {
         
         self.delete(([object1, object2] + objects).flatMap { $0 })
     }
@@ -189,15 +189,14 @@ public /*abstract*/ class BaseDataTransaction {
      
      - parameter objects: the `NSManagedObject`s to be deleted
      */
-    public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: NSManagedObject {
+    public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: DynamicObject {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to delete entities outside their designated queue."
         )
-        
         let context = self.context
-        objects.forEach { context.fetchExisting($0).flatMap(context.delete) }
+        objects.forEach { context.fetchExisting($0).flatMap({ context.delete($0.cs_toRaw()) }) }
     }
     
     /**
@@ -209,7 +208,6 @@ public /*abstract*/ class BaseDataTransaction {
             self.isRunningInAllowedQueue(),
             "Attempted to refresh entities outside their designated queue."
         )
-        
         self.context.refreshAndMergeAllObjects()
     }
     
@@ -231,7 +229,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access inserted objects from an already committed \(cs_typeName(self))."
         )
-        
         return self.context.insertedObjects
     }
     
@@ -251,7 +248,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access inserted objects from an already committed \(cs_typeName(self))."
         )
-        
         return Set(self.context.insertedObjects.flatMap { $0 as? T })
     }
     
@@ -270,7 +266,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access inserted objects IDs from an already committed \(cs_typeName(self))."
         )
-        
         return Set(self.context.insertedObjects.map { $0.objectID })
     }
     
@@ -290,7 +285,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access inserted objects IDs from an already committed \(cs_typeName(self))."
         )
-        
         return Set(self.context.insertedObjects.filter { $0.isKind(of: entity) }.map { $0.objectID })
     }
     
@@ -309,7 +303,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access updated objects from an already committed \(cs_typeName(self))."
         )
-        
         return self.context.updatedObjects
     }
     
@@ -329,7 +322,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access updated objects from an already committed \(cs_typeName(self))."
         )
-        
         return Set(self.context.updatedObjects.filter { $0.isKind(of: entity) }.map { $0 as! T })
     }
     
@@ -348,7 +340,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access updated object IDs from an already committed \(cs_typeName(self))."
         )
-        
         return Set(self.context.updatedObjects.map { $0.objectID })
     }
     
@@ -368,7 +359,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access updated object IDs from an already committed \(cs_typeName(self))."
         )
-        
         return Set(self.context.updatedObjects.filter { $0.isKind(of: entity) }.map { $0.objectID })
     }
     
@@ -387,7 +377,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access deleted objects from an already committed \(cs_typeName(self))."
         )
-        
         return self.context.deletedObjects
     }
     
@@ -407,7 +396,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access deleted objects from an already committed \(cs_typeName(self))."
         )
-        
         return Set(self.context.deletedObjects.filter { $0.isKind(of: entity) }.map { $0 as! T })
     }
     
@@ -427,7 +415,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access deleted object IDs from an already committed \(cs_typeName(self))."
         )
-        
         return Set(self.context.deletedObjects.map { $0.objectID })
     }
     
@@ -447,7 +434,6 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access deleted object IDs from an already committed \(cs_typeName(self))."
         )
-        
         return Set(self.context.deletedObjects.filter { $0.isKind(of: entity) }.map { $0.objectID })
     }
     

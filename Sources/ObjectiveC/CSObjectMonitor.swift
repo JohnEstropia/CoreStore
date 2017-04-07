@@ -27,8 +27,6 @@ import Foundation
 import CoreData
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - CSObjectMonitor
 
 /**
@@ -36,8 +34,9 @@ import CoreData
  
  - SeeAlso: `ObjectMonitor`
  */
+@available(OSX 10.12, *)
 @objc
-public final class CSObjectMonitor: NSObject, CoreStoreObjectiveCType {
+public final class CSObjectMonitor: NSObject {
     
     /**
      Returns the `NSManagedObject` instance being observed, or `nil` if the object was already deleted.
@@ -138,7 +137,8 @@ public final class CSObjectMonitor: NSObject, CoreStoreObjectiveCType {
 
 // MARK: - ObjectMonitor
 
-extension ObjectMonitor: CoreStoreSwiftType {
+@available(OSX 10.12, *)
+extension ObjectMonitor where EntityType: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
@@ -146,6 +146,17 @@ extension ObjectMonitor: CoreStoreSwiftType {
         
         return CSObjectMonitor(self)
     }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> ObjectMonitor<NSManagedObject> {
+        
+        @inline(__always)
+        func noWarnUnsafeBitCast<T, U>(_ x: T, to type: U.Type) -> U {
+            
+            return unsafeBitCast(x, to: type)
+        }
+        return noWarnUnsafeBitCast(self, to: ObjectMonitor<NSManagedObject>.self)
+    }
 }
-
-#endif

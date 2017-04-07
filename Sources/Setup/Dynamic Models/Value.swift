@@ -1,5 +1,5 @@
 //
-//  Attribute.swift
+//  Value.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -30,56 +30,60 @@ import Foundation
 // MARK: Operators
 
 infix operator .= : AssignmentPrecedence
-postfix operator *
 
 
-// MARK: - ManagedObjectProtocol
+// MARK: - DynamicObject
 
-public extension ManagedObjectProtocol where Self: ManagedObject {
+public extension DynamicObject where Self: CoreStoreObject {
     
-    public typealias Attribute = AttributeContainer<Self>
+    public typealias Value = ValueContainer<Self>
 }
 
 
-// MARK: - AttributeContainer
+// MARK: - ValueContainer
 
-public enum AttributeContainer<O: ManagedObject> {
+public enum ValueContainer<O: CoreStoreObject> {
     
     // MARK: - Required
     
     public final class Required<V: ImportableAttributeType>: AttributeProtocol {
         
-        public static func .= (_ attribute: AttributeContainer<O>.Required<V>, _ value: V) {
+        public static func .= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) {
             
             attribute.value = value
         }
         
-        public static postfix func * (_ attribute: AttributeContainer<O>.Required<V>) -> V {
+        public static func .=<O2: CoreStoreObject> (_ attribute: ValueContainer<O>.Required<V>, _ attribute2: ValueContainer<O2>.Required<V>) {
             
-            return attribute.value
+            attribute.value = attribute2.value
         }
         
-        public init(_ keyPath: String, `default`: V = V.cs_emptyValue(), isIndexed: Bool = false) {
+        public init(_ keyPath: KeyPath, `default`: V = V.cs_emptyValue(), isIndexed: Bool = false, isTransient: Bool = false) {
             
             self.keyPath = keyPath
-            self.defaultValue = `default`.cs_toImportableNativeType()
             self.isIndexed = isIndexed
+            self.isTransient = isTransient
+            self.defaultValue = `default`.cs_toImportableNativeType()
         }
         
         public var value: V {
             
             get {
                 
-                let object = self.accessRawObject()
-                let key = self.keyPath
-                let value = object.value(forKey: key)! as! V.ImportableNativeType
-                return V.cs_fromImportableNativeType(value)!
+                return self.accessRawObject()
+                    .getValue(
+                        forKvcKey: self.keyPath,
+                        didGetValue: { V.cs_fromImportableNativeType($0 as! V.ImportableNativeType)! }
+                    )
             }
             set {
                 
-                let object = self.accessRawObject()
-                let key = self.keyPath
-                object.setValue(newValue.cs_toImportableNativeType(), forKey: key)
+                self.accessRawObject()
+                    .setValue(
+                        newValue,
+                        forKvcKey: self.keyPath,
+                        willSetValue: { $0.cs_toImportableNativeType() }
+                    )
             }
         }
         
@@ -91,15 +95,16 @@ public enum AttributeContainer<O: ManagedObject> {
             return V.cs_rawAttributeType
         }
         
-        public let keyPath: String
+        public let keyPath: KeyPath
         
         internal let isOptional = false
         internal let isIndexed: Bool
+        internal let isTransient: Bool
         internal let defaultValue: Any?
         
         internal var accessRawObject: () -> NSManagedObject = {
             
-            fatalError("\(O.self) attribute values should not be accessed")
+            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
         }
     }
     
@@ -108,19 +113,25 @@ public enum AttributeContainer<O: ManagedObject> {
     
     public final class Optional<V: ImportableAttributeType>: AttributeProtocol {
         
-        public static func .= (_ attribute: AttributeContainer<O>.Optional<V>, _ value: V?) {
+        public static func .= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) {
             
             attribute.value = value
         }
         
-        public static postfix func * (_ attribute: AttributeContainer<O>.Optional<V>) -> V? {
+        public static func .=<O2: CoreStoreObject> (_ attribute: ValueContainer<O>.Optional<V>, _ attribute2: ValueContainer<O2>.Optional<V>) {
             
-            return attribute.value
+            attribute.value = attribute2.value
         }
         
-        public init(_ keyPath: String, `default`: V? = nil) {
+        public static func .=<O2: CoreStoreObject> (_ attribute: ValueContainer<O>.Optional<V>, _ attribute2: ValueContainer<O2>.Required<V>) {
+            
+            attribute.value = attribute2.value
+        }
+        
+        public init(_ keyPath: KeyPath, `default`: V? = nil, isTransient: Bool = false) {
             
             self.keyPath = keyPath
+            self.isTransient = isTransient
             self.defaultValue = `default`?.cs_toImportableNativeType()
         }
         
@@ -128,19 +139,20 @@ public enum AttributeContainer<O: ManagedObject> {
             
             get {
                 
-                let object = self.accessRawObject()
-                let key = self.keyPath
-                guard let value = object.value(forKey: key) as! V.ImportableNativeType? else {
-                    
-                    return nil
-                }
-                return V.cs_fromImportableNativeType(value)
+                return self.accessRawObject()
+                    .getValue(
+                        forKvcKey: self.keyPath,
+                        didGetValue: { ($0 as! V.ImportableNativeType?).flatMap(V.cs_fromImportableNativeType) }
+                    )
             }
             set {
                 
-                let object = self.accessRawObject()
-                let key = self.keyPath
-                object.setValue(newValue?.cs_toImportableNativeType(), forKey: key)
+                self.accessRawObject()
+                    .setValue(
+                        newValue,
+                        forKvcKey: self.keyPath,
+                        willSetValue: { $0?.cs_toImportableNativeType() }
+                    )
             }
         }
         
@@ -152,14 +164,15 @@ public enum AttributeContainer<O: ManagedObject> {
             return V.cs_rawAttributeType
         }
         
-        public let keyPath: String
+        public let keyPath: KeyPath
         internal let isOptional = true
         internal let isIndexed = false
+        internal let isTransient: Bool
         internal let defaultValue: Any?
         
         internal var accessRawObject: () -> NSManagedObject = {
             
-            fatalError("\(O.self) attribute values should not be accessed")
+            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
         }
     }
 }
@@ -171,9 +184,10 @@ internal protocol AttributeProtocol: class {
     
     static var attributeType: NSAttributeType { get }
     
-    var keyPath: String { get }
+    var keyPath: KeyPath { get }
     var isOptional: Bool { get }
     var isIndexed: Bool { get }
+    var isTransient: Bool { get }
     var defaultValue: Any? { get }
     var accessRawObject: () -> NSManagedObject { get set }
 }

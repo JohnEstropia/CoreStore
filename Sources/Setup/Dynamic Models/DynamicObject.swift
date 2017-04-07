@@ -1,5 +1,5 @@
 //
-//  ManagedObjectProtocol.swift
+//  DynamicObject.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -26,25 +26,27 @@
 import Foundation
 
 
-// MARK: - ManagedObjectProtocol
+// MARK: - DynamicObject
 
-public protocol ManagedObjectProtocol: class {
+public protocol DynamicObject: class {
 
     static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self
     
-    static func cs_from(object: NSManagedObject) -> Self
+    static func cs_fromRaw(object: NSManagedObject) -> Self
+    
+    func cs_toRaw() -> NSManagedObject
 }
 
-public extension ManagedObjectProtocol where Self: ManagedObject {
+public extension DynamicObject where Self: CoreStoreObject {
     
     @inline(__always)
-    public static func keyPath<O: ManagedObject, V: ImportableAttributeType>(_ attribute: (Self) -> AttributeContainer<O>.Required<V>) -> String  {
+    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Required<V>) -> String  {
         
         return attribute(self.meta).keyPath
     }
     
     @inline(__always)
-    public static func keyPath<O: ManagedObject, V: ImportableAttributeType>(_ attribute: (Self) -> AttributeContainer<O>.Optional<V>) -> String  {
+    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> String  {
         
         return attribute(self.meta).keyPath
     }
@@ -67,19 +69,9 @@ public extension ManagedObjectProtocol where Self: ManagedObject {
 
 // MARK: - NSManagedObject
 
-extension NSManagedObject: ManagedObjectProtocol {
+extension NSManagedObject: DynamicObject {
     
-    // MARK: ManagedObjectProtocol
-    
-    public class func cs_from(object: NSManagedObject) -> Self {
-        
-        @inline(__always)
-        func forceCast<T: NSManagedObject>(_ value: Any) -> T {
-            
-            return value as! T
-        }
-        return forceCast(object)
-    }
+    // MARK: DynamicObject
     
     public class func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self {
         
@@ -90,19 +82,29 @@ extension NSManagedObject: ManagedObjectProtocol {
         }
         return object
     }
+    
+    public class func cs_fromRaw(object: NSManagedObject) -> Self {
+        
+        @inline(__always)
+        func forceCast<T: NSManagedObject>(_ value: Any) -> T {
+            
+            return value as! T
+        }
+        return forceCast(object)
+    }
+    
+    public func cs_toRaw() -> NSManagedObject {
+        
+        return self
+    }
 }
 
 
-// MARK: - ManagedObject
+// MARK: - CoreStoreObject
 
-extension ManagedObject {
+extension CoreStoreObject {
     
-    // MARK: ManagedObjectProtocol
-    
-    public class func cs_from(object: NSManagedObject) -> Self {
-        
-        return self.init(object)
-    }
+    // MARK: DynamicObject
     
     public class func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self {
         
@@ -113,5 +115,15 @@ extension ManagedObject {
             context.assign(object, to: store)
         }
         return self.init(object)
+    }
+    
+    public class func cs_fromRaw(object: NSManagedObject) -> Self {
+        
+        return self.init(object)
+    }
+    
+    public func cs_toRaw() -> NSManagedObject {
+        
+        return self.rawObject!
     }
 }

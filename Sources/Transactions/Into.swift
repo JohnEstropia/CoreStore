@@ -39,10 +39,10 @@ import CoreData
  let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
  ```
  */
-public struct Into<T: ManagedObjectProtocol>: Hashable {
+public struct Into<T: DynamicObject>: Hashable {
     
     /**
-     The associated `NSManagedObject` or `ManagedObject` entity class
+     The associated `NSManagedObject` or `CoreStoreObject` entity class
      */
     public let entityClass: T.Type
     
@@ -103,7 +103,7 @@ public struct Into<T: ManagedObjectProtocol>: Hashable {
     
     // MARK: Equatable
     
-    public static func == <U: ManagedObjectProtocol, V: ManagedObjectProtocol>(lhs: Into<U>, rhs: Into<V>) -> Bool {
+    public static func == <U: DynamicObject, V: DynamicObject>(lhs: Into<U>, rhs: Into<V>) -> Bool {
         
         return lhs.entityClass == rhs.entityClass
             && lhs.configuration == rhs.configuration

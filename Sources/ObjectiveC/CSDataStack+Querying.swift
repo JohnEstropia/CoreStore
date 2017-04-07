@@ -40,7 +40,7 @@ public extension CSDataStack {
     @objc
     public func fetchExistingObject(_ object: NSManagedObject) -> Any? {
         
-        return self.bridgeToSwift.mainContext.fetchExisting(object)
+        return self.bridgeToSwift.mainContext.fetchExisting(object) as NSManagedObject?
     }
     
     /**
@@ -52,7 +52,7 @@ public extension CSDataStack {
     @objc
     public func fetchExistingObjectWithID(_ objectID: NSManagedObjectID) -> Any? {
         
-        return self.bridgeToSwift.mainContext.fetchExisting(objectID)
+        return self.bridgeToSwift.mainContext.fetchExisting(objectID) as NSManagedObject?
     }
     
     /**
@@ -64,7 +64,7 @@ public extension CSDataStack {
     @objc
     public func fetchExistingObjects(_ objects: [NSManagedObject]) -> [Any] {
         
-        return self.bridgeToSwift.mainContext.fetchExisting(objects)
+        return self.bridgeToSwift.mainContext.fetchExisting(objects) as [NSManagedObject]
     }
     
     /**
@@ -76,7 +76,7 @@ public extension CSDataStack {
     @objc
     public func fetchExistingObjectsWithIDs(_ objectIDs: [NSManagedObjectID]) -> [Any] {
         
-        return self.bridgeToSwift.mainContext.fetchExisting(objectIDs)
+        return self.bridgeToSwift.mainContext.fetchExisting(objectIDs) as [NSManagedObject]
     }
     
     /**

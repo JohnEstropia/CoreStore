@@ -27,10 +27,9 @@
 import CoreStore
 
 
-#if os(iOS) || os(watchOS) || os(tvOS)
-
 // MARK: - ConvenienceTests
 
+@available(OSX 10.12, *)
 class ConvenienceTests: BaseTestCase {
     
     @objc
@@ -90,5 +89,3 @@ class ConvenienceTests: BaseTestCase {
         }
     }
 }
-
-#endif
