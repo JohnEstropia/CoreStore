@@ -104,11 +104,12 @@ internal extension NSManagedObjectModel {
         
         if let modelVersionFileURL = modelVersionFileURL,
             let rootModel = NSManagedObjectModel(contentsOf: modelVersionFileURL) {
-                
-                rootModel.modelVersionFileURL = modelVersionFileURL
-                rootModel.modelVersions = modelVersions
-                rootModel.currentModelVersion = currentModelVersion
-                return rootModel
+            
+            // TODO: apply to DynamicModel as well
+            rootModel.modelVersionFileURL = modelVersionFileURL
+            rootModel.modelVersions = modelVersions
+            rootModel.currentModelVersion = currentModelVersion
+            return rootModel
         }
         
         CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel.self)) from the model at URL \"\(modelFileURL)\".")
@@ -178,29 +179,6 @@ internal extension NSManagedObjectModel {
         return mapping
     }
     
-    // TODO: remove
-//    @nonobjc
-//    internal func entityNames(for type: NSManagedObject.Type) -> Set<EntityName> {
-//        
-//        let className = NSStringFromClass(type)
-//        return Set(
-//            self.objectClassNamesByEntityName
-//                .filter({ $0.value == className })
-//                .map({ $0.key })
-//        )
-//    }
-//    
-//    @nonobjc
-//    internal func entityTypesMapping() -> [EntityName: NSManagedObject.Type] {
-//        
-//        var mapping = [EntityName: NSManagedObject.Type]()
-//        self.objectClassNamesByEntityName.forEach { (entityName, className) in
-//            
-//            mapping[entityName] = (NSClassFromString(className)! as! NSManagedObject.Type)
-//        }
-//        return mapping
-//    }
-    
     @nonobjc
     internal func mergedModels() -> [NSManagedObjectModel] {
         
@@ -222,6 +200,7 @@ internal extension NSManagedObjectModel {
                 return nil
         }
         
+        // TODO: apply to DynamicModel as well
         let versionModelFileURL = modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
         guard let model = NSManagedObjectModel(contentsOf: versionModelFileURL) else {
             

@@ -29,7 +29,7 @@ import Foundation
 // MARK: - DynamicObject
 
 public protocol DynamicObject: class {
-
+    
     static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self
     
     static func cs_fromRaw(object: NSManagedObject) -> Self
