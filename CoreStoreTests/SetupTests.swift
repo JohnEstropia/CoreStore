@@ -36,10 +36,13 @@ class SetupTests: BaseTestDataTestCase {
         
         do {
             
-            let model = NSManagedObjectModel.mergedModel(from: [Bundle(for: type(of: self))])!
-            
-            let stack = DataStack(model: model, migrationChain: nil)
-            XCTAssertEqual(stack.coordinator.managedObjectModel, model)
+            let schemaHistory = SchemaHistory(
+                modelName: "Model",
+                bundle: Bundle(for: type(of: self)),
+                migrationChain: nil
+            )
+            let stack = DataStack(schemaHistory: schemaHistory)
+            XCTAssertEqual(stack.coordinator.managedObjectModel, schemaHistory.rawModel)
             XCTAssertEqual(stack.rootSavingContext.persistentStoreCoordinator, stack.coordinator)
             XCTAssertNil(stack.rootSavingContext.parent)
             XCTAssertFalse(stack.rootSavingContext.isDataStackContext)
@@ -47,18 +50,18 @@ class SetupTests: BaseTestDataTestCase {
             XCTAssertEqual(stack.mainContext.parent, stack.rootSavingContext)
             XCTAssertTrue(stack.mainContext.isDataStackContext)
             XCTAssertFalse(stack.mainContext.isTransactionContext)
-            XCTAssertEqual(stack.model, model)
-            XCTAssertTrue(stack.migrationChain.valid)
-            XCTAssertTrue(stack.migrationChain.empty)
-            XCTAssertTrue(stack.migrationChain.rootVersions.isEmpty)
-            XCTAssertTrue(stack.migrationChain.leafVersions.isEmpty)
+            XCTAssertEqual(stack.schemaHistory.rawModel, schemaHistory.rawModel)
+            XCTAssertTrue(stack.schemaHistory.migrationChain.isValid)
+            XCTAssertTrue(stack.schemaHistory.migrationChain.isEmpty)
+            XCTAssertTrue(stack.schemaHistory.migrationChain.rootVersions.isEmpty)
+            XCTAssertTrue(stack.schemaHistory.migrationChain.leafVersions.isEmpty)
             
             CoreStore.defaultStack = stack
             XCTAssertEqual(CoreStore.defaultStack, stack)
         }
         do {
             
-            let migrationChain: MigrationChain = ["version1", "version2", "version3"]
+            let migrationChain: MigrationChain = ["version1", "version2", "version3", "Model"]
             
             let stack = self.expectLogger([.logWarning]) {
                 
@@ -69,7 +72,7 @@ class SetupTests: BaseTestDataTestCase {
                 )
             }
             XCTAssertEqual(stack.modelVersion, "Model")
-            XCTAssertEqual(stack.migrationChain, migrationChain)
+            XCTAssertEqual(stack.schemaHistory.migrationChain, migrationChain)
             
             CoreStore.defaultStack = stack
             XCTAssertEqual(CoreStore.defaultStack, stack)
@@ -226,7 +229,10 @@ class SetupTests: BaseTestDataTestCase {
                 modelName: "Model",
                 bundle: Bundle(for: type(of: self))
             )
-            try sqliteStore.eraseStorageAndWait(metadata: metadata, soureModelHint: stack.model[metadata])
+            try sqliteStore.eraseStorageAndWait(
+                metadata: metadata,
+                soureModelHint: stack.schemaHistory.schema(for: metadata)?.rawModel()
+            )
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
@@ -344,7 +350,10 @@ class SetupTests: BaseTestDataTestCase {
                 modelName: "Model",
                 bundle: Bundle(for: type(of: self))
             )
-            try sqliteStore.eraseStorageAndWait(metadata: metadata, soureModelHint: stack.model[metadata])
+            try sqliteStore.eraseStorageAndWait(
+                metadata: metadata,
+                soureModelHint: stack.schemaHistory.schema(for: metadata)?.rawModel()
+            )
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))

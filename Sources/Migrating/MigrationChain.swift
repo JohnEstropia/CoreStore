@@ -70,7 +70,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
         self.versionTree = [:]
         self.rootVersions = []
         self.leafVersions = []
-        self.valid = true
+        self.isValid = true
     }
     
     /**
@@ -81,7 +81,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
         self.versionTree = [:]
         self.rootVersions = [value]
         self.leafVersions = [value]
-        self.valid = true
+        self.isValid = true
     }
     
     /**
@@ -93,13 +93,13 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
         
         var lastVersion: String?
         var versionTree = [String: String]()
-        var valid = true
+        var isValid = true
         for version in elements {
             
             if let lastVersion = lastVersion,
                 let _ = versionTree.updateValue(version, forKey: lastVersion) {
                 
-                valid = false
+                isValid = false
             }
             lastVersion = version
         }
@@ -107,7 +107,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
         self.versionTree = versionTree
         self.rootVersions = Set(elements.prefix(1))
         self.leafVersions = Set(elements.suffix(1))
-        self.valid = valid
+        self.isValid = isValid
     }
     
     /**
@@ -115,7 +115,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
      */
     public init(_ elements: [(String, String)]) {
         
-        var valid = true
+        var isValid = true
         var versionTree = [String: String]()
         elements.forEach { (sourceVersion, destinationVersion) in
             
@@ -126,7 +126,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
             
             CoreStore.assert(false, "\(cs_typeName(MigrationChain.self))'s migration chain could not be created due to ambiguous version paths.")
             
-            valid = false
+            isValid = false
         }
         let leafVersions = Set(
             elements
@@ -156,7 +156,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
         self.versionTree = versionTree
         self.rootVersions = Set(versionTree.keys).subtracting(versionTree.values)
         self.leafVersions = leafVersions
-        self.valid = valid && Set(versionTree.keys).union(versionTree.values).filter { isVersionAmbiguous($0) }.count <= 0
+        self.isValid = isValid && Set(versionTree.keys).union(versionTree.values).filter { isVersionAmbiguous($0) }.count <= 0
     }
     
     /**
@@ -223,7 +223,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
         return lhs.versionTree == rhs.versionTree
             && lhs.rootVersions == rhs.rootVersions
             && lhs.leafVersions == rhs.leafVersions
-            && lhs.valid == rhs.valid
+            && lhs.isValid == rhs.isValid
     }
     
     
@@ -231,9 +231,9 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
     
     internal let rootVersions: Set<String>
     internal let leafVersions: Set<String>
-    internal let valid: Bool
+    internal let isValid: Bool
     
-    internal var empty: Bool {
+    internal var isEmpty: Bool {
         
         return self.versionTree.count <= 0
     }

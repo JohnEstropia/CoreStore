@@ -54,7 +54,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - parameter versionChain: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(modelName: XcdatamodelFilename?, bundle: Bundle?, versionChain: [String]?) {
+    public convenience init(modelName: XcodeDataModelFileName?, bundle: Bundle?, versionChain: [String]?) {
         
         self.init(
             DataStack(
@@ -73,46 +73,12 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
      - parameter versionTree: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(modelName: XcdatamodelFilename?, bundle: Bundle?, versionTree: [String: String]?) {
+    public convenience init(modelName: XcodeDataModelFileName?, bundle: Bundle?, versionTree: [String: String]?) {
         
         self.init(
             DataStack(
                 modelName: modelName ?? DataStack.applicationName,
                 bundle: bundle ?? Bundle.main,
-                migrationChain: versionTree.flatMap { MigrationChain($0) } ?? nil
-            )
-        )
-    }
-    
-    /**
-     Initializes a `DataStack` from an `NSManagedObjectModel`.
-     
-     - parameter model: the `NSManagedObjectModel` for the stack
-     - parameter versionChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
-     */
-    @objc
-    public convenience init(model: NSManagedObjectModel, versionChain: [String]?) {
-        
-        self.init(
-            DataStack(
-                model: model,
-                migrationChain: versionChain.flatMap { MigrationChain($0) } ?? nil
-            )
-        )
-    }
-    
-    /**
-     Initializes a `DataStack` from an `NSManagedObjectModel`.
-     
-     - parameter model: the `NSManagedObjectModel` for the stack
-     - parameter versionTree: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
-     */
-    @objc
-    public convenience init(model: NSManagedObjectModel, versionTree: [String]?) {
-        
-        self.init(
-            DataStack(
-                model: model,
                 migrationChain: versionTree.flatMap { MigrationChain($0) } ?? nil
             )
         )
@@ -260,6 +226,42 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     
     
     // MARK: Deprecated
+    
+    /**
+     Initializes a `DataStack` from an `NSManagedObjectModel`.
+     
+     - parameter model: the `NSManagedObjectModel` for the stack
+     - parameter versionChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     */
+    @available(*, deprecated: 3.1, message: "Use the -[initWithModelName:bundle:versionChain:] initializer.")
+    @objc
+    public convenience init(model: NSManagedObjectModel, versionChain: [String]?) {
+        
+        self.init(
+            DataStack(
+                model: model,
+                migrationChain: versionChain.flatMap { MigrationChain($0) } ?? nil
+            )
+        )
+    }
+    
+    /**
+     Initializes a `DataStack` from an `NSManagedObjectModel`.
+     
+     - parameter model: the `NSManagedObjectModel` for the stack
+     - parameter versionTree: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     */
+    @available(*, deprecated: 3.1, message: "Use the -[initWithModelName:bundle:versionTree:] initializer.")
+    @objc
+    public convenience init(model: NSManagedObjectModel, versionTree: [String]?) {
+        
+        self.init(
+            DataStack(
+                model: model,
+                migrationChain: versionTree.flatMap { MigrationChain($0) } ?? nil
+            )
+        )
+    }
     
     /**
      Returns the entity name-to-class type mapping from the stack's model.

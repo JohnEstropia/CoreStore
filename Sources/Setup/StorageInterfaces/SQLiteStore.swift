@@ -230,7 +230,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
     
     // MARK: Internal
     
-    internal static let defaultRootDirectory: URL = {
+    internal static let defaultRootDirectory: URL = cs_lazy {
         
         #if os(tvOS)
             let systemDirectorySearchPath = FileManager.SearchPathDirectory.cachesDirectory
@@ -246,7 +246,7 @@ public final class SQLiteStore: LocalStorage, DefaultInitializableStore {
             Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack",
             isDirectory: true
         )
-    }()
+    }
     
     internal static let defaultFileURL = SQLiteStore.defaultRootDirectory
         .appendingPathComponent(

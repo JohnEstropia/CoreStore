@@ -100,3 +100,12 @@ internal func cs_typeName(_ name: String?) -> String {
     
     return "<\(name ?? "unknown")>"
 }
+
+
+// MARK: Functional
+
+@inline(__always)
+internal func cs_lazy<T>(_ closure: () -> T) -> T {
+    
+    return closure()
+}

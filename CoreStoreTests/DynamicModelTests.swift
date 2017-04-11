@@ -57,8 +57,8 @@ class DynamicModelTests: BaseTestDataTestCase {
     func testDynamicModels_CanBeDeclaredCorrectly() {
         
         let dataStack = DataStack(
-            dynamicModel: DynamicModel(
-                version: "V1",
+            CoreStoreSchema(
+                modelVersion: "V1",
                 entities: [
                     Entity<Animal>("Animal"),
                     Entity<Dog>("Dog"),

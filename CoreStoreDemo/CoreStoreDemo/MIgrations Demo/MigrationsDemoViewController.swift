@@ -60,7 +60,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
             }
             for model in models {
                 
-                if model.version == storeVersion {
+                if model.schemaHistory.currentModelVersion == storeVersion {
                     
                     return model
                 }
@@ -141,29 +141,35 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
     
     // MARK: Private
     
-    private typealias ModelMetadata = (label: String, version: String, entityType: NSManagedObject.Type, migrationChain: MigrationChain)
+    private typealias ModelMetadata = (label: String, entityType: NSManagedObject.Type, schemaHistory: SchemaHistory)
     
     private let models: [ModelMetadata] = [
         (
             label: "Model V1",
-            version: "MigrationDemo",
             entityType: OrganismV1.self,
-            migrationChain: ["MigrationDemoV3", "MigrationDemoV2", "MigrationDemo"]
+            schemaHistory: SchemaHistory(
+                modelName: "MigrationDemo",
+                migrationChain: ["MigrationDemoV3", "MigrationDemoV2", "MigrationDemo"]
+            )
         ),
         (
             label: "Model V2",
-            version: "MigrationDemoV2",
             entityType: OrganismV2.self,
-            migrationChain: [
-                "MigrationDemo": "MigrationDemoV2",
-                "MigrationDemoV3": "MigrationDemoV2"
-            ]
+            schemaHistory: SchemaHistory(
+                modelName: "MigrationDemo",
+                migrationChain: [
+                    "MigrationDemo": "MigrationDemoV2",
+                    "MigrationDemoV3": "MigrationDemoV2"
+                ]
+            )
         ),
         (
             label: "Model V3",
-            version: "MigrationDemoV3",
             entityType: OrganismV3.self,
-            migrationChain: ["MigrationDemo", "MigrationDemoV2", "MigrationDemoV3"]
+            schemaHistory: SchemaHistory(
+                modelName: "MigrationDemo",
+                migrationChain: ["MigrationDemo", "MigrationDemoV2", "MigrationDemoV3"]
+            )
         )
     ]
     
@@ -210,17 +216,14 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
     
     private func selectModelVersion(_ model: ModelMetadata) {
         
-        if self.dataStack?.modelVersion == model.version {
+        if self.dataStack?.modelVersion == model.schemaHistory.currentModelVersion {
             
             return
         }
         
         self.set(dataStack: nil, model: nil, scrollToSelection: false) // explicitly trigger NSPersistentStore cleanup by deallocating the stack
         
-        let dataStack = DataStack(
-            modelName: "MigrationDemo",
-            migrationChain: model.migrationChain
-        )
+        let dataStack = DataStack(schemaHistory: model.schemaHistory)
         
         self.setEnabled(false)
         let progress = dataStack.addStorage(
@@ -313,7 +316,13 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
         
         if let dataStack = dataStack, let model = model {
             
-            self.segmentedControl?.selectedSegmentIndex = self.models.map { $0.version }.index(of: model.version)!
+            self.segmentedControl?.selectedSegmentIndex = self.models
+                .index(
+                    where: { (_, _, schemaHistory) -> Bool in
+                        
+                        schemaHistory.currentModelVersion == model.schemaHistory.currentModelVersion
+                    }
+                )!
             
             self._dataStack = dataStack
             let listMonitor = dataStack.monitorList(From(model.entityType), OrderBy(.descending("dna")))

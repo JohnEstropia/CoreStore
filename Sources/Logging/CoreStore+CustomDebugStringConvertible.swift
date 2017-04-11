@@ -158,6 +158,32 @@ extension CoreStoreError: CustomDebugStringConvertible, CoreStoreDebugStringConv
 }
 
 
+// MARK: - CoreStoreSchema
+
+extension CoreStoreSchema: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("modelVersion", self.modelVersion),
+            ("entitiesByConfiguration", self.entitiesByConfiguration),
+            ("rawModel", self.rawModel())
+        )
+    }
+}
+
+
 // MARK: - DataStack
 
 extension DataStack: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
@@ -179,9 +205,33 @@ extension DataStack: CustomDebugStringConvertible, CoreStoreDebugStringConvertib
             ("coordinator", self.coordinator),
             ("rootSavingContext", self.rootSavingContext),
             ("mainContext", self.mainContext),
-            ("model", self.model),
-            ("migrationChain", self.migrationChain),
+            ("schemaHistory", self.schemaHistory),
             ("coordinator.persistentStores", self.coordinator.persistentStores)
+        )
+    }
+}
+
+
+// MARK: - Entity
+
+extension Entity: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("type", self.type),
+            ("entityName", self.entityName)
         )
     }
 }
@@ -350,6 +400,31 @@ extension LegacySQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringC
 }
 
 
+// MARK: - LegacyXcodeDataModel
+
+extension LegacyXcodeDataModel: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("modelVersion", self.modelVersion),
+            ("rawModel", self.rawModel())
+        )
+    }
+}
+
+
 // MARK: - ListMonitor
 
 @available(OSX 10.12, *)
@@ -456,7 +531,7 @@ extension MigrationChain: CustomDebugStringConvertible, CoreStoreDebugStringConv
     
     public var coreStoreDumpString: String {
         
-        guard self.valid else {
+        guard self.isValid else {
             
             return "<invalid migration chain>"
         }
@@ -664,6 +739,32 @@ extension SectionBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertib
         return createFormattedString(
             "(", ")",
             ("sectionKeyPath", self.sectionKeyPath)
+        )
+    }
+}
+
+
+// MARK: - SchemaHistory
+
+extension SchemaHistory: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("currentModelVersion", self.currentModelVersion),
+            ("migrationChain", self.migrationChain),
+            ("schemaByVersion", self.schemaByVersion)
         )
     }
 }
@@ -896,6 +997,32 @@ extension Where: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
 }
 
 
+// MARK: - XcodeDataModel
+
+extension XcodeDataModel: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("modelVersion", self.modelVersion),
+            ("modelVersionFileURL", self.modelVersionFileURL),
+            ("rawModel", self.rawModel())
+        )
+    }
+}
+
+
 // MARK: - Private: Utilities
 
 private typealias DumpInfo = [(key: String, value: Any)]
@@ -972,7 +1099,7 @@ public protocol CoreStoreDebugStringConvertible {
 }
 
 
-// MARK: - Private:
+// MARK: - Standard Types:
 
 extension Array: CoreStoreDebugStringConvertible {
     
@@ -1214,7 +1341,15 @@ extension NSSortDescriptor: CoreStoreDebugStringConvertible {
     }
 }
 
-extension URL: CoreStoreDebugStringConvertible {
+extension NSString: CoreStoreDebugStringConvertible {
+    
+    public var coreStoreDumpString: String {
+        
+        return "\"\(self)\""
+    }
+}
+
+extension NSURL: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         
@@ -1243,6 +1378,14 @@ extension Selector: CoreStoreDebugStringConvertible {
 }
 
 extension String: CoreStoreDebugStringConvertible {
+    
+    public var coreStoreDumpString: String {
+        
+        return "\"\(self)\""
+    }
+}
+
+extension URL: CoreStoreDebugStringConvertible {
     
     public var coreStoreDumpString: String {
         

@@ -28,9 +28,9 @@ import Foundation
 import ObjectiveC
 
 
-// MARK: - EntityProtocol
+// MARK: - DynamicEntity
 
-public protocol EntityProtocol {
+public protocol DynamicEntity {
     
     var type: CoreStoreObject.Type { get }
     var entityName: EntityName { get }
@@ -39,7 +39,7 @@ public protocol EntityProtocol {
 
 // MARK: Entity
 
-public struct Entity<O: CoreStoreObject>: EntityProtocol {
+public struct Entity<O: CoreStoreObject>: DynamicEntity, Hashable {
     
     public init(_ entityName: String) {
         
@@ -47,136 +47,54 @@ public struct Entity<O: CoreStoreObject>: EntityProtocol {
         self.entityName = entityName
     }
     
-    // MARK: EntityProtocol
+    public init(_ type: O.Type, _ entityName: String) {
+        
+        self.type = type
+        self.entityName = entityName
+    }
+    
+    
+    // MARK: - VersionHash
+    
+    public struct VersionHash: ExpressibleByArrayLiteral {
+        
+        let hash: Data
+        
+        public init(_ hash: Data) {
+            
+            self.hash = hash
+        }
+        
+        
+        // MARK: ExpressibleByArrayLiteral
+        
+        public typealias Element = UInt8
+        
+        public init(arrayLiteral elements: UInt8...) {
+            
+            self.hash = Data(bytes: elements)
+        }
+    }
+    
+    
+    // MARK: DynamicEntity
     
     public let type: CoreStoreObject.Type
     public let entityName: EntityName
-}
-
-
-// MARK: - EntityIdentifier
-
-internal struct EntityIdentifier: Hashable {
-    
-    // MARK: - Category
-    
-    internal enum Category: Int {
-        
-        case coreData
-        case coreStore
-    }
-    
-    
-    // MARK: -
-    
-    internal let category: Category
-    internal let interfacedClassName: String
-    
-    internal init(_ type: NSManagedObject.Type) {
-        
-        self.category = .coreData
-        self.interfacedClassName = String(reflecting: type)
-    }
-    
-    internal init(_ type: CoreStoreObject.Type) {
-        
-        self.category = .coreStore
-        self.interfacedClassName = String(reflecting: type)
-    }
-    
-    internal init(_ type: DynamicObject.Type) {
-        
-        switch type {
-            
-        case let type as NSManagedObject.Type:
-            self.init(type)
-            
-        case let type as CoreStoreObject.Type:
-            self.init(type)
-            
-        default:
-            CoreStore.abort("\(cs_typeName(DynamicObject.self)) is not meant to be implemented by external types.")
-        }
-    }
-    
-    internal init(_ entityDescription: NSEntityDescription) {
-        
-        if let entity = entityDescription.anyEntity {
-            
-            self.category = .coreStore
-            self.interfacedClassName = NSStringFromClass(entity.type)
-        }
-        else {
-            
-            self.category = .coreData
-            self.interfacedClassName = entityDescription.managedObjectClassName!
-        }
-    }
     
     
     // MARK: Equatable
     
-    static func == (lhs: EntityIdentifier, rhs: EntityIdentifier) -> Bool {
+    public static func == (lhs: Entity, rhs: Entity) -> Bool {
         
-        return lhs.category == rhs.category
-            && lhs.interfacedClassName == rhs.interfacedClassName
+        return lhs.type == rhs.type
+            && lhs.entityName == rhs.entityName
     }
-    
     
     // MARK: Hashable
     
-    var hashValue: Int {
-    
-        return self.category.hashValue
-            ^ self.interfacedClassName.hashValue
-    }
-}
-
-
-// MARK: - NSEntityDescription
-
-internal extension NSEntityDescription {
-    
-    @nonobjc
-    internal var anyEntity: DynamicModel.AnyEntity? {
+    public var hashValue: Int {
         
-        get {
-            
-            guard let userInfo = self.userInfo,
-                let typeName = userInfo[UserInfoKey.CoreStoreManagedObjectTypeName] as! String?,
-                let entityName = userInfo[UserInfoKey.CoreStoreManagedObjectEntityName] as! String? else {
-                
-                return nil
-            }
-            return DynamicModel.AnyEntity(
-                type: NSClassFromString(typeName) as! CoreStoreObject.Type,
-                entityName: entityName
-            )
-        }
-        set {
-         
-            if let newValue = newValue {
-                
-                self.userInfo = [
-                    UserInfoKey.CoreStoreManagedObjectTypeName: NSStringFromClass(newValue.type),
-                    UserInfoKey.CoreStoreManagedObjectEntityName: newValue.entityName
-                ]
-            }
-            else {
-                
-                self.userInfo = [:]
-            }
-        }
-    }
-    
-    
-    // MARK: Private
-    
-    // MARK: - UserInfoKey
-    
-    fileprivate enum UserInfoKey {
-        
-        fileprivate static let CoreStoreManagedObjectTypeName = "CoreStoreManagedObjectTypeName"
-        fileprivate static let CoreStoreManagedObjectEntityName = "CoreStoreManagedObjectEntityName"
+        return ObjectIdentifier(self.type).hashValue
     }
 }

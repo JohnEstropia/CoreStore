@@ -222,7 +222,7 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
     
     internal init(_ error: Error?) {
         
-        self = error.flatMap { $0.bridgeToSwift } ?? .unknown
+        self = error.flatMap({ $0.bridgeToSwift }) ?? .unknown
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  CoreStoreStrings.swift
+//  DynamicSchema.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -23,44 +23,15 @@
 //  SOFTWARE.
 //
 
+import CoreData
 import Foundation
 
 
-// MARK: - XcodeDataModelFileName
+// MARK: - DynamicSchema
 
-/**
- A `String` that pertains to the name of an *.xcdatamodeld file (without the file extension).
- */
-public typealias XcodeDataModelFileName = String
-
-
-// MARK: - ModelConfiguration
-
-/**
- An `Optional<String>` that pertains to the name of a "Configuration" which particular groups of entities may belong to. When `nil`, pertains to the default configuration which includes all entities.
- */
-public typealias ModelConfiguration = String?
-
-
-// MARK: - ModelVersion
-
-/**
- An `String` that pertains to the name of a versioned *.xcdatamodeld file (without the file extension).
- */
-public typealias ModelVersion = String
-
-
-// MARK: - EntityName
-
-/**
- An `String` that pertains to an Entity name.
- */
-public typealias EntityName = String
-
-
-// MARK: - ClassName
-
-/**
- An `String` that pertains to a dynamically-accessable class name (usable with NSClassFromString(...)).
- */
-public typealias ClassName = String
+public protocol DynamicSchema {
+    
+    var modelVersion: ModelVersion { get }
+    
+    func rawModel() -> NSManagedObjectModel
+}

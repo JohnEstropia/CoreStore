@@ -218,7 +218,7 @@ public extension DataStack {
                                     
                                     try storage.eraseStorageAndWait(
                                         metadata: metadata,
-                                        soureModelHint: self.model[metadata]
+                                        soureModelHint: self.schemaHistory.schema(for: metadata)?.rawModel()
                                     )
                                     _ = try self.addStorageAndWait(storage)
                                     
@@ -382,7 +382,9 @@ public extension DataStack {
                         at: cacheFileURL,
                         options: storeOptions
                     )
-                    _ = try self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                    _ = try self.schemaHistory
+                        .schema(for: metadata)
+                        .flatMap({ try storage.eraseStorageAndWait(soureModel: $0.rawModel()) })
                     _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,
@@ -497,7 +499,7 @@ public extension DataStack {
                     
                     let error = CoreStoreError.mappingModelNotFound(
                         localStoreURL: fileURL,
-                        targetModel: self.model,
+                        targetModel: self.schemaHistory.rawModel,
                         targetModelVersion: self.modelVersion
                     )
                     CoreStore.log(
@@ -545,12 +547,12 @@ public extension DataStack {
             
             let error = CoreStoreError.mappingModelNotFound(
                 localStoreURL: storage.fileURL,
-                targetModel: self.model,
+                targetModel: self.schemaHistory.rawModel,
                 targetModelVersion: self.modelVersion
             )
             CoreStore.log(
                 error,
-                "Failed to find migration steps from \(cs_typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.model)\"."
+                "Failed to find migration steps from \(cs_typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.schemaHistory.rawModel)\"."
             )
             
             DispatchQueue.main.async {
@@ -592,7 +594,7 @@ public extension DataStack {
         let progress = Progress(parent: nil, userInfo: nil)
         progress.totalUnitCount = numberOfMigrations
         
-        for (sourceModel, destinationModel, mappingModel, _) in migrationSteps {
+        for (sourceModel, destinationModel, mappingModel, migrationType) in migrationSteps {
             
             progress.becomeCurrent(withPendingUnitCount: 1)
             
@@ -620,8 +622,13 @@ public extension DataStack {
                             )
                         }
                         catch {
-                            
-                            migrationResult = MigrationResult(error)
+                        
+                            let migrationError = CoreStoreError(error)
+                            CoreStore.log(
+                                migrationError,
+                                "Failed to migrate version model \"\(migrationType.sourceVersion)\" to version \"\(migrationType.destinationVersion)\"."
+                            )
+                            migrationResult = MigrationResult(migrationError)
                             cancelled = true
                         }
                     }
@@ -658,28 +665,27 @@ public extension DataStack {
     
     private func computeMigrationFromStorage<T: LocalStorage>(_ storage: T, metadata: [String: Any]) -> [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]? {
         
-        let model = self.model
-        if model.isConfiguration(withName: storage.configuration, compatibleWithStoreMetadata: metadata) {
+        let schemaHistory = self.schemaHistory
+        if schemaHistory.rawModel.isConfiguration(withName: storage.configuration, compatibleWithStoreMetadata: metadata) {
             
             return []
         }
         
-        guard let initialModel = model[metadata],
-            var currentVersion = initialModel.currentModelVersion else {
-                
-                return nil
+        guard let initialSchema = schemaHistory.schema(for: metadata) else {
+            
+            return nil
         }
-        
-        let migrationChain: MigrationChain = self.migrationChain.empty
-            ? [currentVersion: model.currentModelVersion!]
-            : self.migrationChain
+        var currentVersion = initialSchema.modelVersion
+        let migrationChain: MigrationChain = schemaHistory.migrationChain.isEmpty
+            ? [currentVersion: schemaHistory.currentModelVersion]
+            : schemaHistory.migrationChain
         
         var migrationSteps = [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]()
         
         while let nextVersion = migrationChain.nextVersionFrom(currentVersion),
-            let sourceModel = model[currentVersion],
-            sourceModel != model,
-            let destinationModel = model[nextVersion] {
+            let sourceModel = schemaHistory.rawModel(for: currentVersion),
+            sourceModel != schemaHistory.rawModel,
+            let destinationModel = schemaHistory.rawModel(for: nextVersion) {
                 
                 if let mappingModel = NSMappingModel(
                     from: storage.mappingModelBundles,
@@ -727,7 +733,7 @@ public extension DataStack {
                 currentVersion = nextVersion
         }
         
-        if migrationSteps.last?.destinationModel == model {
+        if migrationSteps.last?.destinationModel == schemaHistory.rawModel {
             
             return migrationSteps
         }
@@ -775,21 +781,8 @@ public extension DataStack {
         }
         catch {
             
-            do {
-                
-                try fileManager.removeItem(at: temporaryFileURL)
-            }
-            catch _ { }
-            
-            let sourceVersion = migrationManager.sourceModel.currentModelVersion ?? "???"
-            let destinationVersion = migrationManager.destinationModel.currentModelVersion ?? "???"
-            let migrationError = CoreStoreError(error)
-            CoreStore.log(
-                migrationError,
-                "Failed to migrate from version model \"\(sourceVersion)\" to version model \"\(destinationVersion)\"."
-            )
-            
-            throw migrationError
+            _ = try? fileManager.removeItem(at: temporaryFileURL)
+            throw CoreStoreError(error)
         }
         
         do {
@@ -806,21 +799,8 @@ public extension DataStack {
         }
         catch {
             
-            do {
-                
-                try fileManager.removeItem(at: temporaryFileURL)
-            }
-            catch _ { }
-            
-            let sourceVersion = migrationManager.sourceModel.currentModelVersion ?? "???"
-            let destinationVersion = migrationManager.destinationModel.currentModelVersion ?? "???"
-            let fileError = CoreStoreError(error)
-            CoreStore.log(
-                fileError,
-                "Failed to save store after migrating from version model \"\(sourceVersion)\" to version model \"\(destinationVersion)\"."
-            )
-            
-            throw fileError
+            _ = try? fileManager.removeItem(at: temporaryFileURL)
+            throw CoreStoreError(error)
         }
     }
 }

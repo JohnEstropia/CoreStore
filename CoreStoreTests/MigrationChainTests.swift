@@ -37,8 +37,8 @@ final class MigrationChainTests: XCTestCase {
     dynamic func test_ThatNilMigrationChains_HaveNoVersions() {
         
         let chain: MigrationChain = nil
-        XCTAssertTrue(chain.valid)
-        XCTAssertTrue(chain.empty)
+        XCTAssertTrue(chain.isValid)
+        XCTAssertTrue(chain.isEmpty)
         
         XCTAssertFalse(chain.contains("version1"))
         XCTAssertNil(chain.nextVersionFrom("version1"))
@@ -48,8 +48,8 @@ final class MigrationChainTests: XCTestCase {
     dynamic func test_ThatStringMigrationChains_HaveOneVersion() {
         
         let chain: MigrationChain = "version1"
-        XCTAssertTrue(chain.valid)
-        XCTAssertTrue(chain.empty)
+        XCTAssertTrue(chain.isValid)
+        XCTAssertTrue(chain.isEmpty)
         
         XCTAssertTrue(chain.contains("version1"))
         XCTAssertFalse(chain.contains("version2"))
@@ -62,8 +62,8 @@ final class MigrationChainTests: XCTestCase {
     dynamic func test_ThatArrayMigrationChains_HaveLinearVersions() {
         
         let chain: MigrationChain = ["version1", "version2", "version3", "version4"]
-        XCTAssertTrue(chain.valid)
-        XCTAssertFalse(chain.empty)
+        XCTAssertTrue(chain.isValid)
+        XCTAssertFalse(chain.isEmpty)
         
         XCTAssertTrue(chain.contains("version1"))
         XCTAssertTrue(chain.contains("version2"))
@@ -86,8 +86,8 @@ final class MigrationChainTests: XCTestCase {
             "version2": "version3",
             "version3": "version4"
         ]
-        XCTAssertTrue(chain.valid)
-        XCTAssertFalse(chain.empty)
+        XCTAssertTrue(chain.isValid)
+        XCTAssertFalse(chain.isEmpty)
         
         XCTAssertTrue(chain.contains("version1"))
         XCTAssertTrue(chain.contains("version2"))

@@ -41,30 +41,24 @@ public final class DataStack: Equatable {
      - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    public convenience init(modelName: XcdatamodelFilename = DataStack.applicationName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
+    public convenience init(modelName: XcodeDataModelFileName = DataStack.applicationName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
         
-        let model = NSManagedObjectModel.fromBundle(
-            bundle,
-            modelName: modelName,
-            modelVersionHints: migrationChain.leafVersions
-        )
-        self.init(model: model, migrationChain: migrationChain)
-    }
-    
-    public convenience init(dynamicModel: DynamicModel) {
-        
-        self.init(model: dynamicModel.createModel())
-    }
-    
-    public convenience init(dynamicModels: [DynamicModel], migrationChain: MigrationChain = nil) {
-        
-        CoreStore.assert(
-            migrationChain.valid,
-            "Invalid migration chain passed to the \(cs_typeName(DataStack.self)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
-        )
         self.init(
-            model: NSManagedObjectModel(byMerging: dynamicModels.map({ $0.createModel() }))!,
-            migrationChain: migrationChain
+            schemaHistory: SchemaHistory(
+                modelName: modelName,
+                bundle: bundle,
+                migrationChain: migrationChain
+            )
+        )
+    }
+    
+    public convenience init(_ schema: DynamicSchema, _ otherSchema: DynamicSchema..., migrationChain: MigrationChain = nil) {
+        
+        self.init(
+            schemaHistory: SchemaHistory(
+                allSchema: [schema] + otherSchema,
+                migrationChain: migrationChain
+            )
         )
     }
     
@@ -74,21 +68,20 @@ public final class DataStack: Equatable {
      - parameter model: the `NSManagedObjectModel` for the stack
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    public required init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {
+    public required init(schemaHistory: SchemaHistory) {
 
         // TODO: test before release (rolled back)
 //        _ = DataStack.isGloballyInitialized
         
         CoreStore.assert(
-            migrationChain.valid,
+            schemaHistory.migrationChain.isValid,
             "Invalid migration chain passed to the \(cs_typeName(DataStack.self)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
         )
         
-        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
+        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: schemaHistory.rawModel)
         self.rootSavingContext = NSManagedObjectContext.rootSavingContextForCoordinator(self.coordinator)
         self.mainContext = NSManagedObjectContext.mainContextForRootContext(self.rootSavingContext)
-        self.model = model
-        self.migrationChain = migrationChain
+        self.schemaHistory = schemaHistory
         
         self.rootSavingContext.parentStack = self
         
@@ -100,7 +93,7 @@ public final class DataStack: Equatable {
      */
     public var modelVersion: String {
         
-        return self.model.currentModelVersion!
+        return self.schemaHistory.currentModelVersion
     }
     
     /**
@@ -109,7 +102,7 @@ public final class DataStack: Equatable {
     public func entityTypesByName(for type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {
         
         var entityTypesByName: [EntityName: NSManagedObject.Type] = [:]
-        for (entityIdentifier, entityDescription) in self.model.entityDescriptionsByEntityIdentifier {
+        for (entityIdentifier, entityDescription) in self.schemaHistory.entityDescriptionsByEntityIdentifier {
             
             switch entityIdentifier.category {
                 
@@ -133,7 +126,7 @@ public final class DataStack: Equatable {
     public func entityTypesByName(for type: CoreStoreObject.Type) -> [EntityName: CoreStoreObject.Type] {
         
         var entityTypesByName: [EntityName: CoreStoreObject.Type] = [:]
-        for (entityIdentifier, entityDescription) in self.model.entityDescriptionsByEntityIdentifier {
+        for (entityIdentifier, entityDescription) in self.schemaHistory.entityDescriptionsByEntityIdentifier {
             
             switch entityIdentifier.category {
                 
@@ -332,7 +325,7 @@ public final class DataStack: Equatable {
                     )
                     try storage.eraseStorageAndWait(
                         metadata: metadata,
-                        soureModelHint: self.model[metadata]
+                        soureModelHint: self.schemaHistory.schema(for: metadata)?.rawModel()
                     )
                     let finalStoreOptions = storage.dictionary(forOptions: storage.localStorageOptions)
                     _ = try self.createPersistentStoreFromStorage(
@@ -425,7 +418,9 @@ public final class DataStack: Equatable {
                         at: cacheFileURL,
                         options: storeOptions
                     )
-                    _ = try self.model[metadata].flatMap(storage.eraseStorageAndWait)
+                    _ = try self.schemaHistory
+                        .schema(for: metadata)
+                        .flatMap({ try storage.eraseStorageAndWait(soureModel: $0.rawModel()) })
                     _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,
@@ -464,11 +459,10 @@ public final class DataStack: Equatable {
     internal let coordinator: NSPersistentStoreCoordinator
     internal let rootSavingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
-    internal let model: NSManagedObjectModel
-    internal let migrationChain: MigrationChain
+    internal let schemaHistory: SchemaHistory
     internal let childTransactionQueue = DispatchQueue.serial("com.coreStore.dataStack.childTransactionQueue")
     internal let storeMetadataUpdateQueue = DispatchQueue.concurrent("com.coreStore.persistentStoreBarrierQueue")
-    internal let migrationQueue: OperationQueue = {
+    internal let migrationQueue: OperationQueue = cs_lazy {
         
         let migrationQueue = OperationQueue()
         migrationQueue.maxConcurrentOperationCount = 1
@@ -476,7 +470,7 @@ public final class DataStack: Equatable {
         migrationQueue.qualityOfService = .utility
         migrationQueue.underlyingQueue = DispatchQueue.serial("com.coreStore.migrationQueue", qos: .userInitiated)
         return migrationQueue
-    }()
+    }
     
     internal func persistentStoreForStorage(_ storage: StorageInterface) -> NSPersistentStore? {
         
@@ -562,7 +556,7 @@ public final class DataStack: Equatable {
     
     internal func entityDescription(for entityIdentifier: EntityIdentifier) -> NSEntityDescription? {
         
-        return self.model.entityDescriptionsByEntityIdentifier[entityIdentifier]
+        return self.schemaHistory.entityDescriptionsByEntityIdentifier[entityIdentifier]
     }
     
     
@@ -595,6 +589,30 @@ public final class DataStack: Equatable {
     
     
     // MARK: Deprecated
+    
+    /**
+     Initializes a `DataStack` from an `NSManagedObjectModel`.
+     
+     - parameter model: the `NSManagedObjectModel` for the stack
+     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     */
+    @available(*, deprecated: 3.1, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModel instance as argument")
+    public convenience init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {
+        
+        let modelVersion = migrationChain.leafVersions.first!
+        self.init(
+            schemaHistory: SchemaHistory(
+                allSchema: [
+                    LegacyXcodeDataModel(
+                        modelName: modelVersion,
+                        model: model
+                    )
+                ],
+                migrationChain: migrationChain,
+                exactCurrentModelVersion: modelVersion
+            )
+        )
+    }
     
     /**
      Returns the entity name-to-class type mapping from the `DataStack`'s model.

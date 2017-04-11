@@ -85,16 +85,19 @@ final class ErrorTests: XCTestCase {
         
         let dummyURL = URL(string: "file:///test1/test2.sqlite")!
         
-        let model = NSManagedObjectModel.fromBundle(Bundle(for: type(of: self)), modelName: "Model")
+        let schemaHistory = SchemaHistory(
+            modelName: "Model",
+            bundle: Bundle(for: type(of: self))
+        )
         let version = "1.0.0"
         
-        let error = CoreStoreError.mappingModelNotFound(localStoreURL: dummyURL, targetModel: model, targetModelVersion: version)
+        let error = CoreStoreError.mappingModelNotFound(localStoreURL: dummyURL, targetModel: schemaHistory.rawModel, targetModelVersion: version)
         XCTAssertEqual((error as NSError).domain, CoreStoreErrorDomain)
         XCTAssertEqual((error as NSError).code, CoreStoreErrorCode.mappingModelNotFound.rawValue)
         
         let userInfo: NSDictionary = [
             "localStoreURL": dummyURL,
-            "targetModel": model,
+            "targetModel": schemaHistory.rawModel,
             "targetModelVersion": version
         ]
         let objcError = error.bridgeToObjectiveC

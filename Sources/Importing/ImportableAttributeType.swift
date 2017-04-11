@@ -580,11 +580,11 @@ extension UUID: ImportableAttributeType {
         
         enum Static {
             
-            static let empty: UUID = {
+            static let empty: UUID = cs_lazy {
                 
                 var zero = Array<UInt8>(repeating: 0, count: 16)
                 return NSUUID(uuidBytes: &zero) as UUID
-            }()
+            }
         }
         return Static.empty
     }

@@ -233,7 +233,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
     
     // MARK: Internal
     
-    internal static let defaultRootDirectory: URL = {
+    internal static let defaultRootDirectory: URL = cs_lazy {
         
         #if os(tvOS)
             let systemDirectorySearchPath = FileManager.SearchPathDirectory.cachesDirectory
@@ -244,7 +244,7 @@ public final class LegacySQLiteStore: LocalStorage, DefaultInitializableStore {
         return FileManager.default.urls(
             for: systemDirectorySearchPath,
             in: .userDomainMask).first!
-    }()
+    }
     
     internal static let defaultFileURL = LegacySQLiteStore.defaultRootDirectory
         .appendingPathComponent(DataStack.applicationName, isDirectory: false)

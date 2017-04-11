@@ -17,7 +17,7 @@ import CoreStore
 class BaseTestDataTestCase: BaseTestCase {
     
     @nonobjc
-    let dateFormatter: DateFormatter = {
+    let dateFormatter: DateFormatter = cs_lazy {
         
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -25,7 +25,7 @@ class BaseTestDataTestCase: BaseTestCase {
         formatter.calendar = Calendar(identifier: Calendar.Identifier.gregorian)
         formatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZ"
         return formatter
-    }()
+    }
     
     @nonobjc
     func prepareTestDataForStack(_ stack: DataStack, configurations: [ModelConfiguration] = [nil]) {

@@ -1,5 +1,5 @@
 //
-//  DynamicModel.swift
+//  CoreStoreSchema.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -23,20 +23,31 @@
 //  SOFTWARE.
 //
 
-import CoreGraphics
+import CoreData
 import Foundation
 
 
-// MARK: - DynamicModel
+// MARK: - CoreStoreSchema
 
-public final class DynamicModel {
+public final class CoreStoreSchema: DynamicSchema {
     
-    public convenience init(version: String, entities: [EntityProtocol]) {
+    public convenience init(modelVersion: String, _ entity: DynamicEntity, _ entities: DynamicEntity...) {
         
-        self.init(version: version, entitiesByConfiguration: [DataStack.defaultConfigurationName: entities])
+        self.init(
+            modelVersion: modelVersion,
+            entities: [entity] + entities
+        )
     }
     
-    public required init(version: String, entitiesByConfiguration: [String: [EntityProtocol]]) {
+    public convenience init(modelVersion: String, entities: [DynamicEntity]) {
+        
+        self.init(
+            modelVersion: modelVersion,
+            entitiesByConfiguration: [DataStack.defaultConfigurationName: entities]
+        )
+    }
+    
+    public required init(modelVersion: String, entitiesByConfiguration: [String: [DynamicEntity]]) {
         
         var actualEntitiesByConfiguration: [String: Set<AnyEntity>] = [:]
         for (configuration, entities) in entitiesByConfiguration {
@@ -56,9 +67,47 @@ public final class DynamicModel {
             "Ambiguous entity types or entity names were found in the model. Ensure that the entity types and entity names are unique to each other. Entities: \(allEntities)"
         )
         
-        self.version = version
+        self.modelVersion = modelVersion
         self.entitiesByConfiguration = actualEntitiesByConfiguration
         self.allEntities = allEntities
+    }
+    
+    
+    // MARK: - DynamicSchema
+    
+    public let modelVersion: ModelVersion
+    
+    public func rawModel() -> NSManagedObjectModel {
+        
+        if let cachedRawModel = self.cachedRawModel {
+            
+            return cachedRawModel
+        }
+        let rawModel = NSManagedObjectModel()
+        var entityDescriptionsByEntity: [AnyEntity: NSEntityDescription] = [:]
+        for entity in self.allEntities {
+            
+            let entityDescription = self.entityDescription(
+                for: entity,
+                initializer: CoreStoreSchema.firstPassCreateEntityDescription
+            )
+            entityDescriptionsByEntity[entity] = (entityDescription.copy() as! NSEntityDescription)
+        }
+        CoreStoreSchema.secondPassConnectRelationshipAttributes(for: entityDescriptionsByEntity)
+        CoreStoreSchema.thirdPassConnectInheritanceTree(for: entityDescriptionsByEntity)
+        
+        rawModel.entities = entityDescriptionsByEntity.values.sorted(by: { $0.name! < $1.name! })
+        for (configuration, entities) in self.entitiesByConfiguration {
+            
+            rawModel.setEntities(
+                entities
+                    .map({ entityDescriptionsByEntity[$0]! })
+                    .sorted(by: { $0.name! < $1.name! }),
+                forConfigurationName: configuration
+            )
+        }
+        self.cachedRawModel = rawModel
+        return rawModel
     }
     
     
@@ -66,9 +115,9 @@ public final class DynamicModel {
     
     // MARK: - AnyEntity
     
-    internal struct AnyEntity: EntityProtocol, Hashable {
+    internal struct AnyEntity: DynamicEntity, Hashable {
         
-        internal init(_ entity: EntityProtocol) {
+        internal init(_ entity: DynamicEntity) {
             
             self.type = entity.type
             self.entityName = entity.entityName
@@ -97,7 +146,7 @@ public final class DynamicModel {
                 ^ self.entityName.hashValue
         }
         
-        // MARK: EntityProtocol
+        // MARK: DynamicEntity
         
         internal let type: CoreStoreObject.Type
         internal let entityName: EntityName
@@ -106,41 +155,30 @@ public final class DynamicModel {
     
     // MARK: -
     
-    internal func createModel() -> NSManagedObjectModel {
+    internal let entitiesByConfiguration: [String: Set<AnyEntity>]
+    
+    
+    // MARK: Private
+    
+    private static let barrierQueue = DispatchQueue.concurrent("com.coreStore.coreStoreDataModelBarrierQueue")
+    
+    private let allEntities: Set<AnyEntity>
+    
+    private var entityDescriptionsByEntity: [CoreStoreSchema.AnyEntity: NSEntityDescription] = [:]
+    private weak var cachedRawModel: NSManagedObjectModel?
+    
+    private func entityDescription(for entity: CoreStoreSchema.AnyEntity, initializer: (CoreStoreSchema.AnyEntity) -> NSEntityDescription) -> NSEntityDescription {
         
-        let model = NSManagedObjectModel()
-        let entityDescriptionsByEntity: [AnyEntity: NSEntityDescription] = ModelCache.performUpdate {
+        if let cachedEntityDescription = self.entityDescriptionsByEntity[entity] {
             
-            var entityDescriptionsByEntity: [AnyEntity: NSEntityDescription] = [:]
-            for entity in self.allEntities {
-                
-                let entityDescription = ModelCache.entityDescription(
-                    for: entity,
-                    initializer: DynamicModel.firstPassCreateEntityDescription
-                )
-                entityDescriptionsByEntity[entity] = entityDescription
-            }
-            DynamicModel.secondPassConnectRelationshipAttributes(for: entityDescriptionsByEntity)
-            DynamicModel.thirdPassConnectInheritanceTree(for: entityDescriptionsByEntity)
-            return entityDescriptionsByEntity
+            return cachedEntityDescription
         }
-        model.entities = entityDescriptionsByEntity.values.sorted(by: { $0.name! < $1.name! })
-        for (configuration, entities) in self.entitiesByConfiguration {
-            
-            model.setEntities(
-                entities
-                    .map({ entityDescriptionsByEntity[$0]! })
-                    .sorted(by: { $0.name! < $1.name! }),
-                forConfigurationName: configuration
-            )
-        }
-        return model
+        let entityDescription = withoutActuallyEscaping(initializer, do: { $0(entity) })
+        self.entityDescriptionsByEntity[entity] = entityDescription
+        return entityDescription
     }
     
-    
-    // MARK: FilePrivate
-    
-    fileprivate static func firstPassCreateEntityDescription(from entity: AnyEntity) -> NSEntityDescription {
+    private static func firstPassCreateEntityDescription(from entity: AnyEntity) -> NSEntityDescription {
         
         let entityDescription = NSEntityDescription()
         entityDescription.anyEntity = entity
@@ -186,7 +224,7 @@ public final class DynamicModel {
         return entityDescription
     }
     
-    fileprivate static func secondPassConnectRelationshipAttributes(for entityDescriptionsByEntity: [AnyEntity: NSEntityDescription]) {
+    private static func secondPassConnectRelationshipAttributes(for entityDescriptionsByEntity: [AnyEntity: NSEntityDescription]) {
         
         var relationshipsByNameByEntity: [AnyEntity: [String: NSRelationshipDescription]] = [:]
         for (entity, entityDescription) in entityDescriptionsByEntity {
@@ -207,7 +245,7 @@ public final class DynamicModel {
             if matchedEntities.isEmpty {
                 
                 CoreStore.abort(
-                    "No \(cs_typeName("Entity<\(type)>")) instance found in the \(cs_typeName(DynamicModel.self))."
+                    "No \(cs_typeName("Entity<\(type)>")) instance found in the \(cs_typeName(CoreStoreSchema.self))."
                 )
             }
             else {
@@ -277,7 +315,7 @@ public final class DynamicModel {
         }
     }
     
-    fileprivate static func thirdPassConnectInheritanceTree(for entityDescriptionsByEntity: [AnyEntity: NSEntityDescription]) {
+    private static func thirdPassConnectInheritanceTree(for entityDescriptionsByEntity: [AnyEntity: NSEntityDescription]) {
         
         func connectBaseEntity(mirror: Mirror, entityDescription: NSEntityDescription) {
             
@@ -304,40 +342,4 @@ public final class DynamicModel {
             )
         }
     }
-    
-    
-    // MARK: Private
-    
-    private let version: String
-    private let allEntities: Set<AnyEntity>
-    private let entitiesByConfiguration: [String: Set<AnyEntity>]
-}
-
-
-// MARK: - ModelCache
-
-fileprivate enum ModelCache {
-    
-    fileprivate static func performUpdate<T>(_ closure: () -> T) -> T {
-        
-        return self.barrierQueue.cs_barrierSync(closure)
-    }
-    
-    fileprivate static func entityDescription(for entity: DynamicModel.AnyEntity, initializer: (DynamicModel.AnyEntity) -> NSEntityDescription) -> NSEntityDescription {
-        
-        if let cachedEntityDescription = self.entityDescriptionsByEntity[entity] {
-            
-            return cachedEntityDescription
-        }
-        let entityDescription = withoutActuallyEscaping(initializer, do: { $0(entity) })
-        self.entityDescriptionsByEntity[entity] = entityDescription
-        return entityDescription
-    }
-    
-    
-    // MARK: Private
-    
-    private static let barrierQueue = DispatchQueue.concurrent("com.coreStore.modelCacheBarrierQueue")
-    
-    private static var entityDescriptionsByEntity: [DynamicModel.AnyEntity: NSEntityDescription] = [:]
 }
