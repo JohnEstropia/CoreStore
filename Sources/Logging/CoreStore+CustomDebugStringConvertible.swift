@@ -997,6 +997,54 @@ extension Where: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
 }
 
 
+// MARK: - VersionLock
+
+extension VersionLock: CustomStringConvertible, CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomStringConvertible
+    
+    public var description: String {
+        
+        var string = "["
+        if self.hashesByEntityName.isEmpty {
+            
+            string.append(":]")
+            return string
+        }
+        for (index, keyValue) in self.hashesByEntityName.enumerated() {
+            
+            let data = keyValue.value
+            let count = data.count
+            let bytes = data.withUnsafeBytes { (pointer: UnsafePointer<HashElement>) in
+                
+                return (0 ..< (count / MemoryLayout<HashElement>.size))
+                    .map({ "\("0x\(String(pointer[$0], radix: 16, uppercase: false))")" })
+            }
+            string.append("\(index == 0 ? "\n" : ",\n")\"\(keyValue.key)\": [\(bytes.joined(separator: ", "))]")
+        }
+        string.indent(1)
+        string.append("\n]")
+        return string
+    }
+    
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return self.description
+    }
+}
+
+
 // MARK: - XcodeDataModel
 
 extension XcodeDataModel: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {

@@ -31,12 +31,29 @@ import CoreData
 
 internal extension NSManagedObject {
     
+    @nonobjc
+    internal func isRunningInAllowedQueue() -> Bool? {
+        
+        guard let context = self.managedObjectContext else {
+            
+            return nil
+        }
+        if context.isTransactionContext {
+            
+            return context.parentTransaction?.isRunningInAllowedQueue()
+        }
+        if context.isDataStackContext {
+            
+            return Thread.isMainThread
+        }
+        return nil
+    }
     // TODO: test before release (rolled back)
 //    @nonobjc
 //    internal static func cs_swizzleMethodsForLogging() {
-//        
+//
 //        struct Static {
-//            
+//
 //            static let isSwizzled = Static.swizzle()
 //            
 //            private static func swizzle() -> Bool {

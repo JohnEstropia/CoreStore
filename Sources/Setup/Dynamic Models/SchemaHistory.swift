@@ -31,6 +31,9 @@ import Foundation
 
 public final class SchemaHistory: ExpressibleByArrayLiteral {
     
+    
+    // MARK: -
+    
     public let currentModelVersion: ModelVersion
     public let migrationChain: MigrationChain
     
@@ -157,6 +160,7 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
                 CoreStore.abort("Could not resolve the \(cs_typeName(SchemaHistory.self)) current model version because the \(cs_typeName(MigrationChain.self)) have ambiguous leaf versions: \(candidateVersions)")
             }
         }
+        
         self.schemaByVersion = schemaByVersion
         self.migrationChain = migrationChain
         self.currentModelVersion = currentModelVersion

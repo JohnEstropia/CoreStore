@@ -84,6 +84,10 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             
             get {
                 
+                CoreStore.assert(
+                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
                 return self.accessRawObject()
                     .getValue(
                         forKvcKey: self.keyPath,
@@ -92,6 +96,10 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             }
             set {
                 
+                CoreStore.assert(
+                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
                 self.accessRawObject()
                     .setValue(
                         newValue,
@@ -175,6 +183,10 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             
             get {
                 
+                CoreStore.assert(
+                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
                 return self.accessRawObject()
                     .getValue(
                         forKvcKey: self.keyPath,
@@ -190,6 +202,10 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             }
             set {
                 
+                CoreStore.assert(
+                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
                 self.accessRawObject()
                     .setValue(
                         newValue,
@@ -279,6 +295,10 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             
             get {
                 
+                CoreStore.assert(
+                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
                 return self.accessRawObject()
                     .getValue(
                         forKvcKey: self.keyPath,
@@ -294,6 +314,10 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             }
             set {
                 
+                CoreStore.assert(
+                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
                 self.accessRawObject()
                     .setValue(
                         newValue,

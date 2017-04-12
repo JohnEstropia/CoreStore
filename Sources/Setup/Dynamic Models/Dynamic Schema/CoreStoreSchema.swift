@@ -31,23 +31,16 @@ import Foundation
 
 public final class CoreStoreSchema: DynamicSchema {
     
-    public convenience init(modelVersion: String, _ entity: DynamicEntity, _ entities: DynamicEntity...) {
+    public convenience init(modelVersion: String, entities: [DynamicEntity], versionLock: VersionLock? = nil) {
         
         self.init(
             modelVersion: modelVersion,
-            entities: [entity] + entities
+            entitiesByConfiguration: [DataStack.defaultConfigurationName: entities],
+            versionLock: versionLock
         )
     }
     
-    public convenience init(modelVersion: String, entities: [DynamicEntity]) {
-        
-        self.init(
-            modelVersion: modelVersion,
-            entitiesByConfiguration: [DataStack.defaultConfigurationName: entities]
-        )
-    }
-    
-    public required init(modelVersion: String, entitiesByConfiguration: [String: [DynamicEntity]]) {
+    public required init(modelVersion: String, entitiesByConfiguration: [String: [DynamicEntity]], versionLock: VersionLock? = nil) {
         
         var actualEntitiesByConfiguration: [String: Set<AnyEntity>] = [:]
         for (configuration, entities) in entitiesByConfiguration {
@@ -58,7 +51,7 @@ public final class CoreStoreSchema: DynamicSchema {
         actualEntitiesByConfiguration[DataStack.defaultConfigurationName] = allEntities
         
         CoreStore.assert(
-            autoreleasepool {
+            cs_lazy {
                 
                 let expectedCount = allEntities.count
                 return Set(allEntities.map({ ObjectIdentifier($0.type) })).count == expectedCount
@@ -70,6 +63,23 @@ public final class CoreStoreSchema: DynamicSchema {
         self.modelVersion = modelVersion
         self.entitiesByConfiguration = actualEntitiesByConfiguration
         self.allEntities = allEntities
+        
+        if let versionLock = versionLock {
+            
+            CoreStore.assert(
+                versionLock == VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName),
+                "A \(cs_typeName(VersionLock.self)) was provided for the \(cs_typeName(CoreStoreSchema.self)) with version \"\(modelVersion)\", but the actual hashes do not match. This may result in unwanted migrations or unusable persistent stores.\nExpected lock values: \(versionLock)\nActual lock values: \(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
+            )
+        }
+        else {
+            
+            #if DEBUG
+                CoreStore.log(
+                    .notice,
+                    message: "These are hashes for the \(cs_typeName(CoreStoreSchema.self)) with version name \"\(modelVersion)\". Copy the dictionary below and pass it to the \(cs_typeName(CoreStoreSchema.self)) initializer's \"versionLock\" argument:\n\(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
+                )
+            #endif
+        }
     }
     
     

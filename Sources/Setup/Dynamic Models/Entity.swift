@@ -43,37 +43,13 @@ public struct Entity<O: CoreStoreObject>: DynamicEntity, Hashable {
     
     public init(_ entityName: String) {
         
-        self.type = O.self
-        self.entityName = entityName
+        self.init(O.self, entityName)
     }
     
     public init(_ type: O.Type, _ entityName: String) {
         
         self.type = type
         self.entityName = entityName
-    }
-    
-    
-    // MARK: - VersionHash
-    
-    public struct VersionHash: ExpressibleByArrayLiteral {
-        
-        let hash: Data
-        
-        public init(_ hash: Data) {
-            
-            self.hash = hash
-        }
-        
-        
-        // MARK: ExpressibleByArrayLiteral
-        
-        public typealias Element = UInt8
-        
-        public init(arrayLiteral elements: UInt8...) {
-            
-            self.hash = Data(bytes: elements)
-        }
     }
     
     
