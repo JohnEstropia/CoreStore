@@ -29,7 +29,11 @@ import CoreData
 
 // MARK: - CoreDataNativeType
 
-@objc public protocol CoreDataNativeType: class, NSObjectProtocol, AnyObject {}
+/**
+ Objective-C Foundation types that are nativel supported by Core Data managed attributes all conform to `CoreDataNativeType`.
+ */
+@objc
+public protocol CoreDataNativeType: class, NSObjectProtocol, AnyObject {}
 
 
 // MARK: - NSNumber

@@ -32,7 +32,7 @@ import CoreData
 public extension CoreStore {
     
     /**
-     Returns the `defaultStack`'s model version. The version string is the same as the name of the version-specific .xcdatamodeld file.
+     Returns the `defaultStack`'s model version. The version string is the same as the name of a version-specific .xcdatamodeld file or `CoreStoreSchema`.
      */
     public static var modelVersion: String {
         
