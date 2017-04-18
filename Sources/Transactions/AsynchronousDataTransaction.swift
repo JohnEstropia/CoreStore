@@ -104,7 +104,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - parameter object: the `NSManagedObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    public override func edit<T: NSManagedObject>(_ object: T?) -> T? {
+    public override func edit<T: DynamicObject>(_ object: T?) -> T? {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -121,7 +121,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    public override func edit<T: NSManagedObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
+    public override func edit<T: DynamicObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
         CoreStore.assert(
             !self.isCommitted,
