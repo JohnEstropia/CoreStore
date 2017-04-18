@@ -487,7 +487,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter lazyInit: a closure to use to lazily-initialize the data
      - returns: A custom data identified by  `userInfoKey`
      */
-    public subscript(userInfoKey key: UnsafeRawPointer, lazyInit closure: () -> Any) -> Any? {
+    public subscript(userInfoKey key: UnsafeRawPointer, lazyInit closure: () -> Any) -> Any {
         
         self.userInfoLock.lock()
         defer {
