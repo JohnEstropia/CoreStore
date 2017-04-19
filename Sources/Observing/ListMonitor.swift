@@ -72,6 +72,11 @@ public final class ListMonitor<T: DynamicObject>: Hashable {
     // MARK: Public (Accessors)
     
     /**
+     The type for the objects contained bye the `ListMonitor`
+     */
+    public typealias ObjectType = T
+    
+    /**
      Returns the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
      
      - parameter index: the index of the object. Using an index above the valid range will raise an exception.

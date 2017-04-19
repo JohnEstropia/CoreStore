@@ -43,6 +43,11 @@ import CoreData
 public final class ObjectMonitor<EntityType: DynamicObject>: Equatable {
     
     /**
+     The type for the object contained by the `ObjectMonitor`
+     */
+    public typealias ObjectType = EntityType
+    
+    /**
      Returns the `NSManagedObject` instance being observed, or `nil` if the object was already deleted.
      */
     public var object: EntityType? {
