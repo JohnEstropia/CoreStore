@@ -29,8 +29,31 @@ import Foundation
 
 // MARK: - CoreStoreObject
 
-open class CoreStoreObject: DynamicObject, Hashable {
+/**
+ The `CoreStoreObject` is an abstract class for creating CoreStore-managed objects that are more type-safe and more convenient than `NSManagedObject` subclasses. The model entities for `CoreStoreObject` subclasses are inferred from the subclasses' Swift declaration themselves; no .xcdatamodeld files needed. To declare persisted attributes and relationships for the `CoreStoreObject` subclass, declare properties of type `Value.Required<T>`, `Value.Optional<T>` for values, or `Relationship.ToOne<T>`, `Relationship.ToManyOrdered<T>`, `Relationship.ToManyUnordered<T>` for relationships.
+ ```
+ class Animal: CoreStoreObject {
+     let species = Value.Required<String>("species")
+     let nickname = Value.Optional<String>("nickname")
+     let master = Relationship.ToOne<Person>("master")
+ }
+ 
+ class Person: CoreStoreObject {
+     let name = Value.Required<String>("name")
+     let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
+ }
+ ```
+ `CoreStoreObject` entities for a model version should be added to `CoreStoreSchema` instance.
+ - SeeAlso: CoreStoreSchema
+ - SeeAlso: CoreStoreObject.Value
+ - SeeAlso: CoreStoreObject.Relationship
+ */
+open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
+    /**
+     Do not call this directly. This is exposed as public only as a required initializer.
+     - Important: subclasses that need a custom initializer should override both `init(_:)` and `init(asMeta:)`, and to call their corresponding super implementations.
+     */
     public required init(_ object: NSManagedObject) {
         
         self.isMeta = false
@@ -38,6 +61,10 @@ open class CoreStoreObject: DynamicObject, Hashable {
         self.initializeAttributes(Mirror(reflecting: self), { [unowned object] in object })
     }
     
+    /**
+     Do not call this directly. This is exposed as public only as a required initializer.
+     - Important: subclasses that need a custom initializer should override both `init(_:)` and `init(asMeta:)`, and to call their corresponding super implementations.
+     */
     public required init(asMeta: Void) {
         
         self.isMeta = true

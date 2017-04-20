@@ -611,14 +611,14 @@ public final class DataStack: Equatable {
      - parameter model: the `NSManagedObjectModel` for the stack
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    @available(*, deprecated: 3.1, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModel instance as argument")
+    @available(*, deprecated: 3.1, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModelSchema instance as argument")
     public convenience init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {
         
         let modelVersion = migrationChain.leafVersions.first!
         self.init(
             schemaHistory: SchemaHistory(
                 allSchema: [
-                    LegacyXcodeDataModel(
+                    LegacyXcodeDataModelSchema(
                         modelName: modelVersion,
                         model: model
                     )

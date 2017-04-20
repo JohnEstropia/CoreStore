@@ -1,5 +1,5 @@
 //
-//  Attribute+Querying.swift
+//  CoreStoreObject+Querying.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,30 +27,65 @@ import CoreData
 import Foundation
 
 
+// MARK: - DynamicObject
+
+public extension DynamicObject where Self: CoreStoreObject {
+    
+    @inline(__always)
+    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Required<V>) -> String  {
+        
+        return attribute(self.meta).keyPath
+    }
+    
+    @inline(__always)
+    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> String  {
+        
+        return attribute(self.meta).keyPath
+    }
+    
+    @inline(__always)
+    public static func `where`(_ condition: (Self) -> Where) -> Where  {
+        
+        return condition(self.meta)
+    }
+}
+
+
 // MARK: - ValueContainer.Required
 
 public extension ValueContainer.Required {
     
+    @inline(__always)
     public static func == (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where(attribute.keyPath, isEqualTo: value)
     }
+    
+    @inline(__always)
     public static func < (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where("%K < %@", attribute.keyPath, value)
     }
+    
+    @inline(__always)
     public static func > (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where("%K > %@", attribute.keyPath, value)
     }
+    
+    @inline(__always)
     public static func <= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where("%K <= %@", attribute.keyPath, value)
     }
+    
+    @inline(__always)
     public static func >= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return Where("%K >= %@", attribute.keyPath, value)
     }
+    
+    @inline(__always)
     public static func != (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
         
         return !Where(attribute.keyPath, isEqualTo: value)
@@ -62,11 +97,13 @@ public extension ValueContainer.Required {
 
 public extension ValueContainer.Optional {
     
+    @inline(__always)
     public static func == (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
         
         return Where(attribute.keyPath, isEqualTo: value)
     }
     
+    @inline(__always)
     public static func != (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
         
         return !Where(attribute.keyPath, isEqualTo: value)

@@ -1,5 +1,5 @@
 //
-//  XcodeDataModel.swift
+//  XcodeDataModelSchema.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,9 +27,9 @@ import CoreData
 import Foundation
 
 
-// MARK: - XcodeDataModel
+// MARK: - XcodeDataModelSchema
 
-public final class XcodeDataModel: DynamicSchema {
+public final class XcodeDataModelSchema: DynamicSchema {
     
     public required init(modelVersion: ModelVersion, modelVersionFileURL: URL) {
         

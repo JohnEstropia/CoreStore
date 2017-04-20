@@ -37,35 +37,6 @@ public protocol DynamicObject: class {
     func cs_toRaw() -> NSManagedObject
 }
 
-public extension DynamicObject where Self: CoreStoreObject {
-    
-    @inline(__always)
-    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Required<V>) -> String  {
-        
-        return attribute(self.meta).keyPath
-    }
-    
-    @inline(__always)
-    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> String  {
-        
-        return attribute(self.meta).keyPath
-    }
-    
-    @inline(__always)
-    public static func `where`(_ condition: (Self) -> Where) -> Where  {
-        
-        return condition(self.meta)
-    }
-    
-    
-    // MARK: Internal
-    
-    internal static var meta: Self {
-        
-        return self.init(asMeta: ())
-    }
-}
-
 
 // MARK: - NSManagedObject
 
@@ -125,5 +96,16 @@ extension CoreStoreObject {
     public func cs_toRaw() -> NSManagedObject {
         
         return self.rawObject!
+    }
+}
+
+
+// MARK: - Internal
+
+internal extension DynamicObject where Self: CoreStoreObject {
+    
+    internal static var meta: Self {
+        
+        return self.init(asMeta: ())
     }
 }

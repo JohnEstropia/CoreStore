@@ -1,5 +1,5 @@
 //
-//  LegacyXcodeDataModel.swift
+//  MigrationMappingProvider.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,28 +27,10 @@ import CoreData
 import Foundation
 
 
-// MARK: - LegacyXcodeDataModel
+// MARK: - MigrationMappingProvider
 
-public final class LegacyXcodeDataModel: DynamicSchema {
+public protocol MigrationMappingProvider {
     
-    public required init(modelName: ModelVersion, model: NSManagedObjectModel) {
-        
-        self.modelVersion = modelName
-        self.model = model
-    }
-    
-    
-    // MARK: DynamicSchema
-    
-    public let modelVersion: ModelVersion
-    
-    public func rawModel() -> NSManagedObjectModel {
-        
-        return self.model
-    }
-    
-    
-    // MARK: Private
-    
-    private let model: NSManagedObjectModel
+    associatedtype SourceType: DynamicObject
+    associatedtype DestinationType: DynamicObject
 }

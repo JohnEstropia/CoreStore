@@ -1,5 +1,5 @@
 //
-//  DynamicSchema.swift
+//  LegacyXcodeDataModelSchema.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,23 +27,28 @@ import CoreData
 import Foundation
 
 
-// MARK: - DynamicSchema
+// MARK: - LegacyXcodeDataModelSchema
 
-/**
- `DynamicSchema` are types that provide `NSManagedObjectModel` instances for a particular model version. CoreStore currently supports concrete types:
- - `XcodeDataModelSchema`: describes models loaded from a .xcdatamodeld file.
- - `LegacyXcodeDataModelSchema`: describes models loaded directly from an existing `NSManagedObjectModel`. It is not advisable to continue using this model as its metadata are not available to CoreStore.
- - `CoreStoreSchema`: describes models written in `CoreStoreObject` Swift class declarations.
- */
-public protocol DynamicSchema {
+public final class LegacyXcodeDataModelSchema: DynamicSchema {
     
-    /**
-     The version string for this model schema.
-     */
-    var modelVersion: ModelVersion { get }
+    public required init(modelName: ModelVersion, model: NSManagedObjectModel) {
+        
+        self.modelVersion = modelName
+        self.model = model
+    }
     
-    /**
-     Do not call this directly. The `NSManagedObjectModel` for this schema may be created lazily and using this method directly may affect the integrity of the model.
-     */
-    func rawModel() -> NSManagedObjectModel
+    
+    // MARK: DynamicSchema
+    
+    public let modelVersion: ModelVersion
+    
+    public func rawModel() -> NSManagedObjectModel {
+        
+        return self.model
+    }
+    
+    
+    // MARK: Private
+    
+    private let model: NSManagedObjectModel
 }

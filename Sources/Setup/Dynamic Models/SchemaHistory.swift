@@ -29,14 +29,30 @@ import Foundation
 
 // MARK: - SchemaHistory
 
+/**
+ The `SchemaHistory` encapsulates all model versions that is relevant to the data model, including past versions.
+ - SeeAlso: SchemaHistory.currentModelVersion
+ - SeeAlso: SchemaHistory.migrationChain
+ */
 public final class SchemaHistory: ExpressibleByArrayLiteral {
     
-    
-    // MARK: -
-    
+    /**
+     The version string for the current model version. The `DataStack` will try to migrate all `StorageInterface`s added to itself to this version, following the version steps provided by the `migrationChain`.
+     */
     public let currentModelVersion: ModelVersion
+    
+    /**
+     The version string for the current model version. The `DataStack` will try to migrate all `StorageInterface`s added to itself to this version, following the version steps provided by the `migrationChain`.
+     */
     public let migrationChain: MigrationChain
     
+    /**
+     Initializes a `SchemaHistory` with all models declared in the specified (.xcdatamodeld) model file.
+     - Important: Use this initializer only if all model versions are either `XcodeDataModelSchema`s or `LegacyXcodeDataModelSchema`s. Do not use this initializer if even one of the model versions is a `CoreStoreSchema`; use the `SchemaHistory.init(allSchema:migrationChain:exactCurrentModelVersion:)` initializer instead.
+     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
+     - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
+     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     */
     public convenience init(modelName: XcodeDataModelFileName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
         
         guard let modelFilePath = bundle.path(forResource: modelName, ofType: "momd") else {
@@ -92,7 +108,7 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
         for modelVersion in modelVersions {
             
             let fileURL = modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
-            allSchema.append(XcodeDataModel(modelVersion: modelVersion, modelVersionFileURL: fileURL))
+            allSchema.append(XcodeDataModelSchema(modelVersion: modelVersion, modelVersionFileURL: fileURL))
         }
         self.init(
             allSchema: allSchema,
