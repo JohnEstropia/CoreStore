@@ -450,61 +450,11 @@ public final class DataStack: Equatable {
      enum Static {
         static var myDataKey: Void?
      }
-     CoreStore.defaultStack[userInfoKey: &Static.myDataKey] = myObject
+     CoreStore.defaultStack.userInfo[&Static.myDataKey] = myObject
      ```
      - Important: Do not use this method to store thread-sensitive data.
-     - parameter userInfoKey: the key for custom data. Make sure this is a static pointer that will never be changed.
      */
-    public subscript(userInfoKey key: UnsafeRawPointer) -> Any? {
-        
-        get {
-            
-            self.userInfoLock.lock()
-            defer {
-                
-                self.userInfoLock.unlock()
-            }
-            return self.userInfo[key]
-        }
-        set {
-            
-            self.userInfoLock.lock()
-            defer {
-                
-                self.userInfoLock.unlock()
-            }
-            self.userInfo[key] = newValue
-        }
-    }
-    
-    /**
-     Allow external libraries to store custom data in the `DataStack`. App code should rarely have a need for this.
-     ```
-     enum Static {
-     static var myDataKey: Void?
-     }
-     CoreStore.defaultStack[userInfoKey: &Static.myDataKey, lazyInit: { MyObject() }] = myObject
-     ```
-     - Important: Do not use this method to store thread-sensitive data.
-     - parameter userInfoKey: the key for custom data. Make sure this is a static pointer that will never be changed.
-     - parameter lazyInit: a closure to use to lazily-initialize the data
-     - returns: A custom data identified by  `userInfoKey`
-     */
-    public subscript(userInfoKey key: UnsafeRawPointer, lazyInit closure: () -> Any) -> Any {
-        
-        self.userInfoLock.lock()
-        defer {
-            
-            self.userInfoLock.unlock()
-        }
-        if let value = self.userInfo[key] {
-            
-            return value
-        }
-        let value = closure()
-        self.userInfo[key] = value
-        return value
-    }
+    private let userInfo = UserInfo()
     
     
     // MARK: Equatable
@@ -636,8 +586,6 @@ public final class DataStack: Equatable {
     
     private var persistentStoresByFinalConfiguration = [String: NSPersistentStore]()
     private var finalConfigurationsByEntityIdentifier = [EntityIdentifier: Set<String>]()
-    private var userInfo: [UnsafeRawPointer: Any] = [:]
-    private let userInfoLock = NSRecursiveLock()
     
     deinit {
         

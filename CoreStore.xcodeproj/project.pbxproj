@@ -434,6 +434,10 @@
 		B5A991ED1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */; };
 		B5A991EE1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */; };
 		B5A991EF1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */; };
+		B5A9921F1EA898710091A2E3 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9921E1EA898710091A2E3 /* UserInfo.swift */; };
+		B5A992201EA898720091A2E3 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9921E1EA898710091A2E3 /* UserInfo.swift */; };
+		B5A992211EA898720091A2E3 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9921E1EA898710091A2E3 /* UserInfo.swift */; };
+		B5A992221EA898720091A2E3 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9921E1EA898710091A2E3 /* UserInfo.swift */; };
 		B5AEFAB51C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
 		B5AEFAB61C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
 		B5AEFAB71C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
@@ -757,6 +761,7 @@
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
 		B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSelect.swift; sourceTree = "<group>"; };
 		B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionLock.swift; sourceTree = "<group>"; };
+		B5A9921E1EA898710091A2E3 /* UserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		B5AD60CD1C90141E00F2B2E8 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
 		B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreBridge.swift; sourceTree = "<group>"; };
 		B5BDC91A1C202269008147CD /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Cartfile; path = ../Cartfile; sourceTree = "<group>"; };
@@ -1323,6 +1328,7 @@
 				B512607E1E97A18000402229 /* CoreStoreObject+Convenience.swift */,
 				B5FAD6A81B50A4B300714891 /* Progress+Convenience.swift */,
 				B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */,
+				B5A9921E1EA898710091A2E3 /* UserInfo.swift */,
 			);
 			path = Convenience;
 			sourceTree = "<group>";
@@ -1692,6 +1698,7 @@
 				B52FD3AA1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
 				B52F74411E9B8724005F3DAC /* LegacyXcodeDataModel.swift in Sources */,
 				B51FE5AB1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
+				B5A9921F1EA898710091A2E3 /* UserInfo.swift in Sources */,
 				B54A6A551BA15F2A007870FD /* FetchedResultsControllerDelegate.swift in Sources */,
 				B5D339E21E948C3600C880DE /* Value.swift in Sources */,
 				B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */,
@@ -1864,6 +1871,7 @@
 				B52FD3AB1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
 				B52F74421E9B8724005F3DAC /* LegacyXcodeDataModel.swift in Sources */,
 				B51FE5AD1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
+				B5A992201EA898720091A2E3 /* UserInfo.swift in Sources */,
 				B5FE4DAD1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
 				B5D339E31E948C3600C880DE /* Value.swift in Sources */,
 				82BA18C51C4BBD5300A0916E /* ListObserver.swift in Sources */,
@@ -2036,6 +2044,7 @@
 				B52FD3AD1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
 				B52F74441E9B8724005F3DAC /* LegacyXcodeDataModel.swift in Sources */,
 				B5ECDC2D1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
+				B5A992221EA898720091A2E3 /* UserInfo.swift in Sources */,
 				B5D7A5BA1CA3BF8F005C752B /* CSInto.swift in Sources */,
 				B5D339E51E948C3600C880DE /* Value.swift in Sources */,
 				B5A5F26A1CAEC50F004AB9AF /* CSSelect.swift in Sources */,
@@ -2208,6 +2217,7 @@
 				B52FD3AC1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
 				B52F74431E9B8724005F3DAC /* LegacyXcodeDataModel.swift in Sources */,
 				B51FE5AE1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
+				B5A992211EA898720091A2E3 /* UserInfo.swift in Sources */,
 				B563218C1BD65216006C9394 /* DataStack+Transaction.swift in Sources */,
 				B5D339E41E948C3600C880DE /* Value.swift in Sources */,
 				B53FBA0E1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,

@@ -578,6 +578,21 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     }
     
     
+    // MARK: Public (3rd Party Utilities)
+    
+    /**
+     Allow external libraries to store custom data in the `ListMonitor`. App code should rarely have a need for this.
+     ```
+     enum Static {
+         static var myDataKey: Void?
+     }
+     monitor.userInfo[&Static.myDataKey] = myObject
+     ```
+     - Important: Do not use this method to store thread-sensitive data.
+     */
+    private let userInfo = UserInfo()
+    
+    
     // MARK: Equatable
     
     public static func == (lhs: ListMonitor<ObjectType>, rhs: ListMonitor<ObjectType>) -> Bool {
