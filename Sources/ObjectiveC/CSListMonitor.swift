@@ -546,7 +546,7 @@ public final class CSListMonitor: NSObject {
 // MARK: - ListMonitor
 
 @available(OSX 10.12, *)
-extension ListMonitor where T: NSManagedObject {
+extension ListMonitor where ListMonitor.ObjectType: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     

@@ -138,7 +138,7 @@ public final class CSObjectMonitor: NSObject {
 // MARK: - ObjectMonitor
 
 @available(OSX 10.12, *)
-extension ObjectMonitor where EntityType: NSManagedObject {
+extension ObjectMonitor where ObjectMonitor.ObjectType: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
