@@ -91,7 +91,7 @@ public extension DynamicSchema {
                     case .integer64AttributeType:
                         valueType = Int64.self
                         if let defaultValue = (attribute.defaultValue as! Int64.ImportableNativeType?).flatMap(Int64.cs_fromImportableNativeType),
-                            defaultValue != Int54.cs_emptyValue() {
+                            defaultValue != Int64.cs_emptyValue() {
                             
                             defaultString = ", default: \(defaultValue)"
                         }

@@ -31,19 +31,16 @@ import Foundation
 
 public extension DynamicObject where Self: CoreStoreObject {
     
-    @inline(__always)
     public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Required<V>) -> String  {
         
         return attribute(self.meta).keyPath
     }
     
-    @inline(__always)
     public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> String  {
         
         return attribute(self.meta).keyPath
     }
     
-    @inline(__always)
     public static func `where`(_ condition: (Self) -> Where) -> Where  {
         
         return condition(self.meta)
