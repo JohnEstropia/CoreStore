@@ -81,7 +81,7 @@ public extension MigrationMappingProvider {
 
 public final class UnsafeMigrationProxyObject {
     
-    public subscript(kvcKey: KeyPath) -> CoreDataNativeType? {
+    public subscript(kvcKey: KeyPath) -> Any? {
         
         get {
             

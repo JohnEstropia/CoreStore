@@ -213,7 +213,6 @@ class SetupTests: BaseTestDataTestCase {
                 self.prepareTestDataForStack(stack)
             }
             XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
-            XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
             XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
             
             return try NSPersistentStoreCoordinator.metadataForPersistentStore(
@@ -334,7 +333,6 @@ class SetupTests: BaseTestDataTestCase {
                 self.prepareTestDataForStack(stack)
             }
             XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
-            XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
             XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
             
             return try NSPersistentStoreCoordinator.metadataForPersistentStore(

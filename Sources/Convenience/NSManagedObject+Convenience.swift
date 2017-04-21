@@ -78,29 +78,29 @@ public extension NSManagedObject {
     }
     
     @nonobjc @inline(__always)
-    public func getValue(forKvcKey kvcKey: KeyPath) -> CoreDataNativeType? {
+    public func getValue(forKvcKey kvcKey: KeyPath) -> Any? {
         
         self.willAccessValue(forKey: kvcKey)
         defer {
             
             self.didAccessValue(forKey: kvcKey)
         }
-        return self.primitiveValue(forKey: kvcKey) as! CoreDataNativeType?
+        return self.primitiveValue(forKey: kvcKey)
     }
     
     @nonobjc @inline(__always)
-    public func getValue<T>(forKvcKey kvcKey: KeyPath, didGetValue: (CoreDataNativeType?) throws -> T) rethrows -> T {
+    public func getValue<T>(forKvcKey kvcKey: KeyPath, didGetValue: (Any?) throws -> T) rethrows -> T {
         
         self.willAccessValue(forKey: kvcKey)
         defer {
             
             self.didAccessValue(forKey: kvcKey)
         }
-        return try didGetValue(self.primitiveValue(forKey: kvcKey) as! CoreDataNativeType?)
+        return try didGetValue(self.primitiveValue(forKey: kvcKey))
     }
     
     @nonobjc @inline(__always)
-    public func getValue<T>(forKvcKey kvcKey: KeyPath, willGetValue: () throws -> Void, didGetValue: (CoreDataNativeType?) throws -> T) rethrows -> T {
+    public func getValue<T>(forKvcKey kvcKey: KeyPath, willGetValue: () throws -> Void, didGetValue: (Any?) throws -> T) rethrows -> T {
         
         self.willAccessValue(forKey: kvcKey)
         defer {
@@ -108,11 +108,11 @@ public extension NSManagedObject {
             self.didAccessValue(forKey: kvcKey)
         }
         try willGetValue()
-        return try didGetValue(self.primitiveValue(forKey: kvcKey) as! CoreDataNativeType?)
+        return try didGetValue(self.primitiveValue(forKey: kvcKey))
     }
     
     @nonobjc @inline(__always)
-    public func setValue(_ value: CoreDataNativeType?, forKvcKey KVCKey: KeyPath) {
+    public func setValue(_ value: Any?, forKvcKey KVCKey: KeyPath) {
         
         self.willChangeValue(forKey: KVCKey)
         defer {
@@ -123,7 +123,7 @@ public extension NSManagedObject {
     }
     
     @nonobjc @inline(__always)
-    public func setValue<T>(_ value: T, forKvcKey KVCKey: KeyPath, willSetValue: (T) throws -> CoreDataNativeType?) rethrows {
+    public func setValue<T>(_ value: T, forKvcKey KVCKey: KeyPath, willSetValue: (T) throws -> Any?) rethrows {
         
         self.willChangeValue(forKey: KVCKey)
         defer {

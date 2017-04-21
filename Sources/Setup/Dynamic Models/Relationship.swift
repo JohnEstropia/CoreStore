@@ -84,32 +84,32 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             
             get {
                 
+                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    object.rawObject!.isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
-                return self.accessRawObject()
-                    .getValue(
-                        forKvcKey: self.keyPath,
-                        didGetValue: { $0.flatMap({ D.cs_fromRaw(object: $0 as! NSManagedObject) }) }
-                    )
+                return object.rawObject!.getValue(
+                    forKvcKey: self.keyPath,
+                    didGetValue: { $0.flatMap({ D.cs_fromRaw(object: $0 as! NSManagedObject) }) }
+                )
             }
             set {
                 
+                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    object.rawObject!.isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
                 CoreStore.assert(
-                    self.accessRawObject().isEditableInContext() == true,
+                    object.rawObject!.isEditableInContext() == true,
                     "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                 )
-                self.accessRawObject()
-                    .setValue(
-                        newValue,
-                        forKvcKey: self.keyPath,
-                        willSetValue: { $0?.rawObject }
-                    )
+                object.rawObject!.setValue(
+                    newValue,
+                    forKvcKey: self.keyPath,
+                    willSetValue: { $0?.rawObject }
+                )
             }
         }
         
@@ -125,7 +125,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let maxCount: Int = 1
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         
-        internal var accessRawObject: () -> NSManagedObject = {
+        internal var parentObject: () -> CoreStoreObject = {
             
             CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
         }
@@ -189,39 +189,39 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             
             get {
                 
+                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    object.rawObject!.isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
-                return self.accessRawObject()
-                    .getValue(
-                        forKvcKey: self.keyPath,
-                        didGetValue: {
+                return object.rawObject!.getValue(
+                    forKvcKey: self.keyPath,
+                    didGetValue: {
+                        
+                        guard let orderedSet = $0 as! NSOrderedSet? else {
                             
-                            guard let orderedSet = $0 as! NSOrderedSet? else {
-                                
-                                return []
-                            }
-                            return orderedSet.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) })
+                            return []
                         }
-                    )
+                        return orderedSet.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) })
+                    }
+                )
             }
             set {
                 
+                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    object.rawObject!.isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
                 CoreStore.assert(
-                    self.accessRawObject().isEditableInContext() == true,
+                    object.rawObject!.isEditableInContext() == true,
                     "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                 )
-                self.accessRawObject()
-                    .setValue(
-                        newValue,
-                        forKvcKey: self.keyPath,
-                        willSetValue: { NSOrderedSet(array: $0.map({ $0.rawObject! })) }
-                    )
+                object.rawObject!.setValue(
+                    newValue,
+                    forKvcKey: self.keyPath,
+                    willSetValue: { NSOrderedSet(array: $0.map({ $0.rawObject! })) }
+                )
             }
         }
         
@@ -238,7 +238,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let maxCount: Int
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         
-        internal var accessRawObject: () -> NSManagedObject = {
+        internal var parentObject: () -> CoreStoreObject = {
             
             CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
         }
@@ -311,39 +311,39 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             
             get {
                 
+                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    object.rawObject!.isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
-                return self.accessRawObject()
-                    .getValue(
-                        forKvcKey: self.keyPath,
-                        didGetValue: {
+                return object.rawObject!.getValue(
+                    forKvcKey: self.keyPath,
+                    didGetValue: {
+                        
+                        guard let set = $0 as! NSSet? else {
                             
-                            guard let set = $0 as! NSSet? else {
-                                
-                                return []
-                            }
-                            return Set(set.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) }))
+                            return []
                         }
-                    )
+                        return Set(set.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) }))
+                    }
+                )
             }
             set {
                 
+                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    self.accessRawObject().isRunningInAllowedQueue() == true,
+                    object.rawObject!.isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
                 CoreStore.assert(
-                    self.accessRawObject().isEditableInContext() == true,
+                    object.rawObject!.isEditableInContext() == true,
                     "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                 )
-                self.accessRawObject()
-                    .setValue(
-                        newValue,
-                        forKvcKey: self.keyPath,
-                        willSetValue: { NSSet(array: $0.map({ $0.rawObject! })) }
-                    )
+                object.rawObject!.setValue(
+                    newValue,
+                    forKvcKey: self.keyPath,
+                    willSetValue: { NSSet(array: $0.map({ $0.rawObject! })) }
+                )
             }
         }
         
@@ -360,7 +360,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let maxCount: Int
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         
-        internal var accessRawObject: () -> NSManagedObject = {
+        internal var parentObject: () -> CoreStoreObject = {
             
             CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
         }
@@ -411,7 +411,7 @@ internal protocol RelationshipProtocol: class {
     var isOrdered: Bool { get }
     var deleteRule: NSDeleteRule { get }
     var inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?) { get }
-    var accessRawObject: () -> NSManagedObject { get set }
+    var parentObject: () -> CoreStoreObject { get set }
     var minCount: Int { get }
     var maxCount: Int { get }
 }

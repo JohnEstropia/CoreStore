@@ -54,11 +54,11 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
      Do not call this directly. This is exposed as public only as a required initializer.
      - Important: subclasses that need a custom initializer should override both `init(_:)` and `init(asMeta:)`, and to call their corresponding super implementations.
      */
-    public required init(_ object: NSManagedObject) {
+    public required init(rawObject: NSManagedObject) {
         
         self.isMeta = false
-        self.rawObject = object
-        self.initializeAttributes(Mirror(reflecting: self), { [unowned object] in object })
+        self.rawObject = rawObject
+        self.initializeAttributes(Mirror(reflecting: self), { [unowned self] in self })
     }
     
     /**
@@ -105,18 +105,18 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     // MARK: Private
     
-    private func initializeAttributes(_ mirror: Mirror, _ accessRawObject: @escaping () -> NSManagedObject) {
+    private func initializeAttributes(_ mirror: Mirror, _ parentObject: @escaping () -> CoreStoreObject) {
         
-        _ = mirror.superclassMirror.flatMap({ self.initializeAttributes($0, accessRawObject) })
+        _ = mirror.superclassMirror.flatMap({ self.initializeAttributes($0, parentObject) })
         for child in mirror.children {
             
             switch child.value {
                 
             case let property as AttributeProtocol:
-                property.accessRawObject = accessRawObject
+                property.parentObject = parentObject
                     
             case let property as RelationshipProtocol:
-                property.accessRawObject = accessRawObject
+                property.parentObject = parentObject
                 
             default:
                 continue

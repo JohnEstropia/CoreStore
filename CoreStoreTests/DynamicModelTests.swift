@@ -45,7 +45,13 @@ class Dog: Animal {
 
 class Person: CoreStoreObject {
     
-    let name = Value.Required<String>("name")
+    let name = Value.Required<String>(
+        "name",
+        customGetter: { (`self`, getValue) in
+            
+            return "Mr. \(getValue())"
+        }
+    )
     let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
 }
 
@@ -107,6 +113,9 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     let person = transaction.create(Into<Person>())
                     XCTAssertNil(person.pet.value)
+                    
+                    person.name .= "John"
+                    XCTAssertEqual(person.name.value, "Mr. John") // Custom getter
                     
                     person.pet .= dog
                     XCTAssertEqual(person.pet.value, dog)

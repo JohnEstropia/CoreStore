@@ -62,13 +62,27 @@ public extension DynamicSchema {
                 for (attributeName, attribute) in attributesByName {
                     
                     let containerType: String
-                    if attribute.isOptional {
+                    if attribute.attributeType == .transformableAttributeType {
                         
-                        containerType = "Value.Optional"
+                        if attribute.isOptional {
+                            
+                            containerType = "Transformable.Optional"
+                        }
+                        else {
+                            
+                            containerType = "Transformable.Required"
+                        }
                     }
                     else {
                         
-                        containerType = "Value.Required"
+                        if attribute.isOptional {
+                            
+                            containerType = "Value.Optional"
+                        }
+                        else {
+                            
+                            containerType = "Value.Required"
+                        }
                     }
                     let valueType: Any.Type
                     var defaultString = ""
@@ -151,11 +165,29 @@ public extension DynamicSchema {
                             }
                             defaultString = ", default: Data(bytes: [\(bytes.joined(separator: ", "))])"
                         }
+                    case .transformableAttributeType:
+                        if let attributeValueClassName = attribute.attributeValueClassName {
+                            
+                            valueType = NSClassFromString(attributeValueClassName)!
+                        }
+                        else {
+                            
+                            valueType = (NSCoding & NSCopying).self
+                        }
+                        if let defaultValue = attribute.defaultValue {
+                            
+                            defaultString = ", default: /* \"\(defaultValue)\" */"
+                        }
+                        else if !attribute.isOptional {
+                            
+                            defaultString = ", default: /* required */"
+                        }
                     default:
-                        fatalError("Unsupported attribute type: \(attribute.attributeType)")
+                        fatalError("Unsupported attribute type: \(attribute.attributeType.rawValue)")
                     }
+                    let indexedString = attribute.isIndexed ? ", isIndexed: true" : ""
                     let transientString = attribute.isTransient ? ", isTransient: true" : ""
-                    output.append("    let \(attributeName) = \(containerType)<\(String(describing: valueType))>(\"\(attributeName)\"\(defaultString)\(transientString))\n")
+                    output.append("    let \(attributeName) = \(containerType)<\(String(describing: valueType))>(\"\(attributeName)\"\(indexedString)\(defaultString)\(transientString))\n")
                 }
             }
             

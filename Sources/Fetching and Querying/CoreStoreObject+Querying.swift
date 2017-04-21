@@ -45,6 +45,16 @@ public extension DynamicObject where Self: CoreStoreObject {
         
         return condition(self.meta)
     }
+    
+    public static func ascending<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+        
+        return OrderBy(.ascending(attribute(self.meta).keyPath))
+    }
+    
+    public static func descending<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+        
+        return OrderBy(.descending(attribute(self.meta).keyPath))
+    }
 }
 
 
