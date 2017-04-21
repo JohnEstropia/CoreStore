@@ -86,11 +86,15 @@ public enum ValueContainer<O: CoreStoreObject> {
                     self.accessRawObject().isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
+                CoreStore.assert(
+                    self.accessRawObject().isEditableInContext() == true,
+                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                )
                 self.accessRawObject()
                     .setValue(
                         newValue,
                         forKvcKey: self.keyPath,
-                        willSetValue: { $0.cs_toImportableNativeType() }
+                        willSetValue: { ($0.cs_toImportableNativeType() as! CoreDataNativeType) }
                     )
             }
         }
@@ -163,11 +167,15 @@ public enum ValueContainer<O: CoreStoreObject> {
                     self.accessRawObject().isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
+                CoreStore.assert(
+                    self.accessRawObject().isEditableInContext() == true,
+                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                )
                 self.accessRawObject()
                     .setValue(
                         newValue,
                         forKvcKey: self.keyPath,
-                        willSetValue: { $0?.cs_toImportableNativeType() }
+                        willSetValue: { ($0?.cs_toImportableNativeType() as! CoreDataNativeType?) }
                     )
             }
         }

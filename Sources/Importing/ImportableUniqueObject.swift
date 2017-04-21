@@ -190,7 +190,7 @@ public extension ImportableUniqueObject where Self: DynamicObject {
                 .setValue(
                     newValue,
                     forKvcKey: type(of: self).uniqueIDKeyPath,
-                    willSetValue: { $0.cs_toImportableNativeType() }
+                    willSetValue: { ($0.cs_toImportableNativeType() as! CoreDataNativeType) }
                 )
         }
     }

@@ -97,6 +97,14 @@ public final class DataStack: Equatable {
     }
     
     /**
+     Returns the `DataStack`'s model schema.
+     */
+    public var modelSchema: DynamicSchema {
+        
+        return self.schemaHistory.schemaByVersion[self.schemaHistory.currentModelVersion]!
+    }
+    
+    /**
      Returns the entity name-to-class type mapping from the `DataStack`'s model.
      */
     public func entityTypesByName(for type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {

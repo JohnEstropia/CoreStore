@@ -100,6 +100,10 @@ public enum RelationshipContainer<O: CoreStoreObject> {
                     self.accessRawObject().isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
+                CoreStore.assert(
+                    self.accessRawObject().isEditableInContext() == true,
+                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                )
                 self.accessRawObject()
                     .setValue(
                         newValue,
@@ -117,6 +121,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let isToMany = false
         internal let isOrdered = false
         internal let deleteRule: NSDeleteRule
+        internal let minCount: Int = 0
+        internal let maxCount: Int = 1
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         
         internal var accessRawObject: () -> NSManagedObject = {
@@ -157,24 +163,24 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             relationship.value = relationship2.value
         }
         
-        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
         }
         
         // TODO: add subscripts, indexed operations for more performant single updates
@@ -206,6 +212,10 @@ public enum RelationshipContainer<O: CoreStoreObject> {
                     self.accessRawObject().isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
+                CoreStore.assert(
+                    self.accessRawObject().isEditableInContext() == true,
+                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                )
                 self.accessRawObject()
                     .setValue(
                         newValue,
@@ -224,6 +234,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let isOptional = true
         internal let isOrdered = true
         internal let deleteRule: NSDeleteRule
+        internal let minCount: Int
+        internal let maxCount: Int
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         
         internal var accessRawObject: () -> NSManagedObject = {
@@ -234,11 +246,15 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: String, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule) {
+        private init(keyPath: String, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, minCount: Int, maxCount: Int) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
             self.inverse = (D.self, inverseKeyPath)
+            
+            let range = (max(0, minCount) ... maxCount)
+            self.minCount = range.lowerBound
+            self.maxCount = range.upperBound
         }
     }
     
@@ -269,24 +285,24 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             relationship.value = Set(relationship2.value)
         }
         
-        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
         }
         
         // TODO: add subscripts, indexed operations for more performant single updates
@@ -318,6 +334,10 @@ public enum RelationshipContainer<O: CoreStoreObject> {
                     self.accessRawObject().isRunningInAllowedQueue() == true,
                     "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                 )
+                CoreStore.assert(
+                    self.accessRawObject().isEditableInContext() == true,
+                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                )
                 self.accessRawObject()
                     .setValue(
                         newValue,
@@ -336,6 +356,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let isOptional = true
         internal let isOrdered = true
         internal let deleteRule: NSDeleteRule
+        internal let minCount: Int
+        internal let maxCount: Int
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         
         internal var accessRawObject: () -> NSManagedObject = {
@@ -346,11 +368,15 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule) {
+        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, minCount: Int, maxCount: Int) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
             self.inverse = (D.self, inverseKeyPath)
+            
+            let range = (max(0, minCount) ... maxCount)
+            self.minCount = range.lowerBound
+            self.maxCount = range.upperBound
         }
     }
     
@@ -386,4 +412,6 @@ internal protocol RelationshipProtocol: class {
     var deleteRule: NSDeleteRule { get }
     var inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?) { get }
     var accessRawObject: () -> NSManagedObject { get set }
+    var minCount: Int { get }
+    var maxCount: Int { get }
 }

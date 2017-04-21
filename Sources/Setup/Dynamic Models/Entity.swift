@@ -34,6 +34,8 @@ public protocol DynamicEntity {
     
     var type: CoreStoreObject.Type { get }
     var entityName: EntityName { get }
+    var isAbstract: Bool { get }
+    var versionHashModifier: String? { get }
 }
 
 
@@ -41,15 +43,17 @@ public protocol DynamicEntity {
 
 public struct Entity<O: CoreStoreObject>: DynamicEntity, Hashable {
     
-    public init(_ entityName: String) {
+    public init(_ entityName: String, isAbstract: Bool = false, versionHashModifier: String? = nil) {
         
-        self.init(O.self, entityName)
+        self.init(O.self, entityName, isAbstract: isAbstract, versionHashModifier: versionHashModifier)
     }
     
-    public init(_ type: O.Type, _ entityName: String) {
+    public init(_ type: O.Type, _ entityName: String, isAbstract: Bool = false, versionHashModifier: String? = nil) {
         
         self.type = type
         self.entityName = entityName
+        self.isAbstract = isAbstract
+        self.versionHashModifier = versionHashModifier
     }
     
     
@@ -57,6 +61,8 @@ public struct Entity<O: CoreStoreObject>: DynamicEntity, Hashable {
     
     public let type: CoreStoreObject.Type
     public let entityName: EntityName
+    public let isAbstract: Bool
+    public let versionHashModifier: String?
     
     
     // MARK: Equatable
@@ -65,6 +71,8 @@ public struct Entity<O: CoreStoreObject>: DynamicEntity, Hashable {
         
         return lhs.type == rhs.type
             && lhs.entityName == rhs.entityName
+            && lhs.isAbstract == rhs.isAbstract
+            && lhs.versionHashModifier == rhs.versionHashModifier
     }
     
     // MARK: Hashable
@@ -72,5 +80,8 @@ public struct Entity<O: CoreStoreObject>: DynamicEntity, Hashable {
     public var hashValue: Int {
         
         return ObjectIdentifier(self.type).hashValue
+            ^ self.entityName.hashValue
+            ^ self.isAbstract.hashValue
+            ^ (self.versionHashModifier ?? "").hashValue
     }
 }

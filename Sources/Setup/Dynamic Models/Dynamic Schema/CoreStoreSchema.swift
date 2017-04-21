@@ -31,7 +31,7 @@ import Foundation
 
 public final class CoreStoreSchema: DynamicSchema {
     
-    public convenience init(modelVersion: String, entities: [DynamicEntity], versionLock: VersionLock? = nil) {
+    public convenience init(modelVersion: ModelVersion, entities: [DynamicEntity], versionLock: VersionLock? = nil) {
         
         self.init(
             modelVersion: modelVersion,
@@ -40,7 +40,7 @@ public final class CoreStoreSchema: DynamicSchema {
         )
     }
     
-    public required init(modelVersion: String, entitiesByConfiguration: [String: [DynamicEntity]], versionLock: VersionLock? = nil) {
+    public required init(modelVersion: ModelVersion, entitiesByConfiguration: [String: [DynamicEntity]], versionLock: VersionLock? = nil) {
         
         var actualEntitiesByConfiguration: [String: Set<AnyEntity>] = [:]
         for (configuration, entities) in entitiesByConfiguration {
@@ -129,14 +129,20 @@ public final class CoreStoreSchema: DynamicSchema {
         
         internal init(_ entity: DynamicEntity) {
             
-            self.type = entity.type
-            self.entityName = entity.entityName
+            self.init(
+                type: entity.type,
+                entityName: entity.entityName,
+                isAbstract: entity.isAbstract,
+                versionHashModifier: entity.versionHashModifier
+            )
         }
         
-        internal init(type: CoreStoreObject.Type, entityName: String) {
+        internal init(type: CoreStoreObject.Type, entityName: String, isAbstract: Bool, versionHashModifier: String?) {
             
             self.type = type
             self.entityName = entityName
+            self.isAbstract = isAbstract
+            self.versionHashModifier = versionHashModifier
         }
         
         
@@ -146,6 +152,8 @@ public final class CoreStoreSchema: DynamicSchema {
             
             return lhs.type == rhs.type
                 && lhs.entityName == rhs.entityName
+                && lhs.isAbstract == rhs.isAbstract
+                && lhs.versionHashModifier == rhs.versionHashModifier
         }
         
         // MARK: Hashable
@@ -154,12 +162,16 @@ public final class CoreStoreSchema: DynamicSchema {
             
             return ObjectIdentifier(self.type).hashValue
                 ^ self.entityName.hashValue
+                ^ self.isAbstract.hashValue
+                ^ (self.versionHashModifier ?? "").hashValue
         }
         
         // MARK: DynamicEntity
         
         internal let type: CoreStoreObject.Type
         internal let entityName: EntityName
+        internal let isAbstract: Bool
+        internal let versionHashModifier: String?
     }
     
     
@@ -193,6 +205,7 @@ public final class CoreStoreSchema: DynamicSchema {
         let entityDescription = NSEntityDescription()
         entityDescription.anyEntity = entity
         entityDescription.name = entity.entityName
+        entityDescription.isAbstract = entity.isAbstract
         entityDescription.managedObjectClassName = NSStringFromClass(NSManagedObject.self)
         
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
@@ -216,8 +229,8 @@ public final class CoreStoreSchema: DynamicSchema {
                 case let relationship as RelationshipProtocol:
                     let description = NSRelationshipDescription()
                     description.name = relationship.keyPath
-                    description.minCount = 0
-                    description.maxCount = relationship.isToMany ? 0 : 1
+                    description.minCount = relationship.minCount
+                    description.maxCount = relationship.maxCount
                     description.isOrdered = relationship.isOrdered
                     description.deleteRule = relationship.deleteRule
                     // TODO: versionHash, renamingIdentifier, etc

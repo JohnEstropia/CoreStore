@@ -48,6 +48,25 @@ internal extension NSManagedObject {
         }
         return nil
     }
+    
+    @nonobjc
+    internal func isEditableInContext() -> Bool? {
+        
+        guard let context = self.managedObjectContext else {
+            
+            return nil
+        }
+        if context.isTransactionContext {
+            
+            return true
+        }
+        if context.isDataStackContext {
+            
+            return false
+        }
+        return nil
+    }
+    
     // TODO: test before release (rolled back)
 //    @nonobjc
 //    internal static func cs_swizzleMethodsForLogging() {
