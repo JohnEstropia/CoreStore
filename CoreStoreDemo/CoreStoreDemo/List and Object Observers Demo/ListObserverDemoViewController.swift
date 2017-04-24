@@ -43,7 +43,10 @@ private struct Static {
         
         didSet {
             
-            self.palettes.refetch(self.filter.whereClause())
+            self.palettes.refetch(
+                self.filter.whereClause(),
+                OrderBy(.ascending(#keyPath(Palette.hue)))
+            )
         }
     }
     

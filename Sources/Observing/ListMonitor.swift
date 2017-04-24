@@ -555,7 +555,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      `refetch(...)` broadcasts `listMonitorWillRefetch(...)` to its observers immediately, and then `listMonitorDidRefetch(...)` after the new fetch request completes.
      
-     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Note that only specified clauses will be changed; unspecified clauses will use previous values.
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
      */
     public func refetch(_ fetchClauses: FetchClause...) {
         
@@ -567,7 +567,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      `refetch(...)` broadcasts `listMonitorWillRefetch(...)` to its observers immediately, and then `listMonitorDidRefetch(...)` after the new fetch request completes.
      
-     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Note that only specified clauses will be changed; unspecified clauses will use previous values.
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
      */
     public func refetch(_ fetchClauses: [FetchClause]) {
         
@@ -946,8 +946,12 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                 return
             }
             
-            self.fetchedResultsControllerDelegate.enabled = false
-            self.applyFetchClauses(self.fetchedResultsController.fetchRequest)
+            let (newFetchedResultsController, newFetchedResultsControllerDelegate) = ListMonitor.recreateFetchedResultsController(
+                context: self.fetchedResultsController.managedObjectContext,
+                from: self.from,
+                sectionBy: self.sectionBy,
+                applyFetchClauses: self.applyFetchClauses
+            )
             
             self.transactionQueue.async { [weak self] in
                 
@@ -956,16 +960,21 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                     return
                 }
                 
-                try! self.fetchedResultsController.performFetchFromSpecifiedStores()
-                
-                DispatchQueue.main.async { [weak self] () -> Void in
+                try! newFetchedResultsController.performFetchFromSpecifiedStores()
+                self.fetchedResultsControllerDelegate.taskGroup.notify(queue: .main) {
+                    
+                    self.fetchedResultsControllerDelegate.enabled = false
+                }
+                newFetchedResultsControllerDelegate.taskGroup.notify(queue: .main) { [weak self] () -> Void in
                     
                     guard let `self` = self else {
                         
                         return
                     }
                     
-                    self.fetchedResultsControllerDelegate.enabled = true
+                    (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = (newFetchedResultsController, newFetchedResultsControllerDelegate)
+                    newFetchedResultsControllerDelegate.handler = self
+                    
                     self.isPendingRefetch = false
                     
                     NotificationCenter.default.post(
@@ -986,7 +995,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
     // MARK: Private
     
-    fileprivate let fetchedResultsController: CoreStoreFetchedResultsController
+    fileprivate var fetchedResultsController: CoreStoreFetchedResultsController
     fileprivate let taskGroup = DispatchGroup()
     fileprivate let sectionIndexTransformer: (_ sectionName: KeyPath?) -> String?
     
@@ -1005,7 +1014,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     private var didInsertSectionKey: Void?
     private var didDeleteSectionKey: Void?
     
-    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
+    private var fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
     private var observerForWillChangePersistentStore: NotificationObserver!
     private var observerForDidChangePersistentStore: NotificationObserver!
     private let transactionQueue: DispatchQueue
@@ -1032,9 +1041,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         }
     }
     
-    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<ObjectType>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<ObjectType>) -> Void)?) {
-        
-        self.isSectioned = (sectionBy != nil)
+    private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<ObjectType>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) -> (controller: CoreStoreFetchedResultsController, delegate: FetchedResultsControllerDelegate) {
         
         let fetchRequest = CoreStoreFetchRequest()
         fetchRequest.fetchLimit = 0
@@ -1052,9 +1059,25 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
         
         let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
+        fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
         
-        self.fetchedResultsController = fetchedResultsController
-        self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
+        return (fetchedResultsController, fetchedResultsControllerDelegate)
+    }
+    
+    private let from: From<ObjectType>
+    private let sectionBy: SectionBy?
+    
+    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<ObjectType>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<ObjectType>) -> Void)?) {
+        
+        self.isSectioned = (sectionBy != nil)
+        self.from = from
+        self.sectionBy = sectionBy
+        (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = ListMonitor.recreateFetchedResultsController(
+            context: context,
+            from: from,
+            sectionBy: sectionBy,
+            applyFetchClauses: applyFetchClauses
+        )
         
         if let sectionIndexTransformer = sectionBy?.sectionIndexTransformer {
             
@@ -1066,9 +1089,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         }
         self.transactionQueue = transactionQueue
         self.applyFetchClauses = applyFetchClauses
-        
-        fetchedResultsControllerDelegate.handler = self
-        fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
+        self.fetchedResultsControllerDelegate.handler = self
         
         guard let coordinator = context.parentStack?.coordinator else {
             
@@ -1129,7 +1150,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
             
             transactionQueue.async {
                 
-                try! fetchedResultsController.performFetchFromSpecifiedStores()
+                try! self.fetchedResultsController.performFetchFromSpecifiedStores()
                 self.taskGroup.notify(queue: .main) {
                     
                     createAsynchronously(self)
@@ -1138,7 +1159,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         }
         else {
             
-            try! fetchedResultsController.performFetchFromSpecifiedStores()
+            try! self.fetchedResultsController.performFetchFromSpecifiedStores()
         }
     }
 }
@@ -1326,12 +1347,15 @@ extension ListMonitor: FetchedResultsControllerHandler {
     }
     
    internal func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        
+    
+        defer {
+            
+            self.taskGroup.leave()
+        }
         NotificationCenter.default.post(
             name: Notification.Name.listMonitorDidChangeList,
             object: self
         )
-        self.taskGroup.leave()
     }
     
    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
