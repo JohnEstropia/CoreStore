@@ -60,24 +60,24 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             relationship.value = relationship2.value
         }
         
-        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
         public var value: D? {
@@ -124,6 +124,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let minCount: Int = 0
         internal let maxCount: Int = 1
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
+        internal let versionHashModifier: String?
+        internal let renamingIdentifier: String?
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -133,11 +135,13 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule) {
+        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, versionHashModifier: String?, renamingIdentifier: String?) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
             self.inverse = (D.self, inverseKeyPath)
+            self.versionHashModifier = versionHashModifier
+            self.renamingIdentifier = renamingIdentifier
         }
     }
     
@@ -163,24 +167,24 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             relationship.value = relationship2.value
         }
         
-        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
+        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
+            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
         // TODO: add subscripts, indexed operations for more performant single updates
@@ -237,6 +241,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let minCount: Int
         internal let maxCount: Int
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
+        internal let versionHashModifier: String?
+        internal let renamingIdentifier: String?
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -246,11 +252,13 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: String, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, minCount: Int, maxCount: Int) {
+        private init(keyPath: String, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: String?, renamingIdentifier: String?) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
             self.inverse = (D.self, inverseKeyPath)
+            self.versionHashModifier = versionHashModifier
+            self.renamingIdentifier = renamingIdentifier
             
             let range = (max(0, minCount) ... maxCount)
             self.minCount = range.lowerBound
@@ -285,24 +293,24 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             relationship.value = Set(relationship2.value)
         }
         
-        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
+        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
+            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0) {
+        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount)
+            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
         // TODO: add subscripts, indexed operations for more performant single updates
@@ -359,6 +367,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let minCount: Int
         internal let maxCount: Int
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
+        internal let versionHashModifier: String?
+        internal let renamingIdentifier: String?
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -368,11 +378,13 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, minCount: Int, maxCount: Int) {
+        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: String?, renamingIdentifier: String?) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
             self.inverse = (D.self, inverseKeyPath)
+            self.versionHashModifier = versionHashModifier
+            self.renamingIdentifier = renamingIdentifier
             
             let range = (max(0, minCount) ... maxCount)
             self.minCount = range.lowerBound
@@ -412,6 +424,8 @@ internal protocol RelationshipProtocol: class {
     var deleteRule: NSDeleteRule { get }
     var inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?) { get }
     var parentObject: () -> CoreStoreObject { get set }
+    var versionHashModifier: String? { get }
+    var renamingIdentifier: String? { get }
     var minCount: Int { get }
     var maxCount: Int { get }
 }

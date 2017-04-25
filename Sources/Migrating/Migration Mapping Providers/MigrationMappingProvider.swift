@@ -27,53 +27,78 @@ import CoreData
 import Foundation
 
 
-// MARK: - MigrationMappingProvider
+// MARK: - SchemaMappingProvider
 
-public protocol MigrationMappingProvider {
+public protocol SchemaMappingProvider {
     
-    associatedtype SourceSchema: DynamicSchema
-    associatedtype DestinationSchema: DynamicSchema
+    var sourceSchema: DynamicSchema { get }
+    var destinationSchema: DynamicSchema { get }
     
-    var sourceSchema: SourceSchema { get }
-    var destinationSchema: DestinationSchema { get }
-    
-    init(source: SourceSchema, destination: DestinationSchema)
-    
-//    func migrate(
-//        from oldObject: SourceType,
-//        to newObject: DestinationType,
-//        transaction: UnsafeDataTransaction
-//    )
-//    
-//    func forEachPropertyMapping(
-//        from oldObject: SourceType,
-//        to newObject: DestinationType,
-//        removed: (_ keyPath: KeyPath) -> Void,
-//        added: (_ keyPath: KeyPath) -> Void,
-//        transformed: (_ keyPath: KeyPath) -> Void,
-//        copied: (_ keyPath: KeyPath) -> Void
-//    )
+    func createMappingModel() throws -> (mappingModel: NSMappingModel, migrationType: MigrationType)
 }
 
-public extension MigrationMappingProvider {
+public protocol EntityMappingProvider {
     
-//    func migrate(from oldObject: SourceType, to newObject: DestinationType, transaction: UnsafeDataTransaction) {
-//        
-//        
-//    }
-//    
-//    func forEachPropertyMapping(from oldObject: SourceType, to newObject: DestinationType, removed: (_ keyPath: KeyPath) -> Void, added: (_ keyPath: KeyPath) -> Void, transformed: (_ keyPath: KeyPath) -> Void) {
-//        
-//        let oldAttributes = oldObject.cs_toRaw().entity.attributesByName
-//        let newAttributes = newObject.cs_toRaw().entity.attributesByName
-//        let oldAttributeKeys = Set(oldAttributes.keys)
-//        let newAttributeKeys = Set(newAttributes.keys)
-//        for keyPath in
-//    }
+    var source: (schema: DynamicSchema, entity: DynamicEntity) { get }
+    var destination: (schema: DynamicSchema, entity: DynamicEntity) { get }
+    
+    func createEntityMapping() -> NSEntityMapping
 }
 
-public extension MigrationMappingProvider {
+
+// MARK: - XcodeMappingModelProvider
+
+open class XcodeMappingModelProvider<S: DynamicSchema, D: DynamicSchema>: SchemaMappingProvider {
     
+    private let mappingModelBundles: [Bundle]
+    
+    public required init(source: SourceSchema, destination: DestinationSchema, mappingModelBundles: [Bundle] = Bundle.allBundles) {
+        
+        self.sourceSchema = source
+        self.destinationSchema = destination
+        self.mappingModelBundles = mappingModelBundles
+    }
+    
+    
+    // MARK: SchemaMappingProvider
+    
+    public typealias SourceSchema = S
+    public typealias DestinationSchema = D
+    
+    public let sourceSchema: SourceSchema
+    public let destinationSchema: DestinationSchema
+    
+    public func createMappingModel() throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
+        
+        let sourceModel = self.sourceSchema.rawModel()
+        let destinationModel = self.destinationSchema.rawModel()
+        
+        if let mappingModel = NSMappingModel(
+            from: self.mappingModelBundles,
+            forSourceModel: sourceModel,
+            destinationModel: destinationModel) {
+            
+            return (
+                mappingModel,
+                .heavyweight(
+                    sourceVersion: self.sourceSchema.modelVersion,
+                    destinationVersion: self.destinationSchema.modelVersion
+                )
+            )
+        }
+        
+        let mappingModel = try NSMappingModel.inferredMappingModel(
+            forSourceModel: sourceModel,
+            destinationModel: destinationModel
+        )
+        return (
+            mappingModel,
+            .lightweight(
+                sourceVersion: self.sourceSchema.modelVersion,
+                destinationVersion: self.destinationSchema.modelVersion
+            )
+        )
+    }
 }
 
 

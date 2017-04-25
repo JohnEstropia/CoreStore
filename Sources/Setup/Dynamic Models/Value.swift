@@ -59,12 +59,14 @@ public enum ValueContainer<O: CoreStoreObject> {
             attribute.value = attribute2.value
         }
         
-        public init(_ keyPath: KeyPath, `default`: V = V.cs_emptyValue(), isIndexed: Bool = false, isTransient: Bool = false, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void = { $1($2) }) {
+        public init(_ keyPath: KeyPath, `default`: V = V.cs_emptyValue(), isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void = { $1($2) }) {
             
             self.keyPath = keyPath
             self.isIndexed = isIndexed
             self.isTransient = isTransient
             self.defaultValue = `default`.cs_toImportableNativeType()
+            self.versionHashModifier = versionHashModifier
+            self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
             self.customSetter = customSetter
         }
@@ -129,6 +131,8 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let isIndexed: Bool
         internal let isTransient: Bool
         internal let defaultValue: Any?
+        internal let versionHashModifier: String?
+        internal let renamingIdentifier: String?
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -162,11 +166,13 @@ public enum ValueContainer<O: CoreStoreObject> {
             attribute.value = attribute2.value
         }
         
-        public init(_ keyPath: KeyPath, `default`: V? = nil, isTransient: Bool = false, customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void = { $1($2) }) {
+        public init(_ keyPath: KeyPath, `default`: V? = nil, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void = { $1($2) }) {
             
             self.keyPath = keyPath
             self.isTransient = isTransient
             self.defaultValue = `default`?.cs_toImportableNativeType()
+            self.versionHashModifier = versionHashModifier
+            self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
             self.customSetter = customSetter
         }
@@ -230,6 +236,8 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let isIndexed = false
         internal let isTransient: Bool
         internal let defaultValue: Any?
+        internal let versionHashModifier: String?
+        internal let renamingIdentifier: String?
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -263,12 +271,14 @@ public enum TransformableContainer<O: CoreStoreObject> {
             attribute.value = attribute2.value
         }
         
-        public init(_ keyPath: KeyPath, `default`: V, isIndexed: Bool = false, isTransient: Bool = false, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void = { $1($2) }) {
+        public init(_ keyPath: KeyPath, `default`: V, isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void = { $1($2) }) {
             
             self.keyPath = keyPath
             self.defaultValue = `default`
             self.isIndexed = isIndexed
             self.isTransient = isTransient
+            self.versionHashModifier = versionHashModifier
+            self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
             self.customSetter = customSetter
         }
@@ -332,6 +342,8 @@ public enum TransformableContainer<O: CoreStoreObject> {
         internal let isIndexed: Bool
         internal let isTransient: Bool
         internal let defaultValue: Any?
+        internal let versionHashModifier: String?
+        internal let renamingIdentifier: String?
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -365,12 +377,14 @@ public enum TransformableContainer<O: CoreStoreObject> {
             attribute.value = attribute2.value
         }
         
-        public init(_ keyPath: KeyPath, `default`: V? = nil, isIndexed: Bool = false, isTransient: Bool = false, customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void = { $1($2) }) {
+        public init(_ keyPath: KeyPath, `default`: V? = nil, isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void = { $1($2) }) {
             
             self.keyPath = keyPath
             self.defaultValue = `default`
             self.isIndexed = isIndexed
             self.isTransient = isTransient
+            self.versionHashModifier = versionHashModifier
+            self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
             self.customSetter = customSetter
         }
@@ -434,6 +448,8 @@ public enum TransformableContainer<O: CoreStoreObject> {
         internal let isIndexed: Bool
         internal let isTransient: Bool
         internal let defaultValue: Any?
+        internal let versionHashModifier: String?
+        internal let renamingIdentifier: String?
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -460,5 +476,7 @@ internal protocol AttributeProtocol: class {
     var isIndexed: Bool { get }
     var isTransient: Bool { get }
     var defaultValue: Any? { get }
+    var versionHashModifier: String? { get }
+    var renamingIdentifier: String? { get }
     var parentObject: () -> CoreStoreObject { get set }
 }

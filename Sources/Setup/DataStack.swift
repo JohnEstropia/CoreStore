@@ -149,7 +149,7 @@ public final class DataStack: Equatable {
                 let actualType = anyEntity.type
                 if (actualType as AnyClass).isSubclass(of: type) {
                     
-                    entityTypesByName[entityDescription.name!] = actualType
+                    entityTypesByName[entityDescription.name!] = (actualType as! CoreStoreObject.Type)
                 }
             }
         }

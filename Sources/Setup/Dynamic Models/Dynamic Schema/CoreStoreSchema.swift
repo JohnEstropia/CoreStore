@@ -137,7 +137,7 @@ public final class CoreStoreSchema: DynamicSchema {
             )
         }
         
-        internal init(type: CoreStoreObject.Type, entityName: String, isAbstract: Bool, versionHashModifier: String?) {
+        internal init(type: DynamicObject.Type, entityName: String, isAbstract: Bool, versionHashModifier: String?) {
             
             self.type = type
             self.entityName = entityName
@@ -168,7 +168,7 @@ public final class CoreStoreSchema: DynamicSchema {
         
         // MARK: DynamicEntity
         
-        internal let type: CoreStoreObject.Type
+        internal let type: DynamicObject.Type
         internal let entityName: EntityName
         internal let isAbstract: Bool
         internal let versionHashModifier: String?
@@ -223,7 +223,8 @@ public final class CoreStoreSchema: DynamicSchema {
                     description.isIndexed = attribute.isIndexed
                     description.defaultValue = attribute.defaultValue
                     description.isTransient = attribute.isTransient
-                    // TODO: versionHash, renamingIdentifier, etc
+                    description.versionHashModifier = attribute.versionHashModifier
+                    description.renamingIdentifier = attribute.renamingIdentifier
                     propertyDescriptions.append(description)
                     
                 case let relationship as RelationshipProtocol:
@@ -233,7 +234,8 @@ public final class CoreStoreSchema: DynamicSchema {
                     description.maxCount = relationship.maxCount
                     description.isOrdered = relationship.isOrdered
                     description.deleteRule = relationship.deleteRule
-                    // TODO: versionHash, renamingIdentifier, etc
+                    description.versionHashModifier = relationship.versionHashModifier
+                    description.renamingIdentifier = relationship.renamingIdentifier
                     propertyDescriptions.append(description)
                     
                 default:
@@ -243,7 +245,7 @@ public final class CoreStoreSchema: DynamicSchema {
             return propertyDescriptions
         }
         
-        entityDescription.properties = createProperties(for: entity.type)
+        entityDescription.properties = createProperties(for: entity.type as! CoreStoreObject.Type)
         return entityDescription
     }
     
@@ -293,7 +295,7 @@ public final class CoreStoreSchema: DynamicSchema {
         for (entity, entityDescription) in entityDescriptionsByEntity {
             
             let relationshipsByName = relationshipsByNameByEntity[entity]!
-            for child in Mirror(reflecting: entity.type.meta).children {
+            for child in Mirror(reflecting: (entity.type as! CoreStoreObject.Type).meta).children {
                 
                 switch child.value {
                     
@@ -360,7 +362,7 @@ public final class CoreStoreSchema: DynamicSchema {
         for (entity, entityDescription) in entityDescriptionsByEntity {
             
             connectBaseEntity(
-                mirror: Mirror(reflecting: entity.type.meta),
+                mirror: Mirror(reflecting: (entity.type as! CoreStoreObject.Type).meta),
                 entityDescription: entityDescription
             )
         }

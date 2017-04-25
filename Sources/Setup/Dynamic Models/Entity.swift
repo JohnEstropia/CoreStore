@@ -32,7 +32,7 @@ import ObjectiveC
 
 public protocol DynamicEntity {
     
-    var type: CoreStoreObject.Type { get }
+    var type: DynamicObject.Type { get }
     var entityName: EntityName { get }
     var isAbstract: Bool { get }
     var versionHashModifier: String? { get }
@@ -41,7 +41,7 @@ public protocol DynamicEntity {
 
 // MARK: Entity
 
-public struct Entity<O: CoreStoreObject>: DynamicEntity, Hashable {
+public struct Entity<O: DynamicObject>: DynamicEntity, Hashable {
     
     public init(_ entityName: String, isAbstract: Bool = false, versionHashModifier: String? = nil) {
         
@@ -59,7 +59,7 @@ public struct Entity<O: CoreStoreObject>: DynamicEntity, Hashable {
     
     // MARK: DynamicEntity
     
-    public let type: CoreStoreObject.Type
+    public let type: DynamicObject.Type
     public let entityName: EntityName
     public let isAbstract: Bool
     public let versionHashModifier: String?

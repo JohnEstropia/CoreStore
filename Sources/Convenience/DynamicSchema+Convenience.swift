@@ -187,7 +187,11 @@ public extension DynamicSchema {
                     }
                     let indexedString = attribute.isIndexed ? ", isIndexed: true" : ""
                     let transientString = attribute.isTransient ? ", isTransient: true" : ""
-                    output.append("    let \(attributeName) = \(containerType)<\(String(describing: valueType))>(\"\(attributeName)\"\(indexedString)\(defaultString)\(transientString))\n")
+                    // TODO: escape strings
+                    let versionHashModifierString = attribute.versionHashModifier.flatMap({ ", versionHashModifier: \"\($0)\"" }) ?? ""
+                    // TODO: escape strings
+                    let renamingIdentifierString = attribute.renamingIdentifier.flatMap({ ", renamingIdentifier: \"\($0)\"" }) ?? ""
+                    output.append("    let \(attributeName) = \(containerType)<\(String(describing: valueType))>(\"\(attributeName)\"\(indexedString)\(defaultString)\(transientString)\(versionHashModifierString)\(renamingIdentifierString))\n")
                 }
             }
             
@@ -251,7 +255,9 @@ public extension DynamicSchema {
                             fatalError("Unsupported delete rule \((relationship.deleteRule)) for relationship \"\(relationshipQualifier)\"")
                         }
                     }
-                    output.append("    let \(relationshipName) = \(containerType)<\(relationship.destinationEntity!.name!)>(\"\(relationshipName)\"\(inverseString)\(deleteRuleString)\(minCountString)\(maxCountString))\n")
+                    let versionHashModifierString = relationship.versionHashModifier.flatMap({ ", versionHashModifier: \"\($0)\"" }) ?? ""
+                    let renamingIdentifierString = relationship.renamingIdentifier.flatMap({ ", renamingIdentifier: \"\($0)\"" }) ?? ""
+                    output.append("    let \(relationshipName) = \(containerType)<\(relationship.destinationEntity!.name!)>(\"\(relationshipName)\"\(inverseString)\(deleteRuleString)\(minCountString)\(maxCountString)\(versionHashModifierString)\(renamingIdentifierString))\n")
                 }
             }
         }
