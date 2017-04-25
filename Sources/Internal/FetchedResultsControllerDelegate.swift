@@ -55,6 +55,9 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     internal var enabled = true
     
     @nonobjc
+    internal let taskGroup = DispatchGroup()
+    
+    @nonobjc
     internal weak var handler: FetchedResultsControllerHandler?
     
     @nonobjc
@@ -78,6 +81,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     @objc
     dynamic func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
+        self.taskGroup.enter()
         guard self.enabled else {
             
             return
@@ -92,6 +96,10 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
     @objc
     dynamic func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
+        defer {
+            
+            self.taskGroup.leave()
+        }
         guard self.enabled else {
             
             return

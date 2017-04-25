@@ -48,7 +48,7 @@ internal struct EntityIdentifier: Hashable {
     internal init(_ type: NSManagedObject.Type) {
         
         self.category = .coreData
-        self.interfacedClassName = String(reflecting: type)
+        self.interfacedClassName = NSStringFromClass(type)
     }
     
     internal init(_ type: CoreStoreObject.Type) {

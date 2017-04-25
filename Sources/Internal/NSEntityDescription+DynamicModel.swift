@@ -38,23 +38,29 @@ internal extension NSEntityDescription {
             
             guard let userInfo = self.userInfo,
                 let typeName = userInfo[UserInfoKey.CoreStoreManagedObjectTypeName] as! String?,
-                let entityName = userInfo[UserInfoKey.CoreStoreManagedObjectEntityName] as! String? else {
+                let entityName = userInfo[UserInfoKey.CoreStoreManagedObjectEntityName] as! String?,
+                let isAbstract = userInfo[UserInfoKey.CoreStoreManagedObjectIsAbstract] as! Bool? else {
                     
                     return nil
             }
             return CoreStoreSchema.AnyEntity(
                 type: NSClassFromString(typeName) as! CoreStoreObject.Type,
-                entityName: entityName
+                entityName: entityName,
+                isAbstract: isAbstract,
+                versionHashModifier: userInfo[UserInfoKey.CoreStoreManagedObjectVersionHashModifier] as! String?
             )
         }
         set {
             
             if let newValue = newValue {
                 
-                self.userInfo = [
+                var userInfo: [AnyHashable : Any] = [
                     UserInfoKey.CoreStoreManagedObjectTypeName: NSStringFromClass(newValue.type),
-                    UserInfoKey.CoreStoreManagedObjectEntityName: newValue.entityName
+                    UserInfoKey.CoreStoreManagedObjectEntityName: newValue.entityName,
+                    UserInfoKey.CoreStoreManagedObjectIsAbstract: newValue.isAbstract
                 ]
+                userInfo[UserInfoKey.CoreStoreManagedObjectVersionHashModifier] = newValue.versionHashModifier
+                self.userInfo = userInfo
             }
             else {
                 
@@ -72,5 +78,7 @@ internal extension NSEntityDescription {
         
         fileprivate static let CoreStoreManagedObjectTypeName = "CoreStoreManagedObjectTypeName"
         fileprivate static let CoreStoreManagedObjectEntityName = "CoreStoreManagedObjectEntityName"
+        fileprivate static let CoreStoreManagedObjectIsAbstract = "CoreStoreManagedObjectIsAbstract"
+        fileprivate static let CoreStoreManagedObjectVersionHashModifier = "CoreStoreManagedObjectVersionHashModifier"
     }
 }

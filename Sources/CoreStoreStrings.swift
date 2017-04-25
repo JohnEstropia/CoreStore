@@ -45,7 +45,7 @@ public typealias ModelConfiguration = String?
 // MARK: - ModelVersion
 
 /**
- An `String` that pertains to the name of a versioned *.xcdatamodeld file (without the file extension).
+ An `String` that pertains to the name of a versioned *.xcdatamodeld file (without the file extension). Model version strings don't necessarily have to be numeric or ordered in any way. The migration sequence will always be decided by (or the lack of) the `MigrationChain`.
  */
 public typealias ModelVersion = String
 

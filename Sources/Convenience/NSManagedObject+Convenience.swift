@@ -112,8 +112,7 @@ public extension NSManagedObject {
     }
     
     @nonobjc @inline(__always)
-    @discardableResult
-    public func setValue(_ value: Any?, forKvcKey KVCKey: KeyPath) -> Any? {
+    public func setValue(_ value: Any?, forKvcKey KVCKey: KeyPath) {
         
         self.willChangeValue(forKey: KVCKey)
         defer {
@@ -121,12 +120,10 @@ public extension NSManagedObject {
             self.didChangeValue(forKey: KVCKey)
         }
         self.setPrimitiveValue(value, forKey: KVCKey)
-        return value
     }
     
     @nonobjc @inline(__always)
-    @discardableResult
-    public func setValue<T>(_ value: T, forKvcKey KVCKey: KeyPath, willSetValue: (T) throws -> Any?) rethrows -> T {
+    public func setValue<T>(_ value: T, forKvcKey KVCKey: KeyPath, willSetValue: (T) throws -> Any?) rethrows {
         
         self.willChangeValue(forKey: KVCKey)
         defer {
@@ -134,20 +131,6 @@ public extension NSManagedObject {
             self.didChangeValue(forKey: KVCKey)
         }
         self.setPrimitiveValue(try willSetValue(value), forKey: KVCKey)
-        return value
-    }
-    
-    @nonobjc @inline(__always)
-    @discardableResult
-    public func setValue<T>(_ value: T, forKvcKey KVCKey: KeyPath, willSetValue: (T) throws -> Any?, didSetValue: (T) -> T = { $0 }) rethrows -> T {
-        
-        self.willChangeValue(forKey: KVCKey)
-        defer {
-            
-            self.didChangeValue(forKey: KVCKey)
-        }
-        self.setPrimitiveValue(try willSetValue(value), forKey: KVCKey)
-        return didSetValue(value)
     }
     
     /**

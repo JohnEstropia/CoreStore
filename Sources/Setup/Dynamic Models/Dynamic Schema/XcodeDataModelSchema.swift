@@ -1,5 +1,5 @@
 //
-//  LegacyXcodeDataModel.swift
+//  XcodeDataModelSchema.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,14 +27,19 @@ import CoreData
 import Foundation
 
 
-// MARK: - LegacyXcodeDataModel
+// MARK: - XcodeDataModelSchema
 
-public final class LegacyXcodeDataModel: DynamicSchema {
+public final class XcodeDataModelSchema: DynamicSchema {
     
-    public required init(modelName: ModelVersion, model: NSManagedObjectModel) {
+    public required init(modelVersion: ModelVersion, modelVersionFileURL: URL) {
         
-        self.modelVersion = modelName
-        self.model = model
+        CoreStore.assert(
+            NSManagedObjectModel(contentsOf: modelVersionFileURL) != nil,
+            "Could not find the \"\(modelVersion).mom\" version file for the model at URL \"\(modelVersionFileURL)\"."
+        )
+        
+        self.modelVersion = modelVersion
+        self.modelVersionFileURL = modelVersionFileURL
     }
     
     
@@ -43,12 +48,31 @@ public final class LegacyXcodeDataModel: DynamicSchema {
     public let modelVersion: ModelVersion
     
     public func rawModel() -> NSManagedObjectModel {
-        
-        return self.model
+    
+        if let cachedRawModel = self.cachedRawModel {
+            
+            return cachedRawModel
+        }
+        if let rawModel = NSManagedObjectModel(contentsOf: self.modelVersionFileURL) {
+            
+            self.cachedRawModel = rawModel
+            return rawModel
+        }
+        CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel.self)) from the model at URL \"\(self.modelVersionFileURL)\".")
+    }
+    
+    
+    // MARK: Internal
+    
+    internal let modelVersionFileURL: URL
+    
+    private lazy var rootModelFileURL: URL = cs_lazy { [unowned self] in
+     
+        return self.modelVersionFileURL.deletingLastPathComponent()
     }
     
     
     // MARK: Private
     
-    private let model: NSManagedObjectModel
+    private weak var cachedRawModel: NSManagedObjectModel?
 }

@@ -37,35 +37,6 @@ public protocol DynamicObject: class {
     func cs_toRaw() -> NSManagedObject
 }
 
-public extension DynamicObject where Self: CoreStoreObject {
-    
-    @inline(__always)
-    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Required<V>) -> String  {
-        
-        return attribute(self.meta).keyPath
-    }
-    
-    @inline(__always)
-    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> String  {
-        
-        return attribute(self.meta).keyPath
-    }
-    
-    @inline(__always)
-    public static func `where`(_ condition: (Self) -> Where) -> Where  {
-        
-        return condition(self.meta)
-    }
-    
-    
-    // MARK: Internal
-    
-    internal static var meta: Self {
-        
-        return self.init(asMeta: ())
-    }
-}
-
 
 // MARK: - NSManagedObject
 
@@ -114,16 +85,38 @@ extension CoreStoreObject {
             
             context.assign(object, to: store)
         }
-        return self.init(object)
+        return self.cs_fromRaw(object: object)
     }
     
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
         
-        return self.init(object)
+        if let coreStoreObject = object.coreStoreObject {
+            
+            @inline(__always)
+            func forceCast<T: CoreStoreObject>(_ value: CoreStoreObject) -> T {
+                
+                return value as! T
+            }
+            return forceCast(coreStoreObject)
+        }
+        let coreStoreObject = self.init(rawObject: object)
+        object.coreStoreObject = coreStoreObject
+        return coreStoreObject
     }
     
     public func cs_toRaw() -> NSManagedObject {
         
         return self.rawObject!
+    }
+}
+
+
+// MARK: - Internal
+
+internal extension DynamicObject where Self: CoreStoreObject {
+    
+    internal static var meta: Self {
+        
+        return self.init(asMeta: ())
     }
 }

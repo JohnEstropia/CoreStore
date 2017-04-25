@@ -400,9 +400,9 @@ extension LegacySQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringC
 }
 
 
-// MARK: - LegacyXcodeDataModel
+// MARK: - LegacyXcodeDataModelSchema
 
-extension LegacyXcodeDataModel: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+extension LegacyXcodeDataModelSchema: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
     
@@ -1045,9 +1045,9 @@ extension VersionLock: CustomStringConvertible, CustomDebugStringConvertible, Co
 }
 
 
-// MARK: - XcodeDataModel
+// MARK: - XcodeDataModelSchema
 
-extension XcodeDataModel: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+extension XcodeDataModelSchema: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
     

@@ -39,9 +39,9 @@ public extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
      */
-    public func importObject<T>(
+    public func importObject<T: DynamicObject & ImportableObject>(
         _ into: Into<T>,
-        source: T.ImportSource) throws -> T? where T: DynamicObject, T: ImportableObject {
+        source: T.ImportSource) throws -> T? {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -69,9 +69,9 @@ public extension BaseDataTransaction {
      - parameter source: the object to import values from
      - throws: an `Error` thrown from any of the `ImportableObject` methods
      */
-    public func importObject<T>(
+    public func importObject<T: DynamicObject & ImportableObject>(
         _ object: T,
-        source: T.ImportSource) throws where T: DynamicObject, T: ImportableObject {
+        source: T.ImportSource) throws {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -97,9 +97,9 @@ public extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the array of created `ImportableObject` instances
      */
-    public func importObjects<T, S: Sequence>(
+    public func importObjects<T: DynamicObject & ImportableObject, S: Sequence>(
         _ into: Into<T>,
-        sourceArray: S) throws -> [T] where T: DynamicObject, T: ImportableObject, S.Iterator.Element == T.ImportSource {
+        sourceArray: S) throws -> [T] where S.Iterator.Element == T.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -133,9 +133,9 @@ public extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
      */
-    public func importUniqueObject<T>(
+    public func importUniqueObject<T: DynamicObject & ImportableUniqueObject>(
         _ into: Into<T>,
-        source: T.ImportSource) throws -> T? where T: DynamicObject, T: ImportableUniqueObject  {
+        source: T.ImportSource) throws -> T? {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -185,10 +185,10 @@ public extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the array of created/updated `ImportableUniqueObject` instances
      */
-    public func importUniqueObjects<T, S: Sequence>(
+    public func importUniqueObjects<T: DynamicObject & ImportableUniqueObject, S: Sequence>(
         _ into: Into<T>,
         sourceArray: S,
-        preProcess: @escaping (_ mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] where T: DynamicObject, T: ImportableUniqueObject, S.Iterator.Element == T.ImportSource {
+        preProcess: @escaping (_ mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] where S.Iterator.Element == T.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),

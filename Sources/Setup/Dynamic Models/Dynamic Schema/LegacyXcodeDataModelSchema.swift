@@ -1,5 +1,5 @@
 //
-//  XcodeDataModel.swift
+//  LegacyXcodeDataModelSchema.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,19 +27,14 @@ import CoreData
 import Foundation
 
 
-// MARK: - XcodeDataModel
+// MARK: - LegacyXcodeDataModelSchema
 
-public final class XcodeDataModel: DynamicSchema {
+public final class LegacyXcodeDataModelSchema: DynamicSchema {
     
-    public required init(modelVersion: ModelVersion, modelVersionFileURL: URL) {
+    public required init(modelName: ModelVersion, model: NSManagedObjectModel) {
         
-        CoreStore.assert(
-            NSManagedObjectModel(contentsOf: modelVersionFileURL) != nil,
-            "Could not find the \"\(modelVersion).mom\" version file for the model at URL \"\(modelVersionFileURL)\"."
-        )
-        
-        self.modelVersion = modelVersion
-        self.modelVersionFileURL = modelVersionFileURL
+        self.modelVersion = modelName
+        self.model = model
     }
     
     
@@ -48,31 +43,12 @@ public final class XcodeDataModel: DynamicSchema {
     public let modelVersion: ModelVersion
     
     public func rawModel() -> NSManagedObjectModel {
-    
-        if let cachedRawModel = self.cachedRawModel {
-            
-            return cachedRawModel
-        }
-        if let rawModel = NSManagedObjectModel(contentsOf: self.modelVersionFileURL) {
-            
-            self.cachedRawModel = rawModel
-            return rawModel
-        }
-        CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel.self)) from the model at URL \"\(self.modelVersionFileURL)\".")
-    }
-    
-    
-    // MARK: Internal
-    
-    internal let modelVersionFileURL: URL
-    
-    private lazy var rootModelFileURL: URL = cs_lazy { [unowned self] in
-     
-        return self.modelVersionFileURL.deletingLastPathComponent()
+        
+        return self.model
     }
     
     
     // MARK: Private
     
-    private weak var cachedRawModel: NSManagedObjectModel?
+    private let model: NSManagedObjectModel
 }

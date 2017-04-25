@@ -97,6 +97,14 @@ public final class DataStack: Equatable {
     }
     
     /**
+     Returns the `DataStack`'s model schema.
+     */
+    public var modelSchema: DynamicSchema {
+        
+        return self.schemaHistory.schemaByVersion[self.schemaHistory.currentModelVersion]!
+    }
+    
+    /**
      Returns the entity name-to-class type mapping from the `DataStack`'s model.
      */
     public func entityTypesByName(for type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {
@@ -141,7 +149,7 @@ public final class DataStack: Equatable {
                 let actualType = anyEntity.type
                 if (actualType as AnyClass).isSubclass(of: type) {
                     
-                    entityTypesByName[entityDescription.name!] = actualType
+                    entityTypesByName[entityDescription.name!] = (actualType as! CoreStoreObject.Type)
                 }
             }
         }
@@ -442,6 +450,21 @@ public final class DataStack: Equatable {
     }
     
     
+    // MARK: 3rd Party Utilities
+    
+    /**
+     Allow external libraries to store custom data in the `DataStack`. App code should rarely have a need for this.
+     ```
+     enum Static {
+        static var myDataKey: Void?
+     }
+     CoreStore.defaultStack.userInfo[&Static.myDataKey] = myObject
+     ```
+     - Important: Do not use this method to store thread-sensitive data.
+     */
+    private let userInfo = UserInfo()
+    
+    
     // MARK: Equatable
     
     public static func == (lhs: DataStack, rhs: DataStack) -> Bool {
@@ -596,14 +619,14 @@ public final class DataStack: Equatable {
      - parameter model: the `NSManagedObjectModel` for the stack
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    @available(*, deprecated: 3.1, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModel instance as argument")
+    @available(*, deprecated: 3.1, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModelSchema instance as argument")
     public convenience init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {
         
         let modelVersion = migrationChain.leafVersions.first!
         self.init(
             schemaHistory: SchemaHistory(
                 allSchema: [
-                    LegacyXcodeDataModel(
+                    LegacyXcodeDataModelSchema(
                         modelName: modelVersion,
                         model: model
                     )

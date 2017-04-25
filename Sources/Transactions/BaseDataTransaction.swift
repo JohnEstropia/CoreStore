@@ -438,6 +438,21 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     
+    // MARK: 3rd Party Utilities
+    
+    /**
+     Allow external libraries to store custom data in the transaction. App code should rarely have a need for this.
+     ```
+     enum Static {
+        static var myDataKey: Void?
+     }
+     transaction.userInfo[&Static.myDataKey] = myObject
+     ```
+     - Important: Do not use this method to store thread-sensitive data.
+     */
+    private let userInfo = UserInfo()
+    
+    
     // MARK: Internal
     
     internal let context: NSManagedObjectContext
