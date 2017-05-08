@@ -227,7 +227,12 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
         
         self.setEnabled(false)
         let progress = dataStack.addStorage(
-            SQLiteStore(fileName: "MigrationDemo.sqlite"),
+            SQLiteStore(
+                fileName: "MigrationDemo.sqlite"/*,
+                migrationMappingProviders: [
+                    CustomSchemaMappingProvider(from: "MigrationDemoV3", to: "MigrationDemoV2")
+                ]*/
+            ),
             completion: { [weak self] (result) -> Void in
                 
                 guard let `self` = self else {

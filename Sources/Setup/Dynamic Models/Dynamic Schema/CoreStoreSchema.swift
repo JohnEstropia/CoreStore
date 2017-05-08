@@ -203,7 +203,7 @@ public final class CoreStoreSchema: DynamicSchema {
     private static func firstPassCreateEntityDescription(from entity: AnyEntity) -> NSEntityDescription {
         
         let entityDescription = NSEntityDescription()
-        entityDescription.anyEntity = entity
+        entityDescription.coreStoreEntity = entity
         entityDescription.name = entity.entityName
         entityDescription.isAbstract = entity.isAbstract
         entityDescription.managedObjectClassName = NSStringFromClass(NSManagedObject.self)

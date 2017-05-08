@@ -263,7 +263,7 @@ class SetupTests: BaseTestDataTestCase {
         )
         do {
             
-            let sqliteStore = LegacySQLiteStore()
+            let sqliteStore = SQLiteStore.legacy()
             do {
                 
                 try stack.addStorageAndWait(sqliteStore)
@@ -278,7 +278,7 @@ class SetupTests: BaseTestDataTestCase {
         }
         do {
             
-            let sqliteStore = LegacySQLiteStore(
+            let sqliteStore = SQLiteStore.legacy(
                 fileName: "ConfigStore1.sqlite",
                 configuration: "Config1",
                 localStorageOptions: .recreateStoreOnModelMismatch
@@ -297,7 +297,7 @@ class SetupTests: BaseTestDataTestCase {
         }
         do {
             
-            let sqliteStore = LegacySQLiteStore(
+            let sqliteStore = SQLiteStore.legacy(
                 fileName: "ConfigStore2.sqlite",
                 configuration: "Config2",
                 localStorageOptions: .recreateStoreOnModelMismatch
@@ -320,7 +320,7 @@ class SetupTests: BaseTestDataTestCase {
     dynamic func test_ThatLegacySQLiteStores_DeleteFilesCorrectly() {
         
         let fileManager = FileManager.default
-        let sqliteStore = LegacySQLiteStore()
+        let sqliteStore = SQLiteStore.legacy()
         func createStore() throws -> [String: Any] {
             
             do {

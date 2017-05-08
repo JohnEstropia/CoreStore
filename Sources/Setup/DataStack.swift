@@ -142,7 +142,7 @@ public final class DataStack: Equatable {
                 continue
                 
             case .coreStore:
-                guard let anyEntity = entityDescription.anyEntity else {
+                guard let anyEntity = entityDescription.coreStoreEntity else {
                     
                     continue
                 }
@@ -191,22 +191,7 @@ public final class DataStack: Equatable {
     @discardableResult
     public func addStorageAndWait() throws -> SQLiteStore {
         
-        return try self.addStorageAndWait(SQLiteStore.self)
-    }
-    
-    /**
-     Creates a `StorageInterface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
-     ```
-     try dataStack.addStorageAndWait(InMemoryStore.self)
-     ```
-     - parameter storeType: the `StorageInterface` type
-     - throws: a `CoreStoreError` value indicating the failure
-     - returns: the `StorageInterface` added to the stack
-     */
-    @discardableResult
-    public func addStorageAndWait<T: StorageInterface>(_ storeType: T.Type) throws -> T where T: DefaultInitializableStore {
-        
-        return try self.addStorageAndWait(storeType.init())
+        return try self.addStorageAndWait(SQLiteStore())
     }
     
     /**
@@ -246,21 +231,6 @@ public final class DataStack: Equatable {
             )
             throw storeError
         }
-    }
-    
-    /**
-     Creates a `LocalStorageInterface` of the specified store type with default values and adds it to the stack. This method blocks until completion.
-     ```
-     try dataStack.addStorageAndWait(SQLiteStore.self)
-     ```
-     - parameter storeType: the `LocalStorageInterface` type
-     - throws: a `CoreStoreError` value indicating the failure
-     - returns: the local storage added to the stack
-     */
-    @discardableResult
-    public func addStorageAndWait<T: LocalStorage>(_ storageType: T.Type) throws -> T where T: DefaultInitializableStore {
-        
-        return try self.addStorageAndWait(storageType.init())
     }
     
     /**

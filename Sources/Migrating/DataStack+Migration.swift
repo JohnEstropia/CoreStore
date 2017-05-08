@@ -32,27 +32,6 @@ import CoreData
 public extension DataStack {
     
     /**
-     Asynchronously adds a `StorageInterface` with default settings to the stack. Migrations are also initiated by default.
-     ```
-     dataStack.addStorage(
-         InMemoryStore.self,
-         completion: { result in
-             switch result {
-             case .success(let storage): // ...
-             case .failure(let error): // ...
-             }
-         }
-     )
-     ```
-     - parameter storeType: the storage type
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
-     */
-    public func addStorage<T: StorageInterface>(_ storeType: T.Type, completion: @escaping (SetupResult<T>) -> Void) where T: DefaultInitializableStore {
-        
-        self.addStorage(storeType.init(), completion: completion)
-    }
-    
-    /**
      Asynchronously adds a `StorageInterface` to the stack. Migrations are also initiated by default.
      ```
      dataStack.addStorage(
@@ -107,28 +86,6 @@ public extension DataStack {
                 }
             }
         }
-    }
-    
-    /**
-     Asynchronously adds a `LocalStorage` with default settings to the stack. Migrations are also initiated by default.
-     ```
-     let migrationProgress = dataStack.addStorage(
-         SQLiteStore.self,
-         completion: { result in
-             switch result {
-             case .success(let storage): // ...
-             case .failure(let error): // ...
-             }
-         }
-     )
-     ```
-     - parameter storeType: the local storage type
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
-     - returns: a `Progress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
-     */
-    public func addStorage<T: LocalStorage>(_ storeType: T.Type, completion: @escaping (SetupResult<T>) -> Void) -> Progress? where T: DefaultInitializableStore {
-        
-        return self.addStorage(storeType.init() as! T.Type, completion: completion)
     }
     
     /**
@@ -683,52 +640,33 @@ public extension DataStack {
         var migrationSteps = [(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType)]()
         
         while let nextVersion = migrationChain.nextVersionFrom(currentVersion),
-            let sourceModel = schemaHistory.rawModel(for: currentVersion),
-            sourceModel != schemaHistory.rawModel,
-            let destinationModel = schemaHistory.rawModel(for: nextVersion) {
+            let sourceSchema = schemaHistory.schema(for: currentVersion),
+            sourceSchema.modelVersion != schemaHistory.currentModelVersion,
+            let destinationSchema = schemaHistory.schema(for: nextVersion) {
                 
-                if let mappingModel = NSMappingModel(
-                    from: storage.mappingModelBundles,
-                    forSourceModel: sourceModel,
-                    destinationModel: destinationModel) {
+                let mappingProviders = storage.migrationMappingProviders
+                do {
                     
-                    migrationSteps.append(
-                        (
-                            sourceModel: sourceModel,
-                            destinationModel: destinationModel,
-                            mappingModel: mappingModel,
-                            migrationType: .heavyweight(
-                                sourceVersion: currentVersion,
-                                destinationVersion: nextVersion
-                            )
-                        )
-                    )
-                }
-                else {
-                    
-                    do {
+                    try withExtendedLifetime((sourceSchema.rawModel(), destinationSchema.rawModel())) { (sourceModel, destinationModel) in
                         
-                        let mappingModel = try NSMappingModel.inferredMappingModel(
-                            forSourceModel: sourceModel,
-                            destinationModel: destinationModel
+                        let mapping = try mappingProviders.findMapping(
+                            sourceSchema: sourceSchema,
+                            destinationSchema: destinationSchema,
+                            storage: storage
                         )
-                        
                         migrationSteps.append(
                             (
                                 sourceModel: sourceModel,
                                 destinationModel: destinationModel,
-                                mappingModel: mappingModel,
-                                migrationType: .lightweight(
-                                    sourceVersion: currentVersion,
-                                    destinationVersion: nextVersion
-                                )
+                                mappingModel: mapping.mappingModel,
+                                migrationType: mapping.migrationType
                             )
                         )
                     }
-                    catch {
-                        
-                        return nil
-                    }
+                }
+                catch {
+                    
+                    return nil
                 }
                 currentVersion = nextVersion
         }
@@ -802,5 +740,33 @@ public extension DataStack {
             _ = try? fileManager.removeItem(at: temporaryFileURL)
             throw CoreStoreError(error)
         }
+    }
+}
+
+
+// MARK: - FilePrivate
+
+fileprivate extension Array where Element == SchemaMappingProvider {
+    
+    func findMapping(sourceSchema: DynamicSchema, destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
+        
+        for element in self {
+            
+            switch element {
+                
+            case let element as CustomSchemaMappingProvider
+                where element.sourceVersion == sourceSchema.modelVersion && element.destinationVersion == destinationSchema.modelVersion:
+                return try element.createMappingModel(from: sourceSchema, to: destinationSchema, storage: storage)
+                
+            case let element as XcodeSchemaMappingProvider
+                where element.sourceVersion == sourceSchema.modelVersion && element.destinationVersion == destinationSchema.modelVersion:
+                return try element.createMappingModel(from: sourceSchema, to: destinationSchema, storage: storage)
+                
+            default:
+                continue
+            }
+        }
+        return try InferredSchemaMappingProvider()
+            .createMappingModel(from: sourceSchema, to: destinationSchema, storage: storage)
     }
 }

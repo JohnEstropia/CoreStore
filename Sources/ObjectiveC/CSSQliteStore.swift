@@ -40,19 +40,18 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
     /**
      Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `CSDataStack`'s `-addStorage*:` methods, a new SQLite file will be created if it does not exist.
      
+     - Important: Initializing `CSSQLiteStore`s with custom migration mapping models is currently not supported. Create an `SQLiteStore` instance from Swift code and bridge the instance to Objective-C using its `SQLiteStore.bridgeToObjectiveC` property.
      - parameter fileURL: the local file URL for the target SQLite persistent store. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
      - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `CSLocalStorageOptionsNone`.
      */
     @objc
-    public convenience init(fileURL: URL, configuration: ModelConfiguration, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
+    public convenience init(fileURL: URL, configuration: ModelConfiguration, localStorageOptions: Int) {
         
         self.init(
             SQLiteStore(
                 fileURL: fileURL,
                 configuration: configuration,
-                mappingModelBundles: mappingModelBundles ?? Bundle.allBundles,
                 localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions)
             )
         )
@@ -61,29 +60,27 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
     /**
      Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `CSDataStack`'s `-addStorage*:` methods, a new SQLite file will be created if it does not exist.
      
-     - Warning: The default SQLite file location for the `CSLegacySQLiteStore` and `CSSQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `CSLegacySQLiteStore` instead of `CSSQLiteStore`.
+     - Important: Initializing `CSSQLiteStore`s with custom migration mapping models is currently not supported. Create an `SQLiteStore` instance from Swift code and bridge the instance to Objective-C using its `SQLiteStore.bridgeToObjectiveC` property.
      - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration
      - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `[CSLocalStorageOptions none]`.
      */
     @objc
-    public convenience init(fileName: String, configuration: ModelConfiguration, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
+    public convenience init(fileName: String, configuration: ModelConfiguration, localStorageOptions: Int) {
         
         self.init(
             SQLiteStore(
                 fileName: fileName,
                 configuration: configuration,
-                mappingModelBundles: mappingModelBundles ?? Bundle.allBundles,
                 localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions)
             )
         )
     }
     
     /**
-     Initializes an `CSSQLiteStore` with an all-default settings: a `fileURL` pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS), a `nil` `configuration` pertaining to the "Default" configuration, a `mappingModelBundles` set to search all `NSBundle`s, and `localStorageOptions` set to `.AllowProgresiveMigration`.
+     Initializes an `CSSQLiteStore` with an all-default settings: a `fileURL` pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS), a `nil` `configuration` pertaining to the "Default" configuration, a `mappingModelBundles` set to search all `NSBundle`s, and `localStorageOptions` set to `[CSLocalStorageOptions none]`.
      
-     - Warning: The default SQLite file location for the `CSLegacySQLiteStore` and `CSSQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `CSLegacySQLiteStore` instead of `CSSQLiteStore`.
+     - Important: Initializing `CSSQLiteStore`s with custom migration mapping models is currently not supported. Create an `SQLiteStore` instance from Swift code and bridge the instance to Objective-C using its `SQLiteStore.bridgeToObjectiveC` property.
      */
     @objc
     public convenience override init() {
@@ -104,12 +101,12 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
     }
     
     /**
-     The `NSBundle`s from which to search mapping models for migrations
+     An array of `SchemaMappingProvider`s that provides the complete mapping models for custom migrations. This is currently only supported for Swift code.
      */
     @objc
-    public var mappingModelBundles: [Bundle] {
-        
-        return self.bridgeToSwift.mappingModelBundles
+    public var migrationMappingProviders: [Any] {
+    
+        return self.bridgeToSwift.migrationMappingProviders
     }
     
     /**
@@ -193,6 +190,55 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
         
         self.bridgeToSwift = swiftValue
         super.init()
+    }
+    
+    
+    // MARK: Deprecated
+    
+    /**
+     Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `CSDataStack`'s `-addStorage*:` methods, a new SQLite file will be created if it does not exist.
+     
+     - Important: Initializing `CSSQLiteStore`s with custom migration mapping models is currently not supported. Create an `SQLiteStore` instance from Swift code and bridge the instance to Objective-C using its `SQLiteStore.bridgeToObjectiveC` property.
+     - parameter fileURL: the local file URL for the target SQLite persistent store. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
+     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration.
+     - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `CSLocalStorageOptionsNone`.
+     */
+    @available(*, deprecated: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new -[CSSQLiteStore initWithFileURL:configuration:localStorageOptions:]) initializer instead.")
+    @objc
+    public convenience init(fileURL: URL, configuration: ModelConfiguration, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
+        
+        self.init(
+            SQLiteStore(
+                fileURL: fileURL,
+                configuration: configuration,
+                mappingModelBundles: mappingModelBundles ?? Bundle.allBundles,
+                localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions)
+            )
+        )
+    }
+    
+    /**
+     Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `CSDataStack`'s `-addStorage*:` methods, a new SQLite file will be created if it does not exist.
+     
+     - Important: Initializing `CSSQLiteStore`s with custom migration mapping models is currently not supported. Create an `SQLiteStore` instance from Swift code and bridge the instance to Objective-C using its `SQLiteStore.bridgeToObjectiveC` property.
+     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
+     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models for migration
+     - parameter localStorageOptions: When the `CSSQLiteStore` is passed to the `CSDataStack`'s `addStorage()` methods, tells the `CSDataStack` how to setup the persistent store. Defaults to `[CSLocalStorageOptions none]`.
+     */
+    @available(*, deprecated: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new -[CSSQLiteStore initWithFileName:configuration:localStorageOptions:]) initializer instead.")
+    @objc
+    public convenience init(fileName: String, configuration: ModelConfiguration, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
+        
+        self.init(
+            SQLiteStore(
+                fileName: fileName,
+                configuration: configuration,
+                mappingModelBundles: mappingModelBundles ?? Bundle.allBundles,
+                localStorageOptions: LocalStorageOptions(rawValue: localStorageOptions)
+            )
+        )
     }
 }
 

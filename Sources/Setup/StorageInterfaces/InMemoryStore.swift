@@ -31,7 +31,7 @@ import CoreData
 /**
  A storage interface that is backed only by memory.
  */
-public final class InMemoryStore: StorageInterface, DefaultInitializableStore {
+public final class InMemoryStore: StorageInterface {
     
     /**
      Initializes an `InMemoryStore` for the specified configuration
@@ -41,9 +41,6 @@ public final class InMemoryStore: StorageInterface, DefaultInitializableStore {
     
         self.configuration = configuration
     }
-    
-    
-    // MARK: DefaultInitializableStore
     
     /**
      Initializes an `InMemoryStore` with the "Default" configuration

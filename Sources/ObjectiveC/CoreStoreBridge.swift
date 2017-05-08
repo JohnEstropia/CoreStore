@@ -76,6 +76,11 @@ internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T) -> T.ObjectiveCT
     return closure().bridgeToObjectiveC
 }
 
+internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> [T]) -> [T.ObjectiveCType] {
+    
+    return closure().map { $0.bridgeToObjectiveC }
+}
+
 internal func bridge<T: CoreStoreSwiftType>(_ closure: () -> T?) -> T.ObjectiveCType? {
     
     return closure()?.bridgeToObjectiveC

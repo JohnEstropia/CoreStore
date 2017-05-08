@@ -372,34 +372,6 @@ extension Into: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
 }
 
 
-// MARK: - LegacySQLiteStore
-
-extension LegacySQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return formattedDebugDescription(self)
-    }
-    
-    
-    // MARK: CoreStoreDebugStringConvertible
-    
-    public var coreStoreDumpString: String {
-        
-        return createFormattedString(
-            "(", ")",
-            ("configuration", self.configuration as Any),
-            ("storeOptions", self.storeOptions as Any),
-            ("fileURL", self.fileURL),
-            ("mappingModelBundles", self.mappingModelBundles),
-            ("localStorageOptions", self.localStorageOptions)
-        )
-    }
-}
-
-
 // MARK: - LegacyXcodeDataModelSchema
 
 extension LegacyXcodeDataModelSchema: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
@@ -893,7 +865,7 @@ extension SQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringConvert
             ("configuration", self.configuration as Any),
             ("storeOptions", self.storeOptions as Any),
             ("fileURL", self.fileURL),
-            ("mappingModelBundles", self.mappingModelBundles),
+            ("migrationMappingProviders", self.migrationMappingProviders),
             ("localStorageOptions", self.localStorageOptions)
         )
     }

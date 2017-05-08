@@ -63,20 +63,6 @@ public protocol StorageInterface: class {
 }
 
 
-// MARK: - DefaultInitializableStore
-
-/**
- The `DefaultInitializableStore` represents `StorageInterface`s that can be initialized with default values
- */
-public protocol DefaultInitializableStore: StorageInterface {
-    
-    /**
-     Initializes the `StorageInterface` with the default configurations
-     */
-    init()
-}
-
-
 // MARK: - LocalStorageOptions
 
 /**
@@ -141,9 +127,9 @@ public protocol LocalStorage: StorageInterface {
     var fileURL: URL { get }
     
     /**
-     The `NSBundle`s from which to search mapping models (*.xcmappingmodel) for migrations
+     An array of `SchemaMappingProvider`s that provides the complete mapping models for custom migrations.
      */
-    var mappingModelBundles: [Bundle] { get }
+    var migrationMappingProviders: [SchemaMappingProvider] { get }
     
     /**
      Options that tell the `DataStack` how to setup the persistent store

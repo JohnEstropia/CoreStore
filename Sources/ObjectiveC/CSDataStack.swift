@@ -125,7 +125,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         
         return bridge(error) {
             
-            try self.bridgeToSwift.addStorageAndWait(InMemoryStore.self)
+            try self.bridgeToSwift.addStorageAndWait(InMemoryStore())
         }
     }
     
@@ -143,7 +143,7 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         
         return bridge(error) {
             
-            try self.bridgeToSwift.addStorageAndWait(SQLiteStore.self)
+            try self.bridgeToSwift.addStorageAndWait(SQLiteStore())
         }
     }
     

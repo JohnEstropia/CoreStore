@@ -32,7 +32,7 @@ import Foundation
 internal extension NSEntityDescription {
     
     @nonobjc
-    internal var anyEntity: CoreStoreSchema.AnyEntity? {
+    internal var coreStoreEntity: CoreStoreSchema.AnyEntity? {
         
         get {
             

@@ -1,4 +1,4 @@
-<?xml version="1.0" standalone="no"?>
+<?xml version="1.0"?>
 <!DOCTYPE database SYSTEM "file:///System/Library/DTDs/CoreData.dtd">
 
 <database>
@@ -10,7 +10,7 @@
             <plist version="1.0">
                 <dict>
                     <key>NSPersistenceFrameworkVersion</key>
-                    <integer>526</integer>
+                    <integer>754</integer>
                     <key>NSStoreModelVersionHashes</key>
                     <dict>
                         <key>XDDevAttributeMapping</key>

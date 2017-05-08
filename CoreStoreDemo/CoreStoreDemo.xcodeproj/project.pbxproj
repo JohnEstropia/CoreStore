@@ -12,7 +12,6 @@
 		B503FAE11AFDC71700F90881 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FADD1AFDC71700F90881 /* Palette.swift */; };
 		B503FAE21AFDC71700F90881 /* PaletteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FADE1AFDC71700F90881 /* PaletteTableViewCell.swift */; };
 		B5125C121B521B78003A42C7 /* OrganismV2ToV3.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = B5125C111B521B78003A42C7 /* OrganismV2ToV3.xcmappingmodel */; };
-		B5125C141B521BA7003A42C7 /* OrganismV3ToV2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = B5125C131B521BA7003A42C7 /* OrganismV3ToV2.xcmappingmodel */; };
 		B52977D91B120B80003D50A5 /* ObserversViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52977D81B120B80003D50A5 /* ObserversViewController.swift */; };
 		B52977DD1B120F3B003D50A5 /* TransactionsDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52977DC1B120F3B003D50A5 /* TransactionsDemoViewController.swift */; };
 		B52977DF1B120F83003D50A5 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B52977DE1B120F83003D50A5 /* MapKit.framework */; };
@@ -26,6 +25,7 @@
 		B560070F1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B560070E1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift */; };
 		B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */; };
 		B566E3321B11DF3200F4F0C6 /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3311B11DF3200F4F0C6 /* UserAccount.swift */; };
+		B56924091EBAE435007C4DC9 /* OrganismV3ToV2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = B5125C131B521BA7003A42C7 /* OrganismV3ToV2.xcmappingmodel */; };
 		B56964C91B20AC780075EE4A /* CustomLoggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964C81B20AC780075EE4A /* CustomLoggerViewController.swift */; };
 		B56964D71B231AE90075EE4A /* StackSetupDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B56964D51B231AE90075EE4A /* StackSetupDemo.xcdatamodeld */; };
 		B56964DA1B231BCA0075EE4A /* MaleAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964D91B231BCA0075EE4A /* MaleAccount.swift */; };
@@ -330,8 +330,8 @@
 				B5EE259B1B3EA4890000406B /* OrganismV3.swift in Sources */,
 				B503FAE11AFDC71700F90881 /* Palette.swift in Sources */,
 				B503FAE21AFDC71700F90881 /* PaletteTableViewCell.swift in Sources */,
+				B56924091EBAE435007C4DC9 /* OrganismV3ToV2.xcmappingmodel in Sources */,
 				B560070F1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift in Sources */,
-				B5125C141B521BA7003A42C7 /* OrganismV3ToV2.xcmappingmodel in Sources */,
 				B503FADF1AFDC71700F90881 /* ListObserverDemoViewController.swift in Sources */,
 				B54AAD4F1AF4D26E00848AE0 /* AppDelegate.swift in Sources */,
 				B56964D71B231AE90075EE4A /* StackSetupDemo.xcdatamodeld in Sources */,

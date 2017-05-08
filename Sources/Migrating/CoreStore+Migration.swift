@@ -30,27 +30,6 @@ import CoreData
 // MARK: - CoreStore
 
 public extension CoreStore {
-    
-    /**
-     Asynchronously adds a `StorageInterface` with default settings to the `defaultStack`. Migrations are also initiated by default.
-     ```
-     CoreStore.addStorage(
-         InMemoryStore.self,
-         completion: { result in
-             switch result {
-             case .success(let storage): // ...
-             case .failure(let error): // ...
-             }
-         }
-     )
-     ```
-     - parameter storeType: the storage type
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
-     */
-    public static func addStorage<T: StorageInterface>(_ storeType: T.Type, completion: @escaping (SetupResult<T>) -> Void) where T: DefaultInitializableStore {
-        
-        self.defaultStack.addStorage(storeType.init(), completion: completion)
-    }
 
     /**
      Asynchronously adds a `StorageInterface` to the `defaultStack`. Migrations are also initiated by default.
@@ -71,28 +50,6 @@ public extension CoreStore {
     public static func addStorage<T: StorageInterface>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
         
         self.defaultStack.addStorage(storage, completion: completion)
-    }
-    
-    /**
-     Asynchronously adds a `LocalStorage` with default settings to the `defaultStack`. Migrations are also initiated by default.
-     ```
-     let migrationProgress = CoreStore.addStorage(
-         SQLiteStore.self,
-         completion: { result in
-             switch result {
-             case .success(let storage): // ...
-             case .failure(let error): // ...
-             }
-         }
-     )
-     ```
-     - parameter storeType: the local storage type
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `LocalStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `LocalStorage` was already added at the same URL and with the same configuration.
-     - returns: a `Progress` instance if a migration has started, or `nil` if either no migrations are required or if a failure occured.
-     */
-    public static func addStorage<T: LocalStorage>(_ storeType: T.Type, completion: @escaping (SetupResult<T>) -> Void) -> Progress? where T: DefaultInitializableStore {
-        
-        return self.defaultStack.addStorage(storeType.init(), completion: completion)
     }
 
     /**

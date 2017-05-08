@@ -270,10 +270,6 @@ try CoreStore.addStorageAndWait(
     )
 )
 ```
-`InMemoryStore`s also implement the `DefaultInitializableStore` sugar protocol which tells CoreStore that this store can initialize without any arguments (`init()`). This lets us provide just the type instead of an instance:
-```swift
-try CoreStore.addStorageAndWait(InMemoryStore.self)
-```
 
 ### Local Store
 The most common `StorageInterface` you will probably use is the `SQLiteStore`, which saves data in a local SQLite file.
@@ -290,9 +286,9 @@ let migrationProgress = CoreStore.addStorage(
 ```
 Refer to the *SQLiteStore.swift* source documentation for detailed explanations for each of the default values.
 
-CoreStore can decide the default values for these properties, so `SQLiteStore`s also implement the `DefaultInitializableStore` sugar protocol which lets us write:
+CoreStore can decide the default values for these properties, so `SQLiteStore`s can be initialized with default arguments:
 ```swift
-try CoreStore.addStorageAndWait(SQLiteStore.self)
+try CoreStore.addStorageAndWait(SQLiteStore())
 ```
 or
 ```swift

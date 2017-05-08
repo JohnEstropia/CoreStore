@@ -81,22 +81,7 @@ public extension CoreStore {
     @discardableResult
     public static func addStorageAndWait() throws -> SQLiteStore {
         
-        return try self.defaultStack.addStorageAndWait(SQLiteStore.self)
-    }
-    
-    /**
-     Creates a `StorageInterface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
-     ```
-     try CoreStore.addStorageAndWait(InMemoryStore.self)
-     ```
-     - parameter storeType: the `StorageInterface` type
-     - throws: a `CoreStoreError` value indicating the failure
-     - returns: the `StorageInterface` added to the `defaultStack`
-     */
-    @discardableResult
-    public static func addStorageAndWait<T: StorageInterface>(_ storeType: T.Type) throws -> T where T: DefaultInitializableStore {
-        
-        return try self.defaultStack.addStorageAndWait(storeType.init())
+        return try self.defaultStack.addStorageAndWait(SQLiteStore())
     }
     
     /**
@@ -112,21 +97,6 @@ public extension CoreStore {
     public static func addStorageAndWait<T: StorageInterface>(_ storage: T) throws -> T {
         
         return try self.defaultStack.addStorageAndWait(storage)
-    }
-    
-    /**
-     Creates a `LocalStorageInterface` of the specified store type with default values and adds it to the `defaultStack`. This method blocks until completion.
-     ```
-     try CoreStore.addStorageAndWait(SQLiteStore.self)
-     ```
-     - parameter storeType: the `LocalStorageInterface` type
-     - throws: a `CoreStoreError` value indicating the failure
-     - returns: the local storage added to the `defaultStack`
-     */
-    @discardableResult
-    public static func addStorageAndWait<T: LocalStorage>(_ storageType: T.Type) throws -> T where T: DefaultInitializableStore {
-        
-        return try self.defaultStack.addStorageAndWait(storageType.init())
     }
     
     /**

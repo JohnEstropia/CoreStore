@@ -106,10 +106,10 @@ public protocol CSLocalStorage: CSStorageInterface {
     var fileURL: URL { get }
     
     /**
-     The `NSBundle`s from which to search mapping models for migrations
+     An array of `SchemaMappingProvider`s that provides the complete mapping models for custom migrations. This is currently only supported for Swift code.
      */
     @objc
-    var mappingModelBundles: [Bundle] { get }
+    var migrationMappingProviders: [Any] { get }
     
     /**
      Options that tell the `CSDataStack` how to setup the persistent store

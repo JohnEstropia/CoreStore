@@ -86,7 +86,7 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.storeOptions as NSDictionary?, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
         XCTAssertEqual(store.fileURL, SQLiteStore.defaultFileURL)
-        XCTAssertEqual(store.mappingModelBundles, Bundle.allBundles)
+        XCTAssertTrue(store.migrationMappingProviders.isEmpty)
         XCTAssertEqual(store.localStorageOptions, .none)
     }
     
@@ -96,12 +96,15 @@ final class StorageInterfaceTests: XCTestCase {
         let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent(NSUUID().uuidString, isDirectory: false)!
             .appendingPathExtension("db")
-        let bundles = [Bundle(for: type(of: self))]
+        let mappingProvider = XcodeSchemaMappingProvider(
+            from: "V1", to: "V2",
+            mappingModelBundle: Bundle(for: type(of: self))
+        )
         
         let store = SQLiteStore(
             fileURL: fileURL,
             configuration: "config1",
-            mappingModelBundles: bundles,
+            migrationMappingProviders: [mappingProvider],
             localStorageOptions: .recreateStoreOnModelMismatch
         )
         XCTAssertEqual(type(of: store).storeType, NSSQLiteStoreType)
@@ -109,7 +112,7 @@ final class StorageInterfaceTests: XCTestCase {
         XCTAssertEqual(store.storeOptions as NSDictionary?, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
         XCTAssertEqual(store.fileURL, fileURL)
-        XCTAssertEqual(store.mappingModelBundles, bundles)
+        XCTAssertEqual(store.migrationMappingProviders as! [XcodeSchemaMappingProvider], [mappingProvider])
         XCTAssertEqual(store.localStorageOptions, [.recreateStoreOnModelMismatch])
     }
     
@@ -117,12 +120,14 @@ final class StorageInterfaceTests: XCTestCase {
     dynamic func test_ThatFileNameSQLiteStores_ConfigureCorrectly() {
         
         let fileName = UUID().uuidString + ".db"
-        let bundles = [Bundle(for: type(of: self))]
-        
+        let mappingProvider = XcodeSchemaMappingProvider(
+            from: "V1", to: "V2",
+            mappingModelBundle: Bundle(for: type(of: self))
+        )
         let store = SQLiteStore(
             fileName: fileName,
             configuration: "config1",
-            mappingModelBundles: bundles,
+            migrationMappingProviders: [mappingProvider],
             localStorageOptions: .recreateStoreOnModelMismatch
         )
         XCTAssertEqual(type(of: store).storeType, NSSQLiteStoreType)
@@ -131,7 +136,7 @@ final class StorageInterfaceTests: XCTestCase {
         
         XCTAssertEqual(store.fileURL.deletingLastPathComponent(), SQLiteStore.defaultRootDirectory)
         XCTAssertEqual(store.fileURL.lastPathComponent, fileName)
-        XCTAssertEqual(store.mappingModelBundles, bundles)
+        XCTAssertEqual(store.migrationMappingProviders as! [XcodeSchemaMappingProvider], [mappingProvider])
         XCTAssertEqual(store.localStorageOptions, [.recreateStoreOnModelMismatch])
     }
     
@@ -152,65 +157,44 @@ final class StorageInterfaceTests: XCTestCase {
             .appendingPathComponent(DataStack.applicationName, isDirectory: false)
             .appendingPathExtension("sqlite")
         
-        XCTAssertEqual(LegacySQLiteStore.defaultRootDirectory, legacyDefaultRootDirectory)
-        XCTAssertEqual(LegacySQLiteStore.defaultFileURL, legacyDefaultFileURL)
+        XCTAssertEqual(SQLiteStore.legacyDefaultRootDirectory, legacyDefaultRootDirectory)
+        XCTAssertEqual(SQLiteStore.legacyDefaultFileURL, legacyDefaultFileURL)
     }
     
     @objc
     dynamic func test_ThatDefaultLegacySQLiteStores_ConfigureCorrectly() {
         
-        let store = LegacySQLiteStore()
+        let store = SQLiteStore.legacy()
         XCTAssertEqual(type(of: store).storeType, NSSQLiteStoreType)
         XCTAssertNil(store.configuration)
         XCTAssertEqual(store.storeOptions as NSDictionary?, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        XCTAssertEqual(store.fileURL, LegacySQLiteStore.defaultFileURL)
-        XCTAssertEqual(store.mappingModelBundles, Bundle.allBundles)
+        XCTAssertEqual(store.fileURL, SQLiteStore.legacyDefaultFileURL)
+        XCTAssertTrue(store.migrationMappingProviders.isEmpty)
         XCTAssertEqual(store.localStorageOptions, .none)
-    }
-    
-    @objc
-    dynamic func test_ThatFileURLLegacySQLiteStores_ConfigureCorrectly() {
-        
-        let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent(NSUUID().uuidString, isDirectory: false)!
-            .appendingPathExtension("db")
-        let bundles = [Bundle(for: type(of: self))]
-        
-        let store = LegacySQLiteStore(
-            fileURL: fileURL,
-            configuration: "config1",
-            mappingModelBundles: bundles,
-            localStorageOptions: .recreateStoreOnModelMismatch
-        )
-        XCTAssertEqual(type(of: store).storeType, NSSQLiteStoreType)
-        XCTAssertEqual(store.configuration, "config1")
-        XCTAssertEqual(store.storeOptions as NSDictionary?, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
-        
-        XCTAssertEqual(store.fileURL, fileURL)
-        XCTAssertEqual(store.mappingModelBundles, bundles)
-        XCTAssertEqual(store.localStorageOptions, [.recreateStoreOnModelMismatch])
     }
     
     @objc
     dynamic func test_ThatFileNameLegacySQLiteStores_ConfigureCorrectly() {
         
         let fileName = UUID().uuidString + ".db"
-        let bundles = [Bundle(for: type(of: self))]
-        
-        let store = LegacySQLiteStore(
+        let mappingProvider = XcodeSchemaMappingProvider(
+            from: "V1", to: "V2",
+            mappingModelBundle: Bundle(for: type(of: self))
+        )
+        let store = SQLiteStore.legacy(
             fileName: fileName,
             configuration: "config1",
-            mappingModelBundles: bundles,
+            migrationMappingProviders: [mappingProvider],
             localStorageOptions: .recreateStoreOnModelMismatch
         )
         XCTAssertEqual(type(of: store).storeType, NSSQLiteStoreType)
         XCTAssertEqual(store.configuration, "config1")
         XCTAssertEqual(store.storeOptions as NSDictionary?, [NSSQLitePragmasOption: ["journal_mode": "WAL"]] as NSDictionary)
         
-        XCTAssertEqual(store.fileURL.deletingLastPathComponent(), LegacySQLiteStore.defaultRootDirectory)
+        XCTAssertEqual(store.fileURL.deletingLastPathComponent(), SQLiteStore.legacyDefaultRootDirectory)
         XCTAssertEqual(store.fileURL.lastPathComponent, fileName)
-        XCTAssertEqual(store.mappingModelBundles, bundles)
+        XCTAssertEqual(store.migrationMappingProviders as! [XcodeSchemaMappingProvider], [mappingProvider])
         XCTAssertEqual(store.localStorageOptions, [.recreateStoreOnModelMismatch])
     }
 }

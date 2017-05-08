@@ -223,6 +223,11 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
         return self.schemaByVersion[modelVersion]?.rawModel()
     }
     
+    internal func schema(for modelVersion: ModelVersion) -> DynamicSchema? {
+        
+        return self.schemaByVersion[modelVersion]
+    }
+    
     internal func schema(for storeMetadata: [String: Any]) -> DynamicSchema? {
         
         guard let modelHashes = storeMetadata[NSStoreModelVersionHashesKey] as! [String: Data]? else {

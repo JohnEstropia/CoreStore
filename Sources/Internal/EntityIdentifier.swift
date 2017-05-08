@@ -74,7 +74,7 @@ internal struct EntityIdentifier: Hashable {
     
     internal init(_ entityDescription: NSEntityDescription) {
         
-        if let anyEntity = entityDescription.anyEntity {
+        if let anyEntity = entityDescription.coreStoreEntity {
             
             self.category = .coreStore
             self.interfacedClassName = NSStringFromClass(anyEntity.type)
