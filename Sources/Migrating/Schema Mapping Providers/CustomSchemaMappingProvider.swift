@@ -35,31 +35,35 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     public enum CustomMapping: Hashable {
         
+        public typealias Transformer = (_ sourceObject: UnsafeSourceObject, _ createDestinationObject: () -> UnsafeDestinationObject) throws -> Void
+        
         case deleteEntity(sourceEntity: EntityName)
         case insertEntity(destinationEntity: EntityName)
-        case transformEntity(sourceEntity: EntityName, destinationEntity: EntityName, transformEntity: (_ sourceObject: UnsafeProxyObject, _ destinationObject: UnsafeProxyObject) throws -> Void)
+        case copyEntity(sourceEntity: EntityName, destinationEntity: EntityName)
+        case transformEntity(sourceEntity: EntityName, destinationEntity: EntityName, transformEntity: Transformer)
         
-        static func inferredTransformation(sourceObject: UnsafeProxyObject, destinationObject: UnsafeProxyObject) throws -> Void {
+        static func inferredTransformation(_ sourceObject: UnsafeSourceObject, _ createDestinationObject: () -> UnsafeDestinationObject) throws -> Void {
             
-            // TODO:
+            let destinationObject = createDestinationObject()
+            destinationObject.enumerateAttributes { (attribute, sourceAttribute) in
+                
+                if let sourceAttribute = sourceAttribute {
+                    
+                    destinationObject[attribute] = sourceObject[sourceAttribute]
+                }
+            }
         }
-//        
-//        case deleteAttribute(sourceEntity: EntityName, sourceAttribute: KeyPath)
-//        case insertAttribute(destinationEntity: EntityName, destinationAttribute: KeyPath)
-//        case transformAttribute(sourceEntity: EntityName, sourceAttribute: KeyPath, destinationEntity: EntityName, destinationAttribute: KeyPath, transform: (_ sourceValue: Any?) throws -> Any?)
         
         var entityMappingSourceEntity: EntityName? {
             
             switch self {
                 
             case .deleteEntity(let sourceEntity),
+                 .copyEntity(let sourceEntity, _),
                  .transformEntity(let sourceEntity, _, _):
                 return sourceEntity
                 
             case .insertEntity:
-//                 .insertAttribute,
-//                 .deleteAttribute,
-//                 .transformAttribute:
                 return nil
             }
         }
@@ -69,49 +73,14 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             switch self {
                 
             case .insertEntity(let destinationEntity),
+                 .copyEntity(_, let destinationEntity),
                  .transformEntity(_, let destinationEntity, _):
                 return destinationEntity
                 
             case .deleteEntity:
-//                 .deleteAttribute,
-//                 .insertAttribute,
-//                 .transformAttribute:
                 return nil
             }
         }
-        
-//        func attributeMappingSourceAttribute(for sourceEntity: EntityName) -> KeyPath? {
-//            
-//            switch self {
-//                
-//            case .deleteAttribute(sourceEntity, let sourceAttribute),
-//                 .transformAttribute(sourceEntity, let sourceAttribute, _, _, _):
-//                return sourceAttribute
-//                
-//            case .deleteEntity,
-//                 .insertEntity,
-//                 .insertAttribute,
-//                 .transformEntity:
-//                return nil
-//            }
-//        }
-//        
-//        func attributeMappingDestinationAttribute(for destinationEntity: EntityName) -> KeyPath? {
-//            
-//            switch self {
-//                
-//            case .insertAttribute(destinationEntity, let destinationAttribute),
-//                 .transformAttribute(_, _, destinationEntity, let destinationAttribute, _):
-//                return destinationAttribute
-//                
-//            case .deleteEntity,
-//                 .insertEntity,
-//                 .deleteAttribute,
-//                 .transformEntity:
-//                return nil
-//            }
-//        }
-        
         
         
         // MARK: Equatable
@@ -126,23 +95,13 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             case (.insertEntity(let destinationEntity1), .insertEntity(let destinationEntity2)):
                 return destinationEntity1 == destinationEntity2
                 
-            case (.transformEntity(let sourceEntity1, let destinationEntity1, _), .transformEntity(let sourceEntity2, let destinationEntity2, _)):
+            case (.copyEntity(let sourceEntity1, let destinationEntity1), .copyEntity(let sourceEntity2, let destinationEntity2)):
                 return sourceEntity1 == sourceEntity2
                     && destinationEntity1 == destinationEntity2
                 
-//            case (.deleteAttribute(let sourceEntity1, let sourceAttribute1), .deleteAttribute(let sourceEntity2, let sourceAttribute2)):
-//                return sourceEntity1 == sourceEntity2
-//                    && sourceAttribute1 == sourceAttribute2
-//                
-//            case (.insertAttribute(let destinationEntity1, let destinationAttribute1), .insertAttribute(let destinationEntity2, let destinationAttribute2)):
-//                return destinationEntity1 == destinationEntity2
-//                    && destinationAttribute1 == destinationAttribute2
-//                
-//            case (.transformAttribute(let sourceEntity1, let sourceAttribute1, let destinationEntity1, let destinationAttribute1, _), .transformAttribute(let sourceEntity2, let sourceAttribute2, let destinationEntity2, let destinationAttribute2, _)):
-//                return sourceEntity1 == sourceEntity2
-//                    && sourceAttribute1 == sourceAttribute2
-//                    && destinationEntity1 == destinationEntity2
-//                    && destinationAttribute1 == destinationAttribute2
+            case (.transformEntity(let sourceEntity1, let destinationEntity1, _), .transformEntity(let sourceEntity2, let destinationEntity2, _)):
+                return sourceEntity1 == sourceEntity2
+                    && destinationEntity1 == destinationEntity2
                 
             default:
                 return false
@@ -162,53 +121,38 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             case .insertEntity(let destinationEntity):
                 return destinationEntity.hashValue
                 
-            case .transformEntity(let sourceEntity, let destinationEntity, _):
+            case .copyEntity(let sourceEntity, let destinationEntity):
                 return sourceEntity.hashValue
                     ^ destinationEntity.hashValue
                 
-//            case .deleteAttribute(let sourceEntity, let sourceAttribute):
-//                return sourceEntity.hashValue
-//                    ^ sourceAttribute.hashValue
-//                
-//            case .insertAttribute(let destinationEntity, let destinationAttribute):
-//                return destinationEntity.hashValue
-//                    ^ destinationAttribute.hashValue
-//                
-//            case .transformAttribute(let sourceEntity, let sourceAttribute, let destinationEntity, let destinationAttribute, _):
-//                return sourceEntity.hashValue
-//                    ^ sourceAttribute.hashValue
-//                    ^ destinationEntity.hashValue
-//                    ^ destinationAttribute.hashValue
+            case .transformEntity(let sourceEntity, let destinationEntity, _):
+                return sourceEntity.hashValue
+                    ^ destinationEntity.hashValue
             }
         }
     }
     
     
-    // MARK: - UnsafeProxyTransaction
+    // MARK: - UnsafeSourceObject
     
-    public final class UnsafeProxyTransaction {
+    public final class UnsafeSourceObject {
         
-        func fetchAll(entityName: EntityName, _ fetchClauses: FetchClause...) -> [UnsafeProxyObject] {
+        public subscript(attribute: KeyPath) -> Any? {
             
-            return self.fetchAll(entityName: entityName, fetchClauses)
+            return self.rawObject.cs_accessValueForKVCKey(attribute)
         }
         
-        func fetchAll(entityName: EntityName, _ fetchClauses: [FetchClause]) -> [UnsafeProxyObject] {
+        public subscript(attribute: NSAttributeDescription) -> Any? {
             
-            // TODO:
-            fatalError()
+            return self.rawObject.cs_accessValueForKVCKey(attribute.name)
         }
-    }
-    
-    
-    // MARK: - UnsafeProxyObject
-    
-    public final class UnsafeProxyObject {
         
-        public subscript(kvcKey: KeyPath) -> Any? {
+        public func enumerateAttributes(_ closure: (_ attribute: NSAttributeDescription) -> Void) {
             
-            get { return self.rawObject.cs_accessValueForKVCKey(kvcKey) }
-            set { self.rawObject.cs_setValue(newValue, forKVCKey: kvcKey) }
+            for case let attribute as NSAttributeDescription in self.rawObject.entity.properties {
+                
+                closure(attribute)
+            }
         }
         
         
@@ -223,6 +167,47 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         // MARK: Private
         
         private let rawObject: NSManagedObject
+    }
+    
+    
+    // MARK: - UnsafeDestinationObject
+    
+    public final class UnsafeDestinationObject {
+        
+        public subscript(attribute: KeyPath) -> Any? {
+            
+            get { return self.rawObject.cs_accessValueForKVCKey(attribute) }
+            set { self.rawObject.cs_setValue(newValue, forKVCKey: attribute) }
+        }
+        
+        public subscript(attribute: NSAttributeDescription) -> Any? {
+            
+            get { return self.rawObject.cs_accessValueForKVCKey(attribute.name) }
+            set { self.rawObject.cs_setValue(newValue, forKVCKey: attribute.name) }
+        }
+        
+        public func enumerateAttributes(_ closure: (_ attribute: NSAttributeDescription, _ sourceAttribute: NSAttributeDescription?) -> Void) {
+            
+            for case let attribute as NSAttributeDescription in self.rawObject.entity.properties {
+                
+                closure(attribute, self.sourceAttributesByDestinationKey[attribute.name])
+            }
+        }
+        
+        
+        // MARK: Internal
+        
+        internal init(_ rawObject: NSManagedObject, _ sourceAttributesByDestinationKey: [KeyPath: NSAttributeDescription]) {
+            
+            self.rawObject = rawObject
+            self.sourceAttributesByDestinationKey = sourceAttributesByDestinationKey
+        }
+        
+        
+        // MARK: Private
+        
+        private let rawObject: NSManagedObject
+        private let sourceAttributesByDestinationKey: [KeyPath: NSAttributeDescription]
     }
     
     
@@ -277,13 +262,13 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         
         let mappingModel = NSMappingModel()
         
-        let (deleteMappings, insertMappings, transformMappings) = self.resolveEntityMappings(
+        let (deleteMappings, insertMappings, copyMappings, transformMappings) = self.resolveEntityMappings(
             sourceModel: sourceModel,
             destinationModel: destinationModel
         )
         func expression(forSource sourceEntity: NSEntityDescription) -> NSExpression {
             
-            return NSExpression(format: "FETCH(FUNCTION($manager, \"fetchRequestForSourceEntityNamed:predicateString:\" , \"\(sourceEntity.name!)\", \"TRUEPREDICATE\"), $manager.sourceContext, NO)")
+            return NSExpression(format: "FETCH(FUNCTION($\(NSMigrationManagerKey), \"fetchRequestForSourceEntityNamed:predicateString:\" , \"\(sourceEntity.name!)\", \"\(NSPredicate(value: true))\"), $\(NSMigrationManagerKey).\(#keyPath(NSMigrationManager.sourceContext)), \(false))")
         }
         
         let sourceEntitiesByName = sourceModel.entitiesByName
@@ -317,7 +302,6 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                     
                     let propertyMapping = NSPropertyMapping()
                     propertyMapping.name = destinationAttribute.name
-                    propertyMapping.valueExpression = NSExpression(forConstantValue: destinationAttribute.defaultValue)
                     attributeMappings.append(propertyMapping)
                 }
                 return attributeMappings
@@ -335,6 +319,52 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             }
             entityMappings.append(entityMapping)
         }
+        for case .copyEntity(let sourceEntityName, let destinationEntityName) in copyMappings {
+            
+            let sourceEntity = sourceEntitiesByName[sourceEntityName]!
+            let destinationEntity = destinationEntitiesByName[destinationEntityName]!
+            
+            let entityMapping = NSEntityMapping()
+            entityMapping.sourceEntityName = sourceEntity.name
+            entityMapping.sourceEntityVersionHash = sourceEntity.versionHash
+            entityMapping.destinationEntityName = destinationEntity.name
+            entityMapping.destinationEntityVersionHash = destinationEntity.versionHash
+            entityMapping.mappingType = .copyEntityMappingType
+            entityMapping.sourceExpression = expression(forSource: sourceEntity)
+            entityMapping.attributeMappings = autoreleasepool { () -> [NSPropertyMapping] in
+                
+                let sourceAttributes = sourceEntity.cs_resolvedAttributeRenamingIdentities()
+                let destinationAttributes = destinationEntity.cs_resolvedAttributeRenamingIdentities()
+                
+                var attributeMappings: [NSPropertyMapping] = []
+                for (renamingIdentifier, destination) in destinationAttributes {
+                    
+                    let sourceAttribute = sourceAttributes[renamingIdentifier]!.attribute
+                    let destinationAttribute = destination.attribute
+                    let propertyMapping = NSPropertyMapping()
+                    propertyMapping.name = destinationAttribute.name
+                    propertyMapping.valueExpression = NSExpression(format: "$\(NSMigrationSourceObjectKey).\(sourceAttribute.name)")
+                    attributeMappings.append(propertyMapping)
+                }
+                return attributeMappings
+            }
+            let entityMappingName = entityMapping.name!
+            entityMapping.relationshipMappings = autoreleasepool { () -> [NSPropertyMapping] in
+                
+                let destinationRelationships = destinationEntity.cs_resolvedRelationshipRenamingIdentities()
+                var relationshipMappings: [NSPropertyMapping] = []
+                for (_, destination) in destinationRelationships {
+                    
+                    let destinationRelationship = destination.relationship
+                    let propertyMapping = NSPropertyMapping()
+                    propertyMapping.name = destinationRelationship.name
+                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"\(#selector(NSMigrationManager.destinationInstances(forEntityMappingName:sourceInstances:)))\" , \"\(entityMappingName)\", $\(NSMigrationSourceObjectKey))[0]")
+                    relationshipMappings.append(propertyMapping)
+                }
+                return relationshipMappings
+            }
+            entityMappings.append(entityMapping)
+        }
         for case .transformEntity(let sourceEntityName, let destinationEntityName, let transformEntity) in transformMappings {
             
             let sourceEntity = sourceEntitiesByName[sourceEntityName]!
@@ -345,153 +375,46 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             entityMapping.sourceEntityVersionHash = sourceEntity.versionHash
             entityMapping.destinationEntityName = destinationEntity.name
             entityMapping.destinationEntityVersionHash = destinationEntity.versionHash
-            entityMapping.mappingType = .transformEntityMappingType
+            entityMapping.mappingType = .customEntityMappingType
             entityMapping.sourceExpression = expression(forSource: sourceEntity)
-            entityMapping.attributeMappings = autoreleasepool { () -> [NSPropertyMapping] in
+            entityMapping.entityMigrationPolicyClassName = NSStringFromClass(CustomEntityMigrationPolicy.self)
+            
+            var userInfo: [AnyHashable: Any] = [
+                CustomEntityMigrationPolicy.UserInfoKey.transformer: transformEntity
+            ]
+            autoreleasepool {
                 
                 let sourceAttributes = sourceEntity.cs_resolvedAttributeRenamingIdentities()
-                let destinationAttributes = sourceEntity.cs_resolvedAttributeRenamingIdentities()
+                let destinationAttributes = destinationEntity.cs_resolvedAttributeRenamingIdentities()
                 
-                let removedAttributeKeys = Set(sourceAttributes.keys)
-                    .subtracting(destinationAttributes.keys)
-                let addedAttributeKeys = Set(destinationAttributes.keys)
-                    .subtracting(sourceAttributes.keys)
-                let copiedAttributeKeys = Set(destinationAttributes.keys)
-                    .subtracting(addedAttributeKeys)
-                    .subtracting(removedAttributeKeys)
-                    .filter({ sourceAttributes[$0]!.versionHash == destinationAttributes[$0]!.versionHash })
-                let transformedAttributeKeys = Set(destinationAttributes.keys)
-                    .subtracting(addedAttributeKeys)
-                    .subtracting(removedAttributeKeys)
-                    .subtracting(copiedAttributeKeys)
-                
-                var attributeMappings: [NSPropertyMapping] = []
-//                for attributeKey in removedAttributeKeys {
-//                    
-//                    let propertyMapping = NSPropertyMapping()
-//                    propertyMapping.name = sourceAttributes[attributeKey]!.attribute.name
-//                    attributeMappings.append(propertyMapping)
-//                }
-                for attributeKey in transformedAttributeKeys {
+                let transformedRenamingIdentifiers = Set(destinationAttributes.keys)
+                    .intersection(sourceAttributes.keys)
+
+                var sourceAttributesByDestinationKey: [KeyPath: NSAttributeDescription] = [:]
+                for renamingIdentifier in transformedRenamingIdentifiers {
                     
-                    let sourceAttribute = sourceAttributes[attributeKey]!.attribute
-                    let destinationAttribute = destinationAttributes[attributeKey]!.attribute
-                    // TODO: assert valid and invalid transformations
-                    let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = destinationAttribute.name
-                    propertyMapping.valueExpression = NSExpression(format: "$source.\(sourceAttribute.name)")
-                    attributeMappings.append(propertyMapping)
+                    let sourceAttribute = sourceAttributes[renamingIdentifier]!.attribute
+                    let destinationAttribute = destinationAttributes[renamingIdentifier]!.attribute
+                    sourceAttributesByDestinationKey[destinationAttribute.name] = sourceAttribute
                 }
-                for attributeKey in copiedAttributeKeys {
-                    
-                    let sourceAttribute = sourceAttributes[attributeKey]!.attribute
-                    let destinationAttribute = destinationAttributes[attributeKey]!.attribute
-                    let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = destinationAttribute.name
-                    propertyMapping.valueExpression = NSExpression(format: "$source.\(sourceAttribute.name)")
-                    attributeMappings.append(propertyMapping)
-                }
-                for attributeKey in addedAttributeKeys {
-                    
-                    let destinationAttribute = destinationAttributes[attributeKey]!.attribute
-                    let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = destinationAttribute.name
-                    propertyMapping.valueExpression = NSExpression(forConstantValue: destinationAttribute.defaultValue)
-                    attributeMappings.append(propertyMapping)
-                }
-                return attributeMappings
+                userInfo[CustomEntityMigrationPolicy.UserInfoKey.sourceAttributesByDestinationKey] = sourceAttributesByDestinationKey
             }
+            let entityMappingName = entityMapping.name!
             entityMapping.relationshipMappings = autoreleasepool { () -> [NSPropertyMapping] in
                 
-                let sourceRelationships = source.entity.cs_resolvedRelationshipRenamingIdentities()
-                let destinationRelationships = destination.entity.cs_resolvedRelationshipRenamingIdentities()
-                
-                let removedRelationshipKeys = Set(sourceRelationships.keys)
-                    .subtracting(destinationRelationships.keys)
-                let addedRelationshipKeys = Set(destinationRelationships.keys)
-                    .subtracting(sourceRelationships.keys)
-                let copiedRelationshipKeys = Set(destinationRelationships.keys)
-                    .subtracting(addedRelationshipKeys)
-                    .subtracting(removedRelationshipKeys)
-                    .filter({ sourceRelationships[$0]!.versionHash == destinationRelationships[$0]!.versionHash })
-                let transformedRelationshipKeys = Set(destinationRelationships.keys)
-                    .subtracting(addedRelationshipKeys)
-                    .subtracting(removedRelationshipKeys)
-                    .subtracting(copiedRelationshipKeys)
-                
+                let destinationRelationships = destinationEntity.cs_resolvedRelationshipRenamingIdentities()
                 var relationshipMappings: [NSPropertyMapping] = []
-                for relationshipKey in removedRelationshipKeys {
+                for (_, destination) in destinationRelationships {
                     
-                    let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = sourceRelationships[relationshipKey]!.relationship.name
-                    relationshipMappings.append(propertyMapping)
-                }
-                for attributeKey in transformedRelationshipKeys {
-                    
-                    let sourceRelationship = sourceRelationships[attributeKey]!.relationship
-                    let destinationRelationship = destinationRelationships[attributeKey]!.relationship
-                    // TODO: assert valid and invalid transformations
+                    let destinationRelationship = destination.relationship
                     let propertyMapping = NSPropertyMapping()
                     propertyMapping.name = destinationRelationship.name
-                    propertyMapping.valueExpression = NSExpression(format: "$source.\(sourceRelationship.name)")
-                    relationshipMappings.append(propertyMapping)
-                }
-                for attributeKey in copiedRelationshipKeys {
-                    
-                    let sourceRelationship = sourceRelationships[attributeKey]!.relationship
-                    let destinationRelationship = destinationRelationships[attributeKey]!.relationship
-                    let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = destinationRelationship.name
-                    propertyMapping.valueExpression = NSExpression(format: "$source.\(sourceRelationship.name)")
-                    relationshipMappings.append(propertyMapping)
-                }
-                for attributeKey in addedRelationshipKeys {
-                    
-                    let destinationRelationship = destinationRelationships[attributeKey]!.relationship
-                    let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = destinationRelationship.name
+                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"\(#selector(NSMigrationManager.destinationInstances(forEntityMappingName:sourceInstances:)))\" , \"\(entityMappingName)\", $\(NSMigrationSourceObjectKey))[0]")
                     relationshipMappings.append(propertyMapping)
                 }
                 return relationshipMappings
             }
-            entityMappings.append(entityMapping)
-        }
-        for entityKey in copiedEntityKeys {
-            
-            let source = sourceEntities[entityKey]!
-            let destination = destinationEntities[entityKey]!
-            
-            let entityMapping = NSEntityMapping()
-            entityMapping.sourceEntityName = source.entity.name
-            entityMapping.sourceEntityVersionHash = source.versionHash
-            entityMapping.destinationEntityName = destination.entity.name
-            entityMapping.destinationEntityVersionHash = destination.versionHash
-            entityMapping.mappingType = .copyEntityMappingType
-            entityMapping.sourceExpression = expression(forSource: source.entity)
-            entityMapping.attributeMappings = autoreleasepool { () -> [NSPropertyMapping] in
-                
-                var attributeMappings: [NSPropertyMapping] = []
-                for (_, sourceAttribute) in source.entity.attributesByName {
-                    
-                    let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = sourceAttribute.name
-                    propertyMapping.valueExpression = NSExpression(format: "$source.\(sourceAttribute.name)")
-                    attributeMappings.append(propertyMapping)
-                }
-                return attributeMappings
-            }
-            entityMapping.relationshipMappings = autoreleasepool { () -> [NSPropertyMapping] in
-                
-                var relationshipMappings: [NSPropertyMapping] = []
-                for (_, sourceRelationship) in source.entity.relationshipsByName {
-                    
-                    let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = sourceRelationship.name
-                    propertyMapping.valueExpression = NSExpression(format: "$source.\(sourceRelationship.name)")
-                    relationshipMappings.append(propertyMapping)
-                }
-                return relationshipMappings
-            }
+            entityMapping.userInfo = userInfo
             entityMappings.append(entityMapping)
         }
         
@@ -512,14 +435,48 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     private final class CustomEntityMigrationPolicy: NSEntityMigrationPolicy {
         
+        // MARK: NSEntityMigrationPolicy
+        
         override func createDestinationInstances(forSource sInstance: NSManagedObject, in mapping: NSEntityMapping, manager: NSMigrationManager) throws {
             
-            try super.createDestinationInstances(forSource: sInstance, in: mapping, manager: manager)
+            let userInfo = mapping.userInfo!
+            let transformer = userInfo[CustomEntityMigrationPolicy.UserInfoKey.transformer]! as! CustomMapping.Transformer
+            let sourceAttributesByDestinationKey = userInfo[CustomEntityMigrationPolicy.UserInfoKey.sourceAttributesByDestinationKey] as! [KeyPath: NSAttributeDescription]
+            
+            var dInstance: NSManagedObject?
+            try transformer(
+                UnsafeSourceObject(sInstance),
+                {
+                    let rawObject = NSEntityDescription.insertNewObject(
+                        forEntityName: mapping.destinationEntityName!,
+                        into: manager.destinationContext
+                    )
+                    dInstance = rawObject
+                    return UnsafeDestinationObject(rawObject, sourceAttributesByDestinationKey)
+                }
+            )
+            if let dInstance = dInstance {
+                
+                manager.associate(
+                    sourceInstance: sInstance,
+                    withDestinationInstance: dInstance,
+                    for: mapping
+                )
+            }
         }
         
         override func createRelationships(forDestination dInstance: NSManagedObject, in mapping: NSEntityMapping, manager: NSMigrationManager) throws {
             
             try super.createRelationships(forDestination: dInstance, in: mapping, manager: manager)
+        }
+        
+        
+        // MARK: FilePrivate
+        
+        fileprivate enum UserInfoKey {
+            
+            fileprivate static let transformer = "CoreStore.CustomEntityMigrationPolicy.transformer"
+            fileprivate static let sourceAttributesByDestinationKey = "CoreStore.CustomEntityMigrationPolicy.sourceAttributesByDestinationKey"
         }
     }
     
@@ -528,10 +485,11 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     private let entityMappings: Set<CustomMapping>
     
-    private func resolveEntityMappings(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel) -> (delete: Set<CustomMapping>, insert: Set<CustomMapping>, transform: Set<CustomMapping>) {
+    private func resolveEntityMappings(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel) -> (delete: Set<CustomMapping>, insert: Set<CustomMapping>, copy: Set<CustomMapping>, transform: Set<CustomMapping>) {
         
         var deleteMappings: Set<CustomMapping> = []
         var insertMappings: Set<CustomMapping> = []
+        var copyMappings: Set<CustomMapping> = []
         var transformMappings: Set<CustomMapping> = []
         var allMappedSourceKeys: [KeyPath: KeyPath] = [:]
         var allMappedDestinationKeys: [KeyPath: KeyPath] = [:]
@@ -598,6 +556,31 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                 transformMappings.insert(mapping)
                 allMappedSourceKeys[sourceEntity] = destinationEntity
                 allMappedDestinationKeys[destinationEntity] = sourceEntity
+                
+            case .copyEntity(let sourceEntity, let destinationEntity):
+                CoreStore.assert(
+                    sourceEntityNames[sourceEntity] != nil,
+                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' passed to \(cs_typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(cs_typeName(NSEntityDescription.self)) from the source \(cs_typeName(NSManagedObjectModel.self))."
+                )
+                CoreStore.assert(
+                    destinationEntityNames[destinationEntity] != nil,
+                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' passed to \(cs_typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(cs_typeName(NSEntityDescription.self)) from the destination \(cs_typeName(NSManagedObjectModel.self))."
+                )
+                CoreStore.assert(
+                    sourceEntityNames[sourceEntity]!.versionHash == destinationEntityNames[destinationEntity]!.versionHash,
+                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' was passed to \(cs_typeName(CustomSchemaMappingProvider.self)) but the \(cs_typeName(NSEntityDescription.self))'s \"versionHash\" of the source and destination entities do not match."
+                )
+                CoreStore.assert(
+                    allMappedSourceKeys[sourceEntity] == nil,
+                    "Duplicate \(cs_typeName(CustomMapping.self))s found for source entity name \"\(sourceEntity)\" in \(cs_typeName(CustomSchemaMappingProvider.self))."
+                )
+                CoreStore.assert(
+                    allMappedDestinationKeys[destinationEntity] == nil,
+                    "Duplicate \(cs_typeName(CustomMapping.self))s found for destination entity name \"\(destinationEntity)\" in \(cs_typeName(CustomSchemaMappingProvider.self))."
+                )
+                copyMappings.insert(mapping)
+                allMappedSourceKeys[sourceEntity] = destinationEntity
+                allMappedDestinationKeys[destinationEntity] = sourceEntity
             }
             
             for renamingIdentifier in transformedRenamingIdentifiers {
@@ -609,13 +592,25 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                 switch (allMappedSourceKeys[sourceEntityName], allMappedDestinationKeys[destinationEntityName]) {
                     
                 case (nil, nil):
-                    transformMappings.insert(
-                        .transformEntity(
-                            sourceEntity: sourceEntityName,
-                            destinationEntity: destinationEntityName,
-                            transformEntity: CustomMapping.inferredTransformation
+                    if sourceEntity.versionHash == destinationEntity.versionHash {
+                        
+                        copyMappings.insert(
+                            .copyEntity(
+                                sourceEntity: sourceEntityName,
+                                destinationEntity: destinationEntityName
+                            )
                         )
-                    )
+                    }
+                    else {
+                        
+                        transformMappings.insert(
+                            .transformEntity(
+                                sourceEntity: sourceEntityName,
+                                destinationEntity: destinationEntityName,
+                                transformEntity: CustomMapping.inferredTransformation
+                            )
+                        )
+                    }
                     allMappedSourceKeys[sourceEntityName] = destinationEntityName
                     allMappedDestinationKeys[destinationEntityName] = sourceEntityName
                     
@@ -660,6 +655,6 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                 }
             }
         }
-        return (deleteMappings, insertMappings, transformMappings)
+        return (deleteMappings, insertMappings, copyMappings, transformMappings)
     }
 }
