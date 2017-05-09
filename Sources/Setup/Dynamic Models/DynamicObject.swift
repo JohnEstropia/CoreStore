@@ -28,12 +28,24 @@ import Foundation
 
 // MARK: - DynamicObject
 
+/**
+ All CoreStore's utilities are designed around `DynamicObject` instances. `NSManagedObject` and `CoreStoreObject` instances all conform to `DynamicObject`.
+ */
 public protocol DynamicObject: class {
     
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self
     
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     static func cs_fromRaw(object: NSManagedObject) -> Self
     
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     func cs_toRaw() -> NSManagedObject
 }
 

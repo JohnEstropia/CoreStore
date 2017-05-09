@@ -29,8 +29,21 @@ import Foundation
 
 // MARK: - LegacyXcodeDataModelSchema
 
+/**
+ The `LegacyXcodeDataModelSchema` describes models loaded directly from an existing `NSManagedObjectModel`. It is not advisable to continue using this model as its metadata are not available to CoreStore.
+ */
 public final class LegacyXcodeDataModelSchema: DynamicSchema {
     
+    /**
+     Initializes a `LegacyXcodeDataModelSchema` from an `NSManagedObjectModel`.
+     ```
+     CoreStore.defaultStack = DataStack(
+         LegacyXcodeDataModelSchema(modelName: "MyAppV1", model: model)
+     )
+     ```
+     - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)
+     - parameter model: the `NSManagedObjectModel`
+     */
     public required init(modelName: ModelVersion, model: NSManagedObjectModel) {
         
         self.modelVersion = modelName

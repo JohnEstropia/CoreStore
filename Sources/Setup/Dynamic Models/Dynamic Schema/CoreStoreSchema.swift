@@ -94,9 +94,9 @@ public final class CoreStoreSchema: DynamicSchema {
      - parameter entities: an array of `Entity<T>` pertaining to all `CoreStoreObject` subclasses to be added to the schema version.
      - parameter versionLock: an optional list of `VersionLock` hashes for each entity name in the `entities` array. If any `DynamicEntity` doesn't match its version lock hash, an assertion will be raised.
      */
-    public convenience init(modelVersion: ModelVersion, entities: [DynamicEntity & Hashable], versionLock: VersionLock? = nil) {
+    public convenience init(modelVersion: ModelVersion, entities: [DynamicEntity], versionLock: VersionLock? = nil) {
         
-        var entityConfigurations: [DynamicEntity & Hashable: Set<String>] = [:]
+        var entityConfigurations: [DynamicEntity: Set<String>] = [:]
         for entity in entities {
             
             entityConfigurations[entity] = []
@@ -138,15 +138,15 @@ public final class CoreStoreSchema: DynamicSchema {
      - parameter entityConfigurations: a dictionary with `Entity<T>` pertaining to all `CoreStoreObject` subclasses  and the corresponding list of "Configurations" they should be added to. To add an entity only to the default configuration, assign an empty set to its configurations list. Note that regardless of the set configurations, all entities will be added to the default configuration.
      - parameter versionLock: an optional list of `VersionLock` hashes for each entity name in the `entities` array. If any `DynamicEntity` doesn't match its version lock hash, an assertion will be raised.
      */
-    public required init(modelVersion: ModelVersion, entityConfigurations: [DynamicEntity & Hashable: Set<String>], versionLock: VersionLock? = nil) {
+    public required init(modelVersion: ModelVersion, entityConfigurations: [DynamicEntity: Set<String>], versionLock: VersionLock? = nil) {
         
-        var actualEntitiesByConfiguration: [String: Set<AnyEntity>] = [:]
+        var actualEntitiesByConfiguration: [String: Set<DynamicEntity>] = [:]
         for (entity, configurations) in entityConfigurations {
             
             for configuration in configurations {
                 
-                var entities: Set<AnyEntity>
-                if let existingEntities = actualEntitiesByConfiguration[configurations] {
+                var entities: Set<DynamicEntity>
+                if let existingEntities = actualEntitiesByConfiguration[configuration] {
                     
                     entities = existingEntities
                 }
@@ -154,11 +154,11 @@ public final class CoreStoreSchema: DynamicSchema {
                     
                     entities = []
                 }
-                entities.insert(AnyEntity(entity))
-                actualEntitiesByConfiguration[configurations] = entities
+                entities.insert(entity)
+                actualEntitiesByConfiguration[configuration] = entities
             }
         }
-        let allEntities = Set(actualEntitiesByConfiguration.values.joined())
+        let allEntities = Set(entityConfigurations.keys)
         actualEntitiesByConfiguration[DataStack.defaultConfigurationName] = allEntities
         
         CoreStore.assert(
@@ -205,7 +205,7 @@ public final class CoreStoreSchema: DynamicSchema {
             return cachedRawModel
         }
         let rawModel = NSManagedObjectModel()
-        var entityDescriptionsByEntity: [AnyEntity: NSEntityDescription] = [:]
+        var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
         for entity in self.allEntities {
             
             let entityDescription = self.entityDescription(
@@ -234,73 +234,19 @@ public final class CoreStoreSchema: DynamicSchema {
     
     // MARK: Internal
     
-    // MARK: - AnyEntity
-    
-    internal struct AnyEntity: DynamicEntity, Hashable {
-        
-        internal init(_ entity: DynamicEntity) {
-            
-            self.init(
-                type: entity.type,
-                entityName: entity.entityName,
-                isAbstract: entity.isAbstract,
-                versionHashModifier: entity.versionHashModifier
-            )
-        }
-        
-        internal init(type: DynamicObject.Type, entityName: String, isAbstract: Bool, versionHashModifier: String?) {
-            
-            self.type = type
-            self.entityName = entityName
-            self.isAbstract = isAbstract
-            self.versionHashModifier = versionHashModifier
-        }
-        
-        
-        // MARK: Equatable
-        
-        static func == (lhs: AnyEntity, rhs: AnyEntity) -> Bool {
-            
-            return lhs.type == rhs.type
-                && lhs.entityName == rhs.entityName
-                && lhs.isAbstract == rhs.isAbstract
-                && lhs.versionHashModifier == rhs.versionHashModifier
-        }
-        
-        // MARK: Hashable
-        
-        var hashValue: Int {
-            
-            return ObjectIdentifier(self.type).hashValue
-                ^ self.entityName.hashValue
-                ^ self.isAbstract.hashValue
-                ^ (self.versionHashModifier ?? "").hashValue
-        }
-        
-        // MARK: DynamicEntity
-        
-        internal let type: DynamicObject.Type
-        internal let entityName: EntityName
-        internal let isAbstract: Bool
-        internal let versionHashModifier: String?
-    }
-    
-    
-    // MARK: -
-    
-    internal let entitiesByConfiguration: [String: Set<AnyEntity>]
+    internal let entitiesByConfiguration: [String: Set<DynamicEntity>]
     
     
     // MARK: Private
     
     private static let barrierQueue = DispatchQueue.concurrent("com.coreStore.coreStoreDataModelBarrierQueue")
     
-    private let allEntities: Set<AnyEntity>
+    private let allEntities: Set<DynamicEntity>
     
-    private var entityDescriptionsByEntity: [CoreStoreSchema.AnyEntity: NSEntityDescription] = [:]
+    private var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
     private weak var cachedRawModel: NSManagedObjectModel?
     
-    private func entityDescription(for entity: CoreStoreSchema.AnyEntity, initializer: (CoreStoreSchema.AnyEntity) -> NSEntityDescription) -> NSEntityDescription {
+    private func entityDescription(for entity: DynamicEntity, initializer: (DynamicEntity) -> NSEntityDescription) -> NSEntityDescription {
         
         if let cachedEntityDescription = self.entityDescriptionsByEntity[entity] {
             
@@ -311,12 +257,13 @@ public final class CoreStoreSchema: DynamicSchema {
         return entityDescription
     }
     
-    private static func firstPassCreateEntityDescription(from entity: AnyEntity) -> NSEntityDescription {
+    private static func firstPassCreateEntityDescription(from entity: DynamicEntity) -> NSEntityDescription {
         
         let entityDescription = NSEntityDescription()
         entityDescription.coreStoreEntity = entity
         entityDescription.name = entity.entityName
         entityDescription.isAbstract = entity.isAbstract
+        entityDescription.versionHashModifier = entity.versionHashModifier
         entityDescription.managedObjectClassName = NSStringFromClass(NSManagedObject.self)
         
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
@@ -360,16 +307,16 @@ public final class CoreStoreSchema: DynamicSchema {
         return entityDescription
     }
     
-    private static func secondPassConnectRelationshipAttributes(for entityDescriptionsByEntity: [AnyEntity: NSEntityDescription]) {
+    private static func secondPassConnectRelationshipAttributes(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]) {
         
-        var relationshipsByNameByEntity: [AnyEntity: [String: NSRelationshipDescription]] = [:]
+        var relationshipsByNameByEntity: [DynamicEntity: [String: NSRelationshipDescription]] = [:]
         for (entity, entityDescription) in entityDescriptionsByEntity {
             
             relationshipsByNameByEntity[entity] = entityDescription.relationshipsByName
         }
-        func findEntity(for type: CoreStoreObject.Type) -> AnyEntity {
+        func findEntity(for type: CoreStoreObject.Type) -> DynamicEntity {
             
-            var matchedEntities: Set<AnyEntity> = []
+            var matchedEntities: Set<DynamicEntity> = []
             for (entity, _) in entityDescriptionsByEntity where entity.type == type {
                 
                 matchedEntities.insert(entity)
@@ -392,7 +339,7 @@ public final class CoreStoreSchema: DynamicSchema {
             }
         }
         
-        func findInverseRelationshipMatching(destinationEntity: AnyEntity, destinationKeyPath: String) -> NSRelationshipDescription {
+        func findInverseRelationshipMatching(destinationEntity: DynamicEntity, destinationKeyPath: String) -> NSRelationshipDescription {
             
             for case (destinationKeyPath, let relationshipDescription) in relationshipsByNameByEntity[destinationEntity]! {
                 
@@ -451,7 +398,7 @@ public final class CoreStoreSchema: DynamicSchema {
         }
     }
     
-    private static func thirdPassConnectInheritanceTree(for entityDescriptionsByEntity: [AnyEntity: NSEntityDescription]) {
+    private static func thirdPassConnectInheritanceTree(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]) {
         
         func connectBaseEntity(mirror: Mirror, entityDescription: NSEntityDescription) {
             

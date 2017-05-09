@@ -35,7 +35,7 @@ import CoreData
 public final class DataStack: Equatable {
     
     /**
-     Initializes a `DataStack` from the model with the specified `modelName` in the specified `bundle`.
+     Convenience initializer for `DataStack` that creates a `SchemaHistory` from the model with the specified `modelName` in the specified `bundle`.
      
      - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set (e.g. in Unit Tests).
      - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
@@ -53,8 +53,20 @@ public final class DataStack: Equatable {
     }
     
     /**
-     Initializes a `DataStack` from a `DynamicSchema` implementation.
-     
+     Convenience initializer for `DataStack` that creates a `SchemaHistory` from a list of `DynamicSchema` versions.
+     ```
+     CoreStore.defaultStack = DataStack(
+         XcodeDataModelSchema(modelName: "MyModelV1"),
+         CoreStoreSchema(
+             modelVersion: "MyModelV2",
+             entities: [
+                 Entity<Animal>("Animal"),
+                 Entity<Person>("Person")
+             ]
+         ),
+         migrationChain: ["MyModelV1", "MyModelV2"]
+     )
+     ```
      - parameter schema: an instance of `DynamicSchema`
      - parameter otherSchema: a list of other `DynamicSchema` instances that represent present/previous/future model versions, in any order
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
@@ -67,10 +79,25 @@ public final class DataStack: Equatable {
                 migrationChain: migrationChain
             )
         )
+    }
     
     /**
      Initializes a `DataStack` from a `SchemaHistory` instance.
-     
+     ```
+     CoreStore.defaultStack = DataStack(
+         schemaHistory: SchemaHistory(
+             XcodeDataModelSchema(modelName: "MyModelV1"),
+             CoreStoreSchema(
+                 modelVersion: "MyModelV2",
+                 entities: [
+                     Entity<Animal>("Animal"),
+                     Entity<Person>("Person")
+                 ]
+             ),
+             migrationChain: ["MyModelV1", "MyModelV2"]
+         )
+     )
+     ```
      - parameter schemaHistory: the `SchemaHistory` for the stack
      */
     public required init(schemaHistory: SchemaHistory) {

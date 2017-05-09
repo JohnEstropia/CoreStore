@@ -38,10 +38,10 @@ import Foundation
 public final class CSXcodeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreObjectiveCType {
     
     @objc
-    public required init(modelVersion: ModelVersion, modelVersionFileURL: URL) {
+    public required init(modelName: ModelVersion, modelVersionFileURL: URL) {
         
         self.bridgeToSwift = XcodeDataModelSchema(
-            modelVersion: modelVersion,
+            modelName: modelName,
             modelVersionFileURL: modelVersionFileURL
         )
     }

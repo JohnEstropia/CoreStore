@@ -30,9 +30,7 @@ import Foundation
 // MARK: - SchemaHistory
 
 /**
- The `SchemaHistory` encapsulates all model versions that is relevant to the data model, including past versions.
- - SeeAlso: SchemaHistory.currentModelVersion
- - SeeAlso: SchemaHistory.migrationChain
+ The `SchemaHistory` encapsulates multiple `DynamicSchema` across multiple model versions. It contains all model history and is used by the `DataStack` to 
  */
 public final class SchemaHistory: ExpressibleByArrayLiteral {
     
@@ -108,7 +106,7 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
         for modelVersion in modelVersions {
             
             let fileURL = modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
-            allSchema.append(XcodeDataModelSchema(modelVersion: modelVersion, modelVersionFileURL: fileURL))
+            allSchema.append(XcodeDataModelSchema(modelName: modelVersion, modelVersionFileURL: fileURL))
         }
         self.init(
             allSchema: allSchema,
@@ -117,6 +115,13 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
         )
     }
     
+    /**
+     Initializes a `SchemaHistory` with a list of `DynamicSchema` and a `MigrationChain` to describe the order of progressive migrations.
+     - parameter schema: a `DynamicSchema` that represents a model version
+     - parameter otherSchema: a list of `DynamicSchema` that represent other model versions
+     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     - parameter exactCurrentModelVersion: an optional string to explicitly select the current model version string. This is useful if the `DataStack` should load a non-latest model version (usually to prepare data before migration). If not provided, the current model version will be computed from the `MigrationChain`.
+     */
     public convenience init(_ schema: DynamicSchema, _ otherSchema: DynamicSchema..., migrationChain: MigrationChain = nil, exactCurrentModelVersion: String? = nil) {
         
         self.init(
@@ -126,6 +131,12 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
         )
     }
     
+    /**
+     Initializes a `SchemaHistory` with a list of `DynamicSchema` and a `MigrationChain` to describe the order of progressive migrations.
+     - parameter allSchema: a list of `DynamicSchema` that represent model versions
+     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     - parameter exactCurrentModelVersion: an optional string to explicitly select the current model version string. This is useful if the `DataStack` should load a non-latest model version (usually to prepare data before migration). If not provided, the current model version will be computed from the `MigrationChain`.
+     */
     public required init(allSchema: [DynamicSchema], migrationChain: MigrationChain = nil, exactCurrentModelVersion: String? = nil) {
         
         if allSchema.isEmpty {

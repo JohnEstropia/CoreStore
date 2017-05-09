@@ -32,7 +32,7 @@ import Foundation
 internal extension NSEntityDescription {
     
     @nonobjc
-    internal var coreStoreEntity: CoreStoreSchema.AnyEntity? {
+    internal var coreStoreEntity: DynamicEntity? {
         
         get {
             
@@ -43,7 +43,7 @@ internal extension NSEntityDescription {
                     
                     return nil
             }
-            return CoreStoreSchema.AnyEntity(
+            return DynamicEntity(
                 type: NSClassFromString(typeName) as! CoreStoreObject.Type,
                 entityName: entityName,
                 isAbstract: isAbstract,
