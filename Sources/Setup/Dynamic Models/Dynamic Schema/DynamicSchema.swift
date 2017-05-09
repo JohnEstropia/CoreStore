@@ -30,10 +30,10 @@ import Foundation
 // MARK: - DynamicSchema
 
 /**
- `DynamicSchema` are types that provide `NSManagedObjectModel` instances for a particular model version. CoreStore currently supports concrete types:
+ `DynamicSchema` are types that provide `NSManagedObjectModel` instances for a particular model version. CoreStore currently supports the following concrete types:
  - `XcodeDataModelSchema`: describes models loaded from a .xcdatamodeld file.
  - `LegacyXcodeDataModelSchema`: describes models loaded directly from an existing `NSManagedObjectModel`. It is not advisable to continue using this model as its metadata are not available to CoreStore.
- - `CoreStoreSchema`: describes models written in `CoreStoreObject` Swift class declarations.
+ - `CoreStoreSchema`: describes models written for `CoreStoreObject` Swift class declarations.
  */
 public protocol DynamicSchema {
     

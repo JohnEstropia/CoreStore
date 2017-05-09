@@ -25,7 +25,6 @@
 		B560070F1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B560070E1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift */; };
 		B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */; };
 		B566E3321B11DF3200F4F0C6 /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3311B11DF3200F4F0C6 /* UserAccount.swift */; };
-		B56924091EBAE435007C4DC9 /* OrganismV3ToV2.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = B5125C131B521BA7003A42C7 /* OrganismV3ToV2.xcmappingmodel */; };
 		B56964C91B20AC780075EE4A /* CustomLoggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964C81B20AC780075EE4A /* CustomLoggerViewController.swift */; };
 		B56964D71B231AE90075EE4A /* StackSetupDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B56964D51B231AE90075EE4A /* StackSetupDemo.xcdatamodeld */; };
 		B56964DA1B231BCA0075EE4A /* MaleAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964D91B231BCA0075EE4A /* MaleAccount.swift */; };
@@ -330,7 +329,6 @@
 				B5EE259B1B3EA4890000406B /* OrganismV3.swift in Sources */,
 				B503FAE11AFDC71700F90881 /* Palette.swift in Sources */,
 				B503FAE21AFDC71700F90881 /* PaletteTableViewCell.swift in Sources */,
-				B56924091EBAE435007C4DC9 /* OrganismV3ToV2.xcmappingmodel in Sources */,
 				B560070F1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift in Sources */,
 				B503FADF1AFDC71700F90881 /* ListObserverDemoViewController.swift in Sources */,
 				B54AAD4F1AF4D26E00848AE0 /* AppDelegate.swift in Sources */,

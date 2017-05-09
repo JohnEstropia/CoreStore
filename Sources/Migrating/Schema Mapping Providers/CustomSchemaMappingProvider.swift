@@ -31,6 +31,27 @@ import Foundation
 
 open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
+    public let sourceVersion: ModelVersion
+    public let destinationVersion: ModelVersion
+    
+    public required init(from sourceVersion: ModelVersion, to destinationVersion: ModelVersion, entityMappings: Set<CustomMapping> = []) {
+        
+        CoreStore.assert(
+            cs_lazy {
+                
+                let sources = entityMappings.flatMap({ $0.entityMappingSourceEntity })
+                let destinations = entityMappings.flatMap({ $0.entityMappingDestinationEntity })
+                return sources.count == Set(sources).count
+                    && destinations.count == Set(destinations).count
+            },
+            "Duplicate source/destination entities found in provided \"entityMappings\" argument."
+        )
+        self.sourceVersion = sourceVersion
+        self.destinationVersion = destinationVersion
+        self.entityMappings = entityMappings
+    }
+    
+    
     // MARK: - CustomMapping
     
     public enum CustomMapping: Hashable {
@@ -40,7 +61,7 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         case deleteEntity(sourceEntity: EntityName)
         case insertEntity(destinationEntity: EntityName)
         case copyEntity(sourceEntity: EntityName, destinationEntity: EntityName)
-        case transformEntity(sourceEntity: EntityName, destinationEntity: EntityName, transformEntity: Transformer)
+        case transformEntity(sourceEntity: EntityName, destinationEntity: EntityName, transformer: Transformer)
         
         static func inferredTransformation(_ sourceObject: UnsafeSourceObject, _ createDestinationObject: () -> UnsafeDestinationObject) throws -> Void {
             
@@ -208,29 +229,6 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         
         private let rawObject: NSManagedObject
         private let sourceAttributesByDestinationKey: [KeyPath: NSAttributeDescription]
-    }
-    
-    
-    // MARK: - Public
-    
-    public let sourceVersion: ModelVersion
-    public let destinationVersion: ModelVersion
-    
-    public required init(from sourceVersion: ModelVersion, to destinationVersion: ModelVersion, entityMappings: Set<CustomMapping> = []) {
-        
-        CoreStore.assert(
-            cs_lazy {
-             
-                let sources = entityMappings.flatMap({ $0.entityMappingSourceEntity })
-                let destinations = entityMappings.flatMap({ $0.entityMappingDestinationEntity })
-                return sources.count == Set(sources).count
-                    && destinations.count == Set(destinations).count
-            },
-            "Duplicate source/destination entities found in provided \"entityMappings\" argument."
-        )
-        self.sourceVersion = sourceVersion
-        self.destinationVersion = destinationVersion
-        self.entityMappings = entityMappings
     }
     
     
@@ -607,7 +605,7 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                             .transformEntity(
                                 sourceEntity: sourceEntityName,
                                 destinationEntity: destinationEntityName,
-                                transformEntity: CustomMapping.inferredTransformation
+                                transformer: CustomMapping.inferredTransformation
                             )
                         )
                     }

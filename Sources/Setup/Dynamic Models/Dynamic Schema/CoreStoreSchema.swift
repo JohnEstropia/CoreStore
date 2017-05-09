@@ -29,23 +29,134 @@ import Foundation
 
 // MARK: - CoreStoreSchema
 
+/**
+ The `CoreStoreSchema` describes models written for `CoreStoreObject` Swift class declarations for a particular model version. `CoreStoreObject` entities for a model version should be added to `CoreStoreSchema` instance.
+ ```
+ class Animal: CoreStoreObject {
+     let species = Value.Required<String>("species")
+     let nickname = Value.Optional<String>("nickname")
+     let master = Relationship.ToOne<Person>("master")
+ }
+ 
+ class Person: CoreStoreObject {
+     let name = Value.Required<String>("name")
+     let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
+ }
+ 
+ CoreStore.defaultStack = DataStack(
+     CoreStoreSchema(
+         modelVersion: "V1",
+         entities: [
+             Entity<Animal>("Animal"),
+             Entity<Person>("Person")
+         ],
+         versionLock: [
+             "Animal": [0x2698c812ebbc3b97, 0x751e3fa3f04cf9, 0x51fd460d3babc82, 0x92b4ba735b5a3053],
+             "Person": [0xae4060a59f990ef0, 0x8ac83a6e1411c130, 0xa29fea58e2e38ab6, 0x2071bb7e33d77887]
+         ]
+     )
+ )
+ ```
+ - SeeAlso: CoreStoreObject
+ - SeeAlso: Entity
+ */
 public final class CoreStoreSchema: DynamicSchema {
     
-    public convenience init(modelVersion: ModelVersion, entities: [DynamicEntity], versionLock: VersionLock? = nil) {
+    /**
+     Initializes a `CoreStoreSchema`. Using this initializer only if the entities don't need to be assigned to particular "Configurations". To use multiple configurations (for example, to separate entities in different `StorageInterface`s), use the `init(modelVersion:entitiesByConfiguration:versionLock:)` initializer.
+     ```
+     class Animal: CoreStoreObject {
+         let species = Value.Required<String>("species")
+         let nickname = Value.Optional<String>("nickname")
+         let master = Relationship.ToOne<Person>("master")
+     }
+     
+     class Person: CoreStoreObject {
+         let name = Value.Required<String>("name")
+         let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
+     }
+     
+     CoreStore.defaultStack = DataStack(
+         CoreStoreSchema(
+             modelVersion: "V1",
+             entities: [
+                 Entity<Animal>("Animal"),
+                 Entity<Person>("Person")
+             ],
+             versionLock: [
+                 "Animal": [0x2698c812ebbc3b97, 0x751e3fa3f04cf9, 0x51fd460d3babc82, 0x92b4ba735b5a3053],
+                 "Person": [0xae4060a59f990ef0, 0x8ac83a6e1411c130, 0xa29fea58e2e38ab6, 0x2071bb7e33d77887]
+             ]
+         )
+     )
+     ```
+     - parameter modelVersion: the model version for the schema. This string should be unique from other `DynamicSchema`'s model versions.
+     - parameter entities: an array of `Entity<T>` pertaining to all `CoreStoreObject` subclasses to be added to the schema version.
+     - parameter versionLock: an optional list of `VersionLock` hashes for each entity name in the `entities` array. If any `DynamicEntity` doesn't match its version lock hash, an assertion will be raised.
+     */
+    public convenience init(modelVersion: ModelVersion, entities: [DynamicEntity & Hashable], versionLock: VersionLock? = nil) {
         
+        var entityConfigurations: [DynamicEntity & Hashable: Set<String>] = [:]
+        for entity in entities {
+            
+            entityConfigurations[entity] = []
+        }
         self.init(
             modelVersion: modelVersion,
-            entitiesByConfiguration: [DataStack.defaultConfigurationName: entities],
+            entityConfigurations: entityConfigurations,
             versionLock: versionLock
         )
     }
     
-    public required init(modelVersion: ModelVersion, entitiesByConfiguration: [String: [DynamicEntity]], versionLock: VersionLock? = nil) {
+    /**
+     Initializes a `CoreStoreSchema`. Using this initializer if multiple "Configurations" (for example, to separate entities in different `StorageInterface`s) are needed. To add an entity only to the default configuration, assign an empty set to its configurations list. Note that regardless of the set configurations, all entities will be added to the default configuration.
+     ```
+     class Animal: CoreStoreObject {
+         let species = Value.Required<String>("species")
+         let nickname = Value.Optional<String>("nickname")
+     }
+     
+     class Person: CoreStoreObject {
+         let name = Value.Required<String>("name")
+     }
+     
+     CoreStore.defaultStack = DataStack(
+         CoreStoreSchema(
+             modelVersion: "V1",
+             entityConfigurations: [
+                 Entity<Animal>("Animal"): [],
+                 Entity<Person>("Person"): ["People"]
+             ],
+             versionLock: [
+                 "Animal": [0x2698c812ebbc3b97, 0x751e3fa3f04cf9, 0x51fd460d3babc82, 0x92b4ba735b5a3053],
+                 "Person": [0xae4060a59f990ef0, 0x8ac83a6e1411c130, 0xa29fea58e2e38ab6, 0x2071bb7e33d77887]
+             ]
+         )
+     )
+     ```
+     - parameter modelVersion: the model version for the schema. This string should be unique from other `DynamicSchema`'s model versions.
+     - parameter entityConfigurations: a dictionary with `Entity<T>` pertaining to all `CoreStoreObject` subclasses  and the corresponding list of "Configurations" they should be added to. To add an entity only to the default configuration, assign an empty set to its configurations list. Note that regardless of the set configurations, all entities will be added to the default configuration.
+     - parameter versionLock: an optional list of `VersionLock` hashes for each entity name in the `entities` array. If any `DynamicEntity` doesn't match its version lock hash, an assertion will be raised.
+     */
+    public required init(modelVersion: ModelVersion, entityConfigurations: [DynamicEntity & Hashable: Set<String>], versionLock: VersionLock? = nil) {
         
         var actualEntitiesByConfiguration: [String: Set<AnyEntity>] = [:]
-        for (configuration, entities) in entitiesByConfiguration {
+        for (entity, configurations) in entityConfigurations {
             
-            actualEntitiesByConfiguration[configuration] = Set(entities.map(AnyEntity.init))
+            for configuration in configurations {
+                
+                var entities: Set<AnyEntity>
+                if let existingEntities = actualEntitiesByConfiguration[configurations] {
+                    
+                    entities = existingEntities
+                }
+                else {
+                    
+                    entities = []
+                }
+                entities.insert(AnyEntity(entity))
+                actualEntitiesByConfiguration[configurations] = entities
+            }
         }
         let allEntities = Set(actualEntitiesByConfiguration.values.joined())
         actualEntitiesByConfiguration[DataStack.defaultConfigurationName] = allEntities

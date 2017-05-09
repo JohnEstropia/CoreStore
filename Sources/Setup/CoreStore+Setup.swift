@@ -155,7 +155,7 @@ public extension CoreStore {
     
     // MARK: Obsolete
     
-    @available(*, obsoleted: 3.0.0, renamed: "entityDescription(for:)")
+    @available(*, obsoleted: 3.1, renamed: "entityDescription(for:)")
     public static func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
         return self.entityDescription(for: type)

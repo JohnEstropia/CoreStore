@@ -228,10 +228,31 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
         self.setEnabled(false)
         let progress = dataStack.addStorage(
             SQLiteStore(
-                fileName: "MigrationDemo.sqlite"/*,
+                fileName: "MigrationDemo.sqlite",
                 migrationMappingProviders: [
-                    CustomSchemaMappingProvider(from: "MigrationDemoV3", to: "MigrationDemoV2")
-                ]*/
+                    CustomSchemaMappingProvider(
+                        from: "MigrationDemoV3",
+                        to: "MigrationDemoV2",
+                        entityMappings: [
+                            .transformEntity(
+                                sourceEntity: "Organism",
+                                destinationEntity: "Organism",
+                                transformer: { (source, createDestination) in
+                                    
+                                    let destination = createDestination()
+                                    destination.enumerateAttributes { (attribute, sourceAttribute) in
+                                        
+                                        if let sourceAttribute = sourceAttribute {
+                                            
+                                            destination[attribute] = source[sourceAttribute]
+                                        }
+                                    }
+                                    destination["numberOfFlippers"] = source["numberOfLimbs"]
+                                }
+                            )
+                        ]
+                    )
+                ]
             ),
             completion: { [weak self] (result) -> Void in
                 

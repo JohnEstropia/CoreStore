@@ -37,7 +37,7 @@ public final class DataStack: Equatable {
     /**
      Initializes a `DataStack` from the model with the specified `modelName` in the specified `bundle`.
      
-     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
+     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set (e.g. in Unit Tests).
      - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
@@ -52,6 +52,13 @@ public final class DataStack: Equatable {
         )
     }
     
+    /**
+     Initializes a `DataStack` from a `DynamicSchema` implementation.
+     
+     - parameter schema: an instance of `DynamicSchema`
+     - parameter otherSchema: a list of other `DynamicSchema` instances that represent present/previous/future model versions, in any order
+     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     */
     public convenience init(_ schema: DynamicSchema, _ otherSchema: DynamicSchema..., migrationChain: MigrationChain = nil) {
         
         self.init(
@@ -60,23 +67,16 @@ public final class DataStack: Equatable {
                 migrationChain: migrationChain
             )
         )
-    }
     
     /**
-     Initializes a `DataStack` from an `NSManagedObjectModel`.
+     Initializes a `DataStack` from a `SchemaHistory` instance.
      
-     - parameter model: the `NSManagedObjectModel` for the stack
-     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     - parameter schemaHistory: the `SchemaHistory` for the stack
      */
     public required init(schemaHistory: SchemaHistory) {
 
         // TODO: test before release (rolled back)
 //        _ = DataStack.isGloballyInitialized
-        
-        CoreStore.assert(
-            schemaHistory.migrationChain.isValid,
-            "Invalid migration chain passed to the \(cs_typeName(DataStack.self)). Check that the model versions' order is correct and that no repetitions or ambiguities exist."
-        )
         
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: schemaHistory.rawModel)
         self.rootSavingContext = NSManagedObjectContext.rootSavingContextForCoordinator(self.coordinator)
@@ -89,7 +89,7 @@ public final class DataStack: Equatable {
     }
     
     /**
-     Returns the `DataStack`'s model version. The version string is the same as the name of the version-specific .xcdatamodeld file.
+     Returns the `DataStack`'s current model version. `StorageInterface`s added to the stack will be migrated to this version.
      */
     public var modelVersion: String {
         
@@ -97,7 +97,7 @@ public final class DataStack: Equatable {
     }
     
     /**
-     Returns the `DataStack`'s model schema.
+     Returns the `DataStack`'s current model schema. `StorageInterface`s added to the stack will be migrated to this version.
      */
     public var modelSchema: DynamicSchema {
         
@@ -619,13 +619,13 @@ public final class DataStack: Equatable {
     
     // MARK: Obsolete
     
-    @available(*, obsoleted: 3.0.0, renamed: "entityDescription(for:)")
+    @available(*, obsoleted: 3.1, renamed: "entityDescription(for:)")
     public func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
         return self.entityDescription(for: type)
     }
     
-    @available(*, obsoleted: 3.0.0, renamed: "objectID(forURIRepresentation:)")
+    @available(*, obsoleted: 3.1, renamed: "objectID(forURIRepresentation:)")
     public func objectIDForURIRepresentation(_ url: URL) -> NSManagedObjectID? {
         
         return self.objectID(forURIRepresentation: url)

@@ -30,7 +30,7 @@ import Foundation
 // MARK: - CoreStoreObject
 
 /**
- The `CoreStoreObject` is an abstract class for creating CoreStore-managed objects that are more type-safe and more convenient than `NSManagedObject` subclasses. The model entities for `CoreStoreObject` subclasses are inferred from the subclasses' Swift declaration themselves; no .xcdatamodeld files needed. To declare persisted attributes and relationships for the `CoreStoreObject` subclass, declare properties of type `Value.Required<T>`, `Value.Optional<T>` for values, or `Relationship.ToOne<T>`, `Relationship.ToManyOrdered<T>`, `Relationship.ToManyUnordered<T>` for relationships.
+ The `CoreStoreObject` is an abstract class for creating CoreStore-managed objects that are more type-safe and more convenient than `NSManagedObject` subclasses. The model entities for `CoreStoreObject` subclasses are inferred from the Swift declaration themselves; no .xcdatamodeld files are needed. To declare persisted attributes and relationships for the `CoreStoreObject` subclass, declare properties of type `Value.Required<T>`, `Value.Optional<T>` for values, or `Relationship.ToOne<T>`, `Relationship.ToManyOrdered<T>`, `Relationship.ToManyUnordered<T>` for relationships.
  ```
  class Animal: CoreStoreObject {
      let species = Value.Required<String>("species")
@@ -44,6 +44,17 @@ import Foundation
  }
  ```
  `CoreStoreObject` entities for a model version should be added to `CoreStoreSchema` instance.
+ ```
+ CoreStore.defaultStack = DataStack(
+     CoreStoreSchema(
+         modelVersion: "V1",
+         entities: [
+             Entity<Animal>("Animal"),
+             Entity<Person>("Person")
+         ]
+     )
+ )
+ ```
  - SeeAlso: CoreStoreSchema
  - SeeAlso: CoreStoreObject.Value
  - SeeAlso: CoreStoreObject.Relationship

@@ -132,7 +132,10 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
             
             CoreStore.abort("The \"allSchema\" argument of the \(cs_typeName(SchemaHistory.self)) initializer cannot be empty.")
         }
-        
+        CoreStore.assert(
+            migrationChain.isValid,
+            "Invalid migration chain passed to the \(cs_typeName(SchemaHistory.self)). Check that the model versions' order are correct and that no repetitions or ambiguities exist."
+        )
         var schemaByVersion: [ModelVersion: DynamicSchema] = [:]
         for schema in allSchema {
             
