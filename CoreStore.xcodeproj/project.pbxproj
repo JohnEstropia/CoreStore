@@ -1035,7 +1035,7 @@
 				B5A261201B64BFDB006EB6D3 /* MigrationType.swift */,
 				B56965231B356B820075EE4A /* MigrationResult.swift */,
 			);
-			path = Migrating;
+			name = Migrating;
 			sourceTree = "<group>";
 		};
 		B5A5F26B1CAFF8D0004AB9AF /* Swift */ = {
@@ -1073,7 +1073,7 @@
 				B53FBA101CAB607000F0D40A /* Convenience */,
 				B5E222211CA4DE5700BA2E95 /* Internal */,
 			);
-			path = ObjectiveC;
+			name = ObjectiveC;
 			sourceTree = "<group>";
 		};
 		B5E1B5A61CAA49CE007FD580 /* Migrating */ = {
@@ -1116,7 +1116,7 @@
 				B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */,
 				B509C7F31E54511B0061C547 /* CoreStoreImportableAttributeType.swift */,
 			);
-			path = Importing;
+			name = Importing;
 			sourceTree = "<group>";
 		};
 		B5E84EDA1AFF84500064E85B /* Setup */ = {
@@ -1126,7 +1126,7 @@
 				B5E84EDB1AFF84500064E85B /* DataStack.swift */,
 				B5FE4DA01C84818B00FA6A91 /* StorageInterfaces */,
 			);
-			path = Setup;
+			name = Setup;
 			sourceTree = "<group>";
 		};
 		B5E84EE21AFF84610064E85B /* Logging */ = {
@@ -1137,7 +1137,7 @@
 				B5E84EE51AFF84610064E85B /* CoreStoreLogger.swift */,
 				B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */,
 			);
-			path = Logging;
+			name = Logging;
 			sourceTree = "<group>";
 		};
 		B5E84EE91AFF846E0064E85B /* Transactions */ = {
@@ -1153,7 +1153,7 @@
 				B50392F81C478FF3009900CA /* NSManagedObject+Transaction.swift */,
 				B5E84EF21AFF846E0064E85B /* SaveResult.swift */,
 			);
-			path = Transactions;
+			name = Transactions;
 			sourceTree = "<group>";
 		};
 		B5E84EFD1AFF847B0064E85B /* Fetching and Querying */ = {
@@ -1168,7 +1168,7 @@
 				B5E84F0A1AFF847B0064E85B /* Protocol Clauses */,
 				B5E84EFF1AFF847B0064E85B /* Concrete Clauses */,
 			);
-			path = "Fetching and Querying";
+			name = "Fetching and Querying";
 			sourceTree = "<group>";
 		};
 		B5E84EFF1AFF847B0064E85B /* Concrete Clauses */ = {
@@ -1181,7 +1181,7 @@
 				B5E84F021AFF847B0064E85B /* GroupBy.swift */,
 				B5E84F001AFF847B0064E85B /* Tweak.swift */,
 			);
-			path = "Concrete Clauses";
+			name = "Concrete Clauses";
 			sourceTree = "<group>";
 		};
 		B5E84F0A1AFF847B0064E85B /* Protocol Clauses */ = {
@@ -1189,7 +1189,7 @@
 			children = (
 				B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */,
 			);
-			path = "Protocol Clauses";
+			name = "Protocol Clauses";
 			sourceTree = "<group>";
 		};
 		B5E84F191AFF84860064E85B /* Observing */ = {
@@ -1204,7 +1204,7 @@
 				B5E84F1D1AFF84860064E85B /* ListMonitor.swift */,
 				B5E84F1E1AFF84860064E85B /* ListObserver.swift */,
 			);
-			path = Observing;
+			name = Observing;
 			sourceTree = "<group>";
 		};
 		B5E84F261AFF84920064E85B /* Convenience */ = {
@@ -1214,7 +1214,7 @@
 				B5FAD6A81B50A4B300714891 /* Progress+Convenience.swift */,
 				B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */,
 			);
-			path = Convenience;
+			name = Convenience;
 			sourceTree = "<group>";
 		};
 		B5E84F291AFF849C0064E85B /* Internal */ = {
@@ -1237,7 +1237,7 @@
 				B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */,
 				B5E84F2D1AFF849C0064E85B /* WeakObject.swift */,
 			);
-			path = Internal;
+			name = Internal;
 			sourceTree = "<group>";
 		};
 		B5ECDBEA1CA6BEAC00C7F112 /* Protocol Clauses */ = {
@@ -1271,7 +1271,7 @@
 				B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */,
 				B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */,
 			);
-			path = StorageInterfaces;
+			name = StorageInterfaces;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
