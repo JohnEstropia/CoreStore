@@ -36,24 +36,80 @@ infix operator .= : AssignmentPrecedence
 
 public extension DynamicObject where Self: CoreStoreObject {
     
+    /**
+     The containing type for value attributes. `Value` attributes support any type that conform to `ImportableAttributeType`.
+     ```
+     class Animal: CoreStoreObject {
+         let species = Value.Required<String>("species")
+         let nickname = Value.Optional<String>("nickname")
+     }
+     ```
+     */
     public typealias Value = ValueContainer<Self>
+    
+    /**
+     The containing type for transformable attributes. `Transformable` attributes support types that conform to `NSCoding` and `NSCopying`.
+     ```
+     class Animal: CoreStoreObject {
+         let ancestors = Transformable.Required<NSArray>("ancestors")
+         let descendants = Transformable.Optional<NSDictionary>("descendants")
+     }
+     ```
+     */
     public typealias Transformable = TransformableContainer<Self>
 }
 
 
 // MARK: - ValueContainer
 
+/**
+ The containing type for value attributes. Use the `DynamicObject.Value` typealias instead for shorter syntax.
+ ```
+ class Animal: CoreStoreObject {
+     let species = Value.Required<String>("species")
+     let nickname = Value.Optional<String>("nickname")
+ }
+ ```
+ */
 public enum ValueContainer<O: CoreStoreObject> {
     
     // MARK: - Required
-    
+    /**
+     The containing type for required value attributes. Any type that conform to `ImportableAttributeType` are supported.
+     ```
+     class Animal: CoreStoreObject {
+         let species = Value.Required<String>("species")
+         let nickname = Value.Optional<String>("nickname")
+     }
+     ```
+     */
     public final class Required<V: ImportableAttributeType>: AttributeProtocol {
         
+        /**
+         Assigns a value to the attribute. The operation
+         ```
+         animal.species .= "Swift"
+         ```
+         is equivalent to
+         ```
+         animal.species.value = "Swift"
+         ```
+         */
         public static func .= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) {
             
             attribute.value = value
         }
         
+        /**
+         Assigns a value to the attribute. The operation
+         ```
+         animal.species .= anotherAnimal.species
+         ```
+         is equivalent to
+         ```
+         animal.species.value = anotherAnimal.species.value
+         ```
+         */
         public static func .=<O2: CoreStoreObject> (_ attribute: ValueContainer<O>.Required<V>, _ attribute2: ValueContainer<O2>.Required<V>) {
             
             attribute.value = attribute2.value
@@ -149,18 +205,57 @@ public enum ValueContainer<O: CoreStoreObject> {
     
     // MARK: - Optional
     
+    /**
+     The containing type for optional value attributes. Any type that conform to `ImportableAttributeType` are supported.
+     ```
+     class Animal: CoreStoreObject {
+         let species = Value.Required<String>("species")
+         let nickname = Value.Optional<String>("nickname")
+     }
+     ```
+     */
     public final class Optional<V: ImportableAttributeType>: AttributeProtocol {
         
+        /**
+         Assigns a value to the attribute. The operation
+         ```
+         animal.nickname .= "Taylor"
+         ```
+         is equivalent to
+         ```
+         animal.nickname.value = "Taylor"
+         ```
+         */
         public static func .= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) {
             
             attribute.value = value
         }
         
+        /**
+         Assigns a value to the attribute. The operation
+         ```
+         animal.nickname .= anotherAnimal.nickname
+         ```
+         is equivalent to
+         ```
+         animal.nickname.value = anotherAnimal.nickname.value
+         ```
+         */
         public static func .=<O2: CoreStoreObject> (_ attribute: ValueContainer<O>.Optional<V>, _ attribute2: ValueContainer<O2>.Optional<V>) {
             
             attribute.value = attribute2.value
         }
         
+        /**
+         Assigns a value to the attribute. The operation
+         ```
+         animal.nickname .= anotherAnimal.nickname
+         ```
+         is equivalent to
+         ```
+         animal.nickname.value = anotherAnimal.nickname.value
+         ```
+         */
         public static func .=<O2: CoreStoreObject> (_ attribute: ValueContainer<O>.Optional<V>, _ attribute2: ValueContainer<O2>.Required<V>) {
             
             attribute.value = attribute2.value
