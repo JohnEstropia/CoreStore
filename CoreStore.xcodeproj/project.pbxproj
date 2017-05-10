@@ -1110,7 +1110,7 @@
 				B52F743C1E9B8724005F3DAC /* XcodeDataModelSchema.swift */,
 				B52F743B1E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift */,
 			);
-			path = "Dynamic Schema";
+			name = "Dynamic Schema";
 			sourceTree = "<group>";
 		};
 		B53FBA101CAB607000F0D40A /* Convenience */ = {
@@ -1203,7 +1203,7 @@
 				B56923DF1EB827F5007C4DC9 /* XcodeSchemaMappingProvider.swift */,
 				B56923DC1EB827F5007C4DC9 /* CustomSchemaMappingProvider.swift */,
 			);
-			path = "Schema Mapping Providers";
+			name = "Schema Mapping Providers";
 			sourceTree = "<group>";
 		};
 		B56964D11B22FF700075EE4A /* Migrating */ = {
@@ -1217,7 +1217,7 @@
 				B56965231B356B820075EE4A /* MigrationResult.swift */,
 				B56923DB1EB827F5007C4DC9 /* Schema Mapping Providers */,
 			);
-			path = Migrating;
+			name = Migrating;
 			sourceTree = "<group>";
 		};
 		B57358D71E5A7F9B0094B50A /* Dynamic Models */ = {
@@ -1232,7 +1232,7 @@
 				B5D339E11E948C3600C880DE /* Value.swift */,
 				B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */,
 			);
-			path = "Dynamic Models";
+			name = "Dynamic Models";
 			sourceTree = "<group>";
 		};
 		B5A5F26B1CAFF8D0004AB9AF /* Swift */ = {
@@ -1271,7 +1271,7 @@
 				B53FBA101CAB607000F0D40A /* Convenience */,
 				B5E222211CA4DE5700BA2E95 /* Internal */,
 			);
-			path = ObjectiveC;
+			name = ObjectiveC;
 			sourceTree = "<group>";
 		};
 		B5E1B5A61CAA49CE007FD580 /* Migrating */ = {
@@ -1314,7 +1314,7 @@
 				B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */,
 				B509C7F31E54511B0061C547 /* ImportableAttributeType.swift */,
 			);
-			path = Importing;
+			name = Importing;
 			sourceTree = "<group>";
 		};
 		B5E84EDA1AFF84500064E85B /* Setup */ = {
@@ -1325,7 +1325,7 @@
 				B57358D71E5A7F9B0094B50A /* Dynamic Models */,
 				B5FE4DA01C84818B00FA6A91 /* StorageInterfaces */,
 			);
-			path = Setup;
+			name = Setup;
 			sourceTree = "<group>";
 		};
 		B5E84EE21AFF84610064E85B /* Logging */ = {
@@ -1336,7 +1336,7 @@
 				B5E84EE51AFF84610064E85B /* CoreStoreLogger.swift */,
 				B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */,
 			);
-			path = Logging;
+			name = Logging;
 			sourceTree = "<group>";
 		};
 		B5E84EE91AFF846E0064E85B /* Transactions */ = {
@@ -1352,7 +1352,7 @@
 				B50392F81C478FF3009900CA /* NSManagedObject+Transaction.swift */,
 				B5E84EF21AFF846E0064E85B /* SaveResult.swift */,
 			);
-			path = Transactions;
+			name = Transactions;
 			sourceTree = "<group>";
 		};
 		B5E84EFD1AFF847B0064E85B /* Fetching and Querying */ = {
@@ -1368,7 +1368,7 @@
 				B5E84F0A1AFF847B0064E85B /* Protocol Clauses */,
 				B5E84EFF1AFF847B0064E85B /* Concrete Clauses */,
 			);
-			path = "Fetching and Querying";
+			name = "Fetching and Querying";
 			sourceTree = "<group>";
 		};
 		B5E84EFF1AFF847B0064E85B /* Concrete Clauses */ = {
@@ -1381,7 +1381,7 @@
 				B5E84F021AFF847B0064E85B /* GroupBy.swift */,
 				B5E84F001AFF847B0064E85B /* Tweak.swift */,
 			);
-			path = "Concrete Clauses";
+			name = "Concrete Clauses";
 			sourceTree = "<group>";
 		};
 		B5E84F0A1AFF847B0064E85B /* Protocol Clauses */ = {
@@ -1389,7 +1389,7 @@
 			children = (
 				B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */,
 			);
-			path = "Protocol Clauses";
+			name = "Protocol Clauses";
 			sourceTree = "<group>";
 		};
 		B5E84F191AFF84860064E85B /* Observing */ = {
@@ -1404,7 +1404,7 @@
 				B5E84F1D1AFF84860064E85B /* ListMonitor.swift */,
 				B5E84F1E1AFF84860064E85B /* ListObserver.swift */,
 			);
-			path = Observing;
+			name = Observing;
 			sourceTree = "<group>";
 		};
 		B5E84F261AFF84920064E85B /* Convenience */ = {
@@ -1417,7 +1417,7 @@
 				B5A9921E1EA898710091A2E3 /* UserInfo.swift */,
 				B5E41EBF1EA9BB37006240F0 /* DynamicSchema+Convenience.swift */,
 			);
-			path = Convenience;
+			name = Convenience;
 			sourceTree = "<group>";
 		};
 		B5E84F291AFF849C0064E85B /* Internal */ = {
@@ -1444,7 +1444,7 @@
 				B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */,
 				B5E84F2D1AFF849C0064E85B /* WeakObject.swift */,
 			);
-			path = Internal;
+			name = Internal;
 			sourceTree = "<group>";
 		};
 		B5ECDBEA1CA6BEAC00C7F112 /* Protocol Clauses */ = {
@@ -1478,7 +1478,7 @@
 				B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */,
 				B5677D3C1CD3B1E400322BFC /* ICloudStoreObserver.swift */,
 			);
-			path = StorageInterfaces;
+			name = StorageInterfaces;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2519,9 +2519,8 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
-					"USE_FRAMEWORKS=1",
+					"DEBUG=1",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2535,7 +2534,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = "-D USE_FRAMEWORKS -D DEBUG";
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.CoreStore;
 				PRODUCT_NAME = CoreStore;
 				SDKROOT = iphoneos;
@@ -2576,7 +2575,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = "USE_FRAMEWORKS=1";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -2587,7 +2586,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_SWIFT_FLAGS = "-D USE_FRAMEWORKS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.johnestropia.CoreStore;
 				PRODUCT_NAME = CoreStore;
 				SDKROOT = iphoneos;
