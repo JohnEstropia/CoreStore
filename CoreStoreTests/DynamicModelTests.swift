@@ -40,19 +40,19 @@ class Dog: Animal {
     let nickname = Value.Optional<String>("nickname")
     let age = Value.Required<Int>("age", default: 1)
     let friends = Relationship.ToManyOrdered<Dog>("friends")
-    let friends2 = Relationship.ToManyUnordered<Dog>("friends2", inverse: { $0.friends })
+    let friendedBy = Relationship.ToManyUnordered<Dog>("friendedBy", inverse: { $0.friends })
 }
 
 class Person: CoreStoreObject {
-    
+    let title = Value.Required<String>("title", default: "Mr.")
     let name = Value.Required<String>(
         "name",
         customGetter: { (`self`, getValue) in
             
-            return "Mr. \(getValue())"
+            return "\(self.title.value) \(getValue())"
         }
     )
-    let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
+    let pets = Relationship.ToManyUnordered<Animal>("pets", inverse: { $0.master })
 }
 
 
@@ -69,12 +69,12 @@ class DynamicModelTests: BaseTestDataTestCase {
                     Entity<Animal>("Animal"),
                     Entity<Dog>("Dog"),
                     Entity<Person>("Person")
-                ],
+                ]/*,
                 versionLock: [
                     "Animal": [0x2698c812ebbc3b97, 0x751e3fa3f04cf9, 0x51fd460d3babc82, 0x92b4ba735b5a3053],
                     "Dog": [0x5285f8e3aff69199, 0x62c3291b59f2ec7c, 0xbe5a571397a4117b, 0x97fb40f5b79ffbdc],
                     "Person": [0xae4060a59f990ef0, 0x8ac83a6e1411c130, 0xa29fea58e2e38ab6, 0x2071bb7e33d77887]
-                ]
+                ]*/
             )
         )
         self.prepareStack(dataStack, configurations: [nil]) { (stack) in
@@ -112,16 +112,20 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(dog.nickname.value, "Spot")
                     
                     let person = transaction.create(Into<Person>())
-                    XCTAssertNil(person.pet.value)
+                    XCTAssertTrue(person.pets.value.isEmpty)
                     
                     person.name .= "John"
                     XCTAssertEqual(person.name.value, "Mr. John") // Custom getter
                     
-                    person.pet .= dog
-                    XCTAssertEqual(person.pet.value, dog)
-                    XCTAssertEqual(person.pet.value?.master.value, person)
+                    person.title .= "Sir"
+                    XCTAssertEqual(person.name.value, "Sir John")
+                    
+                    person.pets.value.insert(dog)
+                    XCTAssertEqual(person.pets.count, 1)
+                    XCTAssertEqual(person.pets.value.first, dog)
+                    XCTAssertEqual(person.pets.value.first?.master.value, person)
                     XCTAssertEqual(dog.master.value, person)
-                    XCTAssertEqual(dog.master.value?.pet.value, dog)
+                    XCTAssertEqual(dog.master.value?.pets.value.first, dog)
                 },
                 success: {
                     
@@ -152,7 +156,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     let person = transaction.fetchOne(From<Person>())
                     XCTAssertNotNil(person)
-                    XCTAssertEqual(person!.pet.value, dog)
+                    XCTAssertEqual(person!.pets.value.first, dog)
                     
                     let p3 = Dog.where({ $0.age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))

@@ -150,8 +150,6 @@ public enum RelationshipContainer<O: CoreStoreObject> {
     
     public final class ToManyOrdered<D: CoreStoreObject>: RelationshipProtocol {
         
-        // MARK: -
-        
         public static func .= (_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ value: [D]) {
             
             relationship.value = value
@@ -187,45 +185,15 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        // TODO: add subscripts, indexed operations for more performant single updates
-        
         public var value: [D] {
             
             get {
                 
-                let object = self.parentObject() as! O
-                CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
-                )
-                return object.rawObject!.getValue(
-                    forKvcKey: self.keyPath,
-                    didGetValue: {
-                        
-                        guard let orderedSet = $0 as! NSOrderedSet? else {
-                            
-                            return []
-                        }
-                        return orderedSet.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) })
-                    }
-                )
+                return self.nativeValue.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) })
             }
             set {
                 
-                let object = self.parentObject() as! O
-                CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
-                )
-                CoreStore.assert(
-                    object.rawObject!.isEditableInContext() == true,
-                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
-                )
-                object.rawObject!.setValue(
-                    newValue,
-                    forKvcKey: self.keyPath,
-                    willSetValue: { NSOrderedSet(array: $0.map({ $0.rawObject! })) }
-                )
+                self.nativeValue = NSOrderedSet(array: newValue.map({ $0.rawObject! }))
             }
         }
         
@@ -249,6 +217,38 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
         }
         
+        internal var nativeValue: NSOrderedSet {
+            
+            get {
+                
+                let object = self.parentObject() as! O
+                CoreStore.assert(
+                    object.rawObject!.isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
+                return object.rawObject!.getValue(
+                    forKvcKey: self.keyPath,
+                    didGetValue: { ($0 as! NSOrderedSet?) ?? [] }
+                )
+            }
+            set {
+                
+                let object = self.parentObject() as! O
+                CoreStore.assert(
+                    object.rawObject!.isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
+                CoreStore.assert(
+                    object.rawObject!.isEditableInContext() == true,
+                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                )
+                object.rawObject!.setValue(
+                    newValue,
+                    forKvcKey: self.keyPath
+                )
+            }
+        }
+        
         
         // MARK: Private
         
@@ -260,7 +260,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             self.versionHashModifier = versionHashModifier
             self.renamingIdentifier = renamingIdentifier
             
-            let range = (max(0, minCount) ... maxCount)
+            let range = (Swift.max(0, minCount) ... maxCount)
             self.minCount = range.lowerBound
             self.maxCount = range.upperBound
         }
@@ -313,9 +313,39 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        // TODO: add subscripts, indexed operations for more performant single updates
-        
         public var value: Set<D> {
+            
+            get {
+                
+                return Set(self.nativeValue.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) }))
+            }
+            set {
+                
+                self.nativeValue = NSSet(array: newValue.map({ $0.rawObject! }))
+            }
+        }
+        
+        
+        // MARK: RelationshipProtocol
+        
+        public let keyPath: KeyPath
+        
+        internal let isToMany = true
+        internal let isOptional = true
+        internal let isOrdered = false
+        internal let deleteRule: NSDeleteRule
+        internal let minCount: Int
+        internal let maxCount: Int
+        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
+        internal let versionHashModifier: String?
+        internal let renamingIdentifier: String?
+        
+        internal var parentObject: () -> CoreStoreObject = {
+            
+            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
+        }
+        
+        internal var nativeValue: NSSet {
             
             get {
                 
@@ -326,14 +356,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
                 )
                 return object.rawObject!.getValue(
                     forKvcKey: self.keyPath,
-                    didGetValue: {
-                        
-                        guard let set = $0 as! NSSet? else {
-                            
-                            return []
-                        }
-                        return Set(set.map({ D.cs_fromRaw(object: $0 as! NSManagedObject) }))
-                    }
+                    didGetValue: { ($0 as! NSSet?) ?? [] }
                 )
             }
             set {
@@ -349,30 +372,9 @@ public enum RelationshipContainer<O: CoreStoreObject> {
                 )
                 object.rawObject!.setValue(
                     newValue,
-                    forKvcKey: self.keyPath,
-                    willSetValue: { NSSet(array: $0.map({ $0.rawObject! })) }
+                    forKvcKey: self.keyPath
                 )
             }
-        }
-        
-        
-        // MARK: RelationshipProtocol
-        
-        public let keyPath: KeyPath
-        
-        internal let isToMany = true
-        internal let isOptional = true
-        internal let isOrdered = true
-        internal let deleteRule: NSDeleteRule
-        internal let minCount: Int
-        internal let maxCount: Int
-        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
-        internal let versionHashModifier: String?
-        internal let renamingIdentifier: String?
-        
-        internal var parentObject: () -> CoreStoreObject = {
-            
-            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
         }
         
         
@@ -386,7 +388,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             self.versionHashModifier = versionHashModifier
             self.renamingIdentifier = renamingIdentifier
             
-            let range = (max(0, minCount) ... maxCount)
+            let range = (Swift.max(0, minCount) ... maxCount)
             self.minCount = range.lowerBound
             self.maxCount = range.upperBound
         }
@@ -410,6 +412,74 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             case .deny:     return .denyDeleteRule
             }
         }
+    }
+}
+
+
+// MARK: RelationshipContainer.ToManyOrdered: RandomAccessCollection
+
+extension RelationshipContainer.ToManyOrdered: RandomAccessCollection {
+    
+    // MARK: Sequence
+    
+    public typealias Iterator = AnyIterator<D>
+    
+    public func makeIterator() -> Iterator {
+        
+        let iterator = self.nativeValue.makeIterator()
+        return AnyIterator({ D.cs_fromRaw(object: iterator.next() as! NSManagedObject) })
+    }
+    
+    
+    // MARK: Collection
+    
+    public typealias Index = Int
+    
+    public var startIndex: Index {
+        
+        return 0
+    }
+    
+    public var endIndex: Index {
+        
+        return self.nativeValue.count
+    }
+    
+    public subscript(position: Index) -> Iterator.Element {
+        
+        return D.cs_fromRaw(object: self.nativeValue[position] as! NSManagedObject)
+    }
+    
+    public func index(after i: Index) -> Index {
+        
+        return i + 1
+    }
+}
+
+
+// MARK: RelationshipContainer.ToManyUnordered: Sequence
+
+extension RelationshipContainer.ToManyUnordered: Sequence {
+    
+    public var count: Int {
+        
+        return self.nativeValue.count
+    }
+    
+    public var isEmpty: Bool {
+    
+        return self.nativeValue.count == 0
+    }
+    
+    
+    // MARK: Sequence
+    
+    public typealias Iterator = AnyIterator<D>
+    
+    public func makeIterator() -> Iterator {
+        
+        let iterator = self.nativeValue.makeIterator()
+        return AnyIterator({ D.cs_fromRaw(object: iterator.next() as! NSManagedObject) })
     }
 }
 
