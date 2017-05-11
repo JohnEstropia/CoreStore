@@ -27,11 +27,6 @@ import CoreData
 import Foundation
 
 
-// MARK: Operators
-
-infix operator .= : AssignmentPrecedence
-
-
 // MARK: - DynamicObject
 
 public extension DynamicObject where Self: CoreStoreObject {
@@ -47,18 +42,6 @@ public enum RelationshipContainer<O: CoreStoreObject> {
     // MARK: - ToOne
     
     public final class ToOne<D: CoreStoreObject>: RelationshipProtocol {
-        
-        // MARK: -
-        
-        public static func .= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ value: D?) {
-            
-            relationship.value = value
-        }
-        
-        public static func .=<O2: CoreStoreObject> (_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) {
-            
-            relationship.value = relationship2.value
-        }
         
         public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
@@ -149,21 +132,6 @@ public enum RelationshipContainer<O: CoreStoreObject> {
     // MARK: - ToManyOrdered
     
     public final class ToManyOrdered<D: CoreStoreObject>: RelationshipProtocol {
-        
-        public static func .= (_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ value: [D]) {
-            
-            relationship.value = value
-        }
-        
-        public static func .=<C: Collection> (_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ value: C) where C.Iterator.Element == D {
-            
-            relationship.value = Array(value)
-        }
-        
-        public static func .=<O2: CoreStoreObject> (_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
-            
-            relationship.value = relationship2.value
-        }
         
         public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
@@ -270,28 +238,6 @@ public enum RelationshipContainer<O: CoreStoreObject> {
     // MARK: - ToManyUnordered
     
     public final class ToManyUnordered<D: CoreStoreObject>: RelationshipProtocol {
-        
-        // MARK: -
-        
-        public static func .= (_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ value: Set<D>) {
-            
-            relationship.value = value
-        }
-        
-        public static func .=<C: Collection> (_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ value: C) where C.Iterator.Element == D {
-            
-            relationship.value = Set(value)
-        }
-        
-        public static func .=<O2: CoreStoreObject> (_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) {
-            
-            relationship.value = relationship2.value
-        }
-        
-        public static func .=<O2: CoreStoreObject> (_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
-            
-            relationship.value = Set(relationship2.value)
-        }
         
         public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
@@ -416,7 +362,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
 }
 
 
-// MARK: RelationshipContainer.ToManyOrdered: RandomAccessCollection
+// MARK: - Convenience
 
 extension RelationshipContainer.ToManyOrdered: RandomAccessCollection {
     
@@ -456,9 +402,6 @@ extension RelationshipContainer.ToManyOrdered: RandomAccessCollection {
     }
 }
 
-
-// MARK: RelationshipContainer.ToManyUnordered: Sequence
-
 extension RelationshipContainer.ToManyUnordered: Sequence {
     
     public var count: Int {
@@ -480,6 +423,117 @@ extension RelationshipContainer.ToManyUnordered: Sequence {
         
         let iterator = self.nativeValue.makeIterator()
         return AnyIterator({ D.cs_fromRaw(object: iterator.next() as! NSManagedObject) })
+    }
+}
+
+
+// MARK: - Operations
+
+infix operator .= : AssignmentPrecedence
+infix operator .== : ComparisonPrecedence
+
+extension RelationshipContainer.ToOne {
+    
+    public static func .= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ newValue: D?) {
+        
+        relationship.value = newValue
+    }
+    
+    public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) {
+        
+        relationship.value = relationship2.value
+    }
+    
+    public static func .== (_ relationship: RelationshipContainer<O>.ToOne<D>, _ value: D?) -> Bool {
+        
+        return relationship.value == value
+    }
+    
+    public static func .== (_ value: D?, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Bool {
+        
+        return value == relationship.value
+    }
+    
+    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) -> Bool {
+        
+        return relationship.value == relationship2.value
+    }
+}
+
+extension RelationshipContainer.ToManyOrdered {
+    
+    public static func .= <S: Sequence>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ newValue: S) where S.Iterator.Element == D {
+        
+        relationship.nativeValue = NSOrderedSet(array: newValue.map({ $0.rawObject! }))
+    }
+    
+    public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
+        
+        relationship.nativeValue = relationship2.nativeValue
+    }
+    
+    public static func .== <C: Collection>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ collection: C) -> Bool where C.Iterator.Element == D {
+        
+        return relationship.nativeValue.elementsEqual(
+            collection.lazy.map({ $0.rawObject! }),
+            by: { ($0 as! NSManagedObject) == ($1 as! NSManagedObject) }
+        )
+    }
+    
+    public static func .== <C: Collection>(_ collection: C, _ relationship: RelationshipContainer<O>.ToManyOrdered<D>) -> Bool where C.Iterator.Element == D {
+        
+        return relationship.nativeValue.elementsEqual(
+            collection.lazy.map({ $0.rawObject! }),
+            by: { ($0 as! NSManagedObject) == ($1 as! NSManagedObject) }
+        )
+    }
+    
+    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) -> Bool {
+        
+        return relationship.nativeValue == relationship2.nativeValue
+    }
+}
+
+extension RelationshipContainer.ToManyUnordered {
+    
+    public static func .= <S: Sequence>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ newValue: S) where S.Iterator.Element == D {
+        
+        relationship.nativeValue = NSSet(array: newValue.map({ $0.rawObject! }))
+    }
+    
+    public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) {
+        
+        relationship.nativeValue = relationship2.nativeValue
+    }
+    
+    public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
+        
+        relationship.nativeValue = NSSet(set: relationship2.nativeValue.set)
+    }
+    
+    public static func .== <S: Sequence>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ sequence: S) -> Bool where S.Iterator.Element == D {
+        
+        return relationship.nativeValue.isEqual(to: Set(sequence.map({ $0.rawObject! })))
+    }
+    
+    public static func .== <S: Sequence>(_ sequence: S, _ relationship: RelationshipContainer<O>.ToManyUnordered<D>) -> Bool where S.Iterator.Element == D {
+        
+        return relationship.nativeValue.isEqual(to: Set(sequence.map({ $0.rawObject! })))
+    }
+    
+    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) -> Bool {
+        
+        return relationship.nativeValue == relationship2.nativeValue
+    }
+    
+    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) -> Bool {
+        
+        return relationship.nativeValue == NSSet(set: relationship2.nativeValue.set)
+    }
+    
+    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) -> Bool {
+        
+        return NSSet(set: relationship.nativeValue.set) == relationship2.nativeValue
     }
 }
 

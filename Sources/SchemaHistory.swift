@@ -40,6 +40,14 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
     public let currentModelVersion: ModelVersion
     
     /**
+     The schema for the current model version. The `DataStack` will try to migrate all `StorageInterface`s added to itself to this version, following the version steps provided by the `migrationChain`.
+     */
+    public var currentSchema: DynamicSchema {
+        
+        return self.schema(for: self.currentModelVersion)!
+    }
+    
+    /**
      The version string for the current model version. The `DataStack` will try to migrate all `StorageInterface`s added to itself to this version, following the version steps provided by the `migrationChain`.
      */
     public let migrationChain: MigrationChain

@@ -33,6 +33,7 @@ class Animal: CoreStoreObject {
     
     let species = Value.Required<String>("species", default: "Swift")
     let master = Relationship.ToOne<Person>("master")
+    let color = Transformable.Optional<UIColor>("color")
 }
 
 class Dog: Animal {
@@ -69,12 +70,12 @@ class DynamicModelTests: BaseTestDataTestCase {
                     Entity<Animal>("Animal"),
                     Entity<Dog>("Dog"),
                     Entity<Person>("Person")
-                ]/*,
+                ],
                 versionLock: [
-                    "Animal": [0x2698c812ebbc3b97, 0x751e3fa3f04cf9, 0x51fd460d3babc82, 0x92b4ba735b5a3053],
-                    "Dog": [0x5285f8e3aff69199, 0x62c3291b59f2ec7c, 0xbe5a571397a4117b, 0x97fb40f5b79ffbdc],
-                    "Person": [0xae4060a59f990ef0, 0x8ac83a6e1411c130, 0xa29fea58e2e38ab6, 0x2071bb7e33d77887]
-                ]*/
+                    "Animal": [0x1b59d511019695cf, 0xdeb97e86c5eff179, 0x1cfd80745646cb3, 0x4ff99416175b5b9a],
+                    "Dog": [0xe3f0afeb109b283a, 0x29998d292938eb61, 0x6aab788333cfc2a3, 0x492ff1d295910ea7],
+                    "Person": [0x66d8bbfd8b21561f, 0xcecec69ecae3570f, 0xc4b73d71256214ef, 0x89b99bfe3e013e8b]
+                ]
             )
         )
         self.prepareStack(dataStack, configurations: [nil]) { (stack) in
@@ -99,6 +100,9 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     animal.species .= "Sparrow"
                     XCTAssertEqual(animal.species.value, "Sparrow")
+                    
+                    animal.color .= .yellow
+                    XCTAssertEqual(animal.color.value, UIColor.yellow)
                     
                     let dog = transaction.create(Into<Dog>())
                     XCTAssertEqual(dog.species.value, "Swift")
