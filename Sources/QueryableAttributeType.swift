@@ -30,15 +30,56 @@ import CoreGraphics
 
 // MARK: - QueryableAttributeType
 
+/**
+ Types supported by CoreStore for querying, especially as generic type for `Select` clauses.
+ Supported default types:
+ - `Bool`
+ - `CGFloat`
+ - `Data`
+ - `Date`
+ - `Double`
+ - `Float`
+ - `Int`
+ - `Int8`
+ - `Int16`
+ - `Int32`
+ - `Int64`
+ - `NSData`
+ - `NSDate`
+ - `NSDecimalNumber`
+ - `NSManagedObjectID`
+ - `NSNull`
+ - `NSNumber`
+ - `NSString`
+ - `NSURL`
+ - `NSUUID`
+ - `String`
+ - `URL`
+ - `UUID`
+ 
+ In addition, `RawRepresentable` types whose `RawValue` already implements `QueryableAttributeType` only need to declare conformance to `QueryableAttributeType`.
+ */
 public protocol QueryableAttributeType: Hashable, SelectResultType {
     
+    /**
+     The `CoreDataNativeType` for this type when used in `Select` clauses.
+     */
     associatedtype QueryableNativeType: CoreDataNativeType
     
+    /**
+     The `NSAttributeType` for this type when used in `Select` clauses.
+     */
     static var cs_rawAttributeType: NSAttributeType { get }
     
+    /**
+     Creates an instance of this type from its `QueryableNativeType` value.
+     */
     @inline(__always)
     static func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self?
     
+    /**
+     Creates `QueryableNativeType` value from this instance.
+     */
     @inline(__always)
     func cs_toQueryableNativeType() -> QueryableNativeType
 }
@@ -572,5 +613,30 @@ extension UUID: QueryableAttributeType {
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         
         return self.uuidString.lowercased() as QueryableNativeType
+    }
+}
+
+
+// MARK: - RawRepresentable
+
+extension RawRepresentable where RawValue: QueryableAttributeType {
+    
+    public typealias QueryableNativeType = RawValue.QueryableNativeType
+    
+    public static var cs_rawAttributeType: NSAttributeType {
+        
+        return RawValue.cs_rawAttributeType
+    }
+    
+    @inline(__always)
+    public static func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
+        
+        return RawValue.cs_fromQueryableNativeType(value).flatMap({ self.init(rawValue: $0) })
+    }
+    
+    @inline(__always)
+    public func cs_toQueryableNativeType() -> QueryableNativeType {
+        
+        return self.rawValue.cs_toQueryableNativeType()
     }
 }

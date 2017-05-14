@@ -36,22 +36,22 @@ public enum MigrationType: Hashable {
     /**
      Indicates that the persistent store matches the latest model version and no migration is needed
      */
-    case none(version: String)
+    case none(version: ModelVersion)
     
     /**
      Indicates that the persistent store does not match the latest model version but Core Data can infer the mapping model, so a lightweight migration is needed
      */
-    case lightweight(sourceVersion: String, destinationVersion: String)
+    case lightweight(sourceVersion: ModelVersion, destinationVersion: ModelVersion)
     
     /**
      Indicates that the persistent store does not match the latest model version and Core Data could not infer a mapping model, so a custom migration is needed
      */
-    case heavyweight(sourceVersion: String, destinationVersion: String)
+    case heavyweight(sourceVersion: ModelVersion, destinationVersion: ModelVersion)
     
     /**
      Returns the source model version for the migration type. If no migration is required, `sourceVersion` will be equal to the `destinationVersion`.
      */
-    public var sourceVersion: String {
+    public var sourceVersion: ModelVersion {
         
         switch self {
             
@@ -69,7 +69,7 @@ public enum MigrationType: Hashable {
     /**
      Returns the destination model version for the migration type. If no migration is required, `destinationVersion` will be equal to the `sourceVersion`.
      */
-    public var destinationVersion: String {
+    public var destinationVersion: ModelVersion {
         
         switch self {
             

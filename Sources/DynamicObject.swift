@@ -46,6 +46,11 @@ public protocol DynamicObject: class {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    static func cs_matches(object: NSManagedObject) -> Bool
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     func cs_toRaw() -> NSManagedObject
 }
 
@@ -74,6 +79,11 @@ extension NSManagedObject: DynamicObject {
             return value as! T
         }
         return forceCast(object)
+    }
+    
+    public static func cs_matches(object: NSManagedObject) -> Bool {
+        
+        return object.isKind(of: self)
     }
     
     public func cs_toRaw() -> NSManagedObject {
@@ -114,6 +124,15 @@ extension CoreStoreObject {
         let coreStoreObject = self.init(rawObject: object)
         object.coreStoreObject = coreStoreObject
         return coreStoreObject
+    }
+    
+    public static func cs_matches(object: NSManagedObject) -> Bool {
+        
+        guard let type = object.entity.coreStoreEntity?.type else {
+            
+            return false
+        }
+        return (self as AnyClass).isSubclass(of: type as AnyClass)
     }
     
     public func cs_toRaw() -> NSManagedObject {

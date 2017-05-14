@@ -302,22 +302,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
  Valid return types depend on the query:
  
  - for `queryValue(...)` methods:
-     - `Bool`
-     - `Int8`
-     - `Int16`
-     - `Int32`
-     - `Int64`
-     - `Double`
-     - `Float`
-     - `String`
-     - `Date`
-     - `Data`
-     - `NSNumber`
-     - `NSString`
-     - `NSDecimalNumber`
-     - `NSDate`
-     - `NSData`
-     - `NSManagedObjectID`
+     - all types that conform to `QueryableAttributeType` protocol
  - for `queryAttributes(...)` methods:
      - `NSDictionary`
  

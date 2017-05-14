@@ -86,10 +86,4 @@ public protocol QueryableSource: class {
      The internal `NSManagedObjectContext` managed by this `QueryableSource`. Using this context directly should typically be avoided, and is provided by CoreStore only for extremely specialized cases.
      */
     func unsafeContext() -> NSManagedObjectContext
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, renamed: "unsafeContext()")
-    func internalContext() -> NSManagedObjectContext
 }

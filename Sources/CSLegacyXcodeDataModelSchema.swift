@@ -37,6 +37,12 @@ import Foundation
 @objc
 public final class CSLegacyXcodeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreObjectiveCType {
     
+    /**
+     Initializes a `CSLegacyXcodeDataModelSchema` from an `NSManagedObjectModel`.
+     
+     - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)
+     - parameter model: the `NSManagedObjectModel`
+     */
     @objc
     public required init(modelName: ModelVersion, model: NSManagedObjectModel) {
         

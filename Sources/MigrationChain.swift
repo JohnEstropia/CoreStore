@@ -30,7 +30,7 @@ import CoreData
 // MARK: - MigrationChain
 
 /**
- A `MigrationChain` indicates the sequence of model versions to be used as the order for progressive migrations. This is typically passed to the `DataStack` initializer and will be applied to all stores added to the `DataStack` with `addSQLiteStore(...)` and its variants.
+ A `MigrationChain` indicates the sequence of model versions to be used as the order for progressive migrations. This is typically passed to the `SchemaHistory` or the `DataStack` initializer and will be applied to all stores added to the `DataStack` with `addStorage(...)` and its variants.
  
  Initializing with empty values (either `nil`, `[]`, or `[:]`) instructs the `DataStack` to use the .xcdatamodel's current version as the final version, and to disable progressive migrations:
  ```

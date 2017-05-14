@@ -86,8 +86,10 @@ final class ErrorTests: XCTestCase {
         let dummyURL = URL(string: "file:///test1/test2.sqlite")!
         
         let schemaHistory = SchemaHistory(
-            modelName: "Model",
-            bundle: Bundle(for: type(of: self))
+            XcodeDataModelSchema.from(
+                modelName: "Model",
+                bundle: Bundle(for: type(of: self))
+            )
         )
         let version = "1.0.0"
         

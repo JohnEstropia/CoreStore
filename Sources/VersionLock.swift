@@ -28,12 +28,49 @@ import Foundation
 
 // MARK: - VersionLock
 
+/**
+ The `VersionLock` contains the version hashes for entities. This is then passed to the `CoreStoreSchema`, which contains all entities for the store. An assertion will be raised if any `Entity` doesn't match the version hash.
+ ```
+ class Animal: CoreStoreObject {
+     let species = Value.Required<String>("species")
+     let nickname = Value.Optional<String>("nickname")
+     let master = Relationship.ToOne<Person>("master")
+ }
+ class Person: CoreStoreObject {
+     let name = Value.Required<String>("name")
+     let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
+ }
+ 
+ CoreStore.defaultStack = DataStack(
+     CoreStoreSchema(
+         modelVersion: "V1",
+         entities: [
+             Entity<Animal>("Animal"),
+             Entity<Person>("Person")
+         ],
+         versionLock: [
+             "Animal": [0x2698c812ebbc3b97, 0x751e3fa3f04cf9, 0x51fd460d3babc82, 0x92b4ba735b5a3053],
+             "Person": [0xae4060a59f990ef0, 0x8ac83a6e1411c130, 0xa29fea58e2e38ab6, 0x2071bb7e33d77887]
+         ]
+     )
+ )
+ ```
+ */
 public struct VersionLock: ExpressibleByDictionaryLiteral, Equatable {
     
+    /**
+     The value type for the dictionary initializer, which is `UInt64`
+     */
     public typealias HashElement = UInt64
     
+    /**
+     The `Data` hash for each entity name.
+     */
     public let hashesByEntityName: [EntityName: Data]
     
+    /**
+     Initializes a `VersionLock` with the version hash for each entity name.
+     */
     public init(_ intArrayByEntityName: [EntityName: [HashElement]]) {
         
         self.init(keyValues: intArrayByEntityName.map({ $0 }))

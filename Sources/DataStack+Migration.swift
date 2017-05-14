@@ -173,7 +173,7 @@ public extension DataStack {
                                 
                                 do {
                                     
-                                    try storage.eraseStorageAndWait(
+                                    try storage.cs_eraseStorageAndWait(
                                         metadata: metadata,
                                         soureModelHint: self.schemaHistory.schema(for: metadata)?.rawModel()
                                     )
@@ -341,7 +341,7 @@ public extension DataStack {
                     )
                     _ = try self.schemaHistory
                         .schema(for: metadata)
-                        .flatMap({ try storage.eraseStorageAndWait(soureModel: $0.rawModel()) })
+                        .flatMap({ try storage.cs_eraseStorageAndWait(soureModel: $0.rawModel()) })
                     _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,
@@ -756,17 +756,17 @@ fileprivate extension Array where Element == SchemaMappingProvider {
                 
             case let element as CustomSchemaMappingProvider
                 where element.sourceVersion == sourceSchema.modelVersion && element.destinationVersion == destinationSchema.modelVersion:
-                return try element.createMappingModel(from: sourceSchema, to: destinationSchema, storage: storage)
+                return try element.cs_createMappingModel(from: sourceSchema, to: destinationSchema, storage: storage)
                 
             case let element as XcodeSchemaMappingProvider
                 where element.sourceVersion == sourceSchema.modelVersion && element.destinationVersion == destinationSchema.modelVersion:
-                return try element.createMappingModel(from: sourceSchema, to: destinationSchema, storage: storage)
+                return try element.cs_createMappingModel(from: sourceSchema, to: destinationSchema, storage: storage)
                 
             default:
                 continue
             }
         }
         return try InferredSchemaMappingProvider()
-            .createMappingModel(from: sourceSchema, to: destinationSchema, storage: storage)
+            .cs_createMappingModel(from: sourceSchema, to: destinationSchema, storage: storage)
     }
 }

@@ -30,28 +30,32 @@ import CoreData
 // MARK: - ImportableObject
 
 /**
- `NSManagedObject` subclasses that conform to the `ImportableObject` protocol can be imported from a specified `ImportSource`. This allows transactions to create and insert instances this way:
+ `NSManagedObject` and `CoreStoreObject` subclasses that conform to the `ImportableObject` protocol can be imported from a specified `ImportSource`. This allows transactions to create and insert instances this way:
  ```
- class MyPersonEntity: NSManagedObject, ImportableObject {
+ class Person: NSManagedObject, ImportableObject {
      typealias ImportSource = NSDictionary
      // ...
  }
  
- CoreStore.beginAsynchronous { (transaction) -> Void in
-     let json: NSDictionary = // ...
-     let person = try! transaction.importObject(
-         Into<MyPersonEntity>(),
-         source: json
-     )
-     // ...
-     transaction.commit()
- }
+ CoreStore.perform(
+     asynchronous: { (transaction) -> Void in
+         let json: NSDictionary = // ...
+         let person = try transaction.importObject(
+             Into<Person>(),
+             source: json
+         )
+         // ...
+     },
+     completion: { (result) in
+         // ...
+     }
+ )
  ```
  */
-public protocol ImportableObject: class {
+public protocol ImportableObject: DynamicObject {
     
     /**
-     The data type for the import source. This is most commonly an `NSDictionary` or another external source such as an `NSUserDefaults`.
+     The data type for the import source. This is most commonly an json type, `NSDictionary`, or another external source such as `NSUserDefaults`.
      */
     associatedtype ImportSource
     

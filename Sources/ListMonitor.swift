@@ -30,10 +30,10 @@ import CoreData
 // MARK: - ListMonitor
 
 /**
- The `ListMonitor` monitors changes to a list of `NSManagedObject` instances. Observers that implement the `ListObserver` protocol may then register themselves to the `ListMonitor`'s `addObserver(_:)` method:
+ The `ListMonitor` monitors changes to a list of `DynamicObject` instances. Observers that implement the `ListObserver` protocol may then register themselves to the `ListMonitor`'s `addObserver(_:)` method:
  ```
  let monitor = CoreStore.monitorList(
-     From<MyPersonEntity>(),
+     From<Person>(),
      Where("title", isEqualTo: "Engineer"),
      OrderBy(.ascending("lastName"))
  )
@@ -51,16 +51,16 @@ import CoreData
  Creating a sectioned-list is also possible with the `monitorSectionedList(...)` method:
  ```
  let monitor = CoreStore.monitorSectionedList(
-     From<MyPersonEntity>(),
+     From<Person>(),
      SectionBy("age") { "Age \($0)" },
      Where("title", isEqualTo: "Engineer"),
      OrderBy(.ascending("lastName"))
  )
  monitor.addObserver(self)
  ```
- Objects from `ListMonitor`s created this way can be accessed either by an `NSIndexPath` or a tuple:
+ Objects from `ListMonitor`s created this way can be accessed either by an `IndexPath` or a tuple:
  ```
- let indexPath = NSIndexPath(forItem: 3, inSection: 2)
+ let indexPath = IndexPath(forItem: 3, inSection: 2)
  let person1 = monitor[indexPath]
  let person2 = monitor[2, 3]
  ```
@@ -80,7 +80,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      Returns the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
      
      - parameter index: the index of the object. Using an index above the valid range will raise an exception.
-     - returns: the `NSManagedObject` at the specified index
+     - returns: the `DynamicObject` at the specified index
      */
     public subscript(index: Int) -> ObjectType {
         
@@ -99,7 +99,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      Returns the object at the given index, or `nil` if out of bounds. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
      
      - parameter index: the index for the object. Using an index above the valid range will return `nil`.
-     - returns: the `NSManagedObject` at the specified index, or `nil` if out of bounds
+     - returns: the `DynamicObject` at the specified index, or `nil` if out of bounds
      */
     public subscript(safeIndex index: Int) -> ObjectType? {
         
@@ -120,11 +120,11 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will raise an exception.
      - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will raise an exception.
-     - returns: the `NSManagedObject` at the specified section and item index
+     - returns: the `DynamicObject` at the specified section and item index
      */
     public subscript(sectionIndex: Int, itemIndex: Int) -> ObjectType {
         
-        return self[NSIndexPath(indexes: [sectionIndex, itemIndex], length: 2) as IndexPath]
+        return self[IndexPath(indexes: [sectionIndex, itemIndex])]
     }
     
     /**
@@ -132,7 +132,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will return `nil`.
      - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will return `nil`.
-     - returns: the `NSManagedObject` at the specified section and item index, or `nil` if out of bounds
+     - returns: the `DynamicObject` at the specified section and item index, or `nil` if out of bounds
      */
     public subscript(safeSectionIndex sectionIndex: Int, safeItemIndex itemIndex: Int) -> ObjectType? {
         
@@ -148,10 +148,10 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     }
     
     /**
-     Returns the object at the given `NSIndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+     Returns the object at the given `IndexPath`. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
      
-     - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will raise an exception.
-     - returns: the `NSManagedObject` at the specified index path
+     - parameter indexPath: the `IndexPath` for the object. Using an `indexPath` with an invalid range will raise an exception.
+     - returns: the `DynamicObject` at the specified index path
      */
     public subscript(indexPath: IndexPath) -> ObjectType {
         
@@ -163,10 +163,10 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     }
     
     /**
-     Returns the object at the given `NSIndexPath`, or `nil` if out of bounds. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
+     Returns the object at the given `IndexPath`, or `nil` if out of bounds. This subscript indexer is typically used for `ListMonitor`s created with `monitorSectionedList(_:)`.
      
-     - parameter indexPath: the `NSIndexPath` for the object. Using an `indexPath` with an invalid range will return `nil`.
-     - returns: the `NSManagedObject` at the specified index path, or `nil` if out of bounds
+     - parameter indexPath: the `IndexPath` for the object. Using an `indexPath` with an invalid range will return `nil`.
+     - returns: the `DynamicObject` at the specified index path, or `nil` if out of bounds
      */
     public subscript(safeIndexPath indexPath: IndexPath) -> ObjectType? {
         
@@ -340,10 +340,10 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     }
     
     /**
-     Returns the index of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
+     Returns the index of the `DynamicObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
      
-     - parameter object: the `NSManagedObject` to search the index of
-     - returns: the index of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
+     - parameter object: the `DynamicObject` to search the index of
+     - returns: the index of the `DynamicObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
      */
     public func indexOf(_ object: ObjectType) -> Int? {
         
@@ -359,10 +359,10 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     }
     
     /**
-     Returns the `NSIndexPath` of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
+     Returns the `IndexPath` of the `DynamicObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
      
-     - parameter object: the `NSManagedObject` to search the index of
-     - returns: the `NSIndexPath` of the `NSManagedObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
+     - parameter object: the `DynamicObject` to search the index of
+     - returns: the `IndexPath` of the `DynamicObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
      */
     public func indexPathOf(_ object: ObjectType) -> IndexPath? {
         
@@ -590,7 +590,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      ```
      - Important: Do not use this method to store thread-sensitive data.
      */
-    private let userInfo = UserInfo()
+    public let userInfo = UserInfo()
     
     
     // MARK: Equatable

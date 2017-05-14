@@ -31,7 +31,7 @@ import CoreGraphics
 // MARK: - ImportableAttributeType
 
 /**
- Types supported by CoreStore as `NSManagedObject` attribute types.
+ Types supported by CoreStore as `NSManagedObject` and `CoreStoreObject` property types.
  Supported default types:
  - Bool
  - CGFloat
@@ -54,17 +54,31 @@ import CoreGraphics
  - String
  - URL
  - UUID
+ 
+ In addition, `RawRepresentable` types whose `RawValue` already implements `ImportableAttributeType` only need to declare conformance to `ImportableAttributeType`.
  */
 public protocol ImportableAttributeType: QueryableAttributeType {
     
+    /**
+     The `CoreDataNativeType` for this type.
+     */
     associatedtype ImportableNativeType: QueryableNativeType
     
+    /**
+     Returns the default "empty" value for this type.
+     */
     @inline(__always)
     static func cs_emptyValue() -> Self
     
+    /**
+     Creates an instance of this type from its `ImportableNativeType` value.
+     */
     @inline(__always)
     static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self?
     
+    /**
+     Creates `ImportableNativeType` value from this instance.
+     */
     @inline(__always)
     func cs_toImportableNativeType() -> ImportableNativeType
 }
@@ -599,5 +613,30 @@ extension UUID: ImportableAttributeType {
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
         return self.cs_toQueryableNativeType()
+    }
+}
+
+
+// MARK: - RawRepresentable
+
+extension RawRepresentable where RawValue: ImportableAttributeType {
+    
+    public typealias ImportableNativeType = RawValue.ImportableNativeType
+    
+    public static func cs_emptyValue() -> Self {
+        
+        return self.init(rawValue: RawValue.cs_emptyValue())!
+    }
+    
+    @inline(__always)
+    public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
+        
+        return RawValue.cs_fromImportableNativeType(value).flatMap({ self.init(rawValue: $0) })
+    }
+    
+    @inline(__always)
+    public func cs_toImportableNativeType() -> ImportableNativeType {
+        
+        return self.rawValue.cs_toImportableNativeType()
     }
 }

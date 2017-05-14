@@ -53,73 +53,16 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
     public let migrationChain: MigrationChain
     
     /**
-     Initializes a `SchemaHistory` with all models declared in the specified (.xcdatamodeld) model file.
-     - Important: Use this initializer only if all model versions are either `XcodeDataModelSchema`s or `LegacyXcodeDataModelSchema`s. Do not use this initializer if even one of the model versions is a `CoreStoreSchema`; use the `SchemaHistory.init(allSchema:migrationChain:exactCurrentModelVersion:)` initializer instead.
-     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
-     - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
+     Convenience initializer for a `SchemaHistory` created from a single xcdatamodeld file.
+     - parameter xcodeDataModeld: a tuple returned from the `XcodeDataModelSchema.from(modelName:bundle:migrationChain:)` method.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    public convenience init(modelName: XcodeDataModelFileName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
+    public convenience init(_ xcodeDataModeld: (allSchema: [XcodeDataModelSchema], currentModelVersion: ModelVersion), migrationChain: MigrationChain = nil) {
         
-        guard let modelFilePath = bundle.path(forResource: modelName, ofType: "momd") else {
-            
-            // For users migrating from very old Xcode versions: Old xcdatamodel files are not contained inside xcdatamodeld (with a "d"), and will thus fail this check. If that was the case, create a new xcdatamodeld file and copy all contents into the new model.
-            let foundModels = bundle
-                .paths(forResourcesOfType: "momd", inDirectory: nil)
-                .map({ ($0 as NSString).lastPathComponent })
-            CoreStore.abort("Could not find \"\(modelName).momd\" from the bundle \"\(bundle.bundleIdentifier ?? "<nil>")\". Other model files in bundle: \(foundModels.coreStoreDumpString)")
-        }
-        
-        let modelFileURL = URL(fileURLWithPath: modelFilePath)
-        let versionInfoPlistURL = modelFileURL.appendingPathComponent("VersionInfo.plist", isDirectory: false)
-        
-        guard let versionInfo = NSDictionary(contentsOf: versionInfoPlistURL),
-            let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
-                
-                CoreStore.abort("Could not load \(cs_typeName(NSManagedObjectModel.self)) metadata from path \"\(versionInfoPlistURL)\".")
-        }
-        
-        let modelVersions = Set(versionHashes.keys)
-        let modelVersionHints = migrationChain.leafVersions
-        let currentModelVersion: String
-        if let plistModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String,
-            modelVersionHints.isEmpty || modelVersionHints.contains(plistModelVersion) {
-            
-            currentModelVersion = plistModelVersion
-        }
-        else if let resolvedVersion = modelVersions.intersection(modelVersionHints).first {
-            
-            CoreStore.log(
-                .warning,
-                message: "The \(cs_typeName(MigrationChain.self)) leaf versions do not include the model file's current version. Resolving to version \"\(resolvedVersion)\"."
-            )
-            currentModelVersion = resolvedVersion
-        }
-        else if let resolvedVersion = modelVersions.first ?? modelVersionHints.first {
-            
-            if !modelVersionHints.isEmpty {
-                
-                CoreStore.log(
-                    .warning,
-                    message: "The \(cs_typeName(MigrationChain.self)) leaf versions do not include any of the model file's embedded versions. Resolving to version \"\(resolvedVersion)\"."
-                )
-            }
-            currentModelVersion = resolvedVersion
-        }
-        else {
-            
-            CoreStore.abort("No model files were found in URL \"\(modelFileURL)\".")
-        }
-        var allSchema: [DynamicSchema] = []
-        for modelVersion in modelVersions {
-            
-            let fileURL = modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
-            allSchema.append(XcodeDataModelSchema(modelName: modelVersion, modelVersionFileURL: fileURL))
-        }
         self.init(
-            allSchema: allSchema,
+            allSchema: xcodeDataModeld.allSchema,
             migrationChain: migrationChain,
-            exactCurrentModelVersion: currentModelVersion
+            exactCurrentModelVersion: xcodeDataModeld.currentModelVersion
         )
     }
     

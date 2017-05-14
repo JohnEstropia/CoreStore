@@ -29,6 +29,9 @@ import Foundation
 
 // MARK: - InferredSchemaMappingProvider
 
+/**
+ A `SchemaMappingProvider` that tries to infer model migration between two `DynamicSchema` versions by searching all `xcmappingmodel`s from `Bundle.allBundles` or by relying on lightweight migration if possible. Throws an error if lightweight migration is impossible for the two `DynamicSchema`. This mapping is automatically used as a fallback mapping provider, even if no mapping providers are explicitly declared in the `StorageInterface`.
+ */
 final class InferredSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: Equatable
@@ -49,7 +52,7 @@ final class InferredSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: SchemaMappingProvider
     
-    public func createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
+    public func cs_createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
         
         let sourceModel = sourceSchema.rawModel()
         let destinationModel = destinationSchema.rawModel()

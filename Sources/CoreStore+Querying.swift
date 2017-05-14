@@ -32,10 +32,10 @@ import CoreData
 public extension CoreStore {
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObject` instance in the `DataStack`'s context from a reference created from a transaction or from a different managed object context.
+     Using the `defaultStack`, fetches the `DynamicObject` instance in the `DataStack`'s context from a reference created from a transaction or from a different managed object context.
      
      - parameter object: a reference to the object created/fetched outside the `DataStack`
-     - returns: the `NSManagedObject` instance if the object exists in the `DataStack`, or `nil` if not found.
+     - returns: the `DynamicObject` instance if the object exists in the `DataStack`, or `nil` if not found.
      */
     public static func fetchExisting<T: DynamicObject>(_ object: T) -> T? {
         
@@ -43,10 +43,10 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObject` instance in the `DataStack`'s context from an `NSManagedObjectID`.
+     Using the `defaultStack`, fetches the `DynamicObject` instance in the `DataStack`'s context from an `NSManagedObjectID`.
      
      - parameter objectID: the `NSManagedObjectID` for the object
-     - returns: the `NSManagedObject` instance if the object exists in the `DataStack`, or `nil` if not found.
+     - returns: the `DynamicObject` instance if the object exists in the `DataStack`, or `nil` if not found.
      */
     public static func fetchExisting<T: DynamicObject>(_ objectID: NSManagedObjectID) -> T? {
         
@@ -54,10 +54,10 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObject` instances in the `DataStack`'s context from references created from a transaction or from a different managed object context.
+     Using the `defaultStack`, fetches the `DynamicObject` instances in the `DataStack`'s context from references created from a transaction or from a different managed object context.
      
-     - parameter objects: an array of `NSManagedObject`s created/fetched outside the `DataStack`
-     - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
+     - parameter objects: an array of `DynamicObject`s created/fetched outside the `DataStack`
+     - returns: the `DynamicObject` array for objects that exists in the `DataStack`
      */
     public static func fetchExisting<T: DynamicObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
         
@@ -65,10 +65,10 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObject` instances in the `DataStack`'s context from a list of `NSManagedObjectID`.
+     Using the `defaultStack`, fetches the `DynamicObject` instances in the `DataStack`'s context from a list of `NSManagedObjectID`.
      
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
-     - returns: the `NSManagedObject` array for objects that exists in the `DataStack`
+     - returns: the `DynamicObject` array for objects that exists in the `DataStack`
      */
     public static func fetchExisting<T: DynamicObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID {
         
@@ -76,11 +76,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the first `NSManagedObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
+     - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
     public static func fetchOne<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
@@ -88,11 +88,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the first `NSManagedObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the first `NSManagedObject` instance that satisfies the specified `FetchClause`s
+     - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
     public static func fetchOne<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
@@ -100,11 +100,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches all `NSManagedObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
+     - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
     public static func fetchAll<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
@@ -112,11 +112,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches all `NSManagedObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: all `NSManagedObject` instances that satisfy the specified `FetchClause`s
+     - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
     public static func fetchAll<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
@@ -124,11 +124,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
+     - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
     public static func fetchCount<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
@@ -136,11 +136,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the number of `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the number `NSManagedObject`s that satisfy the specified `FetchClause`s
+     - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
     public static func fetchCount<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
@@ -148,11 +148,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
+     - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
     public static func fetchObjectID<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
@@ -160,11 +160,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the `NSManagedObjectID` for the first `NSManagedObject` that satisfies the specified `FetchClause`s
+     - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
     public static func fetchObjectID<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
@@ -172,11 +172,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
+     - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
     public static func fetchObjectIDs<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
@@ -184,11 +184,11 @@ public extension CoreStore {
     }
     
     /**
-     Using the `defaultStack`, fetches the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     Using the `defaultStack`, fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: the `NSManagedObjectID` for all `NSManagedObject`s that satisfy the specified `FetchClause`s
+     - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
     public static func fetchObjectIDs<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         

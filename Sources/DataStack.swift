@@ -45,8 +45,11 @@ public final class DataStack: Equatable {
         
         self.init(
             schemaHistory: SchemaHistory(
-                modelName: modelName,
-                bundle: bundle,
+                XcodeDataModelSchema.from(
+                    modelName: modelName,
+                    bundle: bundle,
+                    migrationChain: migrationChain
+                ),
                 migrationChain: migrationChain
             )
         )
@@ -328,7 +331,7 @@ public final class DataStack: Equatable {
                         at: fileURL,
                         options: storeOptions
                     )
-                    try storage.eraseStorageAndWait(
+                    try storage.cs_eraseStorageAndWait(
                         metadata: metadata,
                         soureModelHint: self.schemaHistory.schema(for: metadata)?.rawModel()
                     )
@@ -425,7 +428,7 @@ public final class DataStack: Equatable {
                     )
                     _ = try self.schemaHistory
                         .schema(for: metadata)
-                        .flatMap({ try storage.eraseStorageAndWait(soureModel: $0.rawModel()) })
+                        .flatMap({ try storage.cs_eraseStorageAndWait(soureModel: $0.rawModel()) })
                     _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,
@@ -459,7 +462,7 @@ public final class DataStack: Equatable {
      ```
      - Important: Do not use this method to store thread-sensitive data.
      */
-    private let userInfo = UserInfo()
+    public let userInfo = UserInfo()
     
     
     // MARK: Equatable
@@ -570,7 +573,7 @@ public final class DataStack: Equatable {
                 self.finalConfigurationsByEntityIdentifier[entityIdentifier]?.insert(configurationName)
             }
         }
-        storage.didAddToDataStack(self)
+        storage.cs_didAddToDataStack(self)
         return persistentStore
     }
     
@@ -616,7 +619,7 @@ public final class DataStack: Equatable {
      - parameter model: the `NSManagedObjectModel` for the stack
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    @available(*, deprecated: 3.1, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModelSchema instance as argument")
+    @available(*, deprecated, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModelSchema instance as argument")
     public convenience init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {
         
         let modelVersion = migrationChain.leafVersions.first!
@@ -637,7 +640,7 @@ public final class DataStack: Equatable {
     /**
      Returns the entity name-to-class type mapping from the `DataStack`'s model.
      */
-    @available(*, deprecated: 3.1, message: "Use the new DataStack.entityTypesByName(for:) method passing `NSManagedObject.self` as argument.")
+    @available(*, deprecated, message: "Use the new DataStack.entityTypesByName(for:) method passing `NSManagedObject.self` as argument.")
     public var entityTypesByName: [EntityName: NSManagedObject.Type] {
         
         return self.entityTypesByName(for: NSManagedObject.self)

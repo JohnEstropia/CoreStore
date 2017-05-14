@@ -177,7 +177,7 @@ public extension BaseDataTransaction {
     /**
      Updates existing `ImportableUniqueObject`s or creates them by importing from the specified array of import sources.
      `ImportableUniqueObject` methods are called on the objects in the same order as they are in the `sourceArray`, and are returned in an array with that same order.
-     - Warning: If `sourceArray` contains multiple import sources with same ID, no merging will occur and ONLY THE LAST duplicate will be imported.
+     - Warning: If `sourceArray` contains multiple import sources with same ID, only the last `ImportSource` of the duplicates will be imported.
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter sourceArray: the array of objects to import values from

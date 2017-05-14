@@ -120,17 +120,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     // MARK: Inspecting Pending Objects
     
     /**
-     Returns all pending `NSManagedObject`s that were inserted to the transaction. This method should not be called after the `-commit*:` method was called.
-     
-     - returns: an `NSSet` of pending `NSManagedObject`s that were inserted to the transaction.
-     */
-    @objc
-    public func insertedObjects() -> Set<NSManagedObject> {
-        
-        return self.bridgeToSwift.insertedObjects()
-    }
-    
-    /**
      Returns all pending `NSManagedObject`s of the specified type that were inserted to the transaction. This method should not be called after the `-commit*:` method was called.
      
      - parameter entity: the `NSManagedObject` subclass to filter
@@ -166,17 +155,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     }
     
     /**
-     Returns all pending `NSManagedObject`s that were updated in the transaction. This method should not be called after the `-commit*:` method was called.
-     
-     - returns: an `NSSet` of pending `NSManagedObject`s that were updated to the transaction.
-     */
-    @objc
-    public func updatedObjects() -> Set<NSManagedObject> {
-        
-        return self.bridgeToSwift.updatedObjects()
-    }
-    
-    /**
      Returns all pending `NSManagedObject`s of the specified type that were updated in the transaction. This method should not be called after the `-commit*:` method was called.
      
      - parameter entity: the `NSManagedObject` subclass to filter
@@ -209,17 +187,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     public func updatedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
         return self.bridgeToSwift.updatedObjectIDs(entity)
-    }
-    
-    /**
-     Returns all pending `NSManagedObject`s that were deleted from the transaction. This method should not be called after the `-commit*:` method was called.
-     
-     - returns: an `NSSet` of pending `NSManagedObject`s that were deleted from the transaction.
-     */
-    @objc
-    public func deletedObjects() -> Set<NSManagedObject> {
-        
-        return self.bridgeToSwift.deletedObjects()
     }
     
     /**
@@ -293,4 +260,28 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     // MARK: Private
     
     private let swiftTransaction: BaseDataTransaction
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated, message: "Use -[insertedObjectsOfType:] and pass the specific entity class")
+    @objc
+    public func insertedObjects() -> Set<NSManagedObject> {
+        
+        return self.bridgeToSwift.insertedObjects()
+    }
+    
+    @available(*, deprecated, message: "Use -[updatedObjectsOfType:] and pass the specific entity class")
+    @objc
+    public func updatedObjects() -> Set<NSManagedObject> {
+        
+        return self.bridgeToSwift.updatedObjects()
+    }
+    
+    @available(*, deprecated, message: "Use -[deletedObjectsOfType:] and pass the specific entity class")
+    @objc
+    public func deletedObjects() -> Set<NSManagedObject> {
+        
+        return self.bridgeToSwift.deletedObjects()
+    }
 }

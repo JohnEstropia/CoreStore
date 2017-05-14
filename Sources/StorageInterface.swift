@@ -54,12 +54,12 @@ public protocol StorageInterface: class {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    func didAddToDataStack(_ dataStack: DataStack)
+    func cs_didAddToDataStack(_ dataStack: DataStack)
     
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    func didRemoveFromDataStack(_ dataStack: DataStack)
+    func cs_didRemoveFromDataStack(_ dataStack: DataStack)
 }
 
 
@@ -127,7 +127,7 @@ public protocol LocalStorage: StorageInterface {
     var fileURL: URL { get }
     
     /**
-     An array of `SchemaMappingProvider`s that provides the complete mapping models for custom migrations.
+     An array of `SchemaMappingProvider`s that provide the complete mapping models for custom migrations.
      */
     var migrationMappingProviders: [SchemaMappingProvider] { get }
     
@@ -144,7 +144,7 @@ public protocol LocalStorage: StorageInterface {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
      */
-    func eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws
+    func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws
 }
 
 internal extension LocalStorage {
@@ -228,8 +228,11 @@ public protocol CloudStorage: StorageInterface {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (Cloud stores for example, can set the NSPersistentStoreRemoveUbiquitousMetadataOption option before deleting)
      */
-    func eraseStorageAndWait(soureModel: NSManagedObjectModel) throws
+    func cs_eraseStorageAndWait(soureModel: NSManagedObjectModel) throws
 }
+
+
+// MARK: - Internal
 
 internal extension CloudStorage {
     

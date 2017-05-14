@@ -271,9 +271,9 @@ public final class ICloudStore: CloudStorage {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didAddToDataStack(_ dataStack: DataStack) {
+    public func cs_didAddToDataStack(_ dataStack: DataStack) {
         
-        self.didRemoveFromDataStack(dataStack)
+        self.cs_didRemoveFromDataStack(dataStack)
         
         self.dataStack = dataStack
         let coordinator = dataStack.coordinator
@@ -367,7 +367,7 @@ public final class ICloudStore: CloudStorage {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didRemoveFromDataStack(_ dataStack: DataStack) {
+    public func cs_didRemoveFromDataStack(_ dataStack: DataStack) {
         
         let coordinator = dataStack.coordinator
         let nilValue: AnyObject? = nil
@@ -424,7 +424,7 @@ public final class ICloudStore: CloudStorage {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
-    public func eraseStorageAndWait(soureModel: NSManagedObjectModel) throws {
+    public func cs_eraseStorageAndWait(soureModel: NSManagedObjectModel) throws {
         
         // TODO: check if attached to persistent store
         

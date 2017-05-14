@@ -32,27 +32,31 @@ import CoreData
 /**
  `NSManagedObject` subclasses that conform to the `ImportableUniqueObject` protocol can be imported from a specified `ImportSource`. This allows transactions to either update existing objects or create new instances this way:
  ```
- class MyPersonEntity: NSManagedObject, ImportableUniqueObject {
+ class Person: NSManagedObject, ImportableObject {
      typealias ImportSource = NSDictionary
      typealias UniqueIDType = NSString
      // ...
  }
  
- CoreStore.beginAsynchronous { (transaction) -> Void in
-     let json: NSDictionary = // ...
-     let person = try! transaction.importUniqueObject(
-         Into<MyPersonEntity>(),
-         source: json
-     )
-     // ...
-     transaction.commit()
- }
+ CoreStore.perform(
+     asynchronous: { (transaction) -> Void in
+         let json: NSDictionary = // ...
+         let person = try transaction.importUniqueObject(
+             Into<Person>(),
+             source: json
+         )
+         // ...
+     },
+     completion: { (result) in
+         // ...
+     }
+ )
  ```
  */
 public protocol ImportableUniqueObject: ImportableObject {
     
     /**
-     The data type for the import source. This is most commonly an `NSDictionary` or another external source such as an `NSUserDefaults`.
+     The data type for the import source. This is most commonly an json type, `NSDictionary`, or another external source such as `NSUserDefaults`.
      */
     associatedtype ImportSource
     
@@ -139,31 +143,31 @@ public extension ImportableUniqueObject {
     
     // MARK: Obsolete
     
-    @available(*, obsoleted: 3.0.0, renamed: "shouldInsert(from:in:)")
+    @available(*, obsoleted: 3.1, renamed: "shouldInsert(from:in:)")
     static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldInsert(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 3.0.0, renamed: "shouldUpdate(from:in:)")
+    @available(*, obsoleted: 3.1, renamed: "shouldUpdate(from:in:)")
     static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldUpdate(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 3.0.0, renamed: "uniqueID(from:in:)")
+    @available(*, obsoleted: 3.1, renamed: "uniqueID(from:in:)")
     static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType? {
         
         return try Self.uniqueID(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 3.0.0, renamed: "didInsert(from:in:)")
+    @available(*, obsoleted: 3.1, renamed: "didInsert(from:in:)")
     func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.didInsert(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 3.0.0, renamed: "update(from:in:)")
+    @available(*, obsoleted: 3.1, renamed: "update(from:in:)")
     func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.update(from: source, in: transaction)

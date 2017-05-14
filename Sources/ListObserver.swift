@@ -33,7 +33,7 @@ import CoreData
  Implement the `ListObserver` protocol to observe changes to a list of `NSManagedObject`s. `ListObserver`s may register themselves to a `ListMonitor`'s `addObserver(_:)` method:
  ```
  let monitor = CoreStore.monitorList(
-     From<MyPersonEntity>(),
+     From<Person>(),
      OrderBy(.ascending("lastName"))
  )
  monitor.addObserver(self)

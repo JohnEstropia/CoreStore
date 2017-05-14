@@ -30,7 +30,7 @@ import CoreData
 // MARK: - ObjectMonitor
 
 /**
- The `ObjectMonitor` monitors changes to a single `NSManagedObject` instance. Observers that implement the `ObjectObserver` protocol may then register themselves to the `ObjectMonitor`'s `addObserver(_:)` method:
+ The `ObjectMonitor` monitors changes to a single `DynamicObject` instance. Observers that implement the `ObjectObserver` protocol may then register themselves to the `ObjectMonitor`'s `addObserver(_:)` method:
  ```
  let monitor = CoreStore.monitorObject(object)
  monitor.addObserver(self)
@@ -48,7 +48,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     public typealias ObjectType = D
     
     /**
-     Returns the `NSManagedObject` instance being observed, or `nil` if the object was already deleted.
+     Returns the `DynamicObject` instance being observed, or `nil` if the object was already deleted.
      */
     public var object: ObjectType? {
         
@@ -59,7 +59,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     }
     
     /**
-     Returns `true` if the `NSManagedObject` instance being observed still exists, or `false` if the object was already deleted.
+     Returns `true` if the `DynamicObject` instance being observed still exists, or `false` if the object was already deleted.
      */
     public var isObjectDeleted: Bool {
         
@@ -122,7 +122,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
      ```
      - Important: Do not use this method to store thread-sensitive data.
      */
-    private let userInfo = UserInfo()
+    public let userInfo = UserInfo()
     
     
     // MARK: Equatable

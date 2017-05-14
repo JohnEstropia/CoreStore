@@ -32,7 +32,7 @@ import Foundation
 public extension DynamicObject where Self: CoreStoreObject {
     
     /**
-     The containing type for value attributes. `Value` attributes support any type that conforms to `ImportableAttributeType`.
+     The containing type for value propertiess. `Value` properties support any type that conforms to `ImportableAttributeType`.
      ```
      class Animal: CoreStoreObject {
          let species = Value.Required<String>("species")
@@ -44,7 +44,7 @@ public extension DynamicObject where Self: CoreStoreObject {
     public typealias Value = ValueContainer<Self>
     
     /**
-     The containing type for transformable attributes. `Transformable` attributes support types that conforms to `NSCoding & NSCopying`.
+     The containing type for transformable properties. `Transformable` properties support types that conforms to `NSCoding & NSCopying`.
      ```
      class Animal: CoreStoreObject {
          let species = Value.Required<String>("species")
@@ -60,7 +60,7 @@ public extension DynamicObject where Self: CoreStoreObject {
 // MARK: - ValueContainer
 
 /**
- The containing type for value attributes. Use the `DynamicObject.Value` typealias instead for shorter syntax.
+ The containing type for value properties. Use the `DynamicObject.Value` typealias instead for shorter syntax.
  ```
  class Animal: CoreStoreObject {
      let species = Value.Required<String>("species")
@@ -74,7 +74,7 @@ public enum ValueContainer<O: CoreStoreObject> {
     // MARK: - Required
     
     /**
-     The containing type for required value attributes. Any type that conforms to `ImportableAttributeType` are supported.
+     The containing type for required value properties. Any type that conforms to `ImportableAttributeType` are supported.
      ```
      class Animal: CoreStoreObject {
          let species = Value.Required<String>("species")
@@ -86,7 +86,7 @@ public enum ValueContainer<O: CoreStoreObject> {
     public final class Required<V: ImportableAttributeType>: AttributeProtocol {
         
         /**
-         Initializes the metadata for the attribute.
+         Initializes the metadata for the property.
          ```
          class Person: CoreStoreObject {
              let title = Value.Required<String>("title", default: "Mr.")
@@ -98,11 +98,11 @@ public enum ValueContainer<O: CoreStoreObject> {
              )
          }
          ```
-         - parameter keyPath: the permanent attribute name for this attribute.
+         - parameter keyPath: the permanent attribute name for this property.
          - parameter default: the initial value for the property when the object is first created. Defaults to the `ImportableAttributeType`'s empty value if not specified.
          - parameter isIndexed: `true` if the property should be indexed for searching, otherwise `false`. Defaults to `false` if not specified.
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
-         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the attributes of a property are unchanged but the format or content of its data are changed.)
+         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
          - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
          - parameter self: the `CoreStoreObject`
@@ -206,7 +206,7 @@ public enum ValueContainer<O: CoreStoreObject> {
     // MARK: - Optional
     
     /**
-     The containing type for optional value attributes. Any type that conforms to `ImportableAttributeType` are supported.
+     The containing type for optional value properties. Any type that conforms to `ImportableAttributeType` are supported.
      ```
      class Animal: CoreStoreObject {
          let species = Value.Required<String>("species")
@@ -218,7 +218,7 @@ public enum ValueContainer<O: CoreStoreObject> {
     public final class Optional<V: ImportableAttributeType>: AttributeProtocol {
         
         /**
-         Initializes the metadata for the attribute.
+         Initializes the metadata for the property.
          ```
          class Person: CoreStoreObject {
              let title = Value.Required<String>("title", default: "Mr.")
@@ -230,11 +230,11 @@ public enum ValueContainer<O: CoreStoreObject> {
              )
          }
          ```
-         - parameter keyPath: the permanent attribute name for this attribute.
+         - parameter keyPath: the permanent attribute name for this property.
          - parameter default: the initial value for the property when the object is first created. Defaults to `nil` if not specified.
          - parameter isIndexed: `true` if the property should be indexed for searching, otherwise `false`. Defaults to `false` if not specified.
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
-         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the attributes of a property are unchanged but the format or content of its data are changed.)
+         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
          - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
          - parameter self: the `CoreStoreObject`
@@ -338,7 +338,7 @@ public enum ValueContainer<O: CoreStoreObject> {
 // MARK: - TransformableContainer
 
 /**
- The containing type for transformable attributes. Use the `DynamicObject.Transformable` typealias instead for shorter syntax.
+ The containing type for transformable properties. Use the `DynamicObject.Transformable` typealias instead for shorter syntax.
  ```
  class Animal: CoreStoreObject {
      let species = Value.Required<String>("species")
@@ -352,7 +352,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
     // MARK: - Required
     
     /**
-     The containing type for transformable attributes. Any type that conforms to `NSCoding & NSCopying` are supported.
+     The containing type for transformable properties. Any type that conforms to `NSCoding & NSCopying` are supported.
      ```
      class Animal: CoreStoreObject {
          let species = Value.Required<String>("species")
@@ -364,17 +364,17 @@ public enum TransformableContainer<O: CoreStoreObject> {
     public final class Required<V: NSCoding & NSCopying>: AttributeProtocol {
         
         /**
-         Initializes the metadata for the attribute.
+         Initializes the metadata for the property.
          ```
          class Animal: CoreStoreObject {
              let color = Transformable.Optional<UIColor>("color")
          }
          ```
-         - parameter keyPath: the permanent attribute name for this attribute.
+         - parameter keyPath: the permanent attribute name for this property.
          - parameter default: the initial value for the property when the object is first created. Defaults to the `ImportableAttributeType`'s empty value if not specified.
          - parameter isIndexed: `true` if the property should be indexed for searching, otherwise `false`. Defaults to `false` if not specified.
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
-         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the attributes of a property are unchanged but the format or content of its data are changed.)
+         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
          - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
          - parameter self: the `CoreStoreObject`
@@ -477,7 +477,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
     // MARK: - Optional
     
     /**
-     The containing type for optional transformable attributes. Any type that conforms to `NSCoding & NSCopying` are supported.
+     The containing type for optional transformable properties. Any type that conforms to `NSCoding & NSCopying` are supported.
      ```
      class Animal: CoreStoreObject {
          let species = Value.Required<String>("species")
@@ -489,17 +489,17 @@ public enum TransformableContainer<O: CoreStoreObject> {
     public final class Optional<V: NSCoding & NSCopying>: AttributeProtocol {
         
         /**
-         Initializes the metadata for the attribute.
+         Initializes the metadata for the property.
          ```
          class Animal: CoreStoreObject {
             let color = Transformable.Optional<UIColor>("color")
          }
          ```
-         - parameter keyPath: the permanent attribute name for this attribute.
+         - parameter keyPath: the permanent attribute name for this property.
          - parameter default: the initial value for the property when the object is first created. Defaults to the `ImportableAttributeType`'s empty value if not specified.
          - parameter isIndexed: `true` if the property should be indexed for searching, otherwise `false`. Defaults to `false` if not specified.
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
-         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the attributes of a property are unchanged but the format or content of its data are changed.)
+         - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
          - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
          - parameter self: the `CoreStoreObject`
@@ -608,7 +608,7 @@ infix operator .== : ComparisonPrecedence
 extension ValueContainer.Required {
     
     /**
-     Assigns a value to the attribute. The operation
+     Assigns a value to the property. The operation
      ```
      animal.species .= "Swift"
      ```
@@ -617,13 +617,13 @@ extension ValueContainer.Required {
      animal.species.value = "Swift"
      ```
      */
-    public static func .= (_ attribute: ValueContainer<O>.Required<V>, _ newValue: V) {
+    public static func .= (_ property: ValueContainer<O>.Required<V>, _ newValue: V) {
         
-        attribute.value = newValue
+        property.value = newValue
     }
     
     /**
-     Assigns a value from another attribute. The operation
+     Assigns a value from another property. The operation
      ```
      animal.species .= anotherAnimal.species
      ```
@@ -632,16 +632,76 @@ extension ValueContainer.Required {
      animal.species.value = anotherAnimal.species.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ attribute: ValueContainer<O>.Required<V>, _ attribute2: ValueContainer<O2>.Required<V>) {
+    public static func .= <O2: CoreStoreObject>(_ property: ValueContainer<O>.Required<V>, _ property2: ValueContainer<O2>.Required<V>) {
         
-        attribute.value = attribute2.value
+        property.value = property2.value
+    }
+    
+    /**
+     Compares equality between a property's value and another value
+     ```
+     if animal.species .== "Swift" { ... }
+     ```
+     is equivalent to
+     ```
+     if animal.species.value == "Swift" { ... }
+     ```
+     */
+    public static func .== (_ property: ValueContainer<O>.Required<V>, _ value: V?) -> Bool {
+        
+        return property.value == value
+    }
+    
+    /**
+     Compares equality between a value and a property's value
+     ```
+     if "Swift" .== animal.species { ... }
+     ```
+     is equivalent to
+     ```
+     if "Swift" == animal.species.value { ... }
+     ```
+     */
+    public static func .== (_ value: V?, _ property: ValueContainer<O>.Required<V>) -> Bool {
+        
+        return value == property.value
+    }
+    
+    /**
+     Compares equality between a property's value and another property's value
+     ```
+     if animal.species .== anotherAnimal.species { ... }
+     ```
+     is equivalent to
+     ```
+     if animal.species.value == anotherAnimal.species.value { ... }
+     ```
+     */
+    public static func .== (_ property: ValueContainer<O>.Required<V>, _ property2: ValueContainer<O>.Required<V>) -> Bool {
+        
+        return property.value == property2.value
+    }
+    
+    /**
+     Compares equality between a property's value and another property's value
+     ```
+     if animal.species .== anotherAnimal.species { ... }
+     ```
+     is equivalent to
+     ```
+     if animal.species.value == anotherAnimal.species.value { ... }
+     ```
+     */
+    public static func .== (_ property: ValueContainer<O>.Required<V>, _ property2: ValueContainer<O>.Optional<V>) -> Bool {
+        
+        return property.value == property2.value
     }
 }
 
 extension ValueContainer.Optional {
     
     /**
-     Assigns an optional value to the attribute. The operation
+     Assigns an optional value to the property. The operation
      ```
      animal.nickname .= "Taylor"
      ```
@@ -650,13 +710,13 @@ extension ValueContainer.Optional {
      animal.nickname.value = "Taylor"
      ```
      */
-    public static func .= (_ attribute: ValueContainer<O>.Optional<V>, _ newValue: V?) {
+    public static func .= (_ property: ValueContainer<O>.Optional<V>, _ newValue: V?) {
         
-        attribute.value = newValue
+        property.value = newValue
     }
     
     /**
-     Assigns an optional value from another attribute. The operation
+     Assigns an optional value from another property. The operation
      ```
      animal.nickname .= anotherAnimal.nickname
      ```
@@ -665,13 +725,13 @@ extension ValueContainer.Optional {
      animal.nickname.value = anotherAnimal.nickname.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ attribute: ValueContainer<O>.Optional<V>, _ attribute2: ValueContainer<O2>.Optional<V>) {
+    public static func .= <O2: CoreStoreObject>(_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O2>.Optional<V>) {
         
-        attribute.value = attribute2.value
+        property.value = property2.value
     }
     
     /**
-     Assigns a value from another attribute. The operation
+     Assigns a value from another property. The operation
      ```
      animal.nickname .= anotherAnimal.species
      ```
@@ -680,16 +740,76 @@ extension ValueContainer.Optional {
      animal.nickname.value = anotherAnimal.species.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ attribute: ValueContainer<O>.Optional<V>, _ attribute2: ValueContainer<O2>.Required<V>) {
+    public static func .= <O2: CoreStoreObject>(_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O2>.Required<V>) {
         
-        attribute.value = attribute2.value
+        property.value = property2.value
+    }
+    
+    /**
+     Compares equality between a property's value and another value
+     ```
+     if animal.species .== "Swift" { ... }
+     ```
+     is equivalent to
+     ```
+     if animal.species.value == "Swift" { ... }
+     ```
+     */
+    public static func .== (_ property: ValueContainer<O>.Optional<V>, _ value: V?) -> Bool {
+        
+        return property.value == value
+    }
+    
+    /**
+     Compares equality between a property's value and another property's value
+     ```
+     if "Swift" .== animal.species { ... }
+     ```
+     is equivalent to
+     ```
+     if "Swift" == animal.species.value { ... }
+     ```
+     */
+    public static func .== (_ value: V?, _ property: ValueContainer<O>.Optional<V>) -> Bool {
+        
+        return value == property.value
+    }
+    
+    /**
+     Compares equality between a property's value and another property's value
+     ```
+     if animal.species .== anotherAnimal.species { ... }
+     ```
+     is equivalent to
+     ```
+     if animal.species.value == anotherAnimal.species.value { ... }
+     ```
+     */
+    public static func .== (_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O>.Optional<V>) -> Bool {
+        
+        return property.value == property2.value
+    }
+    
+    /**
+     Compares equality between a property's value and another property's value
+     ```
+     if animal.species .== anotherAnimal.species { ... }
+     ```
+     is equivalent to
+     ```
+     if animal.species.value == anotherAnimal.species.value { ... }
+     ```
+     */
+    public static func .== (_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O>.Required<V>) -> Bool {
+        
+        return property.value == property2.value
     }
 }
 
 extension TransformableContainer.Required {
     
     /**
-     Assigns a transformable value to the attribute. The operation
+     Assigns a transformable value to the property. The operation
      ```
      animal.color .= UIColor.red
      ```
@@ -698,13 +818,13 @@ extension TransformableContainer.Required {
      animal.color.value = UIColor.red
      ```
      */
-    public static func .= (_ attribute: TransformableContainer<O>.Required<V>, _ newValue: V) {
+    public static func .= (_ property: TransformableContainer<O>.Required<V>, _ newValue: V) {
         
-        attribute.value = newValue
+        property.value = newValue
     }
     
     /**
-     Assigns a transformable value from another attribute. The operation
+     Assigns a transformable value from another property. The operation
      ```
      animal.nickname .= anotherAnimal.species
      ```
@@ -713,16 +833,16 @@ extension TransformableContainer.Required {
      animal.nickname.value = anotherAnimal.species.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ attribute: TransformableContainer<O>.Required<V>, _ attribute2: TransformableContainer<O2>.Required<V>) {
+    public static func .= <O2: CoreStoreObject>(_ property: TransformableContainer<O>.Required<V>, _ property2: TransformableContainer<O2>.Required<V>) {
         
-        attribute.value = attribute2.value
+        property.value = property2.value
     }
 }
 
 extension TransformableContainer.Optional {
     
     /**
-     Assigns an optional transformable value to the attribute. The operation
+     Assigns an optional transformable value to the property. The operation
      ```
      animal.color .= UIColor.red
      ```
@@ -731,13 +851,13 @@ extension TransformableContainer.Optional {
      animal.color.value = UIColor.red
      ```
      */
-    public static func .= (_ attribute: TransformableContainer<O>.Optional<V>, _ newValue: V?) {
+    public static func .= (_ property: TransformableContainer<O>.Optional<V>, _ newValue: V?) {
         
-        attribute.value = newValue
+        property.value = newValue
     }
     
     /**
-     Assigns an optional transformable value from another attribute. The operation
+     Assigns an optional transformable value from another property. The operation
      ```
      animal.color .= anotherAnimal.color
      ```
@@ -746,13 +866,13 @@ extension TransformableContainer.Optional {
      animal.color.value = anotherAnimal.color.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ attribute: TransformableContainer<O>.Optional<V>, _ attribute2: TransformableContainer<O2>.Optional<V>) {
+    public static func .= <O2: CoreStoreObject>(_ property: TransformableContainer<O>.Optional<V>, _ property2: TransformableContainer<O2>.Optional<V>) {
         
-        attribute.value = attribute2.value
+        property.value = property2.value
     }
     
     /**
-     Assigns a transformable value from another attribute. The operation
+     Assigns a transformable value from another property. The operation
      ```
      animal.color .= anotherAnimal.color
      ```
@@ -761,9 +881,9 @@ extension TransformableContainer.Optional {
      animal.color.value = anotherAnimal.color.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ attribute: TransformableContainer<O>.Optional<V>, _ attribute2: TransformableContainer<O2>.Required<V>) {
+    public static func .= <O2: CoreStoreObject>(_ property: TransformableContainer<O>.Optional<V>, _ property2: TransformableContainer<O2>.Required<V>) {
         
-        attribute.value = attribute2.value
+        property.value = property2.value
     }
 }
 

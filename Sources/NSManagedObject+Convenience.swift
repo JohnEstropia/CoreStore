@@ -160,7 +160,7 @@ public extension NSManagedObject {
      - parameter KVCKey: the KVC key
      - returns: the primitive value for the KVC key
      */
-    @available(*, deprecated: 3.1, renamed: "getValue(forKvcKey:)")
+    @available(*, deprecated, renamed: "getValue(forKvcKey:)")
     @nonobjc
     public func accessValueForKVCKey(_ KVCKey: KeyPath) -> Any? {
         
@@ -179,7 +179,7 @@ public extension NSManagedObject {
      - parameter didAccessPrimitiveValue: the closure to access the value. This is called between `willAccessValueForKey(...)` and `didAccessValueForKey(...)`
      - returns: the primitive value for the KVC key
      */
-    @available(*, deprecated: 3.1, renamed: "getValue(forKvcKey:didGetValue:)")
+    @available(*, deprecated, renamed: "getValue(forKvcKey:didGetValue:)")
     @discardableResult
     @nonobjc
     public func accessValueForKVCKey<T>(_ KVCKey: KeyPath, _ didAccessPrimitiveValue: (Any?) throws -> T) rethrows -> T {
@@ -198,7 +198,7 @@ public extension NSManagedObject {
      - parameter value: the value to set the KVC key with
      - parameter KVCKey: the KVC key
      */
-    @available(*, deprecated: 3.1, renamed: "setValue(_:forKvcKey:)")
+    @available(*, deprecated, renamed: "setValue(_:forKvcKey:)")
     @nonobjc
     public func setValue(_ value: Any?, forKVCKey KVCKey: KeyPath) {
         
@@ -217,7 +217,7 @@ public extension NSManagedObject {
      - parameter KVCKey: the KVC key
      - parameter didSetPrimitiveValue: the closure called between `willChangeValueForKey(...)` and `didChangeValueForKey(...)`
      */
-    @available(*, deprecated: 3.1, renamed: "setValue(_:forKvcKey:didSetValue:)")
+    @available(*, deprecated, renamed: "setValue(_:forKvcKey:didSetValue:)")
     @discardableResult
     @nonobjc
     public func setValue<T>(_ value: Any?, forKVCKey KVCKey: KeyPath, _ didSetPrimitiveValue: (Any?) throws -> T) rethrows -> T {

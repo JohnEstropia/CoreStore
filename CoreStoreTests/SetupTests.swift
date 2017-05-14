@@ -37,9 +37,10 @@ class SetupTests: BaseTestDataTestCase {
         do {
             
             let schemaHistory = SchemaHistory(
-                modelName: "Model",
-                bundle: Bundle(for: type(of: self)),
-                migrationChain: nil
+                XcodeDataModelSchema.from(
+                    modelName: "Model",
+                    bundle: Bundle(for: type(of: self))
+                )
             )
             let stack = DataStack(schemaHistory: schemaHistory)
             XCTAssertEqual(stack.coordinator.managedObjectModel, schemaHistory.rawModel)
@@ -228,7 +229,7 @@ class SetupTests: BaseTestDataTestCase {
                 modelName: "Model",
                 bundle: Bundle(for: type(of: self))
             )
-            try sqliteStore.eraseStorageAndWait(
+            try sqliteStore.cs_eraseStorageAndWait(
                 metadata: metadata,
                 soureModelHint: stack.schemaHistory.schema(for: metadata)?.rawModel()
             )
@@ -243,7 +244,7 @@ class SetupTests: BaseTestDataTestCase {
         do {
             
             let metadata = try createStore()
-            try sqliteStore.eraseStorageAndWait(metadata: metadata, soureModelHint: nil)
+            try sqliteStore.cs_eraseStorageAndWait(metadata: metadata, soureModelHint: nil)
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
@@ -348,7 +349,7 @@ class SetupTests: BaseTestDataTestCase {
                 modelName: "Model",
                 bundle: Bundle(for: type(of: self))
             )
-            try sqliteStore.eraseStorageAndWait(
+            try sqliteStore.cs_eraseStorageAndWait(
                 metadata: metadata,
                 soureModelHint: stack.schemaHistory.schema(for: metadata)?.rawModel()
             )
@@ -363,7 +364,7 @@ class SetupTests: BaseTestDataTestCase {
         do {
             
             let metadata = try createStore()
-            try sqliteStore.eraseStorageAndWait(metadata: metadata, soureModelHint: nil)
+            try sqliteStore.cs_eraseStorageAndWait(metadata: metadata, soureModelHint: nil)
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))

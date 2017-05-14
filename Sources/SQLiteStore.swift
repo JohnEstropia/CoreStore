@@ -31,7 +31,7 @@ import CoreData
 /**
  A storage interface that is backed by an SQLite database.
  
- - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
+ - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
  */
 public final class SQLiteStore: LocalStorage {
     
@@ -40,8 +40,8 @@ public final class SQLiteStore: LocalStorage {
      
      - parameter fileURL: the local file URL for the target SQLite persistent store. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-     - parameter migrationMappingProviders: An array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
-     - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
+     - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
+     - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.none`.
      */
     public init(fileURL: URL, configuration: ModelConfiguration = nil, migrationMappingProviders: [SchemaMappingProvider] = [], localStorageOptions: LocalStorageOptions = nil) {
         
@@ -54,10 +54,10 @@ public final class SQLiteStore: LocalStorage {
     /**
      Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
      
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
+     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
      - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-     - parameter migrationMappingProviders: An array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
+     - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
     public init(fileName: String, configuration: ModelConfiguration = nil, migrationMappingProviders: [SchemaMappingProvider] = [], localStorageOptions: LocalStorageOptions = nil) {
@@ -72,7 +72,7 @@ public final class SQLiteStore: LocalStorage {
     /**
      Initializes an `SQLiteStore` with an all-default settings: a `fileURL` pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS), a `nil` `configuration` pertaining to the "Default" configuration, a `mappingModelBundles` set to search all `NSBundle`s, and `localStorageOptions` set to `.AllowProgresiveMigration`.
      
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
+     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
      */
     public init() {
         
@@ -85,10 +85,10 @@ public final class SQLiteStore: LocalStorage {
     /**
      Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
      
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
+     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
      - parameter legacyFileName: the local filename for the SQLite persistent store in the "Application Support" directory (or the "Caches" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
      - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-     - parameter migrationMappingProviders: An array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
+     - parameter migrationMappingProviders: an array of `SchemaMappingProviders` that provides the complete mapping models for custom migrations. All lightweight inferred mappings and/or migration mappings provided by *xcmappingmodel files are automatically used as fallback (as `InferredSchemaMappingProvider`) and may be omitted from the array.
      - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
      */
     public static func legacy(fileName: String, configuration: ModelConfiguration = nil, migrationMappingProviders: [SchemaMappingProvider] = [], localStorageOptions: LocalStorageOptions = nil) -> SQLiteStore {
@@ -105,7 +105,7 @@ public final class SQLiteStore: LocalStorage {
     /**
      Initializes an `LegacySQLiteStore` with an all-default settings: a `fileURL` pointing to a "<Application name>.sqlite" file in the "Application Support" directory (or the "Caches" directory on tvOS), a `nil` `configuration` pertaining to the "Default" configuration, a `mappingModelBundles` set to search all `NSBundle`s, and `localStorageOptions` set to `.AllowProgresiveMigration`.
      
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
+     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use the `SQLiteStore.legacy(...)` factory methods to create the `SQLiteStore` instead of using initializers directly.
      */
     public static func legacy() -> SQLiteStore {
         
@@ -141,7 +141,7 @@ public final class SQLiteStore: LocalStorage {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didAddToDataStack(_ dataStack: DataStack) {
+    public func cs_didAddToDataStack(_ dataStack: DataStack) {
         
         self.dataStack = dataStack
     }
@@ -149,7 +149,7 @@ public final class SQLiteStore: LocalStorage {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didRemoveFromDataStack(_ dataStack: DataStack) {
+    public func cs_didRemoveFromDataStack(_ dataStack: DataStack) {
         
         self.dataStack = nil
     }
@@ -194,7 +194,7 @@ public final class SQLiteStore: LocalStorage {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
-    public func eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws {
+    public func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws {
         
         // TODO: check if attached to persistent store
         
@@ -313,34 +313,17 @@ public final class SQLiteStore: LocalStorage {
     private weak var dataStack: DataStack?
     
     
-    // MARK: Deprecated
+    // MARK: Obsoleted
     
-    /**
-     Initializes an SQLite store interface from the given SQLite file URL. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
-     
-     - parameter fileURL: the local file URL for the target SQLite persistent store. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileURL` explicitly for each of them.
-     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models (*.xcmappingmodel) for migration.
-     - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
-     */
-    @available(*, deprecated: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new SQLiteStore.init(fileURL:configuration:migrationMappingProviders:localStorageOptions:) initializer instead.")
+    @available(*, obsoleted: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new SQLiteStore.init(fileURL:configuration:migrationMappingProviders:localStorageOptions:) initializer instead.")
     public convenience init(fileURL: URL, configuration: ModelConfiguration = nil, mappingModelBundles: [Bundle], localStorageOptions: LocalStorageOptions = nil) {
         
-        self.init(fileURL: fileURL, configuration: configuration, migrationMappingProviders: [], localStorageOptions: localStorageOptions)
+        fatalError()
     }
     
-    /**
-     Initializes an SQLite store interface from the given SQLite file name. When this instance is passed to the `DataStack`'s `addStorage()` methods, a new SQLite file will be created if it does not exist.
-     
-     - Warning: The default SQLite file location for the `LegacySQLiteStore` and `SQLiteStore` are different. If the app was depending on CoreStore's default directories prior to 2.0.0, make sure to use `LegacySQLiteStore` instead of `SQLiteStore`.
-     - parameter fileName: the local filename for the SQLite persistent store in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS). Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-     - parameter configuration: an optional configuration name from the model file. If not specified, defaults to `nil`, the "Default" configuration. Note that if you have multiple configurations, you will need to specify a different `fileName` explicitly for each of them.
-     - parameter mappingModelBundles: a list of `NSBundle`s from which to search mapping models (*.xcmappingmodel) for migration.
-     - parameter localStorageOptions: When the `SQLiteStore` is passed to the `DataStack`'s `addStorage()` methods, tells the `DataStack` how to setup the persistent store. Defaults to `.None`.
-     */
-    @available(*, deprecated: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new SQLiteStore.init(fileName:configuration:migrationMappingProviders:localStorageOptions:) initializer instead.")
+    @available(*, obsoleted: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new SQLiteStore.init(fileName:configuration:migrationMappingProviders:localStorageOptions:) initializer instead.")
     public convenience init(fileName: String, configuration: ModelConfiguration = nil, mappingModelBundles: [Bundle], localStorageOptions: LocalStorageOptions = nil) {
         
-        self.init(fileName: fileName, configuration: configuration, migrationMappingProviders: [], localStorageOptions: localStorageOptions)
+        fatalError()
     }
 }

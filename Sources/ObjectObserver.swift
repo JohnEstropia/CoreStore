@@ -30,7 +30,7 @@ import CoreData
 // MARK: - ObjectObserver
 
 /**
- Implement the `ObjectObserver` protocol to observe changes to a single `NSManagedObject` instance. `ObjectObserver`s may register themselves to a `ObjectMonitor`'s `addObserver(_:)` method:
+ Implement the `ObjectObserver` protocol to observe changes to a single `DynamicObject` instance. `ObjectObserver`s may register themselves to a `ObjectMonitor`'s `addObserver(_:)` method:
  ```
  let monitor = CoreStore.monitorObject(object)
  monitor.addObserver(self)
@@ -40,7 +40,7 @@ import CoreData
 public protocol ObjectObserver: class {
     
     /**
-     The `NSManagedObject` type for the observed object
+     The `DynamicObject` type for the observed object
      */
     associatedtype ObjectEntityType: DynamicObject
     
@@ -49,7 +49,7 @@ public protocol ObjectObserver: class {
      The default implementation does nothing.
      
      - parameter monitor: the `ObjectMonitor` monitoring the object being observed
-     - parameter object: the `NSManagedObject` instance being observed
+     - parameter object: the `DynamicObject` instance being observed
      */
     func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType)
     
@@ -58,7 +58,7 @@ public protocol ObjectObserver: class {
      The default implementation does nothing.
      
      - parameter monitor: the `ObjectMonitor` monitoring the object being observed
-     - parameter object: the `NSManagedObject` instance being observed
+     - parameter object: the `DynamicObject` instance being observed
      - parameter changedPersistentKeys: a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
      */
     func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>)
@@ -68,7 +68,7 @@ public protocol ObjectObserver: class {
      The default implementation does nothing.
      
      - parameter monitor: the `ObjectMonitor` monitoring the object being observed
-     - parameter object: the `NSManagedObject` instance being observed
+     - parameter object: the `DynamicObject` instance being observed
      */
     func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType)
 }

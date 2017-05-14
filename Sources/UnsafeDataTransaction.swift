@@ -30,7 +30,7 @@ import CoreData
 // MARK: - UnsafeDataTransaction
 
 /**
- The `UnsafeDataTransaction` provides an interface for non-contiguous `NSManagedObject` creates, updates, and deletes. This is useful for making temporary changes, such as partially filled forms. An unsafe transaction object should typically be only used from the main queue.
+ The `UnsafeDataTransaction` provides an interface for non-contiguous `NSManagedObject` or `CoreStoreObject` creates, updates, and deletes. This is useful for making temporary changes, such as partially filled forms. An unsafe transaction object should typically be only used from the main queue.
  */
 public final class UnsafeDataTransaction: BaseDataTransaction {
     
@@ -124,7 +124,7 @@ public final class UnsafeDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Begins a child transaction where `NSManagedObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
+     Begins a child transaction where `NSManagedObject` or `CoreStoreObject` creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.
      
      - prameter supportsUndo: `undo()`, `redo()`, and `rollback()` methods are only available when this parameter is `true`, otherwise those method will raise an exception. Defaults to `false`. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.
      - returns: an `UnsafeDataTransaction` instance where creates, updates, and deletes can be made.

@@ -32,11 +32,11 @@ import CoreData
 /**
  A `From` clause specifies the source entity and source persistent store for fetch and query methods. A common usage is to just indicate the entity:
  ```
- let person = transaction.fetchOne(From<MyPersonEntity>())
+ let person = transaction.fetchOne(From<Person>())
  ```
  For cases where multiple `NSPersistentStore`s contain the same entity, the source configuration's name needs to be specified as well:
  ```
- let person = transaction.fetchOne(From<MyPersonEntity>("Configuration1"))
+ let person = transaction.fetchOne(From<Person>("Configuration1"))
  ```
  */
 public struct From<T: DynamicObject> {

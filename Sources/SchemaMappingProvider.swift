@@ -29,7 +29,13 @@ import Foundation
 
 // MARK: - SchemaMappingProvider
 
+/**
+ The `SchemaMappingProvider` provides migration mapping information between two `DynamicSchema` versions.
+ */
 public protocol SchemaMappingProvider {
     
-    func createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType)
+    /**
+     Do not call directly.
+     */
+    func cs_createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType)
 }

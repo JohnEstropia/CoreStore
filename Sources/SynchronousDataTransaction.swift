@@ -30,7 +30,7 @@ import CoreData
 // MARK: - SynchronousDataTransaction
 
 /**
- The `SynchronousDataTransaction` provides an interface for `NSManagedObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginSynchronous(_:)`, or from `CoreStore.beginSynchronous(_:)`.
+ The `SynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginSynchronous(_:)`, or from `CoreStore.beginSynchronous(_:)`.
  */
 public final class SynchronousDataTransaction: BaseDataTransaction {
     
@@ -39,7 +39,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      ```
      try transaction.cancel()
      ```
-     - Important: Never use `try?` or `try!` on a `cancel()` call. Always use `try`. Using `try?` will swallow the cancellation and the transaction will proceed to commit as normal. Using `try!` will crash the app as `cancel()` will *always* throw an error.
+     - Important: Always use plain `try` on a `cancel()` call. Never use `try?` or `try!`. Using `try?` will swallow the cancellation and the transaction will proceed to commit as normal. Using `try!` will crash the app as `cancel()` will *always* throw an error.
      */
     public func cancel() throws -> Never {
         
@@ -66,10 +66,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Returns an editable proxy of a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
+     Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
      
-     - parameter object: the `NSManagedObject` type to be edited
-     - returns: an editable proxy for the specified `NSManagedObject`.
+     - parameter object: the `NSManagedObject` or `CoreStoreObject` to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public override func edit<T: DynamicObject>(_ object: T?) -> T? {
         
@@ -82,11 +82,11 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Returns an editable proxy of the object with the specified `NSManagedObjectID`. This method should not be used after the `commit()` method was already called once.
+     Returns an editable proxy of the object with the specified `NSManagedObjectID`.
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
-     - returns: an editable proxy for the specified `NSManagedObject`.
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public override func edit<T: DynamicObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
@@ -99,9 +99,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Deletes a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
+     Deletes a specified `NSManagedObject` or `CoreStoreObject`.
      
-     - parameter object: the `NSManagedObject` type to be deleted
+     - parameter object: the `NSManagedObject` or `CoreStoreObject` type to be deleted
      */
     public override func delete<T: DynamicObject>(_ object: T?) {
         
@@ -114,11 +114,11 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Deletes the specified `NSManagedObject`s.
+     Deletes the specified `DynamicObject`s.
      
-     - parameter object1: the `NSManagedObject` to be deleted
-     - parameter object2: another `NSManagedObject` to be deleted
-     - parameter objects: other `NSManagedObject`s to be deleted
+     - parameter object1: the `DynamicObject` to be deleted
+     - parameter object2: another `DynamicObject` to be deleted
+     - parameter objects: other `DynamicObject`s to be deleted
      */
     public override func delete<T: DynamicObject>(_ object1: T?, _ object2: T?, _ objects: T?...) {
         
@@ -131,9 +131,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Deletes the specified `NSManagedObject`s.
+     Deletes the specified `DynamicObject`s.
      
-     - parameter objects: the `NSManagedObject`s to be deleted
+     - parameter objects: the `DynamicObject`s to be deleted
      */
     public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: DynamicObject {
         
@@ -164,12 +164,6 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Deprecated
     
-    /**
-     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` or `commitAndWait()` method was already called once.
-     - Important: Unlike `SynchronousDataTransaction.commit()`, this method waits for all observers to be notified of the changes before returning. This results in more predictable data update order, but may risk triggering deadlocks.
-     
-     - returns: a `SaveResult` containing the success or failure information
-     */
     @available(*, deprecated, message: "Use the new auto-commit method DataStack.perform(synchronous:waitForAllObservers:)")
     public func commitAndWait() -> SaveResult {
         
@@ -188,12 +182,6 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         }
     }
     
-    /**
-     Saves the transaction changes and waits for completion synchronously. This method should not be used after the `commit()` or `commitAndWait()` method was already called once.
-     - Important: Unlike `SynchronousDataTransaction.commitAndWait()`, this method does not wait for observers to be notified of the changes before returning. This results in lower risk for deadlocks, but the updated data may not have been propagated to the `DataStack` after returning.
-     
-     - returns: a `SaveResult` containing the success or failure information
-     */
     @available(*, deprecated, message: "Use the new auto-commit method DataStack.perform(synchronous:waitForAllObservers:)")
     public func commit() -> SaveResult {
         
@@ -212,12 +200,6 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         }
     }
     
-    /**
-     Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
-     */
     @available(*, deprecated, message: "Secondary tasks spawned from AsynchronousDataTransactions and SynchronousDataTransactions are no longer supported. ")
     @discardableResult
     public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {

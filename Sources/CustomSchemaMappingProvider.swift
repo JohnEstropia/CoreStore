@@ -29,11 +29,28 @@ import Foundation
 
 // MARK: - CustomSchemaMappingProvider
 
+/**
+ A `SchemaMappingProvider` that accepts custom mappings for some entities. Mappings of entities with no `CustomMapping` provided will be automatically calculated if possible.
+ */
 open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
+    /**
+     The source model version for the mapping.
+     */
     public let sourceVersion: ModelVersion
+    
+    /**
+     The destination model version for the mapping.
+     */
     public let destinationVersion: ModelVersion
     
+    /**
+     Creates a `CustomSchemaMappingProvider`
+     
+     - parameter sourceVersion: the source model version for the mapping
+     - parameter destinationVersion: the destination model version for the mapping
+     - parameter entityMappings: a list of `CustomMapping`s. Mappings of entities with no `CustomMapping` provided will be automatically calculated if possible. Any conflicts or ambiguity will raise an assertion.
+     */
     public required init(from sourceVersion: ModelVersion, to destinationVersion: ModelVersion, entityMappings: Set<CustomMapping> = []) {
         
         CoreStore.assert(
@@ -54,16 +71,42 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: - CustomMapping
     
+    /**
+     Provides the type of mapping for an entity. Mappings of entities with no `CustomMapping` provided will be automatically calculated if possible. Any conflicts or ambiguity will raise an assertion.
+     */
     public enum CustomMapping: Hashable {
         
-        public typealias Transformer = (_ sourceObject: UnsafeSourceObject, _ createDestinationObject: () -> UnsafeDestinationObject) throws -> Void
-        
+        /**
+         The `sourceEntity` is meant to be removed from the source `DynamicSchema` and should not be migrated to the destination `DynamicSchema`.
+         */
         case deleteEntity(sourceEntity: EntityName)
+        
+        /**
+         The `destinationEntity` is newly added to the destination `DynamicSchema` and has no mapping from the source `DynamicSchema`.
+         */
         case insertEntity(destinationEntity: EntityName)
+        
+        /**
+         The `DynamicSchema`s entity has no changes and can be copied directly from `sourceEntity` to `destinationEntity`.
+         */
         case copyEntity(sourceEntity: EntityName, destinationEntity: EntityName)
+        
+        /**
+         The `DynamicSchema`s entity needs transformations from `sourceEntity` to `destinationEntity`. The `transformer` closure will be used to apply the changes. The `CustomMapping.inferredTransformation` method can be used directly as the `transformer` if the changes can be inferred (i.e. lightweight).
+         */
         case transformEntity(sourceEntity: EntityName, destinationEntity: EntityName, transformer: Transformer)
         
-        static func inferredTransformation(_ sourceObject: UnsafeSourceObject, _ createDestinationObject: () -> UnsafeDestinationObject) throws -> Void {
+        /**
+         The closure type for `CustomMapping.transformEntity`.
+         - parameter sourceObject: a proxy object representing the source entity. The properties can be accessed via keyPath.
+         - parameter createDestinationObject: the closure to create the object for the destination entity. The `CustomMapping.inferredTransformation` method can be used directly as the `transformer` if the changes can be inferred (i.e. lightweight). The object is created lazily and executing the closure multiple times will return the same instance. The destination object's properties can be accessed and updated via keyPath.
+         */
+        public typealias Transformer = (_ sourceObject: UnsafeSourceObject, _ createDestinationObject: () -> UnsafeDestinationObject) throws -> Void
+        
+        /**
+         The `CustomMapping.inferredTransformation` method can be used directly as the `transformer` if the changes can be inferred (i.e. lightweight).
+         */
+        public static func inferredTransformation(_ sourceObject: UnsafeSourceObject, _ createDestinationObject: () -> UnsafeDestinationObject) throws -> Void {
             
             let destinationObject = createDestinationObject()
             destinationObject.enumerateAttributes { (attribute, sourceAttribute) in
@@ -72,34 +115,6 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                     
                     destinationObject[attribute] = sourceObject[sourceAttribute]
                 }
-            }
-        }
-        
-        var entityMappingSourceEntity: EntityName? {
-            
-            switch self {
-                
-            case .deleteEntity(let sourceEntity),
-                 .copyEntity(let sourceEntity, _),
-                 .transformEntity(let sourceEntity, _, _):
-                return sourceEntity
-                
-            case .insertEntity:
-                return nil
-            }
-        }
-        
-        var entityMappingDestinationEntity: EntityName? {
-            
-            switch self {
-                
-            case .insertEntity(let destinationEntity),
-                 .copyEntity(_, let destinationEntity),
-                 .transformEntity(_, let destinationEntity, _):
-                return destinationEntity
-                
-            case .deleteEntity:
-                return nil
             }
         }
         
@@ -151,29 +166,80 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                     ^ destinationEntity.hashValue
             }
         }
+        
+        
+        // MARK: FilePrivate
+        
+        fileprivate var entityMappingSourceEntity: EntityName? {
+            
+            switch self {
+                
+            case .deleteEntity(let sourceEntity),
+                 .copyEntity(let sourceEntity, _),
+                 .transformEntity(let sourceEntity, _, _):
+                return sourceEntity
+                
+            case .insertEntity:
+                return nil
+            }
+        }
+        
+        fileprivate var entityMappingDestinationEntity: EntityName? {
+            
+            switch self {
+                
+            case .insertEntity(let destinationEntity),
+                 .copyEntity(_, let destinationEntity),
+                 .transformEntity(_, let destinationEntity, _):
+                return destinationEntity
+                
+            case .deleteEntity:
+                return nil
+            }
+        }
     }
     
     
     // MARK: - UnsafeSourceObject
     
+    /**
+     The read-only proxy object used for the source object in a mapping's `Transformer` closure. Properties can be accessed either by keyPath string or by `NSAttributeDescription`.
+     */
     public final class UnsafeSourceObject {
         
+        /**
+         Accesses the property value via its keyPath.
+         */
         public subscript(attribute: KeyPath) -> Any? {
             
             return self.rawObject.cs_accessValueForKVCKey(attribute)
         }
         
+        /**
+         Accesses the property value via its `NSAttributeDescription`, which can be accessed from the `enumerateAttributes(_:)` method.
+         */
         public subscript(attribute: NSAttributeDescription) -> Any? {
             
             return self.rawObject.cs_accessValueForKVCKey(attribute.name)
         }
         
+        /**
+         Enumerates the all `NSAttributeDescription`s. The `attribute` argument can be used as the subscript key to access the property.
+         */
         public func enumerateAttributes(_ closure: (_ attribute: NSAttributeDescription) -> Void) {
             
-            for case let attribute as NSAttributeDescription in self.rawObject.entity.properties {
+            func enumerate(_ entity: NSEntityDescription, _ closure: (NSAttributeDescription) -> Void) {
                 
-                closure(attribute)
+                if let superEntity = entity.superentity {
+                    
+                    enumerate(superEntity, closure)
+                }
+                for case let attribute as NSAttributeDescription in entity.properties {
+                    
+                    closure(attribute)
+                }
             }
+            enumerate(self.rawObject.entity, closure)
         }
         
         
@@ -193,26 +259,46 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: - UnsafeDestinationObject
     
+    /**
+     The read-write proxy object used for the destination object that can be created in a mapping's `Transformer` closure. Properties can be accessed and mutated either through keyPath string or by `NSAttributeDescription`.
+     */
     public final class UnsafeDestinationObject {
         
+        /**
+         Accesses or mutates the property value via its keyPath.
+         */
         public subscript(attribute: KeyPath) -> Any? {
             
             get { return self.rawObject.cs_accessValueForKVCKey(attribute) }
             set { self.rawObject.cs_setValue(newValue, forKVCKey: attribute) }
         }
         
+        /**
+         Accesses or mutates the property value via its `NSAttributeDescription`, which can be accessed from the `enumerateAttributes(_:)` method.
+         */
         public subscript(attribute: NSAttributeDescription) -> Any? {
             
             get { return self.rawObject.cs_accessValueForKVCKey(attribute.name) }
             set { self.rawObject.cs_setValue(newValue, forKVCKey: attribute.name) }
         }
         
+        /**
+         Enumerates the all `NSAttributeDescription`s. The `attribute` argument can be used as the subscript key to access and mutate the property. The `sourceAttribute` can be used to access properties from the source `UnsafeSourceObject`.
+         */
         public func enumerateAttributes(_ closure: (_ attribute: NSAttributeDescription, _ sourceAttribute: NSAttributeDescription?) -> Void) {
             
-            for case let attribute as NSAttributeDescription in self.rawObject.entity.properties {
+            func enumerate(_ entity: NSEntityDescription, _ closure: (_ attribute: NSAttributeDescription, _ sourceAttribute: NSAttributeDescription?) -> Void) {
                 
-                closure(attribute, self.sourceAttributesByDestinationKey[attribute.name])
+                if let superEntity = entity.superentity {
+                    
+                    enumerate(superEntity, closure)
+                }
+                for case let attribute as NSAttributeDescription in entity.properties {
+                    
+                    closure(attribute, self.sourceAttributesByDestinationKey[attribute.name])
+                }
             }
+            enumerate(self.rawObject.entity, closure)
         }
         
         
@@ -225,10 +311,10 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         }
         
         
-        // MARK: Private
+        // MARK: FilePrivate
         
-        private let rawObject: NSManagedObject
-        private let sourceAttributesByDestinationKey: [KeyPath: NSAttributeDescription]
+        fileprivate let rawObject: NSManagedObject
+        fileprivate let sourceAttributesByDestinationKey: [KeyPath: NSAttributeDescription]
     }
     
     
@@ -253,7 +339,7 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: SchemaMappingProvider
     
-    public func createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
+    public func cs_createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
         
         let sourceModel = sourceSchema.rawModel()
         let destinationModel = destinationSchema.rawModel()
@@ -441,19 +527,23 @@ open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             let transformer = userInfo[CustomEntityMigrationPolicy.UserInfoKey.transformer]! as! CustomMapping.Transformer
             let sourceAttributesByDestinationKey = userInfo[CustomEntityMigrationPolicy.UserInfoKey.sourceAttributesByDestinationKey] as! [KeyPath: NSAttributeDescription]
             
-            var dInstance: NSManagedObject?
+            var destinationObject: UnsafeDestinationObject?
             try transformer(
                 UnsafeSourceObject(sInstance),
                 {
+                    if let destinationObject = destinationObject {
+                        
+                        return destinationObject
+                    }
                     let rawObject = NSEntityDescription.insertNewObject(
                         forEntityName: mapping.destinationEntityName!,
                         into: manager.destinationContext
                     )
-                    dInstance = rawObject
-                    return UnsafeDestinationObject(rawObject, sourceAttributesByDestinationKey)
+                    destinationObject = UnsafeDestinationObject(rawObject, sourceAttributesByDestinationKey)
+                    return destinationObject!
                 }
             )
-            if let dInstance = dInstance {
+            if let dInstance = destinationObject?.rawObject {
                 
                 manager.associate(
                     sourceInstance: sInstance,

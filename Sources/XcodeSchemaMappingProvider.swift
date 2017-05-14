@@ -29,12 +29,33 @@ import Foundation
 
 // MARK: - XcodeSchemaMappingProvider
 
+/**
+ A `SchemaMappingProvider` that tries to infer model migration between two `DynamicSchema` versions by loading an xcmappingmodel file from the specified `Bundle`. Throws `CoreStoreError.mappingModelNotFound` if the xcmappingmodel file cannot be found, or if the xcmappingmodel doesn't resolve the source and destination `DynamicSchema`.
+ */
 final class XcodeSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
+    /**
+     The source model version for the mapping.
+     */
     public let sourceVersion: ModelVersion
+    
+    /**
+     The destination model version for the mapping.
+     */
     public let destinationVersion: ModelVersion
+    
+    /**
+     The `Bundle` that contains the xcmappingmodel file.
+     */
     public let mappingModelBundle: Bundle
     
+    /**
+     Creates an `XcodeSchemaMappingProvider`
+     
+     - parameter sourceVersion: the source model version for the mapping
+     - parameter destinationVersion: the destination model version for the mapping
+     - parameter mappingModelBundle: the `Bundle` that contains the xcmappingmodel file
+     */
     public required init(from sourceVersion: ModelVersion, to destinationVersion: ModelVersion, mappingModelBundle: Bundle) {
         
         self.sourceVersion = sourceVersion
@@ -64,7 +85,7 @@ final class XcodeSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: SchemaMappingProvider
     
-    public func createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
+    public func cs_createMappingModel(from sourceSchema: DynamicSchema, to destinationSchema: DynamicSchema, storage: LocalStorage) throws -> (mappingModel: NSMappingModel, migrationType: MigrationType) {
         
         let sourceModel = sourceSchema.rawModel()
         let destinationModel = destinationSchema.rawModel()

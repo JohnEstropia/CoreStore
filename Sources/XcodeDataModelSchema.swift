@@ -40,6 +40,73 @@ import Foundation
 public final class XcodeDataModelSchema: DynamicSchema {
     
     /**
+     Creates a `XcodeDataModelSchema` for each of the models declared in the specified (.xcdatamodeld) model file.
+     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
+     - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
+     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
+     - returns: a tuple containing all `XcodeDataModelSchema` for the models declared in the specified .xcdatamodeld file, and the current model version string declared or inferred from the file.
+     */
+    public static func from(modelName: XcodeDataModelFileName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) -> (allSchema: [XcodeDataModelSchema], currentModelVersion: ModelVersion) {
+        
+        guard let modelFilePath = bundle.path(forResource: modelName, ofType: "momd") else {
+            
+            // For users migrating from very old Xcode versions: Old xcdatamodel files are not contained inside xcdatamodeld (with a "d"), and will thus fail this check. If that was the case, create a new xcdatamodeld file and copy all contents into the new model.
+            let foundModels = bundle
+                .paths(forResourcesOfType: "momd", inDirectory: nil)
+                .map({ ($0 as NSString).lastPathComponent })
+            CoreStore.abort("Could not find \"\(modelName).momd\" from the bundle \"\(bundle.bundleIdentifier ?? "<nil>")\". Other model files in bundle: \(foundModels.coreStoreDumpString)")
+        }
+        
+        let modelFileURL = URL(fileURLWithPath: modelFilePath)
+        let versionInfoPlistURL = modelFileURL.appendingPathComponent("VersionInfo.plist", isDirectory: false)
+        
+        guard let versionInfo = NSDictionary(contentsOf: versionInfoPlistURL),
+            let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
+                
+                CoreStore.abort("Could not load \(cs_typeName(NSManagedObjectModel.self)) metadata from path \"\(versionInfoPlistURL)\".")
+        }
+        
+        let modelVersions = Set(versionHashes.keys)
+        let modelVersionHints = migrationChain.leafVersions
+        let currentModelVersion: String
+        if let plistModelVersion = versionInfo["NSManagedObjectModel_CurrentVersionName"] as? String,
+            modelVersionHints.isEmpty || modelVersionHints.contains(plistModelVersion) {
+            
+            currentModelVersion = plistModelVersion
+        }
+        else if let resolvedVersion = modelVersions.intersection(modelVersionHints).first {
+            
+            CoreStore.log(
+                .warning,
+                message: "The \(cs_typeName(MigrationChain.self)) leaf versions do not include the model file's current version. Resolving to version \"\(resolvedVersion)\"."
+            )
+            currentModelVersion = resolvedVersion
+        }
+        else if let resolvedVersion = modelVersions.first ?? modelVersionHints.first {
+            
+            if !modelVersionHints.isEmpty {
+                
+                CoreStore.log(
+                    .warning,
+                    message: "The \(cs_typeName(MigrationChain.self)) leaf versions do not include any of the model file's embedded versions. Resolving to version \"\(resolvedVersion)\"."
+                )
+            }
+            currentModelVersion = resolvedVersion
+        }
+        else {
+            
+            CoreStore.abort("No model files were found in URL \"\(modelFileURL)\".")
+        }
+        var allSchema: [XcodeDataModelSchema] = []
+        for modelVersion in modelVersions {
+            
+            let fileURL = modelFileURL.appendingPathComponent("\(modelVersion).mom", isDirectory: false)
+            allSchema.append(XcodeDataModelSchema(modelName: modelVersion, modelVersionFileURL: fileURL))
+        }
+        return (allSchema, currentModelVersion)
+    }
+    
+    /**
      Initializes an `XcodeDataModelSchema` from an *.xcdatamodeld version name and its containing `Bundle`.
      ```
      CoreStore.defaultStack = DataStack(

@@ -37,6 +37,12 @@ import Foundation
 @objc
 public final class CSXcodeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreObjectiveCType {
     
+    /**
+     Initializes an `CSXcodeDataModelSchema` from an *.xcdatamodeld file URL.
+     
+     - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)
+     - parameter modelVersionFileURL: the file URL that points to the .xcdatamodeld's "momd" file.
+     */
     @objc
     public required init(modelName: ModelVersion, modelVersionFileURL: URL) {
         

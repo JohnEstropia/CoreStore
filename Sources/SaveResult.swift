@@ -28,52 +28,12 @@ import Foundation
 
 // MARK: - SaveResult
 
-/**
- The `SaveResult` indicates the result of a `commit(...)` for a transaction.
- The `SaveResult` can be treated as a boolean:
- ```
- CoreStore.beginAsynchronous { transaction in
-     // ...
-     let result = transaction.commit()
-     if result {
-        // succeeded
-     }
-     else {
-        // failed
-     }
- }
- ```
- or as an `enum`, where the resulting associated object can also be inspected:
- ```
- CoreStore.beginAsynchronous { transaction in
-     // ...
-     let result = transaction.commit()
-     switch result {
-     case .success(let hasChanges):
-        // hasChanges indicates if there were changes or not
-     case .failure(let error):
-        // error is a CoreStoreError enum value
-     }
- }
- ```
- */
 @available(*, deprecated, message: "Use the new DataStack.perform(asynchronous:...) and DataStack.perform(synchronous:...) family of APIs")
 public enum SaveResult: Hashable {
     
-    /**
-     `SaveResult.success` indicates that the `commit()` for the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated value `hasChanges` indicates if there were saved changes or not.
-     */
     case success(hasChanges: Bool)
-    
-    /**
-     `SaveResult.failure` indicates that the `commit()` for the transaction failed. The associated object for this value is a `CoreStoreError` enum value.
-     */
     case failure(CoreStoreError)
     
-    
-    /**
-     Returns `true` if the result indicates `.success`, `false` if the result is `.failure`.
-     */
     public var boolValue: Bool {
         
         switch self {

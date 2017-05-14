@@ -31,68 +31,146 @@ import Foundation
 
 public extension DynamicObject where Self: CoreStoreObject {
     
+    /**
+     The containing type for relationships. `Relationship`s can be any `CoreStoreObject` subclass.
+     ```
+     class Dog: CoreStoreObject {
+         let master = Relationship.ToOne<Person>("master")
+     }
+     class Person: CoreStoreObject {
+         let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+     }
+     ```
+     */
     public typealias Relationship = RelationshipContainer<Self>
 }
 
 
 // MARK: - RelationshipContainer
 
+/**
+ The containing type for relationships. Use the `DynamicObject.Relationship` typealias instead for shorter syntax.
+ ```
+ class Dog: CoreStoreObject {
+     let master = Relationship.ToOne<Person>("master")
+ }
+ class Person: CoreStoreObject {
+     let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+ }
+ ```
+ */
 public enum RelationshipContainer<O: CoreStoreObject> {
     
     // MARK: - ToOne
     
+    /**
+     The containing type for to-one relationships. Any `CoreStoreObject` subclass can be a destination type. Inverse relationships should be declared from the destination type as well, using the `inverse:` argument for the relationship.
+     ```
+     class Dog: CoreStoreObject {
+         let master = Relationship.ToOne<Person>("master")
+     }
+     class Person: CoreStoreObject {
+         let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+     }
+     ```
+     */
     public final class ToOne<D: CoreStoreObject>: RelationshipProtocol {
         
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
         public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
             self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
         public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
             self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
         public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
             self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
         public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
             self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
+        /**
+         The relationship destination object.
+         */
         public var value: D? {
             
             get {
                 
-                let object = self.parentObject() as! O
-                CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
-                )
-                return object.rawObject!.getValue(
-                    forKvcKey: self.keyPath,
-                    didGetValue: { $0.flatMap({ D.cs_fromRaw(object: $0 as! NSManagedObject) }) }
-                )
+                return self.nativeValue.flatMap(D.cs_fromRaw)
             }
             set {
                 
-                let object = self.parentObject() as! O
-                CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
-                )
-                CoreStore.assert(
-                    object.rawObject!.isEditableInContext() == true,
-                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
-                )
-                object.rawObject!.setValue(
-                    newValue,
-                    forKvcKey: self.keyPath,
-                    willSetValue: { $0?.rawObject }
-                )
+                self.nativeValue = newValue?.rawObject
             }
         }
         
@@ -115,6 +193,38 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
         }
         
+        internal var nativeValue: NSManagedObject? {
+            
+            get {
+                
+                let object = self.parentObject() as! O
+                CoreStore.assert(
+                    object.rawObject!.isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
+                return object.rawObject!.getValue(
+                    forKvcKey: self.keyPath,
+                    didGetValue: { $0 as! NSManagedObject? }
+                )
+            }
+            set {
+                
+                let object = self.parentObject() as! O
+                CoreStore.assert(
+                    object.rawObject!.isRunningInAllowedQueue() == true,
+                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                )
+                CoreStore.assert(
+                    object.rawObject!.isEditableInContext() == true,
+                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                )
+                object.rawObject!.setValue(
+                    newValue,
+                    forKvcKey: self.keyPath
+                )
+            }
+        }
+        
         
         // MARK: Private
         
@@ -131,28 +241,113 @@ public enum RelationshipContainer<O: CoreStoreObject> {
     
     // MARK: - ToManyOrdered
     
+    /**
+     The containing type for to-many ordered relationships. Any `CoreStoreObject` subclass can be a destination type. Inverse relationships should be declared from the destination type as well, using the `inverse:` argument for the relationship.
+     ```
+     class Dog: CoreStoreObject {
+         let master = Relationship.ToOne<Person>("master")
+     }
+     class Person: CoreStoreObject {
+         let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
+     }
+     ```
+     */
     public final class ToManyOrdered<D: CoreStoreObject>: RelationshipProtocol {
         
-        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
+        public convenience init(_ keyPath: KeyPath, minCount: Int = 0, maxCount: Int = 0, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(keyPath: keyPath, minCount: minCount, maxCount: maxCount, inverseKeyPath: { nil }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
+        public convenience init(_ keyPath: KeyPath, minCount: Int = 0, maxCount: Int = 0, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(keyPath: keyPath, minCount: minCount, maxCount: maxCount, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
+        public convenience init(_ keyPath: KeyPath, minCount: Int = 0, maxCount: Int = 0, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(keyPath: keyPath, minCount: minCount, maxCount: maxCount, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
+        public convenience init(_ keyPath: KeyPath, minCount: Int = 0, maxCount: Int = 0, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(keyPath: keyPath, minCount: minCount, maxCount: maxCount, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
+        /**
+         The relationship ordered objects.
+         */
         public var value: [D] {
             
             get {
@@ -220,7 +415,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: String, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: String?, renamingIdentifier: String?) {
+        private init(keyPath: String, minCount: Int, maxCount: Int, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, versionHashModifier: String?, renamingIdentifier: String?) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
@@ -237,28 +432,114 @@ public enum RelationshipContainer<O: CoreStoreObject> {
     
     // MARK: - ToManyUnordered
     
+    /**
+     The containing type for to-many unordered relationships. Any `CoreStoreObject` subclass can be a destination type. Inverse relationships should be declared from the destination type as well, using the `inverse:` argument for the relationship.
+     ```
+     class Dog: CoreStoreObject {
+         let master = Relationship.ToOne<Person>("master")
+     }
+     class Person: CoreStoreObject {
+         let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+     }
+     ```
+     */
     public final class ToManyUnordered<D: CoreStoreObject>: RelationshipProtocol {
         
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
         public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
             self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
         public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
             self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
         public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
             self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
+        /**
+         Initializes the metadata for the relationship. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object. Make sure to declare this relationship's inverse relationship on its destination object. Due to Swift's compiler limitation, only one of the relationship and its inverse can declare an `inverse:` argument.
+         ```
+         class Dog: CoreStoreObject {
+             let master = Relationship.ToOne<Person>("master")
+         }
+         class Person: CoreStoreObject {
+             let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
+         }
+         ```
+         - parameter keyPath: the permanent name for this relationship.
+         - parameter minCount: the minimum number of objects in this relationship UNLESS THE RELATIONSHIP IS EMPTY. This means there might be zero objects in the relationship, which might be less than `minCount`. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter maxCount: the maximum number of objects in this relationship. If the number of objects in the relationship do not satisfy `minCount` and `maxCount`, the transaction's commit (or auto-commit) would fail with a validation error.
+         - parameter inverse: the inverse relationship that is declared for the destination object. All relationships require an "inverse", so updates to to this object's relationship are also reflected on its destination object.
+         - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
+         - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+         - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         */
         public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
             
             self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
         }
         
+        /**
+         The relationship unordered objects.
+         */
         public var value: Set<D> {
             
             get {
@@ -404,11 +685,17 @@ extension RelationshipContainer.ToManyOrdered: RandomAccessCollection {
 
 extension RelationshipContainer.ToManyUnordered: Sequence {
     
+    /**
+     The number of elements in the set.
+     */
     public var count: Int {
         
         return self.nativeValue.count
     }
     
+    /**
+     A Boolean value indicating whether the range contains no elements.
+     */
     public var isEmpty: Bool {
     
         return self.nativeValue.count == 0
@@ -434,44 +721,124 @@ infix operator .== : ComparisonPrecedence
 
 extension RelationshipContainer.ToOne {
     
-    public static func .= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ newValue: D?) {
+    /**
+     Assigns an object to the relationship. The operation
+     ```
+     dog.master .= person
+     ```
+     is equivalent to
+     ```
+     dog.master.value = person
+     ```
+     */
+    public static func .= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ newObject: D?) {
         
-        relationship.value = newValue
+        relationship.nativeValue = newObject?.cs_toRaw()
     }
     
+    /**
+     Assigns an object from another relationship. The operation
+     ```
+     dog.master .= anotherDog.master
+     ```
+     is equivalent to
+     ```
+     dog.master.value = anotherDog.master.value
+     ```
+     */
     public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) {
         
-        relationship.value = relationship2.value
+        relationship.nativeValue = relationship2.nativeValue
     }
     
-    public static func .== (_ relationship: RelationshipContainer<O>.ToOne<D>, _ value: D?) -> Bool {
+    /**
+     Compares equality between a relationship's object and another object
+     ```
+     if dog.master .== person { ... }
+     ```
+     is equivalent to
+     ```
+     if dog.master.value == person { ... }
+     ```
+     */
+    public static func .== (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Bool {
         
-        return relationship.value == value
+        return relationship.nativeValue == object?.cs_toRaw()
     }
     
-    public static func .== (_ value: D?, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Bool {
+    /**
+     Compares equality between an object and a relationship's object
+     ```
+     if dog.master .== person { ... }
+     ```
+     is equivalent to
+     ```
+     if dog.master.value == person { ... }
+     ```
+     */
+    public static func .== (_ object: D?, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Bool {
         
-        return value == relationship.value
+        return object?.cs_toRaw() == relationship.nativeValue
     }
     
+    /**
+     Compares equality between a relationship's object and another relationship's object
+     ```
+     if dog.master .== person { ... }
+     ```
+     is equivalent to
+     ```
+     if dog.master.value == person { ... }
+     ```
+     */
     public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) -> Bool {
         
-        return relationship.value == relationship2.value
+        return relationship.nativeValue == relationship2.nativeValue
     }
 }
 
 extension RelationshipContainer.ToManyOrdered {
     
+    /**
+     Assigns a sequence of objects to the relationship. The operation
+     ```
+     person.pets .= [dog, cat]
+     ```
+     is equivalent to
+     ```
+     person.pets.value = [dog, cat]
+     ```
+     */
     public static func .= <S: Sequence>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ newValue: S) where S.Iterator.Element == D {
         
         relationship.nativeValue = NSOrderedSet(array: newValue.map({ $0.rawObject! }))
     }
     
+    /**
+     Assigns a sequence of objects to the relationship. The operation
+     ```
+     person.pets .= anotherPerson.pets
+     ```
+     is equivalent to
+     ```
+     person.pets.value = anotherPerson.pets.value
+     ```
+     */
     public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
         
         relationship.nativeValue = relationship2.nativeValue
     }
     
+    /**
+     Compares equality between a relationship's objects and a collection of objects
+     ```
+     if person.pets .== [dog, cat] { ... }
+     ```
+     is equivalent to
+     ```
+     if person.pets.value == [dog, cat] { ... }
+     ```
+     */
     public static func .== <C: Collection>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ collection: C) -> Bool where C.Iterator.Element == D {
         
         return relationship.nativeValue.elementsEqual(
@@ -480,6 +847,16 @@ extension RelationshipContainer.ToManyOrdered {
         )
     }
     
+    /**
+     Compares equality between a collection of objects and a relationship's objects
+     ```
+     if [dog, cat] .== person.pets { ... }
+     ```
+     is equivalent to
+     ```
+     if [dog, cat] == person.pets.value { ... }
+     ```
+     */
     public static func .== <C: Collection>(_ collection: C, _ relationship: RelationshipContainer<O>.ToManyOrdered<D>) -> Bool where C.Iterator.Element == D {
         
         return relationship.nativeValue.elementsEqual(
@@ -488,6 +865,16 @@ extension RelationshipContainer.ToManyOrdered {
         )
     }
     
+    /**
+     Compares equality between a relationship's objects and a collection of objects
+     ```
+     if person.pets .== anotherPerson.pets { ... }
+     ```
+     is equivalent to
+     ```
+     if person.pets.value == anotherPerson.pets.value { ... }
+     ```
+     */
     public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) -> Bool {
         
         return relationship.nativeValue == relationship2.nativeValue
@@ -496,44 +883,94 @@ extension RelationshipContainer.ToManyOrdered {
 
 extension RelationshipContainer.ToManyUnordered {
     
+    /**
+     Assigns a sequence of objects to the relationship. The operation
+     ```
+     person.pets .= [dog, cat]
+     ```
+     is equivalent to
+     ```
+     person.pets.value = [dog, cat]
+     ```
+     */
     public static func .= <S: Sequence>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ newValue: S) where S.Iterator.Element == D {
         
         relationship.nativeValue = NSSet(array: newValue.map({ $0.rawObject! }))
     }
     
+    /**
+     Assigns a sequence of objects to the relationship. The operation
+     ```
+     person.pets .= anotherPerson.pets
+     ```
+     is equivalent to
+     ```
+     person.pets.value = anotherPerson.pets.value
+     ```
+     */
     public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) {
         
         relationship.nativeValue = relationship2.nativeValue
     }
     
+    /**
+     Assigns a sequence of objects to the relationship. The operation
+     ```
+     person.pets .= anotherPerson.pets
+     ```
+     is equivalent to
+     ```
+     person.pets.value = anotherPerson.pets.value
+     ```
+     */
     public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
         
         relationship.nativeValue = NSSet(set: relationship2.nativeValue.set)
     }
     
-    public static func .== <S: Sequence>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ sequence: S) -> Bool where S.Iterator.Element == D {
+    /**
+     Compares the if the relationship's objects and a set of objects have the same elements.
+     ```
+     if person.pets .== Set<Animal>([dog, cat]) { ... }
+     ```
+     is equivalent to
+     ```
+     if person.pets.value == Set<Animal>([dog, cat]) { ... }
+     ```
+     */
+    public static func .== (_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ set: Set<D>) -> Bool {
         
-        return relationship.nativeValue.isEqual(to: Set(sequence.map({ $0.rawObject! })))
+        return relationship.nativeValue.isEqual(to: Set(set.map({ $0.rawObject! })))
     }
     
-    public static func .== <S: Sequence>(_ sequence: S, _ relationship: RelationshipContainer<O>.ToManyUnordered<D>) -> Bool where S.Iterator.Element == D {
+    /**
+     Compares if a set of objects and a relationship's objects have the same elements.
+     ```
+     if Set<Animal>([dog, cat]) .== person.pets { ... }
+     ```
+     is equivalent to
+     ```
+     if Set<Animal>([dog, cat]) == person.pets.value { ... }
+     ```
+     */
+    public static func .== (_ set: Set<D>, _ relationship: RelationshipContainer<O>.ToManyUnordered<D>) -> Bool {
         
-        return relationship.nativeValue.isEqual(to: Set(sequence.map({ $0.rawObject! })))
+        return relationship.nativeValue.isEqual(to: Set(set.map({ $0.rawObject! })))
     }
     
+    /**
+     Compares if a relationship's objects and another relationship's objects have the same elements.
+     ```
+     if person.pets .== anotherPerson.pets { ... }
+     ```
+     is equivalent to
+     ```
+     if person.pets.value == anotherPerson.pets.value { ... }
+     ```
+     */
     public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) -> Bool {
         
-        return relationship.nativeValue == relationship2.nativeValue
-    }
-    
-    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) -> Bool {
-        
-        return relationship.nativeValue == NSSet(set: relationship2.nativeValue.set)
-    }
-    
-    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) -> Bool {
-        
-        return NSSet(set: relationship.nativeValue.set) == relationship2.nativeValue
+        return relationship.nativeValue.isEqual(relationship2.nativeValue)
     }
 }
 

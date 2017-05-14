@@ -41,6 +41,7 @@ public extension CSDataStack {
      - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
      - returns: an `NSFetchedResultsController` that observes the `CSDataStack`
      */
+    @available(*, deprecated, message: "CoreStore will obsolete NSFetchedResultsController support in the future in favor of CSListMonitor")
     @objc
     public func createFetchedResultsControllerFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
         
@@ -68,6 +69,7 @@ public extension CSUnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: an `NSFetchedResultsController` that observes an `CSUnsafeDataTransaction`
      */
+    @available(*, deprecated, message: "CoreStore will obsolete NSFetchedResultsController support in the future in favor of CSListMonitor")
     @objc
     public func createFetchedResultsControllerFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
         

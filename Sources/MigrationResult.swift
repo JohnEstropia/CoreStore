@@ -32,27 +32,12 @@ import Foundation
  The `MigrationResult` indicates the result of a migration.
  The `MigrationResult` can be treated as a boolean:
  ```
- CoreStore.upgradeSQLiteStoreIfNeeded { transaction in
-     // ...
-     let result = transaction.commit()
-     if result {
-         // succeeded
-     }
-     else {
-         // failed
-     }
- }
- ```
- or as an `enum`, where the resulting associated object can also be inspected:
- ```
- CoreStore.beginAsynchronous { transaction in
-     // ...
-     let result = transaction.commit()
+ CoreStore.upgradeStorageIfNeeded(SQLiteStorage(fileName: "data.sqlite")) { (result) in
      switch result {
-     case .success(let hasChanges):
-         // hasChanges indicates if there were changes or not
+     case .success(let migrationSteps):
+         // ...
      case .failure(let error):
-         // error is a CoreStoreError enum value
+         // ...
      }
  }
  ```

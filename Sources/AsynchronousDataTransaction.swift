@@ -30,17 +30,43 @@ import CoreData
 // MARK: - AsynchronousDataTransaction
 
 /**
- The `AsynchronousDataTransaction` provides an interface for `NSManagedObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginAsynchronous(_:)`, or from `CoreStore.beginAsynchronous(_:)`.
+ The `AsynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.perform(asynchronous:...)`, or from `CoreStore.perform(synchronous:...)`.
  */
 public final class AsynchronousDataTransaction: BaseDataTransaction {
     
+    /**
+     Cancels a transaction by throwing `CoreStoreError.userCancelled`.
+     ```
+     try transaction.cancel()
+     ```
+     - Important: Never use `try?` or `try!` on a `cancel()` call. Always use `try`. Using `try?` will swallow the cancellation and the transaction will proceed to commit as normal. Using `try!` will crash the app as `cancel()` will *always* throw an error.
+     */
+    public func cancel() throws -> Never {
+        
+        throw CoreStoreError.userCancelled
+    }
+    
+    
     // MARK: - Result
     
+    /**
+     The `Result` contains the success or failure information for a completed transaction
+     */
     public enum Result<T> {
         
+        /**
+         `Result<T>.success` indicates that the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated `userInfo` is the value returned from the transaction closure.
+         */
         case success(userInfo: T)
+        
+        /**
+         `Result<T>.failure` indicates that the transaction either failed or was cancelled. The associated object for this value is a `CoreStoreError` enum value.
+         */
         case failure(error: CoreStoreError)
         
+        /**
+         Returns `true` if the result indicates `.success`, `false` if the result is `.failure`.
+         */
         public var boolValue: Bool {
             
             switch self {
@@ -64,21 +90,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         }
     }
     
-    
     // MARK: -
-    
-    /**
-     Cancels a transaction by throwing `CoreStoreError.userCancelled`.
-     ```
-     try transaction.cancel()
-     ```
-     - Important: Never use `try?` or `try!` on a `cancel()` call. Always use `try`. Using `try?` will swallow the cancellation and the transaction will proceed to commit as normal. Using `try!` will crash the app as `cancel()` will *always* throw an error.
-     */
-    public func cancel() throws -> Never {
-        
-        throw CoreStoreError.userCancelled
-    }
-    
     
     // MARK: BaseDataTransaction
     
@@ -99,10 +111,10 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Returns an editable proxy of a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
+     Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
      
-     - parameter object: the `NSManagedObject` type to be edited
-     - returns: an editable proxy for the specified `NSManagedObject`.
+     - parameter object: the `NSManagedObject` or `CoreStoreObject` to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public override func edit<T: DynamicObject>(_ object: T?) -> T? {
         
@@ -115,11 +127,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Returns an editable proxy of the object with the specified `NSManagedObjectID`. This method should not be used after the `commit()` method was already called once.
+     Returns an editable proxy of the object with the specified `NSManagedObjectID`.
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
-     - returns: an editable proxy for the specified `NSManagedObject`.
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public override func edit<T: DynamicObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
@@ -132,9 +144,9 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Deletes a specified `NSManagedObject`. This method should not be used after the `commit()` method was already called once.
+     Deletes a specified `NSManagedObject` or `CoreStoreObject`.
      
-     - parameter object: the `NSManagedObject` type to be deleted
+     - parameter object: the `NSManagedObject` or `CoreStoreObject` to be deleted
      */
     public override func delete<T: DynamicObject>(_ object: T?) {
         
@@ -147,11 +159,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Deletes the specified `NSManagedObject`s.
+     Deletes the specified `DynamicObject`s.
      
-     - parameter object1: the `NSManagedObject` type to be deleted
-     - parameter object2: another `NSManagedObject` type to be deleted
-     - parameter objects: other `NSManagedObject`s type to be deleted
+     - parameter object1: the `DynamicObject` to be deleted
+     - parameter object2: another `DynamicObject` to be deleted
+     - parameter objects: other `DynamicObject`s to be deleted
      */
     public override func delete<T: DynamicObject>(_ object1: T?, _ object2: T?, _ objects: T?...) {
         
@@ -164,11 +176,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     }
     
     /**
-     Deletes the specified `NSManagedObject`s.
+     Deletes the specified `DynamicObject`s.
      
-     - parameter objects: the `NSManagedObject`s type to be deleted
+     - parameter objects: the `DynamicObject`s to be deleted
      */
-    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: NSManagedObject {
+    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: DynamicObject {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -203,11 +215,6 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     
     // MARK: Deprecated
     
-    /**
-     Saves the transaction changes. This method should not be used after the `commit()` method was already called once.
-     
-     - parameter completion: the block executed after the save completes. Success or failure is reported by the `SaveResult` argument of the block.
-     */
     @available(*, deprecated, message: "Use the new auto-commiting methods `DataStack.perform(asynchronous:completion:)` or `DataStack.perform(asynchronous:success:failure:)`. Please read the documentation on the behavior of the new methods.")
     public func commit(_ completion: @escaping (_ result: SaveResult) -> Void = { _ in }) {
         
@@ -229,12 +236,6 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         }
     }
     
-    /**
-     Begins a child transaction synchronously where NSManagedObject creates, updates, and deletes can be made. This method should not be used after the `commit()` method was already called once.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - returns: a `SaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
-     */
     @available(*, deprecated, message: "Secondary tasks spawned from AsynchronousDataTransactions and SynchronousDataTransactions are no longer supported. ")
     @discardableResult
     public func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {

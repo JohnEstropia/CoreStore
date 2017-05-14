@@ -29,7 +29,7 @@ import CoreData
 // MARK: - InMemoryStore
 
 /**
- A storage interface that is backed only by memory.
+ A storage interface that is backed only in memory.
  */
 public final class InMemoryStore: StorageInterface {
     
@@ -71,7 +71,7 @@ public final class InMemoryStore: StorageInterface {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didAddToDataStack(_ dataStack: DataStack) {
+    public func cs_didAddToDataStack(_ dataStack: DataStack) {
         
         self.dataStack = dataStack
     }
@@ -79,7 +79,7 @@ public final class InMemoryStore: StorageInterface {
     /**
      Do not call directly. Used by the `DataStack` internally.
      */
-    public func didRemoveFromDataStack(_ dataStack: DataStack) {
+    public func cs_didRemoveFromDataStack(_ dataStack: DataStack) {
         
         self.dataStack = nil
     }
