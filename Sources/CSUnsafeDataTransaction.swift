@@ -39,7 +39,8 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     /**
      Saves the transaction changes asynchronously. For a `CSUnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
      
-     - parameter completion: the block executed after the save completes. Success or failure is reported by the `error` argument of the block.
+     - parameter success: the block executed if the save succeeds.
+     - parameter failure: the block executed if the save fails. A `CSError` is reported as the argument of the block.
      */
     @objc
     public func commitWithSuccess(_ success: (() -> Void)?, _ failure: ((CSError) -> Void)?) {
@@ -118,7 +119,7 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
      Flushes all pending changes to the transaction's observers at the end of the `closure`'s execution. This is useful in conjunction with `ListMonitor`s and `ObjectMonitor`s created from `UnsafeDataTransaction`s used to manage temporary "scratch" data.
      
      - Important: Note that unlike `commit()`, `flush()` does not propagate/save updates to the `DataStack` and the persistent store. However, the flushed changes will be seen by children transactions created further from the current transaction (i.e. through `transaction.beginUnsafe()`)
-     - parameter closure: the closure where changes can be made prior to the flush
+     - parameter block: the block where changes can be made prior to the flush
      */
     @objc
     public func flush(_ block: () -> Void) {
@@ -210,11 +211,6 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
         return self.bridgeToSwift.context
     }
     
-    /**
-     Saves the transaction changes asynchronously. For a `CSUnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
-     
-     - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
-     */
     @available(*, deprecated, message: "Use the new -[CSUnsafeDataTransaction commitWithSuccess:failure:] method")
     @objc
     public func commit(_ completion: ((_ result: CSSaveResult) -> Void)?) {
@@ -233,11 +229,6 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
         }
     }
     
-    /**
-     Saves the transaction changes and waits for completion synchronously. For a `CSUnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
-     
-     - returns: a `CSSaveResult` containing the success or failure information
-     */
     @available(*, deprecated, message: "Use the new -[CSUnsafeDataTransaction commitAndWaitWithError:] method")
     @objc
     public func commitAndWait() -> CSSaveResult {

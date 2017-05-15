@@ -29,36 +29,22 @@ import CoreData
 
 // MARK: - CSSaveResult
 
-/**
- The `CSSaveResult` serves as the Objective-C bridging type for `SaveResult`.
- 
- - SeeAlso: `SaveResult`
- */
 @available(*, deprecated, message: "Use APIs that report failures with `CSError`s instead.")
 @objc
 public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
     
-    /**
-     `YES` if the `commit` operation for the transaction succeeded, either because the save succeeded or because there were no changes to save. Returns `NO` to indicate failure.
-     */
     @objc
     public var isSuccess: Bool {
         
         return self.bridgeToSwift.boolValue
     }
     
-    /**
-     `YES` if the `commit` operation for the transaction failed, or `NO` otherwise. When `YES`, the `error` property returns the actual `NSError` for the failure.
-     */
     @objc
     public var isFailure: Bool {
         
         return !self.bridgeToSwift.boolValue
     }
     
-    /**
-     `YES` if the `commit` operation for the transaction succeeded and if there was an actual change made. Returns `NO` otherwise.
-     */
     @objc
     public var hasChanges: Bool {
         
@@ -69,9 +55,6 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
         return hasChanges
     }
     
-    /**
-     The `NSError` for a failed `commit` operation, or `nil` if the `commit` succeeded
-     */
     @objc
     public var error: NSError? {
         
@@ -82,14 +65,6 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
         return error.bridgeToObjectiveC
     }
     
-    /**
-     If the result was a success, the `success` block is executed with a `BOOL` argument that indicates if there were any changes made. If the result was a failure, the `failure` block is executed with an `NSError` argument pertaining to the actual error.
-     
-     The blocks are executed immediately as `@noescape` and will not be retained.
-     
-     - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
-     - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
-     */
     @objc
     public func handleSuccess(_ success: (_ hasChanges: Bool) -> Void, failure: (_ error: NSError) -> Void) {
         
@@ -103,13 +78,6 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
         }
     }
     
-    /**
-     If the result was a success, the `success` block is executed with a `BOOL` argument that indicates if there were any changes made. If the result was a failure, this method does nothing.
-     
-     The block is executed immediately as `@noescape` and will not be retained.
-     
-     - parameter success: the block to execute on success. The block passes a `BOOL` argument that indicates if there were any changes made.
-     */
     @objc
     public func handleSuccess(_ success: (_ hasChanges: Bool) -> Void) {
         
@@ -120,13 +88,6 @@ public final class CSSaveResult: NSObject, CoreStoreObjectiveCType {
         success(hasChanges)
     }
     
-    /**
-     If the result was a failure, the `failure` block is executed with an `NSError` argument pertaining to the actual error. If the result was a success, this method does nothing.
-     
-     The block is executed immediately as `@noescape` and will not be retained.
-     
-     - parameter failure: the block to execute on failure. The block passes an `NSError` argument that pertains to the actual error.
-     */
     @objc
     public func handleFailure(_ failure: (_ error: NSError) -> Void) {
         

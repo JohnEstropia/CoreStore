@@ -129,9 +129,6 @@ public extension CSCoreStore {
     
     // MARK: Deprecated
     
-    /**
-     Returns the entity name-to-class type mapping from the `defaultStack`'s model.
-     */
     @available(*, deprecated, message: "Use the new +entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
     @objc
     public static var entityClassesByName: [EntityName: NSManagedObject.Type] {
@@ -139,12 +136,6 @@ public extension CSCoreStore {
         return CoreStore.entityTypesByName
     }
     
-    /**
-     Returns the entity class for the given entity name from the `defaultStack`'s model.
-     
-     - parameter name: the entity name
-     - returns: the `NSManagedObject` class for the given entity name, or `nil` if not found
-     */
     @available(*, deprecated, message: "Use the new +entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
     @objc
     public static func entityClassWithName(_ name: EntityName) -> NSManagedObject.Type? {

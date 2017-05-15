@@ -40,7 +40,8 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     /**
      Saves the transaction changes. This method should not be used after the `-commitWithCompletion:` method was already called once.
      
-     - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
+     - parameter success: the block executed if the save succeeds.
+     - parameter failure: the block executed if the save fails. A `CSError` is reported as the argument of the block.
      */
     @objc
     public func commitWithSuccess(_ success: (() -> Void)?, failure: ((CSError) -> Void)?) {
@@ -156,11 +157,6 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     
     // MARK: Deprecated
     
-    /**
-     Saves the transaction changes. This method should not be used after the `-commitWithCompletion:` method was already called once.
-     
-     - parameter completion: the block executed after the save completes. Success or failure is reported by the `CSSaveResult` argument of the block.
-     */
     @available(*, deprecated, message: "Use the new -[CSAsynchronousDataTransaction commitWithSuccess:failure:] method.")
     @objc
     public func commitWithCompletion(_ completion: ((_ result: CSSaveResult) -> Void)?) {
@@ -179,12 +175,6 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
         }
     }
     
-    /**
-     Begins a child transaction synchronously where `NSManagedObject` creates, updates, and deletes can be made. This method should not be used after the `-commitWithCompletion:` method was already called once.
-     
-     - parameter closure: the block where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
-     - returns: a `CSSaveResult` value indicating success or failure, or `nil` if the transaction was not comitted synchronously
-     */
     @available(*, deprecated, message: "Secondary tasks spawned from CSAsynchronousDataTransactions and CSSynchronousDataTransactions are no longer supported. ")
     @objc
     @discardableResult

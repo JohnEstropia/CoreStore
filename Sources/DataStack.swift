@@ -613,12 +613,6 @@ public final class DataStack: Equatable {
     
     // MARK: Deprecated
     
-    /**
-     Initializes a `DataStack` from an `NSManagedObjectModel`.
-     
-     - parameter model: the `NSManagedObjectModel` for the stack
-     - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
-     */
     @available(*, deprecated, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModelSchema instance as argument")
     public convenience init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {
         
@@ -637,9 +631,6 @@ public final class DataStack: Equatable {
         )
     }
     
-    /**
-     Returns the entity name-to-class type mapping from the `DataStack`'s model.
-     */
     @available(*, deprecated, message: "Use the new DataStack.entityTypesByName(for:) method passing `NSManagedObject.self` as argument.")
     public var entityTypesByName: [EntityName: NSManagedObject.Type] {
         

@@ -143,9 +143,6 @@ public extension CoreStore {
     
     // MARK: Deprecated
     
-    /**
-     Returns the entity name-to-class type mapping from the `defaultStack`'s model.
-     */
     @available(*, deprecated, message: "Use the new CoreStore.entityTypesByName(for:) method passing `NSManagedObject.self` as argument.")
     public static var entityTypesByName: [EntityName: NSManagedObject.Type] {
         

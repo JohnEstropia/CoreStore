@@ -227,12 +227,6 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     
     // MARK: Deprecated
     
-    /**
-     Initializes a `DataStack` from an `NSManagedObjectModel`.
-     
-     - parameter model: the `NSManagedObjectModel` for the stack
-     - parameter versionChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
-     */
     @available(*, deprecated, message: "Use the -[initWithModelName:bundle:versionChain:] initializer.")
     @objc
     public convenience init(model: NSManagedObjectModel, versionChain: [String]?) {
@@ -245,12 +239,6 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         )
     }
     
-    /**
-     Initializes a `DataStack` from an `NSManagedObjectModel`.
-     
-     - parameter model: the `NSManagedObjectModel` for the stack
-     - parameter versionTree: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
-     */
     @available(*, deprecated, message: "Use the -[initWithModelName:bundle:versionTree:] initializer.")
     @objc
     public convenience init(model: NSManagedObjectModel, versionTree: [String]?) {
@@ -263,9 +251,6 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         )
     }
     
-    /**
-     Returns the entity name-to-class type mapping from the stack's model.
-     */
     @available(*, deprecated, message: "Use the new -entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
     @objc
     public var entityClassesByName: [EntityName: NSManagedObject.Type] {
@@ -273,11 +258,6 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         return self.bridgeToSwift.entityTypesByName
     }
     
-    /**
-     Returns the entity class for the given entity name from the stack's's model.
-     - parameter name: the entity name
-     - returns: the `NSManagedObject` class for the given entity name, or `nil` if not found
-     */
     @available(*, deprecated, message: "Use the new -entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
     @objc
     public func entityClassWithName(_ name: EntityName) -> NSManagedObject.Type? {

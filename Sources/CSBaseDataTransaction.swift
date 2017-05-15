@@ -204,7 +204,6 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     /**
      Returns all pending `NSManagedObjectID`s of the specified type that were deleted from the transaction. This method should not be called after the `-commit*:` method was called.
      
-     - parameter entity: the `NSManagedObject` subclass to filter
      - returns: an `NSSet` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
     @objc

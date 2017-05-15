@@ -32,15 +32,6 @@ import CoreData
 @available(OSX 10.12, *)
 public extension CSDataStack {
     
-    /**
-     Utility for creating an `NSFetchedResultsController` from the `CSDataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstraction.
-     - Note: It is the caller's responsibility to call `-performFetch:` on the created `NSFetchedResultsController`.
-     
-     - parameter from: a `CSFrom` clause indicating the entity type
-     - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
-     - parameter fetchClauses: a series of `CSFetchClause` instances for fetching the object list. Accepts `CSWhere`, `CSOrderBy`, and `CSTweak` clauses.
-     - returns: an `NSFetchedResultsController` that observes the `CSDataStack`
-     */
     @available(*, deprecated, message: "CoreStore will obsolete NSFetchedResultsController support in the future in favor of CSListMonitor")
     @objc
     public func createFetchedResultsControllerFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
@@ -60,15 +51,6 @@ public extension CSDataStack {
 @available(OSX 10.12, *)
 public extension CSUnsafeDataTransaction {
     
-    /**
-     Utility for creating an `NSFetchedResultsController` from the `CSUnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `CSListMonitor`s abstraction.
-     - Note: It is the caller's responsibility to call `-performFetch:` on the created `NSFetchedResultsController`.
-     
-     - parameter from: a `CSFrom` clause indicating the entity type
-     - parameter sectionBy: a `CSSectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections
-     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
-     - returns: an `NSFetchedResultsController` that observes an `CSUnsafeDataTransaction`
-     */
     @available(*, deprecated, message: "CoreStore will obsolete NSFetchedResultsController support in the future in favor of CSListMonitor")
     @objc
     public func createFetchedResultsControllerFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {

@@ -82,6 +82,7 @@ public final class CSFrom: NSObject {
      MyPersonEntity *people = [transaction fetchAllFrom:
         CSFromClass([MyPersonEntity class], @"Config1")];
      ```
+     - parameter entityClass: the associated `NSManagedObject` entity class
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
      */
     @objc
@@ -107,7 +108,7 @@ public final class CSFrom: NSObject {
         CSFromClass([MyPersonEntity class],
                      @[[NSNull null], @"Config1"])];
      ```
-     - parameter entity: the associated `NSManagedObject` entity class
+     - parameter entityClass: the associated `NSManagedObject` entity class
      - parameter configurations: an array of the `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `[NSNull null]` to use the default configuration.
      */
     @objc

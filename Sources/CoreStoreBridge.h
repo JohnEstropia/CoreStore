@@ -156,7 +156,7 @@ CSFrom *_Nonnull CSFromClass(Class _Nonnull entityClass, NSArray<id> *_Nonnull c
  @abstract
  Initializes a <tt>CSGroupBy</tt> clause with a key path string
  
- @param keyPaths
+ @param keyPath
  a key path string to group results with
  
  @result
@@ -169,7 +169,7 @@ CSGroupBy *_Nonnull CSGroupByKeyPath(NSString *_Nonnull keyPath) CORESTORE_RETUR
  @abstract
  Initializes a <tt>CSGroupBy</tt> clause with a list of key path strings
  
- @param keyPaths
+ @param keyPath
  a nil-terminated list of key path strings to group results with
  
  @result
@@ -328,7 +328,7 @@ CSOrderBy *_Nonnull CSOrderByKey(NSSortDescriptor *_Nonnull sortDescriptor) CORE
     fetchClauses:@[CSOrderByKeys(CSSortAscending(@"fullname"), CSSortDescending(@"age"), nil))]]];
  @endcode
  
- @param sortDescriptors
+ @param sortDescriptor
  a nil-terminated array of <tt>NSSortDescriptor</tt>s
  
  @result
@@ -473,9 +473,6 @@ CSSelect *_Nonnull CSSelectData(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RET
     // ...
  @endcode
  
- @param selectTerm
- the <tt>CSSelectTerm</tt> specifying the attribute/aggregate value to query
- 
  @result
  a <tt>CSSelect</tt> clause for querying an <tt>NSManagedObjectID</tt> value
  */
@@ -538,10 +535,7 @@ CSWhere *_Nonnull CSWhereValue(BOOL value) CORESTORE_RETURNS_RETAINED;
  @endcode
  
  @param format
- the format string for the predicate
- 
- @param argumentArray
- the arguments for <tt>format</tt>
+ the format string for the predicate, followed by an optional comma-separated argument list
  
  @result
  a <tt>CSWhere</tt> clause with a predicate using the specified string format and arguments
