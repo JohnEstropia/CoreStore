@@ -187,7 +187,7 @@ public final class CoreStoreSchema: DynamicSchema {
             #if DEBUG
                 CoreStore.log(
                     .notice,
-                    message: "These are hashes for the \(cs_typeName(CoreStoreSchema.self)) with version name \"\(modelVersion)\". Copy the dictionary below and pass it to the \(cs_typeName(CoreStoreSchema.self)) initializer's \"versionLock\" argument:\n\(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
+                    message: "These are hashes for the \(cs_typeName(CoreStoreSchema.self)) with version name \"\(modelVersion)\". Copy the dictionary below and pass it to the \(cs_typeName(CoreStoreSchema.self)) initializer's \"versionLock\" argument:\nversionLock: \(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
                 )
             #endif
         }

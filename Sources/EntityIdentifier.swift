@@ -54,7 +54,7 @@ internal struct EntityIdentifier: Hashable {
     internal init(_ type: CoreStoreObject.Type) {
         
         self.category = .coreStore
-        self.interfacedClassName = String(reflecting: type)
+        self.interfacedClassName = NSStringFromClass(type)
     }
     
     internal init(_ type: DynamicObject.Type) {

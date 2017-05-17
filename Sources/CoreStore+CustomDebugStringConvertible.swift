@@ -983,7 +983,7 @@ extension VersionLock: CustomStringConvertible, CustomDebugStringConvertible, Co
             string.append(":]")
             return string
         }
-        for (index, keyValue) in self.hashesByEntityName.enumerated() {
+        for (index, keyValue) in self.hashesByEntityName.sorted(by: { $0.key < $1.key }).enumerated() {
             
             let data = keyValue.value
             let count = data.count
