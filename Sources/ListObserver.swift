@@ -56,8 +56,7 @@ public protocol ListObserver: class {
     func listMonitorWillChange(_ monitor: ListMonitor<ListEntityType>)
     
     /**
-     Handles processing right after a change to the observed list occurs. (Optional)
-     The default implementation does nothing.
+     Handles processing right after a change to the observed list occurs. (Required)
      
      - parameter monitor: the `ListMonitor` monitoring the object being observed
      */
@@ -65,17 +64,16 @@ public protocol ListObserver: class {
     
     /**
      This method is broadcast from within the `ListMonitor`'s `refetch(...)` method to let observers prepare for the internal `NSFetchedResultsController`'s pending change to its predicate, sort descriptors, etc. (Optional)
-     The default implementation does nothing.
-     - Note: The actual refetch will happen after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes
      
+     - Important: All `ListMonitor` access between `listMonitorWillRefetch(_:)` and `listMonitorDidRefetch(_:)` will raise and assertion. The actual refetch will happen after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes.
      - parameter monitor: the `ListMonitor` monitoring the object being observed
      */
     func listMonitorWillRefetch(_ monitor: ListMonitor<ListEntityType>)
     
     /**
-     After the `ListMonitor`'s `refetch(...)` method is called, this method is broadcast after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes. (Optional)
-     The default implementation does nothing.
+     After the `ListMonitor`'s `refetch(...)` method is called, this method is broadcast after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes. (Required)
      
+     - Important: When `listMonitorDidRefetch(_:)` is called it should be assumed that all `ListMonitor`'s previous data have been reset, including counts, objects, and persistent stores.
      - parameter monitor: the `ListMonitor` monitoring the object being observed
      */
     func listMonitorDidRefetch(_ monitor: ListMonitor<ListEntityType>)
@@ -89,11 +87,7 @@ public extension ListObserver {
     
     public func listMonitorWillChange(_ monitor: ListMonitor<ListEntityType>) { }
     
-    public func listMonitorDidChange(_ monitor: ListMonitor<ListEntityType>) { }
-    
     public func listMonitorWillRefetch(_ monitor: ListMonitor<ListEntityType>) { }
-    
-    public func listMonitorDidRefetch(_ monitor: ListMonitor<ListEntityType>) { }
 }
 
 
