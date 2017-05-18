@@ -294,7 +294,8 @@ public extension NSError {
         }
         switch CocoaError.Code(rawValue: self.code) {
             
-        case CocoaError.Code.persistentStoreIncompatibleVersionHash,
+        case CocoaError.Code.persistentStoreIncompatibleSchema,
+             CocoaError.Code.persistentStoreIncompatibleVersionHash,
              CocoaError.Code.migrationMissingSourceModel,
              CocoaError.Code.migration:
             return true
