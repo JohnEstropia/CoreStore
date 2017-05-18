@@ -231,7 +231,9 @@ extension Entity: CustomDebugStringConvertible, CoreStoreDebugStringConvertible 
         return createFormattedString(
             "(", ")",
             ("type", self.type),
-            ("entityName", self.entityName)
+            ("entityName", self.entityName),
+            ("isAbstract", self.isAbstract),
+            ("versionHashModifier", self.versionHashModifier)
         )
     }
 }
