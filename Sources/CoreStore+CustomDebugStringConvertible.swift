@@ -233,7 +233,7 @@ extension Entity: CustomDebugStringConvertible, CoreStoreDebugStringConvertible 
             ("type", self.type),
             ("entityName", self.entityName),
             ("isAbstract", self.isAbstract),
-            ("versionHashModifier", self.versionHashModifier)
+            ("versionHashModifier", self.versionHashModifier as Any)
         )
     }
 }
