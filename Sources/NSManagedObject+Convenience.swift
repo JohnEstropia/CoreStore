@@ -228,7 +228,7 @@ public extension NSManagedObject {
         self.setPrimitiveValue(value, forKey: KVCKey)
     }
     
-    @available(*, deprecated, renamed: "setValue(_:forKvcKey:didSetValue:)")
+    @available(*, deprecated, renamed: "setValue(_:forKvcKey:willSetValue:didSetValue:)")
     @discardableResult
     @nonobjc
     public func setValue<T>(_ value: Any?, forKVCKey KVCKey: KeyPath, _ didSetPrimitiveValue: (Any?) throws -> T) rethrows -> T {
