@@ -155,16 +155,19 @@ public extension NSManagedObject {
      - parameter value: the value to set the KVC key with
      - parameter KVCKey: the KVC key
      - parameter willSetValue: called before accessing `setPrimitiveValue(forKey:)`. Callers are allowed to cancel the mutation by throwing an error, for example, for custom validations.
+     - parameter didSetValue: called after executing `setPrimitiveValue(forKey:)`.
      */
     @nonobjc @inline(__always)
-    public func setValue<T>(_ value: T, forKvcKey KVCKey: KeyPath, willSetValue: (T) throws -> Any?) rethrows {
+    public func setValue<T>(_ value: T, forKvcKey KVCKey: KeyPath, willSetValue: (T) throws -> Any?, didSetValue: (Any?) -> Void = { _ in }) rethrows {
         
         self.willChangeValue(forKey: KVCKey)
         defer {
             
             self.didChangeValue(forKey: KVCKey)
         }
-        self.setPrimitiveValue(try willSetValue(value), forKey: KVCKey)
+        let transformedValue = try willSetValue(value)
+        self.setPrimitiveValue(transformedValue, forKey: KVCKey)
+        didSetValue(transformedValue)
     }
     
     /**
