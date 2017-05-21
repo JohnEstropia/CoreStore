@@ -154,6 +154,25 @@ public extension NSManagedObject {
      
      - parameter value: the value to set the KVC key with
      - parameter KVCKey: the KVC key
+     - parameter didSetValue: called after executing `setPrimitiveValue(forKey:)`.
+     */
+    @nonobjc @inline(__always)
+    public func setValue(_ value: Any, forKvcKey KVCKey: KeyPath, didSetValue: () -> Void) {
+        
+        self.willChangeValue(forKey: KVCKey)
+        defer {
+            
+            self.didChangeValue(forKey: KVCKey)
+        }
+        self.setPrimitiveValue(value, forKey: KVCKey)
+        didSetValue()
+    }
+    
+    /**
+     Provides a convenience wrapper for setting `setPrimitiveValue(_:forKey:)` with proper calls to `willChangeValue(forKey:)` and `didChangeValue(forKey:)`. This is useful when implementing mutator methods for transient attributes.
+     
+     - parameter value: the value to set the KVC key with
+     - parameter KVCKey: the KVC key
      - parameter willSetValue: called before accessing `setPrimitiveValue(forKey:)`. Callers are allowed to cancel the mutation by throwing an error, for example, for custom validations.
      - parameter didSetValue: called after executing `setPrimitiveValue(forKey:)`.
      */
@@ -228,7 +247,7 @@ public extension NSManagedObject {
         self.setPrimitiveValue(value, forKey: KVCKey)
     }
     
-    @available(*, deprecated, renamed: "setValue(_:forKvcKey:willSetValue:didSetValue:)")
+    @available(*, deprecated, renamed: "setValue(_:forKvcKey:didSetValue:)")
     @discardableResult
     @nonobjc
     public func setValue<T>(_ value: Any?, forKVCKey KVCKey: KeyPath, _ didSetPrimitiveValue: (Any?) throws -> T) rethrows -> T {
