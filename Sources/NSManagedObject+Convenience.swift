@@ -150,14 +150,14 @@ public extension NSManagedObject {
     }
     
     /**
-     Provides a convenience wrapper for setting `setPrimitiveValue(_:forKey:)` with proper calls to `willChangeValue(forKey:)` and `didChangeValue(forKey:)`. This is useful when implementing mutator methods for transient attributes.
+     Provides a convenience wrapper for setting `setPrimitiveValue(_:forKey:)` with proper calls to `willChangeValue(forKey:)` and `didChangeValue(forKey:)`.
      
      - parameter value: the value to set the KVC key with
      - parameter KVCKey: the KVC key
      - parameter didSetValue: called after executing `setPrimitiveValue(forKey:)`.
      */
     @nonobjc @inline(__always)
-    public func setValue(_ value: Any, forKvcKey KVCKey: KeyPath, didSetValue: () -> Void) {
+    public func setValue(_ value: Any?, forKvcKey KVCKey: KeyPath, didSetValue: () -> Void) {
         
         self.willChangeValue(forKey: KVCKey)
         defer {
