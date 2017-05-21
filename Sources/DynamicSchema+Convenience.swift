@@ -31,6 +31,12 @@ import Foundation
 
 public extension DynamicSchema {
     
+    /**
+     Prints the `DynamicSchema` as their corresponding `CoreStoreObject` Swift declarations. This is useful for converting current `XcodeDataModelSchema`-based models into the new `CoreStoreSchema` framework. Additional adjustments may need to be done to the generated source code for "Transformable" attributes.
+     
+     - Important: After transitioning to the new `CoreStoreSchema` framework, it is recommended to add the new schema as a new version that the existing versions' `XcodeDataModelSchema` can migrate to. It is discouraged to load existing SQLite files created with `XcodeDataModelSchema` directly into a `CoreStoreSchema`.
+     - returns: a string that represents the source code for the `DynamicSchema` as their corresponding `CoreStoreObject` Swift declarations.
+     */
     public func printCoreStoreSchema() -> String {
         
         let model = self.rawModel()

@@ -163,7 +163,7 @@
 - (void)test_ThatDataStacks_BridgeCorrectly {
     
     CSDataStack *dataStack = [[CSDataStack alloc]
-                              initWithModelName:@"Model"
+                              initWithXcodeModelName:@"Model"
                               bundle:[NSBundle bundleForClass:[self class]]
                               versionChain:nil];
     XCTAssertNotNil(dataStack);
@@ -201,7 +201,7 @@
     
     [CSCoreStore
      setDefaultStack:[[CSDataStack alloc]
-                      initWithModelName:@"Model"
+                      initWithXcodeModelName:@"Model"
                       bundle:[NSBundle bundleForClass:[self class]]
                       versionChain:nil]];
     [CSCoreStore

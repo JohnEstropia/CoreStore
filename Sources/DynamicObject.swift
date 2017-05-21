@@ -51,6 +51,11 @@ public protocol DynamicObject: class {
     /**
      Used internally by CoreStore. Do not call directly.
      */
+    func cs_id() -> NSManagedObjectID
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
     func cs_toRaw() -> NSManagedObject
 }
 
@@ -84,6 +89,11 @@ extension NSManagedObject: DynamicObject {
     public static func cs_matches(object: NSManagedObject) -> Bool {
         
         return object.isKind(of: self)
+    }
+    
+    public func cs_id() -> NSManagedObjectID {
+        
+        return self.objectID
     }
     
     public func cs_toRaw() -> NSManagedObject {
@@ -133,6 +143,11 @@ extension CoreStoreObject {
             return false
         }
         return (self as AnyClass).isSubclass(of: type as AnyClass)
+    }
+    
+    public func cs_id() -> NSManagedObjectID {
+        
+        return self.rawObject!.objectID
     }
     
     public func cs_toRaw() -> NSManagedObject {

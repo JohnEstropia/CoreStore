@@ -49,37 +49,18 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     /**
      Initializes a `CSDataStack` from the model with the specified `modelName` in the specified `bundle`.
      
-     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
+     - parameter xcodeModelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
      - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
      - parameter versionChain: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
     @objc
-    public convenience init(modelName: XcodeDataModelFileName?, bundle: Bundle?, versionChain: [String]?) {
+    public convenience init(xcodeModelName: XcodeDataModelFileName?, bundle: Bundle?, versionChain: [String]?) {
         
         self.init(
             DataStack(
-                modelName: modelName ?? DataStack.applicationName,
+                xcodeModelName: xcodeModelName ?? DataStack.applicationName,
                 bundle: bundle ?? Bundle.main,
                 migrationChain: versionChain.flatMap { MigrationChain($0) } ?? nil
-            )
-        )
-    }
-    
-    /**
-     Initializes a `CSDataStack` from the model with the specified `modelName` in the specified `bundle`.
-     
-     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
-     - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
-     - parameter versionTree: the version strings that indicate the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
-     */
-    @objc
-    public convenience init(modelName: XcodeDataModelFileName?, bundle: Bundle?, versionTree: [String: String]?) {
-        
-        self.init(
-            DataStack(
-                modelName: modelName ?? DataStack.applicationName,
-                bundle: bundle ?? Bundle.main,
-                migrationChain: versionTree.flatMap { MigrationChain($0) } ?? nil
             )
         )
     }
@@ -226,6 +207,19 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
     
     
     // MARK: Deprecated
+    
+    @available(*, deprecated, message: "Use the -[initWithXcodeModelName:bundle:versionChain:] initializer.")
+    @objc
+    public convenience init(modelName: XcodeDataModelFileName?, bundle: Bundle?, versionChain: [String]?) {
+        
+        self.init(
+            DataStack(
+                xcodeModelName: modelName ?? DataStack.applicationName,
+                bundle: bundle ?? Bundle.main,
+                migrationChain: versionChain.flatMap { MigrationChain($0) } ?? nil
+            )
+        )
+    }
     
     @available(*, deprecated, message: "Use the -[initWithModelName:bundle:versionChain:] initializer.")
     @objc

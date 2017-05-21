@@ -37,16 +37,16 @@ public final class DataStack: Equatable {
     /**
      Convenience initializer for `DataStack` that creates a `SchemaHistory` from the model with the specified `modelName` in the specified `bundle`.
      
-     - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set (e.g. in Unit Tests).
+     - parameter xcodeModelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set (e.g. in Unit Tests).
      - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      */
-    public convenience init(modelName: XcodeDataModelFileName = DataStack.applicationName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
+    public convenience init(xcodeModelName: XcodeDataModelFileName = DataStack.applicationName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
         
         self.init(
             schemaHistory: SchemaHistory(
                 XcodeDataModelSchema.from(
-                    modelName: modelName,
+                    modelName: xcodeModelName,
                     bundle: bundle,
                     migrationChain: migrationChain
                 ),
@@ -612,6 +612,17 @@ public final class DataStack: Equatable {
     
     
     // MARK: Deprecated
+    
+    @available(*, deprecated, renamed: "init(xcodeModelName:bundle:migrationChain:)")
+    public convenience init(modelName: XcodeDataModelFileName, bundle: Bundle = Bundle.main, migrationChain: MigrationChain = nil) {
+        
+        self.init(
+            xcodeModelName: modelName,
+            bundle: bundle,
+            migrationChain: migrationChain
+        )
+    }
+    
     
     @available(*, deprecated, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModelSchema instance as argument")
     public convenience init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {

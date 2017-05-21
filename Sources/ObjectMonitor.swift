@@ -260,16 +260,15 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     
     private init(context: NSManagedObjectContext, object: ObjectType) {
         
-        let rawObject = object.cs_toRaw()
+        let objectID = object.cs_id()
         let fetchRequest = CoreStoreFetchRequest()
-        fetchRequest.entity = rawObject.entity
+        fetchRequest.entity = objectID.entity
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
         fetchRequest.sortDescriptors = []
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        let objectID = rawObject.objectID
         let fetchedResultsController = CoreStoreFetchedResultsController(
             context: context,
             fetchRequest: fetchRequest.dynamicCast(),

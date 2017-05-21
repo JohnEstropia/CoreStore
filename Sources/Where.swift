@@ -148,7 +148,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
             self.init(NSPredicate(format: "\(keyPath) == nil"))
             
         case let object?:
-            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [object.cs_toRaw().objectID]))
+            self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [object.cs_id()]))
         }
     }
     
@@ -171,7 +171,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      */
     public init<S: Sequence>(_ keyPath: KeyPath, isMemberOf list: S) where S.Iterator.Element: DynamicObject {
         
-        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toRaw().objectID }) as NSArray))
+        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_id() }) as NSArray))
     }
     
     /**

@@ -40,7 +40,7 @@ class BaseTestCase: XCTestCase {
     func prepareStack<T>(configurations: [ModelConfiguration] = [nil], _ closure: (_ dataStack: DataStack) -> T) -> T {
         
         let stack = DataStack(
-            modelName: "Model",
+            xcodeModelName: "Model",
             bundle: Bundle(for: type(of: self))
         )
         do {

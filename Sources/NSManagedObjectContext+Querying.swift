@@ -91,7 +91,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     public func fetchExisting<T: DynamicObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T {
         
-        return objects.flatMap({ self.fetchExisting($0.cs_toRaw().objectID) })
+        return objects.flatMap({ self.fetchExisting($0.cs_id()) })
     }
     
     @nonobjc
