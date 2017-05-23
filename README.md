@@ -29,17 +29,18 @@ CoreStore is the answer to the [pain](http://inessential.com/2010/02/26/on_switc
 CoreStore was (and is) heavily shaped by real-world needs of developing data-dependent apps. It enforces safe and convenient Core Data usage while letting you take advantage of the industry's encouraged best practices. And with Core Data and Swift continuously being improved by Apple, CoreStore will just get better and better!
 
 ### Features
-- **New in 4.0: Say goodbye to xcmappingmodeld files!** The new `CoreStoreObject` is THE replacement to `NSManagedObject`. `CoreStoreObject` subclasses can declare type-safe properties all in Swift code, no need to maintain separate resource files for the models. As bonus, these special properties support custom types, and can be used to create type-safe keypaths and queries. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects))*
-- **New in 4.0: Easier custom migrations.** Say goodbye to .xcmappingmodel files; CoreStore can now infer entity mappings when possible, while still allowing an easy way to write custom mappings. *(See [Migrations](#migrations))*
-- **Heavy support for multiple persistent stores per data stack.** CoreStore lets you manage separate stores in a single `DataStack`, just the way *.xcdatamodeld* configurations are designed to. CoreStore will also manage one stack by default, but you can create and manage as many as you need. *(See [Setting up](#setting-up))*
-- **Progressive migrations.** No need to think how to migrate from all previous model versions to your latest model. Just tell the `DataStack` the sequence of version strings (`MigrationChain`s) and CoreStore will automatically use progressive migrations when needed. *(See [Migrations](#migrations))*
-- **Plug-in your own logging framework.** Although a default logger is built-in, all logging, asserting, and error reporting can be funneled to `CoreStoreLogger` protocol implementations. *(See [Logging and error reporting](#logging-and-error-reporting))*
-- **Free to name entities and their class names independently.** CoreStore gets around a restriction with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you can assign different names for the entities and their class names.
-- **Type-safe, easy to configure observers.** You don't have to deal with the burden of setting up `NSFetchedResultsController`s and KVO. As an added bonus, `ListMonitor`s and `ObjectMonitor`s can have multiple observers. This means you can have multiple view controllers efficiently share a single resource! *(See [Observing changes and notifications](#observing-changes-and-notifications))*
-- **Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (min, max, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
-- **Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*
-- **Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
+
 - **Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
+- **Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*
+- **Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (min, max, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
+- **Type-safe, easy to configure observers.** You don't have to deal with the burden of setting up `NSFetchedResultsController`s and KVO. As an added bonus, `ListMonitor`s and `ObjectMonitor`s can have multiple observers. This means you can have multiple view controllers efficiently share a single resource! *(See [Observing changes and notifications](#observing-changes-and-notifications))*
+- **Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
+- 🆕 **New in 4.0: Say goodbye to *.xcdatamodeld* files!** The new `CoreStoreObject` is *the* replacement to `NSManagedObject`. `CoreStoreObject` subclasses can declare type-safe properties all in Swift code, no need to maintain separate resource files for the models. As bonus, these special properties support custom types, and can be used to create type-safe keypaths and queries. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects))*
+- **Progressive migrations.** No need to think how to migrate from all previous model versions to your latest model. Just tell the `DataStack` the sequence of version strings (`MigrationChain`s) and CoreStore will automatically use progressive migrations when needed. *(See [Migrations](#migrations))*
+- 🆕 **New in 4.0: Easier custom migrations.** Say goodbye to .xcmappingmodel files; CoreStore can now infer entity mappings when possible, while still allowing an easy way to write custom mappings. *(See [Migrations](#migrations))*
+- **Plug-in your own logging framework.** Although a default logger is built-in, all logging, asserting, and error reporting can be funneled to `CoreStoreLogger` protocol implementations. *(See [Logging and error reporting](#logging-and-error-reporting))*
+- **Heavy support for multiple persistent stores per data stack.** CoreStore lets you manage separate stores in a single `DataStack`, just the way *.xcdatamodeld* configurations are designed to. CoreStore will also manage one stack by default, but you can create and manage as many as you need. *(See [Setting up](#setting-up))*
+- **Free to name entities and their class names independently.** CoreStore gets around a restriction with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you can assign different names for the entities and their class names.
 - **Full Documentation.** No magic here; all public classes, functions, properties, etc. have detailed *Apple Docs*. This *README* also introduces a lot of concepts and explains a lot of CoreStore's behavior.
 - **Informative (and pretty) logs.** All CoreStore and Core Data-related types now have very informative and pretty print outputs! *(See [Logging and error reporting](#logging-and-error-reporting))*
 - **Objective-C support!** Is your project transitioning from Objective-C to Swift but still can't quite fully convert some huge classes to Swift yet? CoreStore adjusts to the ever-increasing Swift adoption. While still written in pure Swift, all CoreStore types have their corresponding Objective-C-visible "bridging classes". *(See [Objective-C support](#objective-c-support))*
@@ -52,7 +53,6 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 - [TL;DR (a.k.a. sample codes)](#tldr-aka-sample-codes)
 - [Architecture](#architecture)
 - CoreStore Tutorials (All of these have demos in the **CoreStoreDemo** app project!)
-    - [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects)
     - [Setting up](#setting-up)
         - [In-memory store](#in-memory-store)
         - [Local store](#local-store)
@@ -84,6 +84,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
         - [Observe a single object](#observe-a-single-object)
         - [Observe a list of objects](#observe-a-list-of-objects)
     - [Objective-C support](#objective-c-support)
+    - [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects)
 - [Roadmap](#roadmap)
 - [Installation](#installation)
 - [Changesets](#changesets)
@@ -1468,6 +1469,66 @@ NSArray<MYPerson *> *objects =
 To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C source files.
 
 
+## Type-safe `CoreStoreObject`s
+Starting CoreStore 4.0, we can now create persisted objects without depending on *.xcdatamodeld* Core Data files. The new `CoreStoreObject` subclass replaces `NSManagedObject`, and specially-typed properties declared on these classes will be synthesized as Core Data attributes.
+```swift
+class Animal: CoreStoreObject {
+    let species = Value.Required<String>("species")
+}
+
+class Dog: Animal {
+    let nickname = Value.Optional<String>("nickname")
+    let master = Relationship.ToOne<Person>("master")
+}
+
+class Person: CoreStoreObject {
+    let name = Value.Required <String>("name")
+    let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
+}
+```
+To tell the `DataStack` about these types, add all `CoreStoreObject`s' entities to a `CoreStoreSchema`:
+```swift
+
+CoreStore.defaultStack = DataStack(
+    CoreStoreSchema(
+        modelVersion: "V1",
+        entities: [
+            Entity<Animal>("Animal", isAbstract: true),
+            Entity<Dog>("Dog"),
+            Entity<Person>("Person")
+        ]
+    )
+)
+CoreStore.addStorage(/* ... */)
+```
+And that's it. These properties' values can be accessed or mutated using `.value`:
+```swift
+CoreStore.perform(
+    asynchronous: { (transaction) in
+        let dog: Dog = CoreStore.fetchOne(From<Dog>())!
+        let age = dog.age.value // Int
+        dog.age.value = age + 1
+    },
+    completion: { /* ... */ }
+)
+```
+
+In addition, `Value` and `Relationship` properties can be used to create type-safe key-paths
+```swift
+let keyPath: String = Dog.keyPath { $0.nickname }
+```
+as well as `Where` and `OrderBy` clauses
+```swift
+let puppies = CoreStore.fetchAll(
+    From<Dog>(),
+    Dog.where { $0.age < 1 },
+    Dog.ascending { $0.age }
+)
+```
+
+All CoreStore APIs that are usable with `NSManagedObject`s are also available for `CoreStoreObject`s. These include `ListMonitor`s, `ImportableObject`s, fetching, etc.
+
+
 # Installation
 - Requires:
     - iOS 8 SDK and above
@@ -1517,20 +1578,18 @@ To use the Objective-C syntax sugars, import *CoreStoreBridge.h* in your *.m* so
 - `SQLiteStore.init(...)`'s `mappingModelBundles` argument is now obsolete. The new initializer accepts a `migrationMappingProviders` optional argument where explicit mapping sources are declared. For reference on how to do this, see [Migrations](#migrations).
 
 **Deprecated**
-- `DataStack.beginAsynchronous(...)`, `AsynchronousDataTransaction.commit(...)`, `DataStack.beginSynchronous(...)`, and , `SynchronousDataTransaction.commit(...)` are now deprecated in favor of `DataStack.perform(asynchronous:...)` and `DataStack.perform(synchronous:...)` family of methods. These new `perform(...)` methods are auto-commiting, meaning the transaction automatically calls `commit()` internally after the transction closure completes. To roll-back and cancel a transaction, call `try transaction.cancel()`. See [Saving and processing transactions](#saving-and-processing-transactions) for more details.
+- `DataStack.beginAsynchronous(...)`, `DataStack.beginSynchronous(...)`, `AsynchronousDataTransaction.commit(...)`, and `SynchronousDataTransaction.commit(...)` are now deprecated in favor of `DataStack.perform(asynchronous:...)` and `DataStack.perform(synchronous:...)` family of methods. These new `perform(...)` methods are auto-commit, meaning the transaction automatically calls `commit()` internally after the transction closure completes. To roll-back and cancel a transaction, call `try transaction.cancel()`. See [Saving and processing transactions](#saving-and-processing-transactions) for more details.
 
-**Other Changes
-- `ListMonitor.refetch(...)` now works by recreating its internal `NSFetchedResultsController`. Previously `refetch(...)` would only apply new `FetchClause`s on top of previous fetches. Now all `FetchClauses` are required to be passed to `refetch(...)` each time.
-- New important concept about "Dynamic Models", "Schema", and "Schema Histories".
+**Other Changes**
+- `ListMonitor.refetch(...)` now works by recreating its internal `NSFetchedResultsController`. Previously `refetch(...)` would only apply new `FetchClause`s on top of previous fetches. Now all `FetchClauses` are required to be passed to `refetch(...)` each time it is called.
+- New important concepts on "Dynamic Models", "Schema", and "Schema Histories".
     - *Dynamic Models* (`DynamicObject` protocol): These are Core Data object types that any `NSManagedObject` or `CoreStoreObject`s conform to.
-    - *Schema* (`DynamicSchema` protocol): These types contain info for a single model version, as well as entities that belong to it. Currently supports `XcodeDataModelSchema` (.xcdatamodeld), `LegacyXcodeDataModelSchema`, or `CoreStoreSchema`.  
-    - *SchemaHistory* (`SchemaHistory` class): This is now the preferred way to express all models to the `DataStack`. This class contains info to all the `DynamicSchema` across multiple model versions.
-
-- TODO: changelog
+    - *Schema* (`DynamicSchema` protocol): These types contain info for a single model version, as well as entities that belong to it. Currently supports `XcodeDataModelSchema` (.xcdatamodeld file), `LegacyXcodeDataModelSchema`, and `CoreStoreSchema`.  
+    - *SchemaHistory* (`SchemaHistory` class): This is now the preferred way to express all models to the `DataStack`. This class contains info of all the `DynamicSchema` across multiple model versions.
 
 ### Other Releases
 
-For the full Changelog, refer to the [Releases](https://github.com/JohnEstropia/CoreStore/releases) section. 
+For the full Changelog, refer to the [Releases](https://github.com/JohnEstropia/CoreStore/releases) page. 
 
 
 # Contact

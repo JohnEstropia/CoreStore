@@ -41,6 +41,7 @@ public extension DynamicObject where Self: CoreStoreObject {
          let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
      }
      ```
+     - Important: `Relationship` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public typealias Relationship = RelationshipContainer<Self>
 }
@@ -73,6 +74,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
      }
      ```
+     - Important: `Relationship.ToOne` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public final class ToOne<D: CoreStoreObject>: RelationshipProtocol {
         
@@ -251,6 +253,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          let pets = Relationship.ToManyOrdered<Dog>("pets", inverse: { $0.master })
      }
      ```
+     - Important: `Relationship.ToManyOrdered` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public final class ToManyOrdered<D: CoreStoreObject>: RelationshipProtocol {
         
@@ -442,6 +445,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
      }
      ```
+     - Important: `Relationship.ToManyUnordered` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public final class ToManyUnordered<D: CoreStoreObject>: RelationshipProtocol {
         

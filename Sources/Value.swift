@@ -40,6 +40,7 @@ public extension DynamicObject where Self: CoreStoreObject {
          let color = Transformable.Optional<UIColor>("color")
      }
      ```
+     - Important: `Value` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public typealias Value = ValueContainer<Self>
     
@@ -52,6 +53,7 @@ public extension DynamicObject where Self: CoreStoreObject {
          let color = Transformable.Optional<UIColor>("color")
      }
      ```
+     - Important: `Transformable` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public typealias Transformable = TransformableContainer<Self>
 }
@@ -82,6 +84,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          let color = Transformable.Optional<UIColor>("color")
      }
      ```
+     - Important: `Value.Required` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public final class Required<V: ImportableAttributeType>: AttributeProtocol {
         
@@ -214,6 +217,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          let color = Transformable.Optional<UIColor>("color")
      }
      ```
+     - Important: `Value.Optional` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public final class Optional<V: ImportableAttributeType>: AttributeProtocol {
         
@@ -360,6 +364,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          let color = Transformable.Optional<UIColor>("color")
      }
      ```
+     - Important: `Transformable.Required` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public final class Required<V: NSCoding & NSCopying>: AttributeProtocol {
         
@@ -485,6 +490,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          let color = Transformable.Optional<UIColor>("color")
      }
      ```
+     - Important: `Transformable.Optional` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
     public final class Optional<V: NSCoding & NSCopying>: AttributeProtocol {
         
