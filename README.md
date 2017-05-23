@@ -35,7 +35,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 - **Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (min, max, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
 - **Type-safe, easy to configure observers.** You don't have to deal with the burden of setting up `NSFetchedResultsController`s and KVO. As an added bonus, `ListMonitor`s and `ObjectMonitor`s can have multiple observers. This means you can have multiple view controllers efficiently share a single resource! *(See [Observing changes and notifications](#observing-changes-and-notifications))*
 - **Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
-- 🆕 **New in 4.0: Say goodbye to *.xcdatamodeld* files!** The new `CoreStoreObject` is *the* replacement to `NSManagedObject`. `CoreStoreObject` subclasses can declare type-safe properties all in Swift code, no need to maintain separate resource files for the models. As bonus, these special properties support custom types, and can be used to create type-safe keypaths and queries. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects))*
+- 🆕 **New in 4.0: Say goodbye to *.xcdatamodeld* files!** The new `CoreStoreObject` is *the* replacement to `NSManagedObject`. `CoreStoreObject` subclasses can declare type-safe properties all in Swift code, no need to maintain separate resource files for the models. As bonus, these special properties support custom types, and can be used to create type-safe keypaths and queries. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects))*
 - **Progressive migrations.** No need to think how to migrate from all previous model versions to your latest model. Just tell the `DataStack` the sequence of version strings (`MigrationChain`s) and CoreStore will automatically use progressive migrations when needed. *(See [Migrations](#migrations))*
 - 🆕 **New in 4.0: Easier custom migrations.** Say goodbye to .xcmappingmodel files; CoreStore can now infer entity mappings when possible, while still allowing an easy way to write custom mappings. *(See [Migrations](#migrations))*
 - **Plug-in your own logging framework.** Although a default logger is built-in, all logging, asserting, and error reporting can be funneled to `CoreStoreLogger` protocol implementations. *(See [Logging and error reporting](#logging-and-error-reporting))*
@@ -84,7 +84,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
         - [Observe a single object](#observe-a-single-object)
         - [Observe a list of objects](#observe-a-list-of-objects)
     - [Objective-C support](#objective-c-support)
-    - [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects)
+    - [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects)
 - [Roadmap](#roadmap)
 - [Installation](#installation)
 - [Changesets](#changesets)
