@@ -624,14 +624,14 @@ public final class DataStack: Equatable {
     }
     
     
-    @available(*, deprecated, message: "Use the new DataStack.init(schemaHistory:) initializer passing a LegacyXcodeDataModelSchema instance as argument")
+    @available(*, deprecated, message: "Use the new DataStack.init(schemaHistory:) initializer passing an UnsafeDataModelSchema instance as argument")
     public convenience init(model: NSManagedObjectModel, migrationChain: MigrationChain = nil) {
         
         let modelVersion = migrationChain.leafVersions.first!
         self.init(
             schemaHistory: SchemaHistory(
                 allSchema: [
-                    LegacyXcodeDataModelSchema(
+                    UnsafeDataModelSchema(
                         modelName: modelVersion,
                         model: model
                     )

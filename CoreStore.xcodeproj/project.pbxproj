@@ -214,10 +214,10 @@
 		B52F743E1E9B8724005F3DAC /* DynamicSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743A1E9B8724005F3DAC /* DynamicSchema.swift */; };
 		B52F743F1E9B8724005F3DAC /* DynamicSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743A1E9B8724005F3DAC /* DynamicSchema.swift */; };
 		B52F74401E9B8724005F3DAC /* DynamicSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743A1E9B8724005F3DAC /* DynamicSchema.swift */; };
-		B52F74411E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743B1E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift */; };
-		B52F74421E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743B1E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift */; };
-		B52F74431E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743B1E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift */; };
-		B52F74441E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743B1E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift */; };
+		B52F74411E9B8724005F3DAC /* UnsafeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743B1E9B8724005F3DAC /* UnsafeDataModelSchema.swift */; };
+		B52F74421E9B8724005F3DAC /* UnsafeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743B1E9B8724005F3DAC /* UnsafeDataModelSchema.swift */; };
+		B52F74431E9B8724005F3DAC /* UnsafeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743B1E9B8724005F3DAC /* UnsafeDataModelSchema.swift */; };
+		B52F74441E9B8724005F3DAC /* UnsafeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743B1E9B8724005F3DAC /* UnsafeDataModelSchema.swift */; };
 		B52F74451E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743C1E9B8724005F3DAC /* XcodeDataModelSchema.swift */; };
 		B52F74461E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743C1E9B8724005F3DAC /* XcodeDataModelSchema.swift */; };
 		B52F74471E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52F743C1E9B8724005F3DAC /* XcodeDataModelSchema.swift */; };
@@ -426,10 +426,10 @@
 		B56923FB1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923F91EB82956007C4DC9 /* CSXcodeDataModelSchema.swift */; };
 		B56923FC1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923F91EB82956007C4DC9 /* CSXcodeDataModelSchema.swift */; };
 		B56923FD1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923F91EB82956007C4DC9 /* CSXcodeDataModelSchema.swift */; };
-		B56923FF1EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923FE1EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift */; };
-		B56924001EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923FE1EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift */; };
-		B56924011EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923FE1EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift */; };
-		B56924021EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923FE1EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift */; };
+		B56923FF1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923FE1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift */; };
+		B56924001EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923FE1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift */; };
+		B56924011EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923FE1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift */; };
+		B56924021EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56923FE1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift */; };
 		B56964D41B22FFAD0075EE4A /* DataStack+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */; };
 		B56965241B356B820075EE4A /* MigrationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965231B356B820075EE4A /* MigrationResult.swift */; };
 		B57D27BE1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */; };
@@ -746,7 +746,7 @@
 		B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52F742E1E9B50D0005F3DAC /* SchemaHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchemaHistory.swift; sourceTree = "<group>"; };
 		B52F743A1E9B8724005F3DAC /* DynamicSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicSchema.swift; sourceTree = "<group>"; };
-		B52F743B1E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyXcodeDataModelSchema.swift; sourceTree = "<group>"; };
+		B52F743B1E9B8724005F3DAC /* UnsafeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsafeDataModelSchema.swift; sourceTree = "<group>"; };
 		B52F743C1E9B8724005F3DAC /* XcodeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XcodeDataModelSchema.swift; sourceTree = "<group>"; };
 		B52F74491E9B8740005F3DAC /* CoreStoreSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreSchema.swift; sourceTree = "<group>"; };
 		B52FD3A91E3B3EF10001D919 /* NSManagedObject+Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Logging.swift"; sourceTree = "<group>"; };
@@ -800,7 +800,7 @@
 		B56923DF1EB827F5007C4DC9 /* XcodeSchemaMappingProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XcodeSchemaMappingProvider.swift; sourceTree = "<group>"; };
 		B56923F41EB828BF007C4DC9 /* CSDynamicSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSDynamicSchema.swift; sourceTree = "<group>"; };
 		B56923F91EB82956007C4DC9 /* CSXcodeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSXcodeDataModelSchema.swift; sourceTree = "<group>"; };
-		B56923FE1EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSLegacyXcodeDataModelSchema.swift; sourceTree = "<group>"; };
+		B56923FE1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSUnsafeDataModelSchema.swift; sourceTree = "<group>"; };
 		B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "DataStack+Migration.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B56965231B356B820075EE4A /* MigrationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationResult.swift; sourceTree = "<group>"; };
 		B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestDataTestCase.swift; sourceTree = "<group>"; };
@@ -1108,7 +1108,7 @@
 				B52F743A1E9B8724005F3DAC /* DynamicSchema.swift */,
 				B52F74491E9B8740005F3DAC /* CoreStoreSchema.swift */,
 				B52F743C1E9B8724005F3DAC /* XcodeDataModelSchema.swift */,
-				B52F743B1E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift */,
+				B52F743B1E9B8724005F3DAC /* UnsafeDataModelSchema.swift */,
 			);
 			name = "Dynamic Schema";
 			sourceTree = "<group>";
@@ -1190,7 +1190,7 @@
 			children = (
 				B56923F41EB828BF007C4DC9 /* CSDynamicSchema.swift */,
 				B56923F91EB82956007C4DC9 /* CSXcodeDataModelSchema.swift */,
-				B56923FE1EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift */,
+				B56923FE1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift */,
 			);
 			name = "Dynamic Schema";
 			sourceTree = "<group>";
@@ -1788,7 +1788,7 @@
 				B5E1B5981CAA0C23007FD580 /* CSObjectObserver.swift in Sources */,
 				B5519A5F1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */,
 				B52FD3AA1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
-				B52F74411E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift in Sources */,
+				B52F74411E9B8724005F3DAC /* UnsafeDataModelSchema.swift in Sources */,
 				B51FE5AB1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
 				B5A9921F1EA898710091A2E3 /* UserInfo.swift in Sources */,
 				B54A6A551BA15F2A007870FD /* FetchedResultsControllerDelegate.swift in Sources */,
@@ -1900,7 +1900,7 @@
 				B5A991EC1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5FE4DA71C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B52F743D1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
-				B56923FF1EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift in Sources */,
+				B56923FF1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5ECDBEC1CA6BF2000C7F112 /* CSFrom.swift in Sources */,
 				B56923EC1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
 				B5E834B91B76311F001D3D50 /* BaseDataTransaction+Importing.swift in Sources */,
@@ -1972,7 +1972,7 @@
 				B5E1B59A1CAA0C23007FD580 /* CSObjectObserver.swift in Sources */,
 				B5519A601CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */,
 				B52FD3AB1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
-				B52F74421E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift in Sources */,
+				B52F74421E9B8724005F3DAC /* UnsafeDataModelSchema.swift in Sources */,
 				B51FE5AD1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
 				B5A992201EA898720091A2E3 /* UserInfo.swift in Sources */,
 				B5FE4DAD1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
@@ -2084,7 +2084,7 @@
 				B5A991ED1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5ECDBEE1CA6BF2000C7F112 /* CSFrom.swift in Sources */,
 				B52F743E1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
-				B56924001EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift in Sources */,
+				B56924001EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				82BA18D61C4BBD7100A0916E /* NSManagedObjectContext+Transaction.swift in Sources */,
 				B56923ED1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
 				82BA18B91C4BBD4A00A0916E /* From.swift in Sources */,
@@ -2156,7 +2156,7 @@
 				B5ECDC211CA81A2100C7F112 /* CSDataStack+Querying.swift in Sources */,
 				B52DD1C21BE1F94600949AFE /* MigrationManager.swift in Sources */,
 				B52FD3AD1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
-				B52F74441E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift in Sources */,
+				B52F74441E9B8724005F3DAC /* UnsafeDataModelSchema.swift in Sources */,
 				B5ECDC2D1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				B5A992221EA898720091A2E3 /* UserInfo.swift in Sources */,
 				B5D7A5BA1CA3BF8F005C752B /* CSInto.swift in Sources */,
@@ -2268,7 +2268,7 @@
 				B5A991EF1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5220E201D130813009BC71E /* CSObjectMonitor.swift in Sources */,
 				B52F74401E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
-				B56924021EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift in Sources */,
+				B56924021EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5220E171D1306DF009BC71E /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B56923EF1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
 				B53FBA081CAB300C00F0D40A /* CSMigrationType.swift in Sources */,
@@ -2340,7 +2340,7 @@
 				B5519A611CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */,
 				B5FE4DAE1C85D44E00FA6A91 /* SQLiteStore.swift in Sources */,
 				B52FD3AC1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
-				B52F74431E9B8724005F3DAC /* LegacyXcodeDataModelSchema.swift in Sources */,
+				B52F74431E9B8724005F3DAC /* UnsafeDataModelSchema.swift in Sources */,
 				B51FE5AE1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
 				B5A992211EA898720091A2E3 /* UserInfo.swift in Sources */,
 				B563218C1BD65216006C9394 /* DataStack+Transaction.swift in Sources */,
@@ -2452,7 +2452,7 @@
 				B5A991EE1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5ECDBEF1CA6BF2000C7F112 /* CSFrom.swift in Sources */,
 				B52F743F1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
-				B56924011EB82976007C4DC9 /* CSLegacyXcodeDataModelSchema.swift in Sources */,
+				B56924011EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B56321B41BD6521C006C9394 /* NSManagedObjectContext+Transaction.swift in Sources */,
 				B56923EE1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
 				B56321861BD65216006C9394 /* CoreStoreLogger.swift in Sources */,

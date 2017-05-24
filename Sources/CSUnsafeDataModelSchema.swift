@@ -1,5 +1,5 @@
 //
-//  CSLegacyXcodeDataModelSchema.swift
+//  CSUnsafeDataModelSchema.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,18 +27,18 @@ import CoreData
 import Foundation
 
 
-// MARK: - CSLegacyXcodeDataModelSchema
+// MARK: - CSUnsafeDataModelSchema
 
 /**
- The `CSLegacyXcodeDataModelSchema` serves as the Objective-C bridging type for `LegacyXcodeDataModelSchema`.
+ The `CSUnsafeDataModelSchema` serves as the Objective-C bridging type for `UnsafeDataModelSchema`.
  
- - SeeAlso: `LegacyXcodeDataModelSchema`
+ - SeeAlso: `UnsafeDataModelSchema`
  */
 @objc
-public final class CSLegacyXcodeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreObjectiveCType {
+public final class CSUnsafeDataModelSchema: NSObject, CSDynamicSchema, CoreStoreObjectiveCType {
     
     /**
-     Initializes a `CSLegacyXcodeDataModelSchema` from an `NSManagedObjectModel`.
+     Initializes a `CSUnsafeDataModelSchema` from an `NSManagedObjectModel`.
      
      - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)
      - parameter model: the `NSManagedObjectModel`
@@ -46,7 +46,7 @@ public final class CSLegacyXcodeDataModelSchema: NSObject, CSDynamicSchema, Core
     @objc
     public required init(modelName: ModelVersion, model: NSManagedObjectModel) {
         
-        self.bridgeToSwift = LegacyXcodeDataModelSchema(
+        self.bridgeToSwift = UnsafeDataModelSchema(
             modelName: modelName,
             model: model
         )
@@ -62,7 +62,7 @@ public final class CSLegacyXcodeDataModelSchema: NSObject, CSDynamicSchema, Core
     
     public override func isEqual(_ object: Any?) -> Bool {
         
-        guard let object = object as? CSLegacyXcodeDataModelSchema else {
+        guard let object = object as? CSUnsafeDataModelSchema else {
             
             return false
         }
@@ -92,9 +92,9 @@ public final class CSLegacyXcodeDataModelSchema: NSObject, CSDynamicSchema, Core
     
     // MARK: CoreStoreObjectiveCType
     
-    public let bridgeToSwift: LegacyXcodeDataModelSchema
+    public let bridgeToSwift: UnsafeDataModelSchema
     
-    public required init(_ swiftValue: LegacyXcodeDataModelSchema) {
+    public required init(_ swiftValue: UnsafeDataModelSchema) {
         
         self.bridgeToSwift = swiftValue
         super.init()
@@ -102,14 +102,14 @@ public final class CSLegacyXcodeDataModelSchema: NSObject, CSDynamicSchema, Core
 }
 
 
-// MARK: - LegacyXcodeDataModelSchema
+// MARK: - UnsafeDataModelSchema
 
-extension LegacyXcodeDataModelSchema: CoreStoreSwiftType {
+extension UnsafeDataModelSchema: CoreStoreSwiftType {
     
     // MARK: CoreStoreSwiftType
     
-    public var bridgeToObjectiveC: CSLegacyXcodeDataModelSchema {
+    public var bridgeToObjectiveC: CSUnsafeDataModelSchema {
         
-        return CSLegacyXcodeDataModelSchema(self)
+        return CSUnsafeDataModelSchema(self)
     }
 }

@@ -24,20 +24,20 @@ Upgrading from CoreStore 3.x to 4.x? Check out the [new features](#features) and
 
 
 ## Why use CoreStore?
-CoreStore is the answer to the [pain](http://inessential.com/2010/02/26/on_switching_away_from_core_data) [of](http://bsktapp.com/blog/why-is-realm-great-and-why-are-we-not-using-it/) [using](https://www.quora.com/Why-would-you-use-Realm-over-Core-Data) [Core](http://sebastiandobrincu.com/blog/5-reasons-why-you-should-choose-realm-over-coredata) [Data](https://medium.com/the-way-north/ditching-core-data-865c1bb5564c#.a5h8ou6ri). 
+CoreStore is the answer to the [challenges](http://inessential.com/2010/02/26/on_switching_away_from_core_data) [of](http://bsktapp.com/blog/why-is-realm-great-and-why-are-we-not-using-it/) [using](https://www.quora.com/Why-would-you-use-Realm-over-Core-Data) [Core](http://sebastiandobrincu.com/blog/5-reasons-why-you-should-choose-realm-over-coredata) [Data](https://medium.com/the-way-north/ditching-core-data-865c1bb5564c#.a5h8ou6ri). 
 
-CoreStore was (and is) heavily shaped by real-world needs of developing data-dependent apps. It enforces safe and convenient Core Data usage while letting you take advantage of the industry's encouraged best practices. And with Core Data and Swift continuously being improved by Apple, CoreStore will just get better and better!
+CoreStore was (and is) heavily shaped by real-world needs of developing data-dependent apps. It enforces safe and convenient Core Data usage while letting you take advantage of the industry's encouraged best practices.
 
 ### Features
 
 - **Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
 - **Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*
-- **Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (min, max, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
+- **Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (`min`, `max`, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
 - **Type-safe, easy to configure observers.** You don't have to deal with the burden of setting up `NSFetchedResultsController`s and KVO. As an added bonus, `ListMonitor`s and `ObjectMonitor`s can have multiple observers. This means you can have multiple view controllers efficiently share a single resource! *(See [Observing changes and notifications](#observing-changes-and-notifications))*
 - **Efficient importing utilities.** Map your entities once with their corresponding import source (JSON for example), and importing from *transactions* becomes elegant. Uniquing is also done with an efficient find-and-replace algorithm. *(See [Importing data](#importing-data))*
-- 🆕 **New in 4.0: Say goodbye to *.xcdatamodeld* files!** The new `CoreStoreObject` is *the* replacement to `NSManagedObject`. `CoreStoreObject` subclasses can declare type-safe properties all in Swift code, no need to maintain separate resource files for the models. As bonus, these special properties support custom types, and can be used to create type-safe keypaths and queries. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects))*
+- ⭐️ **New in 4.0: Say goodbye to *.xcdatamodeld* files!** The new `CoreStoreObject` is *the* replacement to `NSManagedObject`. `CoreStoreObject` subclasses can declare type-safe properties all in Swift code, no need to maintain separate resource files for the models. As bonus, these special properties support custom types, and can be used to create type-safe keypaths and queries. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects))*
 - **Progressive migrations.** No need to think how to migrate from all previous model versions to your latest model. Just tell the `DataStack` the sequence of version strings (`MigrationChain`s) and CoreStore will automatically use progressive migrations when needed. *(See [Migrations](#migrations))*
-- 🆕 **New in 4.0: Easier custom migrations.** Say goodbye to .xcmappingmodel files; CoreStore can now infer entity mappings when possible, while still allowing an easy way to write custom mappings. *(See [Migrations](#migrations))*
+- ⭐️ **New in 4.0: Easier custom migrations.** Say goodbye to *.xcmappingmodel* files; CoreStore can now infer entity mappings when possible, while still allowing an easy way to write custom mappings. *(See [Migrations](#migrations))*
 - **Plug-in your own logging framework.** Although a default logger is built-in, all logging, asserting, and error reporting can be funneled to `CoreStoreLogger` protocol implementations. *(See [Logging and error reporting](#logging-and-error-reporting))*
 - **Heavy support for multiple persistent stores per data stack.** CoreStore lets you manage separate stores in a single `DataStack`, just the way *.xcdatamodeld* configurations are designed to. CoreStore will also manage one stack by default, but you can create and manage as many as you need. *(See [Setting up](#setting-up))*
 - **Free to name entities and their class names independently.** CoreStore gets around a restriction with other Core Data wrappers where the entity name should be the same as the `NSManagedObject` subclass name. CoreStore loads entity-to-class mappings from the managed object model file, so you can assign different names for the entities and their class names.
@@ -58,8 +58,11 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
         - [Local store](#local-store)
         - [iCloud store](#icloud-store)
     - [Migrations](#migrations)
+        - [Declaring model versions](#declaring-model-versions)
+        - [Starting migrations](#starting-migrations)
         - [Progressive migrations](#progressive-migrations)
         - [Forecasting migrations](#forecasting-migrations)
+        - [Custom migratoins](#custom-migrations)
     - [Saving and processing transactions](#saving-and-processing-transactions)
         - [Transaction types](#transaction-types)
             - [Asynchronous transactions](#asynchronous-transactions)
@@ -282,7 +285,7 @@ let migrationProgress = CoreStore.addStorage(
     SQLiteStore(
         fileName: "MyStore.sqlite",
         configuration: "Config2", // optional. Use entities from the "Config2" configuration in the .xcdatamodeld file
-        mappingModelBundles: [Bundle.main], // optional. The bundles that contain required .xcmappingmodel files
+        migrationMappingProviders: [Bundle.main], // optional. The bundles that contain required .xcmappingmodel files
         localStorageOptions: .recreateStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
     ),
     completion: { /* ... */ }
@@ -308,7 +311,7 @@ public protocol LocalStorage: StorageInterface {
 If you have custom `NSIncrementalStore` or `NSAtomicStore` subclasses, you can implement this protocol and use it similarly to `SQLiteStore`.
 
 ### iCloud Store
-> The iCloud Store is currently in beta. Please use with caution. If you have any concerns please do send me a message on [Twitter](https://twitter.com/JohnEstropia) or on the [CoreStore Slack Team](http://swift-corestore-slack.herokuapp.com/)
+> **Important:** The iCloud Store is currently in beta. Please use with caution. If you have any concerns please do send me a message on [Twitter](https://twitter.com/JohnEstropia) or on the [CoreStore Slack Team](http://swift-corestore-slack.herokuapp.com/)
 
 As a counterpart to `LocalStorage`, the `CloudStorage` protocol abstracts stores managed in the cloud. CoreStore currently provides the concrete class `ICloudStore`. Unlike `InMemoryStore` and `SQLiteStore` though, the `ICloudStore`'s initializer may return `nil` if the iCloud container could not be located or if iCloud is not available on the device:
 ```swift
@@ -369,7 +372,94 @@ The `ICloudStore` only keeps weak references of the registered observers. You ma
 
 
 ## Migrations
-We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's "~AndWait" suffix suggests though, this method blocks so it should not do long tasks such as store migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.allowSynchronousLightweightMigration` option:
+
+### Declaring model versions
+Until CoreStore 4.0, model versions were always assumed to be declared in *.xcdatamodeld* files. The `DataStack` loads these for us by accepting the *.xcdatamodeld* file name and the `Bundle` where the files can be found:
+```swift
+CoreStore.defaultStack = DataStack(
+    xcodeModelName: "MyModel",
+    bundle: Bundle.main,
+    migrationChain: ["MyAppModel", "MyAppModelV2", "MyAppModelV3", "MyAppModelV4"]
+)
+```
+
+Starting CoreStore 4.0, model versions are now expressed as a first-class protocol, `DynamicSchema`. CoreStore currently supports the following schema classes:
+- **`XcodeDataModelSchema`**: a model version with entities loaded from a *.xcdatamodeld* file.
+- **`CoreStoreSchema`**: a model version created with `CoreStoreObject` entities. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects))*
+- **`UnsafeDataModelSchema`**: a model version created with an existing `NSManagedObjectModel` instance.
+
+All the `DynamicSchema` for all model versions are then collected within a single `SchemaHistory` instance, which is then handed to the `DataStack`. Here are some common use cases:
+
+**Multiple model versions grouped in a *.xcdatamodeld* file (Core Data standard method)**
+```swift
+CoreStore.defaultStack = DataStack(
+    xcodeModelName: "MyModel",
+    bundle: Bundle.main,
+    migrationChain: ["MyAppModel", "MyAppModelV2", "MyAppModelV3", "MyAppModelV4"]
+)
+```
+
+**`CoreStoreSchema`-based model version (No *.xcdatamodeld* file needed)**
+*(For more details, see also [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects))*
+```swift
+class Animal: CoreStoreObject {
+    // ...
+}
+class Dog: Animal {
+    // ...
+}
+class Person: CoreStoreObject {
+    // ...
+}
+
+CoreStore.defaultStack = DataStack(
+    CoreStoreSchema(
+        modelVersion: "V1",
+        entities: [
+            Entity<Animal>("Animal", isAbstract: true),
+            Entity<Dog>("Dog"),
+            Entity<Person>("Person")
+        ]
+    )
+)
+```
+
+**Models in a *.xcdatamodeld* file during past app versions, but migrated to the new `CoreStoreSchema` method**
+```swift
+class Animal: CoreStoreObject {
+    // ...
+}
+class Dog: Animal {
+    // ...
+}
+class Person: CoreStoreObject {
+    // ...
+}
+
+let legacySchema = XcodeDataModelSchema.from(
+    modelName: "MyModel", // .xcdatamodeld name
+    bundle: bundle,
+    migrationChain: ["MyAppModel", "MyAppModelV2", "MyAppModelV3", "MyAppModelV4"]
+)
+let newSchema = CoreStoreSchema(
+    modelVersion: "V1",
+    entities: [
+        Entity<Animal>("Animal", isAbstract: true),
+        Entity<Dog>("Dog"),
+        Entity<Person>("Person")
+    ]
+)
+CoreStore.defaultStack = DataStack(
+    schemaHistory: SchemaHistory(
+        legacySchema + [newSchema],
+        migrationChain: ["MyAppModel", "MyAppModelV2", "MyAppModelV3", "MyAppModelV4", "V1"] 
+    )
+)   
+```
+
+
+### Starting migrations
+We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's *~AndWait* suffix suggests though, this method blocks so it should not do long tasks such as store migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.allowSynchronousLightweightMigration` option:
 ```swift
 try dataStack.addStorageAndWait(
     SQLiteStore(
@@ -433,7 +523,7 @@ This allows for different migration paths depending on the starting version. The
 - MyAppModelV2-MyAppModelV4
 - MyAppModelV3-MyAppModelV4
 
-Initializing with empty values (either `nil`, `[]`, or `[:]`) instructs the `DataStack` to disable progressive migrations and revert to the default migration behavior (i.e. use the .xcdatamodel's current version as the final version):
+Initializing with empty values (either `nil`, `[]`, or `[:]`) instructs the `DataStack` to disable progressive migrations and revert to the default migration behavior (i.e. use the *.xcdatamodeld*'s current version as the final version):
 ```swift
 let dataStack = DataStack(migrationChain: nil)
 ```
@@ -471,11 +561,70 @@ catch {
 ```
 `requiredMigrationsForStorage(_:)` returns an array of `MigrationType`s, where each item in the array may be either of the following values:
 ```swift
-case Lightweight(sourceVersion: String, destinationVersion: String)
-case Heavyweight(sourceVersion: String, destinationVersion: String)
+case lightweight(sourceVersion: String, destinationVersion: String)
+case heavyweight(sourceVersion: String, destinationVersion: String)
 ```
 Each `MigrationType` indicates the migration type for each step in the `MigrationChain`. Use these information as fit for your app.
 
+
+### Custom migrations
+
+Before CoreStore 4.0, the only way to implement custom migrations is to use Core Data's standard method: declaring entity mappings through *.xcmappingmodel* files. Starting CoreStore 4.0, new ways to declare migration mappings have been added:
+
+- `InferredSchemaMappingProvider`: The default mapping provider which tries to infer model migration between two `DynamicSchema` versions either by searching all *.xcmappingmodel* files from `Bundle.allBundles`, or by relying on lightweight migration if possible.
+- `XcodeSchemaMappingProvider`: A mapping provider which loads entity mappings from *.xcmappingmodel* files in a specified `Bundle`.
+- `CustomSchemaMappingProvider`: A mapping provider that infers mapping initially, but also accepts custom mappings for specified entities. This was added to support custom migrations with `CoreStoreObject`s as well, but may also be used with `NSManagedObject`s.
+
+These mapping providers conform to `SchemaMappingProvider` and can be passed to `SQLiteStore`'s initializer:
+```swift
+let dataStack = DataStack(migrationChain: ["MyAppModel", "MyAppModelV2", "MyAppModelV3", "MyAppModelV4"])
+_ = try dataStack.addStorage(
+    SQLiteStore(
+        fileName: "MyStore.sqlite",
+        migrationMappingProviders: [
+            XcodeSchemaMappingProvider(from: "V1", to: "V2", mappingModelBundle: Bundle.main),
+            CustomSchemaMappingProvider(from: "V2", to: "V3", entityMappings: [.deleteEntity("Person") ])
+        ]
+    ),
+    completion: { (result) -> Void in
+        // ...
+    }
+)
+```
+
+For version migrations present in the `DataStack`'s `MigrationChain` but not handled by any of the `SQLiteStore`'s `migrationMappingProviders` array, CoreStore will automatically try to use `InferredSchemaMappingProvider` as fallback. Finally if the `InferredSchemaMappingProvider` could not resolve any mapping, the migration will fail and the `DataStack.addStorage(...)` method will report the failure.
+
+For `CustomSchemaMappingProvider`, more granular updates are supported through the dynamic objects `UnsafeSourceObject` and `UnsafeDestinationObject`. The example below allows the migration to conditionally ignore some objects:
+```swift
+let person_v2_to_v3_mapping = CustomSchemaMappingProvider(
+    from: "V2",
+    to: "V3",
+    entityMappings: [
+        .transformEntity(
+            sourceEntity: "Person",
+            destinationEntity: "Person",
+            transformer: { (sourceObject: UnsafeSourceObject, createDestinationObject: () -> UnsafeDestinationObject) in
+                
+                if (sourceObject["isVeryOldAccount"] as! Bool?) == true {
+                    return // this account is too old, don't migrate 
+                }
+                // migrate the rest
+                let destinationObject = createDestinationObject()
+                destinationObject.enumerateAttributes { (attribute, sourceAttribute) in
+                
+                if let sourceAttribute = sourceAttribute {
+                    destinationObject[attribute] = sourceObject[sourceAttribute]
+                }
+            }
+        ) 
+    ]
+)
+SQLiteStore(
+    fileName: "MyStore.sqlite",
+    migrationMappingProviders: [person_v2_to_v3_mapping]
+)
+```
+The `UnsafeSourceObject` is a read-only proxy for an object existing in the source model version. The `UnsafeDestinationObject` is a read-write object that is inserted (optionally) to the destination model version. Both classes' properties are accessed through key-value-coding.
 
 
 ## Saving and processing transactions
@@ -1482,10 +1631,23 @@ class Dog: Animal {
 }
 
 class Person: CoreStoreObject {
-    let name = Value.Required <String>("name")
+    let name = Value.Required<String>("name")
     let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
 }
 ```
+The property names to be saved to Core Data is specified as the `keyPath` argument. This lets us refactor our Swift code without affecting the underlying database. For example:
+```swift
+class Person: CoreStoreObject {
+    private let _name = Value.Required<String>("name")
+    // ...
+}
+```
+Here we added an underscore to the property name and made it `private`, but the underlying key-path `"name"` was unchanged so our model will not trigger a data migration.
+
+> **Important:** As a rule, CoreStore can only process *stored properties*. Computed, `static`, `weak`, or `lazy` properties will not be added to the store. It is also strictly advised use `let` instead of `var` to declare these properties, as any changes to the schema after declaration is not allowed.
+
+Also note how `Relationship`s are linked statically with the `inverse:` argument. All relationships are required to have an "inverse" relationship. Unfortunately, due to Swift compiler limitation we can only declare the `inverse:` on one end of the relationship-pair.
+
 To tell the `DataStack` about these types, add all `CoreStoreObject`s' entities to a `CoreStoreSchema`:
 ```swift
 
@@ -1501,12 +1663,18 @@ CoreStore.defaultStack = DataStack(
 )
 CoreStore.addStorage(/* ... */)
 ```
-And that's it. These properties' values can be accessed or mutated using `.value`:
+And that's all CoreStore needs to build the model; **we don't need *.xcdatamodeld* files anymore.**
+
+These special properties' values can be accessed or mutated using `.value`:
 ```swift
 CoreStore.perform(
     asynchronous: { (transaction) in
         let dog: Dog = CoreStore.fetchOne(From<Dog>())!
+        // ...
+        let nickname = dog.nickname.value // String?
+        let species = dog.species.value // String
         let age = dog.age.value // Int
+        // ...
         dog.age.value = age + 1
     },
     completion: { /* ... */ }
@@ -1539,8 +1707,13 @@ All CoreStore APIs that are usable with `NSManagedObject`s are also available fo
     - The `com.apple.CoreData.ConcurrencyDebug` debug argument should be turned off for the app. CoreStore already guarantees safety for you by making the main context read-only, and by only executing transactions serially.
 
 ### Install with CocoaPods
+In your `Podfile`, add
 ```
-pod 'CoreStore'
+pod 'CoreStore', '~> 4.0'
+```
+and run 
+```
+pod update
 ```
 This installs CoreStore as a framework. Declare `import CoreStore` in your swift file to use the library.
 
@@ -1553,6 +1726,7 @@ and run
 ```
 carthage update
 ```
+This installs CoreStore as a framework. Declare `import CoreStore` in your swift file to use the library.
 
 ### Install as Git Submodule
 ```
@@ -1575,17 +1749,17 @@ To use the Objective-C syntax sugars, import *CoreStoreBridge.h* in your *.m* so
 ### Upgrading from 3.x.x to 4.x.x
 **Obsoleted**
 - `LegacySQLiteStore` is now finally obsoleted in favor of `SQLiteStore`. For sqlite files that were created previously with `LegacySQLiteStore`, make sure to use the `SQLiteStore.legacy(...)` factory method to create an `SQLiteStore` that can load the file from the legacy file path.
-- `SQLiteStore.init(...)`'s `mappingModelBundles` argument is now obsolete. The new initializer accepts a `migrationMappingProviders` optional argument where explicit mapping sources are declared. For reference on how to do this, see [Migrations](#migrations).
+- `SQLiteStore.init(...)`'s `mappingModelBundles` argument is now obsolete. The new initializer accepts a `migrationMappingProviders` optional argument where explicit mapping sources are declared. For reference on how to do this, read on [Custom migrations](#custom-migrations).
 
 **Deprecated**
-- `DataStack.beginAsynchronous(...)`, `DataStack.beginSynchronous(...)`, `AsynchronousDataTransaction.commit(...)`, and `SynchronousDataTransaction.commit(...)` are now deprecated in favor of `DataStack.perform(asynchronous:...)` and `DataStack.perform(synchronous:...)` family of methods. These new `perform(...)` methods are auto-commit, meaning the transaction automatically calls `commit()` internally after the transction closure completes. To roll-back and cancel a transaction, call `try transaction.cancel()`. See [Saving and processing transactions](#saving-and-processing-transactions) for more details.
+- `DataStack.beginAsynchronous(...)`, `DataStack.beginSynchronous(...)`, `AsynchronousDataTransaction.commit(...)`, and `SynchronousDataTransaction.commit(...)` are now deprecated in favor of `DataStack.perform(asynchronous:...)` and `DataStack.perform(synchronous:...)` family of methods. These new `perform(...)` methods are auto-commit, meaning the transaction automatically calls `commit()` internally after the transction closure completes. To roll-back and cancel a transaction, call `try transaction.cancel()`. Read [Saving and processing transactions](#saving-and-processing-transactions) for more details.
 
 **Other Changes**
 - `ListMonitor.refetch(...)` now works by recreating its internal `NSFetchedResultsController`. Previously `refetch(...)` would only apply new `FetchClause`s on top of previous fetches. Now all `FetchClauses` are required to be passed to `refetch(...)` each time it is called.
 - New important concepts on "Dynamic Models", "Schema", and "Schema Histories".
-    - *Dynamic Models* (`DynamicObject` protocol): These are Core Data object types that any `NSManagedObject` or `CoreStoreObject`s conform to.
-    - *Schema* (`DynamicSchema` protocol): These types contain info for a single model version, as well as entities that belong to it. Currently supports `XcodeDataModelSchema` (.xcdatamodeld file), `LegacyXcodeDataModelSchema`, and `CoreStoreSchema`.  
-    - *SchemaHistory* (`SchemaHistory` class): This is now the preferred way to express all models to the `DataStack`. This class contains info of all the `DynamicSchema` across multiple model versions.
+    - **Dynamic Models** (`DynamicObject` protocol): These are Core Data object types that any `NSManagedObject` or `CoreStoreObject`s conform to. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects))*
+    - **Version Schema** (`DynamicSchema` protocol): These types contain info for a single model version, as well as entities that belong to it. Currently supports `XcodeDataModelSchema` (*.xcdatamodeld* file), `CoreStoreSchema`, or `UnsafeDataModelSchema`. *(See [Migrations](#migrations))*
+    - **Schema History** (`SchemaHistory` class): This is now the preferred way to express all models to the `DataStack`. This class contains info to all the `DynamicSchema` across multiple model versions. *(See [Migrations](#migrations))*
 
 ### Other Releases
 

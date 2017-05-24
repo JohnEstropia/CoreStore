@@ -1,5 +1,5 @@
 //
-//  LegacyXcodeDataModelSchema.swift
+//  UnsafeDataModelSchema.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,18 +27,18 @@ import CoreData
 import Foundation
 
 
-// MARK: - LegacyXcodeDataModelSchema
+// MARK: - UnsafeDataModelSchema
 
 /**
- The `LegacyXcodeDataModelSchema` describes models loaded directly from an existing `NSManagedObjectModel`. It is not advisable to continue using this model as its metadata are not available to CoreStore.
+ The `UnsafeDataModelSchema` describes models loaded directly from an existing `NSManagedObjectModel`. It is not advisable to continue using this model as its metadata are not available to CoreStore.
  */
-public final class LegacyXcodeDataModelSchema: DynamicSchema {
+public final class UnsafeDataModelSchema: DynamicSchema {
     
     /**
-     Initializes a `LegacyXcodeDataModelSchema` from an `NSManagedObjectModel`.
+     Initializes a `UnsafeDataModelSchema` from an `NSManagedObjectModel`.
      ```
      CoreStore.defaultStack = DataStack(
-         LegacyXcodeDataModelSchema(modelName: "MyAppV1", model: model)
+         UnsafeDataModelSchema(modelName: "MyAppV1", model: model)
      )
      ```
      - parameter modelName: the model version, typically the file name of an *.xcdatamodeld file (without the file extension)

@@ -78,7 +78,7 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
     }
     
     /**
-     Initializes an `CSSQLiteStore` with an all-default settings: a `fileURL` pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS), a `nil` `configuration` pertaining to the "Default" configuration, a `mappingModelBundles` set to search all `NSBundle`s, and `localStorageOptions` set to `[CSLocalStorageOptions none]`.
+     Initializes an `CSSQLiteStore` with an all-default settings: a `fileURL` pointing to a "<Application name>.sqlite" file in the "Application Support/<bundle id>" directory (or the "Caches/<bundle id>" directory on tvOS), a `nil` `configuration` pertaining to the "Default" configuration, and `localStorageOptions` set to `[CSLocalStorageOptions none]`.
      
      - Important: Initializing `CSSQLiteStore`s with custom migration mapping models is currently not supported. Create an `SQLiteStore` instance from Swift code and bridge the instance to Objective-C using its `SQLiteStore.bridgeToObjectiveC` property.
      */

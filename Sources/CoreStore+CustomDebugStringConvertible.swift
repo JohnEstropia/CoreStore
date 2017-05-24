@@ -374,9 +374,9 @@ extension Into: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
 }
 
 
-// MARK: - LegacyXcodeDataModelSchema
+// MARK: - UnsafeDataModelSchema
 
-extension LegacyXcodeDataModelSchema: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+extension UnsafeDataModelSchema: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
     
