@@ -47,6 +47,10 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
         
         self.bridgeToSwift.context.saveAsynchronouslyWithCompletion { (_, error) in
             
+            defer {
+                
+                withExtendedLifetime(self, {})
+            }
             if let error = error {
                 
                 failure?(error.bridgeToObjectiveC)
@@ -55,7 +59,6 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
                 
                 success?()
             }
-            withExtendedLifetime(self, {})
         }
     }
     
@@ -217,6 +220,10 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
         
         self.bridgeToSwift.context.saveAsynchronouslyWithCompletion { (hasChanges, error) in
             
+            defer {
+                
+                withExtendedLifetime(self, {})
+            }
             if let error = error {
                 
                 completion?(SaveResult(error).bridgeToObjectiveC)
@@ -225,7 +232,6 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
                 
                 completion?(SaveResult(hasChanges: hasChanges).bridgeToObjectiveC)
             }
-            withExtendedLifetime(self, {})
         }
     }
     

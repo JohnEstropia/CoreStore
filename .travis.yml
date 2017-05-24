@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode8.3.2
+osx_image: xcode8.3
 sudo: false
 git:
   submodules: false

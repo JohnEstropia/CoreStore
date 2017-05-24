@@ -63,7 +63,7 @@ public extension DataStack {
             
             defer {
                 
-                withExtendedLifetime(transaction, {})
+                withExtendedLifetime((self, transaction), {})
             }
             let userInfo: T
             do {
@@ -112,7 +112,7 @@ public extension DataStack {
             
             defer {
                 
-                withExtendedLifetime(transaction, {})
+                withExtendedLifetime((self, transaction), {})
             }
             let userInfo: T
             do {

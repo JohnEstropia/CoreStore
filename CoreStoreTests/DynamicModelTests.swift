@@ -28,12 +28,18 @@ import XCTest
 @testable
 import CoreStore
 
+#if os(OSX)
+    typealias Color = NSColor
+#else
+    
+    typealias Color = UIColor
+#endif
 
 class Animal: CoreStoreObject {
     
     let species = Value.Required<String>("species", default: "Swift")
     let master = Relationship.ToOne<Person>("master")
-    let color = Transformable.Optional<UIColor>("color")
+    let color = Transformable.Optional<Color>("color")
 }
 
 class Dog: Animal {
@@ -102,7 +108,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(animal.species.value, "Sparrow")
                     
                     animal.color .= .yellow
-                    XCTAssertEqual(animal.color.value, UIColor.yellow)
+                    XCTAssertEqual(animal.color.value, Color.yellow)
                     
                     let dog = transaction.create(Into<Dog>())
                     XCTAssertEqual(dog.species.value, "Swift")
@@ -168,7 +174,6 @@ class DynamicModelTests: BaseTestDataTestCase {
                 success: {
             
                     fetchDone.fulfill()
-                    withExtendedLifetime(stack, {})
                 },
                 failure: { _ in
                     
