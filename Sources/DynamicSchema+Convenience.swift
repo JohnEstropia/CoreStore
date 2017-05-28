@@ -193,9 +193,11 @@ public extension DynamicSchema {
                     let indexedString = attribute.isIndexed ? ", isIndexed: true" : ""
                     let transientString = attribute.isTransient ? ", isTransient: true" : ""
                     // TODO: escape strings
-                    let versionHashModifierString = attribute.versionHashModifier.flatMap({ ", versionHashModifier: \"\($0)\"" }) ?? ""
+                    let versionHashModifierString = attribute.versionHashModifier
+                        .flatMap({ ", versionHashModifier: \"\($0)\"" }) ?? ""
                     // TODO: escape strings
-                    let renamingIdentifierString = attribute.renamingIdentifier.flatMap({ ", renamingIdentifier: \"\($0)\"" }) ?? ""
+                    let renamingIdentifierString = attribute.renamingIdentifier
+                        .flatMap({ ($0 == attributeName ? "" : ", renamingIdentifier: \"\($0)\"") as String }) ?? ""
                     output.append("    let \(attributeName) = \(containerType)<\(String(describing: valueType))>(\"\(attributeName)\"\(indexedString)\(defaultString)\(transientString)\(versionHashModifierString)\(renamingIdentifierString))\n")
                 }
             }
@@ -260,8 +262,10 @@ public extension DynamicSchema {
                             fatalError("Unsupported delete rule \((relationship.deleteRule)) for relationship \"\(relationshipQualifier)\"")
                         }
                     }
-                    let versionHashModifierString = relationship.versionHashModifier.flatMap({ ", versionHashModifier: \"\($0)\"" }) ?? ""
-                    let renamingIdentifierString = relationship.renamingIdentifier.flatMap({ ", renamingIdentifier: \"\($0)\"" }) ?? ""
+                    let versionHashModifierString = relationship.versionHashModifier
+                        .flatMap({ ", versionHashModifier: \"\($0)\"" }) ?? ""
+                    let renamingIdentifierString = relationship.renamingIdentifier
+                        .flatMap({ ($0 == relationshipName ? "" : ", renamingIdentifier: \"\($0)\"") as String }) ?? ""
                     output.append("    let \(relationshipName) = \(containerType)<\(relationship.destinationEntity!.name!)>(\"\(relationshipName)\"\(inverseString)\(deleteRuleString)\(minCountString)\(maxCountString)\(versionHashModifierString)\(renamingIdentifierString))\n")
                 }
             }

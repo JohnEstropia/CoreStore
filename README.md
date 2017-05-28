@@ -22,6 +22,8 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 
 Upgrading from CoreStore 3.x to 4.x? Check out the [new features](#features) and make sure to read the [Migration guide](#upgrading-from-3xx-to-4xx).
 
+CoreStore is now part of the [Swift Source Compatibility projects](https://swift.org/source-compatibility/#current-list-of-projects).
+
 
 ## Why use CoreStore?
 CoreStore is the answer to the [challenges](http://inessential.com/2010/02/26/on_switching_away_from_core_data) [of](http://bsktapp.com/blog/why-is-realm-great-and-why-are-we-not-using-it/) [using](https://www.quora.com/Why-would-you-use-Realm-over-Core-Data) [Core](http://sebastiandobrincu.com/blog/5-reasons-why-you-should-choose-realm-over-coredata) [Data](https://medium.com/the-way-north/ditching-core-data-865c1bb5564c#.a5h8ou6ri). 
@@ -88,6 +90,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
         - [Observe a list of objects](#observe-a-list-of-objects)
     - [Objective-C support](#objective-c-support)
     - [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects)
+        - [`VersionLock`s](#versionlocks)
 - [Roadmap](#roadmap)
 - [Installation](#installation)
 - [Changesets](#changesets)
@@ -1695,6 +1698,39 @@ let puppies = CoreStore.fetchAll(
 ```
 
 All CoreStore APIs that are usable with `NSManagedObject`s are also available for `CoreStoreObject`s. These include `ListMonitor`s, `ImportableObject`s, fetching, etc.
+
+### `VersionLock`s
+
+While it is convenient to be able to declare entities only in code, it is worrying that we might accidentally change the `CoreStoreObject`'s properties and break our users' model version history. For this, the `CoreStoreSchema` allows us to "lock" our properties to a particular configuration. Any changes to that `VersionLock` will raise an assertion failure during the `CoreStoreSchema` initialization, so you can then look for the commit which changed the `VersionLock` hash.
+
+To use `VersionLock`s, create the `CoreStoreSchema`, run the app, and look for this particular log message that is automatically printed to the console:
+
+<img width="700" alt="VersionLock" src="https://cloud.githubusercontent.com/assets/3029684/26525632/757f1bd0-4398-11e7-9795-4132a2df0538.png" />
+
+Copy this dictionary value and use it as the `versionLock:` argument of the `CoreStoreSchema` initializer:
+```swift
+CoreStoreSchema(
+    modelVersion: "V1",
+    entities: [
+        Entity<Animal>("Animal", isAbstract: true),
+        Entity<Dog>("Dog"),
+        Entity<Person>("Person"),
+    ],
+    versionLock: [
+        "Animal": [0x1b59d511019695cf, 0xdeb97e86c5eff179, 0x1cfd80745646cb3, 0x4ff99416175b5b9a],
+        "Dog": [0xe3f0afeb109b283a, 0x29998d292938eb61, 0x6aab788333cfc2a3, 0x492ff1d295910ea7],
+        "Person": [0x66d8bbfd8b21561f, 0xcecec69ecae3570f, 0xc4b73d71256214ef, 0x89b99bfe3e013e8b]
+    ]
+)
+```
+You can also get this hash after the `DataStack` has been fully set up by printing to the console:
+```swift
+print(CoreStore.defaultStack.modelSchema.printCoreStoreSchema())
+```
+
+Once the version lock is set, any changes in the properties or to the model will trigger an assertion failure similar to this:
+
+<img width="700" alt="VersionLock failure" src="https://cloud.githubusercontent.com/assets/3029684/26525666/92f46f0c-4399-11e7-9395-4379f6f20876.png" />
 
 
 # Installation

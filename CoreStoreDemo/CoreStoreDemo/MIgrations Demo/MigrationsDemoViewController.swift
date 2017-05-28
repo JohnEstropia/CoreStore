@@ -91,6 +91,11 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
         }
     }
     
+    func listMonitorDidRefetch(_ monitor: ListMonitor<NSManagedObject>) {
+        
+        self.listMonitorDidChange(monitor)
+    }
+    
     // MARK: UITableViewDataSource
     
     @objc dynamic func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -148,7 +153,10 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
             label: "Model V1",
             entityType: OrganismV1.self,
             schemaHistory: SchemaHistory(
-                modelName: "MigrationDemo",
+                XcodeDataModelSchema.from(
+                    modelName: "MigrationDemo",
+                    migrationChain: ["MigrationDemoV3", "MigrationDemoV2", "MigrationDemo"]
+                ),
                 migrationChain: ["MigrationDemoV3", "MigrationDemoV2", "MigrationDemo"]
             )
         ),
@@ -156,7 +164,13 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
             label: "Model V2",
             entityType: OrganismV2.self,
             schemaHistory: SchemaHistory(
-                modelName: "MigrationDemo",
+                XcodeDataModelSchema.from(
+                    modelName: "MigrationDemo",
+                    migrationChain: [
+                        "MigrationDemo": "MigrationDemoV2",
+                        "MigrationDemoV3": "MigrationDemoV2"
+                    ]
+                ),
                 migrationChain: [
                     "MigrationDemo": "MigrationDemoV2",
                     "MigrationDemoV3": "MigrationDemoV2"
@@ -167,7 +181,10 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
             label: "Model V3",
             entityType: OrganismV3.self,
             schemaHistory: SchemaHistory(
-                modelName: "MigrationDemo",
+                XcodeDataModelSchema.from(
+                    modelName: "MigrationDemo",
+                    migrationChain: ["MigrationDemo", "MigrationDemoV2", "MigrationDemoV3"]
+                ),
                 migrationChain: ["MigrationDemo", "MigrationDemoV2", "MigrationDemoV3"]
             )
         )
