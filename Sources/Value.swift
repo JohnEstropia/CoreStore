@@ -102,7 +102,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          }
          ```
          - parameter keyPath: the permanent attribute name for this property.
-         - parameter default: the initial value for the property when the object is first created. Defaults to the `ImportableAttributeType`'s empty value if not specified.
+         - parameter default: the initial value for the property when the object is first created. For types that implement `EmptyableAttributeType`s, this argument may be omitted and the type's "empty" value will be used instead (e.g. `false` for `Bool`, `0` for `Int`, `""` for `String`, etc.)
          - parameter isIndexed: `true` if the property should be indexed for searching, otherwise `false`. Defaults to `false` if not specified.
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
          - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
@@ -115,7 +115,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter finalNewValue: the transformed new value
          - parameter originalNewValue: the original new value
          */
-        public init(_ keyPath: KeyPath, `default`: V = V.cs_emptyValue(), isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) }) {
+        public init(_ keyPath: KeyPath, `default`: V, isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) }) {
             
             self.keyPath = keyPath
             self.isIndexed = isIndexed
@@ -335,6 +335,43 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         private let customGetter: (_ `self`: O, _ getValue: () -> V?) -> V?
         private let customSetter: (_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void
+    }
+}
+
+public extension ValueContainer.Required where V: EmptyableAttributeType {
+    
+    /**
+     Initializes the metadata for the property. This convenience initializer uses the `EmptyableAttributeType`'s "empty" value as the initial value for the property when the object is first created (e.g. `false` for `Bool`, `0` for `Int`, `""` for `String`, etc.)
+     ```
+     class Person: CoreStoreObject {
+         let title = Value.Required<String>("title") // initial value defaults to empty string
+     }
+     ```
+     - parameter keyPath: the permanent attribute name for this property.
+     - parameter isIndexed: `true` if the property should be indexed for searching, otherwise `false`. Defaults to `false` if not specified.
+     - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
+     - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
+     - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+     - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
+     - parameter self: the `CoreStoreObject`
+     - parameter getValue: the original getter for the property
+     - parameter customSetter: use this closure to make final transformations to the new value before assigning to the property.
+     - parameter setValue: the original setter for the property
+     - parameter finalNewValue: the transformed new value
+     - parameter originalNewValue: the original new value
+     */
+    public convenience init(_ keyPath: KeyPath, isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) }) {
+        
+        self.init(
+            keyPath,
+            default: V.cs_emptyValue(),
+            isIndexed: isIndexed,
+            isTransient: isTransient,
+            versionHashModifier: versionHashModifier,
+            renamingIdentifier: renamingIdentifier,
+            customGetter: customGetter,
+            customSetter: customSetter
+        )
     }
 }
 

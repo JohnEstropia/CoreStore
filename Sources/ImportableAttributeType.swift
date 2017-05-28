@@ -65,12 +65,6 @@ public protocol ImportableAttributeType: QueryableAttributeType {
     associatedtype ImportableNativeType: QueryableNativeType
     
     /**
-     Returns the default "empty" value for this type.
-     */
-    @inline(__always)
-    static func cs_emptyValue() -> Self
-    
-    /**
      Creates an instance of this type from its `ImportableNativeType` value.
      */
     @inline(__always)
@@ -84,17 +78,30 @@ public protocol ImportableAttributeType: QueryableAttributeType {
 }
 
 
+// MARK: - EmptyableAttributeType
+
+/**
+ `ImportableAttributeType`s that have a natural "empty" value. Example: `0` for `Int`, `""` for `String`.
+ 
+ - Discussion: Not all `ImportableAttributeType`s can have empty values. `URL`s and `Date`s for example have no obvious empty values.
+ */
+public protocol EmptyableAttributeType: ImportableAttributeType {
+    
+    /**
+     Returns the default "empty" value for this type.
+     */
+    @inline(__always)
+    static func cs_emptyValue() -> Self
+}
+
+
 // MARK: - Bool
 
-extension Bool: ImportableAttributeType {
+extension Bool: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Bool {
-        
-        return false
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Bool? {
@@ -107,20 +114,25 @@ extension Bool: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> Bool {
+        
+        return false
+    }
 }
 
 
 // MARK: - CGFloat
 
-extension CGFloat: ImportableAttributeType {
+extension CGFloat: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> CGFloat {
-        
-        return 0
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> CGFloat? {
@@ -133,20 +145,25 @@ extension CGFloat: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> CGFloat {
+        
+        return 0
+    }
 }
 
 
 // MARK: - Data
 
-extension Data: ImportableAttributeType {
+extension Data: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSData
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Data {
-        
-        return Data()
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Data? {
@@ -159,6 +176,15 @@ extension Data: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> Data {
+        
+        return Data()
+    }
 }
 
 
@@ -166,13 +192,9 @@ extension Data: ImportableAttributeType {
 
 extension Date: ImportableAttributeType {
     
-    public typealias ImportableNativeType = NSDate
+    // MARK: ImportableAttributeType
     
-    @inline(__always)
-    public static func cs_emptyValue() -> Date {
-        
-        return Date(timeIntervalSinceReferenceDate: 0)
-    }
+    public typealias ImportableNativeType = NSDate
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Date? {
@@ -190,15 +212,11 @@ extension Date: ImportableAttributeType {
 
 // MARK: - Double
 
-extension Double: ImportableAttributeType {
+extension Double: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Double {
-        
-        return 0
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Double? {
@@ -211,20 +229,25 @@ extension Double: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> Double {
+        
+        return 0
+    }
 }
 
 
 // MARK: - Float
 
-extension Float: ImportableAttributeType {
+extension Float: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Float {
-        
-        return 0
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Float? {
@@ -237,20 +260,25 @@ extension Float: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> Float {
+        
+        return 0
+    }
 }
 
 
 // MARK: - Int
 
-extension Int: ImportableAttributeType {
+extension Int: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int {
-        
-        return 0
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Int? {
@@ -263,20 +291,25 @@ extension Int: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> Int {
+        
+        return 0
+    }
 }
 
 
 // MARK: - Int8
 
-extension Int8: ImportableAttributeType {
+extension Int8: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int8 {
-        
-        return 0
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Int8? {
@@ -289,20 +322,25 @@ extension Int8: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> Int8 {
+        
+        return 0
+    }
 }
 
 
 // MARK: - Int16
 
-extension Int16: ImportableAttributeType {
+extension Int16: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int16 {
-        
-        return 0
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Int16? {
@@ -315,20 +353,25 @@ extension Int16: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> Int16 {
+        
+        return 0
+    }
 }
 
 
 // MARK: - Int32
 
-extension Int32: ImportableAttributeType {
+extension Int32: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int32 {
-        
-        return 0
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Int32? {
@@ -341,20 +384,25 @@ extension Int32: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> Int32 {
+        
+        return 0
+    }
 }
 
 
 // MARK: - Int64
 
-extension Int64: ImportableAttributeType {
+extension Int64: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int64 {
-        
-        return 0
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Int64? {
@@ -367,20 +415,25 @@ extension Int64: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> Int64 {
+        
+        return 0
+    }
 }
 
 
 // MARK: - NSData
 
-extension NSData: ImportableAttributeType {
+extension NSData: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSData
-    
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init()
-    }
     
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
@@ -393,6 +446,15 @@ extension NSData: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @nonobjc @inline(__always)
+    public class func cs_emptyValue() -> Self {
+        
+        return self.init()
+    }
 }
 
 
@@ -400,13 +462,9 @@ extension NSData: ImportableAttributeType {
 
 extension NSDate: ImportableAttributeType {
     
-    public typealias ImportableNativeType = NSDate
+    // MARK: ImportableAttributeType
     
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init(timeIntervalSinceReferenceDate: 0)
-    }
+    public typealias ImportableNativeType = NSDate
     
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
@@ -424,15 +482,11 @@ extension NSDate: ImportableAttributeType {
 
 // MARK: - NSNumber
 
-extension NSNumber: ImportableAttributeType {
+extension NSNumber: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSNumber
-    
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init()
-    }
     
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
@@ -444,21 +498,26 @@ extension NSNumber: ImportableAttributeType {
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
         return self.cs_toQueryableNativeType()
+    }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @nonobjc @inline(__always)
+    public class func cs_emptyValue() -> Self {
+        
+        return self.init()
     }
 }
 
 
 // MARK: - NSString
 
-extension NSString: ImportableAttributeType {
+extension NSString: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSString
-    
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init()
-    }
     
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
@@ -470,6 +529,15 @@ extension NSString: ImportableAttributeType {
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
         return self.cs_toQueryableNativeType()
+    }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @nonobjc @inline(__always)
+    public class func cs_emptyValue() -> Self {
+        
+        return self.init()
     }
 }
 
@@ -478,13 +546,9 @@ extension NSString: ImportableAttributeType {
 
 extension NSURL: ImportableAttributeType {
     
-    public typealias ImportableNativeType = NSString
+    // MARK: ImportableAttributeType
     
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init(string: "")!
-    }
+    public typealias ImportableNativeType = NSString
     
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
@@ -504,16 +568,9 @@ extension NSURL: ImportableAttributeType {
 
 extension NSUUID: ImportableAttributeType {
     
-    public typealias ImportableNativeType = NSString
+    // MARK: ImportableAttributeType
     
-    public class func cs_emptyValue() -> Self {
-        
-        enum Static {
-            
-            static var zero = Array<UInt8>(repeating: 0, count: 16)
-        }
-        return self.init(uuidBytes: &Static.zero)
-    }
+    public typealias ImportableNativeType = NSString
     
     @nonobjc @inline(__always)
     public class func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {
@@ -531,15 +588,11 @@ extension NSUUID: ImportableAttributeType {
 
 // MARK: - String
 
-extension String: ImportableAttributeType {
+extension String: ImportableAttributeType, EmptyableAttributeType {
+    
+    // MARK: ImportableAttributeType
     
     public typealias ImportableNativeType = NSString
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> String {
-        
-        return ""
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> String? {
@@ -552,6 +605,15 @@ extension String: ImportableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
+    
+    
+    // MARK: EmptyableAttributeType
+    
+    @inline(__always)
+    public static func cs_emptyValue() -> String {
+        
+        return ""
+    }
 }
 
 
@@ -559,16 +621,9 @@ extension String: ImportableAttributeType {
 
 extension URL: ImportableAttributeType {
     
-    public typealias ImportableNativeType = NSString
+    // MARK: ImportableAttributeType
     
-    public static func cs_emptyValue() -> URL {
-        
-        enum Static {
-            
-            static let empty = URL(string: "")!
-        }
-        return Static.empty
-    }
+    public typealias ImportableNativeType = NSString
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> URL? {
@@ -588,20 +643,9 @@ extension URL: ImportableAttributeType {
 
 extension UUID: ImportableAttributeType {
     
-    public typealias ImportableNativeType = NSString
+    // MARK: ImportableAttributeType
     
-    public static func cs_emptyValue() -> UUID {
-        
-        enum Static {
-            
-            static let empty: UUID = cs_lazy {
-                
-                var zero = Array<UInt8>(repeating: 0, count: 16)
-                return NSUUID(uuidBytes: &zero) as UUID
-            }
-        }
-        return Static.empty
-    }
+    public typealias ImportableNativeType = NSString
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> UUID? {
@@ -622,11 +666,6 @@ extension UUID: ImportableAttributeType {
 extension RawRepresentable where RawValue: ImportableAttributeType {
     
     public typealias ImportableNativeType = RawValue.ImportableNativeType
-    
-    public static func cs_emptyValue() -> Self {
-        
-        return self.init(rawValue: RawValue.cs_emptyValue())!
-    }
     
     @inline(__always)
     public static func cs_fromImportableNativeType(_ value: ImportableNativeType) -> Self? {

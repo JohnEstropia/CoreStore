@@ -32,7 +32,7 @@ import Foundation
 public extension DynamicSchema {
     
     /**
-     Prints the `DynamicSchema` as their corresponding `CoreStoreObject` Swift declarations. This is useful for converting current `XcodeDataModelSchema`-based models into the new `CoreStoreSchema` framework. Additional adjustments may need to be done to the generated source code for "Transformable" attributes.
+     Prints the `DynamicSchema` as their corresponding `CoreStoreObject` Swift declarations. This is useful for converting current `XcodeDataModelSchema`-based models into the new `CoreStoreSchema` framework. Additional adjustments may need to be done to the generated source code; for example: `Transformable` concrete types need to be provided, as well as `default` values.
      
      - Important: After transitioning to the new `CoreStoreSchema` framework, it is recommended to add the new schema as a new version that the existing versions' `XcodeDataModelSchema` can migrate to. It is discouraged to load existing SQLite files created with `XcodeDataModelSchema` directly into a `CoreStoreSchema`.
      - returns: a string that represents the source code for the `DynamicSchema` as their corresponding `CoreStoreObject` Swift declarations.
@@ -153,8 +153,7 @@ public extension DynamicSchema {
                         }
                     case .dateAttributeType:
                         valueType = Date.self
-                        if let defaultValue = (attribute.defaultValue as! Date.ImportableNativeType?).flatMap(Date.cs_fromImportableNativeType),
-                            defaultValue != Date.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! Date.ImportableNativeType?).flatMap(Date.cs_fromImportableNativeType) {
                             
                             defaultString = ", default: Date(timeIntervalSinceReferenceDate: \(defaultValue.timeIntervalSinceReferenceDate))"
                         }
