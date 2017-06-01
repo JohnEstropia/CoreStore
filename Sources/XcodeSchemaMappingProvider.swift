@@ -32,7 +32,7 @@ import Foundation
 /**
  A `SchemaMappingProvider` that tries to infer model migration between two `DynamicSchema` versions by loading an xcmappingmodel file from the specified `Bundle`. Throws `CoreStoreError.mappingModelNotFound` if the xcmappingmodel file cannot be found, or if the xcmappingmodel doesn't resolve the source and destination `DynamicSchema`.
  */
-final class XcodeSchemaMappingProvider: Hashable, SchemaMappingProvider {
+public final class XcodeSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     /**
      The source model version for the mapping.

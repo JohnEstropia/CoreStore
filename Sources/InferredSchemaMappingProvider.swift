@@ -32,7 +32,7 @@ import Foundation
 /**
  A `SchemaMappingProvider` that tries to infer model migration between two `DynamicSchema` versions by searching all `xcmappingmodel`s from `Bundle.allBundles` or by relying on lightweight migration if possible. Throws an error if lightweight migration is impossible for the two `DynamicSchema`. This mapping is automatically used as a fallback mapping provider, even if no mapping providers are explicitly declared in the `StorageInterface`.
  */
-final class InferredSchemaMappingProvider: Hashable, SchemaMappingProvider {
+public final class InferredSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: Equatable
     

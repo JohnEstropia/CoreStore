@@ -32,7 +32,7 @@ import Foundation
 /**
  A `SchemaMappingProvider` that accepts custom mappings for some entities. Mappings of entities with no `CustomMapping` provided will be automatically calculated if possible.
  */
-open class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
+public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     /**
      The source model version for the mapping.
