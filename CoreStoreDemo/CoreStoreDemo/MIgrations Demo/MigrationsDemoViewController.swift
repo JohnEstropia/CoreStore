@@ -46,7 +46,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
         self.present(alert, animated: true, completion: nil)
         
         
-        let modelMetadata = withExtendedLifetime(DataStack(modelName: "MigrationDemo")) {
+        let modelMetadata = withExtendedLifetime(DataStack(xcodeModelName: "MigrationDemo")) {
             (dataStack: DataStack) -> ModelMetadata in
             
             let models = self.models

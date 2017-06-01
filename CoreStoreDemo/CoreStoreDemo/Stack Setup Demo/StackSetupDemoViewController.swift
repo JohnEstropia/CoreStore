@@ -17,7 +17,7 @@ private struct Static {
     
     static let facebookStack: DataStack = {
         
-        let dataStack = DataStack(modelName: "StackSetupDemo")
+        let dataStack = DataStack(xcodeModelName: "StackSetupDemo")
         try! dataStack.addStorageAndWait(
             SQLiteStore(
                 fileName: "AccountsDemo_FB_Male.sqlite",
@@ -55,7 +55,7 @@ private struct Static {
     
     static let twitterStack: DataStack = {
         
-        let dataStack = DataStack(modelName: "StackSetupDemo")
+        let dataStack = DataStack(xcodeModelName: "StackSetupDemo")
         try! dataStack.addStorageAndWait(
             SQLiteStore(
                 fileName: "AccountsDemo_TW_Male.sqlite",
