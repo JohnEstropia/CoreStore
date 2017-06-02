@@ -233,6 +233,18 @@ public extension ValueContainer.Required {
         
         return Where("%K >= %@", attribute.keyPath, value)
     }
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     ```
+     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname })
+     ```
+     */
+    @inline(__always)
+    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Required<V>) -> Where where S.Iterator.Element == V {
+        
+        return Where(attribute.keyPath, isMemberOf: sequence)
+    }
 }
 
 
@@ -262,6 +274,18 @@ public extension ValueContainer.Optional {
     public static func != (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
         
         return !Where(attribute.keyPath, isEqualTo: value)
+    }
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     ```
+     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname })
+     ```
+     */
+    @inline(__always)
+    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Optional<V>) -> Where where S.Iterator.Element == V {
+        
+        return Where(attribute.keyPath, isMemberOf: sequence)
     }
 }
 
