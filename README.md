@@ -460,7 +460,7 @@ CoreStore.defaultStack = DataStack(
 )   
 ```
 
-**`CoreStoreSchema`-based model versions with progressive migration
+**`CoreStoreSchema`-based model versions with progressive migration**
 ```swift
 typealias Animal = V2.Animal
 typealias Dog = V2.Dog
