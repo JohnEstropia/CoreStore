@@ -54,6 +54,39 @@ public extension DynamicObject where Self: CoreStoreObject {
     }
     
     /**
+     Extracts the keyPath string from a `CoreStoreObject.Relationship` property.
+     ```
+     let keyPath: String = Person.keyPath { $0.pets }
+     ```
+     */
+    public static func keyPath<O: CoreStoreObject, D: CoreStoreObject>(_ relationship: (Self) -> RelationshipContainer<O>.ToOne<D>) -> String  {
+        
+        return relationship(self.meta).keyPath
+    }
+    
+    /**
+     Extracts the keyPath string from a `CoreStoreObject.Relationship` property.
+     ```
+     let keyPath: String = Person.keyPath { $0.pets }
+     ```
+     */
+    public static func keyPath<O: CoreStoreObject, D: CoreStoreObject>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyOrdered<D>) -> String  {
+        
+        return relationship(self.meta).keyPath
+    }
+    
+    /**
+     Extracts the keyPath string from a `CoreStoreObject.Relationship` property.
+     ```
+     let keyPath: String = Person.keyPath { $0.pets }
+     ```
+     */
+    public static func keyPath<O: CoreStoreObject, D: CoreStoreObject>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyUnordered<D>) -> String  {
+        
+        return relationship(self.meta).keyPath
+    }
+    
+    /**
      Creates a `Where` clause from a `CoreStoreObject.Value` property.
      ```
      let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname == "John" })
@@ -67,10 +100,10 @@ public extension DynamicObject where Self: CoreStoreObject {
     /**
      Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
      ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.ascending { $0.age })
+     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
      ```
      */
-    public static func ascending<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+    public static func orderBy<O: CoreStoreObject, V: ImportableAttributeType>(ascending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
         
         return OrderBy(.ascending(attribute(self.meta).keyPath))
     }
@@ -78,9 +111,46 @@ public extension DynamicObject where Self: CoreStoreObject {
     /**
      Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
      ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.descending { $0.age })
+     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
      ```
      */
+    public static func orderBy<O: CoreStoreObject, V: ImportableAttributeType>(ascending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+        
+        return OrderBy(.ascending(attribute(self.meta).keyPath))
+    }
+    
+    /**
+     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
+     ```
+     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
+     ```
+     */
+    public static func orderBy<O: CoreStoreObject, V: ImportableAttributeType>(descending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
+        
+        return OrderBy(.descending(attribute(self.meta).keyPath))
+    }
+    
+    /**
+     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
+     ```
+     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
+     ```
+     */
+    public static func orderBy<O: CoreStoreObject, V: ImportableAttributeType>(descending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+        
+        return OrderBy(.descending(attribute(self.meta).keyPath))
+    }
+    
+    
+    // MARK: Deprecated
+    
+    @available(*, deprecated, renamed: "orderBy(ascending:)")
+    public static func ascending<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+        
+        return OrderBy(.ascending(attribute(self.meta).keyPath))
+    }
+    
+    @available(*, deprecated, renamed: "orderBy(descending:)")
     public static func descending<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
         
         return OrderBy(.descending(attribute(self.meta).keyPath))
@@ -192,5 +262,59 @@ public extension ValueContainer.Optional {
     public static func != (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
         
         return !Where(attribute.keyPath, isEqualTo: value)
+    }
+}
+
+
+// MARK: - RelationshipContainer.ToOne
+
+public extension RelationshipContainer.ToOne {
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     ```
+     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { $0.master == me })
+     ```
+     */
+    @inline(__always)
+    public static func == (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where {
+        
+        return Where(relationship.keyPath, isEqualTo: object)
+    }
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     ```
+     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { $0.master != me })
+     ```
+     */
+    @inline(__always)
+    public static func != (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where {
+        
+        return !Where(relationship.keyPath, isEqualTo: object)
+    }
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     ```
+     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { $0.master ~= me })
+     ```
+     */
+    @inline(__always)
+    public static func ~= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where {
+        
+        return Where(relationship.keyPath, isEqualTo: object)
+    }
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     ```
+     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { [john, joe, bob] ~= $0.master })
+     ```
+     */
+    @inline(__always)
+    public static func ~= <S: Sequence>(_ sequence: S, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Where where S.Iterator.Element == D {
+        
+        return Where(relationship.keyPath, isMemberOf: sequence)
     }
 }
