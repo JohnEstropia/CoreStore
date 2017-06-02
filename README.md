@@ -498,7 +498,7 @@ CoreStore.defaultStack = DataStack(
         ]
     ),
     CoreStoreSchema(
-        modelVersion: "V1",
+        modelVersion: "V2",
         entities: [
             Entity<V2.Animal>("Animal", isAbstract: true),
             Entity<V2.Dog>("Dog"),
