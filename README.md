@@ -460,6 +460,55 @@ CoreStore.defaultStack = DataStack(
 )   
 ```
 
+**`CoreStoreSchema`-based model versions with progressive migration**
+```swift
+typealias Animal = V2.Animal
+typealias Dog = V2.Dog
+typealias Person = V2.Person
+enum V2 {
+    class Animal: CoreStoreObject {
+        // ...
+    }
+    class Dog: Animal {
+        // ...
+    }
+    class Person: CoreStoreObject {
+        // ...
+    }
+}
+enum V1 {
+    class Animal: CoreStoreObject {
+        // ...
+    }
+    class Dog: Animal {
+        // ...
+    }
+    class Person: CoreStoreObject {
+        // ...
+    }
+}
+
+CoreStore.defaultStack = DataStack(
+    CoreStoreSchema(
+        modelVersion: "V1",
+        entities: [
+            Entity<V1.Animal>("Animal", isAbstract: true),
+            Entity<V1.Dog>("Dog"),
+            Entity<V1.Person>("Person")
+        ]
+    ),
+    CoreStoreSchema(
+        modelVersion: "V2",
+        entities: [
+            Entity<V2.Animal>("Animal", isAbstract: true),
+            Entity<V2.Dog>("Dog"),
+            Entity<V2.Person>("Person")
+        ]
+    ),
+    migrationChain: ["V1", "V2"]
+)
+```
+
 
 ### Starting migrations
 We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's *~AndWait* suffix suggests though, this method blocks so it should not do long tasks such as store migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.allowSynchronousLightweightMigration` option:
