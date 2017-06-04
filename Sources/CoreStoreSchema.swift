@@ -268,7 +268,7 @@ public final class CoreStoreSchema: DynamicSchema {
         entityDescription.name = entity.entityName
         entityDescription.isAbstract = entity.isAbstract
         entityDescription.versionHashModifier = entity.versionHashModifier
-        entityDescription.managedObjectClassName = "\(NSStringFromClass(entity.type)).CoreStoreManagedObject"
+        entityDescription.managedObjectClassName = "\(NSStringFromClass(CoreStoreManagedObject.self)).\(NSStringFromClass(entity.type)).\(entity.entityName)"
         
         var keyPathsByAffectedKeyPaths: [KeyPath: Set<KeyPath>] = [:]
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
