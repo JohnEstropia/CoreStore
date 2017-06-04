@@ -200,35 +200,39 @@ public final class CoreStoreSchema: DynamicSchema {
     
     public func rawModel() -> NSManagedObjectModel {
         
-        if let cachedRawModel = self.cachedRawModel {
+        return CoreStoreSchema.barrierQueue.sync(flags: .barrier) {
             
-            return cachedRawModel
-        }
-        let rawModel = NSManagedObjectModel()
-        var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
-        for entity in self.allEntities {
+            if let cachedRawModel = self.cachedRawModel {
+                
+                return cachedRawModel
+            }
+            let rawModel = NSManagedObjectModel()
+            var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
+            for entity in self.allEntities {
+                
+                let entityDescription = self.entityDescription(
+                    for: entity,
+                    initializer: CoreStoreSchema.firstPassCreateEntityDescription
+                )
+                entityDescriptionsByEntity[entity] = (entityDescription.copy() as! NSEntityDescription)
+            }
+            CoreStoreSchema.secondPassConnectRelationshipAttributes(for: entityDescriptionsByEntity)
+            CoreStoreSchema.thirdPassConnectInheritanceTree(for: entityDescriptionsByEntity)
+            CoreStoreSchema.fourthPassSynthesizeManagedObjectClasses(for: entityDescriptionsByEntity)
             
-            let entityDescription = self.entityDescription(
-                for: entity,
-                initializer: CoreStoreSchema.firstPassCreateEntityDescription
-            )
-            entityDescriptionsByEntity[entity] = (entityDescription.copy() as! NSEntityDescription)
+            rawModel.entities = entityDescriptionsByEntity.values.sorted(by: { $0.name! < $1.name! })
+            for (configuration, entities) in self.entitiesByConfiguration {
+                
+                rawModel.setEntities(
+                    entities
+                        .map({ entityDescriptionsByEntity[$0]! })
+                        .sorted(by: { $0.name! < $1.name! }),
+                    forConfigurationName: configuration
+                )
+            }
+            self.cachedRawModel = rawModel
+            return rawModel
         }
-        CoreStoreSchema.secondPassConnectRelationshipAttributes(for: entityDescriptionsByEntity)
-        CoreStoreSchema.thirdPassConnectInheritanceTree(for: entityDescriptionsByEntity)
-        
-        rawModel.entities = entityDescriptionsByEntity.values.sorted(by: { $0.name! < $1.name! })
-        for (configuration, entities) in self.entitiesByConfiguration {
-            
-            rawModel.setEntities(
-                entities
-                    .map({ entityDescriptionsByEntity[$0]! })
-                    .sorted(by: { $0.name! < $1.name! }),
-                forConfigurationName: configuration
-            )
-        }
-        self.cachedRawModel = rawModel
-        return rawModel
     }
     
     
@@ -264,8 +268,9 @@ public final class CoreStoreSchema: DynamicSchema {
         entityDescription.name = entity.entityName
         entityDescription.isAbstract = entity.isAbstract
         entityDescription.versionHashModifier = entity.versionHashModifier
-        entityDescription.managedObjectClassName = NSStringFromClass(NSManagedObject.self)
+        entityDescription.managedObjectClassName = "\(NSStringFromClass(entity.type)).CoreStoreManagedObject"
         
+        var keyPathsByAffectedKeyPaths: [KeyPath: Set<KeyPath>] = [:]
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
             
             var propertyDescriptions: [NSPropertyDescription] = []
@@ -284,6 +289,7 @@ public final class CoreStoreSchema: DynamicSchema {
                     description.versionHashModifier = attribute.versionHashModifier
                     description.renamingIdentifier = attribute.renamingIdentifier
                     propertyDescriptions.append(description)
+                    keyPathsByAffectedKeyPaths[attribute.keyPath] = attribute.affectedByKeyPaths()
                     
                 case let relationship as RelationshipProtocol:
                     let description = NSRelationshipDescription()
@@ -295,6 +301,7 @@ public final class CoreStoreSchema: DynamicSchema {
                     description.versionHashModifier = relationship.versionHashModifier
                     description.renamingIdentifier = relationship.renamingIdentifier
                     propertyDescriptions.append(description)
+                    keyPathsByAffectedKeyPaths[relationship.keyPath] = relationship.affectedByKeyPaths()
                     
                 default:
                     continue
@@ -302,7 +309,7 @@ public final class CoreStoreSchema: DynamicSchema {
             }
             return propertyDescriptions
         }
-        
+        entityDescription.keyPathsByAffectedKeyPaths = keyPathsByAffectedKeyPaths
         entityDescription.properties = createProperties(for: entity.type as! CoreStoreObject.Type)
         return entityDescription
     }
@@ -423,6 +430,45 @@ public final class CoreStoreSchema: DynamicSchema {
                 mirror: Mirror(reflecting: (entity.type as! CoreStoreObject.Type).meta),
                 entityDescription: entityDescription
             )
+        }
+    }
+    
+    private static func fourthPassSynthesizeManagedObjectClasses(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]) {
+        
+        func createManagedObjectSubclass(for entityDescription: NSEntityDescription) {
+            
+            let superEntity = entityDescription.superentity
+            let className = entityDescription.managedObjectClassName!
+            guard case nil = NSClassFromString(className) as! CoreStoreManagedObject.Type? else {
+                
+                return
+            }
+            if let superEntity = superEntity {
+                
+                createManagedObjectSubclass(for: superEntity)
+            }
+            let superClass = cs_lazy { () -> CoreStoreManagedObject.Type in
+                
+                if let superClassName = superEntity?.managedObjectClassName,
+                    let superClass = NSClassFromString(superClassName) {
+                    
+                    return superClass as! CoreStoreManagedObject.Type
+                }
+                return CoreStoreManagedObject.self
+            }
+            let managedObjectClass = className.withCString {
+                
+                return objc_allocateClassPair(superClass, $0, 0) as! CoreStoreManagedObject.Type
+            }
+            objc_registerClassPair(managedObjectClass)
+            managedObjectClass.cs_setKeyPathsForValuesAffectingKeys(
+                entityDescription.keyPathsByAffectedKeyPaths,
+                for: managedObjectClass
+            )
+        }
+        for (_, entityDescription) in entityDescriptionsByEntity {
+            
+            createManagedObjectSubclass(for: entityDescription)
         }
     }
 }

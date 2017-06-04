@@ -114,8 +114,18 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter setValue: the original setter for the property
          - parameter finalNewValue: the transformed new value
          - parameter originalNewValue: the original new value
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public init(_ keyPath: KeyPath, `default`: V, isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) }) {
+        public init(
+            _ keyPath: KeyPath,
+            `default`: V,
+            isIndexed: Bool = false,
+            isTransient: Bool = false,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() },
+            customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) },
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
             self.isIndexed = isIndexed
@@ -125,6 +135,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
             self.customSetter = customSetter
+            self.affectedByKeyPaths = affectedByKeyPaths
         }
         
         /**
@@ -192,6 +203,7 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let defaultValue: Any?
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let affectedByKeyPaths: () -> Set<String>
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -247,8 +259,18 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter setValue: the original setter for the property
          - parameter finalNewValue: the transformed new value
          - parameter originalNewValue: the original new value
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public init(_ keyPath: KeyPath, `default`: V? = nil, isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void = { $1($2) }) {
+        public init(
+            _ keyPath: KeyPath,
+            `default`: V? = nil,
+            isIndexed: Bool = false,
+            isTransient: Bool = false,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() },
+            customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void = { $1($2) },
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
             self.isIndexed = isIndexed
@@ -258,6 +280,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
             self.customSetter = customSetter
+            self.affectedByKeyPaths = affectedByKeyPaths
         }
         
         /**
@@ -324,6 +347,7 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let defaultValue: Any?
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let affectedByKeyPaths: () -> Set<String>
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -359,8 +383,17 @@ public extension ValueContainer.Required where V: EmptyableAttributeType {
      - parameter setValue: the original setter for the property
      - parameter finalNewValue: the transformed new value
      - parameter originalNewValue: the original new value
+     - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
      */
-    public convenience init(_ keyPath: KeyPath, isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) }) {
+    public convenience init(
+        _ keyPath: KeyPath,
+        isIndexed: Bool = false,
+        isTransient: Bool = false,
+        versionHashModifier: String? = nil,
+        renamingIdentifier: String? = nil,
+        customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() },
+        customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) },
+        affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
         
         self.init(
             keyPath,
@@ -370,7 +403,8 @@ public extension ValueContainer.Required where V: EmptyableAttributeType {
             versionHashModifier: versionHashModifier,
             renamingIdentifier: renamingIdentifier,
             customGetter: customGetter,
-            customSetter: customSetter
+            customSetter: customSetter,
+            affectedByKeyPaths: affectedByKeyPaths
         )
     }
 }
@@ -425,8 +459,18 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter setValue: the original setter for the property
          - parameter finalNewValue: the transformed new value
          - parameter originalNewValue: the original new value
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public init(_ keyPath: KeyPath, `default`: V, isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) }) {
+        public init(
+            _ keyPath: KeyPath,
+            `default`: V,
+            isIndexed: Bool = false,
+            isTransient: Bool = false,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() },
+            customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) },
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
             self.defaultValue = `default`
@@ -436,6 +480,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
             self.customSetter = customSetter
+            self.affectedByKeyPaths = affectedByKeyPaths
         }
         
         /**
@@ -502,6 +547,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
         internal let defaultValue: Any?
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let affectedByKeyPaths: () -> Set<String>
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -551,8 +597,18 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter setValue: the original setter for the property
          - parameter finalNewValue: the transformed new value
          - parameter originalNewValue: the original new value
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public init(_ keyPath: KeyPath, `default`: V? = nil, isIndexed: Bool = false, isTransient: Bool = false, versionHashModifier: String? = nil, renamingIdentifier: String? = nil, customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() }, customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void = { $1($2) }) {
+        public init(
+            _ keyPath: KeyPath,
+            `default`: V? = nil,
+            isIndexed: Bool = false,
+            isTransient: Bool = false,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() },
+            customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void = { $1($2) },
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
             self.defaultValue = `default`
@@ -562,6 +618,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
             self.customSetter = customSetter
+            self.affectedByKeyPaths = affectedByKeyPaths
         }
         
         /**
@@ -628,6 +685,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
         internal let defaultValue: Any?
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let affectedByKeyPaths: () -> Set<String>
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -944,5 +1002,6 @@ internal protocol AttributeProtocol: class {
     var defaultValue: Any? { get }
     var versionHashModifier: String? { get }
     var renamingIdentifier: String? { get }
+    var affectedByKeyPaths: () -> Set<String> { get }
     var parentObject: () -> CoreStoreObject { get set }
 }

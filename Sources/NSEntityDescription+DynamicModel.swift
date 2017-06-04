@@ -54,17 +54,43 @@ internal extension NSEntityDescription {
             
             if let newValue = newValue {
                 
-                var userInfo: [AnyHashable : Any] = [
-                    UserInfoKey.CoreStoreManagedObjectTypeName: NSStringFromClass(newValue.type),
-                    UserInfoKey.CoreStoreManagedObjectEntityName: newValue.entityName,
-                    UserInfoKey.CoreStoreManagedObjectIsAbstract: newValue.isAbstract
-                ]
-                userInfo[UserInfoKey.CoreStoreManagedObjectVersionHashModifier] = newValue.versionHashModifier
-                self.userInfo = userInfo
+                cs_setUserInfo { (userInfo) in
+                    
+                    userInfo[UserInfoKey.CoreStoreManagedObjectTypeName] = NSStringFromClass(newValue.type)
+                    userInfo[UserInfoKey.CoreStoreManagedObjectEntityName] = newValue.entityName
+                    userInfo[UserInfoKey.CoreStoreManagedObjectIsAbstract] = newValue.isAbstract
+                    userInfo[UserInfoKey.CoreStoreManagedObjectVersionHashModifier] = newValue.versionHashModifier
+                }
             }
             else {
                 
-                self.userInfo = [:]
+                cs_setUserInfo { (userInfo) in
+                    
+                    userInfo[UserInfoKey.CoreStoreManagedObjectTypeName] = nil
+                    userInfo[UserInfoKey.CoreStoreManagedObjectEntityName] = nil
+                    userInfo[UserInfoKey.CoreStoreManagedObjectIsAbstract] = nil
+                    userInfo[UserInfoKey.CoreStoreManagedObjectVersionHashModifier] = nil
+                }
+            }
+        }
+    }
+    
+    internal var keyPathsByAffectedKeyPaths: [KeyPath: Set<KeyPath>] {
+        
+        get {
+            
+            if let userInfo = self.userInfo,
+                let function = userInfo[UserInfoKey.CoreStoreManagedObjectKeyPathsByAffectedKeyPaths] as! [KeyPath: Set<KeyPath>]? {
+                
+                return function
+            }
+            return [:]
+        }
+        set {
+            
+            cs_setUserInfo { (userInfo) in
+                
+                userInfo[UserInfoKey.CoreStoreManagedObjectKeyPathsByAffectedKeyPaths] = newValue
             }
         }
     }
@@ -74,11 +100,20 @@ internal extension NSEntityDescription {
     
     // MARK: - UserInfoKey
     
-    fileprivate enum UserInfoKey {
+    private enum UserInfoKey {
         
         fileprivate static let CoreStoreManagedObjectTypeName = "CoreStoreManagedObjectTypeName"
         fileprivate static let CoreStoreManagedObjectEntityName = "CoreStoreManagedObjectEntityName"
         fileprivate static let CoreStoreManagedObjectIsAbstract = "CoreStoreManagedObjectIsAbstract"
         fileprivate static let CoreStoreManagedObjectVersionHashModifier = "CoreStoreManagedObjectVersionHashModifier"
+        
+        fileprivate static let CoreStoreManagedObjectKeyPathsByAffectedKeyPaths = "CoreStoreManagedObjectKeyPathsByAffectedKeyPaths"
+    }
+    
+    private func cs_setUserInfo(_ closure: (_ userInfo: inout [AnyHashable: Any]) -> Void) {
+        
+        var userInfo = self.userInfo ?? [:]
+        closure(&userInfo)
+        self.userInfo = userInfo
     }
 }

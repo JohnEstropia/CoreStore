@@ -92,10 +92,23 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                inverseKeyPath: { nil },
+                deleteRule: deleteRule,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -113,10 +126,24 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                inverseKeyPath: { inverse(D.meta).keyPath },
+                deleteRule: deleteRule,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -134,10 +161,24 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                inverseKeyPath: { inverse(D.meta).keyPath },
+                deleteRule: deleteRule,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -155,10 +196,24 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                inverseKeyPath: { inverse(D.meta).keyPath },
+                deleteRule: deleteRule,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -189,6 +244,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let affectedByKeyPaths: () -> Set<String>
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -230,13 +286,14 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, versionHashModifier: String?, renamingIdentifier: String?) {
+        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, versionHashModifier: String?, renamingIdentifier: String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
             self.inverse = (D.self, inverseKeyPath)
             self.versionHashModifier = versionHashModifier
             self.renamingIdentifier = renamingIdentifier
+            self.affectedByKeyPaths = affectedByKeyPaths
         }
     }
     
@@ -273,10 +330,27 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, minCount: Int = 0, maxCount: Int = 0, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, minCount: minCount, maxCount: maxCount, inverseKeyPath: { nil }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                minCount: minCount,
+                maxCount: maxCount,
+                inverseKeyPath: { nil },
+                deleteRule: deleteRule,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -296,10 +370,28 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, minCount: Int = 0, maxCount: Int = 0, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, minCount: minCount, maxCount: maxCount, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                minCount: minCount,
+                maxCount: maxCount,
+                inverseKeyPath: { inverse(D.meta).keyPath },
+                deleteRule: deleteRule,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -319,10 +411,28 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, minCount: Int = 0, maxCount: Int = 0, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, minCount: minCount, maxCount: maxCount, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                minCount: minCount,
+                maxCount: maxCount,
+                inverseKeyPath: { inverse(D.meta).keyPath },
+                deleteRule: deleteRule,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -342,10 +452,28 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, minCount: Int = 0, maxCount: Int = 0, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>,
+            deleteRule: DeleteRule = .nullify,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, minCount: minCount, maxCount: maxCount, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                minCount: minCount,
+                maxCount: maxCount,
+                inverseKeyPath: { inverse(D.meta).keyPath },
+                deleteRule: deleteRule,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -377,6 +505,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let affectedByKeyPaths: () -> Set<String>
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -418,7 +547,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: String, minCount: Int, maxCount: Int, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, versionHashModifier: String?, renamingIdentifier: String?) {
+        private init(keyPath: String, minCount: Int, maxCount: Int, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, versionHashModifier: String?, renamingIdentifier: String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
@@ -429,6 +558,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             let range = (Swift.max(0, minCount) ... maxCount)
             self.minCount = range.lowerBound
             self.maxCount = range.upperBound
+            self.affectedByKeyPaths = affectedByKeyPaths
         }
     }
     
@@ -466,10 +596,27 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            deleteRule: DeleteRule = .nullify,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { nil }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                inverseKeyPath: { nil },
+                deleteRule: deleteRule,
+                minCount: minCount,
+                maxCount: maxCount,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -489,10 +636,28 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>,
+            deleteRule: DeleteRule = .nullify,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                inverseKeyPath: { inverse(D.meta).keyPath },
+                deleteRule: deleteRule,
+                minCount: minCount,
+                maxCount: maxCount,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -512,10 +677,28 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>,
+            deleteRule: DeleteRule = .nullify,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                inverseKeyPath: { inverse(D.meta).keyPath },
+                deleteRule: deleteRule,
+                minCount: minCount,
+                maxCount: maxCount,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -535,10 +718,28 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter deleteRule: defines what happens to relationship when an object is deleted. Valid values are `.nullify`, `.cascade`, and `.delete`. Defaults to `.nullify`.
          - parameter versionHashModifier: used to mark or denote a relationship as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
+         - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public convenience init(_ keyPath: KeyPath, inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>, deleteRule: DeleteRule = .nullify, minCount: Int = 0, maxCount: Int = 0, versionHashModifier: String? = nil, renamingIdentifier: String? = nil) {
+        public convenience init(
+            _ keyPath: KeyPath,
+            inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>,
+            deleteRule: DeleteRule = .nullify,
+            minCount: Int = 0,
+            maxCount: Int = 0,
+            versionHashModifier: String? = nil,
+            renamingIdentifier: String? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(keyPath: keyPath, inverseKeyPath: { inverse(D.meta).keyPath }, deleteRule: deleteRule, minCount: minCount, maxCount: maxCount, versionHashModifier: versionHashModifier, renamingIdentifier: renamingIdentifier)
+            self.init(
+                keyPath: keyPath,
+                inverseKeyPath: { inverse(D.meta).keyPath },
+                deleteRule: deleteRule,
+                minCount: minCount,
+                maxCount: maxCount,
+                versionHashModifier: versionHashModifier,
+                renamingIdentifier: renamingIdentifier,
+                affectedByKeyPaths: affectedByKeyPaths
+            )
         }
         
         /**
@@ -570,6 +771,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let affectedByKeyPaths: () -> Set<String>
         
         internal var parentObject: () -> CoreStoreObject = {
             
@@ -611,7 +813,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: String?, renamingIdentifier: String?) {
+        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: String?, renamingIdentifier: String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
@@ -622,6 +824,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             let range = (Swift.max(0, minCount) ... maxCount)
             self.minCount = range.lowerBound
             self.maxCount = range.upperBound
+            self.affectedByKeyPaths = affectedByKeyPaths
         }
     }
     
@@ -988,6 +1191,7 @@ internal protocol RelationshipProtocol: class {
     var isOrdered: Bool { get }
     var deleteRule: NSDeleteRule { get }
     var inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?) { get }
+    var affectedByKeyPaths: () -> Set<String> { get }
     var parentObject: () -> CoreStoreObject { get set }
     var versionHashModifier: String? { get }
     var renamingIdentifier: String? { get }
