@@ -35,7 +35,7 @@ import CoreData
  - SeeAlso: `SynchronousDataTransaction`
  */
 @objc
-public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
+public final class CSSynchronousDataTransaction: CSBaseDataTransaction, CoreStoreObjectiveCType {
     
     /**
      Saves the transaction changes and waits for completion synchronously. This method should not be used after the `-commitAndWaitWithError:` method was already called once.
@@ -129,9 +129,9 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
     
     public typealias SwiftType = SynchronousDataTransaction
     
-    public override var bridgeToSwift: SynchronousDataTransaction {
+    public var bridgeToSwift: SynchronousDataTransaction {
         
-        return super.bridgeToSwift as! SynchronousDataTransaction
+        return super.swiftTransaction as! SynchronousDataTransaction
     }
     
     public required init(_ swiftValue: SynchronousDataTransaction) {
@@ -139,9 +139,9 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction {
         super.init(swiftValue as BaseDataTransaction)
     }
     
-    public required init(_ swiftValue: BaseDataTransaction) {
+    public required override init(_ swiftValue: BaseDataTransaction) {
         
-        super.init(swiftValue as! SynchronousDataTransaction)
+        super.init(swiftValue)
     }
     
     

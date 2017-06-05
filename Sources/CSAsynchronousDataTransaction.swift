@@ -35,7 +35,7 @@ import CoreData
  - SeeAlso: `AsynchronousDataTransaction`
  */
 @objc
-public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
+public final class CSAsynchronousDataTransaction: CSBaseDataTransaction, CoreStoreObjectiveCType {
     
     /**
      Saves the transaction changes. This method should not be used after the `-commitWithCompletion:` method was already called once.
@@ -139,9 +139,9 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
     
     public typealias SwiftType = AsynchronousDataTransaction
     
-    public override var bridgeToSwift: AsynchronousDataTransaction {
+    public var bridgeToSwift: AsynchronousDataTransaction {
         
-        return super.bridgeToSwift as! AsynchronousDataTransaction
+        return super.swiftTransaction as! AsynchronousDataTransaction
     }
     
     public required init(_ swiftValue: AsynchronousDataTransaction) {
@@ -149,9 +149,9 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction {
         super.init(swiftValue as BaseDataTransaction)
     }
     
-    public required init(_ swiftValue: BaseDataTransaction) {
+    public required override init(_ swiftValue: BaseDataTransaction) {
         
-        super.init(swiftValue as! AsynchronousDataTransaction)
+        super.init(swiftValue)
     }
     
     

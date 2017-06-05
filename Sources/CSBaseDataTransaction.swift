@@ -35,7 +35,7 @@ import CoreData
  - SeeAlso: `BaseDataTransaction`
  */
 @objc
-public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
+public class CSBaseDataTransaction: NSObject {
     
     // MARK: Object management
     
@@ -45,7 +45,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public var hasChanges: Bool {
         
-        return self.bridgeToSwift.hasChanges
+        return self.swiftTransaction.hasChanges
     }
     
     /**
@@ -57,7 +57,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func createInto(_ into: CSInto) -> Any {
         
-        return self.bridgeToSwift.create(into.bridgeToSwift)
+        return self.swiftTransaction.create(into.bridgeToSwift)
     }
     
     /**
@@ -69,7 +69,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func editObject(_ object: NSManagedObject?) -> Any? {
         
-        return self.bridgeToSwift.edit(object)
+        return self.swiftTransaction.edit(object)
     }
     
     /**
@@ -82,7 +82,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func editInto(_ into: CSInto, objectID: NSManagedObjectID) -> Any? {
         
-        return self.bridgeToSwift.edit(into.bridgeToSwift, objectID)
+        return self.swiftTransaction.edit(into.bridgeToSwift, objectID)
     }
 
     /**
@@ -93,7 +93,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func deleteObject(_ object: NSManagedObject?) {
         
-        self.bridgeToSwift.delete(object)
+        self.swiftTransaction.delete(object)
     }
     
     /**
@@ -104,7 +104,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func deleteObjects(_ objects: [NSManagedObject]) {
         
-        self.bridgeToSwift.delete(objects)
+        self.swiftTransaction.delete(objects)
     }
     
     /**
@@ -113,7 +113,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func refreshAndMergeAllObjects() {
         
-        self.bridgeToSwift.refreshAndMergeAllObjects()
+        self.swiftTransaction.refreshAndMergeAllObjects()
     }
     
     
@@ -128,7 +128,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func insertedObjectsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObject> {
         
-        return self.bridgeToSwift.insertedObjects(entity)
+        return self.swiftTransaction.insertedObjects(entity)
     }
     
     /**
@@ -139,7 +139,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func insertedObjectIDs() -> Set<NSManagedObjectID> {
         
-        return self.bridgeToSwift.insertedObjectIDs()
+        return self.swiftTransaction.insertedObjectIDs()
     }
     
     /**
@@ -151,7 +151,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func insertedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
-        return self.bridgeToSwift.insertedObjectIDs(entity)
+        return self.swiftTransaction.insertedObjectIDs(entity)
     }
     
     /**
@@ -163,7 +163,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func updatedObjectsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObject> {
         
-        return self.bridgeToSwift.updatedObjects(entity)
+        return self.swiftTransaction.updatedObjects(entity)
     }
     
     /**
@@ -174,7 +174,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func updatedObjectIDs() -> Set<NSManagedObjectID> {
         
-        return self.bridgeToSwift.updatedObjectIDs()
+        return self.swiftTransaction.updatedObjectIDs()
     }
     
     /**
@@ -186,7 +186,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func updatedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
-        return self.bridgeToSwift.updatedObjectIDs(entity)
+        return self.swiftTransaction.updatedObjectIDs(entity)
     }
     
     /**
@@ -198,7 +198,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func deletedObjectsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObject> {
         
-        return self.bridgeToSwift.deletedObjects(entity)
+        return self.swiftTransaction.deletedObjects(entity)
     }
     
     /**
@@ -209,7 +209,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func deletedObjectIDs() -> Set<NSManagedObjectID> {
         
-        return self.bridgeToSwift.deletedObjectIDs()
+        return self.swiftTransaction.deletedObjectIDs()
     }
 
     /**
@@ -221,7 +221,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func deletedObjectIDsOfType(_ entity: NSManagedObject.Type) -> Set<NSManagedObjectID> {
         
-        return self.bridgeToSwift.deletedObjectIDs(entity)
+        return self.swiftTransaction.deletedObjectIDs(entity)
     }
     
     
@@ -229,7 +229,7 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     
     public override var hash: Int {
         
-        return ObjectIdentifier(self.bridgeToSwift).hashValue
+        return ObjectIdentifier(self.swiftTransaction).hashValue
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
@@ -238,27 +238,19 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
             
             return false
         }
-        return self.bridgeToSwift === object.bridgeToSwift
+        return self.swiftTransaction === object.swiftTransaction
     }
     
     
-    // MARK: CoreStoreObjectiveCType
+    // MARK: Internal
     
-    public required init(_ swiftValue: BaseDataTransaction) {
+    internal let swiftTransaction: BaseDataTransaction
+    
+    internal init(_ swiftValue: BaseDataTransaction) {
         
         self.swiftTransaction = swiftValue
         super.init()
     }
-    
-    public var bridgeToSwift: BaseDataTransaction {
-        
-        return self.swiftTransaction
-    }
-    
-    
-    // MARK: Private
-    
-    private let swiftTransaction: BaseDataTransaction
     
     
     // MARK: Deprecated
@@ -267,20 +259,20 @@ public class CSBaseDataTransaction: NSObject, CoreStoreObjectiveCType {
     @objc
     public func insertedObjects() -> Set<NSManagedObject> {
         
-        return self.bridgeToSwift.insertedObjects()
+        return self.swiftTransaction.insertedObjects()
     }
     
     @available(*, deprecated, message: "Use -[updatedObjectsOfType:] and pass the specific entity class")
     @objc
     public func updatedObjects() -> Set<NSManagedObject> {
         
-        return self.bridgeToSwift.updatedObjects()
+        return self.swiftTransaction.updatedObjects()
     }
     
     @available(*, deprecated, message: "Use -[deletedObjectsOfType:] and pass the specific entity class")
     @objc
     public func deletedObjects() -> Set<NSManagedObject> {
         
-        return self.bridgeToSwift.deletedObjects()
+        return self.swiftTransaction.deletedObjects()
     }
 }

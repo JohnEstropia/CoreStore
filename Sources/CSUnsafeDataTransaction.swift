@@ -35,7 +35,7 @@ import CoreData
  - SeeAlso: `UnsafeDataTransaction`
  */
 @objc
-public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
+public final class CSUnsafeDataTransaction: CSBaseDataTransaction, CoreStoreObjectiveCType {
     /**
      Saves the transaction changes asynchronously. For a `CSUnsafeDataTransaction`, multiple commits are allowed, although it is the developer's responsibility to ensure a reasonable leeway to prevent blocking the main thread.
      
@@ -189,9 +189,9 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
     
     public typealias SwiftType = UnsafeDataTransaction
     
-    public override var bridgeToSwift: UnsafeDataTransaction {
+    public var bridgeToSwift: UnsafeDataTransaction {
         
-        return super.bridgeToSwift as! UnsafeDataTransaction
+        return super.swiftTransaction as! UnsafeDataTransaction
     }
     
     public required init(_ swiftValue: UnsafeDataTransaction) {
@@ -199,9 +199,9 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction {
         super.init(swiftValue as BaseDataTransaction)
     }
     
-    public required init(_ swiftValue: BaseDataTransaction) {
+    public required override init(_ swiftValue: BaseDataTransaction) {
         
-        super.init(swiftValue as! UnsafeDataTransaction)
+        super.init(swiftValue)
     }
     
     
