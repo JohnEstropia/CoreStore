@@ -279,6 +279,82 @@ public extension ValueContainer.Optional {
     /**
      Creates a `Where` clause from a `CoreStoreObject.Value` property.
      ```
+     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age < 20 })
+     ```
+     */
+    @inline(__always)
+    public static func < (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+        
+        if let value = value {
+            
+            return Where("%K < %@", attribute.keyPath, value)
+        }
+        else {
+            
+            return Where("%K < nil", attribute.keyPath)
+        }
+    }
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     ```
+     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age > 20 })
+     ```
+     */
+    @inline(__always)
+    public static func > (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+        
+        if let value = value {
+            
+            return Where("%K > %@", attribute.keyPath, value)
+        }
+        else {
+            
+            return Where("%K > nil", attribute.keyPath)
+        }
+    }
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     ```
+     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age <= 20 })
+     ```
+     */
+    @inline(__always)
+    public static func <= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+        
+        if let value = value {
+            
+            return Where("%K <= %@", attribute.keyPath, value)
+        }
+        else {
+            
+            return Where("%K <= nil", attribute.keyPath)
+        }
+    }
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     ```
+     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age >= 20 })
+     ```
+     */
+    @inline(__always)
+    public static func >= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+        
+        if let value = value {
+            
+            return Where("%K >= %@", attribute.keyPath, value)
+        }
+        else {
+            
+            return Where("%K >= nil", attribute.keyPath)
+        }
+    }
+    
+    /**
+     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     ```
      let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname })
      ```
      */
