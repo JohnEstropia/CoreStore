@@ -861,7 +861,7 @@ extension RelationshipContainer.ToManyOrdered: RandomAccessCollection {
     public func makeIterator() -> Iterator {
         
         let iterator = self.nativeValue.makeIterator()
-        return AnyIterator({ D.cs_fromRaw(object: iterator.next() as! NSManagedObject) })
+        return AnyIterator({ iterator.next().flatMap({ D.cs_fromRaw(object: $0 as! NSManagedObject) }) })
     }
     
     
@@ -916,7 +916,7 @@ extension RelationshipContainer.ToManyUnordered: Sequence {
     public func makeIterator() -> Iterator {
         
         let iterator = self.nativeValue.makeIterator()
-        return AnyIterator({ D.cs_fromRaw(object: iterator.next() as! NSManagedObject) })
+        return AnyIterator({ iterator.next().flatMap({ D.cs_fromRaw(object: $0 as! NSManagedObject) }) })
     }
 }
 
