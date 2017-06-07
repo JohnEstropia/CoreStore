@@ -201,7 +201,7 @@ public extension UnsafeDataTransaction {
 // MARK: - Private
 
 @available(OSX 10.12, *)
-fileprivate func createFRC<T: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<T>? = nil, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<T> {
+fileprivate func createFRC<T: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<T>, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<T> {
     
     let controller = CoreStoreFetchedResultsController(
         context: context,

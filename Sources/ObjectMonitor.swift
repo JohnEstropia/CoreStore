@@ -272,7 +272,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
         let fetchedResultsController = CoreStoreFetchedResultsController(
             context: context,
             fetchRequest: fetchRequest.dynamicCast(),
-            from: nil as From<ObjectType>?,
+            from: From<ObjectType>([objectID.persistentStore?.configurationName]),
             applyFetchClauses: Where("SELF", isEqualTo: objectID).applyToFetchRequest
         )
         

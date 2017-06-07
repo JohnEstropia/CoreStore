@@ -68,12 +68,12 @@ public extension CSUnsafeDataTransaction {
 // MARK: - Private
 
 @available(OSX 10.12, *)
-fileprivate func createFRC(fromContext context: NSManagedObjectContext, from: CSFrom? = nil, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
+fileprivate func createFRC(fromContext context: NSManagedObjectContext, from: CSFrom, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
     
     let controller = CoreStoreFetchedResultsController(
         context: context,
         fetchRequest: CoreStoreFetchRequest().dynamicCast(),
-        from: from?.bridgeToSwift,
+        from: from.bridgeToSwift,
         sectionBy: sectionBy?.bridgeToSwift,
         applyFetchClauses: { (fetchRequest) in
             
