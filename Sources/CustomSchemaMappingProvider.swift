@@ -352,7 +352,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         )
         func expression(forSource sourceEntity: NSEntityDescription) -> NSExpression {
             
-            return NSExpression(format: "FETCH(FUNCTION($\(NSMigrationManagerKey), \"fetchRequestForSourceEntityNamed:predicateString:\" , \"\(sourceEntity.name!)\", \"\(NSPredicate(value: true))\"), $\(NSMigrationManagerKey).\(#keyPath(NSMigrationManager.sourceContext)), \(false))")
+            return NSExpression(format: "FETCH(FUNCTION($\(NSMigrationManagerKey), \"fetchRequestForSourceEntityNamed:predicateString:\" , \"\(sourceEntity.name!)\", \"\(NSPredicate(value: true))\"), FUNCTION($\(NSMigrationManagerKey), \"\(#selector(getter: NSMigrationManager.sourceContext))\"), \(false))")
         }
         
         let sourceEntitiesByName = sourceModel.entitiesByName
@@ -427,22 +427,25 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                     let destinationAttribute = destination.attribute
                     let propertyMapping = NSPropertyMapping()
                     propertyMapping.name = destinationAttribute.name
-                    propertyMapping.valueExpression = NSExpression(format: "$\(NSMigrationSourceObjectKey).\(sourceAttribute.name)")
+                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationSourceObjectKey), \"\(#selector(NSManagedObject.value(forKey:)))\", \"\(sourceAttribute.name)\")")
                     attributeMappings.append(propertyMapping)
                 }
                 return attributeMappings
             }
-            let entityMappingName = entityMapping.name!
             entityMapping.relationshipMappings = autoreleasepool { () -> [NSPropertyMapping] in
                 
+                let sourceRelationships = sourceEntity.cs_resolvedRelationshipRenamingIdentities()
                 let destinationRelationships = destinationEntity.cs_resolvedRelationshipRenamingIdentities()
                 var relationshipMappings: [NSPropertyMapping] = []
-                for (_, destination) in destinationRelationships {
+                for (renamingIdentifier, destination) in destinationRelationships {
                     
+                    let sourceRelationship = sourceRelationships[renamingIdentifier]!.relationship
                     let destinationRelationship = destination.relationship
+                    let sourceRelationshipName = sourceRelationship.name
+
                     let propertyMapping = NSPropertyMapping()
                     propertyMapping.name = destinationRelationship.name
-                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"\(#selector(NSMigrationManager.destinationInstances(forEntityMappingName:sourceInstances:)))\" , \"\(entityMappingName)\", $\(NSMigrationSourceObjectKey))[0]")
+                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"destinationInstancesForSourceRelationshipNamed:sourceInstances:\", \"\(sourceRelationshipName)\", FUNCTION($\(NSMigrationSourceObjectKey), \"\(#selector(NSManagedObject.value(forKey:)))\", \"\(sourceRelationshipName)\"))")
                     relationshipMappings.append(propertyMapping)
                 }
                 return relationshipMappings
@@ -483,17 +486,24 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                 }
                 userInfo[CustomEntityMigrationPolicy.UserInfoKey.sourceAttributesByDestinationKey] = sourceAttributesByDestinationKey
             }
-            let entityMappingName = entityMapping.name!
             entityMapping.relationshipMappings = autoreleasepool { () -> [NSPropertyMapping] in
                 
+                let sourceRelationships = sourceEntity.cs_resolvedRelationshipRenamingIdentities()
                 let destinationRelationships = destinationEntity.cs_resolvedRelationshipRenamingIdentities()
+                let transformedRenamingIdentifiers = Set(destinationRelationships.keys)
+                    .intersection(sourceRelationships.keys)
+
                 var relationshipMappings: [NSPropertyMapping] = []
-                for (_, destination) in destinationRelationships {
-                    
-                    let destinationRelationship = destination.relationship
+                for renamingIdentifier in transformedRenamingIdentifiers {
+
+                    let sourceRelationship = sourceRelationships[renamingIdentifier]!.relationship
+                    let destinationRelationship = destinationRelationships[renamingIdentifier]!.relationship
+                    let sourceRelationshipName = sourceRelationship.name
+                    let destinationRelationshipName = destinationRelationship.name
+
                     let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = destinationRelationship.name
-                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"\(#selector(NSMigrationManager.destinationInstances(forEntityMappingName:sourceInstances:)))\" , \"\(entityMappingName)\", $\(NSMigrationSourceObjectKey))[0]")
+                    propertyMapping.name = destinationRelationshipName
+                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"destinationInstancesForSourceRelationshipNamed:sourceInstances:\", \"\(sourceRelationshipName)\", FUNCTION($\(NSMigrationSourceObjectKey), \"\(#selector(NSManagedObject.value(forKey:)))\", \"\(sourceRelationshipName)\"))")
                     relationshipMappings.append(propertyMapping)
                 }
                 return relationshipMappings
@@ -545,11 +555,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             )
             if let dInstance = destinationObject?.rawObject {
                 
-                manager.associate(
-                    sourceInstance: sInstance,
-                    withDestinationInstance: dInstance,
-                    for: mapping
-                )
+                manager.associate(sourceInstance: sInstance, withDestinationInstance: dInstance, for: mapping)
             }
         }
         
@@ -670,77 +676,76 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                 allMappedSourceKeys[sourceEntity] = destinationEntity
                 allMappedDestinationKeys[destinationEntity] = sourceEntity
             }
+        }
+        for renamingIdentifier in transformedRenamingIdentifiers {
             
-            for renamingIdentifier in transformedRenamingIdentifiers {
+            let sourceEntity = sourceRenamingIdentifiers[renamingIdentifier]!.entity
+            let destinationEntity = destinationRenamingIdentifiers[renamingIdentifier]!.entity
+            let sourceEntityName = sourceEntity.name!
+            let destinationEntityName = destinationEntity.name!
+            switch (allMappedSourceKeys[sourceEntityName], allMappedDestinationKeys[destinationEntityName]) {
                 
-                let sourceEntity = sourceRenamingIdentifiers[renamingIdentifier]!.entity
-                let destinationEntity = destinationRenamingIdentifiers[renamingIdentifier]!.entity
-                let sourceEntityName = sourceEntity.name!
-                let destinationEntityName = destinationEntity.name!
-                switch (allMappedSourceKeys[sourceEntityName], allMappedDestinationKeys[destinationEntityName]) {
+            case (nil, nil):
+                if sourceEntity.versionHash == destinationEntity.versionHash {
                     
-                case (nil, nil):
-                    if sourceEntity.versionHash == destinationEntity.versionHash {
-                        
-                        copyMappings.insert(
-                            .copyEntity(
-                                sourceEntity: sourceEntityName,
-                                destinationEntity: destinationEntityName
-                            )
+                    copyMappings.insert(
+                        .copyEntity(
+                            sourceEntity: sourceEntityName,
+                            destinationEntity: destinationEntityName
                         )
-                    }
-                    else {
-                        
-                        transformMappings.insert(
-                            .transformEntity(
-                                sourceEntity: sourceEntityName,
-                                destinationEntity: destinationEntityName,
-                                transformer: CustomMapping.inferredTransformation
-                            )
+                    )
+                }
+                else {
+                    
+                    transformMappings.insert(
+                        .transformEntity(
+                            sourceEntity: sourceEntityName,
+                            destinationEntity: destinationEntityName,
+                            transformer: CustomMapping.inferredTransformation
                         )
-                    }
-                    allMappedSourceKeys[sourceEntityName] = destinationEntityName
-                    allMappedDestinationKeys[destinationEntityName] = sourceEntityName
-                    
-                case (""?, nil):
-                    insertMappings.insert(.insertEntity(destinationEntity: destinationEntityName))
-                    allMappedDestinationKeys[destinationEntityName] = ""
-                    
-                case (nil, ""?):
-                    deleteMappings.insert(.deleteEntity(sourceEntity: sourceEntityName))
-                    allMappedSourceKeys[sourceEntityName] = ""
-                    
-                default:
-                    continue
+                    )
                 }
-            }
-            for renamingIdentifier in removedRenamingIdentifiers {
+                allMappedSourceKeys[sourceEntityName] = destinationEntityName
+                allMappedDestinationKeys[destinationEntityName] = sourceEntityName
                 
-                let sourceEntity = sourceRenamingIdentifiers[renamingIdentifier]!.entity
-                let sourceEntityName = sourceEntity.name!
-                switch allMappedSourceKeys[sourceEntityName] {
-                    
-                case nil:
-                    deleteMappings.insert(.deleteEntity(sourceEntity: sourceEntityName))
-                    allMappedSourceKeys[sourceEntityName] = ""
-                    
-                default:
-                    continue
-                }
-            }
-            for renamingIdentifier in addedRenamingIdentifiers {
+            case (""?, nil):
+                insertMappings.insert(.insertEntity(destinationEntity: destinationEntityName))
+                allMappedDestinationKeys[destinationEntityName] = ""
                 
-                let destinationEntity = destinationRenamingIdentifiers[renamingIdentifier]!.entity
-                let destinationEntityName = destinationEntity.name!
-                switch allMappedDestinationKeys[destinationEntityName] {
-                    
-                case nil:
-                    insertMappings.insert(.insertEntity(destinationEntity: destinationEntityName))
-                    allMappedDestinationKeys[destinationEntityName] = ""
-                    
-                default:
-                    continue
-                }
+            case (nil, ""?):
+                deleteMappings.insert(.deleteEntity(sourceEntity: sourceEntityName))
+                allMappedSourceKeys[sourceEntityName] = ""
+                
+            default:
+                continue
+            }
+        }
+        for renamingIdentifier in removedRenamingIdentifiers {
+            
+            let sourceEntity = sourceRenamingIdentifiers[renamingIdentifier]!.entity
+            let sourceEntityName = sourceEntity.name!
+            switch allMappedSourceKeys[sourceEntityName] {
+                
+            case nil:
+                deleteMappings.insert(.deleteEntity(sourceEntity: sourceEntityName))
+                allMappedSourceKeys[sourceEntityName] = ""
+                
+            default:
+                continue
+            }
+        }
+        for renamingIdentifier in addedRenamingIdentifiers {
+            
+            let destinationEntity = destinationRenamingIdentifiers[renamingIdentifier]!.entity
+            let destinationEntityName = destinationEntity.name!
+            switch allMappedDestinationKeys[destinationEntityName] {
+                
+            case nil:
+                insertMappings.insert(.insertEntity(destinationEntity: destinationEntityName))
+                allMappedDestinationKeys[destinationEntityName] = ""
+                
+            default:
+                continue
             }
         }
         return (deleteMappings, insertMappings, copyMappings, transformMappings)
