@@ -35,7 +35,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     // MARK: Internal
     
     @nonobjc
-    internal convenience init<T: DynamicObject>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>?, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init<T: DynamicObject>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -47,33 +47,18 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     }
     
     @nonobjc
-    internal init<T: DynamicObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>?, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal init<T: DynamicObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
-        _ = from?.applyToFetchRequest(
+        _ = from.applyToFetchRequest(
             fetchRequest,
             context: context,
             applyAffectedStores: false
         )
         applyFetchClauses(fetchRequest)
         
-        if let from = from {
+        self.reapplyAffectedStores = { fetchRequest, context in
             
-            self.reapplyAffectedStores = { fetchRequest, context in
-                
-                return from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
-            }
-        }
-        else {
-            
-            guard let from = (fetchRequest.entity.flatMap { $0.managedObjectClassName }).flatMap(NSClassFromString).flatMap({ From<T>($0 as! T.Type) }) else {
-                
-                CoreStore.abort("Attempted to create a \(CoreStoreFetchedResultsController.self) without a \(cs_typeName(From<T>.self)) clause or an \(cs_typeName(NSEntityDescription.self)).")
-            }
-            
-            self.reapplyAffectedStores = { fetchRequest, context in
-                
-                return from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
-            }
+            return from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
         }
         
         super.init(
