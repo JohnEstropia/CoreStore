@@ -600,7 +600,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
-    public static func == <T: DynamicObject, U: DynamicObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+    public static func == <T, U>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
@@ -610,7 +610,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
-    public static func ~= <T: DynamicObject, U: DynamicObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+    public static func ~= <T, U>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }

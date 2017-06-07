@@ -63,7 +63,7 @@ public struct Tweak: FetchClause, QueryClause, DeleteClause {
     
     // MARK: FetchClause, QueryClause, DeleteClause
     
-    public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
+    public func applyToFetchRequest<ResultType>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
         self.closure(fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
     }

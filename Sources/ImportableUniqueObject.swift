@@ -56,11 +56,6 @@ import CoreData
 public protocol ImportableUniqueObject: ImportableObject {
     
     /**
-     The data type for the import source. This is most commonly an json type, `NSDictionary`, or another external source such as `NSUserDefaults`.
-     */
-    associatedtype ImportSource
-    
-    /**
      The data type for the entity's unique ID attribute
      */
     associatedtype UniqueIDType: ImportableAttributeType
@@ -125,6 +120,26 @@ public protocol ImportableUniqueObject: ImportableObject {
 
 public extension ImportableUniqueObject {
     
+    var uniqueIDValue: UniqueIDType {
+        
+        get {
+            
+            return self.cs_toRaw().getValue(
+                forKvcKey: type(of: self).uniqueIDKeyPath,
+                didGetValue: { UniqueIDType.cs_fromImportableNativeType($0 as! UniqueIDType.ImportableNativeType)! }
+            )
+        }
+        set {
+            
+            self.cs_toRaw()
+                .setValue(
+                    newValue,
+                    forKvcKey: type(of: self).uniqueIDKeyPath,
+                    willSetValue: { ($0.cs_toImportableNativeType() as! CoreDataNativeType) }
+                )
+        }
+    }
+    
     static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldUpdate(from: source, in: transaction)
@@ -171,31 +186,5 @@ public extension ImportableUniqueObject {
     func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.update(from: source, in: transaction)
-    }
-}
-
-
-// MARK: - ImportableUniqueObject (Default Implementations)
-
-public extension ImportableUniqueObject where Self: DynamicObject {
-    
-    var uniqueIDValue: UniqueIDType {
-        
-        get {
-            
-            return self.cs_toRaw().getValue(
-                forKvcKey: type(of: self).uniqueIDKeyPath,
-                didGetValue: { UniqueIDType.cs_fromImportableNativeType($0 as! UniqueIDType.ImportableNativeType)! }
-            )
-        }
-        set {
-            
-            self.cs_toRaw()
-                .setValue(
-                    newValue,
-                    forKvcKey: type(of: self).uniqueIDKeyPath,
-                    willSetValue: { ($0.cs_toImportableNativeType() as! CoreDataNativeType) }
-                )
-        }
     }
 }

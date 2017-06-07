@@ -37,7 +37,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let keyPath: String = Person.keyPath { $0.nickname }
      ```
      */
-    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Required<V>) -> String  {
+    public static func keyPath<O, V>(_ attribute: (Self) -> ValueContainer<O>.Required<V>) -> String  {
         
         return attribute(self.meta).keyPath
     }
@@ -48,7 +48,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let keyPath: String = Person.keyPath { $0.nickname }
      ```
      */
-    public static func keyPath<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> String  {
+    public static func keyPath<O, V>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> String  {
         
         return attribute(self.meta).keyPath
     }
@@ -59,7 +59,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let keyPath: String = Person.keyPath { $0.pets }
      ```
      */
-    public static func keyPath<O: CoreStoreObject, D: CoreStoreObject>(_ relationship: (Self) -> RelationshipContainer<O>.ToOne<D>) -> String  {
+    public static func keyPath<O, D>(_ relationship: (Self) -> RelationshipContainer<O>.ToOne<D>) -> String  {
         
         return relationship(self.meta).keyPath
     }
@@ -70,7 +70,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let keyPath: String = Person.keyPath { $0.pets }
      ```
      */
-    public static func keyPath<O: CoreStoreObject, D: CoreStoreObject>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyOrdered<D>) -> String  {
+    public static func keyPath<O, D>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyOrdered<D>) -> String  {
         
         return relationship(self.meta).keyPath
     }
@@ -81,7 +81,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let keyPath: String = Person.keyPath { $0.pets }
      ```
      */
-    public static func keyPath<O: CoreStoreObject, D: CoreStoreObject>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyUnordered<D>) -> String  {
+    public static func keyPath<O, D>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyUnordered<D>) -> String  {
         
         return relationship(self.meta).keyPath
     }
@@ -103,7 +103,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
      ```
      */
-    public static func orderBy<O: CoreStoreObject, V: ImportableAttributeType>(ascending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
+    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
         
         return OrderBy(.ascending(attribute(self.meta).keyPath))
     }
@@ -114,7 +114,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
      ```
      */
-    public static func orderBy<O: CoreStoreObject, V: ImportableAttributeType>(ascending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
         
         return OrderBy(.ascending(attribute(self.meta).keyPath))
     }
@@ -125,7 +125,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
      ```
      */
-    public static func orderBy<O: CoreStoreObject, V: ImportableAttributeType>(descending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
+    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
         
         return OrderBy(.descending(attribute(self.meta).keyPath))
     }
@@ -136,7 +136,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
      ```
      */
-    public static func orderBy<O: CoreStoreObject, V: ImportableAttributeType>(descending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
         
         return OrderBy(.descending(attribute(self.meta).keyPath))
     }
@@ -145,13 +145,13 @@ public extension DynamicObject where Self: CoreStoreObject {
     // MARK: Deprecated
     
     @available(*, deprecated, renamed: "orderBy(ascending:)")
-    public static func ascending<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+    public static func ascending<O, V>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
         
         return OrderBy(.ascending(attribute(self.meta).keyPath))
     }
     
     @available(*, deprecated, renamed: "orderBy(descending:)")
-    public static func descending<O: CoreStoreObject, V: ImportableAttributeType>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+    public static func descending<O, V>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
         
         return OrderBy(.descending(attribute(self.meta).keyPath))
     }

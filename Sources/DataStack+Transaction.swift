@@ -211,9 +211,9 @@ public extension DataStack {
         }
         switch transaction.result {
             
-        case nil:                       return nil
-        case (let hasChanges, nil)?:    return SaveResult(hasChanges: hasChanges)
-        case (_, let error?)?:          return SaveResult(error)
+        case .none:                         return nil
+        case .some(let hasChanges, nil):    return SaveResult(hasChanges: hasChanges)
+        case .some(_, let error?):          return SaveResult(error)
         }
     }
 }

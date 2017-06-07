@@ -860,7 +860,7 @@ extension RelationshipContainer.ToManyOrdered: RandomAccessCollection {
     
     public func makeIterator() -> Iterator {
         
-        let iterator = self.nativeValue.makeIterator()
+        var iterator = self.nativeValue.makeIterator()
         return AnyIterator({ iterator.next().flatMap({ D.cs_fromRaw(object: $0 as! NSManagedObject) }) })
     }
     
@@ -915,7 +915,7 @@ extension RelationshipContainer.ToManyUnordered: Sequence {
     
     public func makeIterator() -> Iterator {
         
-        let iterator = self.nativeValue.makeIterator()
+        var iterator = self.nativeValue.makeIterator()
         return AnyIterator({ iterator.next().flatMap({ D.cs_fromRaw(object: $0 as! NSManagedObject) }) })
     }
 }
@@ -953,7 +953,7 @@ extension RelationshipContainer.ToOne {
      dog.master.value = anotherDog.master.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) {
+    public static func .= <O2>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) {
         
         relationship.nativeValue = relationship2.nativeValue
     }
@@ -998,7 +998,7 @@ extension RelationshipContainer.ToOne {
      if dog.master.value == person { ... }
      ```
      */
-    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) -> Bool {
+    public static func .== <O2>(_ relationship: RelationshipContainer<O>.ToOne<D>, _ relationship2: RelationshipContainer<O2>.ToOne<D>) -> Bool {
         
         return relationship.nativeValue == relationship2.nativeValue
     }
@@ -1031,7 +1031,7 @@ extension RelationshipContainer.ToManyOrdered {
      person.pets.value = anotherPerson.pets.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
+    public static func .= <O2>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
         
         relationship.nativeValue = relationship2.nativeValue
     }
@@ -1082,7 +1082,7 @@ extension RelationshipContainer.ToManyOrdered {
      if person.pets.value == anotherPerson.pets.value { ... }
      ```
      */
-    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) -> Bool {
+    public static func .== <O2>(_ relationship: RelationshipContainer<O>.ToManyOrdered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) -> Bool {
         
         return relationship.nativeValue == relationship2.nativeValue
     }
@@ -1115,7 +1115,7 @@ extension RelationshipContainer.ToManyUnordered {
      person.pets.value = anotherPerson.pets.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) {
+    public static func .= <O2>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) {
         
         relationship.nativeValue = relationship2.nativeValue
     }
@@ -1130,7 +1130,7 @@ extension RelationshipContainer.ToManyUnordered {
      person.pets.value = anotherPerson.pets.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
+    public static func .= <O2>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyOrdered<D>) {
         
         relationship.nativeValue = NSSet(set: relationship2.nativeValue.set)
     }
@@ -1175,7 +1175,7 @@ extension RelationshipContainer.ToManyUnordered {
      if person.pets.value == anotherPerson.pets.value { ... }
      ```
      */
-    public static func .== <O2: CoreStoreObject>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) -> Bool {
+    public static func .== <O2>(_ relationship: RelationshipContainer<O>.ToManyUnordered<D>, _ relationship2: RelationshipContainer<O2>.ToManyUnordered<D>) -> Bool {
         
         return relationship.nativeValue.isEqual(relationship2.nativeValue)
     }

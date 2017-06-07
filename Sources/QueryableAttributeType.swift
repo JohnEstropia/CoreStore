@@ -434,12 +434,20 @@ extension NSNull: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNull
     
-    public static let cs_rawAttributeType: NSAttributeType = .undefinedAttributeType
+    public class var cs_rawAttributeType: NSAttributeType {
+        
+        return .undefinedAttributeType
+    }
     
     @nonobjc @inline(__always)
     public static func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
-        return self.init()
+        @inline(__always)
+        func forceCast<T: NSNull>(_ value: Any) -> T? {
+            
+            return value as? T
+        }
+        return forceCast(value)
     }
     
     @nonobjc @inline(__always)

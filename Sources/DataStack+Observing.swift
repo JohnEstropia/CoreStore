@@ -38,7 +38,7 @@ public extension DataStack {
      - parameter object: the `DynamicObject` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
-    public func monitorObject<T: DynamicObject>(_ object: T) -> ObjectMonitor<T> {
+    public func monitorObject<T>(_ object: T) -> ObjectMonitor<T> {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -54,7 +54,7 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorList<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.monitorList(from, fetchClauses)
     }
@@ -66,7 +66,7 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorList<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -95,7 +95,7 @@ public extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T: DynamicObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
+    public func monitorList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
         
         self.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -107,7 +107,7 @@ public extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T: DynamicObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
+    public func monitorList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -138,7 +138,7 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<T: DynamicObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorSectionedList<T>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -151,7 +151,7 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<T: DynamicObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorSectionedList<T>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -182,7 +182,7 @@ public extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T: DynamicObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
+    public func monitorSectionedList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
         
         self.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -195,7 +195,7 @@ public extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T: DynamicObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
+    public func monitorSectionedList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
         
         CoreStore.assert(
             Thread.isMainThread,

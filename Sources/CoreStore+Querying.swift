@@ -82,7 +82,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    public static func fetchOne<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
+    public static func fetchOne<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T? {
         
         return self.defaultStack.fetchOne(from, fetchClauses)
     }
@@ -94,7 +94,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    public static func fetchOne<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
+    public static func fetchOne<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T? {
         
         return self.defaultStack.fetchOne(from, fetchClauses)
     }
@@ -106,7 +106,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    public static func fetchAll<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
+    public static func fetchAll<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]? {
         
         return self.defaultStack.fetchAll(from, fetchClauses)
     }
@@ -118,7 +118,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    public static func fetchAll<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
+    public static func fetchAll<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]? {
         
         return self.defaultStack.fetchAll(from, fetchClauses)
     }
@@ -130,7 +130,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public static func fetchCount<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
+    public static func fetchCount<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int? {
         
         return self.defaultStack.fetchCount(from, fetchClauses)
     }
@@ -142,7 +142,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public static func fetchCount<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
+    public static func fetchCount<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int? {
         
         return self.defaultStack.fetchCount(from, fetchClauses)
     }
@@ -154,7 +154,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
-    public static func fetchObjectID<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
+    public static func fetchObjectID<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
         
         return self.defaultStack.fetchObjectID(from, fetchClauses)
     }
@@ -166,7 +166,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
-    public static func fetchObjectID<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
+    public static func fetchObjectID<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
         
         return self.defaultStack.fetchObjectID(from, fetchClauses)
     }
@@ -178,7 +178,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public static func fetchObjectIDs<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public static func fetchObjectIDs<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
         
         return self.defaultStack.fetchObjectIDs(from, fetchClauses)
     }
@@ -190,7 +190,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public static func fetchObjectIDs<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public static func fetchObjectIDs<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         return self.defaultStack.fetchObjectIDs(from, fetchClauses)
     }
@@ -205,7 +205,7 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryValue<T: DynamicObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
+    public static func queryValue<T, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
         
         return self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
@@ -220,7 +220,7 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryValue<T: DynamicObject, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
+    public static func queryValue<T, U: QueryableAttributeType>(_ from: From<T>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
         
         return self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
@@ -235,7 +235,7 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryAttributes<T: DynamicObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
+    public static func queryAttributes<T>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
         
         return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }
@@ -250,7 +250,7 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryAttributes<T: DynamicObject>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
+    public static func queryAttributes<T>(_ from: From<T>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
         return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }

@@ -365,7 +365,7 @@ public final class CSSelect: NSObject {
         super.init()
     }
     
-    public init<T: SelectResultType>(_ swiftValue: Select<T>) {
+    public init<T>(_ swiftValue: Select<T>) {
         
         self.attributeType = .undefinedAttributeType
         self.selectTerms = swiftValue.selectTerms

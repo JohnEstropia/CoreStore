@@ -103,7 +103,7 @@ public struct Into<T: DynamicObject>: Hashable {
     
     // MARK: Equatable
     
-    public static func == <U: DynamicObject, V: DynamicObject>(lhs: Into<U>, rhs: Into<V>) -> Bool {
+    public static func == <U, V>(lhs: Into<U>, rhs: Into<V>) -> Bool {
         
         return lhs.entityClass == rhs.entityClass
             && lhs.configuration == rhs.configuration

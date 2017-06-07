@@ -50,7 +50,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `CoreStoreObject` entity type and the destination configuration
      - returns: a new `NSManagedObject` or `CoreStoreObject` instance of the specified entity type.
      */
-    public func create<T: DynamicObject>(_ into: Into<T>) -> T {
+    public func create<T>(_ into: Into<T>) -> T {
         
         let entityClass = into.entityClass
         CoreStore.assert(
@@ -141,7 +141,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject`.
      */
-    public func edit<T: DynamicObject>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
+    public func edit<T>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),

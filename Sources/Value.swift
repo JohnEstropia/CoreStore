@@ -733,7 +733,7 @@ extension ValueContainer.Required {
      animal.species.value = anotherAnimal.species.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ property: ValueContainer<O>.Required<V>, _ property2: ValueContainer<O2>.Required<V>) {
+    public static func .= <O2>(_ property: ValueContainer<O>.Required<V>, _ property2: ValueContainer<O2>.Required<V>) {
         
         property.value = property2.value
     }
@@ -826,7 +826,7 @@ extension ValueContainer.Optional {
      animal.nickname.value = anotherAnimal.nickname.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O2>.Optional<V>) {
+    public static func .= <O2>(_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O2>.Optional<V>) {
         
         property.value = property2.value
     }
@@ -841,7 +841,7 @@ extension ValueContainer.Optional {
      animal.nickname.value = anotherAnimal.species.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O2>.Required<V>) {
+    public static func .= <O2>(_ property: ValueContainer<O>.Optional<V>, _ property2: ValueContainer<O2>.Required<V>) {
         
         property.value = property2.value
     }
@@ -934,7 +934,7 @@ extension TransformableContainer.Required {
      animal.nickname.value = anotherAnimal.species.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ property: TransformableContainer<O>.Required<V>, _ property2: TransformableContainer<O2>.Required<V>) {
+    public static func .= <O2>(_ property: TransformableContainer<O>.Required<V>, _ property2: TransformableContainer<O2>.Required<V>) {
         
         property.value = property2.value
     }
@@ -967,7 +967,7 @@ extension TransformableContainer.Optional {
      animal.color.value = anotherAnimal.color.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ property: TransformableContainer<O>.Optional<V>, _ property2: TransformableContainer<O2>.Optional<V>) {
+    public static func .= <O2>(_ property: TransformableContainer<O>.Optional<V>, _ property2: TransformableContainer<O2>.Optional<V>) {
         
         property.value = property2.value
     }
@@ -982,7 +982,7 @@ extension TransformableContainer.Optional {
      animal.color.value = anotherAnimal.color.value
      ```
      */
-    public static func .= <O2: CoreStoreObject>(_ property: TransformableContainer<O>.Optional<V>, _ property2: TransformableContainer<O2>.Required<V>) {
+    public static func .= <O2>(_ property: TransformableContainer<O>.Optional<V>, _ property2: TransformableContainer<O2>.Required<V>) {
         
         property.value = property2.value
     }

@@ -132,7 +132,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
         return lhs === rhs
     }
     
-    public static func == <T: DynamicObject, U: NSManagedObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<U>) -> Bool {
+    public static func == <T, U>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<U>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
@@ -142,7 +142,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
         return lhs === rhs
     }
     
-    public static func ~= <T: DynamicObject, U: DynamicObject>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<U>) -> Bool {
+    public static func ~= <T, U>(lhs: ObjectMonitor<T>, rhs: ObjectMonitor<U>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }

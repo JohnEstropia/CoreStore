@@ -339,7 +339,7 @@ public struct Select<T: SelectResultType>: Hashable {
     
     // MARK: Equatable
     
-    public static func == <T: SelectResultType, U: SelectResultType>(lhs: Select<T>, rhs: Select<U>) -> Bool {
+    public static func == <T, U>(lhs: Select<T>, rhs: Select<U>) -> Bool {
         
         return lhs.selectTerms == rhs.selectTerms
     }
