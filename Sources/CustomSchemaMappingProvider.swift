@@ -352,7 +352,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         )
         func expression(forSource sourceEntity: NSEntityDescription) -> NSExpression {
             
-            return NSExpression(format: "FETCH(FUNCTION($\(NSMigrationManagerKey), \"fetchRequestForSourceEntityNamed:predicateString:\" , \"\(sourceEntity.name!)\", \"\(NSPredicate(value: true))\"), $\(NSMigrationManagerKey).\(#keyPath(NSMigrationManager.sourceContext)), \(false))")
+            return NSExpression(format: "FETCH(FUNCTION($\(NSMigrationManagerKey), \"fetchRequestForSourceEntityNamed:predicateString:\" , \"\(sourceEntity.name!)\", \"\(NSPredicate(value: true))\"), FUNCTION($\(NSMigrationManagerKey), \"\(#selector(getter: NSMigrationManager.sourceContext))\"), \(false))")
         }
         
         let sourceEntitiesByName = sourceModel.entitiesByName
@@ -427,12 +427,11 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                     let destinationAttribute = destination.attribute
                     let propertyMapping = NSPropertyMapping()
                     propertyMapping.name = destinationAttribute.name
-                    propertyMapping.valueExpression = NSExpression(format: "$\(NSMigrationSourceObjectKey).\(sourceAttribute.name)")
+                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationSourceObjectKey), \"\(#selector(NSManagedObject.value(forKey:)))\", \"\(sourceAttribute.name)\")")
                     attributeMappings.append(propertyMapping)
                 }
                 return attributeMappings
             }
-            let entityMappingName = entityMapping.name!
             entityMapping.relationshipMappings = autoreleasepool { () -> [NSPropertyMapping] in
                 
                 let sourceRelationships = sourceEntity.cs_resolvedRelationshipRenamingIdentities()
@@ -442,9 +441,11 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                     
                     let sourceRelationship = sourceRelationships[renamingIdentifier]!.relationship
                     let destinationRelationship = destination.relationship
+                    let sourceRelationshipName = sourceRelationship.name
+
                     let propertyMapping = NSPropertyMapping()
                     propertyMapping.name = destinationRelationship.name
-                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"\(#selector(NSMigrationManager.destinationInstances(forEntityMappingName:sourceInstances:)))\", \"\(entityMappingName)\", $\(NSMigrationSourceObjectKey).\(sourceRelationship.name))")
+                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"destinationInstancesForSourceRelationshipNamed:sourceInstances:\", \"\(sourceRelationshipName)\", FUNCTION($\(NSMigrationSourceObjectKey), \"\(#selector(NSManagedObject.value(forKey:)))\", \"\(sourceRelationshipName)\"))")
                     relationshipMappings.append(propertyMapping)
                 }
                 return relationshipMappings
@@ -485,23 +486,24 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                 }
                 userInfo[CustomEntityMigrationPolicy.UserInfoKey.sourceAttributesByDestinationKey] = sourceAttributesByDestinationKey
             }
-            let entityMappingName = entityMapping.name!
             entityMapping.relationshipMappings = autoreleasepool { () -> [NSPropertyMapping] in
                 
                 let sourceRelationships = sourceEntity.cs_resolvedRelationshipRenamingIdentities()
                 let destinationRelationships = destinationEntity.cs_resolvedRelationshipRenamingIdentities()
-                
+                let transformedRenamingIdentifiers = Set(destinationRelationships.keys)
+                    .intersection(sourceRelationships.keys)
+
                 var relationshipMappings: [NSPropertyMapping] = []
-                for (renamingIdentifier, destination) in destinationRelationships {
-                    
-                    guard let sourceRelationship = sourceRelationships[renamingIdentifier]?.relationship else {
-                        
-                        continue
-                    }
-                    let destinationRelationship = destination.relationship
+                for renamingIdentifier in transformedRenamingIdentifiers {
+
+                    let sourceRelationship = sourceRelationships[renamingIdentifier]!.relationship
+                    let destinationRelationship = destinationRelationships[renamingIdentifier]!.relationship
+                    let sourceRelationshipName = sourceRelationship.name
+                    let destinationRelationshipName = destinationRelationship.name
+
                     let propertyMapping = NSPropertyMapping()
-                    propertyMapping.name = destinationRelationship.name
-                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"\(#selector(NSMigrationManager.destinationInstances(forEntityMappingName:sourceInstances:)))\", \"\(entityMappingName)\", $\(NSMigrationSourceObjectKey).\(sourceRelationship.name))")
+                    propertyMapping.name = destinationRelationshipName
+                    propertyMapping.valueExpression = NSExpression(format: "FUNCTION($\(NSMigrationManagerKey), \"destinationInstancesForSourceRelationshipNamed:sourceInstances:\", \"\(sourceRelationshipName)\", FUNCTION($\(NSMigrationSourceObjectKey), \"\(#selector(NSManagedObject.value(forKey:)))\", \"\(sourceRelationshipName)\"))")
                     relationshipMappings.append(propertyMapping)
                 }
                 return relationshipMappings
@@ -553,11 +555,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             )
             if let dInstance = destinationObject?.rawObject {
                 
-                manager.associate(
-                    sourceInstance: sInstance,
-                    withDestinationInstance: dInstance,
-                    for: mapping
-                )
+                manager.associate(sourceInstance: sInstance, withDestinationInstance: dInstance, for: mapping)
             }
         }
         
