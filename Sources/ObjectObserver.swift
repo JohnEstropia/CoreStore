@@ -61,7 +61,7 @@ public protocol ObjectObserver: class {
      - parameter object: the `DynamicObject` instance being observed
      - parameter changedPersistentKeys: a `Set` of key paths for the attributes that were changed. Note that `changedPersistentKeys` only contains keys for attributes/relationships present in the persistent store, thus transient properties will not be reported.
      */
-    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>)
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<RawKeyPath>)
     
     /**
      Handles processing right after `object` is deleted. (Optional)
@@ -81,7 +81,7 @@ public extension ObjectObserver {
     
     public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) { }
     
-    public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPath>) { }
+    public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<RawKeyPath>) { }
     
     public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType) { }
 }

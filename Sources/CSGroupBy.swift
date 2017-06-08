@@ -41,7 +41,7 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
      The list of key path strings to group results with
      */
     @objc
-    public var keyPaths: [KeyPath] {
+    public var keyPaths: [RawKeyPath] {
         
         return self.bridgeToSwift.keyPaths
     }
@@ -52,7 +52,7 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
      - parameter keyPath: a key path string to group results with
      */
     @objc
-    public convenience init(keyPath: KeyPath) {
+    public convenience init(keyPath: RawKeyPath) {
         
         self.init(GroupBy(keyPath))
     }
@@ -63,7 +63,7 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
      - parameter keyPaths: a list of key path strings to group results with
      */
     @objc
-    public convenience init(keyPaths: [KeyPath]) {
+    public convenience init(keyPaths: [RawKeyPath]) {
         
         self.init(GroupBy(keyPaths))
     }

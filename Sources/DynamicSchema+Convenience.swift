@@ -96,49 +96,49 @@ public extension DynamicSchema {
                         
                     case .integer16AttributeType:
                         valueType = Int16.self
-                        if let defaultValue = (attribute.defaultValue as! Int16.ImportableNativeType?).flatMap(Int16.cs_fromImportableNativeType),
+                        if let defaultValue = (attribute.defaultValue as! Int16.QueryableNativeType?).flatMap(Int16.cs_fromQueryableNativeType),
                             defaultValue != Int16.cs_emptyValue() {
                             
                             defaultString = ", default: \(defaultValue)"
                         }
                     case .integer32AttributeType:
                         valueType = Int32.self
-                        if let defaultValue = (attribute.defaultValue as! Int32.ImportableNativeType?).flatMap(Int32.cs_fromImportableNativeType),
+                        if let defaultValue = (attribute.defaultValue as! Int32.QueryableNativeType?).flatMap(Int32.cs_fromQueryableNativeType),
                             defaultValue != Int32.cs_emptyValue() {
                             
                             defaultString = ", default: \(defaultValue)"
                         }
                     case .integer64AttributeType:
                         valueType = Int64.self
-                        if let defaultValue = (attribute.defaultValue as! Int64.ImportableNativeType?).flatMap(Int64.cs_fromImportableNativeType),
+                        if let defaultValue = (attribute.defaultValue as! Int64.QueryableNativeType?).flatMap(Int64.cs_fromQueryableNativeType),
                             defaultValue != Int64.cs_emptyValue() {
                             
                             defaultString = ", default: \(defaultValue)"
                         }
                     case .decimalAttributeType:
                         valueType = NSDecimalNumber.self
-                        if let defaultValue = (attribute.defaultValue as! NSDecimalNumber.ImportableNativeType?).flatMap(NSDecimalNumber.cs_fromImportableNativeType),
+                        if let defaultValue = (attribute.defaultValue as! NSDecimalNumber.QueryableNativeType?).flatMap(NSDecimalNumber.cs_fromQueryableNativeType),
                             defaultValue != NSDecimalNumber.cs_emptyValue() {
                             
                             defaultString = ", default: NSDecimalNumber(string: \"\(defaultValue.description(withLocale: nil))\")"
                         }
                     case .doubleAttributeType:
                         valueType = Double.self
-                        if let defaultValue = (attribute.defaultValue as! Double.ImportableNativeType?).flatMap(Double.cs_fromImportableNativeType),
+                        if let defaultValue = (attribute.defaultValue as! Double.QueryableNativeType?).flatMap(Double.cs_fromQueryableNativeType),
                             defaultValue != Double.cs_emptyValue() {
                             
                             defaultString = ", default: \(defaultValue)"
                         }
                     case .floatAttributeType:
                         valueType = Float.self
-                        if let defaultValue = (attribute.defaultValue as! Float.ImportableNativeType?).flatMap(Float.cs_fromImportableNativeType),
+                        if let defaultValue = (attribute.defaultValue as! Float.QueryableNativeType?).flatMap(Float.cs_fromQueryableNativeType),
                             defaultValue != Float.cs_emptyValue() {
                             
                             defaultString = ", default: \(defaultValue)"
                         }
                     case .stringAttributeType:
                         valueType = String.self
-                        if let defaultValue = (attribute.defaultValue as! String.ImportableNativeType?).flatMap(String.cs_fromImportableNativeType),
+                        if let defaultValue = (attribute.defaultValue as! String.QueryableNativeType?).flatMap(String.cs_fromQueryableNativeType),
                             defaultValue != String.cs_emptyValue() {
                             
                             // TODO: escape strings
@@ -146,20 +146,20 @@ public extension DynamicSchema {
                         }
                     case .booleanAttributeType:
                         valueType = Bool.self
-                        if let defaultValue = (attribute.defaultValue as! Bool.ImportableNativeType?).flatMap(Bool.cs_fromImportableNativeType),
+                        if let defaultValue = (attribute.defaultValue as! Bool.QueryableNativeType?).flatMap(Bool.cs_fromQueryableNativeType),
                             defaultValue != Bool.cs_emptyValue() {
                             
                             defaultString = ", default: \(defaultValue ? "true" : "false")"
                         }
                     case .dateAttributeType:
                         valueType = Date.self
-                        if let defaultValue = (attribute.defaultValue as! Date.ImportableNativeType?).flatMap(Date.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! Date.QueryableNativeType?).flatMap(Date.cs_fromQueryableNativeType) {
                             
                             defaultString = ", default: Date(timeIntervalSinceReferenceDate: \(defaultValue.timeIntervalSinceReferenceDate))"
                         }
                     case .binaryDataAttributeType:
                         valueType = Data.self
-                        if let defaultValue = (attribute.defaultValue as! Data.ImportableNativeType?).flatMap(Data.cs_fromImportableNativeType),
+                        if let defaultValue = (attribute.defaultValue as! Data.QueryableNativeType?).flatMap(Data.cs_fromQueryableNativeType),
                             defaultValue != Data.cs_emptyValue() {
                             
                             let count = defaultValue.count

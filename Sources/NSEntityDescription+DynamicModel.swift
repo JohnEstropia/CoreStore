@@ -75,12 +75,12 @@ internal extension NSEntityDescription {
         }
     }
     
-    internal var keyPathsByAffectedKeyPaths: [KeyPath: Set<KeyPath>] {
+    internal var keyPathsByAffectedKeyPaths: [RawKeyPath: Set<RawKeyPath>] {
         
         get {
             
             if let userInfo = self.userInfo,
-                let function = userInfo[UserInfoKey.CoreStoreManagedObjectKeyPathsByAffectedKeyPaths] as! [KeyPath: Set<KeyPath>]? {
+                let function = userInfo[UserInfoKey.CoreStoreManagedObjectKeyPathsByAffectedKeyPaths] as! [RawKeyPath: Set<RawKeyPath>]? {
                 
                 return function
             }

@@ -61,10 +61,6 @@ public extension DataStack {
         )
         transaction.transactionQueue.cs_async {
             
-            defer {
-                
-                withExtendedLifetime((self, transaction), {})
-            }
             let userInfo: T
             do {
                 
@@ -82,6 +78,10 @@ public extension DataStack {
             }
             transaction.autoCommit { (_, error) in
                 
+                defer {
+                    
+                    withExtendedLifetime((self, transaction), {})
+                }
                 if let error = error {
                     
                     failure(error)

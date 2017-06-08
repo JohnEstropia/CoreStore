@@ -49,7 +49,7 @@ class Palette: NSManagedObject {
         }
         set {
             
-            self.setValue(newValue.cs_toImportableNativeType(), forKvcKey: #keyPath(Palette.colorName))
+            self.setValue(newValue.cs_toQueryableNativeType(), forKvcKey: #keyPath(Palette.colorName))
         }
     }
     

@@ -14,7 +14,7 @@ import CoreData
 @objc internal class CoreStoreManagedObject: NSManagedObject {
     
     @nonobjc
-    internal class func cs_setKeyPathsForValuesAffectingKeys(_ keyPathsForValuesAffectingKeys: [KeyPath: Set<KeyPath>], for managedObjectClass: CoreStoreManagedObject.Type) {
+    internal class func cs_setKeyPathsForValuesAffectingKeys(_ keyPathsForValuesAffectingKeys: [RawKeyPath: Set<RawKeyPath>], for managedObjectClass: CoreStoreManagedObject.Type) {
         
         Static.queue.sync(flags: .barrier) {
             
@@ -44,5 +44,5 @@ import CoreData
 private enum Static {
     
     static let queue = DispatchQueue.concurrent("com.coreStore.coreStoreManagerObjectBarrierQueue")
-    static var cache: [ObjectIdentifier: [KeyPath: Set<KeyPath>]] = [:]
+    static var cache: [ObjectIdentifier: [RawKeyPath: Set<RawKeyPath>]] = [:]
 }

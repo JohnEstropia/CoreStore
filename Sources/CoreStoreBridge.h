@@ -43,7 +43,7 @@
 #define CORESTORE_RETURNS_RETAINED          __attribute__((ns_returns_retained))
 
 
-#pragma mark - KeyPath Utilities
+#pragma mark - RawKeyPath Utilities
 
 #define CSKeyPath(type, property) ({ \
     type *_je_keypath_dummy __attribute__((unused)); \

@@ -45,7 +45,7 @@ public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
      */
     @objc
-    public static func keyPath(_ sectionKeyPath: KeyPath) -> CSSectionBy {
+    public static func keyPath(_ sectionKeyPath: RawKeyPath) -> CSSectionBy {
         
         return self.init(SectionBy(sectionKeyPath))
     }
@@ -58,7 +58,7 @@ public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
      */
     @objc
-    public static func keyPath(_ sectionKeyPath: KeyPath, sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> CSSectionBy {
+    public static func keyPath(_ sectionKeyPath: RawKeyPath, sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> CSSectionBy {
         
         return self.init(SectionBy(sectionKeyPath, sectionIndexTransformer))
     }

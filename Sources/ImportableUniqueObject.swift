@@ -118,7 +118,7 @@ public protocol ImportableUniqueObject: ImportableObject {
 
 // MARK: - ImportableUniqueObject (Default Implementations)
 
-public extension ImportableUniqueObject {
+public extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: CoreDataNativeType {
     
     var uniqueIDValue: UniqueIDType {
         
@@ -126,7 +126,7 @@ public extension ImportableUniqueObject {
             
             return self.cs_toRaw().getValue(
                 forKvcKey: type(of: self).uniqueIDKeyPath,
-                didGetValue: { UniqueIDType.cs_fromImportableNativeType($0 as! UniqueIDType.ImportableNativeType)! }
+                didGetValue: { UniqueIDType.cs_fromQueryableNativeType($0 as! UniqueIDType.QueryableNativeType)! }
             )
         }
         set {
@@ -135,10 +135,13 @@ public extension ImportableUniqueObject {
                 .setValue(
                     newValue,
                     forKvcKey: type(of: self).uniqueIDKeyPath,
-                    willSetValue: { ($0.cs_toImportableNativeType() as! CoreDataNativeType) }
-                )
+                    willSetValue: { ($0.cs_toQueryableNativeType() as CoreDataNativeType) }
+            )
         }
     }
+}
+
+public extension ImportableUniqueObject {
     
     static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
         

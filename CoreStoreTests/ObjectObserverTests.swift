@@ -219,7 +219,7 @@ class TestObjectObserver: ObjectObserver {
         )
     }
     
-    func objectMonitor(_ monitor: ObjectMonitor<TestEntity1>, didUpdateObject object: TestEntity1, changedPersistentKeys: Set<KeyPath>) {
+    func objectMonitor(_ monitor: ObjectMonitor<TestEntity1>, didUpdateObject object: TestEntity1, changedPersistentKeys: Set<String>) {
         
         NotificationCenter.default.post(
             name: NSNotification.Name(rawValue: "objectMonitor:didUpdateObject:changedPersistentKeys:"),

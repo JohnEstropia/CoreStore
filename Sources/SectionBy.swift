@@ -47,7 +47,7 @@ public struct SectionBy {
      
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      */
-    public init(_ sectionKeyPath: KeyPath) {
+    public init(_ sectionKeyPath: RawKeyPath) {
         
         self.init(sectionKeyPath, { $0 })
     }
@@ -59,7 +59,7 @@ public struct SectionBy {
      - parameter sectionKeyPath: the key path to use to group the objects into sections
      - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
      */
-    public init(_ sectionKeyPath: KeyPath, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+    public init(_ sectionKeyPath: RawKeyPath, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
         
         self.sectionKeyPath = sectionKeyPath
         self.sectionIndexTransformer = sectionIndexTransformer
@@ -68,6 +68,6 @@ public struct SectionBy {
     
     // MARK: Internal
     
-    internal let sectionKeyPath: KeyPath
+    internal let sectionKeyPath: RawKeyPath
     internal let sectionIndexTransformer: (_ sectionName: String?) -> String?
 }

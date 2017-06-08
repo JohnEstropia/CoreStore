@@ -117,7 +117,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: KeyPath,
+            _ keyPath: RawKeyPath,
             `default`: V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -130,7 +130,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             self.keyPath = keyPath
             self.isIndexed = isIndexed
             self.isTransient = isTransient
-            self.defaultValue = `default`.cs_toImportableNativeType()
+            self.defaultValue = `default`.cs_toQueryableNativeType()
             self.versionHashModifier = versionHashModifier
             self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
@@ -156,7 +156,7 @@ public enum ValueContainer<O: CoreStoreObject> {
                         
                         return object.rawObject!.getValue(
                             forKvcKey: self.keyPath,
-                            didGetValue: { V.cs_fromImportableNativeType($0 as! V.ImportableNativeType)! }
+                            didGetValue: { V.cs_fromQueryableNativeType($0 as! V.QueryableNativeType)! }
                         )
                     }
                 )
@@ -179,7 +179,7 @@ public enum ValueContainer<O: CoreStoreObject> {
                         object.rawObject!.setValue(
                             newValue,
                             forKvcKey: self.keyPath,
-                            willSetValue: { $0.cs_toImportableNativeType() }
+                            willSetValue: { $0.cs_toQueryableNativeType() }
                         )
                     },
                     newValue
@@ -195,7 +195,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             return V.cs_rawAttributeType
         }
         
-        public let keyPath: KeyPath
+        public let keyPath: RawKeyPath
         
         internal let isOptional = false
         internal let isIndexed: Bool
@@ -262,7 +262,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: KeyPath,
+            _ keyPath: RawKeyPath,
             `default`: V? = nil,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -275,7 +275,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             self.keyPath = keyPath
             self.isIndexed = isIndexed
             self.isTransient = isTransient
-            self.defaultValue = `default`?.cs_toImportableNativeType()
+            self.defaultValue = `default`?.cs_toQueryableNativeType()
             self.versionHashModifier = versionHashModifier
             self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
@@ -301,7 +301,7 @@ public enum ValueContainer<O: CoreStoreObject> {
                         
                         return object.rawObject!.getValue(
                             forKvcKey: self.keyPath,
-                            didGetValue: { ($0 as! V.ImportableNativeType?).flatMap(V.cs_fromImportableNativeType) }
+                            didGetValue: { ($0 as! V.QueryableNativeType?).flatMap(V.cs_fromQueryableNativeType) }
                         )
                     }
                 )
@@ -324,7 +324,7 @@ public enum ValueContainer<O: CoreStoreObject> {
                         object.rawObject!.setValue(
                             newValue,
                             forKvcKey: self.keyPath,
-                            willSetValue: { $0?.cs_toImportableNativeType() }
+                            willSetValue: { $0?.cs_toQueryableNativeType() }
                         )
                     },
                     newValue
@@ -340,7 +340,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             return V.cs_rawAttributeType
         }
         
-        public let keyPath: KeyPath
+        public let keyPath: RawKeyPath
         internal let isOptional = true
         internal let isIndexed: Bool
         internal let isTransient: Bool
@@ -386,7 +386,7 @@ public extension ValueContainer.Required where V: EmptyableAttributeType {
      - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
      */
     public convenience init(
-        _ keyPath: KeyPath,
+        _ keyPath: RawKeyPath,
         isIndexed: Bool = false,
         isTransient: Bool = false,
         versionHashModifier: String? = nil,
@@ -462,7 +462,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: KeyPath,
+            _ keyPath: RawKeyPath,
             `default`: V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -539,7 +539,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return .transformableAttributeType
         }
         
-        public let keyPath: KeyPath
+        public let keyPath: RawKeyPath
         
         internal let isOptional = false
         internal let isIndexed: Bool
@@ -600,7 +600,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: KeyPath,
+            _ keyPath: RawKeyPath,
             `default`: V? = nil,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -677,7 +677,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return .transformableAttributeType
         }
         
-        public let keyPath: KeyPath
+        public let keyPath: RawKeyPath
         
         internal let isOptional = true
         internal let isIndexed: Bool
@@ -995,7 +995,7 @@ internal protocol AttributeProtocol: class {
     
     static var attributeType: NSAttributeType { get }
     
-    var keyPath: KeyPath { get }
+    var keyPath: RawKeyPath { get }
     var isOptional: Bool { get }
     var isIndexed: Bool { get }
     var isTransient: Bool { get }
