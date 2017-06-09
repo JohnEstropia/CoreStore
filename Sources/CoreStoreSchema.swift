@@ -212,7 +212,7 @@ public final class CoreStoreSchema: DynamicSchema {
                 
                 let entityDescription = self.entityDescription(
                     for: entity,
-                    initializer: CoreStoreSchema.firstPassCreateEntityDescription
+                    initializer: CoreStoreSchema.firstPassCreateEntityDescription(from:in:)
                 )
                 entityDescriptionsByEntity[entity] = (entityDescription.copy() as! NSEntityDescription)
             }
@@ -250,25 +250,26 @@ public final class CoreStoreSchema: DynamicSchema {
     private var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
     private weak var cachedRawModel: NSManagedObjectModel?
     
-    private func entityDescription(for entity: DynamicEntity, initializer: (DynamicEntity) -> NSEntityDescription) -> NSEntityDescription {
+    private func entityDescription(for entity: DynamicEntity, initializer: (DynamicEntity, ModelVersion) -> NSEntityDescription) -> NSEntityDescription {
         
         if let cachedEntityDescription = self.entityDescriptionsByEntity[entity] {
             
             return cachedEntityDescription
         }
-        let entityDescription = withoutActuallyEscaping(initializer, do: { $0(entity) })
+        let modelVersion = self.modelVersion
+        let entityDescription = withoutActuallyEscaping(initializer, do: { $0(entity, modelVersion) })
         self.entityDescriptionsByEntity[entity] = entityDescription
         return entityDescription
     }
     
-    private static func firstPassCreateEntityDescription(from entity: DynamicEntity) -> NSEntityDescription {
+    private static func firstPassCreateEntityDescription(from entity: DynamicEntity, in modelVersion: ModelVersion) -> NSEntityDescription {
         
         let entityDescription = NSEntityDescription()
         entityDescription.coreStoreEntity = entity
         entityDescription.name = entity.entityName
         entityDescription.isAbstract = entity.isAbstract
         entityDescription.versionHashModifier = entity.versionHashModifier
-        entityDescription.managedObjectClassName = "\(NSStringFromClass(CoreStoreManagedObject.self)).\(NSStringFromClass(entity.type)).\(entity.entityName)"
+        entityDescription.managedObjectClassName = CoreStoreManagedObject.cs_subclassName(for: entity, in: modelVersion)
         
         var keyPathsByAffectedKeyPaths: [KeyPath: Set<KeyPath>] = [:]
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {

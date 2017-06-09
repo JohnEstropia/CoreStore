@@ -13,6 +13,12 @@ import CoreData
 
 @objc internal class CoreStoreManagedObject: NSManagedObject {
     
+    @nonobjc @inline(__always)
+    internal static func cs_subclassName(for entity: DynamicEntity, in modelVersion: ModelVersion) -> String {
+        
+        return "_\(NSStringFromClass(CoreStoreManagedObject.self))__\(modelVersion)__\(NSStringFromClass(entity.type))__\(entity.entityName)"
+    }
+    
     @nonobjc
     internal class func cs_setKeyPathsForValuesAffectingKeys(_ keyPathsForValuesAffectingKeys: [KeyPath: Set<KeyPath>], for managedObjectClass: CoreStoreManagedObject.Type) {
         
