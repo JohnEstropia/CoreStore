@@ -54,7 +54,7 @@ class ListObserverTests: BaseTestDataTestCase {
             var events = 0
             
             let willChangeExpectation = self.expectation(
-                forNotification: "listMonitorWillChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -68,7 +68,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didInsertSectionExpectation = self.expectation(
-                forNotification: "listMonitor:didInsertSection:toSectionIndex:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didInsertSection:toSectionIndex:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -88,7 +88,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didInsertObjectExpectation = self.expectation(
-                forNotification: "listMonitor:didInsertObject:toIndexPath:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didInsertObject:toIndexPath:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -120,7 +120,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didChangeExpectation = self.expectation(
-                forNotification: "listMonitorDidChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorDidChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -185,7 +185,7 @@ class ListObserverTests: BaseTestDataTestCase {
             var events = 0
             
             let willChangeExpectation = self.expectation(
-                forNotification: "listMonitorWillChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -200,7 +200,7 @@ class ListObserverTests: BaseTestDataTestCase {
             )
             
             let didUpdateObjectExpectation = self.expectation(
-                forNotification: "listMonitor:didUpdateObject:atIndexPath:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didUpdateObject:atIndexPath:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -251,7 +251,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didChangeExpectation = self.expectation(
-                forNotification: "listMonitorDidChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorDidChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -330,7 +330,7 @@ class ListObserverTests: BaseTestDataTestCase {
             var events = 0
             
             let willChangeExpectation = self.expectation(
-                forNotification: "listMonitorWillChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -344,7 +344,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didMoveObjectExpectation = self.expectation(
-                forNotification: "listMonitor:didMoveObject:fromIndexPath:toIndexPath:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didMoveObject:fromIndexPath:toIndexPath:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -377,7 +377,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didChangeExpectation = self.expectation(
-                forNotification: "listMonitorDidChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorDidChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -438,7 +438,7 @@ class ListObserverTests: BaseTestDataTestCase {
             var events = 0
             
             let willChangeExpectation = self.expectation(
-                forNotification: "listMonitorWillChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -452,7 +452,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didUpdateObjectExpectation = self.expectation(
-                forNotification: "listMonitor:didDeleteObject:fromIndexPath:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didDeleteObject:fromIndexPath:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -481,7 +481,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didDeleteSectionExpectation = self.expectation(
-                forNotification: "listMonitor:didDeleteSection:fromSectionIndex:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didDeleteSection:fromSectionIndex:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -509,7 +509,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didChangeExpectation = self.expectation(
-                forNotification: "listMonitorDidChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorDidChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     

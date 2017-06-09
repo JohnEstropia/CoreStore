@@ -137,7 +137,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(dog.master.value, person)
                     XCTAssertEqual(dog.master.value?.pets.value.first, dog)
                 },
-                success: {
+                success: { _ in
                     
                     updateDone.fulfill()
                 },
@@ -171,7 +171,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let p3 = Dog.where({ $0.age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))
                 },
-                success: {
+                success: { _ in
             
                     fetchDone.fulfill()
                 },

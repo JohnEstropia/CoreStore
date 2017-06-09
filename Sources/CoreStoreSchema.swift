@@ -281,7 +281,7 @@ public final class CoreStoreSchema: DynamicSchema {
                 case let attribute as AttributeProtocol:
                     let description = NSAttributeDescription()
                     description.name = attribute.keyPath
-                    description.attributeType = type(of: attribute).attributeType
+                    description.attributeType = Swift.type(of: attribute).attributeType
                     description.isOptional = attribute.isOptional
                     description.isIndexed = attribute.isIndexed
                     description.defaultValue = attribute.defaultValue

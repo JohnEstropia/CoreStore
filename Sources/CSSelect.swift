@@ -218,6 +218,7 @@ public final class CSSelect: NSObject {
      ```
      - parameter numberTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(numberTerm: CSSelectTerm) {
         
         self.init(Select<NSNumber>(numberTerm.bridgeToSwift))
@@ -233,6 +234,7 @@ public final class CSSelect: NSObject {
      ```
      - parameter decimalTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(decimalTerm: CSSelectTerm) {
         
         self.init(Select<NSDecimalNumber>(decimalTerm.bridgeToSwift))
@@ -248,6 +250,7 @@ public final class CSSelect: NSObject {
      ```
      - parameter stringTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(stringTerm: CSSelectTerm) {
         
         self.init(Select<NSString>(stringTerm.bridgeToSwift))
@@ -263,6 +266,7 @@ public final class CSSelect: NSObject {
      ```
      - parameter dateTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(dateTerm: CSSelectTerm) {
         
         self.init(Select<Date>(dateTerm.bridgeToSwift))
@@ -278,6 +282,7 @@ public final class CSSelect: NSObject {
      ```
      - parameter dataTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(dataTerm: CSSelectTerm) {
         
         self.init(Select<Data>(dataTerm.bridgeToSwift))
@@ -292,6 +297,7 @@ public final class CSSelect: NSObject {
         // ...
      ```
      */
+    @objc
     public convenience init(objectIDTerm: ()) {
         
         self.init(Select<NSManagedObjectID>(.objectID()))
@@ -307,6 +313,7 @@ public final class CSSelect: NSObject {
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
+    @objc
     public static func dictionaryForTerm(_ term: CSSelectTerm) -> CSSelect {
         
         return self.init(Select<NSDictionary>(term.bridgeToSwift))
@@ -325,6 +332,7 @@ public final class CSSelect: NSObject {
      - parameter terms: the `CSSelectTerm`s specifying the attribute/aggregate values to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
+    @objc
     public static func dictionaryForTerms(_ terms: [CSSelectTerm]) -> CSSelect {
         
         return self.init(Select<NSDictionary>(terms.map { $0.bridgeToSwift }))

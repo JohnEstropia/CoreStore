@@ -115,7 +115,7 @@ final class FetchTests: BaseTestDataTestCase {
                         
                         try transaction.cancel()
                     },
-                    success: {
+                    success: { _ in
                         
                         XCTFail()
                     },
@@ -246,7 +246,7 @@ final class FetchTests: BaseTestDataTestCase {
                         }
                         try transaction.cancel()
                     },
-                    success: {
+                    success: { _ in
                 
                         XCTFail()
                     },

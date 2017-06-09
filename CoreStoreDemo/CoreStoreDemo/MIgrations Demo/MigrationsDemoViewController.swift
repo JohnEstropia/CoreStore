@@ -109,7 +109,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
         
         let dna = (self.listMonitor?[indexPath] as? OrganismProtocol)?.dna.description ?? ""
         cell.dnaLabel?.text = "DNA: \(dna)"
-        cell.mutateButtonHandler = { [weak self] _ -> Void in
+        cell.mutateButtonHandler = { [weak self] () -> Void in
             
             guard let `self` = self,
                 let dataStack = self.dataStack,
@@ -361,9 +361,10 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
             
             self.segmentedControl?.selectedSegmentIndex = self.models
                 .index(
-                    where: { (_, _, schemaHistory) -> Bool in
+                    where: { (arg) -> Bool in
                         
-                        schemaHistory.currentModelVersion == model.schemaHistory.currentModelVersion
+                        let (_, _, schemaHistory) = arg
+                        return schemaHistory.currentModelVersion == model.schemaHistory.currentModelVersion
                     }
                 )!
             

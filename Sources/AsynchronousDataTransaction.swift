@@ -203,10 +203,10 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         self.isCommitted = true
         let group = DispatchGroup()
         group.enter()
-        self.context.saveAsynchronouslyWithCompletion { (result) -> Void in
+        self.context.saveAsynchronouslyWithCompletion { (hasChanges, error) -> Void in
             
-            completion(result.0, result.1)
-            self.result = result
+            completion(hasChanges, error)
+            self.result = (hasChanges, error)
             group.leave()
         }
         group.wait()
@@ -226,12 +226,15 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
             !self.isCommitted,
             "Attempted to commit a \(cs_typeName(self)) more than once."
         )
-        self.autoCommit { (result) in
+        self.autoCommit { (hasChanges, error) in
             
-            switch result {
+            if let error = error {
                 
-            case (let hasChanges, nil): completion(SaveResult(hasChanges: hasChanges))
-            case (_, let error?):       completion(SaveResult(error))
+                completion(SaveResult(error))
+            }
+            else {
+                
+                completion(SaveResult(hasChanges: hasChanges))
             }
         }
     }

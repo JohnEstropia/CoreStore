@@ -647,8 +647,9 @@ public extension DataStack {
                 let mappingProviders = storage.migrationMappingProviders
                 do {
                     
-                    try withExtendedLifetime((sourceSchema.rawModel(), destinationSchema.rawModel())) { (sourceModel, destinationModel) in
+                    try withExtendedLifetime((sourceSchema.rawModel(), destinationSchema.rawModel())) {
                         
+                        let (sourceModel, destinationModel) = $0
                         let mapping = try mappingProviders.findMapping(
                             sourceSchema: sourceSchema,
                             destinationSchema: destinationSchema,

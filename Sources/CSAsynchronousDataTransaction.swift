@@ -54,12 +54,15 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction, CoreSto
             !self.bridgeToSwift.isCommitted,
             "Attempted to commit a \(cs_typeName(self)) more than once."
         )
-        self.bridgeToSwift.autoCommit { (result) in
+        self.bridgeToSwift.autoCommit { (_, error) in
             
-            switch result {
+            if let error = error {
                 
-            case (_, nil):          success?()
-            case (_, let error?):   failure?(error.bridgeToObjectiveC)
+                failure?(error.bridgeToObjectiveC)
+            }
+            else {
+                
+                success?()
             }
         }
     }

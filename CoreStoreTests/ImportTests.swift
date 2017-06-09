@@ -565,7 +565,9 @@ class ImportTests: BaseTestDataTestCase {
                         XCTAssertEqual(objects.count, 2)
                         
                         zip(objects, sourceArray)
-                            .forEach { object, dictionary in
+                            .forEach {
+                                
+                                let (object, dictionary) = $0
                                 XCTAssertEqual(object.testEntityID, dictionary[(#keyPath(TestEntity1.testEntityID))] as? NSNumber)
                                 XCTAssertEqual(object.testBoolean, dictionary[(#keyPath(TestEntity1.testBoolean))] as? NSNumber)
                                 XCTAssertEqual(object.testNumber, dictionary[(#keyPath(TestEntity1.testNumber))] as? NSNumber)
