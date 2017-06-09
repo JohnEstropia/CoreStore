@@ -86,7 +86,7 @@ public enum ValueContainer<O: CoreStoreObject> {
      ```
      - Important: `Value.Required` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
-    public final class Required<V: ImportableAttributeType>: AttributeProtocol {
+    public final class Required<V: ImportableAttributeType>: AttributeProtocol where V.QueryableNativeType: CoreDataNativeType {
         
         /**
          Initializes the metadata for the property.
@@ -231,7 +231,7 @@ public enum ValueContainer<O: CoreStoreObject> {
      ```
      - Important: `Value.Optional` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
-    public final class Optional<V: ImportableAttributeType>: AttributeProtocol {
+    public final class Optional<V: ImportableAttributeType>: AttributeProtocol where V.QueryableNativeType: CoreDataNativeType {
         
         /**
          Initializes the metadata for the property.
