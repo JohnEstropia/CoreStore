@@ -118,19 +118,19 @@ public enum ValueContainer<O: CoreStoreObject> {
          */
         public init(
             _ keyPath: KeyPath,
-            `default`: V,
+            `default`: @autoclosure @escaping () -> V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() },
-            customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) },
+            customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)? = nil,
+            customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
             self.isIndexed = isIndexed
             self.isTransient = isTransient
-            self.defaultValue = `default`.cs_toImportableNativeType()
+            self.defaultValue = { `default`().cs_toImportableNativeType() }
             self.versionHashModifier = versionHashModifier
             self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
@@ -145,45 +145,59 @@ public enum ValueContainer<O: CoreStoreObject> {
             
             get {
                 
-                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    self.parentObject != nil,
+                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return self.customGetter(
-                    object,
-                    { () -> V in
-                        
-                        return object.rawObject!.getValue(
-                            forKvcKey: self.keyPath,
-                            didGetValue: { V.cs_fromImportableNativeType($0 as! V.ImportableNativeType)! }
-                        )
-                    }
-                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    )
+                    let customGetter = (self.customGetter ?? { $1() })
+                    return customGetter(
+                        object,
+                        { () -> V in
+                            
+                            return object.rawObject!.getValue(
+                                forKvcKey: self.keyPath,
+                                didGetValue: { V.cs_fromImportableNativeType($0 as! V.ImportableNativeType)! }
+                            )
+                        }
+                    )
+                }
             }
             set {
                 
-                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    self.parentObject != nil,
+                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                CoreStore.assert(
-                    object.rawObject!.isEditableInContext() == true,
-                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
-                )
-                self.customSetter(
-                    object,
-                    { (newValue: V) -> Void in
-                        
-                        object.rawObject!.setValue(
-                            newValue,
-                            forKvcKey: self.keyPath,
-                            willSetValue: { $0.cs_toImportableNativeType() }
-                        )
-                    },
-                    newValue
-                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    )
+                    CoreStore.assert(
+                        object.rawObject!.isEditableInContext() == true,
+                        "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                    )
+                    let customSetter = (self.customSetter ?? { $1($2) })
+                    customSetter(
+                        object,
+                        { (newValue: V) -> Void in
+                            
+                            object.rawObject!.setValue(
+                                newValue,
+                                forKvcKey: self.keyPath,
+                                willSetValue: { $0.cs_toImportableNativeType() }
+                            )
+                        },
+                        newValue
+                    )
+                }
             }
         }
         
@@ -200,21 +214,81 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let isOptional = false
         internal let isIndexed: Bool
         internal let isTransient: Bool
-        internal let defaultValue: Any?
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let defaultValue: () -> Any?
         internal let affectedByKeyPaths: () -> Set<String>
+        internal weak var parentObject: CoreStoreObject?
         
-        internal var parentObject: () -> CoreStoreObject = {
+        internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
             
-            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
+            let keyPath = self.keyPath
+            guard let customGetter = self.customGetter else {
+                
+                guard let _ = self.customSetter else {
+                    
+                    return nil
+                }
+                return { (_ id: Any) -> Any? in
+                    
+                    let rawObject = id as! CoreStoreManagedObject
+                    return rawObject.getValue(forKvcKey: keyPath)
+                }
+            }
+            return { (_ id: Any) -> Any? in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                let value = customGetter(
+                    O.cs_fromRaw(object: rawObject),
+                    {
+                        rawObject.getValue(
+                            forKvcKey: keyPath,
+                            didGetValue: { V.cs_fromImportableNativeType($0 as! V.ImportableNativeType!)! }
+                        )
+                    }
+                )
+                return value.cs_toImportableNativeType()
+            }
+        }
+        
+        internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
+            
+            let keyPath = self.keyPath
+            guard let customSetter = self.customSetter else {
+                
+                guard let _ = self.customGetter else {
+                    
+                    return nil
+                }
+                return { (_ id: Any, _ newValue: Any?) -> Void in
+                    
+                    let rawObject = id as! CoreStoreManagedObject
+                    rawObject.setValue(newValue, forKvcKey: keyPath)
+                }
+            }
+            return { (_ id: Any, _ newValue: Any?) -> Void in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                customSetter(
+                    O.cs_fromRaw(object: rawObject),
+                    { (userValue: V) -> Void in
+                        
+                        rawObject.setValue(
+                            userValue,
+                            forKvcKey: keyPath,
+                            willSetValue: { $0.cs_toImportableNativeType() }
+                        )
+                    },
+                    V.cs_fromImportableNativeType(newValue as! V.ImportableNativeType)!
+                )
+            }
         }
         
         
         // MARK: Private
         
-        private let customGetter: (_ `self`: O, _ getValue: () -> V) -> V
-        private let customSetter: (_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void
+        private let customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)?
+        private let customSetter: ((_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void)?
     }
     
     
@@ -263,19 +337,19 @@ public enum ValueContainer<O: CoreStoreObject> {
          */
         public init(
             _ keyPath: KeyPath,
-            `default`: V? = nil,
+            `default`: @autoclosure @escaping () -> V? = nil,
             isIndexed: Bool = false,
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() },
-            customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void = { $1($2) },
+            customGetter: ((_ `self`: O, _ getValue: () -> V?) -> V?)? = nil,
+            customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
             self.isIndexed = isIndexed
             self.isTransient = isTransient
-            self.defaultValue = `default`?.cs_toImportableNativeType()
+            self.defaultValue = { `default`()?.cs_toImportableNativeType() }
             self.versionHashModifier = versionHashModifier
             self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
@@ -290,45 +364,59 @@ public enum ValueContainer<O: CoreStoreObject> {
             
             get {
                 
-                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    self.parentObject != nil,
+                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return self.customGetter(
-                    object,
-                    { () -> V? in
-                        
-                        return object.rawObject!.getValue(
-                            forKvcKey: self.keyPath,
-                            didGetValue: { ($0 as! V.ImportableNativeType?).flatMap(V.cs_fromImportableNativeType) }
-                        )
-                    }
-                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    )
+                    let customGetter = (self.customGetter ?? { $1() })
+                    return customGetter(
+                        object,
+                        { () -> V? in
+                            
+                            return object.rawObject!.getValue(
+                                forKvcKey: self.keyPath,
+                                didGetValue: { ($0 as! V.ImportableNativeType?).flatMap(V.cs_fromImportableNativeType) }
+                            )
+                        }
+                    )
+                }
             }
             set {
                 
-                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    self.parentObject != nil,
+                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                CoreStore.assert(
-                    object.rawObject!.isEditableInContext() == true,
-                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
-                )
-                self.customSetter(
-                    object,
-                    { (newValue: V?) -> Void in
-                        
-                        object.rawObject!.setValue(
-                            newValue,
-                            forKvcKey: self.keyPath,
-                            willSetValue: { $0?.cs_toImportableNativeType() }
-                        )
-                    },
-                    newValue
-                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    )
+                    CoreStore.assert(
+                        object.rawObject!.isEditableInContext() == true,
+                        "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                    )
+                    let customSetter = (self.customSetter ?? { $1($2) })
+                    customSetter(
+                        object,
+                        { (newValue: V?) -> Void in
+                            
+                            object.rawObject!.setValue(
+                                newValue,
+                                forKvcKey: self.keyPath,
+                                willSetValue: { $0?.cs_toImportableNativeType() }
+                            )
+                        },
+                        newValue
+                    )
+                }
             }
         }
         
@@ -344,21 +432,81 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let isOptional = true
         internal let isIndexed: Bool
         internal let isTransient: Bool
-        internal let defaultValue: Any?
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let defaultValue: () -> Any?
         internal let affectedByKeyPaths: () -> Set<String>
+        internal weak var parentObject: CoreStoreObject?
         
-        internal var parentObject: () -> CoreStoreObject = {
+        internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
             
-            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
+            let keyPath = self.keyPath
+            guard let customGetter = self.customGetter else {
+                
+                guard let _ = self.customSetter else {
+                    
+                    return nil
+                }
+                return { (_ id: Any) -> Any? in
+                    
+                    let rawObject = id as! CoreStoreManagedObject
+                    return rawObject.getValue(forKvcKey: keyPath)
+                }
+            }
+            return { (_ id: Any) -> Any? in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                let value = customGetter(
+                    O.cs_fromRaw(object: rawObject),
+                    {
+                        rawObject.getValue(
+                            forKvcKey: keyPath,
+                            didGetValue: { ($0 as! V.ImportableNativeType?).flatMap(V.cs_fromImportableNativeType) }
+                        )
+                    }
+                )
+                return value?.cs_toImportableNativeType()
+            }
+        }
+        
+        internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
+            
+            let keyPath = self.keyPath
+            guard let customSetter = self.customSetter else {
+                
+                guard let _ = self.customGetter else {
+                    
+                    return nil
+                }
+                return { (_ id: Any, _ newValue: Any?) -> Void in
+                    
+                    let rawObject = id as! CoreStoreManagedObject
+                    rawObject.setValue(newValue, forKvcKey: keyPath)
+                }
+            }
+            return { (_ id: Any, _ newValue: Any?) -> Void in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                customSetter(
+                    O.cs_fromRaw(object: rawObject),
+                    { (userValue: V?) -> Void in
+                        
+                        rawObject.setValue(
+                            userValue,
+                            forKvcKey: keyPath,
+                            willSetValue: { $0?.cs_toImportableNativeType() }
+                        )
+                    },
+                    (newValue as! V.ImportableNativeType?).flatMap(V.cs_fromImportableNativeType)
+                )
+            }
         }
         
         
         // MARK: Private
         
-        private let customGetter: (_ `self`: O, _ getValue: () -> V?) -> V?
-        private let customSetter: (_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void
+        private let customGetter: ((_ `self`: O, _ getValue: () -> V?) -> V?)?
+        private let customSetter: ((_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void)?
     }
 }
 
@@ -391,8 +539,8 @@ public extension ValueContainer.Required where V: EmptyableAttributeType {
         isTransient: Bool = false,
         versionHashModifier: String? = nil,
         renamingIdentifier: String? = nil,
-        customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() },
-        customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) },
+        customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)? = nil,
+        customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void)? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
         
         self.init(
@@ -463,13 +611,13 @@ public enum TransformableContainer<O: CoreStoreObject> {
          */
         public init(
             _ keyPath: KeyPath,
-            `default`: V,
+            `default`: @autoclosure @escaping () -> V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: @escaping (_ `self`: O, _ getValue: () -> V) -> V = { $1() },
-            customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void = { $1($2) },
+            customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)? = nil,
+            customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
@@ -490,44 +638,58 @@ public enum TransformableContainer<O: CoreStoreObject> {
             
             get {
                 
-                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    self.parentObject != nil,
+                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return self.customGetter(
-                    object,
-                    { () -> V in
-                        
-                        return object.rawObject!.getValue(
-                            forKvcKey: self.keyPath,
-                            didGetValue: { $0 as! V }
-                        )
-                    }
-                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    )
+                    let customGetter = (self.customGetter ?? { $1() })
+                    return customGetter(
+                        object,
+                        { () -> V in
+                            
+                            return object.rawObject!.getValue(
+                                forKvcKey: self.keyPath,
+                                didGetValue: { $0 as! V }
+                            )
+                        }
+                    )
+                }
             }
             set {
                 
-                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    self.parentObject != nil,
+                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                CoreStore.assert(
-                    object.rawObject!.isEditableInContext() == true,
-                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
-                )
-                self.customSetter(
-                    object,
-                    { (newValue: V) -> Void in
-                        
-                        object.rawObject!.setValue(
-                            newValue,
-                            forKvcKey: self.keyPath
-                        )
-                    },
-                    newValue
-                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    )
+                    CoreStore.assert(
+                        object.rawObject!.isEditableInContext() == true,
+                        "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                    )
+                    let customSetter = (self.customSetter ?? { $1($2) })
+                    customSetter(
+                        object,
+                        { (newValue: V) -> Void in
+                            
+                            object.rawObject!.setValue(
+                                newValue,
+                                forKvcKey: self.keyPath
+                            )
+                        },
+                        newValue
+                    )
+                }
             }
         }
         
@@ -544,21 +706,71 @@ public enum TransformableContainer<O: CoreStoreObject> {
         internal let isOptional = false
         internal let isIndexed: Bool
         internal let isTransient: Bool
-        internal let defaultValue: Any?
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let defaultValue: () -> Any?
         internal let affectedByKeyPaths: () -> Set<String>
+        internal weak var parentObject: CoreStoreObject?
         
-        internal var parentObject: () -> CoreStoreObject = {
+        internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
             
-            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
+            let keyPath = self.keyPath
+            guard let customGetter = self.customGetter else {
+                
+                guard let _ = self.customSetter else {
+                    
+                    return nil
+                }
+                return { (_ id: Any) -> Any? in
+                    
+                    let rawObject = id as! CoreStoreManagedObject
+                    return rawObject.getValue(forKvcKey: keyPath)
+                }
+            }
+            return { (_ id: Any) -> Any? in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                return customGetter(
+                    O.cs_fromRaw(object: rawObject),
+                    { rawObject.getValue(forKvcKey: keyPath) as! V }
+                )
+            }
+        }
+        
+        internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
+            
+            let keyPath = self.keyPath
+            guard let customSetter = self.customSetter else {
+                
+                guard let _ = self.customGetter else {
+                    
+                    return nil
+                }
+                return { (_ id: Any, _ newValue: Any?) -> Void in
+                    
+                    let rawObject = id as! CoreStoreManagedObject
+                    rawObject.setValue(newValue, forKvcKey: keyPath)
+                }
+            }
+            return { (_ id: Any, _ newValue: Any?) -> Void in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                customSetter(
+                    O.cs_fromRaw(object: rawObject),
+                    { (userValue: V) -> Void in
+                        
+                        rawObject.setValue(userValue, forKvcKey: keyPath)
+                    },
+                    newValue as! V
+                )
+            }
         }
         
         
         // MARK: Private
         
-        private let customGetter: (_ `self`: O, _ getValue: () -> V) -> V
-        private let customSetter: (_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void
+        private let customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)?
+        private let customSetter: ((_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void)?
     }
     
     
@@ -601,13 +813,13 @@ public enum TransformableContainer<O: CoreStoreObject> {
          */
         public init(
             _ keyPath: KeyPath,
-            `default`: V? = nil,
+            `default`: @autoclosure @escaping () -> V? = nil,
             isIndexed: Bool = false,
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: @escaping (_ `self`: O, _ getValue: () -> V?) -> V? = { $1() },
-            customSetter: @escaping (_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void = { $1($2) },
+            customGetter: ((_ `self`: O, _ getValue: () -> V?) -> V?)? = nil,
+            customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
@@ -628,44 +840,58 @@ public enum TransformableContainer<O: CoreStoreObject> {
             
             get {
                 
-                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    self.parentObject != nil,
+                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return self.customGetter(
-                    object,
-                    { () -> V? in
-                        
-                        return object.rawObject!.getValue(
-                            forKvcKey: self.keyPath,
-                            didGetValue: { $0 as! V? }
-                        )
-                    }
-                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    )
+                    let customGetter = (self.customGetter ?? { $1() })
+                    return customGetter(
+                        object,
+                        { () -> V? in
+                            
+                            return object.rawObject!.getValue(
+                                forKvcKey: self.keyPath,
+                                didGetValue: { $0 as! V? }
+                            )
+                        }
+                    )
+                }
             }
             set {
                 
-                let object = self.parentObject() as! O
                 CoreStore.assert(
-                    object.rawObject!.isRunningInAllowedQueue() == true,
-                    "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    self.parentObject != nil,
+                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                CoreStore.assert(
-                    object.rawObject!.isEditableInContext() == true,
-                    "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
-                )
-                self.customSetter(
-                    object,
-                    { (newValue: V?) -> Void in
-                        
-                        object.rawObject!.setValue(
-                            newValue,
-                            forKvcKey: self.keyPath
-                        )
-                    },
-                    newValue
-                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                    )
+                    CoreStore.assert(
+                        object.rawObject!.isEditableInContext() == true,
+                        "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                    )
+                    let customSetter = (self.customSetter ?? { $1($2) })
+                    customSetter(
+                        object,
+                        { (newValue: V?) -> Void in
+                            
+                            object.rawObject!.setValue(
+                                newValue,
+                                forKvcKey: self.keyPath
+                            )
+                        },
+                        newValue
+                    )
+                }
             }
         }
         
@@ -682,21 +908,71 @@ public enum TransformableContainer<O: CoreStoreObject> {
         internal let isOptional = true
         internal let isIndexed: Bool
         internal let isTransient: Bool
-        internal let defaultValue: Any?
         internal let versionHashModifier: String?
         internal let renamingIdentifier: String?
+        internal let defaultValue: () -> Any?
         internal let affectedByKeyPaths: () -> Set<String>
+        internal weak var parentObject: CoreStoreObject?
         
-        internal var parentObject: () -> CoreStoreObject = {
+        internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
             
-            CoreStore.abort("Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types.")
+            let keyPath = self.keyPath
+            guard let customGetter = self.customGetter else {
+                
+                guard let _ = self.customSetter else {
+                    
+                    return nil
+                }
+                return { (_ id: Any) -> Any? in
+                    
+                    let rawObject = id as! CoreStoreManagedObject
+                    return rawObject.getValue(forKvcKey: keyPath)
+                }
+            }
+            return { (_ id: Any) -> Any? in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                return customGetter(
+                    O.cs_fromRaw(object: rawObject),
+                    { rawObject.getValue(forKvcKey: keyPath) as! V? }
+                )
+            }
+        }
+        
+        internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
+            
+            let keyPath = self.keyPath
+            guard let customSetter = self.customSetter else {
+                
+                guard let _ = self.customGetter else {
+                    
+                    return nil
+                }
+                return { (_ id: Any, _ newValue: Any?) -> Void in
+                    
+                    let rawObject = id as! CoreStoreManagedObject
+                    rawObject.setValue(newValue, forKvcKey: keyPath)
+                }
+            }
+            return { (_ id: Any, _ newValue: Any?) -> Void in
+                
+                let rawObject = id as! CoreStoreManagedObject
+                customSetter(
+                    O.cs_fromRaw(object: rawObject),
+                    { (userValue: V?) -> Void in
+                        
+                        rawObject.setValue(userValue, forKvcKey: keyPath)
+                    },
+                    newValue as! V?
+                )
+            }
         }
         
         
         // MARK: Private
         
-        private let customGetter: (_ `self`: O, _ getValue: () -> V?) -> V?
-        private let customSetter: (_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void
+        private let customGetter: ((_ `self`: O, _ getValue: () -> V?) -> V?)?
+        private let customSetter: ((_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void)?
     }
 }
 
@@ -999,9 +1275,11 @@ internal protocol AttributeProtocol: class {
     var isOptional: Bool { get }
     var isIndexed: Bool { get }
     var isTransient: Bool { get }
-    var defaultValue: Any? { get }
     var versionHashModifier: String? { get }
     var renamingIdentifier: String? { get }
+    var defaultValue: () -> Any? { get }
     var affectedByKeyPaths: () -> Set<String> { get }
-    var parentObject: () -> CoreStoreObject { get set }
+    weak var parentObject: CoreStoreObject? { get set }
+    var getter: CoreStoreManagedObject.CustomGetter? { get }
+    var setter: CoreStoreManagedObject.CustomSetter? { get }
 }

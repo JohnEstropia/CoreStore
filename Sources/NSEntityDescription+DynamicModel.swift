@@ -75,14 +75,15 @@ internal extension NSEntityDescription {
         }
     }
     
+    @nonobjc
     internal var keyPathsByAffectedKeyPaths: [KeyPath: Set<KeyPath>] {
         
         get {
             
             if let userInfo = self.userInfo,
-                let function = userInfo[UserInfoKey.CoreStoreManagedObjectKeyPathsByAffectedKeyPaths] as! [KeyPath: Set<KeyPath>]? {
+                let value = userInfo[UserInfoKey.CoreStoreManagedObjectKeyPathsByAffectedKeyPaths] {
                 
-                return function
+                return value as! [KeyPath: Set<KeyPath>]
             }
             return [:]
         }
@@ -91,6 +92,27 @@ internal extension NSEntityDescription {
             cs_setUserInfo { (userInfo) in
                 
                 userInfo[UserInfoKey.CoreStoreManagedObjectKeyPathsByAffectedKeyPaths] = newValue
+            }
+        }
+    }
+    
+    @nonobjc
+    internal var customGetterSetterByKeyPaths: [KeyPath: CoreStoreManagedObject.CustomGetterSetter] {
+        
+        get {
+            
+            if let userInfo = self.userInfo,
+                let value = userInfo[UserInfoKey.CoreStoreManagedObjectCustomGetterSetterByKeyPaths] {
+                
+                return value as! [KeyPath: CoreStoreManagedObject.CustomGetterSetter]
+            }
+            return [:]
+        }
+        set {
+            
+            cs_setUserInfo { (userInfo) in
+                
+                userInfo[UserInfoKey.CoreStoreManagedObjectCustomGetterSetterByKeyPaths] = newValue
             }
         }
     }
@@ -108,6 +130,8 @@ internal extension NSEntityDescription {
         fileprivate static let CoreStoreManagedObjectVersionHashModifier = "CoreStoreManagedObjectVersionHashModifier"
         
         fileprivate static let CoreStoreManagedObjectKeyPathsByAffectedKeyPaths = "CoreStoreManagedObjectKeyPathsByAffectedKeyPaths"
+        fileprivate static let CoreStoreManagedObjectCustomGetterSetterByKeyPaths = "CoreStoreManagedObjectCustomGetterSetterByKeyPaths"
+        
     }
     
     private func cs_setUserInfo(_ closure: (_ userInfo: inout [AnyHashable: Any]) -> Void) {
