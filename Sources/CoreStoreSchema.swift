@@ -488,12 +488,6 @@ public final class CoreStoreSchema: DynamicSchema {
             for (attributeName, customGetterSetters) in (customGetterSetterByKeyPaths ?? [:])
                 where customGetterSetters.getter != nil || customGetterSetters.setter != nil {
                     
-                    var rawAttributes: [objc_property_attribute_t] = [
-                        objc_property_attribute_t(name: "T@", value: attributeName),
-                        objc_property_attribute_t(name: "N", value: ""),
-                        objc_property_attribute_t(name: "C", value: ""),
-                        objc_property_attribute_t(name: "&", value: "")
-                    ]
                     if let getter = customGetterSetters.getter {
                         
                         let getterName = "\(attributeName)"
@@ -505,7 +499,6 @@ public final class CoreStoreSchema: DynamicSchema {
                                 
                                 CoreStore.abort("Could not dynamically add getter method \"\(getterName)\" to class \(cs_typeName(managedObjectClass))")
                         }
-                        rawAttributes.append(objc_property_attribute_t(name: "G", value: getterName))
                     }
                     if let setter = customGetterSetters.setter {
                         
@@ -518,17 +511,7 @@ public final class CoreStoreSchema: DynamicSchema {
                                 
                                 CoreStore.abort("Could not dynamically add setter method \"\(setterName)\" to class \(cs_typeName(managedObjectClass))")
                         }
-                        rawAttributes.append(objc_property_attribute_t(name: "S", value: setterName))
                     }
-//                    rawAttributes.append("\(attributeName)".withCString({ objc_property_attribute_t(name: "V", value: $0) }))
-                    
-//                    rawAttributes.withUnsafeBufferPointer { (buffer) in
-//                        
-//                        guard class_addProperty(managedObjectClass, attributeName, buffer.baseAddress, UInt32(buffer.count)) else {
-//                            
-//                            CoreStore.abort("Could not dynamically add property \"\(attributeName)\" to class \(cs_typeName(managedObjectClass))")
-//                        }
-//                    }
             }
             
             let newSelector = NSSelectorFromString("cs_keyPathsForValuesAffectingValueForKey:")

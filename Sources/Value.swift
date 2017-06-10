@@ -181,7 +181,7 @@ public enum ValueContainer<O: CoreStoreObject> {
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        object.rawObject!.isEditableInContext() == true,
+                        self.isTransient || object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
                     let customSetter = (self.customSetter ?? { $1($2) })
@@ -222,19 +222,11 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
             
-            let keyPath = self.keyPath
             guard let customGetter = self.customGetter else {
                 
-                guard let _ = self.customSetter else {
-                    
-                    return nil
-                }
-                return { (_ id: Any) -> Any? in
-                    
-                    let rawObject = id as! CoreStoreManagedObject
-                    return rawObject.getValue(forKvcKey: keyPath)
-                }
+                return nil
             }
+            let keyPath = self.keyPath
             return { (_ id: Any) -> Any? in
                 
                 let rawObject = id as! CoreStoreManagedObject
@@ -253,19 +245,11 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
             
-            let keyPath = self.keyPath
             guard let customSetter = self.customSetter else {
                 
-                guard let _ = self.customGetter else {
-                    
-                    return nil
-                }
-                return { (_ id: Any, _ newValue: Any?) -> Void in
-                    
-                    let rawObject = id as! CoreStoreManagedObject
-                    rawObject.setValue(newValue, forKvcKey: keyPath)
-                }
+                return nil
             }
+            let keyPath = self.keyPath
             return { (_ id: Any, _ newValue: Any?) -> Void in
                 
                 let rawObject = id as! CoreStoreManagedObject
@@ -400,7 +384,7 @@ public enum ValueContainer<O: CoreStoreObject> {
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        object.rawObject!.isEditableInContext() == true,
+                        self.isTransient || object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
                     let customSetter = (self.customSetter ?? { $1($2) })
@@ -440,19 +424,11 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
             
-            let keyPath = self.keyPath
             guard let customGetter = self.customGetter else {
                 
-                guard let _ = self.customSetter else {
-                    
-                    return nil
-                }
-                return { (_ id: Any) -> Any? in
-                    
-                    let rawObject = id as! CoreStoreManagedObject
-                    return rawObject.getValue(forKvcKey: keyPath)
-                }
+                return nil
             }
+            let keyPath = self.keyPath
             return { (_ id: Any) -> Any? in
                 
                 let rawObject = id as! CoreStoreManagedObject
@@ -471,19 +447,11 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
             
-            let keyPath = self.keyPath
             guard let customSetter = self.customSetter else {
                 
-                guard let _ = self.customGetter else {
-                    
-                    return nil
-                }
-                return { (_ id: Any, _ newValue: Any?) -> Void in
-                    
-                    let rawObject = id as! CoreStoreManagedObject
-                    rawObject.setValue(newValue, forKvcKey: keyPath)
-                }
+                return nil
             }
+            let keyPath = self.keyPath
             return { (_ id: Any, _ newValue: Any?) -> Void in
                 
                 let rawObject = id as! CoreStoreManagedObject
@@ -674,7 +642,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        object.rawObject!.isEditableInContext() == true,
+                        self.isTransient || object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
                     let customSetter = (self.customSetter ?? { $1($2) })
@@ -714,19 +682,11 @@ public enum TransformableContainer<O: CoreStoreObject> {
         
         internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
             
-            let keyPath = self.keyPath
             guard let customGetter = self.customGetter else {
                 
-                guard let _ = self.customSetter else {
-                    
-                    return nil
-                }
-                return { (_ id: Any) -> Any? in
-                    
-                    let rawObject = id as! CoreStoreManagedObject
-                    return rawObject.getValue(forKvcKey: keyPath)
-                }
+                return nil
             }
+            let keyPath = self.keyPath
             return { (_ id: Any) -> Any? in
                 
                 let rawObject = id as! CoreStoreManagedObject
@@ -739,19 +699,11 @@ public enum TransformableContainer<O: CoreStoreObject> {
         
         internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
             
-            let keyPath = self.keyPath
             guard let customSetter = self.customSetter else {
                 
-                guard let _ = self.customGetter else {
-                    
-                    return nil
-                }
-                return { (_ id: Any, _ newValue: Any?) -> Void in
-                    
-                    let rawObject = id as! CoreStoreManagedObject
-                    rawObject.setValue(newValue, forKvcKey: keyPath)
-                }
+                return nil
             }
+            let keyPath = self.keyPath
             return { (_ id: Any, _ newValue: Any?) -> Void in
                 
                 let rawObject = id as! CoreStoreManagedObject
@@ -876,7 +828,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        object.rawObject!.isEditableInContext() == true,
+                        self.isTransient || object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
                     let customSetter = (self.customSetter ?? { $1($2) })
@@ -916,19 +868,11 @@ public enum TransformableContainer<O: CoreStoreObject> {
         
         internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
             
-            let keyPath = self.keyPath
             guard let customGetter = self.customGetter else {
                 
-                guard let _ = self.customSetter else {
-                    
-                    return nil
-                }
-                return { (_ id: Any) -> Any? in
-                    
-                    let rawObject = id as! CoreStoreManagedObject
-                    return rawObject.getValue(forKvcKey: keyPath)
-                }
+                return nil
             }
+            let keyPath = self.keyPath
             return { (_ id: Any) -> Any? in
                 
                 let rawObject = id as! CoreStoreManagedObject
