@@ -527,7 +527,7 @@ public final class CoreStoreSchema: DynamicSchema {
             let origSelector = #selector(NSManagedObject.keyPathsForValuesAffectingValue(forKey:))
             
             let metaClass: AnyClass = object_getClass(managedObjectClass)!
-            let origMethod = class_getClassMethod(managedObjectClass, origSelector)
+            let origMethod = class_getClassMethod(managedObjectClass, origSelector)!
             
             let origImp = method_getImplementation(origMethod)
             let newImp = imp_implementationWithBlock(keyPathsForValuesAffectingValue)

@@ -159,7 +159,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertTrue(person.pets.value.isEmpty)
                     
                     XCTAssertEqual(
-                        object_getClass(person.rawObject!).keyPathsForValuesAffectingValue(forKey: "displayName"),
+                        type(of: person.rawObject!).keyPathsForValuesAffectingValue(forKey: "displayName"),
                         ["title", "name"]
                     )
                     
