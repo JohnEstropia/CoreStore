@@ -13,28 +13,14 @@ import CoreData
 
 @objc internal class CoreStoreManagedObject: NSManagedObject {
     
-    @nonobjc
-    internal class func cs_setKeyPathsForValuesAffectingKeys(_ keyPathsForValuesAffectingKeys: [RawKeyPath: Set<RawKeyPath>], for managedObjectClass: CoreStoreManagedObject.Type) {
-        
-        Static.queue.sync(flags: .barrier) {
-            
-            Static.cache[ObjectIdentifier(managedObjectClass)] = keyPathsForValuesAffectingKeys
-        }
-    }
+    internal typealias CustomGetter = @convention(block) (_ rawObject: Any) -> Any?
+    internal typealias CustomSetter = @convention(block) (_ rawObject: Any, _ newValue: Any?) -> Void
+    internal typealias CustomGetterSetter = (getter: CustomGetter?, setter: CustomSetter?)
     
-    // MARK: NSManagedObject
-    
-    override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
+    @nonobjc @inline(__always)
+    internal static func cs_subclassName(for entity: DynamicEntity, in modelVersion: ModelVersion) -> String {
         
-        return Static.queue.sync(flags: .barrier) {
-            
-            let cacheKey = ObjectIdentifier(self)
-            if let keyPathsForValuesAffectingKeys = Static.cache[cacheKey] {
-                
-                return keyPathsForValuesAffectingKeys[key] ?? []
-            }
-            return super.keyPathsForValuesAffectingValue(forKey: key)
-        }
+        return "_\(NSStringFromClass(CoreStoreManagedObject.self))__\(modelVersion)__\(NSStringFromClass(entity.type))__\(entity.entityName)"
     }
 }
 

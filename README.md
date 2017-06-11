@@ -19,6 +19,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 </p>
 
 * **Swift 3.1:** iOS 8+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
+* Beta support: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/prototype/Swift_3_2), [Swift 4.0](https://github.com/JohnEstropia/CoreStore/tree/prototype/Swift_4_0)
 
 Upgrading from CoreStore 3.x to 4.x? Check out the [new features](#features) and make sure to read the [Migration guide](#upgrading-from-3xx-to-4xx).
 
