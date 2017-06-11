@@ -68,8 +68,8 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     public required init(rawObject: NSManagedObject) {
         
         self.isMeta = false
-        self.rawObject = rawObject
-        self.initializeAttributes(Mirror(reflecting: self), { [unowned self] in self })
+        self.rawObject = (rawObject as! CoreStoreManagedObject)
+        self.initializeAttributes(Mirror(reflecting: self), self)
     }
     
     /**
@@ -110,13 +110,13 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     // MARK: Internal
     
-    internal let rawObject: NSManagedObject?
+    internal let rawObject: CoreStoreManagedObject?
     internal let isMeta: Bool
     
     
     // MARK: Private
     
-    private func initializeAttributes(_ mirror: Mirror, _ parentObject: @escaping () -> CoreStoreObject) {
+    private func initializeAttributes(_ mirror: Mirror, _ parentObject: CoreStoreObject) {
         
         _ = mirror.superclassMirror.flatMap({ self.initializeAttributes($0, parentObject) })
         for child in mirror.children {

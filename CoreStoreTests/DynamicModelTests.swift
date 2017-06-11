@@ -51,15 +51,49 @@ class Dog: Animal {
 }
 
 class Person: CoreStoreObject {
-    let title = Value.Required<String>("title", default: "Mr.")
-    let name = Value.Required<String>(
-        "name",
-        customGetter: { (`self`, getValue) in
+    let title = Value.Required<String>(
+        "title",
+        default: "Mr.",
+        customSetter: { (`self`, setValue, originalNewValue) in
             
-            return "\(self.title.value) \(getValue())"
+            setValue(originalNewValue)
+            self.displayName .= nil
         }
     )
+    let name = Value.Required<String>(
+        "name",
+        customSetter: { (`self`, setValue, originalNewValue) in
+            
+            setValue(originalNewValue)
+            self.displayName .= nil
+        }
+    )
+    let displayName = Value.Optional<String>(
+        "displayName",
+        isTransient: true,
+        customGetter: Person.cachedDisplayName(_:_:),
+        affectedByKeyPaths: Person.keyPathsAffectingDisplayName()
+    )
     let pets = Relationship.ToManyUnordered<Animal>("pets", inverse: { $0.master })
+    
+    static func cachedDisplayName(_ instance: Person, _ getValue: () -> String?) -> String? {
+        
+        if let cached = getValue() {
+            
+            return cached
+        }
+        let primitiveValue = "\(instance.title.value) \(instance.name.value)"
+        instance.displayName .= primitiveValue
+        return primitiveValue
+    }
+    
+    static func keyPathsAffectingDisplayName() -> Set<String> {
+        
+        return [
+            self.keyPath({ $0.title }),
+            self.keyPath({ $0.name })
+        ]
+    }
 }
 
 
@@ -124,11 +158,25 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let person = transaction.create(Into<Person>())
                     XCTAssertTrue(person.pets.value.isEmpty)
                     
+                    XCTAssertEqual(
+                        object_getClass(person.rawObject!).keyPathsForValuesAffectingValue(forKey: "displayName"),
+                        ["title", "name"]
+                    )
+                    
+                    person.name .= "Joe"
+                    
+                    XCTAssertEqual(person.rawObject!.value(forKey: "name") as! String?, "Joe")
+                    XCTAssertEqual(person.rawObject!.value(forKey: "displayName") as! String?, "Mr. Joe")
+                    
+                    person.rawObject!.setValue("AAAA", forKey: "displayName")
+                    XCTAssertEqual(person.rawObject!.value(forKey: "displayName") as! String?, "AAAA")
+                    
                     person.name .= "John"
-                    XCTAssertEqual(person.name.value, "Mr. John") // Custom getter
+                    XCTAssertEqual(person.name.value, "John")
+                    XCTAssertEqual(person.displayName.value, "Mr. John") // Custom getter
                     
                     person.title .= "Sir"
-                    XCTAssertEqual(person.name.value, "Sir John")
+                    XCTAssertEqual(person.displayName.value, "Sir John")
                     
                     person.pets.value.insert(dog)
                     XCTAssertEqual(person.pets.count, 1)
