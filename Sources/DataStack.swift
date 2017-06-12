@@ -35,6 +35,11 @@ import CoreData
 public final class DataStack: Equatable {
     
     /**
+     The resolved application name, used by the `DataStack` as the default Xcode model name (.xcdatamodel filename) if not explicitly provided.
+     */
+    public static let applicationName = (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData"
+    
+    /**
      Convenience initializer for `DataStack` that creates a `SchemaHistory` from the model with the specified `modelName` in the specified `bundle`.
      
      - parameter xcodeModelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set (e.g. in Unit Tests).
@@ -476,8 +481,6 @@ public final class DataStack: Equatable {
     // MARK: Internal
     
     internal static var defaultConfigurationName = "PF_DEFAULT_CONFIGURATION_NAME"
-    
-    internal static let applicationName = (Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String) ?? "CoreData"
     
     internal let coordinator: NSPersistentStoreCoordinator
     internal let rootSavingContext: NSManagedObjectContext
