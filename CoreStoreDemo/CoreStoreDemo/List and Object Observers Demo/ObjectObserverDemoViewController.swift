@@ -29,7 +29,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
             
             if let palette = newValue {
                 
-                self.monitor = CoreStore.monitorObject(palette)
+                self.monitor = ColorsDemo.stack.monitorObject(palette)
             }
             else {
                 
@@ -50,22 +50,22 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     required init?(coder aDecoder: NSCoder) {
         
-        if let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending(#keyPath(Palette.hue)))) {
+        if let palette = ColorsDemo.stack.fetchOne(From<Palette>(), Palette.orderBy(ascending: { $0.hue })) {
             
-            self.monitor = CoreStore.monitorObject(palette)
+            self.monitor = ColorsDemo.stack.monitorObject(palette)
         }
         else {
             
-            _ = try? CoreStore.perform(
+            _ = try? ColorsDemo.stack.perform(
                 synchronous: { (transaction) in
                     
-                    let palette = transaction.create(Into(Palette.self))
-                    palette.setInitialValues()
+                    let palette = transaction.create(Into<Palette>())
+                    palette.setInitialValues(in: transaction)
                 }
             )
             
-            let palette = CoreStore.fetchOne(From<Palette>(), OrderBy(.ascending(#keyPath(Palette.hue))))!
-            self.monitor = CoreStore.monitorObject(palette)
+            let palette = ColorsDemo.stack.fetchOne(From<Palette>(), Palette.orderBy(ascending: { $0.hue }))!
+            self.monitor = ColorsDemo.stack.monitorObject(palette)
         }
         
         super.init(coder: aDecoder)
@@ -121,12 +121,12 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     @IBAction dynamic func hueSliderValueDidChange(_ sender: AnyObject?) {
         
         let hue = self.hueSlider?.value ?? 0
-        CoreStore.perform(
+        ColorsDemo.stack.perform(
             asynchronous: { [weak self] (transaction) in
                 
                 if let palette = transaction.edit(self?.monitor?.object) {
                     
-                    palette.hue = Int32(hue)
+                    palette.hue .= Int(hue)
                 }
             },
             completion: { _ in }
@@ -136,12 +136,12 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     @IBAction dynamic func saturationSliderValueDidChange(_ sender: AnyObject?) {
         
         let saturation = self.saturationSlider?.value ?? 0
-        CoreStore.perform(
+        ColorsDemo.stack.perform(
             asynchronous: { [weak self] (transaction) in
                 
                 if let palette = transaction.edit(self?.monitor?.object) {
                     
-                    palette.saturation = saturation
+                    palette.saturation .= saturation
                 }
             },
             completion: { _ in }
@@ -151,12 +151,12 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     @IBAction dynamic func brightnessSliderValueDidChange(_ sender: AnyObject?) {
         
         let brightness = self.brightnessSlider?.value ?? 0
-        CoreStore.perform(
+        ColorsDemo.stack.perform(
             asynchronous: { [weak self] (transaction) in
                 
                 if let palette = transaction.edit(self?.monitor?.object) {
                     
-                    palette.brightness = brightness
+                    palette.brightness .= brightness
                 }
             },
             completion: { _ in }
@@ -165,7 +165,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     @IBAction dynamic func deleteBarButtonTapped(_ sender: AnyObject?) {
         
-        CoreStore.perform(
+        ColorsDemo.stack.perform(
             asynchronous: { [weak self] (transaction) in
                 
                 transaction.delete(self?.monitor?.object)
@@ -176,7 +176,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     func reloadPaletteInfo(_ palette: Palette, changedKeys: Set<String>?) {
         
-        self.colorNameLabel?.text = palette.colorName
+        self.colorNameLabel?.text = palette.colorName.value
         
         let color = palette.color
         self.colorNameLabel?.textColor = color
@@ -184,17 +184,17 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         
         self.hsbLabel?.text = palette.colorText
         
-        if changedKeys == nil || changedKeys?.contains(#keyPath(Palette.hue)) == true {
+        if changedKeys == nil || changedKeys?.contains(Palette.keyPath{ $0.hue }) == true {
             
-            self.hueSlider?.value = Float(palette.hue)
+            self.hueSlider?.value = Float(palette.hue.value)
         }
-        if changedKeys == nil || changedKeys?.contains(#keyPath(Palette.saturation)) == true {
+        if changedKeys == nil || changedKeys?.contains(Palette.keyPath{ $0.saturation }) == true {
             
-            self.saturationSlider?.value = palette.saturation
+            self.saturationSlider?.value = palette.saturation.value
         }
-        if changedKeys == nil || changedKeys?.contains(#keyPath(Palette.brightness)) == true {
+        if changedKeys == nil || changedKeys?.contains(Palette.keyPath{ $0.brightness }) == true {
             
-            self.brightnessSlider?.value = palette.brightness
+            self.brightnessSlider?.value = palette.brightness.value
         }
     }
 }
