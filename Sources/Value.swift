@@ -160,10 +160,9 @@ public enum ValueContainer<O: CoreStoreObject> {
                         object,
                         { () -> V in
                             
-                            return object.rawObject!.getValue(
-                                forKvcKey: self.keyPath,
-                                didGetValue: { V.cs_fromImportableNativeType($0 as! V.ImportableNativeType)! }
-                            )
+                            return V.cs_fromImportableNativeType(
+                                object.rawObject!.value(forKey: self.keyPath)! as! V.ImportableNativeType
+                            )!
                         }
                     )
                 }
@@ -181,7 +180,7 @@ public enum ValueContainer<O: CoreStoreObject> {
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        self.isTransient || object.rawObject!.isEditableInContext() == true,
+                        object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
                     let customSetter = (self.customSetter ?? { $1($2) })
@@ -190,12 +189,57 @@ public enum ValueContainer<O: CoreStoreObject> {
                         { (newValue: V) -> Void in
                             
                             object.rawObject!.setValue(
-                                newValue,
-                                forKvcKey: self.keyPath,
-                                willSetValue: { $0.cs_toImportableNativeType() }
+                                newValue.cs_toImportableNativeType(),
+                                forKey: self.keyPath
                             )
                         },
                         newValue
+                    )
+                }
+            }
+        }
+        
+        /**
+         The primitive value. Compared to `value`, `primitiveValue` bypasses all notification mechanisms. This is typically only used for setting values for transient properties.
+         */
+        public var primitiveValue: V {
+            
+            get {
+                
+                CoreStore.assert(
+                    self.parentObject != nil,
+                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
+                    )
+                    return V.cs_fromImportableNativeType(
+                        object.rawObject!.primitiveValue(forKey: self.keyPath)! as! V.ImportableNativeType
+                    )!
+                }
+            }
+            set {
+                
+                CoreStore.assert(
+                    self.parentObject != nil,
+                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
+                    )
+                    CoreStore.assert(
+                        self.isTransient || object.rawObject!.isEditableInContext() == true,
+                        "Attempted to update a \(cs_typeName(O.self))'s primitive value from outside a transaction."
+                    )
+                    object.rawObject!.setPrimitiveValue(
+                        newValue.cs_toImportableNativeType(),
+                        forKey: self.keyPath
                     )
                 }
             }
@@ -363,10 +407,8 @@ public enum ValueContainer<O: CoreStoreObject> {
                         object,
                         { () -> V? in
                             
-                            return object.rawObject!.getValue(
-                                forKvcKey: self.keyPath,
-                                didGetValue: { ($0 as! V.ImportableNativeType?).flatMap(V.cs_fromImportableNativeType) }
-                            )
+                            return (object.rawObject!.value(forKey: self.keyPath) as! V.ImportableNativeType?)
+                                .flatMap(V.cs_fromImportableNativeType)
                         }
                     )
                 }
@@ -384,7 +426,7 @@ public enum ValueContainer<O: CoreStoreObject> {
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        self.isTransient || object.rawObject!.isEditableInContext() == true,
+                        object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
                     let customSetter = (self.customSetter ?? { $1($2) })
@@ -393,12 +435,56 @@ public enum ValueContainer<O: CoreStoreObject> {
                         { (newValue: V?) -> Void in
                             
                             object.rawObject!.setValue(
-                                newValue,
-                                forKvcKey: self.keyPath,
-                                willSetValue: { $0?.cs_toImportableNativeType() }
+                                newValue?.cs_toImportableNativeType(),
+                                forKey: self.keyPath
                             )
                         },
                         newValue
+                    )
+                }
+            }
+        }
+        
+        /**
+         The primitive value. Compared to `value`, `primitiveValue` bypasses all notification mechanisms. This is typically only used for setting values for transient properties.
+         */
+        public var primitiveValue: V? {
+            
+            get {
+                
+                CoreStore.assert(
+                    self.parentObject != nil,
+                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
+                    )
+                    return (object.rawObject!.primitiveValue(forKey: self.keyPath) as! V.ImportableNativeType?)
+                        .flatMap(V.cs_fromImportableNativeType)
+                }
+            }
+            set {
+                
+                CoreStore.assert(
+                    self.parentObject != nil,
+                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
+                    )
+                    CoreStore.assert(
+                        self.isTransient || object.rawObject!.isEditableInContext() == true,
+                        "Attempted to update a \(cs_typeName(O.self))'s primitive value from outside a transaction."
+                    )
+                    object.rawObject!.setPrimitiveValue(
+                        newValue?.cs_toImportableNativeType(),
+                        forKey: self.keyPath
                     )
                 }
             }
@@ -621,10 +707,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         object,
                         { () -> V in
                             
-                            return object.rawObject!.getValue(
-                                forKvcKey: self.keyPath,
-                                didGetValue: { $0 as! V }
-                            )
+                            return object.rawObject!.value(forKey: self.keyPath)! as! V
                         }
                     )
                 }
@@ -642,7 +725,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        self.isTransient || object.rawObject!.isEditableInContext() == true,
+                        object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
                     let customSetter = (self.customSetter ?? { $1($2) })
@@ -652,10 +735,54 @@ public enum TransformableContainer<O: CoreStoreObject> {
                             
                             object.rawObject!.setValue(
                                 newValue,
-                                forKvcKey: self.keyPath
+                                forKey: self.keyPath
                             )
                         },
                         newValue
+                    )
+                }
+            }
+        }
+        
+        /**
+         The primitive value. Compared to `value`, `primitiveValue` bypasses all notification mechanisms. This is typically only used for setting values for transient properties.
+         */
+        public var primitiveValue: V {
+            
+            get {
+                
+                CoreStore.assert(
+                    self.parentObject != nil,
+                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
+                    )
+                    return object.rawObject!.primitiveValue(forKey: self.keyPath)! as! V
+                }
+            }
+            set {
+                
+                CoreStore.assert(
+                    self.parentObject != nil,
+                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
+                    )
+                    CoreStore.assert(
+                        self.isTransient || object.rawObject!.isEditableInContext() == true,
+                        "Attempted to update a \(cs_typeName(O.self))'s primitive value from outside a transaction."
+                    )
+                    object.rawObject!.setPrimitiveValue(
+                        newValue,
+                        forKey: self.keyPath
                     )
                 }
             }
@@ -807,10 +934,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         object,
                         { () -> V? in
                             
-                            return object.rawObject!.getValue(
-                                forKvcKey: self.keyPath,
-                                didGetValue: { $0 as! V? }
-                            )
+                            object.rawObject!.value(forKey: self.keyPath) as! V?
                         }
                     )
                 }
@@ -828,7 +952,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        self.isTransient || object.rawObject!.isEditableInContext() == true,
+                        object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
                     let customSetter = (self.customSetter ?? { $1($2) })
@@ -838,10 +962,54 @@ public enum TransformableContainer<O: CoreStoreObject> {
                             
                             object.rawObject!.setValue(
                                 newValue,
-                                forKvcKey: self.keyPath
+                                forKey: self.keyPath
                             )
                         },
                         newValue
+                    )
+                }
+            }
+        }
+        
+        /**
+         The primitive value. Compared to `value`, `primitiveValue` bypasses all notification mechanisms. This is typically only used for setting values for transient properties.
+         */
+        public var primitiveValue: V? {
+            
+            get {
+                
+                CoreStore.assert(
+                    self.parentObject != nil,
+                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
+                    )
+                    return object.rawObject!.primitiveValue(forKey: self.keyPath) as! V?
+                }
+            }
+            set {
+                
+                CoreStore.assert(
+                    self.parentObject != nil,
+                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                )
+                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                    
+                    CoreStore.assert(
+                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
+                    )
+                    CoreStore.assert(
+                        self.isTransient || object.rawObject!.isEditableInContext() == true,
+                        "Attempted to update a \(cs_typeName(O.self))'s primitive value from outside a transaction."
+                    )
+                    object.rawObject!.setPrimitiveValue(
+                        newValue,
+                        forKey: self.keyPath
                     )
                 }
             }
