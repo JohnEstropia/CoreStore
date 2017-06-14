@@ -155,14 +155,3 @@ extension CoreStoreObject {
         return self.rawObject!
     }
 }
-
-
-// MARK: - Internal
-
-internal extension DynamicObject where Self: CoreStoreObject {
-    
-    internal static var meta: Self {
-        
-        return self.init(asMeta: ())
-    }
-}

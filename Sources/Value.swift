@@ -123,8 +123,8 @@ public enum ValueContainer<O: CoreStoreObject> {
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)? = nil,
-            customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void)? = nil,
+            customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
@@ -155,16 +155,13 @@ public enum ValueContainer<O: CoreStoreObject> {
                         object.rawObject!.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
-                    let customGetter = (self.customGetter ?? { $1() })
-                    return customGetter(
-                        object,
-                        { () -> V in
-                            
-                            return V.cs_fromImportableNativeType(
-                                object.rawObject!.value(forKey: self.keyPath)! as! V.ImportableNativeType
-                            )!
-                        }
-                    )
+                    if let customGetter = self.customGetter {
+                        
+                        return customGetter(PartialObject<O>(object.rawObject!))
+                    }
+                    return V.cs_fromImportableNativeType(
+                        object.rawObject!.value(forKey: self.keyPath)! as! V.ImportableNativeType
+                    )!
                 }
             }
             set {
@@ -183,17 +180,13 @@ public enum ValueContainer<O: CoreStoreObject> {
                         object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
-                    let customSetter = (self.customSetter ?? { $1($2) })
-                    customSetter(
-                        object,
-                        { (newValue: V) -> Void in
-                            
-                            object.rawObject!.setValue(
-                                newValue.cs_toImportableNativeType(),
-                                forKey: self.keyPath
-                            )
-                        },
-                        newValue
+                    if let customSetter = self.customSetter {
+                        
+                        return customSetter(PartialObject<O>(object.rawObject!), newValue)
+                    }
+                    return object.rawObject!.setValue(
+                        newValue.cs_toImportableNativeType(),
+                        forKey: self.keyPath
                     )
                 }
             }
@@ -274,15 +267,12 @@ public enum ValueContainer<O: CoreStoreObject> {
             return { (_ id: Any) -> Any? in
                 
                 let rawObject = id as! CoreStoreManagedObject
-                let value = customGetter(
-                    O.cs_fromRaw(object: rawObject),
-                    {
-                        rawObject.getValue(
-                            forKvcKey: keyPath,
-                            didGetValue: { V.cs_fromImportableNativeType($0 as! V.ImportableNativeType!)! }
-                        )
-                    }
-                )
+                rawObject.willAccessValue(forKey: keyPath)
+                defer {
+                    
+                    rawObject.didAccessValue(forKey: keyPath)
+                }
+                let value = customGetter(PartialObject<O>(rawObject))
                 return value.cs_toImportableNativeType()
             }
         }
@@ -297,16 +287,13 @@ public enum ValueContainer<O: CoreStoreObject> {
             return { (_ id: Any, _ newValue: Any?) -> Void in
                 
                 let rawObject = id as! CoreStoreManagedObject
+                rawObject.willChangeValue(forKey: keyPath)
+                defer {
+                    
+                    rawObject.didChangeValue(forKey: keyPath)
+                }
                 customSetter(
-                    O.cs_fromRaw(object: rawObject),
-                    { (userValue: V) -> Void in
-                        
-                        rawObject.setValue(
-                            userValue,
-                            forKvcKey: keyPath,
-                            willSetValue: { $0.cs_toImportableNativeType() }
-                        )
-                    },
+                    PartialObject<O>(rawObject),
                     V.cs_fromImportableNativeType(newValue as! V.ImportableNativeType)!
                 )
             }
@@ -315,8 +302,8 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private let customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)?
-        private let customSetter: ((_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void)?
+        private let customGetter: ((_ partialObject: PartialObject<O>) -> V)?
+        private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)?
     }
     
     
@@ -370,8 +357,8 @@ public enum ValueContainer<O: CoreStoreObject> {
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: ((_ `self`: O, _ getValue: () -> V?) -> V?)? = nil,
-            customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void)? = nil,
+            customGetter: ((_ partialObject: PartialObject<O>) -> V?)? = nil,
+            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
@@ -402,15 +389,12 @@ public enum ValueContainer<O: CoreStoreObject> {
                         object.rawObject!.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
-                    let customGetter = (self.customGetter ?? { $1() })
-                    return customGetter(
-                        object,
-                        { () -> V? in
-                            
-                            return (object.rawObject!.value(forKey: self.keyPath) as! V.ImportableNativeType?)
-                                .flatMap(V.cs_fromImportableNativeType)
-                        }
-                    )
+                    if let customGetter = self.customGetter {
+                        
+                        return customGetter(PartialObject<O>(object.rawObject!))
+                    }
+                    return (object.rawObject!.value(forKey: self.keyPath) as! V.ImportableNativeType?)
+                        .flatMap(V.cs_fromImportableNativeType)
                 }
             }
             set {
@@ -429,17 +413,13 @@ public enum ValueContainer<O: CoreStoreObject> {
                         object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
-                    let customSetter = (self.customSetter ?? { $1($2) })
-                    customSetter(
-                        object,
-                        { (newValue: V?) -> Void in
-                            
-                            object.rawObject!.setValue(
-                                newValue?.cs_toImportableNativeType(),
-                                forKey: self.keyPath
-                            )
-                        },
-                        newValue
+                    if let customSetter = self.customSetter {
+                        
+                        return customSetter(PartialObject<O>(object.rawObject!), newValue)
+                    }
+                    object.rawObject!.setValue(
+                        newValue?.cs_toImportableNativeType(),
+                        forKey: self.keyPath
                     )
                 }
             }
@@ -518,15 +498,12 @@ public enum ValueContainer<O: CoreStoreObject> {
             return { (_ id: Any) -> Any? in
                 
                 let rawObject = id as! CoreStoreManagedObject
-                let value = customGetter(
-                    O.cs_fromRaw(object: rawObject),
-                    {
-                        rawObject.getValue(
-                            forKvcKey: keyPath,
-                            didGetValue: { ($0 as! V.ImportableNativeType?).flatMap(V.cs_fromImportableNativeType) }
-                        )
-                    }
-                )
+                rawObject.willAccessValue(forKey: keyPath)
+                defer {
+                    
+                    rawObject.didAccessValue(forKey: keyPath)
+                }
+                let value = customGetter(PartialObject<O>(rawObject))
                 return value?.cs_toImportableNativeType()
             }
         }
@@ -541,16 +518,13 @@ public enum ValueContainer<O: CoreStoreObject> {
             return { (_ id: Any, _ newValue: Any?) -> Void in
                 
                 let rawObject = id as! CoreStoreManagedObject
+                rawObject.willChangeValue(forKey: keyPath)
+                defer {
+                    
+                    rawObject.didChangeValue(forKey: keyPath)
+                }
                 customSetter(
-                    O.cs_fromRaw(object: rawObject),
-                    { (userValue: V?) -> Void in
-                        
-                        rawObject.setValue(
-                            userValue,
-                            forKvcKey: keyPath,
-                            willSetValue: { $0?.cs_toImportableNativeType() }
-                        )
-                    },
+                    PartialObject<O>(rawObject),
                     (newValue as! V.ImportableNativeType?).flatMap(V.cs_fromImportableNativeType)
                 )
             }
@@ -559,8 +533,8 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private let customGetter: ((_ `self`: O, _ getValue: () -> V?) -> V?)?
-        private let customSetter: ((_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void)?
+        private let customGetter: ((_ partialObject: PartialObject<O>) -> V?)?
+        private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)?
     }
 }
 
@@ -593,7 +567,7 @@ public extension ValueContainer.Required where V: EmptyableAttributeType {
         isTransient: Bool = false,
         versionHashModifier: String? = nil,
         renamingIdentifier: String? = nil,
-        customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)? = nil,
+        customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V) -> V)? = nil,
         customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void)? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
         
@@ -670,7 +644,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)? = nil,
+            customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V) -> V)? = nil,
             customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
@@ -704,7 +678,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                     )
                     let customGetter = (self.customGetter ?? { $1() })
                     return customGetter(
-                        object,
+                        PartialObject<O>(object.rawObject!),
                         { () -> V in
                             
                             return object.rawObject!.value(forKey: self.keyPath)! as! V
@@ -818,7 +792,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                 
                 let rawObject = id as! CoreStoreManagedObject
                 return customGetter(
-                    O.cs_fromRaw(object: rawObject),
+                    PartialObject<O>(rawObject),
                     { rawObject.getValue(forKvcKey: keyPath) as! V }
                 )
             }
@@ -848,7 +822,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private let customGetter: ((_ `self`: O, _ getValue: () -> V) -> V)?
+        private let customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V) -> V)?
         private let customSetter: ((_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void)?
     }
     
@@ -897,7 +871,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: ((_ `self`: O, _ getValue: () -> V?) -> V?)? = nil,
+            customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V?) -> V?)? = nil,
             customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
@@ -931,7 +905,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                     )
                     let customGetter = (self.customGetter ?? { $1() })
                     return customGetter(
-                        object,
+                        PartialObject<O>(object.rawObject!),
                         { () -> V? in
                             
                             object.rawObject!.value(forKey: self.keyPath) as! V?
@@ -1045,7 +1019,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                 
                 let rawObject = id as! CoreStoreManagedObject
                 return customGetter(
-                    O.cs_fromRaw(object: rawObject),
+                    PartialObject<O>(rawObject),
                     { rawObject.getValue(forKvcKey: keyPath) as! V? }
                 )
             }
@@ -1083,7 +1057,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private let customGetter: ((_ `self`: O, _ getValue: () -> V?) -> V?)?
+        private let customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V?) -> V?)?
         private let customSetter: ((_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void)?
     }
 }
