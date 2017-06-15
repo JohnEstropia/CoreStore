@@ -192,52 +192,6 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
         }
         
-        /**
-         The primitive value. Compared to `value`, `primitiveValue` bypasses all notification mechanisms. This is typically only used for setting values for transient properties.
-         */
-        public var primitiveValue: V {
-            
-            get {
-                
-                CoreStore.assert(
-                    self.parentObject != nil,
-                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
-                )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
-                    
-                    CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
-                    )
-                    return V.cs_fromImportableNativeType(
-                        object.rawObject!.primitiveValue(forKey: self.keyPath)! as! V.ImportableNativeType
-                    )!
-                }
-            }
-            set {
-                
-                CoreStore.assert(
-                    self.parentObject != nil,
-                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
-                )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
-                    
-                    CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
-                    )
-                    CoreStore.assert(
-                        self.isTransient || object.rawObject!.isEditableInContext() == true,
-                        "Attempted to update a \(cs_typeName(O.self))'s primitive value from outside a transaction."
-                    )
-                    object.rawObject!.setPrimitiveValue(
-                        newValue.cs_toImportableNativeType(),
-                        forKey: self.keyPath
-                    )
-                }
-            }
-        }
-        
         
         // MARK: AttributeProtocol
         
@@ -425,51 +379,6 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
         }
         
-        /**
-         The primitive value. Compared to `value`, `primitiveValue` bypasses all notification mechanisms. This is typically only used for setting values for transient properties.
-         */
-        public var primitiveValue: V? {
-            
-            get {
-                
-                CoreStore.assert(
-                    self.parentObject != nil,
-                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
-                )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
-                    
-                    CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
-                    )
-                    return (object.rawObject!.primitiveValue(forKey: self.keyPath) as! V.ImportableNativeType?)
-                        .flatMap(V.cs_fromImportableNativeType)
-                }
-            }
-            set {
-                
-                CoreStore.assert(
-                    self.parentObject != nil,
-                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
-                )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
-                    
-                    CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
-                    )
-                    CoreStore.assert(
-                        self.isTransient || object.rawObject!.isEditableInContext() == true,
-                        "Attempted to update a \(cs_typeName(O.self))'s primitive value from outside a transaction."
-                    )
-                    object.rawObject!.setPrimitiveValue(
-                        newValue?.cs_toImportableNativeType(),
-                        forKey: self.keyPath
-                    )
-                }
-            }
-        }
-        
         
         // MARK: AttributeProtocol
         
@@ -567,8 +476,8 @@ public extension ValueContainer.Required where V: EmptyableAttributeType {
         isTransient: Bool = false,
         versionHashModifier: String? = nil,
         renamingIdentifier: String? = nil,
-        customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V) -> V)? = nil,
-        customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void)? = nil,
+        customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+        customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
         affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
         
         self.init(
@@ -644,8 +553,8 @@ public enum TransformableContainer<O: CoreStoreObject> {
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V) -> V)? = nil,
-            customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V) -> Void, _ originalNewValue: V) -> Void)? = nil,
+            customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
@@ -676,14 +585,11 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         object.rawObject!.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
-                    let customGetter = (self.customGetter ?? { $1() })
-                    return customGetter(
-                        PartialObject<O>(object.rawObject!),
-                        { () -> V in
-                            
-                            return object.rawObject!.value(forKey: self.keyPath)! as! V
-                        }
-                    )
+                    if let customGetter = self.customGetter {
+                        
+                        return customGetter(PartialObject<O>(object.rawObject!))
+                    }
+                    return object.rawObject!.value(forKey: self.keyPath)! as! V
                 }
             }
             set {
@@ -702,59 +608,11 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
-                    let customSetter = (self.customSetter ?? { $1($2) })
-                    customSetter(
-                        object,
-                        { (newValue: V) -> Void in
-                            
-                            object.rawObject!.setValue(
-                                newValue,
-                                forKey: self.keyPath
-                            )
-                        },
-                        newValue
-                    )
-                }
-            }
-        }
-        
-        /**
-         The primitive value. Compared to `value`, `primitiveValue` bypasses all notification mechanisms. This is typically only used for setting values for transient properties.
-         */
-        public var primitiveValue: V {
-            
-            get {
-                
-                CoreStore.assert(
-                    self.parentObject != nil,
-                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
-                )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
-                    
-                    CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
-                    )
-                    return object.rawObject!.primitiveValue(forKey: self.keyPath)! as! V
-                }
-            }
-            set {
-                
-                CoreStore.assert(
-                    self.parentObject != nil,
-                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
-                )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
-                    
-                    CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
-                    )
-                    CoreStore.assert(
-                        self.isTransient || object.rawObject!.isEditableInContext() == true,
-                        "Attempted to update a \(cs_typeName(O.self))'s primitive value from outside a transaction."
-                    )
-                    object.rawObject!.setPrimitiveValue(
+                    if let customSetter = self.customSetter {
+                        
+                        return customSetter(PartialObject<O>(object.rawObject!), newValue)
+                    }
+                    object.rawObject!.setValue(
                         newValue,
                         forKey: self.keyPath
                     )
@@ -791,10 +649,13 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return { (_ id: Any) -> Any? in
                 
                 let rawObject = id as! CoreStoreManagedObject
-                return customGetter(
-                    PartialObject<O>(rawObject),
-                    { rawObject.getValue(forKvcKey: keyPath) as! V }
-                )
+                rawObject.willAccessValue(forKey: keyPath)
+                defer {
+                    
+                    rawObject.didAccessValue(forKey: keyPath)
+                }
+                let value = customGetter(PartialObject<O>(rawObject))
+                return value
             }
         }
         
@@ -808,12 +669,13 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return { (_ id: Any, _ newValue: Any?) -> Void in
                 
                 let rawObject = id as! CoreStoreManagedObject
+                rawObject.willChangeValue(forKey: keyPath)
+                defer {
+                    
+                    rawObject.didChangeValue(forKey: keyPath)
+                }
                 customSetter(
-                    O.cs_fromRaw(object: rawObject),
-                    { (userValue: V) -> Void in
-                        
-                        rawObject.setValue(userValue, forKvcKey: keyPath)
-                    },
+                    PartialObject<O>(rawObject),
                     newValue as! V
                 )
             }
@@ -822,8 +684,8 @@ public enum TransformableContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private let customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V) -> V)?
-        private let customSetter: ((_ `self`: O, _ setValue: (V) -> Void, _ newValue: V) -> Void)?
+        private let customGetter: ((_ partialObject: PartialObject<O>) -> V)?
+        private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)?
     }
     
     
@@ -871,8 +733,8 @@ public enum TransformableContainer<O: CoreStoreObject> {
             isTransient: Bool = false,
             versionHashModifier: String? = nil,
             renamingIdentifier: String? = nil,
-            customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V?) -> V?)? = nil,
-            customSetter: ((_ `self`: O, _ setValue: (_ finalNewValue: V?) -> Void, _ originalNewValue: V?) -> Void)? = nil,
+            customGetter: ((_ partialObject: PartialObject<O>) -> V?)? = nil,
+            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
@@ -903,14 +765,11 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         object.rawObject!.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
-                    let customGetter = (self.customGetter ?? { $1() })
-                    return customGetter(
-                        PartialObject<O>(object.rawObject!),
-                        { () -> V? in
-                            
-                            object.rawObject!.value(forKey: self.keyPath) as! V?
-                        }
-                    )
+                    if let customGetter = self.customGetter {
+                        
+                        return customGetter(PartialObject<O>(object.rawObject!))
+                    }
+                    return object.rawObject!.value(forKey: self.keyPath) as! V?
                 }
             }
             set {
@@ -929,59 +788,11 @@ public enum TransformableContainer<O: CoreStoreObject> {
                         object.rawObject!.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
-                    let customSetter = (self.customSetter ?? { $1($2) })
-                    customSetter(
-                        object,
-                        { (newValue: V?) -> Void in
-                            
-                            object.rawObject!.setValue(
-                                newValue,
-                                forKey: self.keyPath
-                            )
-                        },
-                        newValue
-                    )
-                }
-            }
-        }
-        
-        /**
-         The primitive value. Compared to `value`, `primitiveValue` bypasses all notification mechanisms. This is typically only used for setting values for transient properties.
-         */
-        public var primitiveValue: V? {
-            
-            get {
-                
-                CoreStore.assert(
-                    self.parentObject != nil,
-                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
-                )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
-                    
-                    CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
-                    )
-                    return object.rawObject!.primitiveValue(forKey: self.keyPath) as! V?
-                }
-            }
-            set {
-                
-                CoreStore.assert(
-                    self.parentObject != nil,
-                    "Attempted to access primitive values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
-                )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
-                    
-                    CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s primitive value outside it's designated queue."
-                    )
-                    CoreStore.assert(
-                        self.isTransient || object.rawObject!.isEditableInContext() == true,
-                        "Attempted to update a \(cs_typeName(O.self))'s primitive value from outside a transaction."
-                    )
-                    object.rawObject!.setPrimitiveValue(
+                    if let customSetter = self.customSetter {
+                        
+                        return customSetter(PartialObject<O>(object.rawObject!), newValue)
+                    }
+                    object.rawObject!.setValue(
                         newValue,
                         forKey: self.keyPath
                     )
@@ -1018,37 +829,33 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return { (_ id: Any) -> Any? in
                 
                 let rawObject = id as! CoreStoreManagedObject
-                return customGetter(
-                    PartialObject<O>(rawObject),
-                    { rawObject.getValue(forKvcKey: keyPath) as! V? }
-                )
+                rawObject.willAccessValue(forKey: keyPath)
+                defer {
+                    
+                    rawObject.didAccessValue(forKey: keyPath)
+                }
+                let value = customGetter(PartialObject<O>(rawObject))
+                return value
             }
         }
         
         internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
             
-            let keyPath = self.keyPath
             guard let customSetter = self.customSetter else {
                 
-                guard let _ = self.customGetter else {
-                    
-                    return nil
-                }
-                return { (_ id: Any, _ newValue: Any?) -> Void in
-                    
-                    let rawObject = id as! CoreStoreManagedObject
-                    rawObject.setValue(newValue, forKvcKey: keyPath)
-                }
+                return nil
             }
+            let keyPath = self.keyPath
             return { (_ id: Any, _ newValue: Any?) -> Void in
                 
                 let rawObject = id as! CoreStoreManagedObject
+                rawObject.willChangeValue(forKey: keyPath)
+                defer {
+                    
+                    rawObject.didChangeValue(forKey: keyPath)
+                }
                 customSetter(
-                    O.cs_fromRaw(object: rawObject),
-                    { (userValue: V?) -> Void in
-                        
-                        rawObject.setValue(userValue, forKvcKey: keyPath)
-                    },
+                    PartialObject<O>(rawObject),
                     newValue as! V?
                 )
             }
@@ -1057,8 +864,8 @@ public enum TransformableContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private let customGetter: ((_ `self`: PartialObject<O>, _ getValue: () -> V?) -> V?)?
-        private let customSetter: ((_ `self`: O, _ setValue: (V?) -> Void, _ newValue: V?) -> Void)?
+        private let customGetter: ((_ partialObject: PartialObject<O>) -> V?)?
+        private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)?
     }
 }
 
