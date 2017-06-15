@@ -91,6 +91,29 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
+    public func primitiveValue<V: ImportableAttributeType>(for property: (O) -> ValueContainer<O>.Required<V>) -> V {
+        
+        return V.cs_fromImportableNativeType(
+            self.rawObject.primitiveValue(forKey: property(O.meta).keyPath)! as! V.ImportableNativeType
+            )!
+    }
+    
+    public func primitiveValue<V: ImportableAttributeType>(for property: (O) -> ValueContainer<O>.Optional<V>) -> V? {
+        
+        return (self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V.ImportableNativeType?)
+            .flatMap(V.cs_fromImportableNativeType)
+    }
+    
+    public func primitiveValue<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Required<V>) -> V {
+        
+        return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath)! as! V
+    }
+    
+    public func primitiveValue<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Optional<V>) -> V? {
+        
+        return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V?
+    }
+    
     public func setPrimitiveValue<V: ImportableAttributeType>(_ value: V, for property: (O) -> ValueContainer<O>.Required<V>) {
         
         self.rawObject.setPrimitiveValue(
