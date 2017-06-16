@@ -36,27 +36,14 @@ public struct PartialObject<O: CoreStoreObject> {
         return O.cs_fromRaw(object: self.rawObject)
     }
     
+    
+    // MARK: Value.Required utilities
+    
     public func value<V: ImportableAttributeType>(for property: (O) -> ValueContainer<O>.Required<V>) -> V {
         
         return V.cs_fromImportableNativeType(
             self.rawObject.value(forKey: property(O.meta).keyPath)! as! V.ImportableNativeType
         )!
-    }
-    
-    public func value<V: ImportableAttributeType>(for property: (O) -> ValueContainer<O>.Optional<V>) -> V? {
-        
-        return (self.rawObject.value(forKey: property(O.meta).keyPath) as! V.ImportableNativeType?)
-            .flatMap(V.cs_fromImportableNativeType)
-    }
-    
-    public func value<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Required<V>) -> V {
-        
-        return self.rawObject.value(forKey: property(O.meta).keyPath)! as! V
-    }
-    
-    public func value<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Optional<V>) -> V? {
-        
-        return self.rawObject.value(forKey: property(O.meta).keyPath) as! V?
     }
     
     public func setValue<V: ImportableAttributeType>(_ value: V, for property: (O) -> ValueContainer<O>.Required<V>) {
@@ -67,51 +54,11 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
-    public func setValue<V: ImportableAttributeType>(_ value: V?, for property: (O) -> ValueContainer<O>.Optional<V>) {
-        
-        self.rawObject.setValue(
-            value?.cs_toImportableNativeType(),
-            forKey: property(O.meta).keyPath
-        )
-    }
-    
-    public func setValue<V: NSCoding & NSCopying>(_ value: V, for property: (O) -> TransformableContainer<O>.Required<V>) {
-        
-        self.rawObject.setValue(
-            value,
-            forKey: property(O.meta).keyPath
-        )
-    }
-    
-    public func setValue<V: NSCoding & NSCopying>(_ value: V?, for property: (O) -> TransformableContainer<O>.Optional<V>) {
-        
-        self.rawObject.setValue(
-            value,
-            forKey: property(O.meta).keyPath
-        )
-    }
-    
     public func primitiveValue<V: ImportableAttributeType>(for property: (O) -> ValueContainer<O>.Required<V>) -> V {
         
         return V.cs_fromImportableNativeType(
             self.rawObject.primitiveValue(forKey: property(O.meta).keyPath)! as! V.ImportableNativeType
-            )!
-    }
-    
-    public func primitiveValue<V: ImportableAttributeType>(for property: (O) -> ValueContainer<O>.Optional<V>) -> V? {
-        
-        return (self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V.ImportableNativeType?)
-            .flatMap(V.cs_fromImportableNativeType)
-    }
-    
-    public func primitiveValue<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Required<V>) -> V {
-        
-        return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath)! as! V
-    }
-    
-    public func primitiveValue<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Optional<V>) -> V? {
-        
-        return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V?
+        )!
     }
     
     public func setPrimitiveValue<V: ImportableAttributeType>(_ value: V, for property: (O) -> ValueContainer<O>.Required<V>) {
@@ -122,6 +69,29 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
+    
+    // MARK: Value.Optional utilities
+    
+    public func value<V: ImportableAttributeType>(for property: (O) -> ValueContainer<O>.Optional<V>) -> V? {
+        
+        return (self.rawObject.value(forKey: property(O.meta).keyPath) as! V.ImportableNativeType?)
+            .flatMap(V.cs_fromImportableNativeType)
+    }
+    
+    public func setValue<V: ImportableAttributeType>(_ value: V?, for property: (O) -> ValueContainer<O>.Optional<V>) {
+        
+        self.rawObject.setValue(
+            value?.cs_toImportableNativeType(),
+            forKey: property(O.meta).keyPath
+        )
+    }
+    
+    public func primitiveValue<V: ImportableAttributeType>(for property: (O) -> ValueContainer<O>.Optional<V>) -> V? {
+        
+        return (self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V.ImportableNativeType?)
+            .flatMap(V.cs_fromImportableNativeType)
+    }
+    
     public func setPrimitiveValue<V: ImportableAttributeType>(_ value: V?, for property: (O) -> ValueContainer<O>.Optional<V>) {
         
         self.rawObject.setPrimitiveValue(
@@ -130,12 +100,54 @@ public struct PartialObject<O: CoreStoreObject> {
         )
     }
     
+    
+    // MARK: Transformable.Required utilities
+    
+    public func value<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Required<V>) -> V {
+        
+        return self.rawObject.value(forKey: property(O.meta).keyPath)! as! V
+    }
+    
+    public func setValue<V: NSCoding & NSCopying>(_ value: V, for property: (O) -> TransformableContainer<O>.Required<V>) {
+        
+        self.rawObject.setValue(
+            value,
+            forKey: property(O.meta).keyPath
+        )
+    }
+    
+    public func primitiveValue<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Required<V>) -> V {
+        
+        return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath)! as! V
+    }
+    
     public func setPrimitiveValue<V: NSCoding & NSCopying>(_ value: V, for property: (O) -> TransformableContainer<O>.Required<V>) {
         
         self.rawObject.setPrimitiveValue(
             value,
             forKey: property(O.meta).keyPath
         )
+    }
+    
+    
+    // MARK: Transformable.Optional utilities
+    
+    public func value<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Optional<V>) -> V? {
+        
+        return self.rawObject.value(forKey: property(O.meta).keyPath) as! V?
+    }
+    
+    public func setValue<V: NSCoding & NSCopying>(_ value: V?, for property: (O) -> TransformableContainer<O>.Optional<V>) {
+        
+        self.rawObject.setValue(
+            value,
+            forKey: property(O.meta).keyPath
+        )
+    }
+    
+    public func primitiveValue<V: NSCoding & NSCopying>(for property: (O) -> TransformableContainer<O>.Optional<V>) -> V? {
+        
+        return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V?
     }
     
     public func setPrimitiveValue<V: NSCoding & NSCopying>(_ value: V?, for property: (O) -> TransformableContainer<O>.Optional<V>) {
