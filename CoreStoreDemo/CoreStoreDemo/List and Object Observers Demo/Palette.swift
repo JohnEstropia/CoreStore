@@ -23,18 +23,18 @@ final class Palette: CoreStoreObject {
     let colorName = Value.Optional<String>(
         "colorName",
         isTransient: true,
-        customGetter: Palette.getCachedColorName
+        customGetter: Palette.getColorName
     )
     
-    private static func getCachedColorName(_ instance: Palette, _ getValue: () -> String?) -> String? {
+    private static func getColorName(_ partialObject: PartialObject<Palette>) -> String? {
         
-        if let colorName = getValue() {
+        if let colorName = partialObject.primitiveValue(for: { $0.colorName }) {
             
             return colorName
         }
         
         let colorName: String
-        switch instance.hue.value % 360 {
+        switch partialObject.value(for: { $0.hue }) % 360 {
             
         case 0 ..< 20: colorName = "Lower Reds"
         case 20 ..< 57: colorName = "Oranges and Browns"
@@ -47,7 +47,7 @@ final class Palette: CoreStoreObject {
         default: colorName = "Upper Reds"
         }
         
-        instance.colorName.primitiveValue = colorName
+        partialObject.setPrimitiveValue(colorName, for: { $0.colorName })
         return colorName
     }
 }
