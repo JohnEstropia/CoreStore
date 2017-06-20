@@ -29,6 +29,9 @@ import Foundation
 
 // MARK: - PartialObject
 
+/**
+ A `PartialObject` is only used when overriding getters and setters for `CoreStoreObject` properties. Custom getters and setters are implemented as a closure that "overrides" the default property getter/setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a heavy performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.persistentValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
+ */
 public struct PartialObject<O: CoreStoreObject> {
     
     public func completeObject() -> O {
@@ -37,7 +40,7 @@ public struct PartialObject<O: CoreStoreObject> {
     }
     
     
-    // MARK: Value.Required utilities
+    // MARK: Value.Required accessors/mutators
     
     public func value<V: ImportableAttributeType>(for property: (O) -> ValueContainer<O>.Required<V>) -> V {
         

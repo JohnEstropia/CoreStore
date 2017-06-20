@@ -93,12 +93,24 @@ public enum ValueContainer<O: CoreStoreObject> {
          ```
          class Person: CoreStoreObject {
              let title = Value.Required<String>("title", default: "Mr.")
-             let name = Value.Required<String>(
-                 "name",
-                 customGetter: { (`self`, getValue) in
-                    return "\(self.title.value) \(getValue())"
-                 }
+             let name = Value.Required<String>("name")
+             let displayName = Value.Required<String>(
+                 "displayName",
+                 isTransient: true,
+                 customGetter: Person.getName(_:)
              )
+         
+             private static func getName(_ partialObject: PartialObject<Person>) -> String {
+                 let cachedDisplayName = partialObject.primitiveValue(for: { $0.displayName })
+                 if !cachedDisplayName.isEmpty {
+                     return cachedDisplayName
+                 }
+                 let title = partialObject.value(for: { $0.title })
+                 let name = partialObject.value(for: { $0.name })
+                 let displayName = "\(title) \(name)"
+                 partialObject.setPrimitiveValue(displayName, for: { $0.displayName })
+                 return displayName
+             }
          }
          ```
          - parameter keyPath: the permanent attribute name for this property.
@@ -107,13 +119,8 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
          - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-         - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
-         - parameter self: the `CoreStoreObject`
-         - parameter getValue: the original getter for the property
-         - parameter customSetter: use this closure to make final transformations to the new value before assigning to the property.
-         - parameter setValue: the original setter for the property
-         - parameter finalNewValue: the transformed new value
-         - parameter originalNewValue: the original new value
+         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.primitiveValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
+         - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
@@ -280,13 +287,24 @@ public enum ValueContainer<O: CoreStoreObject> {
          Initializes the metadata for the property.
          ```
          class Person: CoreStoreObject {
-             let title = Value.Required<String>("title", default: "Mr.")
-             let name = Value.Required<String>(
-                 "name",
-                 customGetter: { (`self`, getValue) in
-                     return "\(self.title.value) \(getValue())"
-                 }
+             let title = Value.Optional<String>("title", default: "Mr.")
+             let name = Value.Optional<String>("name")
+             let displayName = Value.Optional<String>(
+                 "displayName",
+                 isTransient: true,
+                 customGetter: Person.getName(_:)
              )
+             
+             private static func getName(_ partialObject: PartialObject<Person>) -> String? {
+                 if let cachedDisplayName = partialObject.primitiveValue(for: { $0.displayName }) {
+                    return cachedDisplayName
+                 }
+                 let title = partialObject.value(for: { $0.title })
+                 let name = partialObject.value(for: { $0.name })
+                 let displayName = "\(title) \(name)"
+                 partialObject.setPrimitiveValue(displayName, for: { $0.displayName })
+                 return displayName
+             }
          }
          ```
          - parameter keyPath: the permanent attribute name for this property.
@@ -453,7 +471,8 @@ public extension ValueContainer.Required where V: EmptyableAttributeType {
      Initializes the metadata for the property. This convenience initializer uses the `EmptyableAttributeType`'s "empty" value as the initial value for the property when the object is first created (e.g. `false` for `Bool`, `0` for `Int`, `""` for `String`, etc.)
      ```
      class Person: CoreStoreObject {
-         let title = Value.Required<String>("title") // initial value defaults to empty string
+         let title = Value.Required<String>("title", default: "Mr.") // explicit default value
+         let name = Value.Required<String>("name") // initial value defaults to empty string
      }
      ```
      - parameter keyPath: the permanent attribute name for this property.
@@ -461,13 +480,8 @@ public extension ValueContainer.Required where V: EmptyableAttributeType {
      - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
      - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
      - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-     - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
-     - parameter self: the `CoreStoreObject`
-     - parameter getValue: the original getter for the property
-     - parameter customSetter: use this closure to make final transformations to the new value before assigning to the property.
-     - parameter setValue: the original setter for the property
-     - parameter finalNewValue: the transformed new value
-     - parameter originalNewValue: the original new value
+     - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.primitiveValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
+     - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
      - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
      */
     public convenience init(
@@ -528,7 +542,30 @@ public enum TransformableContainer<O: CoreStoreObject> {
          Initializes the metadata for the property.
          ```
          class Animal: CoreStoreObject {
-             let color = Transformable.Optional<UIColor>("color")
+             let species = Value.Required<String>("species")
+             let color = Transformable.Required<UIColor>(
+                 "color",
+                 default: UIColor.clear,
+                 isTransient: true,
+                 customGetter: Animal.getColor(_:)
+             )
+         }
+         
+         private static func getColor(_ partialObject: PartialObject<Animal>) -> UIColor {
+             let cachedColor = partialObject.primitiveValue(for: { $0.color })
+             if cachedColor != UIColor.clear {
+         
+                 return cachedColor
+             }
+             let color: UIColor
+             switch partialObject.value(for: { $0.species }) {
+         
+             case "Swift": color = UIColor.orange
+             case "Bulbasaur": color = UIColor.green
+             default: color = UIColor.black
+             }
+             partialObject.setPrimitiveValue(color, for: { $0.color })
+             return color
          }
          ```
          - parameter keyPath: the permanent attribute name for this property.
@@ -537,13 +574,8 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
          - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-         - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
-         - parameter self: the `CoreStoreObject`
-         - parameter getValue: the original getter for the property
-         - parameter customSetter: use this closure to make final transformations to the new value before assigning to the property.
-         - parameter setValue: the original setter for the property
-         - parameter finalNewValue: the transformed new value
-         - parameter originalNewValue: the original new value
+         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.primitiveValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
+         - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
@@ -708,7 +740,27 @@ public enum TransformableContainer<O: CoreStoreObject> {
          Initializes the metadata for the property.
          ```
          class Animal: CoreStoreObject {
-            let color = Transformable.Optional<UIColor>("color")
+             let species = Value.Required<String>("species")
+             let color = Transformable.Optional<UIColor>(
+                 "color",
+                 isTransient: true,
+                 customGetter: Animal.getColor(_:)
+             )
+         }
+             
+         private static func getColor(_ partialObject: PartialObject<Animal>) -> UIColor? {
+             if let cachedColor = partialObject.primitiveValue(for: { $0.color }) {
+                 return cachedColor
+             }
+             let color: UIColor?
+             switch partialObject.value(for: { $0.species }) {
+             
+             case "Swift": color = UIColor.orange
+             case "Bulbasaur": color = UIColor.green
+             default: return nil
+             }
+             partialObject.setPrimitiveValue(color, for: { $0.color })
+             return color
          }
          ```
          - parameter keyPath: the permanent attribute name for this property.
@@ -717,13 +769,8 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
          - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
-         - parameter customGetter: use this closure to make final transformations to the property's value before returning from the getter.
-         - parameter self: the `CoreStoreObject`
-         - parameter getValue: the original getter for the property
-         - parameter customSetter: use this closure to make final transformations to the new value before assigning to the property.
-         - parameter setValue: the original setter for the property
-         - parameter finalNewValue: the transformed new value
-         - parameter originalNewValue: the original new value
+         - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.primitiveValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
+         - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
