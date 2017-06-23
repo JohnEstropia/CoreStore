@@ -135,3 +135,23 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
         }
     }
 }
+
+
+// MARK: - DynamicObject where Self: CoreStoreObject
+
+public extension DynamicObject where Self: CoreStoreObject {
+    
+    public func partialObject() -> PartialObject<Self> {
+        
+        CoreStore.assert(
+            !self.isMeta,
+            "Attempted to create a \(cs_typeName(PartialObject<Self>.self)) from a meta object. Meta objects are only used for querying keyPaths and infering types."
+        )
+        return PartialObject<Self>(self.rawObject!)
+    }
+    
+    internal static var meta: Self {
+        
+        return self.init(asMeta: ())
+    }
+}

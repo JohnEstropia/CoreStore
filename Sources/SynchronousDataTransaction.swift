@@ -158,6 +158,10 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
         self.isCommitted = true
         let result = self.context.saveSynchronously(waitForMerge: waitForMerge)
         self.result = result
+        defer {
+            
+            self.context.reset()
+        }
         return result
     }
     
