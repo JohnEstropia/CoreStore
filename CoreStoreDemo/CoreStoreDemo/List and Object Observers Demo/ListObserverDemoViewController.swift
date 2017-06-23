@@ -10,7 +10,7 @@ import UIKit
 import CoreStore
 
 
-private struct Static {
+struct ColorsDemo {
     
     enum Filter: String {
         
@@ -33,8 +33,8 @@ private struct Static {
             switch self {
                 
             case .all: return Where(true)
-            case .light: return Where("%K >= %@", #keyPath(Palette.brightness), 0.9)
-            case .dark: return Where("%K <= %@", #keyPath(Palette.brightness), 0.4)
+            case .light: return Palette.where({ $0.brightness >= 0.9 })
+            case .dark: return Palette.where({ $0.brightness <= 0.4 })
             }
         }
     }
@@ -45,25 +45,38 @@ private struct Static {
             
             self.palettes.refetch(
                 self.filter.whereClause(),
-                OrderBy(.ascending(#keyPath(Palette.hue)))
+                Palette.orderBy(ascending: { $0.hue })
             )
         }
     }
     
+    static let stack: DataStack = {
+     
+        return DataStack(
+            CoreStoreSchema(
+                modelVersion: "ColorsDemo",
+                entities: [
+                    Entity<Palette>("Palette"),
+                ],
+                versionLock: [
+                    "Palette": [0x8c25aa53c7c90a28, 0xa243a34d25f1a3a7, 0x56565b6935b6055a, 0x4f988bb257bf274f]
+                ]
+            )
+        )
+    }()
+    
     static let palettes: ListMonitor<Palette> = {
         
-        try! CoreStore.addStorageAndWait(
+        try! ColorsDemo.stack.addStorageAndWait(
             SQLiteStore(
                 fileName: "ColorsDemo.sqlite",
-                configuration: "ObservingDemo",
                 localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
-        
-        return CoreStore.monitorSectionedList(
+        return ColorsDemo.stack.monitorSectionedList(
             From<Palette>(),
-            SectionBy(#keyPath(Palette.colorName)),
-            OrderBy(.ascending(#keyPath(Palette.hue)))
+            SectionBy(Palette.keyPath({ $0.colorName })),
+            Palette.orderBy(ascending: { $0.hue })
         )
     }()
 }
@@ -77,7 +90,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     deinit {
         
-        Static.palettes.removeObserver(self)
+        ColorsDemo.palettes.removeObserver(self)
     }
     
     
@@ -98,7 +111,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         ]
         
         let filterBarButton = UIBarButtonItem(
-            title: Static.filter.rawValue,
+            title: ColorsDemo.filter.rawValue,
             style: .plain,
             target: self,
             action: #selector(self.filterBarButtonItemTouched(_:))
@@ -113,9 +126,9 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         ]
         self.filterBarButton = filterBarButton
         
-        Static.palettes.addObserver(self)
+        ColorsDemo.palettes.addObserver(self)
         
-        self.setTable(enabled: !Static.palettes.isPendingRefetch)
+        self.setTable(enabled: !ColorsDemo.palettes.isPendingRefetch)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -137,19 +150,19 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     override func numberOfSections(in tableView: UITableView) -> Int {
         
-        return Static.palettes.numberOfSections()
+        return ColorsDemo.palettes.numberOfSections()
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return Static.palettes.numberOfObjectsInSection(section)
+        return ColorsDemo.palettes.numberOfObjectsInSection(section)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "PaletteTableViewCell") as! PaletteTableViewCell
         
-        let palette = Static.palettes[indexPath]
+        let palette = ColorsDemo.palettes[indexPath]
         cell.colorView?.backgroundColor = palette.color
         cell.label?.text = palette.colorText
         
@@ -165,7 +178,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         
         self.performSegue(
             withIdentifier: "ObjectObserverDemoViewController",
-            sender: Static.palettes[indexPath]
+            sender: ColorsDemo.palettes[indexPath]
         )
     }
     
@@ -174,8 +187,8 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         switch editingStyle {
             
         case .delete:
-            let palette = Static.palettes[indexPath]
-            CoreStore.perform(
+            let palette = ColorsDemo.palettes[indexPath]
+            ColorsDemo.stack.perform(
                 asynchronous: { (transaction) in
                     
                     transaction.delete(palette)
@@ -190,7 +203,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        return Static.palettes.sectionInfoAtIndex(section).name
+        return ColorsDemo.palettes.sectionInfoAtIndex(section).name
     }
     
     
@@ -213,7 +226,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     func listMonitorDidRefetch(_ monitor: ListMonitor<Palette>) {
         
-        self.filterBarButton?.title = Static.filter.rawValue
+        self.filterBarButton?.title = ColorsDemo.filter.rawValue
         self.tableView.reloadData()
         self.setTable(enabled: true)
     }
@@ -235,7 +248,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         
         if let cell = self.tableView.cellForRow(at: indexPath) as? PaletteTableViewCell {
             
-            let palette = Static.palettes[indexPath]
+            let palette = ColorsDemo.palettes[indexPath]
             cell.colorView?.backgroundColor = palette.color
             cell.label?.text = palette.colorText
         }
@@ -268,7 +281,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     @IBAction private dynamic func resetBarButtonItemTouched(_ sender: AnyObject?) {
         
-        CoreStore.perform(
+        ColorsDemo.stack.perform(
             asynchronous: { (transaction) in
                 
                 transaction.deleteAll(From<Palette>())
@@ -279,16 +292,16 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     @IBAction private dynamic func filterBarButtonItemTouched(_ sender: AnyObject?) {
         
-        Static.filter = Static.filter.next()
+        ColorsDemo.filter = ColorsDemo.filter.next()
     }
     
     @IBAction private dynamic func addBarButtonItemTouched(_ sender: AnyObject?) {
         
-        CoreStore.perform(
+        ColorsDemo.stack.perform(
             asynchronous: { (transaction) in
                 
                 let palette = transaction.create(Into<Palette>())
-                palette.setInitialValues()
+                palette.setInitialValues(in: transaction)
             },
             completion: { _ in }
         )

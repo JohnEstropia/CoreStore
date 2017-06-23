@@ -704,13 +704,13 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                     
                     guard let `self` = self,
                         let userInfo = note.userInfo,
-                        let object = userInfo[String(describing: NSManagedObject.self)] as? ObjectType else {
+                        let rawObject = userInfo[String(describing: NSManagedObject.self)] as? NSManagedObject else {
                             
                             return
                     }
                     callback(
                         self,
-                        object,
+                        ObjectType.cs_fromRaw(object: rawObject),
                         userInfo[String(describing: IndexPath.self)] as? IndexPath,
                         userInfo["\(String(describing: IndexPath.self)).New"] as? IndexPath
                     )

@@ -51,40 +51,50 @@ class Dog: Animal {
 }
 
 class Person: CoreStoreObject {
+    
     let title = Value.Required<String>(
         "title",
         default: "Mr.",
-        customSetter: { (`self`, setValue, originalNewValue) in
-            
-            setValue(originalNewValue)
-            self.displayName .= nil
-        }
+        customSetter: Person.setTitle
     )
+    
     let name = Value.Required<String>(
         "name",
-        customSetter: { (`self`, setValue, originalNewValue) in
-            
-            setValue(originalNewValue)
-            self.displayName .= nil
-        }
+        customSetter: Person.setName
     )
+    
     let displayName = Value.Optional<String>(
         "displayName",
         isTransient: true,
-        customGetter: Person.cachedDisplayName(_:_:),
+        customGetter: Person.getDisplayName(_:),
         affectedByKeyPaths: Person.keyPathsAffectingDisplayName()
     )
+    
     let pets = Relationship.ToManyUnordered<Animal>("pets", inverse: { $0.master })
     
-    static func cachedDisplayName(_ instance: Person, _ getValue: () -> String?) -> String? {
+    private static func setTitle(_ partialObject: PartialObject<Person>, _ newValue: String) {
         
-        if let cached = getValue() {
+        partialObject.setPrimitiveValue(newValue, for: { $0.title })
+        partialObject.setPrimitiveValue(nil, for: { $0.displayName })
+    }
+    
+    private static func setName(_ partialObject: PartialObject<Person>, _ newValue: String) {
+        
+        partialObject.setPrimitiveValue(newValue, for: { $0.name })
+        partialObject.setPrimitiveValue(nil, for: { $0.displayName })
+    }
+    
+    static func getDisplayName(_ partialObject: PartialObject<Person>) -> String? {
+        
+        if let displayName = partialObject.primitiveValue(for: { $0.displayName }) {
             
-            return cached
+            return displayName
         }
-        let primitiveValue = "\(instance.title.value) \(instance.name.value)"
-        instance.displayName .= primitiveValue
-        return primitiveValue
+        let title = partialObject.value(for: { $0.title })
+        let name = partialObject.value(for: { $0.name })
+        let displayName = "\(title) \(name)"
+        partialObject.setPrimitiveValue(displayName, for: { $0.displayName })
+        return displayName
     }
     
     static func keyPathsAffectingDisplayName() -> Set<String> {
