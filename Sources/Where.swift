@@ -216,3 +216,25 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
         return self.predicate.hashValue
     }
 }
+
+
+// MARK: - Sequence where Element == Where
+
+public extension Sequence where Iterator.Element == Where {
+    
+    /**
+     Combines multiple `Where` predicates together using `AND` operator
+     */
+    public func combinedByAnd() -> Where {
+        
+        return Where(NSCompoundPredicate(type: .and, subpredicates: self.map({ $0.predicate })))
+    }
+    
+    /**
+     Combines multiple `Where` predicates together using `OR` operator
+     */
+    public func combinedByOr() -> Where {
+        
+        return Where(NSCompoundPredicate(type: .or, subpredicates: self.map({ $0.predicate })))
+    }
+}

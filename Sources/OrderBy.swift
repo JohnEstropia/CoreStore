@@ -172,3 +172,17 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
         return (self.sortDescriptors as NSArray).hashValue
     }
 }
+
+
+// MARK: - Sequence where Element == OrderBy
+
+public extension Sequence where Iterator.Element == OrderBy {
+    
+    /**
+     Combines multiple `OrderBy` predicates together
+     */
+    public func combined() -> OrderBy {
+        
+        return OrderBy(self.flatMap({ $0.sortDescriptors }))
+    }
+}
