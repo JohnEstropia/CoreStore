@@ -43,11 +43,79 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     }
     
     /**
+     Combines two `Where` predicates together using `AND` operator.
+     - parameter left: the left hand side `Where` clause
+     - parameter right: the right hand side `Where` clause
+     - returns: Return `left` unchanged if `right` is nil
+     */
+    public static func && (left: Where, right: Where?) -> Where {
+        
+        if right != nil {
+            return left && right!
+        }
+        else {
+            
+            return left
+        }
+    }
+    
+    /**
+     Combines two `Where` predicates together using `AND` operator.
+     - parameter left: the left hand side `Where` clause
+     - parameter right: the right hand side `Where` clause
+     - returns: Returns `right` unchanged if `left` is nil
+     */
+    public static func && (left: Where?, right: Where) -> Where {
+        
+        if left != nil {
+            return left && right
+        }
+        else {
+            
+            return right
+        }
+    }
+    
+    /**
      Combines two `Where` predicates together using `OR` operator
      */
     public static func || (left: Where, right: Where) -> Where {
         
         return Where(NSCompoundPredicate(type: .or, subpredicates: [left.predicate, right.predicate]))
+    }
+    
+    /**
+     Combines two `Where` predicates together using `OR` operator.
+     - parameter left: the left hand side `Where` clause
+     - parameter right: the right hand side `Where` clause
+     - returns: Returns `left` unchanged if `right` is nil
+     */
+    public static func || (left: Where, right: Where?) -> Where {
+        
+        if right != nil {
+            return left || right!
+        }
+        else {
+            
+            return left
+        }
+    }
+    
+    /**
+     Combines two `Where` predicates together using `OR` operator.
+     - parameter left: the left hand side `Where` clause
+     - parameter right: the right hand side `Where` clause
+     - returns: Return `right` unchanged if `left` is nil
+     */
+    public static func || (left: Where?, right: Where) -> Where {
+        
+        if left != nil {
+            return left || right
+        }
+        else {
+            
+            return right
+        }
     }
     
     /**
