@@ -206,6 +206,22 @@ public final class SQLiteStore: LocalStorage {
     }
     
     /**
+     Called by the `DataStack` to perform checkpoint operations on the storage. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE to force a checkpoint.
+     */
+    public func cs_finalizeStorageAndWait(soureModelHint: NSManagedObjectModel) throws {
+        
+        _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: soureModelHint)) { (coordinator: NSPersistentStoreCoordinator) in
+            
+            try coordinator.addPersistentStore(
+                ofType: type(of: self).storeType,
+                configurationName: self.configuration,
+                at: fileURL,
+                options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
+            )
+        }
+    }
+    
+    /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
     public func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws {
