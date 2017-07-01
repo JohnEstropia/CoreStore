@@ -117,6 +117,20 @@ public final class SQLiteStore: LocalStorage {
         )
     }
     
+    /**
+     Queries the file size (in bytes) of the store, or `nil` if the file does not exist yet
+     */
+    public func fileSize() -> UInt64? {
+        
+        guard let attribute = try? FileManager.default.attributesOfItem(atPath: self.fileURL.path),
+            let sizeAttribute = attribute[.size],
+            let fileSize = sizeAttribute as? NSNumber else {
+                
+                return nil
+        }
+        return fileSize.uint64Value
+    }
+    
     
     // MARK: StorageInterface
     

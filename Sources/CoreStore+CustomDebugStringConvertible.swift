@@ -868,7 +868,8 @@ extension SQLiteStore: CustomDebugStringConvertible, CoreStoreDebugStringConvert
             ("storeOptions", self.storeOptions as Any),
             ("fileURL", self.fileURL),
             ("migrationMappingProviders", self.migrationMappingProviders),
-            ("localStorageOptions", self.localStorageOptions)
+            ("localStorageOptions", self.localStorageOptions),
+            ("fileSize", self.fileSize() as Any)
         )
     }
 }
