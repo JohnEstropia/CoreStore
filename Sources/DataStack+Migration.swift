@@ -708,6 +708,7 @@ public extension DataStack {
         
         do {
             
+            try storage.cs_finalizeStorageAndWait(soureModelHint: sourceModel)
             try migrationManager.migrateStore(
                 from: fileURL,
                 sourceType: type(of: storage).storeType,
@@ -717,6 +718,13 @@ public extension DataStack {
                 destinationType: type(of: storage).storeType,
                 destinationOptions: nil
             )
+            let temporaryStorage = SQLiteStore(
+                fileURL: temporaryFileURL,
+                configuration: storage.configuration,
+                migrationMappingProviders: storage.migrationMappingProviders,
+                localStorageOptions: storage.localStorageOptions
+            )
+            try temporaryStorage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
         }
         catch {
             
