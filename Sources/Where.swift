@@ -177,7 +177,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init(_ keyPath: RawKeyPath, isEqualTo value: Void?) {
+    public init(_ keyPath: KeyPathString, isEqualTo value: Void?) {
         
         self.init(NSPredicate(format: "\(keyPath) == nil"))
     }
@@ -188,7 +188,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init<T: QueryableAttributeType>(_ keyPath: RawKeyPath, isEqualTo value: T?) {
+    public init<T: QueryableAttributeType>(_ keyPath: KeyPathString, isEqualTo value: T?) {
         
         switch value {
             
@@ -207,7 +207,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter object: the arguments for the `==` operator
      */
-    public init<T: DynamicObject>(_ keyPath: RawKeyPath, isEqualTo object: T?) {
+    public init<T: DynamicObject>(_ keyPath: KeyPathString, isEqualTo object: T?) {
         
         switch object {
             
@@ -226,7 +226,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence>(_ keyPath: RawKeyPath, isMemberOf list: S) where S.Iterator.Element: QueryableAttributeType {
+    public init<S: Sequence>(_ keyPath: KeyPathString, isMemberOf list: S) where S.Iterator.Element: QueryableAttributeType {
         
         self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_toQueryableNativeType() }) as NSArray))
     }
@@ -237,7 +237,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter list: the sequence to check membership of
      */
-    public init<S: Sequence>(_ keyPath: RawKeyPath, isMemberOf list: S) where S.Iterator.Element: DynamicObject {
+    public init<S: Sequence>(_ keyPath: KeyPathString, isMemberOf list: S) where S.Iterator.Element: DynamicObject {
         
         self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0.cs_id() }) as NSArray))
     }

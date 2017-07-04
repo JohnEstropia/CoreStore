@@ -30,5 +30,5 @@ import CoreData
 private enum Static {
     
     static let queue = DispatchQueue.concurrent("com.coreStore.coreStoreManagerObjectBarrierQueue")
-    static var cache: [ObjectIdentifier: [RawKeyPath: Set<RawKeyPath>]] = [:]
+    static var cache: [ObjectIdentifier: [KeyPathString: Set<KeyPathString>]] = [:]
 }

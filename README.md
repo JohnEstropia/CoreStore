@@ -1447,7 +1447,7 @@ class MyViewController: UIViewController, ObjectObserver {
         // ...
     }
     
-    func objectMonitor(monitor: ObjectMonitor<MyPersonEntity>, didUpdateObject object: MyPersonEntity, changedPersistentKeys: Set<RawKeyPath>) {
+    func objectMonitor(monitor: ObjectMonitor<MyPersonEntity>, didUpdateObject object: MyPersonEntity, changedPersistentKeys: Set<KeyPathString>) {
         // ...
     }
     

@@ -997,7 +997,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
     fileprivate var fetchedResultsController: CoreStoreFetchedResultsController
     fileprivate let taskGroup = DispatchGroup()
-    fileprivate let sectionIndexTransformer: (_ sectionName: RawKeyPath?) -> String?
+    fileprivate let sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String?
     
     private let isSectioned: Bool
     

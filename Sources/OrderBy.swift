@@ -27,9 +27,9 @@ import Foundation
 import CoreData
 
 
-// MARK: - RawKeyPath
+// MARK: - KeyPathString
     
-public typealias RawKeyPath = String
+public typealias KeyPathString = String
 
 
 // MARK: - SortKey
@@ -40,14 +40,14 @@ public typealias RawKeyPath = String
 public enum SortKey {
     
     /**
-     Indicates that the `RawKeyPath` should be sorted in ascending order
+     Indicates that the `KeyPathString` should be sorted in ascending order
      */
-    case ascending(RawKeyPath)
+    case ascending(KeyPathString)
     
     /**
-     Indicates that the `RawKeyPath` should be sorted in descending order
+     Indicates that the `KeyPathString` should be sorted in descending order
      */
-    case descending(RawKeyPath)
+    case descending(KeyPathString)
 }
 
 

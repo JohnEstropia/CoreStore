@@ -124,7 +124,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             `default`: @autoclosure @escaping () -> V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -207,7 +207,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             return V.cs_rawAttributeType
         }
         
-        public let keyPath: RawKeyPath
+        public let keyPath: KeyPathString
         
         internal let isOptional = false
         internal let isIndexed: Bool
@@ -323,7 +323,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             `default`: @autoclosure @escaping () -> V? = nil,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -405,7 +405,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             return V.cs_rawAttributeType
         }
         
-        public let keyPath: RawKeyPath
+        public let keyPath: KeyPathString
         internal let isOptional = true
         internal let isIndexed: Bool
         internal let isTransient: Bool
@@ -485,7 +485,7 @@ public extension ValueContainer.Required where V: EmptyableAttributeType {
      - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
      */
     public convenience init(
-        _ keyPath: RawKeyPath,
+        _ keyPath: KeyPathString,
         isIndexed: Bool = false,
         isTransient: Bool = false,
         versionHashModifier: String? = nil,
@@ -579,7 +579,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             `default`: @autoclosure @escaping () -> V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -660,7 +660,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return .transformableAttributeType
         }
         
-        public let keyPath: RawKeyPath
+        public let keyPath: KeyPathString
         
         internal let isOptional = false
         internal let isIndexed: Bool
@@ -774,7 +774,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             `default`: @autoclosure @escaping () -> V? = nil,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -855,7 +855,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return .transformableAttributeType
         }
         
-        public let keyPath: RawKeyPath
+        public let keyPath: KeyPathString
         
         internal let isOptional = true
         internal let isIndexed: Bool
@@ -1211,7 +1211,7 @@ internal protocol AttributeProtocol: class {
     
     static var attributeType: NSAttributeType { get }
     
-    var keyPath: RawKeyPath { get }
+    var keyPath: KeyPathString { get }
     var isOptional: Bool { get }
     var isIndexed: Bool { get }
     var isTransient: Bool { get }

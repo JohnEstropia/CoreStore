@@ -37,7 +37,7 @@ public struct GroupBy: QueryClause, Hashable {
     /**
      The list of key path strings to group results with
      */
-    public let keyPaths: [RawKeyPath]
+    public let keyPaths: [KeyPathString]
     
     /**
      Initializes a `GroupBy` clause with an empty list of key path strings
@@ -53,7 +53,7 @@ public struct GroupBy: QueryClause, Hashable {
      - parameter keyPath: a key path string to group results with
      - parameter keyPaths: a series of key path strings to group results with
      */
-    public init(_ keyPath: RawKeyPath, _ keyPaths: RawKeyPath...) {
+    public init(_ keyPath: KeyPathString, _ keyPaths: KeyPathString...) {
         
         self.init([keyPath] + keyPaths)
     }
@@ -63,7 +63,7 @@ public struct GroupBy: QueryClause, Hashable {
      
      - parameter keyPaths: a list of key path strings to group results with
      */
-    public init(_ keyPaths: [RawKeyPath]) {
+    public init(_ keyPaths: [KeyPathString]) {
         
         self.keyPaths = keyPaths
     }

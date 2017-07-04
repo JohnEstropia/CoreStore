@@ -85,7 +85,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     // MARK: ObjectObserver
     
-    func objectMonitor(_ monitor: ObjectMonitor<Palette>, didUpdateObject object: Palette, changedPersistentKeys: Set<RawKeyPath>) {
+    func objectMonitor(_ monitor: ObjectMonitor<Palette>, didUpdateObject object: Palette, changedPersistentKeys: Set<KeyPathString>) {
         
         self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
     }

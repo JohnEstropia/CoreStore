@@ -324,6 +324,10 @@
 		B5519A601CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A5E1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift */; };
 		B5519A611CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A5E1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift */; };
 		B5519A621CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A5E1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift */; };
+		B55514EA1EED8BF900BAB888 /* FetchCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55514E91EED8BF900BAB888 /* FetchCondition.swift */; };
+		B55514EB1EED8BF900BAB888 /* FetchCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55514E91EED8BF900BAB888 /* FetchCondition.swift */; };
+		B55514EC1EED8BF900BAB888 /* FetchCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55514E91EED8BF900BAB888 /* FetchCondition.swift */; };
+		B55514ED1EED8BF900BAB888 /* FetchCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55514E91EED8BF900BAB888 /* FetchCondition.swift */; };
 		B55717441D15B09E009BDBCA /* CoreStoreBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = B55717421D15AF9C009BDBCA /* CoreStoreBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B55717451D15B09F009BDBCA /* CoreStoreBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = B55717421D15AF9C009BDBCA /* CoreStoreBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B55717461D15B0A1009BDBCA /* CoreStoreBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = B55717421D15AF9C009BDBCA /* CoreStoreBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -786,6 +790,7 @@
 		B5519A5E1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSAsynchronousDataTransaction.swift; sourceTree = "<group>"; };
 		B5548CD51BD65AE00077652A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B5548CD71BD65AE50077652A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
+		B55514E91EED8BF900BAB888 /* FetchCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCondition.swift; sourceTree = "<group>"; };
 		B55717421D15AF9C009BDBCA /* CoreStoreBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreStoreBridge.h; sourceTree = "<group>"; };
 		B559CD421CAA8B6300E4D58B /* CSSetupResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSetupResult.swift; sourceTree = "<group>"; };
 		B559CD481CAA8C6D00E4D58B /* CSStorageInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSStorageInterface.swift; sourceTree = "<group>"; };
@@ -1374,6 +1379,7 @@
 				B5E84F061AFF847B0064E85B /* DataStack+Querying.swift */,
 				B5E84F071AFF847B0064E85B /* CoreStore+Querying.swift */,
 				B596BBB51DD5BC67001DCDD9 /* FetchableSource.swift */,
+				B55514E91EED8BF900BAB888 /* FetchCondition.swift */,
 				B596BBBA1DD5C39F001DCDD9 /* QueryableSource.swift */,
 				B549F65D1E569C7400FBAB2D /* QueryableAttributeType.swift */,
 				B5E84F0A1AFF847B0064E85B /* Protocol Clauses */,
@@ -1794,6 +1800,7 @@
 				B5D339D81E9489AB00C880DE /* CoreStoreObject.swift in Sources */,
 				B5D3F6451C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				B56923FA1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
+				B55514EA1EED8BF900BAB888 /* FetchCondition.swift in Sources */,
 				B596BBBB1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B5ECDBFF1CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B5ECDC051CA8138100C7F112 /* CSOrderBy.swift in Sources */,
@@ -1980,6 +1987,7 @@
 				B5D339D91E9489AB00C880DE /* CoreStoreObject.swift in Sources */,
 				82BA18CE1C4BBD7100A0916E /* FetchedResultsControllerDelegate.swift in Sources */,
 				B56923FB1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
+				B55514EB1EED8BF900BAB888 /* FetchCondition.swift in Sources */,
 				B596BBBC1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B5ECDC011CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B5ECDC071CA8138100C7F112 /* CSOrderBy.swift in Sources */,
@@ -2166,6 +2174,7 @@
 				B5D339DB1E9489AB00C880DE /* CoreStoreObject.swift in Sources */,
 				B52DD1951BE1F92500949AFE /* CoreStoreError.swift in Sources */,
 				B56923FD1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
+				B55514ED1EED8BF900BAB888 /* FetchCondition.swift in Sources */,
 				B596BBBE1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B546F9601C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				B5ECDC0F1CA8161B00C7F112 /* CSGroupBy.swift in Sources */,
@@ -2352,6 +2361,7 @@
 				B5D339DA1E9489AB00C880DE /* CoreStoreObject.swift in Sources */,
 				B5ECDC021CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B56923FC1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
+				B55514EC1EED8BF900BAB888 /* FetchCondition.swift in Sources */,
 				B596BBBD1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B5ECDC081CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B5E1B59B1CAA0C23007FD580 /* CSObjectObserver.swift in Sources */,
