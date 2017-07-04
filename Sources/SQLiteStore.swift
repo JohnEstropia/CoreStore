@@ -117,6 +117,20 @@ public final class SQLiteStore: LocalStorage {
         )
     }
     
+    /**
+     Queries the file size (in bytes) of the store, or `nil` if the file does not exist yet
+     */
+    public func fileSize() -> UInt64? {
+        
+        guard let attribute = try? FileManager.default.attributesOfItem(atPath: self.fileURL.path),
+            let sizeAttribute = attribute[.size],
+            let fileSize = sizeAttribute as? NSNumber else {
+                
+                return nil
+        }
+        return fileSize.uint64Value
+    }
+    
     
     // MARK: StorageInterface
     
@@ -189,6 +203,22 @@ public final class SQLiteStore: LocalStorage {
             storeOptions[NSInferMappingModelAutomaticallyOption] = true
         }
         return storeOptions
+    }
+    
+    /**
+     Called by the `DataStack` to perform checkpoint operations on the storage. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE to force a checkpoint.
+     */
+    public func cs_finalizeStorageAndWait(soureModelHint: NSManagedObjectModel) throws {
+        
+        _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: soureModelHint)) { (coordinator: NSPersistentStoreCoordinator) in
+            
+            try coordinator.addPersistentStore(
+                ofType: type(of: self).storeType,
+                configurationName: self.configuration,
+                at: fileURL,
+                options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
+            )
+        }
     }
     
     /**

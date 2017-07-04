@@ -86,6 +86,11 @@ public final class LegacySQLiteStore: LocalStorage {
     
     public var localStorageOptions: LocalStorageOptions
     
+    public func cs_finalizeStorageAndWait(soureModelHint: NSManagedObjectModel) throws {
+        
+        fatalError()
+    }
+    
     public func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws {
         
         fatalError()

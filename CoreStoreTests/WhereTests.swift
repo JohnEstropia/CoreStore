@@ -258,6 +258,21 @@ final class WhereTests: XCTestCase {
         }
         do {
             
+            let andWhere = whereClause1 && whereClause2 && whereClause3
+            let noneWhere: Where? = nil
+            let someWhere: Where? = Where("key4", isEqualTo: "value4")
+
+            
+            let finalNoneWhere = andWhere && noneWhere
+            let finalSomeWhere = andWhere && someWhere
+            let unwrappedFinalSomeWhere = andWhere && someWhere!
+
+        
+            XCTAssertEqual(andWhere.predicate, finalNoneWhere.predicate)
+            XCTAssertEqual(finalSomeWhere.predicate, unwrappedFinalSomeWhere.predicate)
+        }
+        do {
+            
             let orWhere = whereClause1 || whereClause2 || whereClause3
             let orPredicate = NSCompoundPredicate(
                 type: .or,
@@ -272,6 +287,21 @@ final class WhereTests: XCTestCase {
             XCTAssertEqual(orWhere.predicate, orPredicate)
             XCTAssertEqual(orWhere, whereClause1 || whereClause2 || whereClause3)
         }
+        do {
+            
+            let orWhere = whereClause1 || whereClause2 || whereClause3
+            let noneWhere: Where? = nil
+            let someWhere: Where? = Where("key4", isEqualTo: "value4")
+            
+            
+            let finalNoneWhere = orWhere && noneWhere
+            let finalSomeWhere = orWhere && someWhere
+            let unwrappedFinalSomeWhere = orWhere && someWhere!
+            
+            XCTAssertEqual(orWhere.predicate, finalNoneWhere.predicate)
+            XCTAssertEqual(finalSomeWhere.predicate, unwrappedFinalSomeWhere.predicate)
+        }
+
     }
     
     @objc
