@@ -50,13 +50,11 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      */
     public static func && (left: Where, right: Where?) -> Where {
         
-        if right != nil {
-            return left && right!
-        }
-        else {
+        if let right = right {
             
-            return left
+            return left && right
         }
+        return left
     }
     
     /**
@@ -67,13 +65,11 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      */
     public static func && (left: Where?, right: Where) -> Where {
         
-        if left != nil {
+        if let left = left {
+            
             return left && right
         }
-        else {
-            
-            return right
-        }
+        return right
     }
     
     /**
@@ -92,13 +88,11 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      */
     public static func || (left: Where, right: Where?) -> Where {
         
-        if right != nil {
-            return left || right!
-        }
-        else {
+        if let right = right {
             
-            return left
+            return left || right
         }
+        return left
     }
     
     /**
@@ -109,13 +103,11 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      */
     public static func || (left: Where?, right: Where) -> Where {
         
-        if left != nil {
+        if let left = left {
+            
             return left || right
         }
-        else {
-            
-            return right
-        }
+        return right
     }
     
     /**
