@@ -40,8 +40,8 @@ class ConvenienceTests: BaseTestCase {
             let controller = stack.createFetchedResultsController(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testString)),
-                Where("%@ > %d", #keyPath(TestEntity1.testEntityID), 100),
-                OrderBy(.ascending(#keyPath(TestEntity1.testString))),
+                Where<TestEntity1>("%@ > %d", #keyPath(TestEntity1.testEntityID), 100),
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testString))),
                 Tweak { $0.fetchLimit = 10 }
             )
             XCTAssertEqual(controller.managedObjectContext, stack.mainContext)
@@ -49,11 +49,11 @@ class ConvenienceTests: BaseTestCase {
             XCTAssertEqual(controller.sectionNameKeyPath, #keyPath(TestEntity1.testString))
             XCTAssertEqual(
                 controller.fetchRequest.sortDescriptors!,
-                OrderBy(.ascending(#keyPath(TestEntity1.testString))).sortDescriptors
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testString))).sortDescriptors
             )
             XCTAssertEqual(
                 controller.fetchRequest.predicate,
-                Where("%@ > %d", #keyPath(TestEntity1.testEntityID), 100).predicate
+                Where<TestEntity1>("%@ > %d", #keyPath(TestEntity1.testEntityID), 100).predicate
             )
             XCTAssertEqual(controller.fetchRequest.fetchLimit, 10)
         }
@@ -69,8 +69,8 @@ class ConvenienceTests: BaseTestCase {
                 let controller = transaction.createFetchedResultsController(
                     From<TestEntity1>(),
                     SectionBy(#keyPath(TestEntity1.testString)),
-                    Where("%@ > %d", #keyPath(TestEntity1.testEntityID), 100),
-                    OrderBy(.ascending(#keyPath(TestEntity1.testString))),
+                    Where<TestEntity1>("%@ > %d", #keyPath(TestEntity1.testEntityID), 100),
+                    OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testString))),
                     Tweak { $0.fetchLimit = 10 }
                 )
                 XCTAssertEqual(controller.managedObjectContext, transaction.context)
@@ -78,11 +78,11 @@ class ConvenienceTests: BaseTestCase {
                 XCTAssertEqual(controller.sectionNameKeyPath, #keyPath(TestEntity1.testString))
                 XCTAssertEqual(
                     controller.fetchRequest.sortDescriptors!,
-                    OrderBy(.ascending(#keyPath(TestEntity1.testString))).sortDescriptors
+                    OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testString))).sortDescriptors
                 )
                 XCTAssertEqual(
                     controller.fetchRequest.predicate,
-                    Where("%@ > %d", #keyPath(TestEntity1.testEntityID), 100).predicate
+                    Where<TestEntity1>("%@ > %d", #keyPath(TestEntity1.testEntityID), 100).predicate
                 )
                 XCTAssertEqual(controller.fetchRequest.fetchLimit, 10)
             }

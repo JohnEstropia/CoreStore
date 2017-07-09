@@ -43,7 +43,7 @@ class ListObserverTests: BaseTestDataTestCase {
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testBoolean)),
-                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -171,7 +171,7 @@ class ListObserverTests: BaseTestDataTestCase {
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testBoolean)),
-                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -270,7 +270,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     if let object = transaction.fetchOne(
                         From<TestEntity1>(),
-                        Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) {
+                        Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) {
                         
                         object.testNumber = NSNumber(value: 11)
                         object.testDecimal = NSDecimalNumber(string: "11")
@@ -284,7 +284,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     }
                     if let object = transaction.fetchOne(
                         From<TestEntity1>(),
-                        Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
+                        Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
                         
                         object.testNumber = NSNumber(value: 22)
                         object.testDecimal = NSDecimalNumber(string: "22")
@@ -323,7 +323,7 @@ class ListObserverTests: BaseTestDataTestCase {
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testBoolean)),
-                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -396,7 +396,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     if let object = transaction.fetchOne(
                         From<TestEntity1>(),
-                        Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
+                        Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
                         
                         object.testBoolean = NSNumber(value: true)
                     }
@@ -431,7 +431,7 @@ class ListObserverTests: BaseTestDataTestCase {
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testBoolean)),
-                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -528,7 +528,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     let count = transaction.deleteAll(
                         From<TestEntity1>(),
-                        Where(#keyPath(TestEntity1.testBoolean), isEqualTo: false)
+                        Where<TestEntity1>(#keyPath(TestEntity1.testBoolean), isEqualTo: false)
                     )
                     XCTAssertEqual(count, 2)
                     return transaction.hasChanges

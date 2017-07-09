@@ -396,7 +396,7 @@ final class TransactionTests: BaseTestCase {
             let observer = TestListObserver()
             let monitor = stack.monitorList(
                 From<TestEntity1>(),
-                OrderBy(.ascending("testEntityID"))
+                OrderBy<TestEntity1>(.ascending("testEntityID"))
             )
             monitor.addObserver(observer)
             

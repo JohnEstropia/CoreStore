@@ -32,7 +32,7 @@ import CoreData
 /**
  The `Where` clause specifies the conditions for a fetch or a query.
  */
-public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
+public struct Where<D: DynamicObject>: WhereClause, FetchClause, QueryClause, DeleteClause, Hashable {
     
     /**
      Combines two `Where` predicates together using `AND` operator
@@ -127,11 +127,6 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     }
     
     /**
-     The `NSPredicate` for the fetch or query
-     */
-    public let predicate: NSPredicate
-    
-    /**
      Initializes a `Where` clause with a predicate that always evaluates to `true`
      */
     public init() {
@@ -188,7 +183,7 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter value: the arguments for the `==` operator
      */
-    public init<T: QueryableAttributeType>(_ keyPath: KeyPathString, isEqualTo value: T?) {
+    public init<U: QueryableAttributeType>(_ keyPath: KeyPathString, isEqualTo value: U?) {
         
         switch value {
             
@@ -207,17 +202,27 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
      - parameter keyPath: the keyPath to compare with
      - parameter object: the arguments for the `==` operator
      */
-    public init<T: DynamicObject>(_ keyPath: KeyPathString, isEqualTo object: T?) {
+    public init<D: DynamicObject>(_ keyPath: KeyPathString, isEqualTo object: D?) {
         
         switch object {
             
-        case nil,
-             is NSNull:
+        case nil:
             self.init(NSPredicate(format: "\(keyPath) == nil"))
             
         case let object?:
             self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [object.cs_id()]))
         }
+    }
+    
+    /**
+     Initializes a `Where` clause that compares equality
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter objectID: the arguments for the `==` operator
+     */
+    public init(_ keyPath: KeyPathString, isEqualTo objectID: NSManagedObjectID) {
+        
+        self.init(NSPredicate(format: "\(keyPath) == %@", argumentArray: [objectID]))
     }
     
     /**
@@ -243,6 +248,17 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
     }
     
     /**
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
+    public init<S: Sequence>(_ keyPath: KeyPathString, isMemberOf list: S) where S.Iterator.Element: NSManagedObjectID {
+        
+        self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0 }) as NSArray))
+    }
+    
+    /**
      Initializes a `Where` clause with an `NSPredicate`
      
      - parameter predicate: the `NSPredicate` for the fetch or query
@@ -251,6 +267,13 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
         
         self.predicate = predicate
     }
+    
+    
+    // MARK: WhereClause
+    
+    public typealias ObjectType = D
+    
+    public let predicate: NSPredicate
     
     
     // MARK: FetchClause, QueryClause, DeleteClause
@@ -286,14 +309,33 @@ public struct Where: FetchClause, QueryClause, DeleteClause, Hashable {
 }
 
 
-// MARK: - Sequence where Element == Where
+// MARK: - WhereClause
 
-public extension Sequence where Iterator.Element == Where {
+/**
+ Abstracts the `Where` clause for protocol utilities.
+ */
+public protocol WhereClause {
+    
+    /**
+     The `DynamicObject` type associated with the clause
+     */
+    associatedtype ObjectType: DynamicObject
+    
+    /**
+     The `NSPredicate` for the fetch or query
+     */
+    var predicate: NSPredicate { get }
+}
+
+
+// MARK: - Sequence where Iterator.Element: WhereClause
+
+public extension Sequence where Iterator.Element: WhereClause {
     
     /**
      Combines multiple `Where` predicates together using `AND` operator
      */
-    public func combinedByAnd() -> Where {
+    public func combinedByAnd() -> Where<Iterator.Element.ObjectType> {
         
         return Where(NSCompoundPredicate(type: .and, subpredicates: self.map({ $0.predicate })))
     }
@@ -301,7 +343,7 @@ public extension Sequence where Iterator.Element == Where {
     /**
      Combines multiple `Where` predicates together using `OR` operator
      */
-    public func combinedByOr() -> Where {
+    public func combinedByOr() -> Where<Iterator.Element.ObjectType> {
         
         return Where(NSCompoundPredicate(type: .or, subpredicates: self.map({ $0.predicate })))
     }

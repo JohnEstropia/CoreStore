@@ -38,7 +38,7 @@ public extension UnsafeDataTransaction {
      - parameter object: the `DynamicObject` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
-    public func monitorObject<T>(_ object: T) -> ObjectMonitor<T> {
+    public func monitorObject<D>(_ object: D) -> ObjectMonitor<D> {
         
         return ObjectMonitor(
             unsafeTransaction: self,
@@ -53,7 +53,7 @@ public extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorList<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
         
         return self.monitorList(from, fetchClauses)
     }
@@ -65,10 +65,10 @@ public extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorList<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
         
         CoreStore.assert(
-            fetchClauses.filter { $0 is OrderBy }.count > 0,
+            fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
@@ -90,7 +90,7 @@ public extension UnsafeDataTransaction {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
+    public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: FetchClause...) {
         
         self.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -102,10 +102,10 @@ public extension UnsafeDataTransaction {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
+    public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: [FetchClause])  {
         
         CoreStore.assert(
-            fetchClauses.filter { $0 is OrderBy }.count > 0,
+            fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
@@ -129,7 +129,7 @@ public extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<T>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -142,10 +142,10 @@ public extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<T>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
         
         CoreStore.assert(
-            fetchClauses.filter { $0 is OrderBy }.count > 0,
+            fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
@@ -168,7 +168,7 @@ public extension UnsafeDataTransaction {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
+    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
         
         self.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -181,10 +181,10 @@ public extension UnsafeDataTransaction {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
+    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
         
         CoreStore.assert(
-            fetchClauses.filter { $0 is OrderBy }.count > 0,
+            fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         

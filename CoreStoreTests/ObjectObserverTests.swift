@@ -43,7 +43,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             
             guard let object = stack.fetchOne(
                 From<TestEntity1>(),
-                Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
+                Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
                     
                     XCTFail()
                     return
@@ -140,7 +140,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             
             guard let object = stack.fetchOne(
                 From<TestEntity1>(),
-                Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
+                Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
                     
                     XCTFail()
                     return

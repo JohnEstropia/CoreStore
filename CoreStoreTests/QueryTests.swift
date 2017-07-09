@@ -43,7 +43,7 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)
+                Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)
             ]
             do {
                 
@@ -227,8 +227,8 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1),
-                OrderBy(.ascending(#keyPath(TestEntity1.testEntityID)))
+                Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1),
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
             ]
             do {
                 
@@ -406,7 +406,7 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
+                Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
@@ -583,7 +583,7 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
+                Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
@@ -767,7 +767,7 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
+                Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
@@ -951,7 +951,7 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
+                Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
@@ -1129,7 +1129,7 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", #keyPath(TestEntity1.testNumber), 1)
+                Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1)
             ]
             do {
                 
@@ -1297,8 +1297,8 @@ class QueryTests: BaseTestDataTestCase {
             
             let from = From<TestEntity1>(configurations)
             let queryClauses: [QueryClause] = [
-                Where("%K > %@", #keyPath(TestEntity1.testNumber), 3),
-                OrderBy(.ascending(#keyPath(TestEntity1.testEntityID)))
+                Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 3),
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
             ]
             do {
                 

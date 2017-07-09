@@ -38,7 +38,7 @@ public extension DataStack {
      - parameter object: the `DynamicObject` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
-    public func monitorObject<T>(_ object: T) -> ObjectMonitor<T> {
+    public func monitorObject<D>(_ object: D) -> ObjectMonitor<D> {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -54,7 +54,7 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorList<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
         
         return self.monitorList(from, fetchClauses)
     }
@@ -66,7 +66,7 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorList<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -82,7 +82,7 @@ public extension DataStack {
                 
                 CoreStore.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(cs_typeName(ListMonitor<T>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(cs_typeName(ListMonitor<D>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy<D>.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )
@@ -95,7 +95,7 @@ public extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
+    public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: FetchClause...) {
         
         self.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -107,7 +107,7 @@ public extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
+    public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: [FetchClause])  {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -123,7 +123,7 @@ public extension DataStack {
                 
                 CoreStore.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(cs_typeName(ListMonitor<T>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(cs_typeName(ListMonitor<D>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy<D>.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             },
             createAsynchronously: createAsynchronously
@@ -138,7 +138,7 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<T>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -151,7 +151,7 @@ public extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<T>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -168,7 +168,7 @@ public extension DataStack {
                 
                 CoreStore.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(cs_typeName(ListMonitor<T>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(cs_typeName(ListMonitor<D>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy<D>.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )
@@ -182,7 +182,7 @@ public extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
+    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
         
         self.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -195,7 +195,7 @@ public extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
+    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
         
         CoreStore.assert(
             Thread.isMainThread,
@@ -212,7 +212,7 @@ public extension DataStack {
                 
                 CoreStore.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(cs_typeName(ListMonitor<T>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(cs_typeName(ListMonitor<D>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy<D>.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             },
             createAsynchronously: createAsynchronously

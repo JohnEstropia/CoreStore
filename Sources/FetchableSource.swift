@@ -40,7 +40,7 @@ public protocol FetchableSource: class {
      - parameter object: a reference to the object created/fetched outside the `FetchableSource`'s context
      - returns: the `DynamicObject` instance if the object exists in the `FetchableSource`'s context, or `nil` if not found.
      */
-    func fetchExisting<T: DynamicObject>(_ object: T) -> T?
+    func fetchExisting<D: DynamicObject>(_ object: D) -> D?
     
     /**
      Fetches the `DynamicObject` instance in the `FetchableSource`'s context from an `NSManagedObjectID`.
@@ -48,7 +48,7 @@ public protocol FetchableSource: class {
      - parameter objectID: the `NSManagedObjectID` for the object
      - returns: the `DynamicObject` instance if the object exists in the `FetchableSource`, or `nil` if not found.
      */
-    func fetchExisting<T: DynamicObject>(_ objectID: NSManagedObjectID) -> T?
+    func fetchExisting<D: DynamicObject>(_ objectID: NSManagedObjectID) -> D?
     
     /**
      Fetches the `DynamicObject` instances in the `FetchableSource`'s context from references created from another managed object context.
@@ -56,7 +56,7 @@ public protocol FetchableSource: class {
      - parameter objects: an array of `DynamicObject`s created/fetched outside the `FetchableSource`'s context
      - returns: the `DynamicObject` array for objects that exists in the `FetchableSource`
      */
-    func fetchExisting<T: DynamicObject, S: Sequence>(_ objects: S) -> [T] where S.Iterator.Element == T
+    func fetchExisting<D: DynamicObject, S: Sequence>(_ objects: S) -> [D] where S.Iterator.Element == D
 
     /**
      Fetches the `DynamicObject` instances in the `FetchableSource`'s context from a list of `NSManagedObjectID`.
@@ -64,7 +64,7 @@ public protocol FetchableSource: class {
      - parameter objectIDs: the `NSManagedObjectID` array for the objects
      - returns: the `DynamicObject` array for objects that exists in the `FetchableSource`'s context
      */
-    func fetchExisting<T: DynamicObject, S: Sequence>(_ objectIDs: S) -> [T] where S.Iterator.Element == NSManagedObjectID
+    func fetchExisting<D: DynamicObject, S: Sequence>(_ objectIDs: S) -> [D] where S.Iterator.Element == NSManagedObjectID
 
     /**
      Fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -73,7 +73,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    func fetchOne<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> T?
+    func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> D?
 
     /**
      Fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -82,7 +82,10 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    func fetchOne<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> T?
+    func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> D?
+    
+    // TODO: docs
+    func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType?
 
     /**
      Fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -91,7 +94,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    func fetchAll<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [T]?
+    func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> [D]?
 
     /**
      Fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -100,7 +103,10 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    func fetchAll<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [T]?
+    func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [D]?
+    
+    // TODO: docs
+    func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]?
 
     /**
      Fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -109,7 +115,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    func fetchCount<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> Int?
+    func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Int?
 
     /**
      Fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -118,7 +124,10 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    func fetchCount<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> Int?
+    func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Int?
+    
+    // TODO: docs
+    func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int?
 
     /**
      Fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -127,7 +136,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
-    func fetchObjectID<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> NSManagedObjectID?
+    func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> NSManagedObjectID?
 
     /**
      Fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -136,7 +145,10 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
-    func fetchObjectID<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID?
+    func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID?
+    
+    // TODO: docs
+    func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) -> NSManagedObjectID?
 
     /**
      Fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -145,7 +157,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    func fetchObjectIDs<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]?
+    func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]?
 
     /**
      Fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -154,7 +166,10 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    func fetchObjectIDs<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]?
+    func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]?
+    
+    // TODO: docs
+    func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) -> [NSManagedObjectID]?
     
     /**
      The internal `NSManagedObjectContext` managed by this `FetchableSource`. Using this context directly should typically be avoided, and is provided by CoreStore only for extremely specialized cases.

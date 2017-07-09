@@ -26,6 +26,58 @@
 import CoreData
 import Foundation
 
+//public extension From where D: NSManagedObject {
+//    
+////    public func select<R>(_ resultType: R.Type, _ selectTerm: SelectTerm, _ selectTerms: SelectTerm...) -> QueryChainBuilder<D, R> {
+////
+////        return self.select(resultType, [selectTerm] + selectTerms)
+////    }
+////
+////    public func select<R>(_ resultType: R.Type, _ selectTerms: [SelectTerm]) -> QueryChainBuilder<D, R> {
+////
+////        return .init(
+////            from: self,
+////            select: .init(selectTerms),
+////            groupBy: .init(),
+////            fetchClauses: []
+////        )
+////    }
+//    
+//    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, T>) -> SectionMonitorChainBuilder<D> {
+//        
+//        return self.sectionBy(sectionKeyPath._kvcKeyPathString!, { $0 })
+//    }
+//    
+//    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, T>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<D> {
+//        
+//        return self.sectionBy(sectionKeyPath._kvcKeyPathString!, sectionIndexTransformer)
+//    }
+//    
+//    public func `where`<T>(_ keyPath: KeyPath<D, T>, isEqualTo value: Void?) -> FetchChainBuilder<D> {
+//        
+//        return self.where(keyPath._kvcKeyPathString!, isEqualTo: value)
+//    }
+//    
+//    public func `where`<U: QueryableAttributeType>(_ keyPath: KeyPath<D, U>, isEqualTo value: U?) -> FetchChainBuilder<D> {
+//        
+//        return self.where(keyPath._kvcKeyPathString!, isEqualTo: value)
+//    }
+//    
+//    public func `where`(_ keyPath: KeyPath<D, D>, isEqualTo object: D?) -> FetchChainBuilder<D> {
+//        
+//        return self.where(keyPath._kvcKeyPathString!, isEqualTo: object)
+//    }
+//    
+//    public func `where`<S: Sequence>(_ keyPath: KeyPath<D, S.Iterator.Element>, isMemberOf list: S) -> FetchChainBuilder<D> where S.Iterator.Element: QueryableAttributeType {
+//        
+//        return self.where(keyPath._kvcKeyPathString!, isMemberOf: list)
+//    }
+//    
+//    public func `where`<S: Sequence>(_ keyPath: KeyPath<D, S.Iterator.Element>, isMemberOf list: S) -> FetchChainBuilder<D> where S.Iterator.Element == D {
+//        
+//        return self.where(keyPath._kvcKeyPathString!, isMemberOf: list)
+//    }
+//}
 
 // MARK: - DynamicObject
 
@@ -92,7 +144,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname == "John" })
      ```
      */
-    public static func `where`(_ condition: (Self) -> Where) -> Where  {
+    public static func `where`(_ condition: (Self) -> Where<Self>) -> Where<Self>  {
         
         return condition(self.meta)
     }
@@ -103,7 +155,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
      ```
      */
-    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
+    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy<Self>  {
         
         return OrderBy(.ascending(attribute(self.meta).keyPath))
     }
@@ -114,7 +166,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
      ```
      */
-    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy<Self>  {
         
         return OrderBy(.ascending(attribute(self.meta).keyPath))
     }
@@ -125,7 +177,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
      ```
      */
-    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
+    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy<Self>  {
         
         return OrderBy(.descending(attribute(self.meta).keyPath))
     }
@@ -136,22 +188,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
      ```
      */
-    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
-        
-        return OrderBy(.descending(attribute(self.meta).keyPath))
-    }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, renamed: "orderBy(ascending:)")
-    public static func ascending<O, V>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
-        
-        return OrderBy(.ascending(attribute(self.meta).keyPath))
-    }
-    
-    @available(*, deprecated, renamed: "orderBy(descending:)")
-    public static func descending<O, V>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
+    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy<Self>  {
         
         return OrderBy(.descending(attribute(self.meta).keyPath))
     }
@@ -169,7 +206,7 @@ public extension ValueContainer.Required {
      ```
      */
     @inline(__always)
-    public static func == (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func == (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where(attribute.keyPath, isEqualTo: value)
     }
@@ -181,7 +218,7 @@ public extension ValueContainer.Required {
      ```
      */
     @inline(__always)
-    public static func != (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func != (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return !Where(attribute.keyPath, isEqualTo: value)
     }
@@ -193,7 +230,7 @@ public extension ValueContainer.Required {
      ```
      */
     @inline(__always)
-    public static func < (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func < (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K < %@", attribute.keyPath, value)
     }
@@ -205,7 +242,7 @@ public extension ValueContainer.Required {
      ```
      */
     @inline(__always)
-    public static func > (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func > (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K > %@", attribute.keyPath, value)
     }
@@ -217,7 +254,7 @@ public extension ValueContainer.Required {
      ```
      */
     @inline(__always)
-    public static func <= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func <= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K <= %@", attribute.keyPath, value)
     }
@@ -229,7 +266,7 @@ public extension ValueContainer.Required {
      ```
      */
     @inline(__always)
-    public static func >= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func >= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K >= %@", attribute.keyPath, value)
     }
@@ -241,7 +278,7 @@ public extension ValueContainer.Required {
      ```
      */
     @inline(__always)
-    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Required<V>) -> Where where S.Iterator.Element == V {
+    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Required<V>) -> Where<O> where S.Iterator.Element == V {
         
         return Where(attribute.keyPath, isMemberOf: sequence)
     }
@@ -259,7 +296,7 @@ public extension ValueContainer.Optional {
      ```
      */
     @inline(__always)
-    public static func == (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func == (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         return Where(attribute.keyPath, isEqualTo: value)
     }
@@ -271,7 +308,7 @@ public extension ValueContainer.Optional {
      ```
      */
     @inline(__always)
-    public static func != (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func != (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         return !Where(attribute.keyPath, isEqualTo: value)
     }
@@ -283,7 +320,7 @@ public extension ValueContainer.Optional {
      ```
      */
     @inline(__always)
-    public static func < (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func < (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
             
@@ -302,7 +339,7 @@ public extension ValueContainer.Optional {
      ```
      */
     @inline(__always)
-    public static func > (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func > (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
             
@@ -321,7 +358,7 @@ public extension ValueContainer.Optional {
      ```
      */
     @inline(__always)
-    public static func <= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func <= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
             
@@ -340,7 +377,7 @@ public extension ValueContainer.Optional {
      ```
      */
     @inline(__always)
-    public static func >= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func >= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
             
@@ -359,7 +396,7 @@ public extension ValueContainer.Optional {
      ```
      */
     @inline(__always)
-    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Optional<V>) -> Where where S.Iterator.Element == V {
+    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Optional<V>) -> Where<O> where S.Iterator.Element == V {
         
         return Where(attribute.keyPath, isMemberOf: sequence)
     }
@@ -377,7 +414,7 @@ public extension RelationshipContainer.ToOne {
      ```
      */
     @inline(__always)
-    public static func == (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where {
+    public static func == (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where<O> {
         
         return Where(relationship.keyPath, isEqualTo: object)
     }
@@ -389,7 +426,7 @@ public extension RelationshipContainer.ToOne {
      ```
      */
     @inline(__always)
-    public static func != (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where {
+    public static func != (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where<O> {
         
         return !Where(relationship.keyPath, isEqualTo: object)
     }
@@ -401,7 +438,7 @@ public extension RelationshipContainer.ToOne {
      ```
      */
     @inline(__always)
-    public static func ~= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where {
+    public static func ~= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where<O> {
         
         return Where(relationship.keyPath, isEqualTo: object)
     }
@@ -413,7 +450,7 @@ public extension RelationshipContainer.ToOne {
      ```
      */
     @inline(__always)
-    public static func ~= <S: Sequence>(_ sequence: S, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Where where S.Iterator.Element == D {
+    public static func ~= <S: Sequence>(_ sequence: S, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Where<O> where S.Iterator.Element == D {
         
         return Where(relationship.keyPath, isMemberOf: sequence)
     }

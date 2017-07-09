@@ -79,9 +79,9 @@ extension NSManagedObject: DynamicObject {
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
         
         @inline(__always)
-        func forceCast<T: NSManagedObject>(_ value: Any) -> T {
+        func forceCast<D: NSManagedObject>(_ value: Any) -> D {
             
-            return value as! T
+            return value as! D
         }
         return forceCast(object)
     }
@@ -125,9 +125,9 @@ extension CoreStoreObject {
         if let coreStoreObject = object.coreStoreObject {
             
             @inline(__always)
-            func forceCast<T: CoreStoreObject>(_ value: CoreStoreObject) -> T {
+            func forceCast<D: CoreStoreObject>(_ value: CoreStoreObject) -> D {
                 
-                return value as! T
+                return value as! D
             }
             return forceCast(coreStoreObject)
         }

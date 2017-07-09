@@ -32,31 +32,12 @@ import CoreData
 public typealias KeyPathString = String
 
 
-// MARK: - SortKey
-
-/**
- The `SortKey` is passed to the `OrderBy` clause to indicate the sort keys and their sort direction.
- */
-public enum SortKey {
-    
-    /**
-     Indicates that the `KeyPathString` should be sorted in ascending order
-     */
-    case ascending(KeyPathString)
-    
-    /**
-     Indicates that the `KeyPathString` should be sorted in descending order
-     */
-    case descending(KeyPathString)
-}
-
-
 // MARK: - OrderBy
 
 /**
  The `OrderBy` clause specifies the sort order for results for a fetch or a query.
  */
-public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
+public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause, DeleteClause, Hashable {
     
     /**
      Combines two `OrderBy` sort descriptors together
@@ -73,11 +54,6 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
         
         left = left + right
     }
-    
-    /**
-     The list of sort descriptors
-     */
-    public let sortDescriptors: [NSSortDescriptor]
     
     /**
      Initializes a `OrderBy` clause with an empty list of sort descriptors
@@ -112,21 +88,9 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
      
      - parameter sortKey: a series of `SortKey`s
      */
-    public init(_ sortKey: [SortKey]) {
+    public init(_ sortKeys: [SortKey]) {
         
-        self.init(
-            sortKey.map { sortKey -> NSSortDescriptor in
-                
-                switch sortKey {
-                    
-                case .ascending(let keyPath):
-                    return NSSortDescriptor(key: keyPath, ascending: true)
-                    
-                case .descending(let keyPath):
-                    return NSSortDescriptor(key: keyPath, ascending: false)
-                }
-            }
-        )
+        self.init(sortKeys.map({ $0.descriptor }))
     }
     
     /**
@@ -139,6 +103,13 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
         
         self.init([sortKey] + sortKeys)
     }
+    
+    
+    // MARK: OrderByClause
+    
+    public typealias ObjectType = D
+    
+    public let sortDescriptors: [NSSortDescriptor]
     
     
     // MARK: FetchClause, QueryClause, DeleteClause
@@ -171,17 +142,154 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
         
         return (self.sortDescriptors as NSArray).hashValue
     }
+    
+    
+    // MARK: - SortKey
+    
+    /**
+     The `SortKey` is passed to the `OrderBy` clause to indicate the sort keys and their sort direction.
+     */
+    public struct SortKey {
+        
+        // MARK: Raw Key Paths
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in ascending order
+         */
+        public static func ascending(_ keyPath: KeyPathString) -> SortKey {
+            
+            return SortKey(descriptor: .init(key: keyPath, ascending: true))
+        }
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in descending order
+         */
+        public static func descending(_ keyPath: KeyPathString) -> SortKey {
+            
+            return SortKey(descriptor: .init(key: keyPath, ascending: false))
+        }
+        
+        
+        // MARK: NSManagedObject Key Paths
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in ascending order
+         */
+        public static func ascending<T>(_ keyPath: KeyPath<D, T>) -> SortKey where D: NSManagedObject {
+            
+            return .ascending(keyPath._kvcKeyPathString!)
+        }
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in descending order
+         */
+        public static func descending<T>(_ keyPath: KeyPath<D, T>) -> SortKey where D: NSManagedObject {
+            
+            return .descending(keyPath._kvcKeyPathString!)
+        }
+        
+        
+        // MARK: CoreStoreObject Key Paths
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in ascending order
+         */
+        public static func ascending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: ValueContainer<D>.Required<T> {
+            
+            return .ascending(D.meta[keyPath: attribute].keyPath)
+        }
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in ascending order
+         */
+        public static func ascending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: ValueContainer<D>.Optional<T> {
+            
+            return .ascending(D.meta[keyPath: attribute].keyPath)
+        }
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in ascending order
+         */
+        public static func ascending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: TransformableContainer<D>.Required<T> {
+            
+            return .ascending(D.meta[keyPath: attribute].keyPath)
+        }
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in ascending order
+         */
+        public static func ascending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: TransformableContainer<D>.Optional<T> {
+            
+            return .ascending(D.meta[keyPath: attribute].keyPath)
+        }
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in descending order
+         */
+        public static func descending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: ValueContainer<D>.Required<T> {
+            
+            return .descending(D.meta[keyPath: attribute].keyPath)
+        }
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in descending order
+         */
+        public static func descending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: ValueContainer<D>.Optional<T> {
+            
+            return .descending(D.meta[keyPath: attribute].keyPath)
+        }
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in descending order
+         */
+        public static func descending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: TransformableContainer<D>.Required<T> {
+            
+            return .descending(D.meta[keyPath: attribute].keyPath)
+        }
+        
+        /**
+         Indicates that the `KeyPathString` should be sorted in descending order
+         */
+        public static func descending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: TransformableContainer<D>.Optional<T> {
+            
+            return .descending(D.meta[keyPath: attribute].keyPath)
+        }
+        
+        
+        // MARK: Private
+        
+        fileprivate let descriptor: NSSortDescriptor
+    }
 }
 
 
-// MARK: - Sequence where Element == OrderBy
+// MARK: - OrderByClause
 
-public extension Sequence where Iterator.Element == OrderBy {
+/**
+ Abstracts the `OrderBy` clause for protocol utilities.
+ */
+public protocol OrderByClause {
+    
+    /**
+     The `DynamicObject` type associated with the clause
+     */
+    associatedtype ObjectType: DynamicObject
+    
+    /**
+     The `NSSortDescriptor` array for the fetch or query
+     */
+    var sortDescriptors: [NSSortDescriptor] { get }
+}
+
+
+// MARK: - Sequence where Iterator.Element: OrderByClause
+
+public extension Sequence where Iterator.Element: OrderByClause {
     
     /**
      Combines multiple `OrderBy` predicates together
      */
-    public func combined() -> OrderBy {
+    public func combined() -> OrderBy<Iterator.Element.ObjectType> {
         
         return OrderBy(self.flatMap({ $0.sortDescriptors }))
     }

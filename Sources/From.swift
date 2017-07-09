@@ -39,12 +39,12 @@ import CoreData
  let person = transaction.fetchOne(From<Person>("Configuration1"))
  ```
  */
-public struct From<T: DynamicObject> {
+public struct From<D: DynamicObject> {
     
     /**
      The associated `NSManagedObject` or `CoreStoreObject` entity class
      */
-    public let entityClass: T.Type
+    public let entityClass: D.Type
     
     /**
      The `NSPersistentStore` configuration names to associate objects from.
@@ -60,7 +60,7 @@ public struct From<T: DynamicObject> {
      */
     public init() {
         
-        self.init(entityClass: T.self, configurations: nil)
+        self.init(entityClass: D.self, configurations: nil)
     }
     
     /**
@@ -70,7 +70,7 @@ public struct From<T: DynamicObject> {
      ```
      - parameter entity: the associated `NSManagedObject` or `CoreStoreObject` type
      */
-    public init(_ entity: T.Type) {
+    public init(_ entity: D.Type) {
         
         self.init(entityClass: entity, configurations: nil)
     }
@@ -85,7 +85,7 @@ public struct From<T: DynamicObject> {
      */
     public init(_ configuration: ModelConfiguration, _ otherConfigurations: ModelConfiguration...) {
         
-        self.init(entityClass: T.self, configurations: [configuration] + otherConfigurations)
+        self.init(entityClass: D.self, configurations: [configuration] + otherConfigurations)
     }
     
     /**
@@ -97,7 +97,7 @@ public struct From<T: DynamicObject> {
      */
     public init(_ configurations: [ModelConfiguration]) {
         
-        self.init(entityClass: T.self, configurations: configurations)
+        self.init(entityClass: D.self, configurations: configurations)
     }
     
     /**
@@ -109,7 +109,7 @@ public struct From<T: DynamicObject> {
      - parameter configuration: the `NSPersistentStore` configuration name to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      - parameter otherConfigurations: an optional list of other configuration names to associate objects from (see `configuration` parameter)
      */
-    public init(_ entity: T.Type, _ configuration: ModelConfiguration, _ otherConfigurations: ModelConfiguration...) {
+    public init(_ entity: D.Type, _ configuration: ModelConfiguration, _ otherConfigurations: ModelConfiguration...) {
         
         self.init(entityClass: entity, configurations: [configuration] + otherConfigurations)
     }
@@ -122,7 +122,7 @@ public struct From<T: DynamicObject> {
      - parameter entity: the associated `NSManagedObject` or `CoreStoreObject` type
      - parameter configurations: a list of `NSPersistentStore` configuration names to associate objects from. This parameter is required if multiple configurations contain the created `NSManagedObject` or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      */
-    public init(_ entity: T.Type, _ configurations: [ModelConfiguration]) {
+    public init(_ entity: D.Type, _ configurations: [ModelConfiguration]) {
         
         self.init(entityClass: entity, configurations: configurations)
     }
@@ -132,7 +132,7 @@ public struct From<T: DynamicObject> {
     
     internal let findPersistentStores: (_ context: NSManagedObjectContext) -> [NSPersistentStore]?
     
-    internal init(entityClass: T.Type, configurations: [ModelConfiguration]?, findPersistentStores: @escaping (_ context: NSManagedObjectContext) -> [NSPersistentStore]?) {
+    internal init(entityClass: D.Type, configurations: [ModelConfiguration]?, findPersistentStores: @escaping (_ context: NSManagedObjectContext) -> [NSPersistentStore]?) {
         
         self.entityClass = entityClass
         self.configurations = configurations
@@ -167,7 +167,7 @@ public struct From<T: DynamicObject> {
     
     // MARK: Private
     
-    private init(entityClass: T.Type, configurations: [ModelConfiguration]?) {
+    private init(entityClass: D.Type, configurations: [ModelConfiguration]?) {
         
         self.entityClass = entityClass
         self.configurations = configurations

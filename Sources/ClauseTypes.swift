@@ -43,7 +43,7 @@ public protocol FetchClause {
 /**
  The `QueryClause` implement clauses used to configure `NSFetchRequest`s.
  */
-public protocol QueryClause {
+public protocol QueryClause: FetchClause {
     
     func applyToFetchRequest<T>(_ fetchRequest: NSFetchRequest<T>)
 }
@@ -54,7 +54,7 @@ public protocol QueryClause {
 /**
  The `DeleteClause` implement clauses used to configure `NSFetchRequest`s.
  */
-public protocol DeleteClause {
+public protocol DeleteClause: FetchClause {
     
     func applyToFetchRequest<T>(_ fetchRequest: NSFetchRequest<T>)
 }
