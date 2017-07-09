@@ -57,6 +57,9 @@ public protocol QueryableSource: class {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
     func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U?
+    
+    // TODO: docs
+    func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) -> B.ResultType? where B.ResultType: QueryableAttributeType
 
     /**
      Queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
@@ -81,6 +84,9 @@ public protocol QueryableSource: class {
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
     func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]?
+    
+    // TODO: docs
+    func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) -> [[String: Any]]? where B.ResultType == NSDictionary
     
     /**
      The internal `NSManagedObjectContext` managed by this `QueryableSource`. Using this context directly should typically be avoided, and is provided by CoreStore only for extremely specialized cases.

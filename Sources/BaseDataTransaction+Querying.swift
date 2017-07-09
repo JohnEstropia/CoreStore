@@ -382,6 +382,16 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
         return self.context.queryValue(from, selectClause, queryClauses)
     }
     
+    // TODO: docs
+    public func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) -> B.ResultType? where B.ResultType: QueryableAttributeType {
+        
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+        )
+        return self.context.queryValue(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
+    }
+    
     /**
      Queries a dictionary of attribute values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      
@@ -418,6 +428,16 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
             "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
         return self.context.queryAttributes(from, selectClause, queryClauses)
+    }
+    
+    // TODO: docs
+    public func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) -> [[String: Any]]? where B.ResultType == NSDictionary {
+        
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+        )
+        return self.context.queryAttributes(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
     }
     
     
