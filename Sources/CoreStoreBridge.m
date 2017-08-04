@@ -235,15 +235,16 @@ CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CORESTORE_RE
 
 - (void)setAffectedStores:(NSArray<NSPersistentStore *> *_Nullable)affectedStores {
     
-    // Bugfix for NSFetchRequest messing up memory management for `affectedStores`
-    // http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
-    
-    if (NSFoundationVersionNumber < NSFoundationVersionNumber10_0) {
+    NSProcessInfo *processInfo = [NSProcessInfo processInfo];
+    if ([processInfo isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){ 11, 0, 0 }]
+        || ![processInfo isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){ 10, 0, 0 }]) {
         
         self.safeAffectedStores = affectedStores;
         [super setAffectedStores:affectedStores];
         return;
     }
+    // Bugfix for NSFetchRequest messing up memory management for `affectedStores`
+    // http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
     if (self.releaseArray != NULL) {
         
         CFRelease(self.releaseArray);
