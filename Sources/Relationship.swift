@@ -97,8 +97,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         public convenience init(
             _ keyPath: KeyPath,
             deleteRule: DeleteRule = .nullify,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -132,8 +132,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             _ keyPath: KeyPath,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>,
             deleteRule: DeleteRule = .nullify,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -167,8 +167,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             _ keyPath: KeyPath,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>,
             deleteRule: DeleteRule = .nullify,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -202,8 +202,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             _ keyPath: KeyPath,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>,
             deleteRule: DeleteRule = .nullify,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -242,8 +242,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let minCount: Int = 0
         internal let maxCount: Int = 1
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
-        internal let versionHashModifier: String?
-        internal let renamingIdentifier: String?
+        internal let versionHashModifier: () -> String?
+        internal let renamingIdentifier: () -> String?
         internal let affectedByKeyPaths: () -> Set<String>
         internal weak var parentObject: CoreStoreObject?
         
@@ -294,7 +294,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, versionHashModifier: String?, renamingIdentifier: String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
+        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
@@ -345,8 +345,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             minCount: Int = 0,
             maxCount: Int = 0,
             deleteRule: DeleteRule = .nullify,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -386,8 +386,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             maxCount: Int = 0,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>,
             deleteRule: DeleteRule = .nullify,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -427,8 +427,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             maxCount: Int = 0,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>,
             deleteRule: DeleteRule = .nullify,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -468,8 +468,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             maxCount: Int = 0,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>,
             deleteRule: DeleteRule = .nullify,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -511,8 +511,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let minCount: Int
         internal let maxCount: Int
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
-        internal let versionHashModifier: String?
-        internal let renamingIdentifier: String?
+        internal let versionHashModifier: () -> String?
+        internal let renamingIdentifier: () -> String?
         internal let affectedByKeyPaths: () -> Set<String>
         internal weak var parentObject: CoreStoreObject?
         
@@ -563,7 +563,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: String, minCount: Int, maxCount: Int, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, versionHashModifier: String?, renamingIdentifier: String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
+        private init(keyPath: String, minCount: Int, maxCount: Int, inverseKeyPath: @escaping () -> String?, deleteRule: DeleteRule, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
@@ -619,8 +619,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             deleteRule: DeleteRule = .nullify,
             minCount: Int = 0,
             maxCount: Int = 0,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -660,8 +660,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             deleteRule: DeleteRule = .nullify,
             minCount: Int = 0,
             maxCount: Int = 0,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -701,8 +701,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             deleteRule: DeleteRule = .nullify,
             minCount: Int = 0,
             maxCount: Int = 0,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -742,8 +742,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             deleteRule: DeleteRule = .nullify,
             minCount: Int = 0,
             maxCount: Int = 0,
-            versionHashModifier: String? = nil,
-            renamingIdentifier: String? = nil,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.init(
@@ -785,8 +785,8 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let minCount: Int
         internal let maxCount: Int
         internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?)
-        internal let versionHashModifier: String?
-        internal let renamingIdentifier: String?
+        internal let versionHashModifier: () -> String?
+        internal let renamingIdentifier: () -> String?
         internal let affectedByKeyPaths: () -> Set<String>
         internal weak var parentObject: CoreStoreObject?
         
@@ -837,7 +837,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: String?, renamingIdentifier: String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
+        private init(keyPath: KeyPath, inverseKeyPath: @escaping () -> KeyPath?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
@@ -1203,22 +1203,4 @@ extension RelationshipContainer.ToManyUnordered {
         
         return relationship.nativeValue.isEqual(relationship2.nativeValue)
     }
-}
-
-
-// MARK: - RelationshipProtocol
-
-internal protocol RelationshipProtocol: class {
-    
-    var keyPath: KeyPath { get }
-    var isToMany: Bool { get }
-    var isOrdered: Bool { get }
-    var deleteRule: NSDeleteRule { get }
-    var inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?) { get }
-    var affectedByKeyPaths: () -> Set<String> { get }
-    weak var parentObject: CoreStoreObject? { get set }
-    var versionHashModifier: String? { get }
-    var renamingIdentifier: String? { get }
-    var minCount: Int { get }
-    var maxCount: Int { get }
 }

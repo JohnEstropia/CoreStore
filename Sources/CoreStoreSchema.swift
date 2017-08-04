@@ -295,8 +295,8 @@ public final class CoreStoreSchema: DynamicSchema {
                     description.isIndexed = attribute.isIndexed
                     description.defaultValue = attribute.defaultValue()
                     description.isTransient = attribute.isTransient
-                    description.versionHashModifier = attribute.versionHashModifier
-                    description.renamingIdentifier = attribute.renamingIdentifier
+                    description.versionHashModifier = attribute.versionHashModifier()
+                    description.renamingIdentifier = attribute.renamingIdentifier()
                     propertyDescriptions.append(description)
                     keyPathsByAffectedKeyPaths[attribute.keyPath] = attribute.affectedByKeyPaths()
                     customGetterSetterByKeyPaths[attribute.keyPath] = (attribute.getter, attribute.setter)
@@ -308,8 +308,8 @@ public final class CoreStoreSchema: DynamicSchema {
                     description.maxCount = relationship.maxCount
                     description.isOrdered = relationship.isOrdered
                     description.deleteRule = relationship.deleteRule
-                    description.versionHashModifier = relationship.versionHashModifier
-                    description.renamingIdentifier = relationship.renamingIdentifier
+                    description.versionHashModifier = relationship.versionHashModifier()
+                    description.renamingIdentifier = relationship.renamingIdentifier()
                     propertyDescriptions.append(description)
                     keyPathsByAffectedKeyPaths[relationship.keyPath] = relationship.affectedByKeyPaths()
                     

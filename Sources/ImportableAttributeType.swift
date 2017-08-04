@@ -78,26 +78,9 @@ public protocol ImportableAttributeType: QueryableAttributeType {
 }
 
 
-// MARK: - EmptyableAttributeType
-
-/**
- `ImportableAttributeType`s that have a natural "empty" value. Example: `0` for `Int`, `""` for `String`.
- 
- - Discussion: Not all `ImportableAttributeType`s can have empty values. `URL`s and `Date`s for example have no obvious empty values.
- */
-public protocol EmptyableAttributeType: ImportableAttributeType {
-    
-    /**
-     Returns the default "empty" value for this type.
-     */
-    @inline(__always)
-    static func cs_emptyValue() -> Self
-}
-
-
 // MARK: - Bool
 
-extension Bool: ImportableAttributeType, EmptyableAttributeType {
+extension Bool: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -114,21 +97,11 @@ extension Bool: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Bool {
-        
-        return false
-    }
 }
-
 
 // MARK: - CGFloat
 
-extension CGFloat: ImportableAttributeType, EmptyableAttributeType {
+extension CGFloat: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -145,21 +118,12 @@ extension CGFloat: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> CGFloat {
-        
-        return 0
-    }
 }
 
 
 // MARK: - Data
 
-extension Data: ImportableAttributeType, EmptyableAttributeType {
+extension Data: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -175,15 +139,6 @@ extension Data: ImportableAttributeType, EmptyableAttributeType {
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
         return self.cs_toQueryableNativeType()
-    }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Data {
-        
-        return Data()
     }
 }
 
@@ -212,7 +167,7 @@ extension Date: ImportableAttributeType {
 
 // MARK: - Double
 
-extension Double: ImportableAttributeType, EmptyableAttributeType {
+extension Double: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -229,21 +184,12 @@ extension Double: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Double {
-        
-        return 0
-    }
 }
 
 
 // MARK: - Float
 
-extension Float: ImportableAttributeType, EmptyableAttributeType {
+extension Float: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -260,21 +206,12 @@ extension Float: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Float {
-        
-        return 0
-    }
 }
 
 
 // MARK: - Int
 
-extension Int: ImportableAttributeType, EmptyableAttributeType {
+extension Int: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -291,21 +228,12 @@ extension Int: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int {
-        
-        return 0
-    }
 }
 
 
 // MARK: - Int8
 
-extension Int8: ImportableAttributeType, EmptyableAttributeType {
+extension Int8: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -322,21 +250,12 @@ extension Int8: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int8 {
-        
-        return 0
-    }
 }
 
 
 // MARK: - Int16
 
-extension Int16: ImportableAttributeType, EmptyableAttributeType {
+extension Int16: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -353,21 +272,12 @@ extension Int16: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int16 {
-        
-        return 0
-    }
 }
 
 
 // MARK: - Int32
 
-extension Int32: ImportableAttributeType, EmptyableAttributeType {
+extension Int32: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -384,21 +294,12 @@ extension Int32: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int32 {
-        
-        return 0
-    }
 }
 
 
 // MARK: - Int64
 
-extension Int64: ImportableAttributeType, EmptyableAttributeType {
+extension Int64: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -415,21 +316,12 @@ extension Int64: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int64 {
-        
-        return 0
-    }
 }
 
 
 // MARK: - NSData
 
-extension NSData: ImportableAttributeType, EmptyableAttributeType {
+extension NSData: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -445,15 +337,6 @@ extension NSData: ImportableAttributeType, EmptyableAttributeType {
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
         return self.cs_toQueryableNativeType()
-    }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init()
     }
 }
 
@@ -482,7 +365,7 @@ extension NSDate: ImportableAttributeType {
 
 // MARK: - NSNumber
 
-extension NSNumber: ImportableAttributeType, EmptyableAttributeType {
+extension NSNumber: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -499,21 +382,12 @@ extension NSNumber: ImportableAttributeType, EmptyableAttributeType {
         
         return self.cs_toQueryableNativeType()
     }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init()
-    }
 }
 
 
 // MARK: - NSString
 
-extension NSString: ImportableAttributeType, EmptyableAttributeType {
+extension NSString: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -529,15 +403,6 @@ extension NSString: ImportableAttributeType, EmptyableAttributeType {
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
         return self.cs_toQueryableNativeType()
-    }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init()
     }
 }
 
@@ -588,7 +453,7 @@ extension NSUUID: ImportableAttributeType {
 
 // MARK: - String
 
-extension String: ImportableAttributeType, EmptyableAttributeType {
+extension String: ImportableAttributeType {
     
     // MARK: ImportableAttributeType
     
@@ -604,15 +469,6 @@ extension String: ImportableAttributeType, EmptyableAttributeType {
     public func cs_toImportableNativeType() -> ImportableNativeType {
         
         return self.cs_toQueryableNativeType()
-    }
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> String {
-        
-        return ""
     }
 }
 

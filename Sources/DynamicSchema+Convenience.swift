@@ -96,71 +96,62 @@ public extension DynamicSchema {
                         
                     case .integer16AttributeType:
                         valueType = Int16.self
-                        if let defaultValue = (attribute.defaultValue as! Int16.ImportableNativeType?).flatMap(Int16.cs_fromImportableNativeType),
-                            defaultValue != Int16.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! Int16.ImportableNativeType?).flatMap(Int16.cs_fromImportableNativeType) {
                             
-                            defaultString = ", default: \(defaultValue)"
+                            defaultString = ", initial: \(defaultValue)"
                         }
                     case .integer32AttributeType:
                         valueType = Int32.self
-                        if let defaultValue = (attribute.defaultValue as! Int32.ImportableNativeType?).flatMap(Int32.cs_fromImportableNativeType),
-                            defaultValue != Int32.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! Int32.ImportableNativeType?).flatMap(Int32.cs_fromImportableNativeType) {
                             
-                            defaultString = ", default: \(defaultValue)"
+                            defaultString = ", initial: \(defaultValue)"
                         }
                     case .integer64AttributeType:
                         valueType = Int64.self
-                        if let defaultValue = (attribute.defaultValue as! Int64.ImportableNativeType?).flatMap(Int64.cs_fromImportableNativeType),
-                            defaultValue != Int64.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! Int64.ImportableNativeType?).flatMap(Int64.cs_fromImportableNativeType) {
                             
-                            defaultString = ", default: \(defaultValue)"
+                            defaultString = ", initial: \(defaultValue)"
                         }
                     case .decimalAttributeType:
                         valueType = NSDecimalNumber.self
-                        if let defaultValue = (attribute.defaultValue as! NSDecimalNumber.ImportableNativeType?).flatMap(NSDecimalNumber.cs_fromImportableNativeType),
-                            defaultValue != NSDecimalNumber.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! NSDecimalNumber.ImportableNativeType?).flatMap(NSDecimalNumber.cs_fromImportableNativeType) {
                             
-                            defaultString = ", default: NSDecimalNumber(string: \"\(defaultValue.description(withLocale: nil))\")"
+                            defaultString = ", initial: NSDecimalNumber(string: \"\(defaultValue.description(withLocale: nil))\")"
                         }
                     case .doubleAttributeType:
                         valueType = Double.self
-                        if let defaultValue = (attribute.defaultValue as! Double.ImportableNativeType?).flatMap(Double.cs_fromImportableNativeType),
-                            defaultValue != Double.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! Double.ImportableNativeType?).flatMap(Double.cs_fromImportableNativeType) {
                             
-                            defaultString = ", default: \(defaultValue)"
+                            defaultString = ", initial: \(defaultValue)"
                         }
                     case .floatAttributeType:
                         valueType = Float.self
-                        if let defaultValue = (attribute.defaultValue as! Float.ImportableNativeType?).flatMap(Float.cs_fromImportableNativeType),
-                            defaultValue != Float.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! Float.ImportableNativeType?).flatMap(Float.cs_fromImportableNativeType) {
                             
-                            defaultString = ", default: \(defaultValue)"
+                            defaultString = ", initial: \(defaultValue)"
                         }
                     case .stringAttributeType:
                         valueType = String.self
-                        if let defaultValue = (attribute.defaultValue as! String.ImportableNativeType?).flatMap(String.cs_fromImportableNativeType),
-                            defaultValue != String.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! String.ImportableNativeType?).flatMap(String.cs_fromImportableNativeType) {
                             
                             // TODO: escape strings
-                            defaultString = ", default: \"\(defaultValue)\""
+                            defaultString = ", initial: \"\(defaultValue)\""
                         }
                     case .booleanAttributeType:
                         valueType = Bool.self
-                        if let defaultValue = (attribute.defaultValue as! Bool.ImportableNativeType?).flatMap(Bool.cs_fromImportableNativeType),
-                            defaultValue != Bool.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! Bool.ImportableNativeType?).flatMap(Bool.cs_fromImportableNativeType) {
                             
-                            defaultString = ", default: \(defaultValue ? "true" : "false")"
+                            defaultString = ", initial: \(defaultValue ? "true" : "false")"
                         }
                     case .dateAttributeType:
                         valueType = Date.self
                         if let defaultValue = (attribute.defaultValue as! Date.ImportableNativeType?).flatMap(Date.cs_fromImportableNativeType) {
                             
-                            defaultString = ", default: Date(timeIntervalSinceReferenceDate: \(defaultValue.timeIntervalSinceReferenceDate))"
+                            defaultString = ", initial: Date(timeIntervalSinceReferenceDate: \(defaultValue.timeIntervalSinceReferenceDate))"
                         }
                     case .binaryDataAttributeType:
                         valueType = Data.self
-                        if let defaultValue = (attribute.defaultValue as! Data.ImportableNativeType?).flatMap(Data.cs_fromImportableNativeType),
-                            defaultValue != Data.cs_emptyValue() {
+                        if let defaultValue = (attribute.defaultValue as! Data.ImportableNativeType?).flatMap(Data.cs_fromImportableNativeType) {
                             
                             let count = defaultValue.count
                             let bytes = defaultValue.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in
@@ -168,7 +159,7 @@ public extension DynamicSchema {
                                 return (0 ..< (count / MemoryLayout<UInt8>.size))
                                     .map({ "\("0x\(String(pointer[$0], radix: 16, uppercase: false))")" })
                             }
-                            defaultString = ", default: Data(bytes: [\(bytes.joined(separator: ", "))])"
+                            defaultString = ", initial: Data(bytes: [\(bytes.joined(separator: ", "))])"
                         }
                     case .transformableAttributeType:
                         if let attributeValueClassName = attribute.attributeValueClassName {
@@ -181,11 +172,11 @@ public extension DynamicSchema {
                         }
                         if let defaultValue = attribute.defaultValue {
                             
-                            defaultString = ", default: /* \"\(defaultValue)\" */"
+                            defaultString = ", initial: /* \"\(defaultValue)\" */"
                         }
                         else if !attribute.isOptional {
                             
-                            defaultString = ", default: /* required */"
+                            defaultString = ", initial: /* required */"
                         }
                     default:
                         fatalError("Unsupported attribute type: \(attribute.attributeType.rawValue)")
