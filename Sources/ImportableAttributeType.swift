@@ -60,64 +60,18 @@ import CoreGraphics
 public protocol ImportableAttributeType: QueryableAttributeType {}
 
 
-// MARK: - EmptyableAttributeType
-
-/**
- `ImportableAttributeType`s that have a natural "empty" value. Example: `0` for `Int`, `""` for `String`.
- 
- - Discussion: Not all `ImportableAttributeType`s can have empty values. `URL`s and `Date`s for example have no obvious empty values.
- */
-public protocol EmptyableAttributeType: ImportableAttributeType {
-    
-    /**
-     Returns the default "empty" value for this type.
-     */
-    @inline(__always)
-    static func cs_emptyValue() -> Self
-}
-
-
 // MARK: - Bool
 
-extension Bool: ImportableAttributeType, EmptyableAttributeType {
-    
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Bool {
-        
-        return false
-    }
-}
-
+extension Bool: ImportableAttributeType {}
 
 // MARK: - CGFloat
 
-extension CGFloat: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> CGFloat {
-        
-        return 0
-    }
-}
+extension CGFloat: ImportableAttributeType {}
 
 
 // MARK: - Data
 
-extension Data: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Data {
-        
-        return Data()
-    }
-}
+extension Data: ImportableAttributeType {}
 
 
 // MARK: - Date
@@ -127,114 +81,42 @@ extension Date: ImportableAttributeType {}
 
 // MARK: - Double
 
-extension Double: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Double {
-        
-        return 0
-    }
-}
+extension Double: ImportableAttributeType {}
 
 
 // MARK: - Float
 
-extension Float: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Float {
-        
-        return 0
-    }
-}
+extension Float: ImportableAttributeType {}
 
 
 // MARK: - Int
 
-extension Int: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int {
-        
-        return 0
-    }
-}
+extension Int: ImportableAttributeType {}
 
 
 // MARK: - Int8
 
-extension Int8: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int8 {
-        
-        return 0
-    }
-}
+extension Int8: ImportableAttributeType {}
 
 
 // MARK: - Int16
 
-extension Int16: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int16 {
-        
-        return 0
-    }
-}
+extension Int16: ImportableAttributeType {}
 
 
 // MARK: - Int32
 
-extension Int32: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int32 {
-        
-        return 0
-    }
-}
+extension Int32: ImportableAttributeType {}
 
 
 // MARK: - Int64
 
-extension Int64: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> Int64 {
-        
-        return 0
-    }
-}
+extension Int64: ImportableAttributeType {}
 
 
 // MARK: - NSData
 
-extension NSData: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init()
-    }
-}
+extension NSData: ImportableAttributeType {}
 
 
 // MARK: - NSDate
@@ -244,30 +126,12 @@ extension NSDate: ImportableAttributeType {}
 
 // MARK: - NSNumber
 
-extension NSNumber: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init()
-    }
-}
+extension NSNumber: ImportableAttributeType {}
 
 
 // MARK: - NSString
 
-extension NSString: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @nonobjc @inline(__always)
-    public class func cs_emptyValue() -> Self {
-        
-        return self.init()
-    }
-}
+extension NSString: ImportableAttributeType {}
 
 
 // MARK: - NSURL
@@ -282,16 +146,7 @@ extension NSUUID: ImportableAttributeType {}
 
 // MARK: - String
 
-extension String: ImportableAttributeType, EmptyableAttributeType {
-    
-    // MARK: EmptyableAttributeType
-    
-    @inline(__always)
-    public static func cs_emptyValue() -> String {
-        
-        return ""
-    }
-}
+extension String: ImportableAttributeType {}
 
 
 // MARK: - URL
