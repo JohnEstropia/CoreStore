@@ -438,6 +438,11 @@ public /*abstract*/ class BaseDataTransaction {
         return self.bypassesQueueing || self.transactionQueue.cs_isCurrentExecutionContext()
     }
     
+    deinit {
+        
+        self.context.reset()
+    }
+    
     
     // MARK: Deprecated
     

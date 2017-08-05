@@ -37,7 +37,7 @@ import CoreStore
 
 class Animal: CoreStoreObject {
     
-    let species = Value.Required<String>("species", default: "Swift")
+    let species = Value.Required<String>("species", initial: "Swift")
     let master = Relationship.ToOne<Person>("master")
     let color = Transformable.Optional<Color>("color")
 }
@@ -45,7 +45,7 @@ class Animal: CoreStoreObject {
 class Dog: Animal {
     
     let nickname = Value.Optional<String>("nickname")
-    let age = Value.Required<Int>("age", default: 1)
+    let age = Value.Required<Int>("age", initial: 1)
     let friends = Relationship.ToManyOrdered<Dog>("friends")
     let friendedBy = Relationship.ToManyUnordered<Dog>("friendedBy", inverse: { $0.friends })
 }
@@ -54,12 +54,13 @@ class Person: CoreStoreObject {
     
     let title = Value.Required<String>(
         "title",
-        default: "Mr.",
+        initial: "Mr.",
         customSetter: Person.setTitle
     )
     
     let name = Value.Required<String>(
         "name",
+        initial: "",
         customSetter: Person.setName
     )
     

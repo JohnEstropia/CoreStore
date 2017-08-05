@@ -16,9 +16,9 @@ import CoreStore
 
 final class Palette: CoreStoreObject {
     
-    let hue = Value.Required<Int>("hue")
-    let saturation = Value.Required<Float>("saturation")
-    let brightness = Value.Required<Float>("brightness")
+    let hue = Value.Required<Int>("hue", initial: 0)
+    let saturation = Value.Required<Float>("saturation", initial: 0)
+    let brightness = Value.Required<Float>("brightness", initial: 0)
     
     let colorName = Value.Optional<String>(
         "colorName",
