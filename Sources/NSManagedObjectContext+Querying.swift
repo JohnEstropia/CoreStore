@@ -304,6 +304,12 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     }
     
     @nonobjc
+    public func queryValue<B>(_ clauseChain: B) -> B.ResultType? where B : QueryChainableBuilderType, B.ResultType : QueryableAttributeType {
+        
+        return self.queryValue(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
+    }
+    
+    @nonobjc
     public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
         
         return self.queryAttributes(from, selectClause, queryClauses)
@@ -325,6 +331,11 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
             return nil
         }
         return self.queryAttributes(fetchRequest)
+    }
+    
+    public func queryAttributes<B>(_ clauseChain: B) -> [[String : Any]]? where B : QueryChainableBuilderType, B.ResultType == NSDictionary {
+        
+        return self.queryAttributes(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
     }
     
     

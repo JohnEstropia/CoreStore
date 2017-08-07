@@ -29,192 +29,303 @@ import Foundation
 
 // MARK: - KeyPath where Root: NSManagedObject, Value: QueryableAttributeType & Equatable
 
-public extension KeyPath where Root: NSManagedObject, Value: QueryableAttributeType & Equatable {
+public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
     
-    public static func == (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> {
-        
-        return Where(keyPath._kvcKeyPathString!, isEqualTo: value)
-    }
-    
-    public static func != (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> {
-        
-        return !Where(keyPath._kvcKeyPathString!, isEqualTo: value)
-    }
-    
-    public static func ~= <S: Sequence>(_ sequence: S, _ keyPath: KeyPath<Root, Value>) -> Where<Root> where S.Iterator.Element == Value {
-        
-        return Where(keyPath._kvcKeyPathString!, isMemberOf: sequence)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: value)
 }
+
+public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
+    
+    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: value)
+}
+
+public func ~= <O: NSManagedObject, V: QueryableAttributeType & Equatable, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, V>) -> Where<O> where S.Iterator.Element == V {
+    
+    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+}
+
 
 // MARK: - KeyPath where Root: NSManagedObject, Value: Optional<QueryableAttributeType & Equatable>
 
-public extension KeyPath where Root: NSManagedObject {
+public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
     
-    public static func == <V: QueryableAttributeType & Equatable> (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> where Value == Optional<V> {
-        
-        return Where(keyPath._kvcKeyPathString!, isEqualTo: value)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: value)
+}
+
+public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
     
-    public static func != <V: QueryableAttributeType & Equatable> (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> where Value == Optional<V> {
-        
-        return !Where(keyPath._kvcKeyPathString!, isEqualTo: value)
-    }
+    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: value)
+}
+
+public func ~= <O: NSManagedObject, V: QueryableAttributeType & Equatable, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, Optional<V>>) -> Where<O> where S.Iterator.Element == V {
     
-    public static func ~= <S: Sequence, V: QueryableAttributeType & Equatable>(_ sequence: S, _ keyPath: KeyPath<Root, Value>) -> Where<Root> where Value == Optional<V>, S.Iterator.Element == V {
-        
-        return Where(keyPath._kvcKeyPathString!, isMemberOf: sequence)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
 }
 
 
-// MARK: - KeyPath where Root: NSManagedObject, Value: QueryableAttributeType
+// MARK: - KeyPath where Root: NSManagedObject, Value: QueryableAttributeType & Comparable
 
-public extension KeyPath where Root: NSManagedObject, Value: QueryableAttributeType {
+public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
     
-    public static func < (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> {
-        
-        return Where("%K < %@", keyPath._kvcKeyPathString!, value)
-    }
+    return Where<O>("%K < %@", keyPath._kvcKeyPathString!, value)
+}
+
+public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
     
-    public static func > (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> {
-        
-        return Where("%K > %@", keyPath._kvcKeyPathString!, value)
-    }
+    return Where<O>("%K > %@", keyPath._kvcKeyPathString!, value)
+}
+
+public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
     
-    public static func <= (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> {
-        
-        return Where("%K <= %@", keyPath._kvcKeyPathString!, value)
-    }
+    return Where<O>("%K <= %@", keyPath._kvcKeyPathString!, value)
+}
+
+public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
     
-    public static func >= (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> {
-        
-        return Where("%K >= %@", keyPath._kvcKeyPathString!, value)
-    }
+    return Where<O>("%K >= %@", keyPath._kvcKeyPathString!, value)
 }
 
 
-// MARK: - KeyPath where Root: NSManagedObject, Value: Optional<QueryableAttributeType>
+// MARK: - KeyPath where Root: NSManagedObject, Value: Optional<QueryableAttributeType & Comparable>
 
-public extension KeyPath where Root: NSManagedObject {
+public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
     
-    public static func < <V: QueryableAttributeType> (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> where Value == Optional<V> {
+    if let value = value {
         
-        if let value = value {
-            
-            return Where("%K < %@", keyPath._kvcKeyPathString!, value)
-        }
-        else {
-            
-            return Where("%K < nil", keyPath._kvcKeyPathString!)
-        }
+        return Where<O>("%K < %@", keyPath._kvcKeyPathString!, value)
     }
-    
-    public static func > <V: QueryableAttributeType> (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> where Value == Optional<V> {
+    else {
         
-        if let value = value {
-            
-            return Where("%K > %@", keyPath._kvcKeyPathString!, value)
-        }
-        else {
-            
-            return Where("%K > nil", keyPath._kvcKeyPathString!)
-        }
+        return Where<O>("%K < nil", keyPath._kvcKeyPathString!)
     }
+}
+
+public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
     
-    public static func <= <V: QueryableAttributeType> (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> where Value == Optional<V> {
+    if let value = value {
         
-        if let value = value {
-            
-            return Where("%K <= %@", keyPath._kvcKeyPathString!, value)
-        }
-        else {
-            
-            return Where("%K <= nil", keyPath._kvcKeyPathString!)
-        }
+        return Where<O>("%K > %@", keyPath._kvcKeyPathString!, value)
     }
-    
-    public static func >= <V: QueryableAttributeType> (_ keyPath: KeyPath<Root, Value>, _ value: Value) -> Where<Root> where Value == Optional<V> {
+    else {
         
-        if let value = value {
-            
-            return Where("%K >= %@", keyPath._kvcKeyPathString!, value)
-        }
-        else {
-            
-            return Where("%K >= nil", keyPath._kvcKeyPathString!)
-        }
+        return Where<O>("%K > nil", keyPath._kvcKeyPathString!)
+    }
+}
+
+public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
+    
+    if let value = value {
+        
+        return Where<O>("%K <= %@", keyPath._kvcKeyPathString!, value)
+    }
+    else {
+        
+        return Where<O>("%K <= nil", keyPath._kvcKeyPathString!)
+    }
+}
+
+public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
+    
+    if let value = value {
+        
+        return Where<O>("%K >= %@", keyPath._kvcKeyPathString!, value)
+    }
+    else {
+        
+        return Where<O>("%K >= nil", keyPath._kvcKeyPathString!)
     }
 }
 
 
 // MARK: - KeyPath where Root: NSManagedObject, Value: NSManagedObject
 
-public extension KeyPath where Root: NSManagedObject, Value: NSManagedObject {
+public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ object: D) -> Where<O> {
     
-    public static func == (_ keyPath: KeyPath<Root, Value>, _ object: Value) -> Where<Root> {
-        
-        return Where(keyPath._kvcKeyPathString!, isEqualTo: object)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+}
+
+public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ object: D) -> Where<O> {
     
-    public static func != (_ keyPath: KeyPath<Root, Value>, _ object: Value) -> Where<Root> {
-        
-        return !Where(keyPath._kvcKeyPathString!, isEqualTo: object)
-    }
+    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+}
+
+public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, D>) -> Where<O> where S.Iterator.Element == D {
     
-    public static func ~= <S: Sequence>(_ sequence: S, _ keyPath: KeyPath<Root, Value>) -> Where<Root> where S.Iterator.Element == Value {
-        
-        return Where(keyPath._kvcKeyPathString!, isMemberOf: sequence)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+}
+
+public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ objectID: NSManagedObjectID?) -> Where<O> {
     
-    public static func == (_ keyPath: KeyPath<Root, Value>, _ objectID: NSManagedObjectID?) -> Where<Root> {
-        
-        return Where(keyPath._kvcKeyPathString!, isEqualTo: objectID)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+}
+
+public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, D>, _ objectID: NSManagedObjectID?) -> Where<O> {
     
-    public static func != (_ keyPath: KeyPath<Root, Value>, _ objectID: NSManagedObjectID?) -> Where<Root> {
-        
-        return !Where(keyPath._kvcKeyPathString!, isEqualTo: objectID)
-    }
+    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+}
+
+public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, D>) -> Where<O> where S.Iterator.Element == NSManagedObjectID {
     
-    public static func ~= <S: Sequence>(_ sequence: S, _ keyPath: KeyPath<Root, Value>) -> Where<Root> where S.Iterator.Element == NSManagedObjectID {
-        
-        return Where(keyPath._kvcKeyPathString!, isMemberOf: sequence)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
 }
 
 
 // MARK: - KeyPath where Root: NSManagedObject, Value: Optional<NSManagedObject>
 
-public extension KeyPath where Root: NSManagedObject {
+public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: D?) -> Where<O> {
     
-    public static func == <V: NSManagedObject> (_ keyPath: KeyPath<Root, Value>, _ object: Value) -> Where<Root> where Value == Optional<V> {
-        
-        return Where(keyPath._kvcKeyPathString!, isEqualTo: object)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+}
+
+public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: D?) -> Where<O> {
     
-    public static func != <V: NSManagedObject> (_ keyPath: KeyPath<Root, Value>, _ object: Value) -> Where<Root> where Value == Optional<V> {
-        
-        return !Where(keyPath._kvcKeyPathString!, isEqualTo: object)
-    }
+    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+}
+
+public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, Optional<D>>) -> Where<O> where S.Iterator.Element == D {
     
-    public static func ~= <S: Sequence, V: NSManagedObject>(_ sequence: S, _ keyPath: KeyPath<Root, Value>) -> Where<Root> where Value == Optional<V>, S.Iterator.Element == V {
-        
-        return Where(keyPath._kvcKeyPathString!, isMemberOf: sequence)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+}
+
+public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ objectID: NSManagedObjectID?) -> Where<O> {
     
-    public static func == <V: NSManagedObject> (_ keyPath: KeyPath<Root, Value>, _ objectID: NSManagedObjectID?) -> Where<Root> where Value == Optional<V> {
-        
-        return Where(keyPath._kvcKeyPathString!, isEqualTo: objectID)
-    }
+    return Where<O>(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+}
+
+public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ objectID: NSManagedObjectID?) -> Where<O> {
     
-    public static func != <V: NSManagedObject> (_ keyPath: KeyPath<Root, Value>, _ objectID: NSManagedObjectID?) -> Where<Root> where Value == Optional<V> {
-        
-        return !Where(keyPath._kvcKeyPathString!, isEqualTo: objectID)
-    }
+    return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: objectID)
+}
+
+public func ~= <O: NSManagedObject, D: NSManagedObject, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, Optional<D>>) -> Where<O> where S.Iterator.Element == NSManagedObjectID {
     
-    public static func ~= <S: Sequence, V: NSManagedObject>(_ sequence: S, _ keyPath: KeyPath<Root, Value>) -> Where<Root> where Value == Optional<V>, S.Iterator.Element == NSManagedObjectID {
-        
-        return Where(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+    return Where<O>(keyPath._kvcKeyPathString!, isMemberOf: sequence)
+}
+
+
+// MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Required<QueryableAttributeType & Equatable>
+
+public func == <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
+
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+}
+
+public func != <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
+    
+    return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+}
+
+public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>) -> Where<O> where S.Iterator.Element == V {
+    
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
+}
+
+
+// MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Optional<QueryableAttributeType & Equatable>
+
+public func == <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
+    
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+}
+
+public func != <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
+    
+    return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+}
+
+public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>) -> Where<O> where S.Iterator.Element == V {
+    
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
+}
+
+
+// MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Required<QueryableAttributeType & Comparable>
+
+public func < <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
+    
+    return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value)
+}
+
+public func > <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
+    
+    return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value)
+}
+
+public func <= <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
+    
+    return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value)
+}
+
+public func >= <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
+    
+    return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value)
+}
+
+
+// MARK: - KeyPath where Root: CoreStoreObject, Value: ValueContainer<Root>.Optional<QueryableAttributeType & Comparable>
+
+public func < <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
+    
+    if let value = value {
+
+        return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value)
     }
+    else {
+
+        return Where<O>("%K < nil", O.meta[keyPath: keyPath].keyPath)
+    }
+}
+
+public func > <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
+    
+    if let value = value {
+        
+        return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value)
+    }
+    else {
+        
+        return Where<O>("%K > nil", O.meta[keyPath: keyPath].keyPath)
+    }
+}
+
+public func <= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
+    
+    if let value = value {
+        
+        return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value)
+    }
+    else {
+        
+        return Where<O>("%K <= nil", O.meta[keyPath: keyPath].keyPath)
+    }
+}
+
+public func >= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
+    
+    if let value = value {
+        
+        return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value)
+    }
+    else {
+        
+        return Where<O>("%K >= nil", O.meta[keyPath: keyPath].keyPath)
+    }
+}
+
+
+// MARK: - KeyPath where Root: CoreStoreObject, Value: RelationshipContainer<Root>.ToOne<CoreStoreObject>
+
+public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D) -> Where<O> {
+    
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+}
+
+public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D) -> Where<O> {
+    
+    return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+}
+
+public func ~= <O, D, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>) -> Where<O> where S.Iterator.Element == D {
+    
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isMemberOf: sequence)
 }

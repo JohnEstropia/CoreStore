@@ -26,58 +26,6 @@
 import CoreData
 import Foundation
 
-//public extension From where D: NSManagedObject {
-//    
-////    public func select<R>(_ resultType: R.Type, _ selectTerm: SelectTerm, _ selectTerms: SelectTerm...) -> QueryChainBuilder<D, R> {
-////
-////        return self.select(resultType, [selectTerm] + selectTerms)
-////    }
-////
-////    public func select<R>(_ resultType: R.Type, _ selectTerms: [SelectTerm]) -> QueryChainBuilder<D, R> {
-////
-////        return .init(
-////            from: self,
-////            select: .init(selectTerms),
-////            groupBy: .init(),
-////            fetchClauses: []
-////        )
-////    }
-//    
-//    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, T>) -> SectionMonitorChainBuilder<D> {
-//        
-//        return self.sectionBy(sectionKeyPath._kvcKeyPathString!, { $0 })
-//    }
-//    
-//    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, T>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<D> {
-//        
-//        return self.sectionBy(sectionKeyPath._kvcKeyPathString!, sectionIndexTransformer)
-//    }
-//    
-//    public func `where`<T>(_ keyPath: KeyPath<D, T>, isEqualTo value: Void?) -> FetchChainBuilder<D> {
-//        
-//        return self.where(keyPath._kvcKeyPathString!, isEqualTo: value)
-//    }
-//    
-//    public func `where`<U: QueryableAttributeType>(_ keyPath: KeyPath<D, U>, isEqualTo value: U?) -> FetchChainBuilder<D> {
-//        
-//        return self.where(keyPath._kvcKeyPathString!, isEqualTo: value)
-//    }
-//    
-//    public func `where`(_ keyPath: KeyPath<D, D>, isEqualTo object: D?) -> FetchChainBuilder<D> {
-//        
-//        return self.where(keyPath._kvcKeyPathString!, isEqualTo: object)
-//    }
-//    
-//    public func `where`<S: Sequence>(_ keyPath: KeyPath<D, S.Iterator.Element>, isMemberOf list: S) -> FetchChainBuilder<D> where S.Iterator.Element: QueryableAttributeType {
-//        
-//        return self.where(keyPath._kvcKeyPathString!, isMemberOf: list)
-//    }
-//    
-//    public func `where`<S: Sequence>(_ keyPath: KeyPath<D, S.Iterator.Element>, isMemberOf list: S) -> FetchChainBuilder<D> where S.Iterator.Element == D {
-//        
-//        return self.where(keyPath._kvcKeyPathString!, isMemberOf: list)
-//    }
-//}
 
 // MARK: - DynamicObject
 

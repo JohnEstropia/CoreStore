@@ -33,7 +33,7 @@ internal protocol AttributeProtocol: class {
     
     static var attributeType: NSAttributeType { get }
     
-    var keyPath: RawKeyPath { get }
+    var keyPath: KeyPathString { get }
     var isOptional: Bool { get }
     var isIndexed: Bool { get }
     var isTransient: Bool { get }

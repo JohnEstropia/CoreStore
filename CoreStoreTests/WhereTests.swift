@@ -31,12 +31,12 @@ import CoreStore
 
 // MARK: - XCTAssertAllEqual
 
-private func XCTAssertAllEqual<D: DynamicObject>(_ whereClauses: Where<D>...) {
+private func XCTAssertAllEqual<D>(_ whereClauses: Where<D>...) {
     
     XCTAssertAllEqual(whereClauses)
 }
 
-private func XCTAssertAllEqual<D: DynamicObject>(_ whereClauses: [Where<D>]) {
+private func XCTAssertAllEqual<D>(_ whereClauses: [Where<D>]) {
     
     for i in whereClauses.indices {
         

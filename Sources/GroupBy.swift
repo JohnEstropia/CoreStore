@@ -32,12 +32,7 @@ import CoreData
 /**
  The `GroupBy` clause specifies that the result of a query be grouped accoording to the specified key path.
  */
-public struct GroupBy: QueryClause, Hashable {
-    
-    /**
-     The list of key path strings to group results with
-     */
-    public let keyPaths: [KeyPathString]
+public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
     
     /**
      Initializes a `GroupBy` clause with an empty list of key path strings
@@ -67,6 +62,13 @@ public struct GroupBy: QueryClause, Hashable {
         
         self.keyPaths = keyPaths
     }
+    
+    
+    // MARK: WhereClause
+    
+    public typealias ObjectType = D
+    
+    public let keyPaths: [KeyPathString]
     
     
     // MARK: QueryClause
@@ -99,4 +101,23 @@ public struct GroupBy: QueryClause, Hashable {
         
         return (self.keyPaths as NSArray).hashValue
     }
+}
+
+
+// MARK: - GroupByClause
+
+/**
+ Abstracts the `GroupBy` clause for protocol utilities.
+ */
+public protocol GroupByClause {
+    
+    /**
+     The `DynamicObject` type associated with the clause
+     */
+    associatedtype ObjectType: DynamicObject
+    
+    /**
+     The list of key path strings to group results with
+     */
+    var keyPaths: [KeyPathString] { get }
 }

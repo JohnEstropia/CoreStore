@@ -42,7 +42,6 @@ public protocol QueryChainableBuilderType {
     
     var from: From<ObjectType> { get set }
     var select: Select<ResultType> { get set }
-    var groupBy: GroupBy { get set }
     var queryClauses: [QueryClause] { get set }
 }
 
@@ -80,7 +79,6 @@ public struct QueryChainBuilder<D: DynamicObject, R: SelectResultType>: QueryCha
     
     public var from: From<D>
     public var select: Select<R>
-    public var groupBy: GroupBy
     public var queryClauses: [QueryClause] = []
 }
 
@@ -111,7 +109,6 @@ public extension From {
         return .init(
             from: self,
             select: .init(selectTerms),
-            groupBy: .init(),
             queryClauses: []
         )
     }
@@ -215,19 +212,19 @@ public extension FetchChainBuilder {
 
 public extension QueryChainBuilder {
     
+    public func groupBy(_ clause: GroupBy<D>) -> QueryChainBuilder<D, R> {
+        
+        return self.queryChain(appending: clause)
+    }
+    
     public func groupBy(_ keyPath: KeyPathString, _ keyPaths: KeyPathString...) -> QueryChainBuilder<D, R> {
         
-        return self.groupBy([keyPath] + keyPaths)
+        return self.groupBy(GroupBy<D>([keyPath] + keyPaths))
     }
     
     public func groupBy(_ keyPaths: [KeyPathString]) -> QueryChainBuilder<D, R> {
         
-        return .init(
-            from: self.from,
-            select: self.select,
-            groupBy: .init(keyPaths),
-            queryClauses: self.queryClauses
-        )
+        return self.queryChain(appending: GroupBy<D>(keyPaths))
     }
     
     public func `where`(_ clause: Where<D>) -> QueryChainBuilder<D, R> {
@@ -268,7 +265,6 @@ public extension QueryChainBuilder {
         return .init(
             from: self.from,
             select: self.select,
-            groupBy: self.groupBy,
             queryClauses: self.queryClauses + [clause]
         )
     }

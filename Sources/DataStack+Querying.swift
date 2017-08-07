@@ -153,7 +153,7 @@ extension DataStack: FetchableSource, QueryableSource {
     
     // TODO: docs
     public func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]? {
-        
+
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."

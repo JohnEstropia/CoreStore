@@ -38,14 +38,14 @@ final class GroupByTests: BaseTestCase {
         
         do {
             
-            let groupBy = GroupBy()
+            let groupBy = GroupBy<NSManagedObject>()
             XCTAssertEqual(groupBy, GroupBy([] as [String]))
             XCTAssertNotEqual(groupBy, GroupBy("key"))
             XCTAssertTrue(groupBy.keyPaths.isEmpty)
         }
         do {
             
-            let groupBy = GroupBy("key1")
+            let groupBy = GroupBy<NSManagedObject>("key1")
             XCTAssertEqual(groupBy, GroupBy("key1"))
             XCTAssertEqual(groupBy, GroupBy(["key1"]))
             XCTAssertNotEqual(groupBy, GroupBy("key2"))
@@ -53,7 +53,7 @@ final class GroupByTests: BaseTestCase {
         }
         do {
             
-            let groupBy = GroupBy("key1", "key2")
+            let groupBy = GroupBy<NSManagedObject>("key1", "key2")
             XCTAssertEqual(groupBy, GroupBy("key1", "key2"))
             XCTAssertEqual(groupBy, GroupBy(["key1", "key2"]))
             XCTAssertNotEqual(groupBy, GroupBy("key2", "key1"))
@@ -66,7 +66,7 @@ final class GroupByTests: BaseTestCase {
         
         self.prepareStack { (dataStack) in
             
-            let groupBy = GroupBy(#keyPath(TestEntity1.testString))
+            let groupBy = GroupBy<NSManagedObject>(#keyPath(TestEntity1.testString))
             
             let request = CoreStoreFetchRequest()
             _ = From<TestEntity1>().applyToFetchRequest(request, context: dataStack.mainContext)

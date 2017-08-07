@@ -258,7 +258,7 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         @available(*, deprecated: 3.2, renamed: "init(_:initial:isIndexed:isTransient:versionHashModifier:renamingIdentifier:customGetter:customSetter:affectedByKeyPaths:)")
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             `default`: @autoclosure @escaping () -> V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
