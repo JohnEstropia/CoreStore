@@ -1093,15 +1093,6 @@ fileprivate extension String {
         return String(repeating: " ", count: level * 4)
     }
     
-    fileprivate func trimSwiftModuleName() -> String {
-        
-        if self.hasPrefix("Swift.") {
-            
-            return self.substring(from: "Swift.".endIndex)
-        }
-        return self
-    }
-    
     fileprivate mutating func indent(_ level: Int) {
         
         self = self.replacingOccurrences(of: "\n", with: "\n\(String.indention(level))")

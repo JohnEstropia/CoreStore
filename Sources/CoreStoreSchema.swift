@@ -538,7 +538,7 @@ public final class CoreStoreSchema: DynamicSchema {
             }
             else {
                 
-                let newMethod = class_getClassMethod(managedObjectClass, newSelector)
+                let newMethod = class_getClassMethod(managedObjectClass, newSelector)!
                 method_exchangeImplementations(origMethod, newMethod)
             }
         }
