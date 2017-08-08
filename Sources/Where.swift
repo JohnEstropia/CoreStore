@@ -328,6 +328,116 @@ public protocol WhereClause {
 }
 
 
+// MARK: - Where where D: NSManagedObject
+
+public extension Where where D: NSManagedObject {
+    
+    /**
+     Initializes a `Where` clause that compares equality to `nil`
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    public init<V: QueryableAttributeType>(_ keyPath: KeyPath<D, V>, isEqualTo value: Void?) {
+        
+        self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) == nil"))
+    }
+    
+    /**
+     Initializes a `Where` clause that compares equality to `nil`
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    public init<O: DynamicObject>(_ keyPath: KeyPath<D, O>, isEqualTo value: Void?) {
+        
+        self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) == nil"))
+    }
+    
+    /**
+     Initializes a `Where` clause that compares equality
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    public init<V: QueryableAttributeType>(_ keyPath: KeyPath<D, V>, isEqualTo value: V?) {
+        
+        switch value {
+            
+        case nil,
+             is NSNull:
+            self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) == nil"))
+            
+        case let value?:
+            self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) == %@", argumentArray: [value.cs_toQueryableNativeType()]))
+        }
+    }
+    
+    /**
+     Initializes a `Where` clause that compares equality
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter value: the arguments for the `==` operator
+     */
+    public init<O: DynamicObject>(_ keyPath: KeyPath<D, O>, isEqualTo value: O?) {
+        
+        switch value {
+            
+        case nil,
+             is NSNull:
+            self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) == nil"))
+            
+        case let value?:
+            self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) == %@", argumentArray: [value.cs_id()]))
+        }
+    }
+    
+    /**
+     Initializes a `Where` clause that compares equality
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter objectID: the arguments for the `==` operator
+     */
+    public init<O: DynamicObject>(_ keyPath: KeyPath<D, O>, isEqualTo objectID: NSManagedObjectID) {
+        
+        self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) == %@", argumentArray: [objectID]))
+    }
+    
+    /**
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
+    public init<V: QueryableAttributeType, S: Sequence>(_ keyPath: KeyPath<D, V>, isMemberOf list: S) where S.Iterator.Element == V {
+        
+        self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) IN %@", list.map({ $0.cs_toQueryableNativeType() }) as NSArray))
+    }
+    
+    /**
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
+    public init<O: DynamicObject, S: Sequence>(_ keyPath: KeyPath<D, O>, isMemberOf list: S) where S.Iterator.Element == O {
+        
+        self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) IN %@", list.map({ $0.cs_id() }) as NSArray))
+    }
+    
+    /**
+     Initializes a `Where` clause that compares membership
+     
+     - parameter keyPath: the keyPath to compare with
+     - parameter list: the sequence to check membership of
+     */
+    public init<O: DynamicObject, S: Sequence>(_ keyPath: KeyPath<D, O>, isMemberOf list: S) where S.Iterator.Element: NSManagedObjectID {
+        
+        self.init(NSPredicate(format: "\(keyPath._kvcKeyPathString!) IN %@", list.map({ $0 }) as NSArray))
+    }
+}
+
+
 // MARK: - Sequence where Iterator.Element: WhereClause
 
 public extension Sequence where Iterator.Element: WhereClause {
