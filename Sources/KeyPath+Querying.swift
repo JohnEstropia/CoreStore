@@ -1,5 +1,5 @@
 //
-//  Where+NSManagedObject.swift
+//  KeyPath+Querying.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia

@@ -489,10 +489,10 @@
 		B59FA0B01CCBACA7007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
 		B59FA0B11CCBACA7007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
 		B59FA0B21CCBACA8007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
-		B5A1DAC81F111BFA003CF369 /* Where+NSManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* Where+NSManagedObject.swift */; };
-		B5A1DAC91F111BFA003CF369 /* Where+NSManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* Where+NSManagedObject.swift */; };
-		B5A1DACA1F111BFA003CF369 /* Where+NSManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* Where+NSManagedObject.swift */; };
-		B5A1DACB1F111BFA003CF369 /* Where+NSManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* Where+NSManagedObject.swift */; };
+		B5A1DAC81F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
+		B5A1DAC91F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
+		B5A1DACA1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
+		B5A1DACB1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
 		B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A261201B64BFDB006EB6D3 /* MigrationType.swift */; };
 		B5A5F2661CAEC50F004AB9AF /* CSSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */; };
 		B5A5F2681CAEC50F004AB9AF /* CSSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */; };
@@ -846,7 +846,7 @@
 		B596BBBA1DD5C39F001DCDD9 /* QueryableSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryableSource.swift; sourceTree = "<group>"; };
 		B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+Setup.swift"; sourceTree = "<group>"; };
 		B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudStore.swift; sourceTree = "<group>"; };
-		B5A1DAC71F111BFA003CF369 /* Where+NSManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Where+NSManagedObject.swift"; sourceTree = "<group>"; };
+		B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyPath+Querying.swift"; sourceTree = "<group>"; };
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
 		B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSelect.swift; sourceTree = "<group>"; };
 		B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionLock.swift; sourceTree = "<group>"; };
@@ -1283,7 +1283,7 @@
 		B5A1DAC61F111BBE003CF369 /* KeyPath Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				B5A1DAC71F111BFA003CF369 /* Where+NSManagedObject.swift */,
+				B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */,
 				B5D339EB1E9495E500C880DE /* CoreStoreObject+Querying.swift */,
 			);
 			name = "KeyPath Utilities";
@@ -1901,7 +1901,7 @@
 				B501FDE71CA8D20500BE22EF /* CSListObserver.swift in Sources */,
 				B5E41EC01EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B501FDE21CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
-				B5A1DAC81F111BFA003CF369 /* Where+NSManagedObject.swift in Sources */,
+				B5A1DAC81F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */,
 				B5ECDC111CA816E500C7F112 /* CSTweak.swift in Sources */,
 				B56923C41EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
@@ -2092,7 +2092,7 @@
 				B501FDE91CA8D20500BE22EF /* CSListObserver.swift in Sources */,
 				B5E41EC11EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B501FDE41CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
-				B5A1DAC91F111BFA003CF369 /* Where+NSManagedObject.swift in Sources */,
+				B5A1DAC91F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B5FE4DA31C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B5ECDC131CA816E500C7F112 /* CSTweak.swift in Sources */,
 				B56923C51EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
@@ -2283,7 +2283,7 @@
 				B559CD4D1CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
 				B5E41EC31EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B5ECDBE91CA6BEA300C7F112 /* CSClauseTypes.swift in Sources */,
-				B5A1DACB1F111BFA003CF369 /* Where+NSManagedObject.swift in Sources */,
+				B5A1DACB1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B52DD1B81BE1F94000949AFE /* DataStack+Migration.swift in Sources */,
 				B5ECDC091CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B56923C71EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
@@ -2474,7 +2474,7 @@
 				B501FDE51CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
 				B5E41EC21EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B5ECDC141CA816E500C7F112 /* CSTweak.swift in Sources */,
-				B5A1DACA1F111BFA003CF369 /* Where+NSManagedObject.swift in Sources */,
+				B5A1DACA1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B56321AE1BD6521C006C9394 /* NotificationObserver.swift in Sources */,
 				B56321931BD65216006C9394 /* DataStack+Querying.swift in Sources */,
 				B56923C61EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
