@@ -62,7 +62,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
                 
                 return object
             }
-            return T.cs_fromRaw(object: existingRawObject)
+            return type(of: object).cs_fromRaw(object: existingRawObject)
         }
         catch {
             
