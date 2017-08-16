@@ -62,9 +62,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
                 
                 return object
             }
-            
-            let objectDynamicType = type(of: object)
-            return objectDynamicType.cs_fromRaw(object: existingRawObject)
+            return type(of: object).cs_fromRaw(object: existingRawObject)
         }
         catch {
             
