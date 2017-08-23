@@ -145,7 +145,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
     public required init(modelName: ModelVersion, modelVersionFileURL: URL) {
         
         CoreStore.assert(
-            FileManager.default.fileExists(atPath: modelVersionFileURL.path),
+            NSManagedObjectModel(contentsOf: modelVersionFileURL) != nil,
             "Could not find the \"\(modelName).mom\" version file for the model at URL \"\(modelVersionFileURL)\"."
         )
         
@@ -164,13 +164,12 @@ public final class XcodeDataModelSchema: DynamicSchema {
             
             return cachedRawModel
         }
-        CoreStore.assert(
-            FileManager.default.fileExists(atPath: self.modelVersionFileURL.path),
-            "Could not find the \"\(self.modelVersion).mom\" version file for the model at URL \"\(self.modelVersionFileURL)\"."
-        )
-        let rawModel = NSManagedObjectModel(contentsOf: self.modelVersionFileURL)
-        self.cachedRawModel = rawModel
-        return rawModel
+        if let rawModel = NSManagedObjectModel(contentsOf: self.modelVersionFileURL) {
+            
+            self.cachedRawModel = rawModel
+            return rawModel
+        }
+        CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel.self)) from the model at URL \"\(self.modelVersionFileURL)\".")
     }
     
     
