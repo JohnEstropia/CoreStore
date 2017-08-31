@@ -28,7 +28,7 @@ struct ColorsDemo {
             }
         }
         
-        func whereClause() -> Where {
+        func whereClause() -> Where<Palette> {
             
             switch self {
                 
