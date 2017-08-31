@@ -114,7 +114,7 @@ public extension DynamicSchema {
                         }
                     case .decimalAttributeType:
                         valueType = NSDecimalNumber.self
-                        if let defaultValue = (attribute.defaultValue as! NSDecimalNumber.QueryableNativeType?).flatMap(NSDecimalNumber.cs_fromQueryableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! NSDecimalNumber?) {
                             
                             defaultString = ", initial: NSDecimalNumber(string: \"\(defaultValue.description(withLocale: nil))\")"
                         }
