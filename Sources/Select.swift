@@ -401,13 +401,14 @@ internal extension Collection where Iterator.Element == SelectTerm {
                 return entity.attributesByName[components[0]]
                 
             default:
-                guard let relationship = entity.relationshipsByName[components[0]] else {
-                    
-                    return nil
+                guard let relationship = entity.relationshipsByName[components[0]],
+                    let destinationEntity = relationship.destinationEntity else {
+                        
+                        return nil
                 }
                 return attributeDescription(
                     for: components.dropFirst().joined(separator: "."),
-                    in: relationship.entity
+                    in: destinationEntity
                 )
             }
         }
@@ -418,18 +419,7 @@ internal extension Collection where Iterator.Element == SelectTerm {
             switch term {
                 
             case ._attribute(let keyPath):
-                let entityDescription = fetchRequest.entity!
-                if let attributeDescription = attributeDescription(for: keyPath, in: entityDescription) {
-                    
-                    propertiesToFetch.append(attributeDescription)
-                }
-                else {
-                    
-                    CoreStore.log(
-                        .warning,
-                        message: "The key path \"\(keyPath)\" could not be resolved in entity \(cs_typeName(entityDescription.managedObjectClassName)) as an attribute and will be ignored by \(cs_typeName(owner)) query clause."
-                    )
-                }
+                propertiesToFetch.append(keyPath)
                 
             case ._aggregate(let function, let keyPath, let alias, let nativeType):
                 let entityDescription = fetchRequest.entity!
