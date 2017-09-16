@@ -1,0 +1,8 @@
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '9.3.5'
+use_frameworks!
+
+target 'CoreStoreDemo' do
+    pod 'CoreStore', '~> 4.1'
+end
+
