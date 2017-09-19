@@ -45,6 +45,7 @@ public protocol QueryChainableBuilderType {
     var queryClauses: [QueryClause] { get set }
 }
 
+@available(OSX 10.12, *)
 public protocol SectionMonitorBuilderType {
     
     associatedtype ObjectType: DynamicObject
@@ -85,6 +86,7 @@ public struct QueryChainBuilder<D: DynamicObject, R: SelectResultType>: QueryCha
 
 // MARK: - SectionMonitorChainBuilder
 
+@available(OSX 10.12, *)
 public struct SectionMonitorChainBuilder<D: DynamicObject>: SectionMonitorBuilderType {
     
     // MARK: SectionMonitorBuilderType
@@ -113,11 +115,13 @@ public extension From {
         )
     }
     
+    @available(OSX 10.12, *)
     public func sectionBy(_ sectionKeyPath: KeyPathString) -> SectionMonitorChainBuilder<D> {
         
         return self.sectionBy(sectionKeyPath, { $0 })
     }
     
+    @available(OSX 10.12, *)
     public func sectionBy(_ sectionKeyPath: KeyPathString, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<D> {
         
         return .init(
@@ -270,6 +274,7 @@ public extension QueryChainBuilder {
     }
 }
 
+@available(OSX 10.12, *)
 public extension SectionMonitorChainBuilder {
     
     public func `where`(_ clause: Where<D>) -> SectionMonitorChainBuilder<D> {
