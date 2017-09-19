@@ -370,8 +370,8 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
             
             self._dataStack = dataStack
             let listMonitor = dataStack.monitorList(
-                From(model.entityType)
-                    .orderBy(.descending(#keyPath(OrganismV1.dna)))
+                From(model.entityType),
+                OrderBy<NSManagedObject>(.descending(#keyPath(OrganismV1.dna)))
             )
             listMonitor.addObserver(self)
             self._listMonitor = listMonitor
