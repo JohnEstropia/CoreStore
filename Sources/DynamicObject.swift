@@ -78,7 +78,12 @@ extension NSManagedObject: DynamicObject {
     
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
         
-        return unsafeDowncast(object, to: self)
+        @inline(__always)
+        func forceCast<D: NSManagedObject>(_ value: Any) -> D {
+            
+            return value as! D
+        }
+        return forceCast(object)
     }
     
     public static func cs_matches(object: NSManagedObject) -> Bool {
