@@ -83,6 +83,12 @@ public extension UnsafeDataTransaction {
         )
     }
     
+    // TODO: docs
+    public func monitorList<B: FetchChainableBuilderType>(_ clauseChain: B) -> ListMonitor<B.ObjectType> {
+        
+        return self.monitorList(clauseChain.from, clauseChain.fetchClauses)
+    }
+    
     /**
      Asynchronously creates a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list. Since `NSFetchedResultsController` greedily locks the persistent store on initial fetch, you may prefer this method instead of the synchronous counterpart to avoid deadlocks while background updates/saves are being executed.
      
@@ -118,6 +124,16 @@ public extension UnsafeDataTransaction {
                 fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
             },
             createAsynchronously: createAsynchronously
+        )
+    }
+    
+    // TODO: docs
+    public func monitorList<B: FetchChainableBuilderType>(createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void, _ clauseChain: B) {
+        
+        self.monitorList(
+            createAsynchronously: createAsynchronously,
+            clauseChain.from,
+            clauseChain.fetchClauses
         )
     }
     
@@ -160,6 +176,16 @@ public extension UnsafeDataTransaction {
         )
     }
     
+    // TODO: docs
+    public func monitorSectionedList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> ListMonitor<B.ObjectType> {
+        
+        return self.monitorSectionedList(
+            clauseChain.from,
+            clauseChain.sectionBy,
+            clauseChain.fetchClauses
+        )
+    }
+    
     /**
      Asynchronously creates a `ListMonitor` for a sectioned list of `DynamicObject`s that satisfy the specified fetch clauses. Multiple `ListObserver`s may then register themselves to be notified when changes are made to the list. Since `NSFetchedResultsController` greedily locks the persistent store on initial fetch, you may prefer this method instead of the synchronous counterpart to avoid deadlocks while background updates/saves are being executed.
      
@@ -197,6 +223,17 @@ public extension UnsafeDataTransaction {
                 fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
             },
             createAsynchronously: createAsynchronously
+        )
+    }
+    
+    // TODO: docs
+    public func monitorSectionedList<B: SectionMonitorBuilderType>(createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void, _ clauseChain: B) {
+        
+        self.monitorSectionedList(
+            createAsynchronously: createAsynchronously,
+            clauseChain.from,
+            clauseChain.sectionBy,
+            clauseChain.fetchClauses
         )
     }
 }
