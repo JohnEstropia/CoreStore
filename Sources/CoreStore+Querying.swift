@@ -99,6 +99,12 @@ public extension CoreStore {
         return self.defaultStack.fetchOne(from, fetchClauses)
     }
     
+    // TODO: docs
+    public static func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType? {
+        
+        return self.defaultStack.fetchOne(clauseChain)
+    }
+    
     /**
      Using the `defaultStack`, fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
@@ -121,6 +127,12 @@ public extension CoreStore {
     public static func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [D]? {
         
         return self.defaultStack.fetchAll(from, fetchClauses)
+    }
+    
+    // TODO: docs
+    public static func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]? {
+        
+        return self.defaultStack.fetchAll(clauseChain)
     }
     
     /**
@@ -147,6 +159,12 @@ public extension CoreStore {
         return self.defaultStack.fetchCount(from, fetchClauses)
     }
     
+    // TODO: docs
+    public static func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int? {
+        
+        return self.defaultStack.fetchCount(clauseChain)
+    }
+    
     /**
      Using the `defaultStack`, fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
@@ -171,6 +189,12 @@ public extension CoreStore {
         return self.defaultStack.fetchObjectID(from, fetchClauses)
     }
     
+    // TODO: docs
+    public static func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) -> NSManagedObjectID? {
+        
+        return self.defaultStack.fetchObjectID(clauseChain)
+    }
+    
     /**
      Using the `defaultStack`, fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      
@@ -193,6 +217,12 @@ public extension CoreStore {
     public static func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         return self.defaultStack.fetchObjectIDs(from, fetchClauses)
+    }
+    
+    // TODO: docs
+    public static func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) -> [NSManagedObjectID]? {
+        
+        return self.defaultStack.fetchObjectIDs(clauseChain)
     }
     
     /**
@@ -225,6 +255,12 @@ public extension CoreStore {
         return self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
     
+    // TODO: docs
+    public static func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) -> B.ResultType? where B.ResultType: QueryableAttributeType {
+        
+        return self.defaultStack.queryValue(clauseChain)
+    }
+    
     /**
      Using the `defaultStack`, queries a dictionary of attribtue values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      
@@ -253,5 +289,11 @@ public extension CoreStore {
     public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
         return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
+    }
+    
+    // TODO: docs
+    public static func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) -> [[String: Any]]? where B.ResultType == NSDictionary {
+        
+        return self.defaultStack.queryAttributes(clauseChain)
     }
 }
