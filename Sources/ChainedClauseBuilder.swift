@@ -41,7 +41,7 @@ public protocol QueryChainableBuilderType {
     associatedtype ResultType: SelectResultType
     
     var from: From<ObjectType> { get set }
-    var select: Select<ResultType> { get set }
+    var select: Select<ObjectType, ResultType> { get set }
     var queryClauses: [QueryClause] { get set }
 }
 
@@ -79,7 +79,7 @@ public struct QueryChainBuilder<D: DynamicObject, R: SelectResultType>: QueryCha
     public typealias ResultType = R
     
     public var from: From<D>
-    public var select: Select<R>
+    public var select: Select<D, R>
     public var queryClauses: [QueryClause] = []
 }
 
@@ -101,12 +101,12 @@ public struct SectionMonitorChainBuilder<D: DynamicObject>: SectionMonitorBuilde
 
 public extension From {
     
-    public func select<R>(_ resultType: R.Type, _ selectTerm: SelectTerm, _ selectTerms: SelectTerm...) -> QueryChainBuilder<D, R> {
+    public func select<R>(_ resultType: R.Type, _ selectTerm: SelectTerm<D>, _ selectTerms: SelectTerm<D>...) -> QueryChainBuilder<D, R> {
         
         return self.select(resultType, [selectTerm] + selectTerms)
     }
     
-    public func select<R>(_ resultType: R.Type, _ selectTerms: [SelectTerm]) -> QueryChainBuilder<D, R> {
+    public func select<R>(_ resultType: R.Type, _ selectTerms: [SelectTerm<D>]) -> QueryChainBuilder<D, R> {
         
         return .init(
             from: self,
@@ -167,6 +167,97 @@ public extension From {
     private func fetchChain(appending clause: FetchClause) -> FetchChainBuilder<D> {
         
         return .init(from: self, fetchClauses: [clause])
+    }
+}
+
+public extension From where D: NSManagedObject {
+    
+    public func select<R>(_ keyPath: KeyPath<D, R>) -> QueryChainBuilder<D, R> {
+        
+        return self.select(R.self, [SelectTerm<D>.attribute(keyPath)])
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, T>) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(sectionKeyPath._kvcKeyPathString!, { $0 })
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, T>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(sectionKeyPath._kvcKeyPathString!, sectionIndexTransformer)
+    }
+}
+
+public extension From where D: CoreStoreObject {
+    
+    public func select<R>(_ keyPath: KeyPath<D, ValueContainer<D>.Required<R>>) -> QueryChainBuilder<D, R> {
+        
+        return self.select(R.self, [SelectTerm<D>.attribute(keyPath)])
+    }
+    
+    public func select<R>(_ keyPath: KeyPath<D, ValueContainer<D>.Optional<R>>) -> QueryChainBuilder<D, R> {
+        
+        return self.select(R.self, [SelectTerm<D>.attribute(keyPath)])
+    }
+    
+    public func select<R>(_ keyPath: KeyPath<D, TransformableContainer<D>.Required<R>>) -> QueryChainBuilder<D, R> {
+        
+        return self.select(R.self, [SelectTerm<D>.attribute(keyPath)])
+    }
+    
+    public func select<R>(_ keyPath: KeyPath<D, TransformableContainer<D>.Optional<R>>) -> QueryChainBuilder<D, R> {
+        
+        return self.select(R.self, [SelectTerm<D>.attribute(keyPath)])
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Required<T>>) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(D.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Optional<T>>) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(D.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Required<T>>) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(D.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(D.meta[keyPath: sectionKeyPath].keyPath, { $0 })
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionBy(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
     }
 }
 
@@ -271,6 +362,37 @@ public extension QueryChainBuilder {
             select: self.select,
             queryClauses: self.queryClauses + [clause]
         )
+    }
+}
+
+public extension QueryChainBuilder where D: NSManagedObject {
+    
+    public func groupBy<T>(_ keyPath: KeyPath<D, T>) -> QueryChainBuilder<D, R> {
+        
+        return self.groupBy(GroupBy<D>(keyPath))
+    }
+}
+
+public extension QueryChainBuilder where D: CoreStoreObject {
+    
+    public func groupBy<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Required<T>>) -> QueryChainBuilder<D, R> {
+        
+        return self.groupBy(GroupBy<D>(keyPath))
+    }
+    
+    public func groupBy<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Optional<T>>) -> QueryChainBuilder<D, R> {
+        
+        return self.groupBy(GroupBy<D>(keyPath))
+    }
+    
+    public func groupBy<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Required<T>>) -> QueryChainBuilder<D, R> {
+        
+        return self.groupBy(GroupBy<D>(keyPath))
+    }
+    
+    public func groupBy<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>) -> QueryChainBuilder<D, R> {
+        
+        return self.groupBy(GroupBy<D>(keyPath))
     }
 }
 

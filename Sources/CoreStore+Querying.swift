@@ -235,7 +235,7 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
+    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: QueryClause...) -> U? {
         
         return self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
@@ -250,7 +250,7 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
+    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) -> U? {
         
         return self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
@@ -271,7 +271,7 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
+    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
         
         return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }
@@ -286,7 +286,7 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
+    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
         return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }

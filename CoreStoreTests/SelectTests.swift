@@ -38,7 +38,7 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term: SelectTerm = "attribute"
+            let term: SelectTerm<NSManagedObject> = "attribute"
             XCTAssertEqual(term, SelectTerm.attribute("attribute"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
@@ -58,7 +58,7 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.attribute("attribute")
+            let term = SelectTerm<NSManagedObject>.attribute("attribute")
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute2"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute"))
@@ -82,7 +82,7 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.average("attribute")
+            let term = SelectTerm<NSManagedObject>.average("attribute")
             XCTAssertEqual(term, SelectTerm.average("attribute"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute2"))
@@ -106,7 +106,7 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.average("attribute", as: "alias")
+            let term = SelectTerm<NSManagedObject>.average("attribute", as: "alias")
             XCTAssertEqual(term, SelectTerm.average("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.average("attribute2"))
@@ -135,7 +135,7 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.count("attribute")
+            let term = SelectTerm<NSManagedObject>.count("attribute")
             XCTAssertEqual(term, SelectTerm.count("attribute"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute2"))
@@ -159,7 +159,7 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.count("attribute", as: "alias")
+            let term = SelectTerm<NSManagedObject>.count("attribute", as: "alias")
             XCTAssertEqual(term, SelectTerm.count("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.count("attribute2"))
@@ -188,7 +188,7 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.maximum("attribute")
+            let term = SelectTerm<NSManagedObject>.maximum("attribute")
             XCTAssertEqual(term, SelectTerm.maximum("attribute"))
             XCTAssertNotEqual(term, SelectTerm.maximum("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.maximum("attribute2"))
@@ -212,7 +212,7 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.maximum("attribute", as: "alias")
+            let term = SelectTerm<NSManagedObject>.maximum("attribute", as: "alias")
             XCTAssertEqual(term, SelectTerm.maximum("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.maximum("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.maximum("attribute2"))
@@ -241,7 +241,7 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.minimum("attribute")
+            let term = SelectTerm<NSManagedObject>.minimum("attribute")
             XCTAssertEqual(term, SelectTerm.minimum("attribute"))
             XCTAssertNotEqual(term, SelectTerm.minimum("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.minimum("attribute2"))
@@ -265,7 +265,7 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.minimum("attribute", as: "alias")
+            let term = SelectTerm<NSManagedObject>.minimum("attribute", as: "alias")
             XCTAssertEqual(term, SelectTerm.minimum("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.minimum("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.minimum("attribute2"))
@@ -294,7 +294,7 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.sum("attribute")
+            let term = SelectTerm<NSManagedObject>.sum("attribute")
             XCTAssertEqual(term, SelectTerm.sum("attribute"))
             XCTAssertNotEqual(term, SelectTerm.sum("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.sum("attribute2"))
@@ -318,7 +318,7 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.sum("attribute", as: "alias")
+            let term = SelectTerm<NSManagedObject>.sum("attribute", as: "alias")
             XCTAssertEqual(term, SelectTerm.sum("attribute", as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.sum("attribute", as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.sum("attribute2"))
@@ -347,7 +347,7 @@ final class SelectTests: XCTestCase {
         
         do {
             
-            let term = SelectTerm.objectID()
+            let term = SelectTerm<NSManagedObject>.objectID()
             XCTAssertEqual(term, SelectTerm.objectID())
             XCTAssertNotEqual(term, SelectTerm.objectID(as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.attribute("attribute"))
@@ -368,7 +368,7 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let term = SelectTerm.objectID(as: "alias")
+            let term = SelectTerm<NSManagedObject>.objectID(as: "alias")
             XCTAssertEqual(term, SelectTerm.objectID(as: "alias"))
             XCTAssertNotEqual(term, SelectTerm.objectID(as: "alias2"))
             XCTAssertNotEqual(term, SelectTerm.objectID())
@@ -393,12 +393,12 @@ final class SelectTests: XCTestCase {
     @objc
     dynamic func test_ThatSelectClauses_ConfigureCorrectly() {
         
-        let term1 = SelectTerm.attribute("attribute1")
-        let term2 = SelectTerm.attribute("attribute2")
-        let term3 = SelectTerm.attribute("attribute3")
+        let term1 = SelectTerm<NSManagedObject>.attribute("attribute1")
+        let term2 = SelectTerm<NSManagedObject>.attribute("attribute2")
+        let term3 = SelectTerm<NSManagedObject>.attribute("attribute3")
         do {
             
-            let select = Select<Int>(term1, term2, term3)
+            let select = Select<NSManagedObject, Int>(term1, term2, term3)
             XCTAssertEqual(select.selectTerms, [term1, term2, term3])
             XCTAssertNotEqual(select.selectTerms, [term1, term3, term2])
             XCTAssertNotEqual(select.selectTerms, [term2, term1, term3])
@@ -408,7 +408,7 @@ final class SelectTests: XCTestCase {
         }
         do {
             
-            let select = Select<Int>([term1, term2, term3])
+            let select = Select<NSManagedObject, Int>([term1, term2, term3])
             XCTAssertEqual(select.selectTerms, [term1, term2, term3])
             XCTAssertNotEqual(select.selectTerms, [term1, term3, term2])
             XCTAssertNotEqual(select.selectTerms, [term2, term1, term3])

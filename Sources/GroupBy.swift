@@ -103,6 +103,37 @@ public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
     }
 }
 
+public extension GroupBy where D: NSManagedObject {
+    
+    public init<T>(_ keyPath: KeyPath<D, T>) {
+        
+        self.init([keyPath._kvcKeyPathString!])
+    }
+}
+
+public extension GroupBy where D: CoreStoreObject {
+    
+    public init<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Required<T>>) {
+        
+        self.init([D.meta[keyPath: keyPath].keyPath])
+    }
+    
+    public init<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Optional<T>>) {
+        
+        self.init([D.meta[keyPath: keyPath].keyPath])
+    }
+    
+    public init<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Required<T>>) {
+        
+        self.init([D.meta[keyPath: keyPath].keyPath])
+    }
+    
+    public init<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>) {
+        
+        self.init([D.meta[keyPath: keyPath].keyPath])
+    }
+}
+
 
 // MARK: - GroupByClause
 

@@ -279,51 +279,50 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     // MARK: QueryableSource
     
     @nonobjc
-    public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<U>, _ queryClauses: QueryClause...) -> U? {
+    public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: QueryClause...) -> U? {
         
         return self.queryValue(from, selectClause, queryClauses)
     }
     
     @nonobjc
-    public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<U>, _ queryClauses: [QueryClause]) -> U? {
+    public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) -> U? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
-        let selectTerms = selectClause.selectTerms
-        selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
+        selectClause.applyToFetchRequest(fetchRequest)
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
         guard storeFound else {
             
             return nil
         }
-        return self.queryValue(selectTerms, fetchRequest: fetchRequest)
+        return self.queryValue(selectClause.selectTerms, fetchRequest: fetchRequest)
     }
     
     @nonobjc
-    public func queryValue<B>(_ clauseChain: B) -> B.ResultType? where B : QueryChainableBuilderType, B.ResultType : QueryableAttributeType {
+    public func queryValue<B>(_ clauseChain: B) -> B.ResultType? where B: QueryChainableBuilderType, B.ResultType: QueryableAttributeType {
         
         return self.queryValue(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
     }
     
     @nonobjc
-    public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
+    public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
         
         return self.queryAttributes(from, selectClause, queryClauses)
     }
     
     @nonobjc
-    public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
+    public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
         
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
-        selectClause.selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
+        selectClause.applyToFetchRequest(fetchRequest)
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
         guard storeFound else {
@@ -498,7 +497,7 @@ internal extension NSManagedObjectContext {
     // MARK: Querying
     
     @nonobjc
-    internal func queryValue<U: QueryableAttributeType>(_ selectTerms: [SelectTerm], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> U? {
+    internal func queryValue<D, U: QueryableAttributeType>(_ selectTerms: [SelectTerm<D>], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> U? {
         
         var fetchResults: [Any]?
         var fetchError: Error?
@@ -516,9 +515,9 @@ internal extension NSManagedObjectContext {
         if let fetchResults = fetchResults {
             
             if let rawResult = fetchResults.first as? NSDictionary,
-                let rawObject = rawResult[selectTerms.keyPathForFirstSelectTerm()] as? U.QueryableNativeType {
+                let rawObject = rawResult[selectTerms.first!.keyPathString] as? U.QueryableNativeType {
                 
-                return Select<U>.ReturnType.cs_fromQueryableNativeType(rawObject)
+                return Select<D, U>.ReturnType.cs_fromQueryableNativeType(rawObject)
             }
             return nil
         }
@@ -531,7 +530,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func queryValue(_ selectTerms: [SelectTerm], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Any? {
+    internal func queryValue<D>(_ selectTerms: [SelectTerm<D>], fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Any? {
         
         var fetchResults: [Any]?
         var fetchError: Error?
@@ -549,7 +548,7 @@ internal extension NSManagedObjectContext {
         if let fetchResults = fetchResults {
             
             if let rawResult = fetchResults.first as? NSDictionary,
-                let rawObject = rawResult[selectTerms.keyPathForFirstSelectTerm()] {
+                let rawObject = rawResult[selectTerms.first!.keyPathString] {
                 
                 return rawObject
             }
@@ -581,7 +580,7 @@ internal extension NSManagedObjectContext {
         }
         if let fetchResults = fetchResults {
             
-            return Select<NSDictionary>.ReturnType.cs_fromQueryResultsNativeType(fetchResults)
+            return NSDictionary.cs_fromQueryResultsNativeType(fetchResults)
         }
         
         CoreStore.log(
