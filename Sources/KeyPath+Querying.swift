@@ -325,11 +325,6 @@ public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, 
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
 }
 
-public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ null: Void?) -> Where<O> {
-    
-    return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: nil)
-}
-
 public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
@@ -338,11 +333,6 @@ public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, 
 public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D?) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
-}
-
-public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ null: Void?) -> Where<O> {
-    
-    return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: nil)
 }
 
 public func ~= <O, D, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>) -> Where<O> where S.Iterator.Element == D {
