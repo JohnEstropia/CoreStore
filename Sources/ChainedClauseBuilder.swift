@@ -161,12 +161,22 @@ public extension From {
         return self.fetchChain(appending: clause)
     }
     
+    public func appending<S: Sequence>(_ clauses: S) -> FetchChainBuilder<D> where S.Element: FetchClause {
+        
+        return self.fetchChain(appending: clauses)
+    }
+    
     
     // MARK: Private
     
     private func fetchChain(appending clause: FetchClause) -> FetchChainBuilder<D> {
         
         return .init(from: self, fetchClauses: [clause])
+    }
+    
+    private func fetchChain<S: Sequence>(appending clauses: S) -> FetchChainBuilder<D> where S.Element: FetchClause {
+        
+        return .init(from: self, fetchClauses: Array(clauses))
     }
 }
 
@@ -293,6 +303,11 @@ public extension FetchChainBuilder {
         return self.fetchChain(appending: clause)
     }
     
+    public func appending<S: Sequence>(_ clauses: S) -> FetchChainBuilder<D> where S.Element: FetchClause {
+        
+        return self.fetchChain(appending: clauses)
+    }
+    
     
     // MARK: Private
     
@@ -301,6 +316,14 @@ public extension FetchChainBuilder {
         return .init(
             from: self.from,
             fetchClauses: self.fetchClauses + [clause]
+        )
+    }
+    
+    private func fetchChain<S: Sequence>(appending clauses: S) -> FetchChainBuilder<D> where S.Element: FetchClause {
+        
+        return .init(
+            from: self.from,
+            fetchClauses: self.fetchClauses + Array(clauses)
         )
     }
 }
@@ -352,6 +375,11 @@ public extension QueryChainBuilder {
         return self.queryChain(appending: clause)
     }
     
+    public func appending<S: Sequence>(_ clauses: S) -> QueryChainBuilder<D, R> where S.Element: QueryClause {
+        
+        return self.queryChain(appending: clauses)
+    }
+    
     
     // MARK: Private
     
@@ -361,6 +389,15 @@ public extension QueryChainBuilder {
             from: self.from,
             select: self.select,
             queryClauses: self.queryClauses + [clause]
+        )
+    }
+    
+    private func queryChain<S: Sequence>(appending clauses: S) -> QueryChainBuilder<D, R> where S.Element: QueryClause {
+        
+        return .init(
+            from: self.from,
+            select: self.select,
+            queryClauses: self.queryClauses + Array(clauses)
         )
     }
 }
@@ -429,6 +466,11 @@ public extension SectionMonitorChainBuilder {
         return self.sectionMonitorChain(appending: clause)
     }
     
+    public func appending<S: Sequence>(_ clauses: S) -> SectionMonitorChainBuilder<D> where S.Element: FetchClause {
+        
+        return self.sectionMonitorChain(appending: clauses)
+    }
+    
     
     // MARK: Private
     
@@ -438,6 +480,15 @@ public extension SectionMonitorChainBuilder {
             from: self.from,
             sectionBy: self.sectionBy,
             fetchClauses: self.fetchClauses + [clause]
+        )
+    }
+    
+    private func sectionMonitorChain<S: Sequence>(appending clauses: S) -> SectionMonitorChainBuilder<D> where S.Element: FetchClause {
+        
+        return .init(
+            from: self.from,
+            sectionBy: self.sectionBy,
+            fetchClauses: self.fetchClauses + Array(clauses)
         )
     }
 }
