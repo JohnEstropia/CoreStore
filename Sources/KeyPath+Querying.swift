@@ -320,7 +320,17 @@ public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, 
     return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
 }
 
+public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D?) -> Where<O> {
+    
+    return Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+}
+
 public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D) -> Where<O> {
+    
+    return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+}
+
+public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D?) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
 }
