@@ -78,12 +78,7 @@ extension NSManagedObject: DynamicObject {
     
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
         
-        @inline(__always)
-        func forceCast<D: NSManagedObject>(_ value: Any) -> D {
-            
-            return value as! D
-        }
-        return forceCast(object)
+        return unsafeDowncast(object, to: self)
     }
     
     public static func cs_matches(object: NSManagedObject) -> Bool {
@@ -124,12 +119,7 @@ extension CoreStoreObject {
         
         if let coreStoreObject = object.coreStoreObject {
             
-            @inline(__always)
-            func forceCast<D: CoreStoreObject>(_ value: CoreStoreObject) -> D {
-                
-                return value as! D
-            }
-            return forceCast(coreStoreObject)
+            return unsafeDowncast(coreStoreObject, to: self)
         }
         let coreStoreObject = self.init(rawObject: object)
         object.coreStoreObject = coreStoreObject
