@@ -1,0 +1,6 @@
+framework module CoreStore {
+  umbrella header "CoreStore-umbrella.h"
+
+  export *
+  module * { export * }
+}
