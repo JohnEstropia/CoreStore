@@ -51,7 +51,7 @@ public protocol SectionMonitorBuilderType {
     associatedtype ObjectType: DynamicObject
     
     var from: From<ObjectType> { get set }
-    var sectionBy: SectionBy { get set }
+    var sectionBy: SectionBy<ObjectType> { get set }
     var fetchClauses: [FetchClause] { get set }
 }
 
@@ -92,7 +92,7 @@ public struct SectionMonitorChainBuilder<D: DynamicObject>: SectionMonitorBuilde
     // MARK: SectionMonitorBuilderType
     
     public var from: From<D>
-    public var sectionBy: SectionBy
+    public var sectionBy: SectionBy<D>
     public var fetchClauses: [FetchClause] = []
 }
 
@@ -100,6 +100,15 @@ public struct SectionMonitorChainBuilder<D: DynamicObject>: SectionMonitorBuilde
 // MARK: - From
 
 public extension From {
+    
+    public func select<R>(_ clause: Select<D, R>) -> QueryChainBuilder<D, R> {
+        
+        return .init(
+            from: self,
+            select: clause,
+            queryClauses: []
+        )
+    }
     
     public func select<R>(_ resultType: R.Type, _ selectTerm: SelectTerm<D>, _ selectTerms: SelectTerm<D>...) -> QueryChainBuilder<D, R> {
         
@@ -112,6 +121,16 @@ public extension From {
             from: self,
             select: .init(selectTerms),
             queryClauses: []
+        )
+    }
+    
+    @available(OSX 10.12, *)
+    public func sectionBy(_ clause: SectionBy<D>) -> SectionMonitorChainBuilder<D> {
+        
+        return .init(
+            from: self,
+            sectionBy: clause,
+            fetchClauses: []
         )
     }
     

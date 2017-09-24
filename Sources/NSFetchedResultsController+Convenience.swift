@@ -42,7 +42,7 @@ public extension DataStack {
      - returns: an `NSFetchedResultsController` that observes the `DataStack`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
         
         return createFRC(
             fromContext: self.mainContext,
@@ -62,7 +62,7 @@ public extension DataStack {
      - returns: an `NSFetchedResultsController` that observes the `DataStack`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
         
         return createFRC(
             fromContext: self.mainContext,
@@ -127,7 +127,7 @@ public extension UnsafeDataTransaction {
      - returns: an `NSFetchedResultsController` that observes the `UnsafeDataTransaction`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
         
         return createFRC(
             fromContext: self.context,
@@ -147,7 +147,7 @@ public extension UnsafeDataTransaction {
      - returns: an `NSFetchedResultsController` that observes the `UnsafeDataTransaction`
      */
     @nonobjc
-    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
+    public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
         
         return createFRC(
             fromContext: self.context,
@@ -201,7 +201,7 @@ public extension UnsafeDataTransaction {
 // MARK: - Private
 
 @available(OSX 10.12, *)
-fileprivate func createFRC<D: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<D>, sectionBy: SectionBy? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
+fileprivate func createFRC<D: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<D>, sectionBy: SectionBy<D>? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
     
     let controller = CoreStoreFetchedResultsController(
         context: context,

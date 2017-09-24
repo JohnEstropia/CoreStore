@@ -145,7 +145,7 @@ public extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -158,7 +158,7 @@ public extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
+    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
         
         CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
@@ -194,7 +194,7 @@ public extension UnsafeDataTransaction {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
+    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) {
         
         self.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -207,7 +207,7 @@ public extension UnsafeDataTransaction {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
+    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) {
         
         CoreStore.assert(
             fetchClauses.filter { $0 is OrderBy<D> }.count > 0,

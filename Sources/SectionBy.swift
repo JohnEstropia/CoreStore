@@ -40,7 +40,7 @@ import CoreData
  ```
  */
 @available(OSX 10.12, *)
-public struct SectionBy {
+public struct SectionBy<D: DynamicObject> {
     
     /**
      Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
@@ -70,4 +70,122 @@ public struct SectionBy {
     
     internal let sectionKeyPath: KeyPathString
     internal let sectionIndexTransformer: (_ sectionName: String?) -> String?
+}
+
+@available(OSX 10.12, *)
+public extension SectionBy where D: NSManagedObject {
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
+     
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, T>) {
+        
+        self.init(sectionKeyPath, { $0 })
+    }
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     
+     - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, T>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+        
+        self.init(sectionKeyPath._kvcKeyPathString!, sectionIndexTransformer)
+    }
+}
+
+@available(OSX 10.12, *)
+public extension SectionBy where D: CoreStoreObject {
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
+     
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Required<T>>) {
+        
+        self.init(sectionKeyPath, { $0 })
+    }
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
+     
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Optional<T>>) {
+        
+        self.init(sectionKeyPath, { $0 })
+    }
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
+     
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Required<T>>) {
+        
+        self.init(sectionKeyPath, { $0 })
+    }
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
+     
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>) {
+        
+        self.init(sectionKeyPath, { $0 })
+    }
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     
+     - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+        
+        self.init(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+    }
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     
+     - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, ValueContainer<D>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+        
+        self.init(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+    }
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     
+     - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Required<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+        
+        self.init(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+    }
+    
+    /**
+     Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections, and a closure to transform the value for the key path to an appropriate section name
+     
+     - Important: Some utilities (such as `ListMonitor`s) may keep `SectionBy`s in memory and may thus introduce retain cycles if reference captures are not handled properly.
+     - parameter sectionKeyPath: the key path to use to group the objects into sections
+     - parameter sectionIndexTransformer: a closure to transform the value for the key path to an appropriate section name
+     */
+    public init<T>(_ sectionKeyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>, _ sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) {
+        
+        self.init(D.meta[keyPath: sectionKeyPath].keyPath, sectionIndexTransformer)
+    }
 }

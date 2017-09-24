@@ -287,8 +287,8 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
                 self.set(dataStack: dataStack, model: model, scrollToSelection: true)
                 
                 let count = dataStack.queryValue(
-                    From(model.entityType),
-                    Select<Int>(.count(#keyPath(OrganismV1.dna))))!
+                    From<NSManagedObject>(model.entityType)
+                        .select(Int.self, .count(#keyPath(OrganismV1.dna))))!
                 if count > 0 {
                     
                     self.setEnabled(true)
