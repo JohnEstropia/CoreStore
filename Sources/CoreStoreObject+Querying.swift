@@ -382,18 +382,6 @@ public extension RelationshipContainer.ToOne {
     /**
      Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { $0.master ~= me })
-     ```
-     */
-    @inline(__always)
-    public static func ~= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where<O> {
-        
-        return Where(relationship.keyPath, isEqualTo: object)
-    }
-    
-    /**
-     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
-     ```
      let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { [john, joe, bob] ~= $0.master })
      ```
      */
