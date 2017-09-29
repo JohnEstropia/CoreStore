@@ -27,66 +27,72 @@ import Foundation
 import CoreData
 
 
+infix operator &&? : LogicalConjunctionPrecedence
+infix operator ||? : LogicalConjunctionPrecedence
+
+
 // MARK: - Where
 
 /**
  The `Where` clause specifies the conditions for a fetch or a query.
  */
-public struct Where<D: DynamicObject>: WhereClause, FetchClause, QueryClause, DeleteClause, Hashable {
+public struct Where<D: DynamicObject>: WhereClauseType, FetchClause, QueryClause, DeleteClause, Hashable {
     
     /**
      Combines two `Where` predicates together using `AND` operator
      */
-    public static func && (left: Where, right: Where) -> Where {
+    public static func && (left: Where<D>, right: Where<D>) -> Where<D> {
         
-        return Where(NSCompoundPredicate(type: .and, subpredicates: [left.predicate, right.predicate]))
-    }
-    
-    /**
-     Combines two `Where` predicates together using `AND` operator.
-     - parameter left: the left hand side `Where` clause
-     - parameter right: the right hand side `Where` clause
-     - returns: Return `left` unchanged if `right` is nil
-     */
-    public static func && (left: Where, right: Where?) -> Where {
-        
-        if let right = right {
-            
-            return left && right
-        }
-        return left
-    }
-    
-    /**
-     Combines two `Where` predicates together using `AND` operator.
-     - parameter left: the left hand side `Where` clause
-     - parameter right: the right hand side `Where` clause
-     - returns: Returns `right` unchanged if `left` is nil
-     */
-    public static func && (left: Where?, right: Where) -> Where {
-        
-        if let left = left {
-            
-            return left && right
-        }
-        return right
+        return Where<D>(NSCompoundPredicate(type: .and, subpredicates: [left.predicate, right.predicate]))
     }
     
     /**
      Combines two `Where` predicates together using `OR` operator
      */
-    public static func || (left: Where, right: Where) -> Where {
+    public static func || (left: Where<D>, right: Where<D>) -> Where<D> {
         
-        return Where(NSCompoundPredicate(type: .or, subpredicates: [left.predicate, right.predicate]))
+        return Where<D>(NSCompoundPredicate(type: .or, subpredicates: [left.predicate, right.predicate]))
+    }
+    
+    /**
+     Inverts the predicate of a `Where` clause using `NOT` operator
+     */
+    public static prefix func ! (clause: Where<D>) -> Where<D> {
+        
+        return Where<D>(NSCompoundPredicate(type: .not, subpredicates: [clause.predicate]))
+    }
+        
+    /**
+     Combines two `Where` predicates together using `AND` operator.
+     - returns: `left` if `right` is `nil`, otherwise equivalent to `(left && right)`
+     */
+    public static func &&? (left: Where<D>, right: Where<D>?) -> Where<D> {
+        
+        if let right = right {
+            
+            return left && right
+        }
+        return left
+    }
+    
+    /**
+     Combines two `Where` predicates together using `AND` operator.
+     - returns: `right` if `left` is `nil`, otherwise equivalent to `(left && right)`
+     */
+    public static func &&? (left: Where<D>?, right: Where<D>) -> Where<D> {
+        
+        if let left = left {
+            
+            return left && right
+        }
+        return right
     }
     
     /**
      Combines two `Where` predicates together using `OR` operator.
-     - parameter left: the left hand side `Where` clause
-     - parameter right: the right hand side `Where` clause
-     - returns: Returns `left` unchanged if `right` is nil
+     - returns: `left` if `right` is `nil`, otherwise equivalent to `(left || right)`
      */
-    public static func || (left: Where, right: Where?) -> Where {
+    public static func ||? (left: Where<D>, right: Where<D>?) -> Where<D> {
         
         if let right = right {
             
@@ -97,25 +103,15 @@ public struct Where<D: DynamicObject>: WhereClause, FetchClause, QueryClause, De
     
     /**
      Combines two `Where` predicates together using `OR` operator.
-     - parameter left: the left hand side `Where` clause
-     - parameter right: the right hand side `Where` clause
-     - returns: Return `right` unchanged if `left` is nil
+     - returns: `right` if `left` is `nil`, otherwise equivalent to `(left || right)`
      */
-    public static func || (left: Where?, right: Where) -> Where {
+    public static func ||? (left: Where<D>?, right: Where<D>) -> Where<D> {
         
         if let left = left {
             
             return left || right
         }
         return right
-    }
-    
-    /**
-     Inverts the predicate of a `Where` clause using `NOT` operator
-     */
-    public static prefix func ! (clause: Where) -> Where {
-        
-        return Where(NSCompoundPredicate(type: .not, subpredicates: [clause.predicate]))
     }
     
     /**
@@ -250,22 +246,20 @@ public struct Where<D: DynamicObject>: WhereClause, FetchClause, QueryClause, De
         self.init(NSPredicate(format: "\(keyPath) IN %@", list.map({ $0 }) as NSArray))
     }
     
-    /**
-     Initializes a `Where` clause with an `NSPredicate`
-     
-     - parameter predicate: the `NSPredicate` for the fetch or query
-     */
+    
+    // MARK: AnyWhereClause
+    
+    public let predicate: NSPredicate
+    
     public init(_ predicate: NSPredicate) {
         
         self.predicate = predicate
     }
     
     
-    // MARK: WhereClause
+    // MARK: WhereClauseType
     
     public typealias ObjectType = D
-    
-    public let predicate: NSPredicate
     
     
     // MARK: FetchClause, QueryClause, DeleteClause
@@ -298,25 +292,6 @@ public struct Where<D: DynamicObject>: WhereClause, FetchClause, QueryClause, De
         
         return self.predicate.hashValue
     }
-}
-
-
-// MARK: - WhereClause
-
-/**
- Abstracts the `Where` clause for protocol utilities.
- */
-public protocol WhereClause {
-    
-    /**
-     The `DynamicObject` type associated with the clause
-     */
-    associatedtype ObjectType: DynamicObject
-    
-    /**
-     The `NSPredicate` for the fetch or query
-     */
-    var predicate: NSPredicate { get }
 }
 
 
@@ -530,9 +505,9 @@ public extension Where where D: CoreStoreObject {
 }
 
 
-// MARK: - Sequence where Iterator.Element: WhereClause
+// MARK: - Sequence where Iterator.Element: WhereClauseType
 
-public extension Sequence where Iterator.Element: WhereClause {
+public extension Sequence where Iterator.Element: WhereClauseType {
     
     /**
      Combines multiple `Where` predicates together using `AND` operator
@@ -548,5 +523,51 @@ public extension Sequence where Iterator.Element: WhereClause {
     public func combinedByOr() -> Where<Iterator.Element.ObjectType> {
         
         return Where(NSCompoundPredicate(type: .or, subpredicates: self.map({ $0.predicate })))
+    }
+}
+
+
+// MARK: - Deprecated
+
+public extension Where {
+    
+    @available(*, deprecated: 4.0, renamed: "&&?")
+    public static func && (left: Where<D>, right: Where<D>?) -> Where<D> {
+        
+        if let right = right {
+            
+            return left && right
+        }
+        return left
+    }
+    
+    @available(*, deprecated: 4.0, renamed: "&&?")
+    public static func && (left: Where<D>?, right: Where<D>) -> Where<D> {
+        
+        if let left = left {
+            
+            return left && right
+        }
+        return right
+    }
+    
+    @available(*, deprecated: 4.0, renamed: "||?")
+    public static func || (left: Where<D>, right: Where<D>?) -> Where<D> {
+        
+        if let right = right {
+            
+            return left || right
+        }
+        return left
+    }
+    
+    @available(*, deprecated: 4.0, renamed: "||?")
+    public static func || (left: Where<D>?, right: Where<D>) -> Where<D> {
+        
+        if let left = left {
+            
+            return left || right
+        }
+        return right
     }
 }

@@ -263,8 +263,8 @@ final class WhereTests: XCTestCase {
             let someWhere: Where<NSManagedObject>? = Where<NSManagedObject>("key4", isEqualTo: "value4")
 
             
-            let finalNoneWhere = andWhere && noneWhere
-            let finalSomeWhere = andWhere && someWhere
+            let finalNoneWhere = andWhere &&? noneWhere
+            let finalSomeWhere = andWhere &&? someWhere
             let unwrappedFinalSomeWhere = andWhere && someWhere!
 
         
@@ -294,8 +294,8 @@ final class WhereTests: XCTestCase {
             let someWhere: Where<NSManagedObject>? = Where<NSManagedObject>("key4", isEqualTo: "value4")
             
             
-            let finalNoneWhere = orWhere && noneWhere
-            let finalSomeWhere = orWhere && someWhere
+            let finalNoneWhere = orWhere &&? noneWhere
+            let finalSomeWhere = orWhere &&? someWhere
             let unwrappedFinalSomeWhere = orWhere && someWhere!
             
             XCTAssertEqual(orWhere.predicate, finalNoneWhere.predicate)

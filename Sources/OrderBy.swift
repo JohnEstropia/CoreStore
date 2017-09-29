@@ -27,11 +27,6 @@ import Foundation
 import CoreData
 
 
-// MARK: - KeyPathString
-    
-public typealias KeyPathString = String
-
-
 // MARK: - OrderBy
 
 /**

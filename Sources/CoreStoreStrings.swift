@@ -64,3 +64,11 @@ public typealias EntityName = String
  An `String` that pertains to a dynamically-accessable class name (usable with NSClassFromString(...)).
  */
 public typealias ClassName = String
+
+
+// MARK: - KeyPathString
+
+/**
+ An `String` that pertains to a attribute keyPaths.
+ */
+public typealias KeyPathString = String

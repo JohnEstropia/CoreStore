@@ -218,7 +218,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let p2 = Dog.where({ $0.nickname == "Spot" })
                     XCTAssertEqual(p2.predicate, NSPredicate(format: "%K == %@", "nickname", "Spot"))
                     
-                    let dog = transaction.fetchOne(From<Dog>(), p2)
+                    let dog = transaction.fetchOne(From<Dog>().where(\.nickname == "Spot"))
                     XCTAssertNotNil(dog)
                     XCTAssertEqual(dog!.nickname.value, "Spot")
                     XCTAssertEqual(dog!.species.value, "Dog")
@@ -229,6 +229,35 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     let p3 = Dog.where({ $0.age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))
+                    
+                    _ = transaction.fetchAll(
+                        From<Dog>()
+                            .where(\Animal.species == "Dog" && \.age == 10)
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>()
+                            .where(\.age == 10 && \Animal.species == "Dog")
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        Dog.where({ $0.age > 10 && $0.age <= 15 })
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        Dog.where({ $0.species == "Dog" && $0.age == 10 })
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        Dog.where({ $0.age == 10 && $0.species == "Dog" })
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        Dog.where({ $0.age > 10 && $0.age <= 15 })
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        (\Dog.age > 10 && \Dog.age <= 15)
+                    )
                 },
                 success: { _ in
             

@@ -64,7 +64,7 @@ public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
     }
     
     
-    // MARK: WhereClause
+    // MARK: GroupByClause
     
     public typealias ObjectType = D
     
