@@ -48,6 +48,16 @@ public enum SortKey {
      Indicates that the `RawKeyPath` should be sorted in descending order
      */
     case descending(RawKeyPath)
+
+    /**
+     Indicates that the `RawKeyPath` should be sorted in ascending order in a case-insenstive manner
+     */
+    case ascendingInsensitive(RawKeyPath)
+
+    /**
+     Indicates that the `RawKeyPath` should be sorted in descending order in a case-insenstive manner
+     */
+    case descendingInsensitive(RawKeyPath)
 }
 
 
@@ -124,6 +134,12 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
                     
                 case .descending(let keyPath):
                     return NSSortDescriptor(key: keyPath, ascending: false)
+
+                case .ascendingInsensitive(let keyPath):
+                    return NSSortDescriptor(key: keyPath, ascending: true, selector: #selector(NSString.localizedCaseInsensitiveCompare(_:)))
+
+                case .descendingInsensitive(let keyPath):
+                    return NSSortDescriptor(key: keyPath, ascending: false, selector: #selector(NSString.localizedCaseInsensitiveCompare(_:)))
                 }
             }
         )
