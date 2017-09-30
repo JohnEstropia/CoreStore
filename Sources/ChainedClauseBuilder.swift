@@ -221,6 +221,11 @@ public extension From where D: NSManagedObject {
 
 public extension From where D: CoreStoreObject {
     
+    public func `where`(_ clause: (D) -> Where<D>) -> FetchChainBuilder<D> {
+        
+        return self.fetchChain(appending: clause(D.meta))
+    }
+    
     public func select<R>(_ keyPath: KeyPath<D, ValueContainer<D>.Required<R>>) -> QueryChainBuilder<D, R> {
         
         return self.select(R.self, [SelectTerm<D>.attribute(keyPath)])
@@ -347,6 +352,14 @@ public extension FetchChainBuilder {
     }
 }
 
+public extension FetchChainBuilder where D: CoreStoreObject {
+    
+    public func `where`(_ clause: (D) -> Where<D>) -> FetchChainBuilder<D> {
+        
+        return self.fetchChain(appending: clause(D.meta))
+    }
+}
+
 public extension QueryChainBuilder {
     
     public func groupBy(_ clause: GroupBy<D>) -> QueryChainBuilder<D, R> {
@@ -431,6 +444,11 @@ public extension QueryChainBuilder where D: NSManagedObject {
 
 public extension QueryChainBuilder where D: CoreStoreObject {
     
+    public func `where`(_ clause: (D) -> Where<D>) -> QueryChainBuilder<D, R> {
+        
+        return self.queryChain(appending: clause(D.meta))
+    }
+    
     public func groupBy<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Required<T>>) -> QueryChainBuilder<D, R> {
         
         return self.groupBy(GroupBy<D>(keyPath))
@@ -509,5 +527,14 @@ public extension SectionMonitorChainBuilder {
             sectionBy: self.sectionBy,
             fetchClauses: self.fetchClauses + Array(clauses)
         )
+    }
+}
+
+@available(OSX 10.12, *)
+public extension SectionMonitorChainBuilder where D: CoreStoreObject {
+    
+    public func `where`(_ clause: (D) -> Where<D>) -> SectionMonitorChainBuilder<D> {
+        
+        return self.sectionMonitorChain(appending: clause(D.meta))
     }
 }
