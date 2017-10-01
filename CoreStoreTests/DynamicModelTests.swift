@@ -237,6 +237,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     _ = transaction.fetchAll(
                         From<Dog>()
                             .where(\.age == 10 && \Animal.species == "Dog")
+                            .orderBy(.ascending({ $0.species }))
                     )
                     _ = transaction.fetchAll(
                         From<Dog>(),
