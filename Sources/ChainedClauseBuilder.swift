@@ -221,7 +221,7 @@ public extension From where D: NSManagedObject {
 
 public extension From where D: CoreStoreObject {
     
-    public func `where`(_ clause: (D) -> Where<D>) -> FetchChainBuilder<D> {
+    public func `where`<T: AnyWhereClause>(_ clause: (D) -> T) -> FetchChainBuilder<D> {
         
         return self.fetchChain(appending: clause(D.meta))
     }
@@ -354,7 +354,7 @@ public extension FetchChainBuilder {
 
 public extension FetchChainBuilder where D: CoreStoreObject {
     
-    public func `where`(_ clause: (D) -> Where<D>) -> FetchChainBuilder<D> {
+    public func `where`<T: AnyWhereClause>(_ clause: (D) -> T) -> FetchChainBuilder<D> {
         
         return self.fetchChain(appending: clause(D.meta))
     }
@@ -444,7 +444,7 @@ public extension QueryChainBuilder where D: NSManagedObject {
 
 public extension QueryChainBuilder where D: CoreStoreObject {
     
-    public func `where`(_ clause: (D) -> Where<D>) -> QueryChainBuilder<D, R> {
+    public func `where`<T: AnyWhereClause>(_ clause: (D) -> T) -> QueryChainBuilder<D, R> {
         
         return self.queryChain(appending: clause(D.meta))
     }
@@ -533,7 +533,7 @@ public extension SectionMonitorChainBuilder {
 @available(OSX 10.12, *)
 public extension SectionMonitorChainBuilder where D: CoreStoreObject {
     
-    public func `where`(_ clause: (D) -> Where<D>) -> SectionMonitorChainBuilder<D> {
+    public func `where`<T: AnyWhereClause>(_ clause: (D) -> T) -> SectionMonitorChainBuilder<D> {
         
         return self.sectionMonitorChain(appending: clause(D.meta))
     }
