@@ -262,7 +262,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in ascending order
      */
-    public static func ascending<DSub, A, T>(_ attribute: (D) -> A) -> SortKey where A: ValueContainer<DSub>.Required<T> {
+    public static func ascending<DSub, A, T>(_ attribute: (D) -> A) -> OrderBy<D>.SortKey where A: ValueContainer<DSub>.Required<T> {
         
         return .ascending(attribute(D.meta).keyPath)
     }
@@ -270,7 +270,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in ascending order
      */
-    public static func ascending<DSub, A, T>(_ attribute: (D) -> A) -> SortKey where A: ValueContainer<DSub>.Optional<T> {
+    public static func ascending<DSub, A, T>(_ attribute: (D) -> A) -> OrderBy<D>.SortKey where A: ValueContainer<DSub>.Optional<T> {
         
         return .ascending(attribute(D.meta).keyPath)
     }
@@ -278,7 +278,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in ascending order
      */
-    public static func ascending<DSub, A, T>(_ attribute: (D) -> A) -> SortKey where A: TransformableContainer<DSub>.Required<T> {
+    public static func ascending<DSub, A, T>(_ attribute: (D) -> A) -> OrderBy<D>.SortKey where A: TransformableContainer<DSub>.Required<T> {
         
         return .ascending(attribute(D.meta).keyPath)
     }
@@ -286,7 +286,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in ascending order
      */
-    public static func ascending<DSub, A, T>(_ attribute: (D) -> A) -> SortKey where A: TransformableContainer<DSub>.Optional<T> {
+    public static func ascending<DSub, A, T>(_ attribute: (D) -> A) -> OrderBy<D>.SortKey where A: TransformableContainer<DSub>.Optional<T> {
         
         return .ascending(attribute(D.meta).keyPath)
     }
@@ -294,7 +294,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in descending order
      */
-    public static func descending<DSub, A, T>(_ attribute: (D) -> A) -> SortKey where A: ValueContainer<DSub>.Required<T> {
+    public static func descending<DSub, A, T>(_ attribute: (D) -> A) -> OrderBy<D>.SortKey where A: ValueContainer<DSub>.Required<T> {
         
         return .descending(attribute(D.meta).keyPath)
     }
@@ -302,7 +302,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in descending order
      */
-    public static func descending<DSub, A, T>(_ attribute: (D) -> A) -> SortKey where A: ValueContainer<DSub>.Optional<T> {
+    public static func descending<DSub, A, T>(_ attribute: (D) -> A) -> OrderBy<D>.SortKey where A: ValueContainer<DSub>.Optional<T> {
         
         return .descending(attribute(D.meta).keyPath)
     }
@@ -310,7 +310,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in descending order
      */
-    public static func descending<DSub, A, T>(_ attribute: (D) -> A) -> SortKey where A: TransformableContainer<DSub>.Required<T> {
+    public static func descending<DSub, A, T>(_ attribute: (D) -> A) -> OrderBy<D>.SortKey where A: TransformableContainer<DSub>.Required<T> {
         
         return .descending(attribute(D.meta).keyPath)
     }
@@ -318,7 +318,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in descending order
      */
-    public static func descending<DSub, A, T>(_ attribute: (D) -> A) -> SortKey where A: TransformableContainer<DSub>.Optional<T> {
+    public static func descending<DSub, A, T>(_ attribute: (D) -> A) -> OrderBy<D>.SortKey where A: TransformableContainer<DSub>.Optional<T> {
         
         return .descending(attribute(D.meta).keyPath)
     }
