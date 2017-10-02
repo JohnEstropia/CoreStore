@@ -257,7 +257,7 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
     }
 }
 
-public extension OrderBy where D: CoreStoreObject {
+public extension OrderBy.SortKey where D: CoreStoreObject {
     
     /**
      Indicates that the `KeyPathString` should be sorted in ascending order
