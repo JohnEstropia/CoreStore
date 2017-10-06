@@ -770,6 +770,7 @@
 		B52F743C1E9B8724005F3DAC /* XcodeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XcodeDataModelSchema.swift; sourceTree = "<group>"; };
 		B52F74491E9B8740005F3DAC /* CoreStoreSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreSchema.swift; sourceTree = "<group>"; };
 		B52FD3A91E3B3EF10001D919 /* NSManagedObject+Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Logging.swift"; sourceTree = "<group>"; };
+		B53205791F74E9170023927D /* .cocoapods.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cocoapods.yml; sourceTree = "<group>"; };
 		B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+CoreStore.swift"; sourceTree = "<group>"; };
 		B538BA701D15B3E30003A766 /* CoreStoreBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreStoreBridge.m; sourceTree = "<group>"; };
 		B53B275E1EE3B92E00E9B352 /* CoreStoreManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreManagedObject.swift; sourceTree = "<group>"; };
@@ -1044,6 +1045,7 @@
 				B5E84ED91AFF82360064E85B /* LICENSE */,
 				B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */,
 				B5BDC91A1C202269008147CD /* Cartfile */,
+				B53205791F74E9170023927D /* .cocoapods.yml */,
 				B5BDC9271C2024F2008147CD /* .travis.yml */,
 				B5AD60CD1C90141E00F2B2E8 /* Package.swift */,
 			);
