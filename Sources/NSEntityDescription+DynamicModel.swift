@@ -32,6 +32,17 @@ import Foundation
 internal extension NSEntityDescription {
     
     @nonobjc
+    internal var dynamicObjectType: DynamicObject.Type? {
+        
+        guard let userInfo = self.userInfo,
+            let typeName = userInfo[UserInfoKey.CoreStoreManagedObjectTypeName] as! String? else {
+                
+                return nil
+        }
+        return (NSClassFromString(typeName) as! DynamicObject.Type)
+    }
+    
+    @nonobjc
     internal var coreStoreEntity: DynamicEntity? {
         
         get {
