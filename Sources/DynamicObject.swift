@@ -131,7 +131,12 @@ extension CoreStoreObject {
             }
             return forceCast(coreStoreObject)
         }
-        let coreStoreObject = self.init(rawObject: object)
+        @inline(__always)
+        func forceTypeCast<T: CoreStoreObject>(_ type: DynamicObject.Type, to: T.Type) -> T.Type {
+            
+            return type as! T.Type
+        }
+        let coreStoreObject = forceTypeCast(object.entity.dynamicObjectType!, to: self).init(rawObject: object)
         object.coreStoreObject = coreStoreObject
         return coreStoreObject
     }
