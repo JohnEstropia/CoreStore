@@ -33,13 +33,13 @@ import Foundation
  The `CoreStoreObject` is an abstract class for creating CoreStore-managed objects that are more type-safe and more convenient than `NSManagedObject` subclasses. The model entities for `CoreStoreObject` subclasses are inferred from the Swift declaration themselves; no .xcdatamodeld files are needed. To declare persisted attributes and relationships for the `CoreStoreObject` subclass, declare properties of type `Value.Required<T>`, `Value.Optional<T>` for values, or `Relationship.ToOne<T>`, `Relationship.ToManyOrdered<T>`, `Relationship.ToManyUnordered<T>` for relationships.
  ```
  class Animal: CoreStoreObject {
-     let species = Value.Required<String>("species")
+     let species = Value.Required<String>("species", initial: "")
      let nickname = Value.Optional<String>("nickname")
      let master = Relationship.ToOne<Person>("master")
  }
  
  class Person: CoreStoreObject {
-     let name = Value.Required<String>("name")
+     let name = Value.Required<String>("name", initial: "")
      let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
  }
  ```
@@ -141,6 +141,9 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
 
 public extension DynamicObject where Self: CoreStoreObject {
     
+    /**
+     Returns the `PartialObject` instance for the object, which acts as a fast, type-safe KVC interface for `CoreStoreObject`.
+     */
     public func partialObject() -> PartialObject<Self> {
         
         CoreStore.assert(

@@ -1675,7 +1675,7 @@ To use these syntax sugars, include *CoreStoreBridge.h* in your Objective-C sour
 Starting CoreStore 4.0, we can now create persisted objects without depending on *.xcdatamodeld* Core Data files. The new `CoreStoreObject` subclass replaces `NSManagedObject`, and specially-typed properties declared on these classes will be synthesized as Core Data attributes.
 ```swift
 class Animal: CoreStoreObject {
-    let species = Value.Required<String>("species")
+    let species = Value.Required<String>("species", initial: "")
 }
 
 class Dog: Animal {
@@ -1684,14 +1684,14 @@ class Dog: Animal {
 }
 
 class Person: CoreStoreObject {
-    let name = Value.Required<String>("name")
+    let name = Value.Required<String>("name", initial: "")
     let pets = Relationship.ToManyUnordered<Dog>("pets", inverse: { $0.master })
 }
 ```
 The property names to be saved to Core Data is specified as the `keyPath` argument. This lets us refactor our Swift code without affecting the underlying database. For example:
 ```swift
 class Person: CoreStoreObject {
-    private let _name = Value.Required<String>("name")
+    private let _name = Value.Required<String>("name", initial: "")
     // ...
 }
 ```

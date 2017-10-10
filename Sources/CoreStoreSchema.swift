@@ -33,13 +33,13 @@ import Foundation
  The `CoreStoreSchema` describes models written for `CoreStoreObject` Swift class declarations for a particular model version. `CoreStoreObject` entities for a model version should be added to `CoreStoreSchema` instance.
  ```
  class Animal: CoreStoreObject {
-     let species = Value.Required<String>("species")
+     let species = Value.Required<String>("species", initial: "")
      let nickname = Value.Optional<String>("nickname")
      let master = Relationship.ToOne<Person>("master")
  }
  
  class Person: CoreStoreObject {
-     let name = Value.Required<String>("name")
+     let name = Value.Required<String>("name", initial: "")
      let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
  }
  
@@ -66,13 +66,13 @@ public final class CoreStoreSchema: DynamicSchema {
      Initializes a `CoreStoreSchema`. Using this initializer only if the entities don't need to be assigned to particular "Configurations". To use multiple configurations (for example, to separate entities in different `StorageInterface`s), use the `init(modelVersion:entitiesByConfiguration:versionLock:)` initializer.
      ```
      class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species")
+         let species = Value.Required<String>("species", initial: "")
          let nickname = Value.Optional<String>("nickname")
          let master = Relationship.ToOne<Person>("master")
      }
      
      class Person: CoreStoreObject {
-         let name = Value.Required<String>("name")
+         let name = Value.Required<String>("name", initial: "")
          let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
      }
      
@@ -112,12 +112,12 @@ public final class CoreStoreSchema: DynamicSchema {
      Initializes a `CoreStoreSchema`. Using this initializer if multiple "Configurations" (for example, to separate entities in different `StorageInterface`s) are needed. To add an entity only to the default configuration, assign an empty set to its configurations list. Note that regardless of the set configurations, all entities will be added to the default configuration.
      ```
      class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species")
+         let species = Value.Required<String>("species", initial: "")
          let nickname = Value.Optional<String>("nickname")
      }
      
      class Person: CoreStoreObject {
-         let name = Value.Required<String>("name")
+         let name = Value.Required<String>("name", initial: "")
      }
      
      CoreStore.defaultStack = DataStack(

@@ -48,12 +48,6 @@ public enum LogLevel {
 public protocol CoreStoreLogger {
     
     /**
-     When `true`, all `NSManagedObject` attribute and relationship access will raise an assertion when executed on the wrong transaction/datastack queue. Defaults to `false` if not implemented.
-     */
-    // TODO: test before release (rolled back)
-//    var enableObjectConcurrencyDebugging: Bool { get set }
-    
-    /**
      Handles log messages sent by the `CoreStore` framework.
      
      - parameter level: the severity of the log message
@@ -99,13 +93,6 @@ public protocol CoreStoreLogger {
 }
 
 extension CoreStoreLogger {
-    
-    // TODO: test before release (rolled back)
-//    public var enableObjectConcurrencyDebugging: Bool {
-//        
-//        get { return false }
-//        set {}
-//    }
     
     public func abort(_ message: String, fileName: StaticString, lineNumber: Int, functionName: StaticString) {
         

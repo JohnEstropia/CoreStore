@@ -226,8 +226,6 @@ public final class SQLiteStore: LocalStorage {
      */
     public func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws {
         
-        // TODO: check if attached to persistent store
-        
         func deleteFiles(storeURL: URL, extraFiles: [String] = []) throws {
             
             let fileManager = FileManager.default
