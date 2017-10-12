@@ -35,9 +35,9 @@ public extension DynamicObject where Self: CoreStoreObject {
      The containing type for transformable properties. `Transformable` properties support types that conforms to `NSCoding & NSCopying`.
      ```
      class Animal: CoreStoreObject {
-     let species = Value.Required<String>("species")
-     let nickname = Value.Optional<String>("nickname")
-     let color = Transformable.Optional<UIColor>("color")
+         let species = Value.Required<String>("species", initial: "")
+         let nickname = Value.Optional<String>("nickname")
+         let color = Transformable.Optional<UIColor>("color")
      }
      ```
      - Important: `Transformable` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
@@ -52,7 +52,7 @@ public extension DynamicObject where Self: CoreStoreObject {
  The containing type for transformable properties. Use the `DynamicObject.Transformable` typealias instead for shorter syntax.
  ```
  class Animal: CoreStoreObject {
-     let species = Value.Required<String>("species")
+     let species = Value.Required<String>("species", initial: "")
      let nickname = Value.Optional<String>("nickname")
      let color = Transformable.Optional<UIColor>("color")
  }
@@ -66,7 +66,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
      The containing type for transformable properties. Any type that conforms to `NSCoding & NSCopying` are supported.
      ```
      class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species")
+         let species = Value.Required<String>("species", initial: "")
          let nickname = Value.Optional<String>("nickname")
          let color = Transformable.Optional<UIColor>("color")
      }
@@ -79,7 +79,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          Initializes the metadata for the property.
          ```
          class Animal: CoreStoreObject {
-             let species = Value.Required<String>("species")
+             let species = Value.Required<String>("species", initial: "")
              let color = Transformable.Required<UIColor>(
                  "color",
                  initial: UIColor.clear,
@@ -292,7 +292,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
      The containing type for optional transformable properties. Any type that conforms to `NSCoding & NSCopying` are supported.
      ```
      class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species")
+         let species = Value.Required<String>("species", initial: "")
          let nickname = Value.Optional<String>("nickname")
          let color = Transformable.Optional<UIColor>("color")
      }
@@ -305,7 +305,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          Initializes the metadata for the property.
          ```
          class Animal: CoreStoreObject {
-             let species = Value.Required<String>("species")
+             let species = Value.Required<String>("species", initial: "")
              let color = Transformable.Optional<UIColor>(
                  "color",
                  isTransient: true,

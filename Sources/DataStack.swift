@@ -110,9 +110,6 @@ public final class DataStack: Equatable {
      */
     public required init(schemaHistory: SchemaHistory) {
 
-        // TODO: test before release (rolled back)
-//        _ = DataStack.isGloballyInitialized
-        
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: schemaHistory.rawModel)
         self.rootSavingContext = NSManagedObjectContext.rootSavingContextForCoordinator(self.coordinator)
         self.mainContext = NSManagedObjectContext.mainContextForRootContext(self.rootSavingContext)
@@ -587,13 +584,6 @@ public final class DataStack: Equatable {
     
     
     // MARK: Private
-    
-    // TODO: test before release (rolled back)
-//    private static let isGloballyInitialized: Bool = {
-//        
-//        NSManagedObject.cs_swizzleMethodsForLogging()
-//        return true
-//    }()
     
     private var persistentStoresByFinalConfiguration = [String: NSPersistentStore]()
     private var finalConfigurationsByEntityIdentifier = [EntityIdentifier: Set<String>]()

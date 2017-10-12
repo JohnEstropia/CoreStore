@@ -32,12 +32,12 @@ import Foundation
  The `VersionLock` contains the version hashes for entities. This is then passed to the `CoreStoreSchema`, which contains all entities for the store. An assertion will be raised if any `Entity` doesn't match the version hash.
  ```
  class Animal: CoreStoreObject {
-     let species = Value.Required<String>("species")
+     let species = Value.Required<String>("species", initial: "")
      let nickname = Value.Optional<String>("nickname")
      let master = Relationship.ToOne<Person>("master")
  }
  class Person: CoreStoreObject {
-     let name = Value.Required<String>("name")
+     let name = Value.Required<String>("name", initial: "")
      let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
  }
  

@@ -35,7 +35,7 @@ public extension DynamicObject where Self: CoreStoreObject {
      The containing type for value propertiess. `Value` properties support any type that conforms to `ImportableAttributeType`.
      ```
      class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species")
+         let species = Value.Required<String>("species", initial: "")
          let nickname = Value.Optional<String>("nickname")
          let color = Transformable.Optional<UIColor>("color")
      }
@@ -52,7 +52,7 @@ public extension DynamicObject where Self: CoreStoreObject {
  The containing type for value properties. Use the `DynamicObject.Value` typealias instead for shorter syntax.
  ```
  class Animal: CoreStoreObject {
-     let species = Value.Required<String>("species")
+     let species = Value.Required<String>("species", initial: "")
      let nickname = Value.Optional<String>("nickname")
      let color = Transformable.Optional<UIColor>("color")
  }
@@ -66,7 +66,7 @@ public enum ValueContainer<O: CoreStoreObject> {
      The containing type for required value properties. Any type that conforms to `ImportableAttributeType` are supported.
      ```
      class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species")
+         let species = Value.Required<String>("species", initial: "")
          let nickname = Value.Optional<String>("nickname")
          let color = Transformable.Optional<UIColor>("color")
      }
@@ -80,9 +80,10 @@ public enum ValueContainer<O: CoreStoreObject> {
          ```
          class Person: CoreStoreObject {
              let title = Value.Required<String>("title", initial: "Mr.")
-             let name = Value.Required<String>("name")
+             let name = Value.Required<String>("name", initial: "")
              let displayName = Value.Required<String>(
                  "displayName",
+                 initial: "",
                  isTransient: true,
                  customGetter: Person.getName(_:)
              )
@@ -289,7 +290,7 @@ public enum ValueContainer<O: CoreStoreObject> {
      The containing type for optional value properties. Any type that conforms to `ImportableAttributeType` are supported.
      ```
      class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species")
+         let species = Value.Required<String>("species", initial: "")
          let nickname = Value.Optional<String>("nickname")
          let color = Transformable.Optional<UIColor>("color")
      }

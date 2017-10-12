@@ -425,8 +425,6 @@ public final class ICloudStore: CloudStorage {
      */
     public func cs_eraseStorageAndWait(soureModel: NSManagedObjectModel) throws {
         
-        // TODO: check if attached to persistent store
-        
         let cacheFileURL = self.cacheFileURL
         try autoreleasepool {
             
