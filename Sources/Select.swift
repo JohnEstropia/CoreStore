@@ -74,7 +74,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter keyPath: the attribute name
      - returns: a `SelectTerm` to a `Select` clause for querying an entity attribute
      */
-    public static func attribute(_ keyPath: KeyPath) -> SelectTerm {
+    public static func attribute(_ keyPath: RawKeyPath) -> SelectTerm {
         
         return ._attribute(keyPath)
     }
@@ -91,7 +91,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "average(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the average value of an attribute
      */
-    public static func average(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
+    public static func average(_ keyPath: RawKeyPath, as alias: RawKeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "average:",
@@ -113,7 +113,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "count(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for a count query
      */
-    public static func count(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
+    public static func count(_ keyPath: RawKeyPath, as alias: RawKeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "count:",
@@ -135,7 +135,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "max(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute
      */
-    public static func maximum(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
+    public static func maximum(_ keyPath: RawKeyPath, as alias: RawKeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "max:",
@@ -157,7 +157,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "min(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute
      */
-    public static func minimum(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
+    public static func minimum(_ keyPath: RawKeyPath, as alias: RawKeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "min:",
@@ -179,7 +179,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "sum(<attributeName>)" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
      */
-    public static func sum(_ keyPath: KeyPath, as alias: KeyPath? = nil) -> SelectTerm {
+    public static func sum(_ keyPath: RawKeyPath, as alias: RawKeyPath? = nil) -> SelectTerm {
         
         return ._aggregate(
             function: "sum:",
@@ -202,7 +202,7 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
      - parameter alias: the dictionary key to use to access the result. Ignored when the query return value is not an `NSDictionary`. If `nil`, the default key "objecID" is used
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
      */
-    public static func objectID(as alias: KeyPath? = nil) -> SelectTerm {
+    public static func objectID(as alias: RawKeyPath? = nil) -> SelectTerm {
         
         return ._identity(
             alias: alias ?? "objectID",
@@ -213,17 +213,17 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
     
     // MARK: ExpressibleByStringLiteral
     
-    public init(stringLiteral value: KeyPath) {
+    public init(stringLiteral value: RawKeyPath) {
         
         self = ._attribute(value)
     }
     
-    public init(unicodeScalarLiteral value: KeyPath) {
+    public init(unicodeScalarLiteral value: RawKeyPath) {
         
         self = ._attribute(value)
     }
     
-    public init(extendedGraphemeClusterLiteral value: KeyPath) {
+    public init(extendedGraphemeClusterLiteral value: RawKeyPath) {
         
         self = ._attribute(value)
     }
@@ -274,8 +274,8 @@ public enum SelectTerm: ExpressibleByStringLiteral, Hashable {
     
     // MARK: Internal
     
-    case _attribute(KeyPath)
-    case _aggregate(function: String, keyPath: KeyPath, alias: String, nativeType: NSAttributeType)
+    case _attribute(RawKeyPath)
+    case _aggregate(function: String, keyPath: RawKeyPath, alias: String, nativeType: NSAttributeType)
     case _identity(alias: String, nativeType: NSAttributeType)
 }
 
@@ -339,7 +339,7 @@ public struct Select<T: SelectResultType>: Hashable {
     
     // MARK: Equatable
     
-    public static func == <T: SelectResultType, U: SelectResultType>(lhs: Select<T>, rhs: Select<U>) -> Bool {
+    public static func == <T, U>(lhs: Select<T>, rhs: Select<U>) -> Bool {
         
         return lhs.selectTerms == rhs.selectTerms
     }
@@ -469,7 +469,7 @@ internal extension Collection where Iterator.Element == SelectTerm {
         fetchRequest.propertiesToFetch = propertiesToFetch
     }
     
-    internal func keyPathForFirstSelectTerm() -> KeyPath {
+    internal func keyPathForFirstSelectTerm() -> RawKeyPath {
         
         switch self.first! {
             

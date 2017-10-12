@@ -61,10 +61,6 @@ public extension DataStack {
         )
         transaction.transactionQueue.cs_async {
             
-            defer {
-                
-                withExtendedLifetime((self, transaction), {})
-            }
             let userInfo: T
             do {
                 
@@ -82,6 +78,10 @@ public extension DataStack {
             }
             transaction.autoCommit { (_, error) in
                 
+                defer {
+                    
+                    withExtendedLifetime((self, transaction), {})
+                }
                 if let error = error {
                     
                     failure(error)
@@ -211,9 +211,9 @@ public extension DataStack {
         }
         switch transaction.result {
             
-        case nil:                       return nil
-        case (let hasChanges, nil)?:    return SaveResult(hasChanges: hasChanges)
-        case (_, let error?)?:          return SaveResult(error)
+        case .none:                         return nil
+        case .some(let hasChanges, nil):    return SaveResult(hasChanges: hasChanges)
+        case .some(_, let error?):          return SaveResult(error)
         }
     }
 }

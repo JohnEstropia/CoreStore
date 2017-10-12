@@ -37,7 +37,7 @@ public struct GroupBy: QueryClause, Hashable {
     /**
      The list of key path strings to group results with
      */
-    public let keyPaths: [KeyPath]
+    public let keyPaths: [RawKeyPath]
     
     /**
      Initializes a `GroupBy` clause with an empty list of key path strings
@@ -53,7 +53,7 @@ public struct GroupBy: QueryClause, Hashable {
      - parameter keyPath: a key path string to group results with
      - parameter keyPaths: a series of key path strings to group results with
      */
-    public init(_ keyPath: KeyPath, _ keyPaths: KeyPath...) {
+    public init(_ keyPath: RawKeyPath, _ keyPaths: RawKeyPath...) {
         
         self.init([keyPath] + keyPaths)
     }
@@ -63,7 +63,7 @@ public struct GroupBy: QueryClause, Hashable {
      
      - parameter keyPaths: a list of key path strings to group results with
      */
-    public init(_ keyPaths: [KeyPath]) {
+    public init(_ keyPaths: [RawKeyPath]) {
         
         self.keyPaths = keyPaths
     }
@@ -71,7 +71,7 @@ public struct GroupBy: QueryClause, Hashable {
     
     // MARK: QueryClause
     
-    public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
+    public func applyToFetchRequest<ResultType>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
         if let keyPaths = fetchRequest.propertiesToGroupBy as? [String], keyPaths != self.keyPaths {
             

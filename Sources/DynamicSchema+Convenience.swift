@@ -96,19 +96,19 @@ public extension DynamicSchema {
                         
                     case .integer16AttributeType:
                         valueType = Int16.self
-                        if let defaultValue = (attribute.defaultValue as! Int16.ImportableNativeType?).flatMap(Int16.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! Int16.QueryableNativeType?).flatMap(Int16.cs_fromQueryableNativeType) {
                             
                             defaultString = ", initial: \(defaultValue)"
                         }
                     case .integer32AttributeType:
                         valueType = Int32.self
-                        if let defaultValue = (attribute.defaultValue as! Int32.ImportableNativeType?).flatMap(Int32.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! Int32.QueryableNativeType?).flatMap(Int32.cs_fromQueryableNativeType) {
                             
                             defaultString = ", initial: \(defaultValue)"
                         }
                     case .integer64AttributeType:
                         valueType = Int64.self
-                        if let defaultValue = (attribute.defaultValue as! Int64.ImportableNativeType?).flatMap(Int64.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! Int64.QueryableNativeType?).flatMap(Int64.cs_fromQueryableNativeType) {
                             
                             defaultString = ", initial: \(defaultValue)"
                         }
@@ -120,38 +120,38 @@ public extension DynamicSchema {
                         }
                     case .doubleAttributeType:
                         valueType = Double.self
-                        if let defaultValue = (attribute.defaultValue as! Double.ImportableNativeType?).flatMap(Double.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! Double.QueryableNativeType?).flatMap(Double.cs_fromQueryableNativeType) {
                             
                             defaultString = ", initial: \(defaultValue)"
                         }
                     case .floatAttributeType:
                         valueType = Float.self
-                        if let defaultValue = (attribute.defaultValue as! Float.ImportableNativeType?).flatMap(Float.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! Float.QueryableNativeType?).flatMap(Float.cs_fromQueryableNativeType) {
                             
                             defaultString = ", initial: \(defaultValue)"
                         }
                     case .stringAttributeType:
                         valueType = String.self
-                        if let defaultValue = (attribute.defaultValue as! String.ImportableNativeType?).flatMap(String.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! String.QueryableNativeType?).flatMap(String.cs_fromQueryableNativeType) {
                             
                             // TODO: escape strings
                             defaultString = ", initial: \"\(defaultValue)\""
                         }
                     case .booleanAttributeType:
                         valueType = Bool.self
-                        if let defaultValue = (attribute.defaultValue as! Bool.ImportableNativeType?).flatMap(Bool.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! Bool.QueryableNativeType?).flatMap(Bool.cs_fromQueryableNativeType) {
                             
                             defaultString = ", initial: \(defaultValue ? "true" : "false")"
                         }
                     case .dateAttributeType:
                         valueType = Date.self
-                        if let defaultValue = (attribute.defaultValue as! Date.ImportableNativeType?).flatMap(Date.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! Date.QueryableNativeType?).flatMap(Date.cs_fromQueryableNativeType) {
                             
                             defaultString = ", initial: Date(timeIntervalSinceReferenceDate: \(defaultValue.timeIntervalSinceReferenceDate))"
                         }
                     case .binaryDataAttributeType:
                         valueType = Data.self
-                        if let defaultValue = (attribute.defaultValue as! Data.ImportableNativeType?).flatMap(Data.cs_fromImportableNativeType) {
+                        if let defaultValue = (attribute.defaultValue as! Data.QueryableNativeType?).flatMap(Data.cs_fromQueryableNativeType) {
                             
                             let count = defaultValue.count
                             let bytes = defaultValue.withUnsafeBytes { (pointer: UnsafePointer<UInt8>) in

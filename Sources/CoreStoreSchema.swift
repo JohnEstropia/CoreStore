@@ -33,13 +33,13 @@ import Foundation
  The `CoreStoreSchema` describes models written for `CoreStoreObject` Swift class declarations for a particular model version. `CoreStoreObject` entities for a model version should be added to `CoreStoreSchema` instance.
  ```
  class Animal: CoreStoreObject {
-     let species = Value.Required<String>("species")
+     let species = Value.Required<String>("species", initial: "")
      let nickname = Value.Optional<String>("nickname")
      let master = Relationship.ToOne<Person>("master")
  }
  
  class Person: CoreStoreObject {
-     let name = Value.Required<String>("name")
+     let name = Value.Required<String>("name", initial: "")
      let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
  }
  
@@ -66,13 +66,13 @@ public final class CoreStoreSchema: DynamicSchema {
      Initializes a `CoreStoreSchema`. Using this initializer only if the entities don't need to be assigned to particular "Configurations". To use multiple configurations (for example, to separate entities in different `StorageInterface`s), use the `init(modelVersion:entitiesByConfiguration:versionLock:)` initializer.
      ```
      class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species")
+         let species = Value.Required<String>("species", initial: "")
          let nickname = Value.Optional<String>("nickname")
          let master = Relationship.ToOne<Person>("master")
      }
      
      class Person: CoreStoreObject {
-         let name = Value.Required<String>("name")
+         let name = Value.Required<String>("name", initial: "")
          let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
      }
      
@@ -112,12 +112,12 @@ public final class CoreStoreSchema: DynamicSchema {
      Initializes a `CoreStoreSchema`. Using this initializer if multiple "Configurations" (for example, to separate entities in different `StorageInterface`s) are needed. To add an entity only to the default configuration, assign an empty set to its configurations list. Note that regardless of the set configurations, all entities will be added to the default configuration.
      ```
      class Animal: CoreStoreObject {
-         let species = Value.Required<String>("species")
+         let species = Value.Required<String>("species", initial: "")
          let nickname = Value.Optional<String>("nickname")
      }
      
      class Person: CoreStoreObject {
-         let name = Value.Required<String>("name")
+         let name = Value.Required<String>("name", initial: "")
      }
      
      CoreStore.defaultStack = DataStack(
@@ -208,7 +208,7 @@ public final class CoreStoreSchema: DynamicSchema {
             }
             let rawModel = NSManagedObjectModel()
             var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
-            var allCustomGettersSetters: [DynamicEntity: [KeyPath: CoreStoreManagedObject.CustomGetterSetter]] = [:]
+            var allCustomGettersSetters: [DynamicEntity: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]] = [:]
             for entity in self.allEntities {
                 
                 let (entityDescription, customGetterSetterByKeyPaths) = self.entityDescription(
@@ -253,10 +253,10 @@ public final class CoreStoreSchema: DynamicSchema {
     private let allEntities: Set<DynamicEntity>
     
     private var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
-    private var customGettersSettersByEntity: [DynamicEntity: [KeyPath: CoreStoreManagedObject.CustomGetterSetter]] = [:]
+    private var customGettersSettersByEntity: [DynamicEntity: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]] = [:]
     private weak var cachedRawModel: NSManagedObjectModel?
     
-    private func entityDescription(for entity: DynamicEntity, initializer: (DynamicEntity, ModelVersion) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [KeyPath: CoreStoreManagedObject.CustomGetterSetter])) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [KeyPath: CoreStoreManagedObject.CustomGetterSetter]) {
+    private func entityDescription(for entity: DynamicEntity, initializer: (DynamicEntity, ModelVersion) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter])) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]) {
         
         if let cachedEntityDescription = self.entityDescriptionsByEntity[entity] {
             
@@ -269,7 +269,7 @@ public final class CoreStoreSchema: DynamicSchema {
         return (entityDescription, customGetterSetterByKeyPaths)
     }
     
-    private static func firstPassCreateEntityDescription(from entity: DynamicEntity, in modelVersion: ModelVersion) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [KeyPath: CoreStoreManagedObject.CustomGetterSetter]) {
+    private static func firstPassCreateEntityDescription(from entity: DynamicEntity, in modelVersion: ModelVersion) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]) {
         
         let entityDescription = NSEntityDescription()
         entityDescription.coreStoreEntity = entity
@@ -278,8 +278,8 @@ public final class CoreStoreSchema: DynamicSchema {
         entityDescription.versionHashModifier = entity.versionHashModifier
         entityDescription.managedObjectClassName = CoreStoreManagedObject.cs_subclassName(for: entity, in: modelVersion)
         
-        var keyPathsByAffectedKeyPaths: [KeyPath: Set<KeyPath>] = [:]
-        var customGetterSetterByKeyPaths: [KeyPath: CoreStoreManagedObject.CustomGetterSetter] = [:]
+        var keyPathsByAffectedKeyPaths: [RawKeyPath: Set<RawKeyPath>] = [:]
+        var customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter] = [:]
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
             
             var propertyDescriptions: [NSPropertyDescription] = []
@@ -443,9 +443,9 @@ public final class CoreStoreSchema: DynamicSchema {
         }
     }
     
-    private static func fourthPassSynthesizeManagedObjectClasses(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription], allCustomGettersSetters: [DynamicEntity: [KeyPath: CoreStoreManagedObject.CustomGetterSetter]]) {
+    private static func fourthPassSynthesizeManagedObjectClasses(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription], allCustomGettersSetters: [DynamicEntity: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]]) {
         
-        func createManagedObjectSubclass(for entityDescription: NSEntityDescription, customGetterSetterByKeyPaths: [KeyPath: CoreStoreManagedObject.CustomGetterSetter]?) {
+        func createManagedObjectSubclass(for entityDescription: NSEntityDescription, customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]?) {
             
             let superEntity = entityDescription.superentity
             let className = entityDescription.managedObjectClassName!

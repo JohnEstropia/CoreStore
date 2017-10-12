@@ -85,7 +85,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - parameter value: the arguments for the `==` operator
      */
     @objc
-    public convenience init(keyPath: KeyPath, isEqualTo value: CoreDataNativeType?) {
+    public convenience init(keyPath: RawKeyPath, isEqualTo value: CoreDataNativeType?) {
         
         self.init(value == nil || value is NSNull
             ? Where("\(keyPath) == nil")
@@ -99,7 +99,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - parameter list: the array to check membership of
      */
     @objc
-    public convenience init(keyPath: KeyPath, isMemberOf list: [CoreDataNativeType]) {
+    public convenience init(keyPath: RawKeyPath, isMemberOf list: [CoreDataNativeType]) {
         
         self.init(Where("\(keyPath) IN %@", list as NSArray))
     }

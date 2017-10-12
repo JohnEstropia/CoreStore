@@ -38,7 +38,7 @@ public extension CoreStore {
      - parameter object: the `DynamicObject` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
-    public static func monitorObject<T: DynamicObject>(_ object: T) -> ObjectMonitor<T> {
+    public static func monitorObject<T>(_ object: T) -> ObjectMonitor<T> {
         
         return self.defaultStack.monitorObject(object)
     }
@@ -50,7 +50,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public static func monitorList<T: DynamicObject>(_ from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public static func monitorList<T>(_ from: From<T>, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.defaultStack.monitorList(from, fetchClauses)
     }
@@ -62,7 +62,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public static func monitorList<T: DynamicObject>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public static func monitorList<T>(_ from: From<T>, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         return self.defaultStack.monitorList(from, fetchClauses)
     }
@@ -74,7 +74,7 @@ public extension CoreStore {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public static func monitorList<T: DynamicObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
+    public static func monitorList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: FetchClause...) {
         
         self.defaultStack.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -86,7 +86,7 @@ public extension CoreStore {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public static func monitorList<T: DynamicObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
+    public static func monitorList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ fetchClauses: [FetchClause])  {
         
         self.defaultStack.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -99,7 +99,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public static func monitorSectionedList<T: DynamicObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
+    public static func monitorSectionedList<T>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) -> ListMonitor<T> {
         
         return self.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -112,7 +112,7 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public static func monitorSectionedList<T: DynamicObject>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
+    public static func monitorSectionedList<T>(_ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) -> ListMonitor<T> {
         
         return self.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -125,7 +125,7 @@ public extension CoreStore {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public static func monitorSectionedList<T: DynamicObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
+    public static func monitorSectionedList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: FetchClause...) {
         
         self.defaultStack.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -138,7 +138,7 @@ public extension CoreStore {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public static func monitorSectionedList<T: DynamicObject>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
+    public static func monitorSectionedList<T>(createAsynchronously: @escaping (ListMonitor<T>) -> Void, _ from: From<T>, _ sectionBy: SectionBy, _ fetchClauses: [FetchClause]) {
         
         self.defaultStack.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }

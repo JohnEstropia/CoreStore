@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode8.3
+osx_image: xcode9
 sudo: false
 git:
   submodules: false
@@ -10,24 +10,29 @@ env:
   - LC_CTYPE=en_US.UTF-8
   - LANG=en_US.UTF-8
   matrix:
-    - DESTINATION="OS=10.3,name=iPhone 7"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=10.1,name=iPhone 7"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=9.0,name=iPhone 6 Plus"      SCHEME="CoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=8.4,name=iPhone 6"           SCHEME="CoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=8.3,name=iPhone 5S"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=8.3,name=iPhone 5"           SCHEME="CoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=8.3,name=iPhone 4S"          SCHEME="CoreStore iOS"     SDK=iphonesimulator10.3  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="arch=x86_64"                    SCHEME="CoreStore OSX"     SDK=macosx10.12          RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=3.2,name=Apple Watch - 42mm" SCHEME="CoreStore watchOS" SDK=watchsimulator3.2    RUN_TESTS="NO"  POD_LINT="NO"
-    - DESTINATION="OS=2.2,name=Apple Watch - 42mm" SCHEME="CoreStore watchOS" SDK=watchsimulator3.2    RUN_TESTS="NO"  POD_LINT="NO"
-    - DESTINATION="OS=10.2,name=Apple TV 1080p"    SCHEME="CoreStore tvOS"    SDK=appletvsimulator10.2 RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=9.2,name=Apple TV 1080p"     SCHEME="CoreStore tvOS"    SDK=appletvsimulator10.2 RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=11.0,name=iPhone 8"          SCHEME="CoreStore iOS"     SDK=iphonesimulator11.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=10.3,name=iPhone 7"          SCHEME="CoreStore iOS"     SDK=iphonesimulator11.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=10.1,name=iPhone 7"          SCHEME="CoreStore iOS"     SDK=iphonesimulator11.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=9.0,name=iPhone 6 Plus"      SCHEME="CoreStore iOS"     SDK=iphonesimulator11.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=8.4,name=iPhone 6"           SCHEME="CoreStore iOS"     SDK=iphonesimulator11.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=8.3,name=iPhone 5S"          SCHEME="CoreStore iOS"     SDK=iphonesimulator11.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=8.3,name=iPhone 5"           SCHEME="CoreStore iOS"     SDK=iphonesimulator11.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=8.3,name=iPhone 4S"          SCHEME="CoreStore iOS"     SDK=iphonesimulator11.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="arch=x86_64"                    SCHEME="CoreStore OSX"     SDK=macosx10.13          RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=4.0,name=Apple Watch - 42mm" SCHEME="CoreStore watchOS" SDK=watchsimulator4.0    RUN_TESTS="NO"  POD_LINT="NO"
+    - DESTINATION="OS=3.2,name=Apple Watch - 42mm" SCHEME="CoreStore watchOS" SDK=watchsimulator4.0    RUN_TESTS="NO"  POD_LINT="NO"
+    - DESTINATION="OS=2.2,name=Apple Watch - 42mm" SCHEME="CoreStore watchOS" SDK=watchsimulator4.0    RUN_TESTS="NO"  POD_LINT="NO"
+    - DESTINATION="OS=11.0,name=Apple TV 1080p"    SCHEME="CoreStore tvOS"    SDK=appletvsimulator11.0 RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=10.2,name=Apple TV 1080p"    SCHEME="CoreStore tvOS"    SDK=appletvsimulator11.0 RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=9.2,name=Apple TV 1080p"     SCHEME="CoreStore tvOS"    SDK=appletvsimulator11.0 RUN_TESTS="YES" POD_LINT="NO"
 before_install:
   - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
   - gem install xcpretty --no-rdoc --no-ri --no-document --quiet
-  - curl -OlL "https://github.com/Carthage/Carthage/releases/download/0.23.0/Carthage.pkg"
+  - curl -OlL "https://github.com/Carthage/Carthage/releases/download/0.26.0/Carthage.pkg"
   - sudo installer -pkg "Carthage.pkg" -target /
   - rm "Carthage.pkg"
+  - npm install ios-sim -g
+  - ios-sim start --devicetypeid "com.apple.CoreSimulator.SimDeviceType.iPhone-8, 11.0"
 before_script:
   - carthage update --use-submodules
 script:
@@ -38,8 +43,8 @@ script:
       xcodebuild -workspace CoreStore.xcworkspace -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
       xcodebuild -workspace CoreStore.xcworkspace -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
     fi
-  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStore iOS" -sdk "iphonesimulator10.3" -destination "OS=10.3,name=iPhone 7" -configuration Debug ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
-  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStore iOS" -sdk "iphonesimulator10.3" -destination "OS=10.3,name=iPhone 7" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
+  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStoreDemo" -sdk "iphonesimulator11.0" -destination "OS=11.0,name=iPhone 8" -configuration Debug ONLY_ACTIVE_ARCH=NO build | xcpretty -c;
+  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStoreDemo" -sdk "iphonesimulator11.0" -destination "OS=11.0,name=iPhone 8" -configuration Release ONLY_ACTIVE_ARCH=NO build | xcpretty -c;
   - if [ $POD_LINT == "YES" ]; then
       pod lib lint --quick;
     fi

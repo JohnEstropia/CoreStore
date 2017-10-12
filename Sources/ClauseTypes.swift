@@ -34,7 +34,7 @@ import CoreData
  */
 public protocol FetchClause {
     
-    func applyToFetchRequest<T: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<T>)
+    func applyToFetchRequest<T>(_ fetchRequest: NSFetchRequest<T>)
 }
 
 
@@ -45,7 +45,7 @@ public protocol FetchClause {
  */
 public protocol QueryClause {
     
-    func applyToFetchRequest<T: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<T>)
+    func applyToFetchRequest<T>(_ fetchRequest: NSFetchRequest<T>)
 }
 
 
@@ -56,5 +56,5 @@ public protocol QueryClause {
  */
 public protocol DeleteClause {
     
-    func applyToFetchRequest<T: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<T>)
+    func applyToFetchRequest<T>(_ fetchRequest: NSFetchRequest<T>)
 }

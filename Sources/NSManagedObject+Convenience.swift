@@ -84,7 +84,7 @@ public extension NSManagedObject {
      - returns: the primitive value for the KVC key
      */
     @nonobjc @inline(__always)
-    public func getValue(forKvcKey kvcKey: KeyPath) -> Any? {
+    public func getValue(forKvcKey kvcKey: RawKeyPath) -> Any? {
         
         self.willAccessValue(forKey: kvcKey)
         defer {
@@ -102,7 +102,7 @@ public extension NSManagedObject {
      - returns: the primitive value transformed by the `didGetValue` closure
      */
     @nonobjc @inline(__always)
-    public func getValue<T>(forKvcKey kvcKey: KeyPath, didGetValue: (Any?) throws -> T) rethrows -> T {
+    public func getValue<T>(forKvcKey kvcKey: RawKeyPath, didGetValue: (Any?) throws -> T) rethrows -> T {
         
         self.willAccessValue(forKey: kvcKey)
         defer {
@@ -121,7 +121,7 @@ public extension NSManagedObject {
      - returns: the primitive value transformed by the `didGetValue` closure
      */
     @nonobjc @inline(__always)
-    public func getValue<T>(forKvcKey kvcKey: KeyPath, willGetValue: () throws -> Void, didGetValue: (Any?) throws -> T) rethrows -> T {
+    public func getValue<T>(forKvcKey kvcKey: RawKeyPath, willGetValue: () throws -> Void, didGetValue: (Any?) throws -> T) rethrows -> T {
         
         self.willAccessValue(forKey: kvcKey)
         defer {
@@ -139,7 +139,7 @@ public extension NSManagedObject {
      - parameter KVCKey: the KVC key
      */
     @nonobjc @inline(__always)
-    public func setValue(_ value: Any?, forKvcKey KVCKey: KeyPath) {
+    public func setValue(_ value: Any?, forKvcKey KVCKey: RawKeyPath) {
         
         self.willChangeValue(forKey: KVCKey)
         defer {
@@ -157,7 +157,7 @@ public extension NSManagedObject {
      - parameter didSetValue: called after executing `setPrimitiveValue(forKey:)`.
      */
     @nonobjc @inline(__always)
-    public func setValue(_ value: Any?, forKvcKey KVCKey: KeyPath, didSetValue: () -> Void) {
+    public func setValue(_ value: Any?, forKvcKey KVCKey: RawKeyPath, didSetValue: () -> Void) {
         
         self.willChangeValue(forKey: KVCKey)
         defer {
@@ -177,7 +177,7 @@ public extension NSManagedObject {
      - parameter didSetValue: called after executing `setPrimitiveValue(forKey:)`.
      */
     @nonobjc @inline(__always)
-    public func setValue<T>(_ value: T, forKvcKey KVCKey: KeyPath, willSetValue: (T) throws -> Any?, didSetValue: (Any?) -> Void = { _ in }) rethrows {
+    public func setValue<T>(_ value: T, forKvcKey KVCKey: RawKeyPath, willSetValue: (T) throws -> Any?, didSetValue: (Any?) -> Void = { _ in }) rethrows {
         
         self.willChangeValue(forKey: KVCKey)
         defer {
@@ -212,7 +212,7 @@ public extension NSManagedObject {
     
     @available(*, deprecated, renamed: "getValue(forKvcKey:)")
     @nonobjc
-    public func accessValueForKVCKey(_ KVCKey: KeyPath) -> Any? {
+    public func accessValueForKVCKey(_ KVCKey: RawKeyPath) -> Any? {
         
         self.willAccessValue(forKey: KVCKey)
         defer {
@@ -225,7 +225,7 @@ public extension NSManagedObject {
     @available(*, deprecated, renamed: "getValue(forKvcKey:didGetValue:)")
     @discardableResult
     @nonobjc
-    public func accessValueForKVCKey<T>(_ KVCKey: KeyPath, _ didAccessPrimitiveValue: (Any?) throws -> T) rethrows -> T {
+    public func accessValueForKVCKey<T>(_ KVCKey: RawKeyPath, _ didAccessPrimitiveValue: (Any?) throws -> T) rethrows -> T {
         
         self.willAccessValue(forKey: KVCKey)
         defer {
@@ -237,7 +237,7 @@ public extension NSManagedObject {
     
     @available(*, deprecated, renamed: "setValue(_:forKvcKey:)")
     @nonobjc
-    public func setValue(_ value: Any?, forKVCKey KVCKey: KeyPath) {
+    public func setValue(_ value: Any?, forKVCKey KVCKey: RawKeyPath) {
         
         self.willChangeValue(forKey: KVCKey)
         defer {
@@ -250,7 +250,7 @@ public extension NSManagedObject {
     @available(*, deprecated, renamed: "setValue(_:forKvcKey:didSetValue:)")
     @discardableResult
     @nonobjc
-    public func setValue<T>(_ value: Any?, forKVCKey KVCKey: KeyPath, _ didSetPrimitiveValue: (Any?) throws -> T) rethrows -> T {
+    public func setValue<T>(_ value: Any?, forKVCKey KVCKey: RawKeyPath, _ didSetPrimitiveValue: (Any?) throws -> T) rethrows -> T {
         
         self.willChangeValue(forKey: KVCKey)
         defer {

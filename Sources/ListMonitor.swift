@@ -600,7 +600,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
-    public static func == <T: DynamicObject, U: DynamicObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+    public static func == <T, U>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
@@ -610,7 +610,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
-    public static func ~= <T: DynamicObject, U: DynamicObject>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
+    public static func ~= <T, U>(lhs: ListMonitor<T>, rhs: ListMonitor<U>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
@@ -997,7 +997,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
     fileprivate var fetchedResultsController: CoreStoreFetchedResultsController
     fileprivate let taskGroup = DispatchGroup()
-    fileprivate let sectionIndexTransformer: (_ sectionName: KeyPath?) -> String?
+    fileprivate let sectionIndexTransformer: (_ sectionName: RawKeyPath?) -> String?
     
     private let isSectioned: Bool
     

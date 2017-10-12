@@ -88,7 +88,7 @@ public enum SetupResult<T: StorageInterface>: Hashable {
     
     // MARK: Equatable
     
-    public static func == <T: StorageInterface, U: StorageInterface>(lhs: SetupResult<T>, rhs: SetupResult<U>) -> Bool {
+    public static func == <T, U>(lhs: SetupResult<T>, rhs: SetupResult<U>) -> Bool {
         
         switch (lhs, rhs) {
             

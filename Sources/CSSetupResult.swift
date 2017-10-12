@@ -152,7 +152,7 @@ public final class CSSetupResult: NSObject {
     
     // MARK: CoreStoreObjectiveCType
     
-    public required init<T: StorageInterface>(_ swiftValue: SetupResult<T>) where T: CoreStoreSwiftType, T.ObjectiveCType: CSStorageInterface {
+    public required init<T>(_ swiftValue: SetupResult<T>) where T: CoreStoreSwiftType, T.ObjectiveCType: CSStorageInterface {
         
         switch swiftValue {
             

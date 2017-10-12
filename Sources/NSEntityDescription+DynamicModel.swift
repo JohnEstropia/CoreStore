@@ -87,14 +87,14 @@ internal extension NSEntityDescription {
     }
     
     @nonobjc
-    internal var keyPathsByAffectedKeyPaths: [KeyPath: Set<KeyPath>] {
+    internal var keyPathsByAffectedKeyPaths: [RawKeyPath: Set<RawKeyPath>] {
         
         get {
             
             if let userInfo = self.userInfo,
                 let value = userInfo[UserInfoKey.CoreStoreManagedObjectKeyPathsByAffectedKeyPaths] {
                 
-                return value as! [KeyPath: Set<KeyPath>]
+                return value as! [RawKeyPath: Set<RawKeyPath>]
             }
             return [:]
         }
@@ -108,14 +108,14 @@ internal extension NSEntityDescription {
     }
     
     @nonobjc
-    internal var customGetterSetterByKeyPaths: [KeyPath: CoreStoreManagedObject.CustomGetterSetter] {
+    internal var customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter] {
         
         get {
             
             if let userInfo = self.userInfo,
                 let value = userInfo[UserInfoKey.CoreStoreManagedObjectCustomGetterSetterByKeyPaths] {
                 
-                return value as! [KeyPath: CoreStoreManagedObject.CustomGetterSetter]
+                return value as! [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]
             }
             return [:]
         }

@@ -48,7 +48,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - parameter keyPath: the attribute name
      */
     @objc
-    public convenience init(keyPath: KeyPath) {
+    public convenience init(keyPath: RawKeyPath) {
 
         self.init(.attribute(keyPath))
     }
@@ -65,7 +65,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the average value of an attribute
      */
     @objc
-    public static func average(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
+    public static func average(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
         
         return self.init(.average(keyPath, as: alias))
     }
@@ -82,7 +82,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `SelectTerm` to a `Select` clause for a count query
      */
     @objc
-    public static func count(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
+    public static func count(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
         
         return self.init(.count(keyPath, as: alias))
     }
@@ -99,7 +99,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the maximum value for an attribute
      */
     @objc
-    public static func maximum(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
+    public static func maximum(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
         
         return self.init(.maximum(keyPath, as: alias))
     }
@@ -116,7 +116,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the minimum value for an attribute
      */
     @objc
-    public static func minimum(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
+    public static func minimum(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
         
         return self.init(.minimum(keyPath, as: alias))
     }
@@ -133,7 +133,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the sum value for an attribute
      */
     @objc
-    public static func sum(_ keyPath: KeyPath, as alias: KeyPath?) -> CSSelectTerm {
+    public static func sum(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
         
         return self.init(.sum(keyPath, as: alias))
     }
@@ -150,7 +150,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
      */
     @objc
-    public static func objectIDAs(_ alias: KeyPath? = nil) -> CSSelectTerm {
+    public static func objectIDAs(_ alias: RawKeyPath? = nil) -> CSSelectTerm {
         
         return self.init(.objectID(as: alias))
     }
@@ -365,7 +365,7 @@ public final class CSSelect: NSObject {
         super.init()
     }
     
-    public init<T: SelectResultType>(_ swiftValue: Select<T>) {
+    public init<T>(_ swiftValue: Select<T>) {
         
         self.attributeType = .undefinedAttributeType
         self.selectTerms = swiftValue.selectTerms

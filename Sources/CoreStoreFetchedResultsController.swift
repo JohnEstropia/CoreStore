@@ -35,7 +35,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     // MARK: Internal
     
     @nonobjc
-    internal convenience init<T: DynamicObject>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init<T>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -47,7 +47,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     }
     
     @nonobjc
-    internal init<T: DynamicObject>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal init<T>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         _ = from.applyToFetchRequest(
             fetchRequest,
@@ -83,7 +83,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     }
     
     @nonobjc
-    internal func dynamicCast<U: NSFetchRequestResult>() -> NSFetchedResultsController<U> {
+    internal func dynamicCast<U>() -> NSFetchedResultsController<U> {
         
         return unsafeBitCast(self, to: NSFetchedResultsController<U>.self)
     }

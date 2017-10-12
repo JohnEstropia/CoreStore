@@ -27,9 +27,9 @@ import Foundation
 import CoreData
 
 
-// MARK: - KeyPath
+// MARK: - RawKeyPath
     
-public typealias KeyPath = String
+public typealias RawKeyPath = String
 
 
 // MARK: - SortKey
@@ -40,14 +40,24 @@ public typealias KeyPath = String
 public enum SortKey {
     
     /**
-     Indicates that the `KeyPath` should be sorted in ascending order
+     Indicates that the `RawKeyPath` should be sorted in ascending order
      */
-    case ascending(KeyPath)
+    case ascending(RawKeyPath)
     
     /**
-     Indicates that the `KeyPath` should be sorted in descending order
+     Indicates that the `RawKeyPath` should be sorted in descending order
      */
-    case descending(KeyPath)
+    case descending(RawKeyPath)
+
+    /**
+     Indicates that the `RawKeyPath` should be sorted in ascending order in a case-insenstive manner
+     */
+    case ascendingInsensitive(RawKeyPath)
+
+    /**
+     Indicates that the `RawKeyPath` should be sorted in descending order in a case-insenstive manner
+     */
+    case descendingInsensitive(RawKeyPath)
 }
 
 
@@ -124,6 +134,12 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
                     
                 case .descending(let keyPath):
                     return NSSortDescriptor(key: keyPath, ascending: false)
+
+                case .ascendingInsensitive(let keyPath):
+                    return NSSortDescriptor(key: keyPath, ascending: true, selector: #selector(NSString.localizedCaseInsensitiveCompare(_:)))
+
+                case .descendingInsensitive(let keyPath):
+                    return NSSortDescriptor(key: keyPath, ascending: false, selector: #selector(NSString.localizedCaseInsensitiveCompare(_:)))
                 }
             }
         )
@@ -143,7 +159,7 @@ public struct OrderBy: FetchClause, QueryClause, DeleteClause, Hashable {
     
     // MARK: FetchClause, QueryClause, DeleteClause
     
-    public func applyToFetchRequest<ResultType: NSFetchRequestResult>(_ fetchRequest: NSFetchRequest<ResultType>) {
+    public func applyToFetchRequest<ResultType>(_ fetchRequest: NSFetchRequest<ResultType>) {
         
         if let sortDescriptors = fetchRequest.sortDescriptors, sortDescriptors != self.sortDescriptors {
             

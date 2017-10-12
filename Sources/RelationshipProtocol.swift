@@ -31,11 +31,11 @@ import CoreData
 
 internal protocol RelationshipProtocol: class {
     
-    var keyPath: KeyPath { get }
+    var keyPath: RawKeyPath { get }
     var isToMany: Bool { get }
     var isOrdered: Bool { get }
     var deleteRule: NSDeleteRule { get }
-    var inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPath?) { get }
+    var inverse: (type: CoreStoreObject.Type, keyPath: () -> RawKeyPath?) { get }
     var affectedByKeyPaths: () -> Set<String> { get }
     weak var parentObject: CoreStoreObject? { get set }
     var versionHashModifier: () -> String? { get }

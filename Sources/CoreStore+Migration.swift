@@ -47,7 +47,7 @@ public extension CoreStore {
      - parameter storage: the storage
      - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `StorageInterface` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `StorageInterface` was already added at the same URL and with the same configuration.
      */
-    public static func addStorage<T: StorageInterface>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
+    public static func addStorage<T>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
         
         self.defaultStack.addStorage(storage, completion: completion)
     }

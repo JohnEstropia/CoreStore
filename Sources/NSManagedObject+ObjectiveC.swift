@@ -38,7 +38,7 @@ public extension NSManagedObject {
      - returns: the primitive value for the KVC key
      */
     @objc
-    public func cs_accessValueForKVCKey(_ KVCKey: KeyPath) -> Any? {
+    public func cs_accessValueForKVCKey(_ KVCKey: RawKeyPath) -> Any? {
         
         return self.getValue(forKvcKey: KVCKey)
     }
@@ -50,7 +50,7 @@ public extension NSManagedObject {
      - parameter KVCKey: the KVC key
      */
     @objc
-    public func cs_setValue(_ value: Any?, forKVCKey KVCKey: KeyPath) {
+    public func cs_setValue(_ value: Any?, forKVCKey KVCKey: RawKeyPath) {
         
         self.setValue(value, forKvcKey: KVCKey)
     }

@@ -1215,6 +1215,8 @@ extension NSAttributeType: CoreStoreDebugStringConvertible {
         case .binaryDataAttributeType:      return ".binaryDataAttributeType"
         case .transformableAttributeType:   return ".transformableAttributeType"
         case .objectIDAttributeType:        return ".objectIDAttributeType"
+        case .UUIDAttributeType:            return ".UUIDAttributeType"
+        case .URIAttributeType:             return ".URIAttributeType"
         }
     }
 }
