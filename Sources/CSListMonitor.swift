@@ -560,7 +560,6 @@ extension ListMonitor where ListMonitor.ObjectType: NSManagedObject {
     
     fileprivate func downcast() -> ListMonitor<NSManagedObject> {
         
-        @inline(__always)
         func noWarnUnsafeBitCast<T, U>(_ x: T, to type: U.Type) -> U {
             
             return unsafeBitCast(x, to: type)
