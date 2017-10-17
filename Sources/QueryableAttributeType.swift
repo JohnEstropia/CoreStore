@@ -350,7 +350,6 @@ extension NSData: QueryableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
-        @inline(__always)
         func forceCast<T: NSData>(_ value: Any) -> T? {
             
             return value as? T
@@ -380,7 +379,6 @@ extension NSDate: QueryableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
-        @inline(__always)
         func forceCast<T: NSDate>(_ value: Any) -> T? {
             
             return value as? T
@@ -421,7 +419,6 @@ extension NSManagedObjectID: QueryableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
-        @inline(__always)
         func forceCast<T: NSManagedObjectID>(_ value: Any) -> T? {
             
             return value as? T
@@ -451,7 +448,6 @@ extension NSNull: QueryableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
-        @inline(__always)
         func forceCast<T: NSNull>(_ value: Any) -> T? {
             
             return value as? T
@@ -481,7 +477,6 @@ extension NSNumber: QueryableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
-        @inline(__always)
         func forceCast<T: NSNumber>(_ value: Any) -> T? {
             
             return value as? T
@@ -511,7 +506,6 @@ extension NSString: QueryableAttributeType {
     @nonobjc @inline(__always)
     public class func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
-        @inline(__always)
         func forceCast<T: NSString>(_ value: Any) -> T? {
             
             return value as? T
