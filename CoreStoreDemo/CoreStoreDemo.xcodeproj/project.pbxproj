@@ -265,7 +265,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "John Rommel Estropia";
 				TargetAttributes = {
 					B54AAD481AF4D26E00848AE0 = {
