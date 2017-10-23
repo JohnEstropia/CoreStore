@@ -99,7 +99,18 @@ public extension CoreStore {
         return self.defaultStack.fetchOne(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let youngestTeen = CoreStore.fetchOne(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType`
+     */
     public static func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType? {
         
         return self.defaultStack.fetchOne(clauseChain)
@@ -129,7 +140,18 @@ public extension CoreStore {
         return self.defaultStack.fetchAll(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let people = CoreStore.fetchAll(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType`
+     */
     public static func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]? {
         
         return self.defaultStack.fetchAll(clauseChain)
@@ -159,7 +181,18 @@ public extension CoreStore {
         return self.defaultStack.fetchCount(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches the number of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let numberOfAdults = CoreStore.fetchCount(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the number `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
+     */
     public static func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int? {
         
         return self.defaultStack.fetchCount(clauseChain)
@@ -189,7 +222,18 @@ public extension CoreStore {
         return self.defaultStack.fetchObjectID(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let youngestTeenID = CoreStore.fetchObjectID(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType`
+     */
     public static func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) -> NSManagedObjectID? {
         
         return self.defaultStack.fetchObjectID(clauseChain)
@@ -219,7 +263,18 @@ public extension CoreStore {
         return self.defaultStack.fetchObjectIDs(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let idsOfAdults = transaction.fetchObjectIDs(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
+     */
     public static func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) -> [NSManagedObjectID]? {
         
         return self.defaultStack.fetchObjectIDs(clauseChain)
@@ -255,7 +310,20 @@ public extension CoreStore {
         return self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
     
-    // TODO: docs
+    /**
+     Queries a property value or aggregate as specified by the `QueryChainableBuilderType` built from a chain of clauses.
+     
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
+     ```
+     let averageAdultAge = CoreStore.queryValue(
+         From<MyPersonEntity>()
+             .select(Int.self, .average(\.age))
+             .where(\.age > 18)
+     )
+     ```
+     - parameter clauseChain: a `QueryChainableBuilderType` indicating the property/aggregate to fetch and the series of queries for the request.
+     - returns: the result of the the query as specified by the `QueryChainableBuilderType`
+     */
     public static func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) -> B.ResultType? where B.ResultType: QueryableAttributeType {
         
         return self.defaultStack.queryValue(clauseChain)
@@ -291,7 +359,29 @@ public extension CoreStore {
         return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }
     
-    // TODO: docs
+    /**
+     Queries a dictionary of attribute values or  as specified by the `QueryChainableBuilderType` built from a chain of clauses.
+     
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
+     ```
+     let results = CoreStore.queryAttributes(
+         From<MyPersonEntity>()
+             .select(
+                 NSDictionary.self,
+                 .attribute(\.age, as: "age"),
+                 .count(\.age, as: "numberOfPeople")
+             )
+             .groupBy(\.age)
+     )
+     for dictionary in results! {
+         let age = dictionary["age"] as! Int
+         let count = dictionary["numberOfPeople"] as! Int
+         print("There are \(count) people who are \(age) years old."
+     }
+     ```
+     - parameter clauseChain: a `QueryChainableBuilderType` indicating the properties to fetch and the series of queries for the request.
+     - returns: the result of the the query as specified by the `QueryChainableBuilderType`
+     */
     public static func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) -> [[String: Any]]? where B.ResultType == NSDictionary {
         
         return self.defaultStack.queryAttributes(clauseChain)

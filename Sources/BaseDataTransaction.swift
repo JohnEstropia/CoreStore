@@ -116,10 +116,10 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-     Returns an editable proxy of a specified `NSManagedObject`.
+     Returns an editable proxy of a specified `NSManagedObject` or `CoreStoreObject`.
      
-     - parameter object: the `NSManagedObject` type to be edited
-     - returns: an editable proxy for the specified `NSManagedObject`.
+     - parameter object: the `NSManagedObject` or `CoreStoreObject` type to be edited
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public func edit<D: DynamicObject>(_ object: D?) -> D? {
         
@@ -139,7 +139,7 @@ public /*abstract*/ class BaseDataTransaction {
      
      - parameter into: an `Into` clause specifying the entity type
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
-     - returns: an editable proxy for the specified `NSManagedObject`.
+     - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
     public func edit<D>(_ into: Into<D>, _ objectID: NSManagedObjectID) -> D? {
         
@@ -156,9 +156,9 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-     Deletes a specified `NSManagedObject`.
+     Deletes a specified `NSManagedObject` or `CoreStoreObject`.
      
-     - parameter object: the `NSManagedObject` to be deleted
+     - parameter object: the `NSManagedObject` or `CoreStoreObject` to be deleted
      */
     public func delete<D: DynamicObject>(_ object: D?) {
         
@@ -173,11 +173,11 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-     Deletes the specified `NSManagedObject`s.
+     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s.
      
-     - parameter object1: the `NSManagedObject` to be deleted
-     - parameter object2: another `NSManagedObject` to be deleted
-     - parameter objects: other `NSManagedObject`s to be deleted
+     - parameter object1: the `NSManagedObject` or `CoreStoreObject` to be deleted
+     - parameter object2: another `NSManagedObject` or `CoreStoreObject` to be deleted
+     - parameter objects: other `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
     public func delete<D: DynamicObject>(_ object1: D?, _ object2: D?, _ objects: D?...) {
         
@@ -185,9 +185,9 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-     Deletes the specified `NSManagedObject`s.
+     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s.
      
-     - parameter objects: the `NSManagedObject`s to be deleted
+     - parameter objects: the `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
     public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: DynamicObject {
         

@@ -27,6 +27,8 @@ import Foundation
 import CoreData
 
 
+// MARK: - FetchChainableBuilderType
+
 public protocol FetchChainableBuilderType {
     
     associatedtype ObjectType: DynamicObject
@@ -34,6 +36,9 @@ public protocol FetchChainableBuilderType {
     var from: From<ObjectType> { get set }
     var fetchClauses: [FetchClause] { get set }
 }
+
+
+// MARK: - QueryChainableBuilderType
 
 public protocol QueryChainableBuilderType {
     

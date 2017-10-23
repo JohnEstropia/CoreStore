@@ -68,7 +68,7 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
     /**
      Deletes all `DynamicObject`s that satisfy the specified conditions.
      ```
-     transaction.deleteAll(From<Person>().where(\.age > 50)
+     transaction.deleteAll(From<Person>().where(\.age > 50))
      ```
      - parameter clauseChain: a `FetchChainableBuilderType` clause chain created from a `From` clause
      - returns: the number of `DynamicObject`s deleted
@@ -163,7 +163,18 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
         return self.context.fetchOne(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let youngestTeen = transaction.fetchOne(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType`
+     */
     public func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType? {
         
         CoreStore.assert(
@@ -205,7 +216,18 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
         return self.context.fetchAll(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let people = transaction.fetchAll(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType`
+     */
     public func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]? {
         
         CoreStore.assert(
@@ -247,7 +269,18 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
         return self.context.fetchCount(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches the number of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let numberOfAdults = transaction.fetchCount(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the number `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
+     */
     public func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int? {
         
         CoreStore.assert(
@@ -289,7 +322,18 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
         return self.context.fetchObjectID(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let youngestTeenID = transaction.fetchObjectID(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType`
+     */
     public func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) -> NSManagedObjectID? {
         
         CoreStore.assert(
@@ -331,7 +375,18 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
         return self.context.fetchObjectIDs(from, fetchClauses)
     }
     
-    // TODO: docs
+    /**
+     Fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let idsOfAdults = transaction.fetchObjectIDs(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
+     */
     public func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) -> [NSManagedObjectID]? {
         
         CoreStore.assert(
@@ -382,7 +437,20 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
         return self.context.queryValue(from, selectClause, queryClauses)
     }
     
-    // TODO: docs
+    /**
+     Queries a property value or aggregate as specified by the `QueryChainableBuilderType` built from a chain of clauses.
+     
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
+     ```
+     let averageAdultAge = transaction.queryValue(
+         From<MyPersonEntity>()
+             .select(Int.self, .average(\.age))
+             .where(\.age > 18)
+     )
+     ```
+     - parameter clauseChain: a `QueryChainableBuilderType` indicating the property/aggregate to fetch and the series of queries for the request.
+     - returns: the result of the the query as specified by the `QueryChainableBuilderType`
+     */
     public func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) -> B.ResultType? where B.ResultType: QueryableAttributeType {
         
         CoreStore.assert(
@@ -430,7 +498,29 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
         return self.context.queryAttributes(from, selectClause, queryClauses)
     }
     
-    // TODO: docs
+    /**
+     Queries a dictionary of attribute values or  as specified by the `QueryChainableBuilderType` built from a chain of clauses.
+     
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
+     ```
+     let results = dataStack.queryAttributes(
+         From<MyPersonEntity>()
+             .select(
+                 NSDictionary.self,
+                 .attribute(\.age, as: "age"),
+                 .count(\.age, as: "numberOfPeople")
+              )
+             .groupBy(\.age)
+     )
+     for dictionary in results! {
+         let age = dictionary["age"] as! Int
+         let count = dictionary["numberOfPeople"] as! Int
+         print("There are \(count) people who are \(age) years old."
+     }
+     ```
+     - parameter clauseChain: a `QueryChainableBuilderType` indicating the properties to fetch and the series of queries for the request.
+     - returns: the result of the the query as specified by the `QueryChainableBuilderType`
+     */
     public func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) -> [[String: Any]]? where B.ResultType == NSDictionary {
         
         CoreStore.assert(

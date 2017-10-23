@@ -234,6 +234,9 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
         
+        /**
+         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
+         */
         public let keyPath: KeyPathString
         
         internal let isToMany = false
@@ -502,6 +505,9 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
         
+        /**
+         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
+         */
         public let keyPath: KeyPathString
         
         internal let isToMany = true
@@ -776,6 +782,9 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
         
+        /**
+         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
+         */
         public let keyPath: KeyPathString
         
         internal let isToMany = true

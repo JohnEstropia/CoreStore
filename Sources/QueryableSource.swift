@@ -58,7 +58,20 @@ public protocol QueryableSource: class {
      */
     func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) -> U?
     
-    // TODO: docs
+    /**
+     Queries a property value or aggregate as specified by the `QueryChainableBuilderType` built from a chain of clauses.
+     
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
+     ```
+     let averageAdultAge = dataStack.queryValue(
+         From<MyPersonEntity>()
+             .select(Int.self, .average(\.age))
+             .where(\.age > 18)
+     )
+     ```
+     - parameter clauseChain: a `QueryChainableBuilderType` indicating the property/aggregate to fetch and the series of queries for the request.
+     - returns: the result of the the query as specified by the `QueryChainableBuilderType`
+     */
     func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) -> B.ResultType? where B.ResultType: QueryableAttributeType
 
     /**
@@ -85,7 +98,29 @@ public protocol QueryableSource: class {
      */
     func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]?
     
-    // TODO: docs
+    /**
+     Queries a dictionary of attribute values or  as specified by the `QueryChainableBuilderType` built from a chain of clauses.
+     
+     A "query" differs from a "fetch" in that it only retrieves values already stored in the persistent store. As such, values from unsaved transactions or contexts will not be incorporated in the query result.
+     ```
+     let results = source.queryAttributes(
+         From<MyPersonEntity>()
+             .select(
+                 NSDictionary.self,
+                 .attribute(\.age, as: "age"),
+                 .count(\.age, as: "numberOfPeople")
+             )
+             .groupBy(\.age)
+     )
+     for dictionary in results! {
+         let age = dictionary["age"] as! Int
+         let count = dictionary["numberOfPeople"] as! Int
+         print("There are \(count) people who are \(age) years old."
+     }
+     ```
+     - parameter clauseChain: a `QueryChainableBuilderType` indicating the properties to fetch and the series of queries for the request.
+     - returns: the result of the the query as specified by the `QueryChainableBuilderType`
+     */
     func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) -> [[String: Any]]? where B.ResultType == NSDictionary
     
     /**

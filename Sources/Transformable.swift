@@ -191,13 +191,16 @@ public enum TransformableContainer<O: CoreStoreObject> {
 
 
         // MARK: AttributeProtocol
+        
+        /**
+         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
+         */
+        public let keyPath: KeyPathString
 
         internal static var attributeType: NSAttributeType {
 
             return .transformableAttributeType
         }
-
-        public let keyPath: KeyPathString
 
         internal let isOptional = false
         internal let isIndexed: Bool
@@ -420,6 +423,9 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return .transformableAttributeType
         }
 
+        /**
+         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
+         */
         public let keyPath: KeyPathString
 
         internal let isOptional = true

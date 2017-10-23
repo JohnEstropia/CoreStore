@@ -84,7 +84,18 @@ public protocol FetchableSource: class {
      */
     func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> D?
     
-    // TODO: docs
+    /**
+     Fetches the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let youngestTeen = source.fetchOne(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType`
+     */
     func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType?
 
     /**
@@ -105,7 +116,18 @@ public protocol FetchableSource: class {
      */
     func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [D]?
     
-    // TODO: docs
+    /**
+     Fetches all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let people = source.fetchAll(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType`
+     */
     func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]?
 
     /**
@@ -126,7 +148,18 @@ public protocol FetchableSource: class {
      */
     func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Int?
     
-    // TODO: docs
+    /**
+     Fetches the number of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let numberOfAdults = source.fetchCount(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the number `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
+     */
     func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int?
 
     /**
@@ -147,7 +180,18 @@ public protocol FetchableSource: class {
      */
     func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID?
     
-    // TODO: docs
+    /**
+     Fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let youngestTeenID = source.fetchObjectID(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType`
+     */
     func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) -> NSManagedObjectID?
 
     /**
@@ -168,7 +212,18 @@ public protocol FetchableSource: class {
      */
     func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]?
     
-    // TODO: docs
+    /**
+     Fetches the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
+     ```
+     let idsOfAdults = source.fetchObjectIDs(
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
+     */
     func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) -> [NSManagedObjectID]?
     
     /**

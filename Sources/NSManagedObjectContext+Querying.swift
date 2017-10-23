@@ -123,7 +123,6 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
         return self.fetchOne(fetchRequest.dynamicCast()).flatMap(from.entityClass.cs_fromRaw)
     }
     
-    // TODO: docs
     @nonobjc
     public func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType? {
         
@@ -154,7 +153,6 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
         return self.fetchAll(fetchRequest.dynamicCast())?.map(entityClass.cs_fromRaw)
     }
     
-    // TODO: docs
     @nonobjc
     public func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]? {
         
@@ -181,7 +179,6 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
         return self.fetchCount(fetchRequest.dynamicCast())
     }
     
-    // TODO: docs
     @nonobjc
     public func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int? {
         
