@@ -83,7 +83,23 @@ public extension UnsafeDataTransaction {
         )
     }
     
-    // TODO: docs
+    /**
+     Asynchronously creates a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses. Since `NSFetchedResultsController` greedily locks the persistent store on initial fetch, you may prefer this method instead of the synchronous counterpart to avoid deadlocks while background updates/saves are being executed.
+     
+     ```
+     transaction.monitorList(
+         { (monitor) in
+             self.monitor = monitor
+         },
+         From<MyPersonEntity>()
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter createAsynchronously: the closure that receives the created `ListMonitor` instance
+     - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
+     - returns: a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
+     */
     public func monitorList<B: FetchChainableBuilderType>(_ clauseChain: B) -> ListMonitor<B.ObjectType> {
         
         return self.monitorList(clauseChain.from, clauseChain.fetchClauses)
@@ -176,7 +192,19 @@ public extension UnsafeDataTransaction {
         )
     }
     
-    // TODO: docs
+    /**
+     Creates a `ListMonitor` for a sectioned list of `DynamicObject`s that satisfy the specified `SectionMonitorBuilderType` built from a chain of clauses.
+     ```
+     let monitor = transaction.monitorSectionedList(
+         From<MyPersonEntity>()
+             .sectionBy(\.age, { "\($0!) years old" })
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
+     - returns: a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `SectionMonitorBuilderType`
+     */
     public func monitorSectionedList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> ListMonitor<B.ObjectType> {
         
         return self.monitorSectionedList(
@@ -226,7 +254,22 @@ public extension UnsafeDataTransaction {
         )
     }
     
-    // TODO: docs
+    /**
+     Asynchronously creates a `ListMonitor` for a sectioned list of `DynamicObject`s that satisfy the specified `SectionMonitorBuilderType` built from a chain of clauses.
+     ```
+     transaction.monitorSectionedList(
+         { (monitor) in
+             self.monitor = monitor
+         },
+         From<MyPersonEntity>()
+             .sectionBy(\.age, { "\($0!) years old" })
+             .where(\.age > 18)
+             .orderBy(.ascending(\.age))
+     )
+     ```
+     - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
+     - returns: a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `SectionMonitorBuilderType`
+     */
     public func monitorSectionedList<B: SectionMonitorBuilderType>(createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void, _ clauseChain: B) {
         
         self.monitorSectionedList(

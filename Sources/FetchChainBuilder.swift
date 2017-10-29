@@ -1,5 +1,5 @@
 //
-//  CoreStoreManagedObject.swift
+//  FetchChainBuilder.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -23,29 +23,52 @@
 //  SOFTWARE.
 //
 
+import Foundation
 import CoreData
 
 
-// MARK: - CoreStoreManagedObject
+// MARK: - FetchChainBuilder
 
-@objc internal class CoreStoreManagedObject: NSManagedObject {
+/**
+ The fetch builder type used for fetches. A `FetchChainBuilder` is created from a `From` clause.
+ ```
+ let people = source.fetchAll(
+     From<MyPersonEntity>()
+         .where(\.age > 18)
+         .orderBy(.ascending(\.age))
+ )
+ ```
+ */
+public struct FetchChainBuilder<D: DynamicObject>: FetchChainableBuilderType {
     
-    internal typealias CustomGetter = @convention(block) (_ rawObject: Any) -> Any?
-    internal typealias CustomSetter = @convention(block) (_ rawObject: Any, _ newValue: Any?) -> Void
-    internal typealias CustomGetterSetter = (getter: CustomGetter?, setter: CustomSetter?)
+    // MARK: FetchChainableBuilderType
     
-    @nonobjc @inline(__always)
-    internal static func cs_subclassName(for entity: DynamicEntity, in modelVersion: ModelVersion) -> String {
-        
-        return "_\(NSStringFromClass(CoreStoreManagedObject.self))__\(modelVersion)__\(NSStringFromClass(entity.type))__\(entity.entityName)"
-    }
+    public typealias ObjectType = D
+    
+    public var from: From<D>
+    public var fetchClauses: [FetchClause] = []
 }
 
 
-// MARK: - Private
+// MARK: - FetchChainableBuilderType
 
-private enum Static {
+/**
+ Utility protocol for `FetchChainBuilder`. Used in fetch methods that support chained fetch builders.
+ */
+public protocol FetchChainableBuilderType {
     
-    static let queue = DispatchQueue.concurrent("com.coreStore.coreStoreManagerObjectBarrierQueue")
-    static var cache: [ObjectIdentifier: [KeyPathString: Set<KeyPathString>]] = [:]
+    /**
+     The `DynamicObject` type for the fetch
+     */
+    associatedtype ObjectType: DynamicObject
+    
+    /**
+     The `From` clause specifies the source entity and source persistent store for the fetch
+     */
+    var from: From<ObjectType> { get set }
+    
+    /**
+     The `FetchClause`s to be used for the fetch
+     */
+    var fetchClauses: [FetchClause] { get set }
 }
