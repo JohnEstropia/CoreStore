@@ -31,7 +31,7 @@ import Foundation
 /**
  `CoreStoreObjectiveCType`s are Objective-C accessible classes that represent CoreStore's Swift types.
  */
-public protocol CoreStoreObjectiveCType: class, AnyObject {
+public protocol CoreStoreObjectiveCType: class {
     
     /**
      The corresponding Swift type
