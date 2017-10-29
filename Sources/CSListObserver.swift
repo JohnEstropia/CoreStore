@@ -42,7 +42,7 @@ import CoreData
  */
 @available(OSX 10.12, *)
 @objc
-public protocol CSListObserver: class, AnyObject {
+public protocol CSListObserver: class {
     
     /**
      Handles processing just before a change to the observed list occurs

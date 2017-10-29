@@ -40,7 +40,7 @@ import CoreData
  */
 @available(OSX 10.12, *)
 @objc
-public protocol CSObjectObserver: class, AnyObject {
+public protocol CSObjectObserver: class {
     
     /**
      Handles processing just before a change to the observed `object` occurs
