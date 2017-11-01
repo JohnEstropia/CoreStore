@@ -121,7 +121,7 @@ extension CoreStoreObject {
             
             return unsafeDowncast(coreStoreObject, to: self)
         }
-        func forceTypeCast<T: CoreStoreObject>(_ type: DynamicObject.Type, to: T.Type) -> T.Type {
+        func forceTypeCast<T: CoreStoreObject>(_ type: AnyClass, to: T.Type) -> T.Type {
             
             return type as! T.Type
         }
