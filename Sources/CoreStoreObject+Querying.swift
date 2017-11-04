@@ -85,61 +85,6 @@ public extension DynamicObject where Self: CoreStoreObject {
         
         return relationship(self.meta).keyPath
     }
-    
-    /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname == "John" })
-     ```
-     */
-    public static func `where`(_ condition: (Self) -> Where<Self>) -> Where<Self>  {
-        
-        return condition(self.meta)
-    }
-    
-    /**
-     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
-     ```
-     */
-    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy<Self>  {
-        
-        return OrderBy(.ascending(attribute(self.meta).keyPath))
-    }
-    
-    /**
-     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
-     ```
-     */
-    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy<Self>  {
-        
-        return OrderBy(.ascending(attribute(self.meta).keyPath))
-    }
-    
-    /**
-     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
-     ```
-     */
-    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy<Self>  {
-        
-        return OrderBy(.descending(attribute(self.meta).keyPath))
-    }
-    
-    /**
-     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
-     ```
-     */
-    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy<Self>  {
-        
-        return OrderBy(.descending(attribute(self.meta).keyPath))
-    }
 }
 
 
@@ -148,9 +93,9 @@ public extension DynamicObject where Self: CoreStoreObject {
 public extension ValueContainer.Required {
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname == "John" })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.nickname == "John" }))
      ```
      */
     @inline(__always)
@@ -160,9 +105,9 @@ public extension ValueContainer.Required {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is not equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname != "John" })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.nickname != "John" }))
      ```
      */
     @inline(__always)
@@ -172,9 +117,9 @@ public extension ValueContainer.Required {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is less than a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age < 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age < 20 }))
      ```
      */
     @inline(__always)
@@ -184,9 +129,9 @@ public extension ValueContainer.Required {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is greater than a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age > 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age > 20 }))
      ```
      */
     @inline(__always)
@@ -196,9 +141,9 @@ public extension ValueContainer.Required {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is less than or equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age <= 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age <= 20 }))
      ```
      */
     @inline(__always)
@@ -208,9 +153,9 @@ public extension ValueContainer.Required {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is greater than or equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age >= 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age >= 20 }))
      ```
      */
     @inline(__always)
@@ -220,9 +165,9 @@ public extension ValueContainer.Required {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by checking if a sequence contains the value of a property
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname }))
      ```
      */
     @inline(__always)
@@ -238,9 +183,9 @@ public extension ValueContainer.Required {
 public extension ValueContainer.Optional {
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname == "John" })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.nickname == "John" }))
      ```
      */
     @inline(__always)
@@ -250,9 +195,9 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is not equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname != "John" })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.nickname != "John" }))
      ```
      */
     @inline(__always)
@@ -262,9 +207,9 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is less than a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age < 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age < 20 }))
      ```
      */
     @inline(__always)
@@ -281,9 +226,9 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is greater than a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age > 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age > 20 }))
      ```
      */
     @inline(__always)
@@ -300,9 +245,9 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is less than or equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age <= 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age <= 20 }))
      ```
      */
     @inline(__always)
@@ -319,9 +264,9 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is greater than or equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age >= 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age >= 20 }))
      ```
      */
     @inline(__always)
@@ -338,9 +283,9 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by checking if a sequence contains the value of a property
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname }))
      ```
      */
     @inline(__always)
@@ -356,9 +301,9 @@ public extension ValueContainer.Optional {
 public extension RelationshipContainer.ToOne {
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     Creates a `Where` clause by comparing if a property is equal to a value
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { $0.master == me })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ $0.master == me }))
      ```
      */
     @inline(__always)
@@ -368,9 +313,9 @@ public extension RelationshipContainer.ToOne {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     Creates a `Where` clause by comparing if a property is not equal to a value
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { $0.master != me })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ $0.master != me }))
      ```
      */
     @inline(__always)
@@ -380,14 +325,50 @@ public extension RelationshipContainer.ToOne {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     Creates a `Where` clause by checking if a sequence contains the value of a property
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { [john, joe, bob] ~= $0.master })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ [john, joe, bob] ~= $0.master }))
      ```
      */
     @inline(__always)
     public static func ~= <S: Sequence>(_ sequence: S, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Where<O> where S.Iterator.Element == D {
         
         return Where(relationship.keyPath, isMemberOf: sequence)
+    }
+}
+
+
+// MARK: Deprecated
+
+extension DynamicObject where Self: CoreStoreObject {
+    
+    @available(*, deprecated, message: "Use the Where<DynamicObject>(_:) initializer that accepts the same closure argument")
+    public static func `where`(_ condition: (Self) -> Where<Self>) -> Where<Self>  {
+        
+        return condition(self.meta)
+    }
+    
+    @available(*, deprecated, message: "Use the new OrderBy<DynamicObject>(ascending:) overload that accepts the same closure argument")
+    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy<Self>  {
+        
+        return OrderBy(.ascending(attribute(self.meta).keyPath))
+    }
+    
+    @available(*, deprecated, message: "Use the new OrderBy<DynamicObject>(ascending:) overload that accepts the same closure argument")
+    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy<Self>  {
+        
+        return OrderBy(.ascending(attribute(self.meta).keyPath))
+    }
+    
+    @available(*, deprecated, message: "Use the new OrderBy<DynamicObject>(descending:) overload that accepts the same closure argument")
+    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy<Self>  {
+        
+        return OrderBy(.descending(attribute(self.meta).keyPath))
+    }
+    
+    @available(*, deprecated, message: "Use the new OrderBy<DynamicObject>(descending:) overload that accepts the same closure argument")
+    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy<Self>  {
+        
+        return OrderBy(.descending(attribute(self.meta).keyPath))
     }
 }

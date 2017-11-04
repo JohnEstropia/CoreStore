@@ -502,6 +502,16 @@ public extension Where where D: CoreStoreObject {
         
         self.init(D.meta[keyPath: keyPath].keyPath, isMemberOf: list)
     }
+    
+    /**
+     Initializes a `Where` clause from a closure
+     
+     - parameter condition: closure that returns the `Where` clause
+     */
+    public init(_ condition: (D) -> Where<D>) {
+        
+        self = condition(D.meta)
+    }
 }
 
 

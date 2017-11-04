@@ -208,14 +208,14 @@ class DynamicModelTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) in
                     
-                    let p1 = Animal.where({ $0.species == "Sparrow" })
+                    let p1 = Where<Animal>({ $0.species == "Sparrow" })
                     XCTAssertEqual(p1.predicate, NSPredicate(format: "%K == %@", "species", "Sparrow"))
                     
                     let bird = transaction.fetchOne(From<Animal>(), p1)
                     XCTAssertNotNil(bird)
                     XCTAssertEqual(bird!.species.value, "Sparrow")
                     
-                    let p2 = Dog.where({ $0.nickname == "Spot" })
+                    let p2 = Where<Dog>({ $0.nickname == "Spot" })
                     XCTAssertEqual(p2.predicate, NSPredicate(format: "%K == %@", "nickname", "Spot"))
                     
                     let dog = transaction.fetchOne(From<Dog>().where(\.nickname == "Spot"))
@@ -227,7 +227,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertNotNil(person)
                     XCTAssertEqual(person!.pets.value.first, dog)
                     
-                    let p3 = Dog.where({ $0.age == 10 })
+                    let p3 = Where<Dog>({ $0.age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))
                     
                     _ = transaction.fetchAll(
@@ -241,19 +241,19 @@ class DynamicModelTests: BaseTestDataTestCase {
                     )
                     _ = transaction.fetchAll(
                         From<Dog>(),
-                        Dog.where({ $0.age > 10 && $0.age <= 15 })
+                        Where<Dog>({ $0.age > 10 && $0.age <= 15 })
                     )
                     _ = transaction.fetchAll(
                         From<Dog>(),
-                        Dog.where({ $0.species == "Dog" && $0.age == 10 })
+                        Where<Dog>({ $0.species == "Dog" && $0.age == 10 })
                     )
                     _ = transaction.fetchAll(
                         From<Dog>(),
-                        Dog.where({ $0.age == 10 && $0.species == "Dog" })
+                        Where<Dog>({ $0.age == 10 && $0.species == "Dog" })
                     )
                     _ = transaction.fetchAll(
                         From<Dog>(),
-                        Dog.where({ $0.age > 10 && $0.age <= 15 })
+                        Where<Dog>({ $0.age > 10 && $0.age <= 15 })
                     )
                     _ = transaction.fetchAll(
                         From<Dog>(),

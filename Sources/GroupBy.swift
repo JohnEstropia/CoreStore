@@ -105,6 +105,11 @@ public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
 
 public extension GroupBy where D: NSManagedObject {
     
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
     public init<T>(_ keyPath: KeyPath<D, T>) {
         
         self.init([keyPath._kvcKeyPathString!])
@@ -113,21 +118,41 @@ public extension GroupBy where D: NSManagedObject {
 
 public extension GroupBy where D: CoreStoreObject {
     
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
     public init<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Required<T>>) {
         
         self.init([D.meta[keyPath: keyPath].keyPath])
     }
     
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
     public init<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Optional<T>>) {
         
         self.init([D.meta[keyPath: keyPath].keyPath])
     }
     
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
     public init<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Required<T>>) {
         
         self.init([D.meta[keyPath: keyPath].keyPath])
     }
     
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
     public init<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>) {
         
         self.init([D.meta[keyPath: keyPath].keyPath])
