@@ -575,6 +575,7 @@ public extension DataStack {
                                 sourceModel: sourceModel,
                                 destinationModel: destinationModel,
                                 mappingModel: mappingModel,
+                                migrationType: migrationType,
                                 progress: childProgress
                             )
                         }
@@ -680,10 +681,34 @@ public extension DataStack {
         return nil
     }
     
-    private func startMigrationForStorage<T: LocalStorage>(_ storage: T, sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, progress: Progress) throws {
+    private func startMigrationForStorage<T: LocalStorage>(_ storage: T, sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType, progress: Progress) throws {
         
         let fileURL = storage.fileURL
-        
+        if case .lightweight = migrationType {
+
+            do {
+
+                _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: destinationModel)) { (coordinator: NSPersistentStoreCoordinator) in
+
+                    try coordinator.addPersistentStoreSynchronously(
+                        type(of: storage).storeType,
+                        configuration: storage.configuration,
+                        URL: fileURL,
+                        options: storage.dictionary(
+                            forOptions: storage.localStorageOptions.union(.allowSynchronousLightweightMigration)
+                        )
+                    )
+                }
+                _ = try? storage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
+                progress.completedUnitCount = progress.totalUnitCount
+                return
+            }
+            catch {
+
+                // try manual migration
+            }
+        }
+
         let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
             .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack")
             .appendingPathComponent(ProcessInfo().globallyUniqueString)
