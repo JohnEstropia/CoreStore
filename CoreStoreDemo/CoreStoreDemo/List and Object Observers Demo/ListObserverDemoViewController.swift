@@ -32,9 +32,9 @@ struct ColorsDemo {
             
             switch self {
                 
-            case .all: return Where(true)
-            case .light: return Palette.where({ $0.brightness >= 0.9 })
-            case .dark: return Palette.where({ $0.brightness <= 0.4 })
+            case .all: return .init()
+            case .light: return (\Palette.brightness >= 0.9)
+            case .dark: return (\Palette.brightness <= 0.4)
             }
         }
     }
@@ -45,7 +45,7 @@ struct ColorsDemo {
             
             self.palettes.refetch(
                 self.filter.whereClause(),
-                Palette.orderBy(ascending: { $0.hue })
+                OrderBy<Palette>(.ascending(\.hue))
             )
         }
     }
@@ -74,9 +74,9 @@ struct ColorsDemo {
             )
         )
         return ColorsDemo.stack.monitorSectionedList(
-            From<Palette>(),
-            SectionBy(Palette.keyPath({ $0.colorName })),
-            Palette.orderBy(ascending: { $0.hue })
+            From<Palette>()
+                .sectionBy(\.colorName)
+                .orderBy(.ascending(\.hue))
         )
     }()
 }
