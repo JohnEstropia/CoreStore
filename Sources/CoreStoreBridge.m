@@ -235,9 +235,8 @@ CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CORESTORE_RE
 
 - (void)setAffectedStores:(NSArray<NSPersistentStore *> *_Nullable)affectedStores {
     
-    NSProcessInfo *processInfo = [NSProcessInfo processInfo];
-    if ([processInfo isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){ 11, 0, 0 }]
-        || ![processInfo isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){ 10, 0, 0 }]) {
+    if (NSFoundationVersionNumber < NSFoundationVersionNumber10_0
+        || [[NSProcessInfo processInfo] isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){ 11, 0, 0 }]) {
         
         self.safeAffectedStores = affectedStores;
         [super setAffectedStores:affectedStores];
