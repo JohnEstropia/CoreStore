@@ -72,15 +72,13 @@ internal extension NSPersistentStoreCoordinator {
     }
     
     @nonobjc
-    internal func addPersistentStoreSynchronously(_ storeType: String, configuration: ModelConfiguration, URL storeURL: URL?, options: [NSObject : AnyObject]?) throws -> NSPersistentStore {
+    internal func addPersistentStoreSynchronously(_ storeType: String, configuration: ModelConfiguration, URL storeURL: URL?, options: [AnyHashable: Any]?) throws -> NSPersistentStore {
         
-        var store: NSPersistentStore?
-        var storeError: NSError?
-        self.performSynchronously {
+        return try self.performSynchronously {
             
             do {
                 
-                store = try self.addPersistentStore(
+                return try self.addPersistentStore(
                     ofType: storeType,
                     configurationName: configuration,
                     at: storeURL,
@@ -89,13 +87,8 @@ internal extension NSPersistentStoreCoordinator {
             }
             catch {
                 
-                storeError = error as NSError
+                throw CoreStoreError(error)
             }
         }
-        if let store = store {
-            
-            return store
-        }
-        throw CoreStoreError(storeError)
     }
 }
