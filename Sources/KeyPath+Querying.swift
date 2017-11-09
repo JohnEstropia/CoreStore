@@ -77,6 +77,17 @@ public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ key
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.nickname ==  nil))
+ ```
+ */
+public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K == nil", keyPath._kvcKeyPathString!)
+}
+
+/**
  Creates a `Where` clause by comparing if a property is not equal to a value
  ```
  let person = CoreStore.fetchOne(From<Person>().where(\.nickname != "John"))
@@ -85,6 +96,17 @@ public func == <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ key
 public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, Optional<V>>, _ value: V?) -> Where<O> {
     
     return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: value)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.nickname != nil))
+ ```
+ */
+public func != <O: NSManagedObject, V: QueryableAttributeType & Equatable>(_ keyPath: KeyPath<O, Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K != nil", keyPath._kvcKeyPathString!)
 }
 
 /**
@@ -167,6 +189,17 @@ public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is less than a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.age < 20))
+ ```
+ */
+public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K < nil", keyPath._kvcKeyPathString!)
+}
+
+/**
  Creates a `Where` clause by comparing if a property is greater than a value
  ```
  let person = CoreStore.fetchOne(From<Person>().where(\.age > 20))
@@ -182,6 +215,17 @@ public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
         
         return Where<O>("%K > nil", keyPath._kvcKeyPathString!)
     }
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is greater than a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.age > nil))
+ ```
+ */
+public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K > nil", keyPath._kvcKeyPathString!)
 }
 
 /**
@@ -203,6 +247,17 @@ public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ ke
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is less than or equal to a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.age <= nil))
+ ```
+ */
+public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K <= nil", keyPath._kvcKeyPathString!)
+}
+
+/**
  Creates a `Where` clause by comparing if a property is greater than or equal to a value
  ```
  let person = CoreStore.fetchOne(From<Person>().where(\.age >= 20))
@@ -218,6 +273,17 @@ public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ ke
         
         return Where<O>("%K >= nil", keyPath._kvcKeyPathString!)
     }
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is greater than or equal to a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.age >= nil))
+ ```
+ */
+public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K >= nil", keyPath._kvcKeyPathString!)
 }
 
 
@@ -304,6 +370,17 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Op
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
+ let dog = CoreStore.fetchOne(From<Dog>().where(\.master == nil))
+ ```
+ */
+public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K == nil", keyPath._kvcKeyPathString!)
+}
+
+/**
  Creates a `Where` clause by comparing if a property is not equal to a value
  ```
  let dog = CoreStore.fetchOne(From<Dog>().where(\.master != john))
@@ -312,6 +389,17 @@ public func == <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Op
 public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ object: D?) -> Where<O> {
     
     return !Where<O>(keyPath._kvcKeyPathString!, isEqualTo: object)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
+ let dog = CoreStore.fetchOne(From<Dog>().where(\.master != nil))
+ ```
+ */
+public func != <O: NSManagedObject, D: NSManagedObject>(_ keyPath: KeyPath<O, Optional<D>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K != nil", keyPath._kvcKeyPathString!)
 }
 
 /**
@@ -409,6 +497,17 @@ public func == <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.nickname == nil))
+ ```
+ */
+public func == <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K == nil", O.meta[keyPath: keyPath].keyPath)
+}
+
+/**
  Creates a `Where` clause by comparing if a property is not equal to a value
  ```
  let person = CoreStore.fetchOne(From<Person>().where(\.nickname != "John"))
@@ -417,6 +516,17 @@ public func == <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
 public func != <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ value: V?) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: value)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.nickname != nil))
+ ```
+ */
+public func != <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K != nil", O.meta[keyPath: keyPath].keyPath)
 }
 
 /**
@@ -499,6 +609,17 @@ public func < <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ val
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is less than a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.age < nil))
+ ```
+ */
+public func < <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K < nil", O.meta[keyPath: keyPath].keyPath)
+}
+
+/**
  Creates a `Where` clause by comparing if a property is greater than a value
  ```
  let person = CoreStore.fetchOne(From<Person>().where(\.age > 20))
@@ -514,6 +635,17 @@ public func > <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ val
         
         return Where<O>("%K > nil", O.meta[keyPath: keyPath].keyPath)
     }
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is greater than a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.age > nil))
+ ```
+ */
+public func > <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K > nil", O.meta[keyPath: keyPath].keyPath)
 }
 
 /**
@@ -535,6 +667,17 @@ public func <= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is less than or equal to a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.age <= nil))
+ ```
+ */
+public func <= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K <= nil", O.meta[keyPath: keyPath].keyPath)
+}
+
+/**
  Creates a `Where` clause by comparing if a property is greater than or equal to a value
  ```
  let person = CoreStore.fetchOne(From<Person>().where(\.age >= 20))
@@ -550,6 +693,17 @@ public func >= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
         
         return Where<O>("%K >= nil", O.meta[keyPath: keyPath].keyPath)
     }
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is greater than or equal to a value
+ ```
+ let person = CoreStore.fetchOne(From<Person>().where(\.age >= nil))
+ ```
+ */
+public func >= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K >= nil", O.meta[keyPath: keyPath].keyPath)
 }
 
 
@@ -578,6 +732,17 @@ public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, 
 }
 
 /**
+ Creates a `Where` clause by comparing if a property is equal to a value
+ ```
+ let dog = CoreStore.fetchOne(From<Dog>().where(\.master == nil))
+ ```
+ */
+public func == <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K == nil", O.meta[keyPath: keyPath].keyPath)
+}
+
+/**
  Creates a `Where` clause by comparing if a property is not equal to a value
  ```
  let dog = CoreStore.fetchOne(From<Dog>().where(\.master != john))
@@ -597,6 +762,17 @@ public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, 
 public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ object: D?) -> Where<O> {
     
     return !Where<O>(O.meta[keyPath: keyPath].keyPath, isEqualTo: object)
+}
+
+/**
+ Creates a `Where` clause by comparing if a property is not equal to a value
+ ```
+ let dog = CoreStore.fetchOne(From<Dog>().where(\.master != nil))
+ ```
+ */
+public func != <O, D>(_ keyPath: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ null: Void?) -> Where<O> {
+    
+    return Where<O>("%K != nil", O.meta[keyPath: keyPath].keyPath)
 }
 
 /**
