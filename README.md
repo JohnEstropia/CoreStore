@@ -18,10 +18,10 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 </p>
 
-* **Swift 3.2:** iOS 8+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
-* Other Swift versions: [Swift 3.1(version 4.1.4)](https://github.com/JohnEstropia/CoreStore/tree/4.1.4), [Swift 4.0](https://github.com/JohnEstropia/CoreStore/tree/5.0.0)
+* **Swift 4.0:** iOS 8+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
+* Other Swift versions: [Swift 3.2(version 4.2.3)](https://github.com/JohnEstropia/CoreStore/tree/4.2.3)
 
-Upgrading from CoreStore 4.1 (Swift 3.1) to 4.2 (Swift 3.2)? Check out the [new features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
+Upgrading from CoreStore 4.2 (Swift 3.2) to 5.0 (Swift 4.0)? Check out the [new features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
 
 CoreStore is now part of the [Swift Source Compatibility projects](https://swift.org/source-compatibility/#current-list-of-projects).
 
@@ -146,20 +146,18 @@ let people = CoreStore.fetchAll(From<MyPersonEntity>())
 Fetching objects (complex):
 ```swift
 let people = CoreStore.fetchAll(
-    From<MyPersonEntity>(),
-    Where("age > 30"),
-    OrderBy(.ascending("name"), .descending("age")),
-    Tweak { (fetchRequest) -> Void in
-        fetchRequest.includesPendingChanges = false
-    }
+    From<MyPersonEntity>()
+        .where(\.age > 30),
+        .orderBy(.ascending(\.name), .descending(.\age)),
+        .tweak({ $0.includesPendingChanges = false })
 )
 ```
 
 Querying values:
 ```swift
 let maxAge = CoreStore.queryValue(
-    From<MyPersonEntity>(),
-    Select<Int>(.maximum("age"))
+    From<MyPersonEntity>()
+        .select(Int.self, .maximum(\.age))
 )
 ```
 
