@@ -687,8 +687,35 @@ public extension DataStack {
 
             do {
 
+                let timerQueue = DispatchQueue(
+                    label: "DataStack.lightweightMigration.timerQueue",
+                    qos: .utility,
+                    attributes: []
+                )
+                let estimatedTime: TimeInterval = 60 * 3 // 3 mins
+                let interval: TimeInterval = 1
+                let fakeTotalUnitCount: Float = 0.9 * Float(progress.totalUnitCount)
+                var fakeProgress: Float = 0
+                
+                var recursiveCheck: () -> Void = {}
+                recursiveCheck = {
+                    
+                    guard fakeProgress < 1 else {
+                        
+                        return
+                    }
+                    progress.completedUnitCount = Int64(fakeTotalUnitCount * fakeProgress)
+                    fakeProgress += Float(interval / estimatedTime)
+                    
+                    timerQueue.asyncAfter(
+                        deadline: .now() + interval,
+                        execute: recursiveCheck
+                    )
+                }
+                timerQueue.async(execute: recursiveCheck)
+                
                 _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: destinationModel)) { (coordinator: NSPersistentStoreCoordinator) in
-
+                    
                     try coordinator.addPersistentStoreSynchronously(
                         type(of: storage).storeType,
                         configuration: storage.configuration,
@@ -697,6 +724,10 @@ public extension DataStack {
                             forOptions: storage.localStorageOptions.union(.allowSynchronousLightweightMigration)
                         )
                     )
+                }
+                timerQueue.sync {
+                    
+                    fakeProgress = 1
                 }
                 _ = try? storage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
                 progress.completedUnitCount = progress.totalUnitCount
