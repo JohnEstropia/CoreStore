@@ -714,6 +714,7 @@ public extension DataStack {
                 }
                 timerQueue.async(execute: recursiveCheck)
                 
+                _ = try storage.cs_finalizeStorageAndWait(soureModelHint: sourceModel)
                 _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: destinationModel)) { (coordinator: NSPersistentStoreCoordinator) in
                     
                     try coordinator.addPersistentStoreSynchronously(
