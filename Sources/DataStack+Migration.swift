@@ -682,6 +682,15 @@ public extension DataStack {
     
     private func startMigrationForStorage<T: LocalStorage>(_ storage: T, sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, mappingModel: NSMappingModel, migrationType: MigrationType, progress: Progress) throws {
         
+        do {
+            
+            try storage.cs_finalizeStorageAndWait(soureModelHint: sourceModel)
+        }
+        catch {
+            
+            throw CoreStoreError(error)
+        }
+        
         let fileURL = storage.fileURL
         if case .lightweight = migrationType {
 
@@ -714,7 +723,6 @@ public extension DataStack {
                 }
                 timerQueue.async(execute: recursiveCheck)
                 
-                _ = try storage.cs_finalizeStorageAndWait(soureModelHint: sourceModel)
                 _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: destinationModel)) { (coordinator: NSPersistentStoreCoordinator) in
                     
                     try coordinator.addPersistentStoreSynchronously(
@@ -730,13 +738,13 @@ public extension DataStack {
                     
                     fakeProgress = 1
                 }
-                _ = try? storage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
+                try storage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
                 progress.completedUnitCount = progress.totalUnitCount
                 return
             }
             catch {
 
-                // try manual migration
+                throw CoreStoreError(error)
             }
         }
 
@@ -764,7 +772,6 @@ public extension DataStack {
         
         do {
             
-            try storage.cs_finalizeStorageAndWait(soureModelHint: sourceModel)
             try migrationManager.migrateStore(
                 from: fileURL,
                 sourceType: type(of: storage).storeType,
