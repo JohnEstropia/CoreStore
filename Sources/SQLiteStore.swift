@@ -219,6 +219,7 @@ public final class SQLiteStore: LocalStorage {
                 options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
             )
         }
+        _ = try? FileManager.default.removeItem(atPath: "\(self.fileURL.path)-shm")
     }
     
     /**
