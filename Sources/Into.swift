@@ -39,12 +39,12 @@ import CoreData
  let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
  ```
  */
-public struct Into<T: DynamicObject>: Hashable {
+public struct Into<D: DynamicObject>: Hashable {
     
     /**
      The associated `NSManagedObject` or `CoreStoreObject` entity class
      */
-    public let entityClass: T.Type
+    public let entityClass: D.Type
     
     /**
      The `NSPersistentStore` configuration name to associate objects from.
@@ -60,17 +60,17 @@ public struct Into<T: DynamicObject>: Hashable {
      */
     public init() {
         
-        self.init(entityClass: T.self, configuration: nil, inferStoreIfPossible: true)
+        self.init(entityClass: D.self, configuration: nil, inferStoreIfPossible: true)
     }
     
     /**
-     Initializes an `Into` clause with the specified entity type.
+     Initializes an `Into` clause with the specified entity type. This is useful for querying a subclass while binding the generic type with a base class.
      ```
-     let person = transaction.create(Into(MyPersonEntity.self))
+     let person = transaction.create(Into<MyPersonEntity>(MyEmployeeEntity.self))
      ```
-     - parameter entity: the `NSManagedObject` type to be created
+     - parameter entity: the `NSManagedObject` or `CoreStoreObject` type to be created
      */
-    public init(_ entity: T.Type) {
+    public init(_ entity: D.Type) {
         
         self.init(entityClass: entity, configuration: nil, inferStoreIfPossible: true)
     }
@@ -80,22 +80,22 @@ public struct Into<T: DynamicObject>: Hashable {
      ```
      let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
      ```
-     - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      */
     public init(_ configuration: ModelConfiguration) {
         
-        self.init(entityClass: T.self, configuration: configuration, inferStoreIfPossible: false)
+        self.init(entityClass: D.self, configuration: configuration, inferStoreIfPossible: false)
     }
     
     /**
-     Initializes an `Into` clause with the specified entity type and configuration.
+     Initializes an `Into` clause with the specified entity type and configuration. This is useful for querying a subclass while binding the generic type with a base class.
      ```
-     let person = transaction.create(Into(MyPersonEntity.self, "Configuration1"))
+     let person = transaction.create(Into<MyPersonEntity>(MyEmployeeEntity.self, "Configuration1"))
      ```
-     - parameter entity: the `NSManagedObject` type to be created
-     - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s entity type. Set to `nil` to use the default configuration.
+     - parameter entity: the `NSManagedObject` or `CoreStoreObject` type to be created
+     - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      */
-    public init(_ entity: T.Type, _ configuration: ModelConfiguration) {
+    public init(_ entity: D.Type, _ configuration: ModelConfiguration) {
         
         self.init(entityClass: entity, configuration: configuration, inferStoreIfPossible: false)
     }
@@ -125,7 +125,7 @@ public struct Into<T: DynamicObject>: Hashable {
     
     internal let inferStoreIfPossible: Bool
     
-    internal init(entityClass: T.Type, configuration: ModelConfiguration, inferStoreIfPossible: Bool) {
+    internal init(entityClass: D.Type, configuration: ModelConfiguration, inferStoreIfPossible: Bool) {
         
         self.entityClass = entityClass
         self.configuration = configuration

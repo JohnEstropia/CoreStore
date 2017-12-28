@@ -95,7 +95,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             deleteRule: DeleteRule = .nullify,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             renamingIdentifier: @autoclosure @escaping () -> String? = nil,
@@ -129,7 +129,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>,
             deleteRule: DeleteRule = .nullify,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
@@ -164,7 +164,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>,
             deleteRule: DeleteRule = .nullify,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
@@ -199,7 +199,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>,
             deleteRule: DeleteRule = .nullify,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
@@ -234,14 +234,13 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
         
-        public let keyPath: RawKeyPath
-        
+        internal let keyPath: KeyPathString
         internal let isToMany = false
         internal let isOrdered = false
         internal let deleteRule: NSDeleteRule
         internal let minCount: Int = 0
         internal let maxCount: Int = 1
-        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> RawKeyPath?)
+        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPathString?)
         internal let versionHashModifier: () -> String?
         internal let renamingIdentifier: () -> String?
         internal let affectedByKeyPaths: () -> Set<String>
@@ -294,7 +293,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: RawKeyPath, inverseKeyPath: @escaping () -> RawKeyPath?, deleteRule: DeleteRule, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
+        private init(keyPath: KeyPathString, inverseKeyPath: @escaping () -> KeyPathString?, deleteRule: DeleteRule, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue
@@ -341,7 +340,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             minCount: Int = 0,
             maxCount: Int = 0,
             deleteRule: DeleteRule = .nullify,
@@ -381,7 +380,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             minCount: Int = 0,
             maxCount: Int = 0,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>,
@@ -422,7 +421,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             minCount: Int = 0,
             maxCount: Int = 0,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>,
@@ -463,7 +462,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             minCount: Int = 0,
             maxCount: Int = 0,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>,
@@ -502,15 +501,14 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
         
-        public let keyPath: RawKeyPath
-        
+        internal let keyPath: KeyPathString
         internal let isToMany = true
         internal let isOptional = true
         internal let isOrdered = true
         internal let deleteRule: NSDeleteRule
         internal let minCount: Int
         internal let maxCount: Int
-        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> RawKeyPath?)
+        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPathString?)
         internal let versionHashModifier: () -> String?
         internal let renamingIdentifier: () -> String?
         internal let affectedByKeyPaths: () -> Set<String>
@@ -615,7 +613,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             deleteRule: DeleteRule = .nullify,
             minCount: Int = 0,
             maxCount: Int = 0,
@@ -655,7 +653,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToOne<O>,
             deleteRule: DeleteRule = .nullify,
             minCount: Int = 0,
@@ -696,7 +694,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyOrdered<O>,
             deleteRule: DeleteRule = .nullify,
             minCount: Int = 0,
@@ -737,7 +735,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             inverse: @escaping (D) -> RelationshipContainer<D>.ToManyUnordered<O>,
             deleteRule: DeleteRule = .nullify,
             minCount: Int = 0,
@@ -776,15 +774,14 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
         
-        public let keyPath: RawKeyPath
-        
+        internal let keyPath: KeyPathString
         internal let isToMany = true
         internal let isOptional = true
         internal let isOrdered = false
         internal let deleteRule: NSDeleteRule
         internal let minCount: Int
         internal let maxCount: Int
-        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> RawKeyPath?)
+        internal let inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPathString?)
         internal let versionHashModifier: () -> String?
         internal let renamingIdentifier: () -> String?
         internal let affectedByKeyPaths: () -> Set<String>
@@ -837,7 +834,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: Private
         
-        private init(keyPath: RawKeyPath, inverseKeyPath: @escaping () -> RawKeyPath?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
+        private init(keyPath: KeyPathString, inverseKeyPath: @escaping () -> KeyPathString?, deleteRule: DeleteRule, minCount: Int, maxCount: Int, versionHashModifier: @autoclosure @escaping () -> String?, renamingIdentifier: @autoclosure @escaping () -> String?, affectedByKeyPaths: @autoclosure @escaping () -> Set<String>) {
             
             self.keyPath = keyPath
             self.deleteRule = deleteRule.nativeValue

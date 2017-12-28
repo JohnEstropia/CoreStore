@@ -35,7 +35,7 @@ import CoreData
  - SeeAlso: `SelectTerm`
  */
 @objc
-public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
+public final class CSSelectTerm: NSObject {
     
     /**
      Provides a `CSSelectTerm` to a `CSSelect` clause for querying an entity attribute.
@@ -48,7 +48,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - parameter keyPath: the attribute name
      */
     @objc
-    public convenience init(keyPath: RawKeyPath) {
+    public convenience init(keyPath: KeyPathString) {
 
         self.init(.attribute(keyPath))
     }
@@ -65,7 +65,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the average value of an attribute
      */
     @objc
-    public static func average(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
+    public static func average(_ keyPath: KeyPathString, as alias: KeyPathString?) -> CSSelectTerm {
         
         return self.init(.average(keyPath, as: alias))
     }
@@ -82,7 +82,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `SelectTerm` to a `Select` clause for a count query
      */
     @objc
-    public static func count(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
+    public static func count(_ keyPath: KeyPathString, as alias: KeyPathString?) -> CSSelectTerm {
         
         return self.init(.count(keyPath, as: alias))
     }
@@ -99,7 +99,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the maximum value for an attribute
      */
     @objc
-    public static func maximum(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
+    public static func maximum(_ keyPath: KeyPathString, as alias: KeyPathString?) -> CSSelectTerm {
         
         return self.init(.maximum(keyPath, as: alias))
     }
@@ -116,7 +116,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the minimum value for an attribute
      */
     @objc
-    public static func minimum(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
+    public static func minimum(_ keyPath: KeyPathString, as alias: KeyPathString?) -> CSSelectTerm {
         
         return self.init(.minimum(keyPath, as: alias))
     }
@@ -133,7 +133,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSelectTerm` to a `CSSelect` clause for querying the sum value for an attribute
      */
     @objc
-    public static func sum(_ keyPath: RawKeyPath, as alias: RawKeyPath?) -> CSSelectTerm {
+    public static func sum(_ keyPath: KeyPathString, as alias: KeyPathString?) -> CSSelectTerm {
         
         return self.init(.sum(keyPath, as: alias))
     }
@@ -150,7 +150,7 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
      - returns: a `SelectTerm` to a `Select` clause for querying the sum value for an attribute
      */
     @objc
-    public static func objectIDAs(_ alias: RawKeyPath? = nil) -> CSSelectTerm {
+    public static func objectIDAs(_ alias: KeyPathString? = nil) -> CSSelectTerm {
         
         return self.init(.objectID(as: alias))
     }
@@ -175,11 +175,11 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
     
     // MARK: CoreStoreObjectiveCType
     
-    public let bridgeToSwift: SelectTerm
+    public let bridgeToSwift: SelectTerm<NSManagedObject>
     
-    public init(_ swiftValue: SelectTerm) {
+    public init<D: NSManagedObject>(_ swiftValue: SelectTerm<D>) {
         
-        self.bridgeToSwift = swiftValue
+        self.bridgeToSwift = swiftValue.downcast()
         super.init()
     }
 }
@@ -187,13 +187,31 @@ public final class CSSelectTerm: NSObject, CoreStoreObjectiveCType {
 
 // MARK: - SelectTerm
 
-extension SelectTerm: CoreStoreSwiftType {
+extension SelectTerm where D: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSSelectTerm {
         
         return CSSelectTerm(self)
+    }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> SelectTerm<NSManagedObject> {
+        
+        switch self {
+            
+        case ._attribute(let keyPath):
+            return SelectTerm<NSManagedObject>._attribute(keyPath)
+            
+        case ._aggregate(let function, let keyPath, let alias, let nativeType):
+            return SelectTerm<NSManagedObject>._aggregate(function: function, keyPath: keyPath, alias: alias, nativeType: nativeType)
+            
+        case ._identity(let alias, let nativeType):
+            return SelectTerm<NSManagedObject>._identity(alias: alias, nativeType: nativeType)
+        }
     }
 }
 
@@ -218,9 +236,10 @@ public final class CSSelect: NSObject {
      ```
      - parameter numberTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(numberTerm: CSSelectTerm) {
         
-        self.init(Select<NSNumber>(numberTerm.bridgeToSwift))
+        self.init(Select<NSManagedObject, NSNumber>(numberTerm.bridgeToSwift))
     }
     
     /**
@@ -233,9 +252,10 @@ public final class CSSelect: NSObject {
      ```
      - parameter decimalTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(decimalTerm: CSSelectTerm) {
         
-        self.init(Select<NSDecimalNumber>(decimalTerm.bridgeToSwift))
+        self.init(Select<NSManagedObject, NSDecimalNumber>(decimalTerm.bridgeToSwift))
     }
     
     /**
@@ -248,9 +268,10 @@ public final class CSSelect: NSObject {
      ```
      - parameter stringTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(stringTerm: CSSelectTerm) {
         
-        self.init(Select<NSString>(stringTerm.bridgeToSwift))
+        self.init(Select<NSManagedObject, NSString>(stringTerm.bridgeToSwift))
     }
     
     /**
@@ -263,9 +284,10 @@ public final class CSSelect: NSObject {
      ```
      - parameter dateTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(dateTerm: CSSelectTerm) {
         
-        self.init(Select<Date>(dateTerm.bridgeToSwift))
+        self.init(Select<NSManagedObject, Date>(dateTerm.bridgeToSwift))
     }
     
     /**
@@ -278,9 +300,10 @@ public final class CSSelect: NSObject {
      ```
      - parameter dataTerm: the `CSSelectTerm` specifying the attribute/aggregate value to query
      */
+    @objc
     public convenience init(dataTerm: CSSelectTerm) {
         
-        self.init(Select<Data>(dataTerm.bridgeToSwift))
+        self.init(Select<NSManagedObject, Data>(dataTerm.bridgeToSwift))
     }
     
     /**
@@ -292,9 +315,10 @@ public final class CSSelect: NSObject {
         // ...
      ```
      */
+    @objc
     public convenience init(objectIDTerm: ()) {
         
-        self.init(Select<NSManagedObjectID>(.objectID()))
+        self.init(Select<NSManagedObject, NSManagedObjectID>(.objectID()))
     }
     
     /**
@@ -307,9 +331,10 @@ public final class CSSelect: NSObject {
      - parameter term: the `CSSelectTerm` specifying the attribute/aggregate value to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
+    @objc
     public static func dictionaryForTerm(_ term: CSSelectTerm) -> CSSelect {
         
-        return self.init(Select<NSDictionary>(term.bridgeToSwift))
+        return self.init(Select<NSManagedObject, NSDictionary>(term.bridgeToSwift))
     }
     
     /**
@@ -325,9 +350,10 @@ public final class CSSelect: NSObject {
      - parameter terms: the `CSSelectTerm`s specifying the attribute/aggregate values to query
      - returns: a `CSSelect` clause for querying an entity attribute
      */
+    @objc
     public static func dictionaryForTerms(_ terms: [CSSelectTerm]) -> CSSelect {
         
-        return self.init(Select<NSDictionary>(terms.map { $0.bridgeToSwift }))
+        return self.init(Select<NSManagedObject, NSDictionary>(terms.map { $0.bridgeToSwift }))
     }
     
     
@@ -357,18 +383,18 @@ public final class CSSelect: NSObject {
     
     // MARK: CoreStoreObjectiveCType
     
-    public init<T: QueryableAttributeType>(_ swiftValue: Select<T>) {
+    public init<D: NSManagedObject, T: QueryableAttributeType>(_ swiftValue: Select<D, T>) {
         
         self.attributeType = T.cs_rawAttributeType
-        self.selectTerms = swiftValue.selectTerms
+        self.selectTerms = swiftValue.selectTerms.map({ $0.downcast() })
         self.bridgeToSwift = swiftValue
         super.init()
     }
     
-    public init<T>(_ swiftValue: Select<T>) {
+    public init<D: NSManagedObject, T>(_ swiftValue: Select<D, T>) {
         
         self.attributeType = .undefinedAttributeType
-        self.selectTerms = swiftValue.selectTerms
+        self.selectTerms = swiftValue.selectTerms.map({ $0.downcast() })
         self.bridgeToSwift = swiftValue
         super.init()
     }
@@ -377,7 +403,95 @@ public final class CSSelect: NSObject {
     // MARK: Internal
     
     internal let attributeType: NSAttributeType
-    internal let selectTerms: [SelectTerm]
+    internal let selectTerms: [SelectTerm<NSManagedObject>]
+    
+    
+    // MARK: Internal
+    
+    internal func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
+        
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.resultType = .dictionaryResultType
+        
+        func attributeDescription(for keyPath: String, in entity: NSEntityDescription) -> NSAttributeDescription? {
+            
+            let components = keyPath.components(separatedBy: ".")
+            switch components.count {
+                
+            case 0:
+                return nil
+                
+            case 1:
+                return entity.attributesByName[components[0]]
+                
+            default:
+                guard let relationship = entity.relationshipsByName[components[0]],
+                    let destinationEntity = relationship.destinationEntity else {
+                        
+                        return nil
+                }
+                return attributeDescription(
+                    for: components.dropFirst().joined(separator: "."),
+                    in: destinationEntity
+                )
+            }
+        }
+        
+        var propertiesToFetch = [Any]()
+        for term in self.selectTerms {
+            
+            switch term {
+                
+            case ._attribute(let keyPath):
+                propertiesToFetch.append(keyPath)
+                
+            case ._aggregate(let function, let keyPath, let alias, let nativeType):
+                let entityDescription = fetchRequest.entity!
+                if let attributeDescription = attributeDescription(for: keyPath, in: entityDescription) {
+                    
+                    let expressionDescription = NSExpressionDescription()
+                    expressionDescription.name = alias
+                    if nativeType == .undefinedAttributeType {
+                        
+                        expressionDescription.expressionResultType = attributeDescription.attributeType
+                    }
+                    else {
+                        
+                        expressionDescription.expressionResultType = nativeType
+                    }
+                    expressionDescription.expression = NSExpression(
+                        forFunction: function,
+                        arguments: [NSExpression(forKeyPath: keyPath)]
+                    )
+                    propertiesToFetch.append(expressionDescription)
+                }
+                else {
+                    
+                    CoreStore.log(
+                        .warning,
+                        message: "The key path \"\(keyPath)\" could not be resolved in entity \(cs_typeName(entityDescription.managedObjectClassName)) as an attribute and will be ignored by \(cs_typeName(self)) query clause."
+                    )
+                }
+                
+            case ._identity(let alias, let nativeType):
+                let expressionDescription = NSExpressionDescription()
+                expressionDescription.name = alias
+                if nativeType == .undefinedAttributeType {
+                    
+                    expressionDescription.expressionResultType = .objectIDAttributeType
+                }
+                else {
+                    
+                    expressionDescription.expressionResultType = nativeType
+                }
+                expressionDescription.expression = NSExpression.expressionForEvaluatedObject()
+                
+                propertiesToFetch.append(expressionDescription)
+            }
+        }
+        
+        fetchRequest.propertiesToFetch = propertiesToFetch
+    }
     
     
     // MARK: Private
@@ -388,12 +502,20 @@ public final class CSSelect: NSObject {
 
 // MARK: - Select
 
-extension Select: CoreStoreSwiftType {
+extension Select where D: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSSelect {
         
         return CSSelect(self)
+    }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> Select<NSManagedObject, T> {
+        
+        return Select<NSManagedObject, T>(self.selectTerms.map({ $0.downcast() }))
     }
 }

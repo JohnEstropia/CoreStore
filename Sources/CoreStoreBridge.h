@@ -43,7 +43,7 @@
 #define CORESTORE_RETURNS_RETAINED          __attribute__((ns_returns_retained))
 
 
-#pragma mark - RawKeyPath Utilities
+#pragma mark - KeyPathString Utilities
 
 #define CSKeyPath(type, property) ({ \
     type *_je_keypath_dummy __attribute__((unused)); \
@@ -477,7 +477,7 @@ CSSelect *_Nonnull CSSelectData(CSSelectTerm *_Nonnull selectTerm) CORESTORE_RET
  a <tt>CSSelect</tt> clause for querying an <tt>NSManagedObjectID</tt> value
  */
 CORESTORE_EXTERN
-CSSelect *_Nonnull CSSelectObjectID() CORESTORE_RETURNS_RETAINED;
+CSSelect *_Nonnull CSSelectObjectID(void) CORESTORE_RETURNS_RETAINED;
 
 
 #pragma mark CSTweak

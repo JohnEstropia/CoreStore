@@ -210,7 +210,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         /**
          Accesses the property value via its keyPath.
          */
-        public subscript(attribute: RawKeyPath) -> Any? {
+        public subscript(attribute: KeyPathString) -> Any? {
             
             return self.rawObject.cs_accessValueForKVCKey(attribute)
         }
@@ -267,7 +267,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         /**
          Accesses or mutates the property value via its keyPath.
          */
-        public subscript(attribute: RawKeyPath) -> Any? {
+        public subscript(attribute: KeyPathString) -> Any? {
             
             get { return self.rawObject.cs_accessValueForKVCKey(attribute) }
             set { self.rawObject.cs_setValue(newValue, forKVCKey: attribute) }
@@ -304,7 +304,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         
         // MARK: Internal
         
-        internal init(_ rawObject: NSManagedObject, _ sourceAttributesByDestinationKey: [RawKeyPath: NSAttributeDescription]) {
+        internal init(_ rawObject: NSManagedObject, _ sourceAttributesByDestinationKey: [KeyPathString: NSAttributeDescription]) {
             
             self.rawObject = rawObject
             self.sourceAttributesByDestinationKey = sourceAttributesByDestinationKey
@@ -314,7 +314,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         // MARK: FilePrivate
         
         fileprivate let rawObject: NSManagedObject
-        fileprivate let sourceAttributesByDestinationKey: [RawKeyPath: NSAttributeDescription]
+        fileprivate let sourceAttributesByDestinationKey: [KeyPathString: NSAttributeDescription]
     }
     
     
@@ -477,7 +477,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
                 let transformedRenamingIdentifiers = Set(destinationAttributes.keys)
                     .intersection(sourceAttributes.keys)
 
-                var sourceAttributesByDestinationKey: [RawKeyPath: NSAttributeDescription] = [:]
+                var sourceAttributesByDestinationKey: [KeyPathString: NSAttributeDescription] = [:]
                 for renamingIdentifier in transformedRenamingIdentifiers {
                     
                     let sourceAttribute = sourceAttributes[renamingIdentifier]!.attribute
@@ -535,7 +535,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             
             let userInfo = mapping.userInfo!
             let transformer = userInfo[CustomEntityMigrationPolicy.UserInfoKey.transformer]! as! CustomMapping.Transformer
-            let sourceAttributesByDestinationKey = userInfo[CustomEntityMigrationPolicy.UserInfoKey.sourceAttributesByDestinationKey] as! [RawKeyPath: NSAttributeDescription]
+            let sourceAttributesByDestinationKey = userInfo[CustomEntityMigrationPolicy.UserInfoKey.sourceAttributesByDestinationKey] as! [KeyPathString: NSAttributeDescription]
             
             var destinationObject: UnsafeDestinationObject?
             try transformer(
@@ -585,8 +585,8 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         var insertMappings: Set<CustomMapping> = []
         var copyMappings: Set<CustomMapping> = []
         var transformMappings: Set<CustomMapping> = []
-        var allMappedSourceKeys: [RawKeyPath: RawKeyPath] = [:]
-        var allMappedDestinationKeys: [RawKeyPath: RawKeyPath] = [:]
+        var allMappedSourceKeys: [KeyPathString: KeyPathString] = [:]
+        var allMappedDestinationKeys: [KeyPathString: KeyPathString] = [:]
         
         let sourceRenamingIdentifiers = sourceModel.cs_resolvedRenamingIdentities()
         let sourceEntityNames = sourceModel.entitiesByName

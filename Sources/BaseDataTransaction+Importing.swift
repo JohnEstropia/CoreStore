@@ -39,9 +39,9 @@ public extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
      */
-    public func importObject<T: DynamicObject & ImportableObject>(
-        _ into: Into<T>,
-        source: T.ImportSource) throws -> T? {
+    public func importObject<D: ImportableObject>(
+        _ into: Into<D>,
+        source: D.ImportSource) throws -> D? {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -69,9 +69,9 @@ public extension BaseDataTransaction {
      - parameter source: the object to import values from
      - throws: an `Error` thrown from any of the `ImportableObject` methods
      */
-    public func importObject<T: DynamicObject & ImportableObject>(
-        _ object: T,
-        source: T.ImportSource) throws {
+    public func importObject<D: ImportableObject>(
+        _ object: D,
+        source: D.ImportSource) throws {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -97,9 +97,9 @@ public extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the array of created `ImportableObject` instances
      */
-    public func importObjects<T: DynamicObject & ImportableObject, S: Sequence>(
-        _ into: Into<T>,
-        sourceArray: S) throws -> [T] where S.Iterator.Element == T.ImportSource {
+    public func importObjects<D: ImportableObject, S: Sequence>(
+        _ into: Into<D>,
+        sourceArray: S) throws -> [D] where S.Iterator.Element == D.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -108,7 +108,7 @@ public extension BaseDataTransaction {
             
             return try autoreleasepool {
                 
-                return try sourceArray.flatMap { (source) -> T? in
+                return try sourceArray.flatMap { (source) -> D? in
                   
                     let entityType = into.entityClass 
                     guard entityType.shouldInsert(from: source, in: self) else {
@@ -133,9 +133,9 @@ public extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
      */
-    public func importUniqueObject<T: DynamicObject & ImportableUniqueObject>(
-        _ into: Into<T>,
-        source: T.ImportSource) throws -> T? {
+    public func importUniqueObject<D: ImportableUniqueObject>(
+        _ into: Into<D>,
+        source: D.ImportSource) throws -> D? {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -151,7 +151,7 @@ public extension BaseDataTransaction {
                     return nil
                 }
                 
-                if let object = self.fetchOne(From(entityType), Where(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
+                if let object = self.fetchOne(From(entityType), Where<D>(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
                     guard entityType.shouldUpdate(from: source, in: self) else {
                         
@@ -185,10 +185,10 @@ public extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the array of created/updated `ImportableUniqueObject` instances
      */
-    public func importUniqueObjects<T: DynamicObject & ImportableUniqueObject, S: Sequence>(
-        _ into: Into<T>,
+    public func importUniqueObjects<D: ImportableUniqueObject, S: Sequence>(
+        _ into: Into<D>,
         sourceArray: S,
-        preProcess: @escaping (_ mapping: [T.UniqueIDType: T.ImportSource]) throws -> [T.UniqueIDType: T.ImportSource] = { $0 }) throws -> [T] where S.Iterator.Element == T.ImportSource {
+        preProcess: @escaping (_ mapping: [D.UniqueIDType: D.ImportSource]) throws -> [D.UniqueIDType: D.ImportSource] = { $0 }) throws -> [D] where S.Iterator.Element == D.ImportSource {
             
             CoreStore.assert(
                 self.isRunningInAllowedQueue(),
@@ -198,10 +198,10 @@ public extension BaseDataTransaction {
             return try autoreleasepool {
               
                 let entityType = into.entityClass 
-                var importSourceByID = Dictionary<T.UniqueIDType, T.ImportSource>()
+                var importSourceByID = Dictionary<D.UniqueIDType, D.ImportSource>()
                 let sortedIDs = try autoreleasepool {
                   
-                    return try sourceArray.flatMap { (source) -> T.UniqueIDType? in
+                    return try sourceArray.flatMap { (source) -> D.UniqueIDType? in
                         
                         guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
                             
@@ -214,12 +214,12 @@ public extension BaseDataTransaction {
                 
                 importSourceByID = try autoreleasepool { try preProcess(importSourceByID) }
 
-                var existingObjectsByID = Dictionary<T.UniqueIDType, T>()
-                self.fetchAll(From(entityType), Where(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))?
+                var existingObjectsByID = Dictionary<D.UniqueIDType, D>()
+                self.fetchAll(From(entityType), Where<D>(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))?
                     .forEach { existingObjectsByID[$0.uniqueIDValue] = $0 }
               
-                var processedObjectIDs = Set<T.UniqueIDType>()
-                var result = [T]()
+                var processedObjectIDs = Set<D.UniqueIDType>()
+                var result = [D]()
               
                 for objectID in sortedIDs where !processedObjectIDs.contains(objectID) {
                     

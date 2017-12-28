@@ -50,7 +50,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     required init?(coder aDecoder: NSCoder) {
         
-        if let palette = ColorsDemo.stack.fetchOne(From<Palette>(), Palette.orderBy(ascending: { $0.hue })) {
+        if let palette = ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.hue))) {
             
             self.monitor = ColorsDemo.stack.monitorObject(palette)
         }
@@ -64,7 +64,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
                 }
             )
             
-            let palette = ColorsDemo.stack.fetchOne(From<Palette>(), Palette.orderBy(ascending: { $0.hue }))!
+            let palette = ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.hue)))!
             self.monitor = ColorsDemo.stack.monitorObject(palette)
         }
         
@@ -85,7 +85,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     // MARK: ObjectObserver
     
-    func objectMonitor(_ monitor: ObjectMonitor<Palette>, didUpdateObject object: Palette, changedPersistentKeys: Set<RawKeyPath>) {
+    func objectMonitor(_ monitor: ObjectMonitor<Palette>, didUpdateObject object: Palette, changedPersistentKeys: Set<KeyPathString>) {
         
         self.reloadPaletteInfo(object, changedKeys: changedPersistentKeys)
     }

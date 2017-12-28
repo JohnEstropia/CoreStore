@@ -131,7 +131,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
         // none
     }
     
-    func objectMonitor(_ monitor: ObjectMonitor<Place>, didUpdateObject object: Place, changedPersistentKeys: Set<RawKeyPath>) {
+    func objectMonitor(_ monitor: ObjectMonitor<Place>, didUpdateObject object: Place, changedPersistentKeys: Set<KeyPathString>) {
         
         if let mapView = self.mapView {
             

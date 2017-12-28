@@ -31,12 +31,12 @@ import CoreStore
 
 // MARK: - XCTAssertAllEqual
 
-private func XCTAssertAllEqual(_ whereClauses: Where...) {
+private func XCTAssertAllEqual<D>(_ whereClauses: Where<D>...) {
     
     XCTAssertAllEqual(whereClauses)
 }
 
-private func XCTAssertAllEqual(_ whereClauses: [Where]) {
+private func XCTAssertAllEqual<D>(_ whereClauses: [Where<D>]) {
     
     for i in whereClauses.indices {
         
@@ -53,55 +53,61 @@ private func XCTAssertAllEqual(_ whereClauses: [Where]) {
 final class WhereTests: XCTestCase {
     
     @objc
+    dynamic func test_ThatDynamicModelKeyPaths_CanBeCreated() {
+        
+        XCTAssertEqual(String(keyPath: \TestEntity1.testEntityID), "testEntityID")
+    }
+    
+    @objc
     dynamic func test_ThatWhereClauses_ConfigureCorrectly() {
         
         do {
             
-            let whereClause = Where()
-            XCTAssertEqual(whereClause, Where(true))
-            XCTAssertNotEqual(whereClause, Where(false))
+            let whereClause = Where<NSManagedObject>()
+            XCTAssertEqual(whereClause, Where<NSManagedObject>(true))
+            XCTAssertNotEqual(whereClause, Where<NSManagedObject>(false))
             XCTAssertEqual(whereClause.predicate, NSPredicate(value: true))
         }
         do {
             
-            let whereClause = Where(true)
-            XCTAssertEqual(whereClause, Where())
-            XCTAssertNotEqual(whereClause, Where(false))
+            let whereClause = Where<NSManagedObject>(true)
+            XCTAssertEqual(whereClause, Where<NSManagedObject>())
+            XCTAssertNotEqual(whereClause, Where<NSManagedObject>(false))
             XCTAssertEqual(whereClause.predicate, NSPredicate(value: true))
         }
         do {
             
             let predicate = NSPredicate(format: "%K == %@", "key", "value")
-            let whereClause = Where(predicate)
-            XCTAssertEqual(whereClause, Where(predicate))
+            let whereClause = Where<NSManagedObject>(predicate)
+            XCTAssertEqual(whereClause, Where<NSManagedObject>(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
         }
         do {
             
-            let whereClause = Where("%K == %@", "key", "value")
+            let whereClause = Where<NSManagedObject>("%K == %@", "key", "value")
             let predicate = NSPredicate(format: "%K == %@", "key", "value")
-            XCTAssertEqual(whereClause, Where(predicate))
+            XCTAssertEqual(whereClause, Where<NSManagedObject>(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
         }
         do {
             
-            let whereClause = Where("%K == %@", argumentArray: ["key", "value"])
+            let whereClause = Where<NSManagedObject>("%K == %@", argumentArray: ["key", "value"])
             let predicate = NSPredicate(format: "%K == %@", "key", "value")
-            XCTAssertEqual(whereClause, Where(predicate))
+            XCTAssertEqual(whereClause, Where<NSManagedObject>(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
         }
         do {
             
-            let whereClause = Where("key", isEqualTo: "value")
+            let whereClause = Where<NSManagedObject>("key", isEqualTo: "value")
             let predicate = NSPredicate(format: "%K == %@", "key", "value")
-            XCTAssertEqual(whereClause, Where(predicate))
+            XCTAssertEqual(whereClause, Where<NSManagedObject>(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
         }
         do {
             
-            let whereClause = Where("key", isMemberOf: ["value1", "value2", "value3"])
+            let whereClause = Where<NSManagedObject>("key", isMemberOf: ["value1", "value2", "value3"])
             let predicate = NSPredicate(format: "%K IN %@", "key", ["value1", "value2", "value3"])
-            XCTAssertEqual(whereClause, Where(predicate))
+            XCTAssertEqual(whereClause, Where<NSManagedObject>(predicate))
             XCTAssertEqual(whereClause.predicate, predicate)
         }
     }
@@ -113,112 +119,112 @@ final class WhereTests: XCTestCase {
             
             let value: Int = 100
             XCTAssertAllEqual(
-                Where("%K == %d", "key", value),
-                Where("%K == %d", "key", value as AnyObject),
-                Where("%K == %d", "key", NSNumber(value: value)),
-                Where("%K == %@", "key", value),
-                Where("%K == %@", "key", value as AnyObject),
-                Where("%K == %@", "key", NSNumber(value: value)),
-                Where("key", isEqualTo: value),
-                Where("key", isEqualTo: NSNumber(value: value))
+                Where<NSManagedObject>("%K == %d", "key", value),
+                Where<NSManagedObject>("%K == %d", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %d", "key", NSNumber(value: value)),
+                Where<NSManagedObject>("%K == %@", "key", value),
+                Where<NSManagedObject>("%K == %@", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %@", "key", NSNumber(value: value)),
+                Where<NSManagedObject>("key", isEqualTo: value),
+                Where<NSManagedObject>("key", isEqualTo: NSNumber(value: value))
             )
         }
         do {
             
             let value = NSNumber(value: 100)
             XCTAssertAllEqual(
-                Where("%K == %d", "key", value),
-                Where("%K == %d", "key", value as AnyObject),
-                Where("%K == %d", "key", value.intValue),
-                Where("%K == %@", "key", value),
-                Where("%K == %@", "key", value as AnyObject),
-                Where("%K == %@", "key", value.intValue),
-                Where("key", isEqualTo: value),
-                Where("key", isEqualTo: value.intValue)
+                Where<NSManagedObject>("%K == %d", "key", value),
+                Where<NSManagedObject>("%K == %d", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %d", "key", value.intValue),
+                Where<NSManagedObject>("%K == %@", "key", value),
+                Where<NSManagedObject>("%K == %@", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %@", "key", value.intValue),
+                Where<NSManagedObject>("key", isEqualTo: value),
+                Where<NSManagedObject>("key", isEqualTo: value.intValue)
             )
         }
         do {
             
             let value: Int64 = Int64.max
             XCTAssertAllEqual(
-                Where("%K == %d", "key", value),
-                Where("%K == %d", "key", value as AnyObject),
-                Where("%K == %d", "key", NSNumber(value: value)),
-                Where("%K == %@", "key", value),
-                Where("%K == %@", "key", value as AnyObject),
-                Where("%K == %@", "key", NSNumber(value: value)),
-                Where("key", isEqualTo: value),
-                Where("key", isEqualTo: NSNumber(value: value))
+                Where<NSManagedObject>("%K == %d", "key", value),
+                Where<NSManagedObject>("%K == %d", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %d", "key", NSNumber(value: value)),
+                Where<NSManagedObject>("%K == %@", "key", value),
+                Where<NSManagedObject>("%K == %@", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %@", "key", NSNumber(value: value)),
+                Where<NSManagedObject>("key", isEqualTo: value),
+                Where<NSManagedObject>("key", isEqualTo: NSNumber(value: value))
             )
         }
         do {
             
             let value = NSNumber(value: Int64.max)
             XCTAssertAllEqual(
-                Where("%K == %d", "key", value),
-                Where("%K == %d", "key", value as AnyObject),
-                Where("%K == %d", "key", value.int64Value),
-                Where("%K == %@", "key", value),
-                Where("%K == %@", "key", value as AnyObject),
-                Where("%K == %@", "key", value.int64Value),
-                Where("key", isEqualTo: value),
-                Where("key", isEqualTo: value.int64Value)
+                Where<NSManagedObject>("%K == %d", "key", value),
+                Where<NSManagedObject>("%K == %d", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %d", "key", value.int64Value),
+                Where<NSManagedObject>("%K == %@", "key", value),
+                Where<NSManagedObject>("%K == %@", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %@", "key", value.int64Value),
+                Where<NSManagedObject>("key", isEqualTo: value),
+                Where<NSManagedObject>("key", isEqualTo: value.int64Value)
             )
         }
         do {
             
             let value: String = "value"
             XCTAssertAllEqual(
-                Where("%K == %s", "key", value),
-                Where("%K == %s", "key", value as AnyObject),
-                Where("%K == %s", "key", NSString(string: value)),
-                Where("%K == %@", "key", value),
-                Where("%K == %@", "key", value as AnyObject),
-                Where("%K == %@", "key", NSString(string: value)),
-                Where("key", isEqualTo: value),
-                Where("key", isEqualTo: value as NSString),
-                Where("key", isEqualTo: NSString(string: value))
+                Where<NSManagedObject>("%K == %s", "key", value),
+                Where<NSManagedObject>("%K == %s", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %s", "key", NSString(string: value)),
+                Where<NSManagedObject>("%K == %@", "key", value),
+                Where<NSManagedObject>("%K == %@", "key", value as AnyObject),
+                Where<NSManagedObject>("%K == %@", "key", NSString(string: value)),
+                Where<NSManagedObject>("key", isEqualTo: value),
+                Where<NSManagedObject>("key", isEqualTo: value as NSString),
+                Where<NSManagedObject>("key", isEqualTo: NSString(string: value))
             )
         }
         do {
             
             let value = NSString(string: "value")
             XCTAssertAllEqual(
-                Where("%K == %s", "key", value),
-                Where("%K == %s", "key", value as String),
-                Where("%K == %s", "key", value as String as AnyObject),
-                Where("%K == %@", "key", value),
-                Where("%K == %@", "key", value as String),
-                Where("%K == %@", "key", value as String as AnyObject),
-                Where("key", isEqualTo: value),
-                Where("key", isEqualTo: value as String),
-                Where("key", isEqualTo: value as String as NSString)
+                Where<NSManagedObject>("%K == %s", "key", value),
+                Where<NSManagedObject>("%K == %s", "key", value as String),
+                Where<NSManagedObject>("%K == %s", "key", value as String as AnyObject),
+                Where<NSManagedObject>("%K == %@", "key", value),
+                Where<NSManagedObject>("%K == %@", "key", value as String),
+                Where<NSManagedObject>("%K == %@", "key", value as String as AnyObject),
+                Where<NSManagedObject>("key", isEqualTo: value),
+                Where<NSManagedObject>("key", isEqualTo: value as String),
+                Where<NSManagedObject>("key", isEqualTo: value as String as NSString)
             )
         }
         do {
             
             let value: [Int] = [100, 200]
             XCTAssertAllEqual(
-                Where("%K IN %@", "key", value),
-                Where("%K IN %@", "key", value as AnyObject),
-                Where("%K IN %@", "key", value as [AnyObject]),
-                Where("%K IN %@", "key", value as NSArray),
-                Where("%K IN %@", "key", NSArray(array: value)),
-                Where("%K IN %@", "key", value as AnyObject as! NSArray),
-                Where("key", isMemberOf: value)
+                Where<NSManagedObject>("%K IN %@", "key", value),
+                Where<NSManagedObject>("%K IN %@", "key", value as AnyObject),
+                Where<NSManagedObject>("%K IN %@", "key", value as [AnyObject]),
+                Where<NSManagedObject>("%K IN %@", "key", value as NSArray),
+                Where<NSManagedObject>("%K IN %@", "key", NSArray(array: value)),
+                Where<NSManagedObject>("%K IN %@", "key", value as AnyObject as! NSArray),
+                Where<NSManagedObject>("key", isMemberOf: value)
             )
         }
         do {
             
             let value: [Int64] = [Int64.min, 100, Int64.max]
             XCTAssertAllEqual(
-                Where("%K IN %@", "key", value),
-                Where("%K IN %@", "key", value as AnyObject),
-                Where("%K IN %@", "key", value as [AnyObject]),
-                Where("%K IN %@", "key", value as NSArray),
-                Where("%K IN %@", "key", NSArray(array: value)),
-                Where("%K IN %@", "key", value as AnyObject as! NSArray),
-                Where("key", isMemberOf: value)
+                Where<NSManagedObject>("%K IN %@", "key", value),
+                Where<NSManagedObject>("%K IN %@", "key", value as AnyObject),
+                Where<NSManagedObject>("%K IN %@", "key", value as [AnyObject]),
+                Where<NSManagedObject>("%K IN %@", "key", value as NSArray),
+                Where<NSManagedObject>("%K IN %@", "key", NSArray(array: value)),
+                Where<NSManagedObject>("%K IN %@", "key", value as AnyObject as! NSArray),
+                Where<NSManagedObject>("key", isMemberOf: value)
             )
         }
     }
@@ -226,9 +232,9 @@ final class WhereTests: XCTestCase {
     @objc
     dynamic func test_ThatWhereClauseOperations_ComputeCorrectly() {
         
-        let whereClause1 = Where("key1", isEqualTo: "value1")
-        let whereClause2 = Where("key2", isEqualTo: "value2")
-        let whereClause3 = Where("key3", isEqualTo: "value3")
+        let whereClause1 = Where<NSManagedObject>("key1", isEqualTo: "value1")
+        let whereClause2 = Where<NSManagedObject>("key2", isEqualTo: "value2")
+        let whereClause3 = Where<NSManagedObject>("key3", isEqualTo: "value3")
         
         do {
             
@@ -259,12 +265,12 @@ final class WhereTests: XCTestCase {
         do {
             
             let andWhere = whereClause1 && whereClause2 && whereClause3
-            let noneWhere: Where? = nil
-            let someWhere: Where? = Where("key4", isEqualTo: "value4")
+            let noneWhere: Where<NSManagedObject>? = nil
+            let someWhere: Where<NSManagedObject>? = Where<NSManagedObject>("key4", isEqualTo: "value4")
 
             
-            let finalNoneWhere = andWhere && noneWhere
-            let finalSomeWhere = andWhere && someWhere
+            let finalNoneWhere = andWhere &&? noneWhere
+            let finalSomeWhere = andWhere &&? someWhere
             let unwrappedFinalSomeWhere = andWhere && someWhere!
 
         
@@ -290,12 +296,12 @@ final class WhereTests: XCTestCase {
         do {
             
             let orWhere = whereClause1 || whereClause2 || whereClause3
-            let noneWhere: Where? = nil
-            let someWhere: Where? = Where("key4", isEqualTo: "value4")
+            let noneWhere: Where<NSManagedObject>? = nil
+            let someWhere: Where<NSManagedObject>? = Where<NSManagedObject>("key4", isEqualTo: "value4")
             
             
-            let finalNoneWhere = orWhere && noneWhere
-            let finalSomeWhere = orWhere && someWhere
+            let finalNoneWhere = orWhere &&? noneWhere
+            let finalSomeWhere = orWhere &&? someWhere
             let unwrappedFinalSomeWhere = orWhere && someWhere!
             
             XCTAssertEqual(orWhere.predicate, finalNoneWhere.predicate)
@@ -307,7 +313,7 @@ final class WhereTests: XCTestCase {
     @objc
     dynamic func test_ThatWhereClauses_ApplyToFetchRequestsCorrectly() {
         
-        let whereClause = Where("key", isEqualTo: "value")
+        let whereClause = Where<NSManagedObject>("key", isEqualTo: "value")
         let request = CoreStoreFetchRequest()
         whereClause.applyToFetchRequest(request)
         XCTAssertNotNil(request.predicate)

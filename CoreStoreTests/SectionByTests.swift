@@ -39,13 +39,13 @@ final class SectionByTests: XCTestCase {
         
         do {
             
-            let sectionBy = SectionBy("key")
+            let sectionBy = SectionBy<NSManagedObject>("key")
             XCTAssertEqual(sectionBy.sectionKeyPath, "key")
             XCTAssertEqual(sectionBy.sectionIndexTransformer("key"), "key")
         }
         do {
             
-            let sectionBy = SectionBy("key") { $0.flatMap { "\($0):suffix" } }
+            let sectionBy = SectionBy<NSManagedObject>("key") { $0.flatMap { "\($0):suffix" } }
             XCTAssertEqual(sectionBy.sectionKeyPath, "key")
             XCTAssertEqual(sectionBy.sectionIndexTransformer("key"), "key:suffix")
             XCTAssertNil(sectionBy.sectionIndexTransformer(nil))

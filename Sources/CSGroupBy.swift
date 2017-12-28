@@ -35,13 +35,13 @@ import CoreData
  - SeeAlso: `GroupBy`
  */
 @objc
-public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
+public final class CSGroupBy: NSObject, CSQueryClause {
     
     /**
      The list of key path strings to group results with
      */
     @objc
-    public var keyPaths: [RawKeyPath] {
+    public var keyPaths: [KeyPathString] {
         
         return self.bridgeToSwift.keyPaths
     }
@@ -52,7 +52,7 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
      - parameter keyPath: a key path string to group results with
      */
     @objc
-    public convenience init(keyPath: RawKeyPath) {
+    public convenience init(keyPath: KeyPathString) {
         
         self.init(GroupBy(keyPath))
     }
@@ -63,7 +63,7 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
      - parameter keyPaths: a list of key path strings to group results with
      */
     @objc
-    public convenience init(keyPaths: [RawKeyPath]) {
+    public convenience init(keyPaths: [KeyPathString]) {
         
         self.init(GroupBy(keyPaths))
     }
@@ -102,11 +102,11 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
     
     // MARK: CoreStoreObjectiveCType
     
-    public let bridgeToSwift: GroupBy
+    public let bridgeToSwift: GroupBy<NSManagedObject>
     
-    public init(_ swiftValue: GroupBy) {
+    public init<D: NSManagedObject>(_ swiftValue: GroupBy<D>) {
         
-        self.bridgeToSwift = swiftValue
+        self.bridgeToSwift = swiftValue.downcast()
         super.init()
     }
 }
@@ -114,12 +114,20 @@ public final class CSGroupBy: NSObject, CSQueryClause, CoreStoreObjectiveCType {
 
 // MARK: - GroupBy
 
-extension GroupBy: CoreStoreSwiftType {
+extension GroupBy where D: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSGroupBy {
         
         return CSGroupBy(self)
+    }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> GroupBy<NSManagedObject> {
+        
+        return GroupBy<NSManagedObject>(self.keyPaths)
     }
 }

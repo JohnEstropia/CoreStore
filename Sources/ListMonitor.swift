@@ -626,7 +626,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
     // MARK: Internal
     
-    internal convenience init(dataStack: DataStack, from: From<ObjectType>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(dataStack: DataStack, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -638,7 +638,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal convenience init(dataStack: DataStack, from: From<ObjectType>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<ObjectType>) -> Void) {
+    internal convenience init(dataStack: DataStack, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<ObjectType>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -650,7 +650,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<ObjectType>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -662,7 +662,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<ObjectType>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<ObjectType>) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<ObjectType>) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -997,7 +997,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
     fileprivate var fetchedResultsController: CoreStoreFetchedResultsController
     fileprivate let taskGroup = DispatchGroup()
-    fileprivate let sectionIndexTransformer: (_ sectionName: RawKeyPath?) -> String?
+    fileprivate let sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String?
     
     private let isSectioned: Bool
     
@@ -1041,7 +1041,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         }
     }
     
-    private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<ObjectType>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) -> (controller: CoreStoreFetchedResultsController, delegate: FetchedResultsControllerDelegate) {
+    private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) -> (controller: CoreStoreFetchedResultsController, delegate: FetchedResultsControllerDelegate) {
         
         let fetchRequest = CoreStoreFetchRequest()
         fetchRequest.fetchLimit = 0
@@ -1065,9 +1065,9 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     }
     
     private let from: From<ObjectType>
-    private let sectionBy: SectionBy?
+    private let sectionBy: SectionBy<ObjectType>?
     
-    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<ObjectType>, sectionBy: SectionBy?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<ObjectType>) -> Void)?) {
+    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<ObjectType>) -> Void)?) {
         
         self.isSectioned = (sectionBy != nil)
         self.from = from

@@ -1,5 +1,5 @@
 //
-//  ClauseTypes.swift
+//  TypeErasedClauses.swift
 //  CoreStore
 //
 //  Copyright © 2014 John Rommel Estropia
@@ -43,7 +43,7 @@ public protocol FetchClause {
 /**
  The `QueryClause` implement clauses used to configure `NSFetchRequest`s.
  */
-public protocol QueryClause {
+public protocol QueryClause: FetchClause {
     
     func applyToFetchRequest<T>(_ fetchRequest: NSFetchRequest<T>)
 }
@@ -54,7 +54,28 @@ public protocol QueryClause {
 /**
  The `DeleteClause` implement clauses used to configure `NSFetchRequest`s.
  */
-public protocol DeleteClause {
+public protocol DeleteClause: FetchClause {
     
     func applyToFetchRequest<T>(_ fetchRequest: NSFetchRequest<T>)
+}
+
+
+// MARK: - AnyWhereClause
+
+/**
+ Type-erased `Where` clause for protocol utilities.
+ */
+public protocol AnyWhereClause: QueryClause, DeleteClause {
+    
+    /**
+     The `NSPredicate` for the fetch or query
+     */
+    var predicate: NSPredicate { get }
+    
+    /**
+     Initializes a `Where` clause with an `NSPredicate`
+     
+     - parameter predicate: the `NSPredicate` for the fetch or query
+     */
+    init(_ predicate: NSPredicate)
 }

@@ -35,7 +35,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     // MARK: Internal
     
     @nonobjc
-    internal convenience init<T>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init<D>(dataStack: DataStack, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<D>, sectionBy: SectionBy<D>? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -47,7 +47,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     }
     
     @nonobjc
-    internal init<T>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<T>, sectionBy: SectionBy? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
+    internal init<D>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<D>, sectionBy: SectionBy<D>? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
         _ = from.applyToFetchRequest(
             fetchRequest,

@@ -99,8 +99,8 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
             
         case 0?:
             let request = NSFetchRequest<NSFetchRequestResult>()
-            Where(true).applyToFetchRequest(request)
-            Where(false).applyToFetchRequest(request)
+            Where<NSManagedObject>(true).applyToFetchRequest(request)
+            Where<NSManagedObject>(false).applyToFetchRequest(request)
             
         case 1?:
             _ = try? dataStack.addStorageAndWait(

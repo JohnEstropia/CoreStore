@@ -101,8 +101,8 @@ class Person: CoreStoreObject {
     static func keyPathsAffectingDisplayName() -> Set<String> {
         
         return [
-            self.keyPath({ $0.title }),
-            self.keyPath({ $0.name })
+            String(keyPath: \Person.title),
+            String(keyPath: \Person.name)
         ]
     }
 }
@@ -112,7 +112,8 @@ class Person: CoreStoreObject {
 
 class DynamicModelTests: BaseTestDataTestCase {
     
-    func testDynamicModels_CanBeDeclaredCorrectly() {
+    @objc
+    dynamic func test_ThatDynamicModels_CanBeDeclaredCorrectly() {
         
         let dataStack = DataStack(
             CoreStoreSchema(
@@ -131,13 +132,13 @@ class DynamicModelTests: BaseTestDataTestCase {
         )
         self.prepareStack(dataStack, configurations: [nil]) { (stack) in
             
-            let k1 = Animal.keyPath({ $0.species })
+            let k1 = String(keyPath: \Animal.species)
             XCTAssertEqual(k1, "species")
             
-            let k2 = Dog.keyPath({ $0.species })
+            let k2 = String(keyPath: \Dog.species)
             XCTAssertEqual(k2, "species")
             
-            let k3 = Dog.keyPath({ $0.nickname })
+            let k3 = String(keyPath: \Dog.nickname)
             XCTAssertEqual(k3, "nickname")
             
             let updateDone = self.expectation(description: "update-done")
@@ -170,7 +171,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertTrue(person.pets.value.isEmpty)
                     
                     XCTAssertEqual(
-                        object_getClass(person.rawObject!).keyPathsForValuesAffectingValue(forKey: "displayName"),
+                        type(of: person.rawObject!).keyPathsForValuesAffectingValue(forKey: "displayName"),
                         ["title", "name"]
                     )
                     
@@ -196,7 +197,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(dog.master.value, person)
                     XCTAssertEqual(dog.master.value?.pets.value.first, dog)
                 },
-                success: {
+                success: { _ in
                     
                     updateDone.fulfill()
                 },
@@ -208,17 +209,17 @@ class DynamicModelTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) in
                     
-                    let p1 = Animal.where({ $0.species == "Sparrow" })
+                    let p1 = Where<Animal>({ $0.species == "Sparrow" })
                     XCTAssertEqual(p1.predicate, NSPredicate(format: "%K == %@", "species", "Sparrow"))
                     
                     let bird = transaction.fetchOne(From<Animal>(), p1)
                     XCTAssertNotNil(bird)
                     XCTAssertEqual(bird!.species.value, "Sparrow")
                     
-                    let p2 = Dog.where({ $0.nickname == "Spot" })
+                    let p2 = Where<Dog>({ $0.nickname == "Spot" })
                     XCTAssertEqual(p2.predicate, NSPredicate(format: "%K == %@", "nickname", "Spot"))
                     
-                    let dog = transaction.fetchOne(From<Dog>(), p2)
+                    let dog = transaction.fetchOne(From<Dog>().where(\.nickname == "Spot"))
                     XCTAssertNotNil(dog)
                     XCTAssertEqual(dog!.nickname.value, "Spot")
                     XCTAssertEqual(dog!.species.value, "Dog")
@@ -227,10 +228,40 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertNotNil(person)
                     XCTAssertEqual(person!.pets.value.first, dog)
                     
-                    let p3 = Dog.where({ $0.age == 10 })
+                    let p3 = Where<Dog>({ $0.age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))
+                    
+                    _ = transaction.fetchAll(
+                        From<Dog>()
+                            .where(\Animal.species == "Dog" && \.age == 10)
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>()
+                            .where(\.age == 10 && \Animal.species == "Dog")
+                            .orderBy(.ascending({ $0.species }))
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        Where<Dog>({ $0.age > 10 && $0.age <= 15 })
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        Where<Dog>({ $0.species == "Dog" && $0.age == 10 })
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        Where<Dog>({ $0.age == 10 && $0.species == "Dog" })
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        Where<Dog>({ $0.age > 10 && $0.age <= 15 })
+                    )
+                    _ = transaction.fetchAll(
+                        From<Dog>(),
+                        (\Dog.age > 10 && \Dog.age <= 15)
+                    )
                 },
-                success: {
+                success: { _ in
             
                     fetchDone.fulfill()
                 },
@@ -241,6 +272,13 @@ class DynamicModelTests: BaseTestDataTestCase {
             )
             self.waitAndCheckExpectations()
         }
+    }
+    
+    @objc
+    dynamic func test_ThatDynamicModelKeyPaths_CanBeCreated() {
+        
+        XCTAssertEqual(String(keyPath: \Animal.species), "species")
+        XCTAssertEqual(String(keyPath: \Dog.species), "species")
     }
     
     @nonobjc

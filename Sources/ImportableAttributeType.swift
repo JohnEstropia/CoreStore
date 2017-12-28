@@ -163,12 +163,18 @@ extension UUID: ImportableAttributeType {}
 
 extension RawRepresentable where RawValue: ImportableAttributeType {
     
+    /**
+     Creates an instance of this type from its `QueryableNativeType` value.
+     */
     @inline(__always)
     public static func cs_fromQueryableNativeType(_ value: QueryableNativeType) -> Self? {
         
         return RawValue.cs_fromQueryableNativeType(value).flatMap({ self.init(rawValue: $0) })
     }
     
+    /**
+     Creates `QueryableNativeType` value from this instance.
+     */
     @inline(__always)
     public func cs_toQueryableNativeType() -> QueryableNativeType {
         

@@ -142,15 +142,14 @@ internal extension NSManagedObjectContext {
         
         fetchRequest.fetchLimit = 0
         
-        let selectTerms = selectClause.selectTerms
-        selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
+        selectClause.applyToFetchRequest(fetchRequest)
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
         guard storeFound else {
             
             return nil
         }
-        return self.queryValue(selectTerms, fetchRequest: fetchRequest.dynamicCast())
+        return self.queryValue(selectClause.selectTerms, fetchRequest: fetchRequest.dynamicCast())
     }
     
     @nonobjc
@@ -161,7 +160,7 @@ internal extension NSManagedObjectContext {
         
         fetchRequest.fetchLimit = 0
         
-        selectClause.selectTerms.applyToFetchRequest(fetchRequest, owner: selectClause)
+        selectClause.applyToFetchRequest(fetchRequest)
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
         guard storeFound else {

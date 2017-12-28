@@ -35,7 +35,7 @@ import CoreData
  - SeeAlso: `Where`
  */
 @objc
-public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
+public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause {
     
     /**
      The internal `NSPredicate` instance for the `Where` clause
@@ -85,7 +85,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - parameter value: the arguments for the `==` operator
      */
     @objc
-    public convenience init(keyPath: RawKeyPath, isEqualTo value: CoreDataNativeType?) {
+    public convenience init(keyPath: KeyPathString, isEqualTo value: CoreDataNativeType?) {
         
         self.init(value == nil || value is NSNull
             ? Where("\(keyPath) == nil")
@@ -99,7 +99,7 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
      - parameter list: the array to check membership of
      */
     @objc
-    public convenience init(keyPath: RawKeyPath, isMemberOf list: [CoreDataNativeType]) {
+    public convenience init(keyPath: KeyPathString, isMemberOf list: [CoreDataNativeType]) {
         
         self.init(Where("\(keyPath) IN %@", list as NSArray))
     }
@@ -149,11 +149,11 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
     
     // MARK: CoreStoreObjectiveCType
     
-    public let bridgeToSwift: Where
+    public let bridgeToSwift: Where<NSManagedObject>
     
-    public init(_ swiftValue: Where) {
+    public init<D: NSManagedObject>(_ swiftValue: Where<D>) {
         
-        self.bridgeToSwift = swiftValue
+        self.bridgeToSwift = swiftValue.downcast()
         super.init()
     }
 }
@@ -161,12 +161,20 @@ public final class CSWhere: NSObject, CSFetchClause, CSQueryClause, CSDeleteClau
 
 // MARK: - Where
 
-extension Where: CoreStoreSwiftType {
+extension Where where D: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSWhere {
         
         return CSWhere(self)
+    }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> Where<NSManagedObject> {
+        
+        return Where<NSManagedObject>(self.predicate)
     }
 }

@@ -27,221 +27,83 @@ import CoreData
 import Foundation
 
 
-// MARK: - DynamicObject
-
-public extension DynamicObject where Self: CoreStoreObject {
-    
-    /**
-     Extracts the keyPath string from a `CoreStoreObject.Value` property.
-     ```
-     let keyPath: String = Person.keyPath { $0.nickname }
-     ```
-     */
-    public static func keyPath<O, V>(_ attribute: (Self) -> ValueContainer<O>.Required<V>) -> String  {
-        
-        return attribute(self.meta).keyPath
-    }
-    
-    /**
-     Extracts the keyPath string from a `CoreStoreObject.Value` property.
-     ```
-     let keyPath: String = Person.keyPath { $0.nickname }
-     ```
-     */
-    public static func keyPath<O, V>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> String  {
-        
-        return attribute(self.meta).keyPath
-    }
-    
-    /**
-     Extracts the keyPath string from a `CoreStoreObject.Relationship` property.
-     ```
-     let keyPath: String = Person.keyPath { $0.pets }
-     ```
-     */
-    public static func keyPath<O, D>(_ relationship: (Self) -> RelationshipContainer<O>.ToOne<D>) -> String  {
-        
-        return relationship(self.meta).keyPath
-    }
-    
-    /**
-     Extracts the keyPath string from a `CoreStoreObject.Relationship` property.
-     ```
-     let keyPath: String = Person.keyPath { $0.pets }
-     ```
-     */
-    public static func keyPath<O, D>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyOrdered<D>) -> String  {
-        
-        return relationship(self.meta).keyPath
-    }
-    
-    /**
-     Extracts the keyPath string from a `CoreStoreObject.Relationship` property.
-     ```
-     let keyPath: String = Person.keyPath { $0.pets }
-     ```
-     */
-    public static func keyPath<O, D>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyUnordered<D>) -> String  {
-        
-        return relationship(self.meta).keyPath
-    }
-    
-    /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname == "John" })
-     ```
-     */
-    public static func `where`(_ condition: (Self) -> Where) -> Where  {
-        
-        return condition(self.meta)
-    }
-    
-    /**
-     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
-     ```
-     */
-    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
-        
-        return OrderBy(.ascending(attribute(self.meta).keyPath))
-    }
-    
-    /**
-     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(ascending: { $0.age }))
-     ```
-     */
-    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
-        
-        return OrderBy(.ascending(attribute(self.meta).keyPath))
-    }
-    
-    /**
-     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
-     ```
-     */
-    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy  {
-        
-        return OrderBy(.descending(attribute(self.meta).keyPath))
-    }
-    
-    /**
-     Creates an `OrderBy` clause from a `CoreStoreObject.Value` property.
-     ```
-     let person = CoreStore.fetchAll(From<Person>(), Person.orderBy(descending: { $0.age }))
-     ```
-     */
-    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
-        
-        return OrderBy(.descending(attribute(self.meta).keyPath))
-    }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, renamed: "orderBy(ascending:)")
-    public static func ascending<O, V>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
-        
-        return OrderBy(.ascending(attribute(self.meta).keyPath))
-    }
-    
-    @available(*, deprecated, renamed: "orderBy(descending:)")
-    public static func descending<O, V>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy  {
-        
-        return OrderBy(.descending(attribute(self.meta).keyPath))
-    }
-}
-
-
 // MARK: - ValueContainer.Required
 
 public extension ValueContainer.Required {
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname == "John" })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.nickname == "John" }))
      ```
      */
-    @inline(__always)
-    public static func == (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func == (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where(attribute.keyPath, isEqualTo: value)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is not equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname != "John" })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.nickname != "John" }))
      ```
      */
-    @inline(__always)
-    public static func != (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func != (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return !Where(attribute.keyPath, isEqualTo: value)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is less than a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age < 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age < 20 }))
      ```
      */
-    @inline(__always)
-    public static func < (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func < (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K < %@", attribute.keyPath, value)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is greater than a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age > 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age > 20 }))
      ```
      */
-    @inline(__always)
-    public static func > (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func > (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K > %@", attribute.keyPath, value)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is less than or equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age <= 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age <= 20 }))
      ```
      */
-    @inline(__always)
-    public static func <= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func <= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K <= %@", attribute.keyPath, value)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is greater than or equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age >= 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age >= 20 }))
      ```
      */
-    @inline(__always)
-    public static func >= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where {
+    public static func >= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
         return Where("%K >= %@", attribute.keyPath, value)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by checking if a sequence contains the value of a property
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname }))
      ```
      */
-    @inline(__always)
-    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Required<V>) -> Where where S.Iterator.Element == V {
+    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Required<V>) -> Where<O> where S.Iterator.Element == V {
         
         return Where(attribute.keyPath, isMemberOf: sequence)
     }
@@ -253,37 +115,34 @@ public extension ValueContainer.Required {
 public extension ValueContainer.Optional {
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname == "John" })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.nickname == "John" }))
      ```
      */
-    @inline(__always)
-    public static func == (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func == (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         return Where(attribute.keyPath, isEqualTo: value)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is not equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.nickname != "John" })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.nickname != "John" }))
      ```
      */
-    @inline(__always)
-    public static func != (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func != (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         return !Where(attribute.keyPath, isEqualTo: value)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is less than a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age < 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age < 20 }))
      ```
      */
-    @inline(__always)
-    public static func < (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func < (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
             
@@ -296,13 +155,12 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is greater than a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age > 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age > 20 }))
      ```
      */
-    @inline(__always)
-    public static func > (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func > (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
             
@@ -315,13 +173,12 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is less than or equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age <= 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age <= 20 }))
      ```
      */
-    @inline(__always)
-    public static func <= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func <= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
             
@@ -334,13 +191,12 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by comparing if a property is greater than or equal to a value
      ```
-     let person = CoreStore.fetchOne(From<Person>(), Person.where { $0.age >= 20 })
+     let person = CoreStore.fetchOne(From<Person>().where({ $0.age >= 20 }))
      ```
      */
-    @inline(__always)
-    public static func >= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where {
+    public static func >= (_ attribute: ValueContainer<O>.Optional<V>, _ value: V?) -> Where<O> {
         
         if let value = value {
             
@@ -353,13 +209,12 @@ public extension ValueContainer.Optional {
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Value` property.
+     Creates a `Where` clause by checking if a sequence contains the value of a property
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ ["Pluto", "Snoopy", "Scooby"] ~= $0.nickname }))
      ```
      */
-    @inline(__always)
-    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Optional<V>) -> Where where S.Iterator.Element == V {
+    public static func ~= <S: Sequence>(_ sequence: S, _ attribute: ValueContainer<O>.Optional<V>) -> Where<O> where S.Iterator.Element == V {
         
         return Where(attribute.keyPath, isMemberOf: sequence)
     }
@@ -371,50 +226,101 @@ public extension ValueContainer.Optional {
 public extension RelationshipContainer.ToOne {
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     Creates a `Where` clause by comparing if a property is equal to a value
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { $0.master == me })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ $0.master == me }))
      ```
      */
-    @inline(__always)
-    public static func == (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where {
+    public static func == (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where<O> {
         
         return Where(relationship.keyPath, isEqualTo: object)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     Creates a `Where` clause by comparing if a property is not equal to a value
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { $0.master != me })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ $0.master != me }))
      ```
      */
-    @inline(__always)
-    public static func != (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where {
+    public static func != (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where<O> {
         
         return !Where(relationship.keyPath, isEqualTo: object)
     }
     
     /**
-     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
+     Creates a `Where` clause by checking if a sequence contains the value of a property
      ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { $0.master ~= me })
-     ```
-     */
-    @inline(__always)
-    public static func ~= (_ relationship: RelationshipContainer<O>.ToOne<D>, _ object: D?) -> Where {
-        
-        return Where(relationship.keyPath, isEqualTo: object)
-    }
-    
-    /**
-     Creates a `Where` clause from a `CoreStoreObject.Relationship` property.
-     ```
-     let dog = CoreStore.fetchOne(From<Dog>(), Dog.where { [john, joe, bob] ~= $0.master })
+     let dog = CoreStore.fetchOne(From<Dog>().where({ [john, joe, bob] ~= $0.master }))
      ```
      */
-    @inline(__always)
-    public static func ~= <S: Sequence>(_ sequence: S, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Where where S.Iterator.Element == D {
+    public static func ~= <S: Sequence>(_ sequence: S, _ relationship: RelationshipContainer<O>.ToOne<D>) -> Where<O> where S.Iterator.Element == D {
         
         return Where(relationship.keyPath, isMemberOf: sequence)
+    }
+}
+
+
+// MARK: Deprecated
+
+extension DynamicObject where Self: CoreStoreObject {
+    
+    @available(*, deprecated, message: "Use the String(keyPath:) initializer and pass the KeyPath: String(keyPath: \\Person.name)")
+    public static func keyPath<O, V>(_ attribute: (Self) -> ValueContainer<O>.Required<V>) -> String  {
+        
+        return attribute(self.meta).keyPath
+    }
+    
+    @available(*, deprecated, message: "Use the String(keyPath:) initializer and pass the KeyPath: String(keyPath: \\Person.name)")
+    public static func keyPath<O, V>(_ attribute: (Self) -> ValueContainer<O>.Optional<V>) -> String  {
+        
+        return attribute(self.meta).keyPath
+    }
+    
+    @available(*, deprecated, message: "Use the String(keyPath:) initializer and pass the KeyPath: String(keyPath: \\Person.friend)")
+    public static func keyPath<O, D>(_ relationship: (Self) -> RelationshipContainer<O>.ToOne<D>) -> String  {
+        
+        return relationship(self.meta).keyPath
+    }
+    
+    @available(*, deprecated, message: "Use the String(keyPath:) initializer and pass the KeyPath: String(keyPath: \\Person.friends)")
+    public static func keyPath<O, D>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyOrdered<D>) -> String  {
+        
+        return relationship(self.meta).keyPath
+    }
+    
+    @available(*, deprecated, message: "Use the String(keyPath:) initializer and pass the KeyPath: String(keyPath: \\Person.friends)")
+    public static func keyPath<O, D>(_ relationship: (Self) -> RelationshipContainer<O>.ToManyUnordered<D>) -> String  {
+        
+        return relationship(self.meta).keyPath
+    }
+    
+    @available(*, deprecated, message: "Use the Where<DynamicObject>(_:) initializer that accepts the same closure argument")
+    public static func `where`(_ condition: (Self) -> Where<Self>) -> Where<Self>  {
+        
+        return condition(self.meta)
+    }
+    
+    @available(*, deprecated, message: "Use the new OrderBy<DynamicObject>(ascending:) overload that accepts the same closure argument")
+    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy<Self>  {
+        
+        return OrderBy(.ascending(attribute(self.meta).keyPath))
+    }
+    
+    @available(*, deprecated, message: "Use the new OrderBy<DynamicObject>(ascending:) overload that accepts the same closure argument")
+    public static func orderBy<O, V>(ascending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy<Self>  {
+        
+        return OrderBy(.ascending(attribute(self.meta).keyPath))
+    }
+    
+    @available(*, deprecated, message: "Use the new OrderBy<DynamicObject>(descending:) overload that accepts the same closure argument")
+    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Required<V>) -> OrderBy<Self>  {
+        
+        return OrderBy(.descending(attribute(self.meta).keyPath))
+    }
+    
+    @available(*, deprecated, message: "Use the new OrderBy<DynamicObject>(descending:) overload that accepts the same closure argument")
+    public static func orderBy<O, V>(descending attribute: (Self) -> ValueContainer<O>.Optional<V>) -> OrderBy<Self>  {
+        
+        return OrderBy(.descending(attribute(self.meta).keyPath))
     }
 }

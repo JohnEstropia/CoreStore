@@ -396,7 +396,7 @@ final class TransactionTests: BaseTestCase {
             let observer = TestListObserver()
             let monitor = stack.monitorList(
                 From<TestEntity1>(),
-                OrderBy(.ascending("testEntityID"))
+                OrderBy<TestEntity1>(.ascending("testEntityID"))
             )
             monitor.addObserver(observer)
             
@@ -404,7 +404,7 @@ final class TransactionTests: BaseTestCase {
             
             var events = 0
             let willChangeExpectation = self.expectation(
-                forNotification: "listMonitorWillChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -418,7 +418,7 @@ final class TransactionTests: BaseTestCase {
                 }
             )
             let didInsertObjectExpectation = self.expectation(
-                forNotification: "listMonitor:didInsertObject:toIndexPath:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didInsertObject:toIndexPath:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -448,7 +448,7 @@ final class TransactionTests: BaseTestCase {
                 }
             )
             let didChangeExpectation = self.expectation(
-                forNotification: "listMonitorDidChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorDidChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -737,7 +737,7 @@ final class TransactionTests: BaseTestCase {
                         createDiscardExpectation.fulfill()
                         try transaction.cancel()
                     },
-                    success: {
+                    success: { _ in
                         
                         XCTFail()
                     },
@@ -795,7 +795,7 @@ final class TransactionTests: BaseTestCase {
                         
                         try transaction.cancel()
                     },
-                    success: {
+                    success: { _ in
                         
                         XCTFail()
                     },
@@ -828,7 +828,7 @@ final class TransactionTests: BaseTestCase {
                         
                         try transaction.cancel()
                     },
-                    success: {
+                    success: { _ in
                         
                         XCTFail()
                     },

@@ -1,5 +1,5 @@
 //
-//  AttributeProtocol.swift
+//  FetchChainBuilder.swift
 //  CoreStore
 //
 //  Copyright © 2017 John Rommel Estropia
@@ -27,21 +27,48 @@ import Foundation
 import CoreData
 
 
-// MARK: - AttributeProtocol
+// MARK: - FetchChainBuilder
 
-internal protocol AttributeProtocol: class {
+/**
+ The fetch builder type used for fetches. A `FetchChainBuilder` is created from a `From` clause.
+ ```
+ let people = source.fetchAll(
+     From<MyPersonEntity>()
+         .where(\.age > 18)
+         .orderBy(.ascending(\.age))
+ )
+ ```
+ */
+public struct FetchChainBuilder<D: DynamicObject>: FetchChainableBuilderType {
     
-    static var attributeType: NSAttributeType { get }
+    // MARK: FetchChainableBuilderType
     
-    var keyPath: KeyPathString { get }
-    var isOptional: Bool { get }
-    var isIndexed: Bool { get }
-    var isTransient: Bool { get }
-    var versionHashModifier: () -> String? { get }
-    var renamingIdentifier: () -> String? { get }
-    var defaultValue: () -> Any? { get }
-    var affectedByKeyPaths: () -> Set<String> { get }
-    weak var parentObject: CoreStoreObject? { get set }
-    var getter: CoreStoreManagedObject.CustomGetter? { get }
-    var setter: CoreStoreManagedObject.CustomSetter? { get }
+    public typealias ObjectType = D
+    
+    public var from: From<D>
+    public var fetchClauses: [FetchClause] = []
+}
+
+
+// MARK: - FetchChainableBuilderType
+
+/**
+ Utility protocol for `FetchChainBuilder`. Used in fetch methods that support chained fetch builders.
+ */
+public protocol FetchChainableBuilderType {
+    
+    /**
+     The `DynamicObject` type for the fetch
+     */
+    associatedtype ObjectType: DynamicObject
+    
+    /**
+     The `From` clause specifies the source entity and source persistent store for the fetch
+     */
+    var from: From<ObjectType> { get set }
+    
+    /**
+     The `FetchClause`s to be used for the fetch
+     */
+    var fetchClauses: [FetchClause] { get set }
 }

@@ -34,7 +34,7 @@
 		82BA18B51C4BBD3F00A0916E /* BaseDataTransaction+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EFE1AFF847B0064E85B /* BaseDataTransaction+Querying.swift */; };
 		82BA18B61C4BBD3F00A0916E /* DataStack+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F061AFF847B0064E85B /* DataStack+Querying.swift */; };
 		82BA18B71C4BBD3F00A0916E /* CoreStore+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F071AFF847B0064E85B /* CoreStore+Querying.swift */; };
-		82BA18B81C4BBD4200A0916E /* ClauseTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */; };
+		82BA18B81C4BBD4200A0916E /* TypeErasedClauses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* TypeErasedClauses.swift */; };
 		82BA18B91C4BBD4A00A0916E /* From.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F011AFF847B0064E85B /* From.swift */; };
 		82BA18BA1C4BBD4A00A0916E /* Select.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F031AFF847B0064E85B /* Select.swift */; };
 		82BA18BB1C4BBD4A00A0916E /* Where.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F051AFF847B0064E85B /* Where.swift */; };
@@ -101,6 +101,18 @@
 		B51FE5AF1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */; };
 		B5202CFA1C04688100DED140 /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
 		B5202CFD1C046E8400DED140 /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
+		B5215CA41FA47DFD00139E3A /* FetchChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CA31FA47DFD00139E3A /* FetchChainBuilder.swift */; };
+		B5215CA51FA47DFD00139E3A /* FetchChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CA31FA47DFD00139E3A /* FetchChainBuilder.swift */; };
+		B5215CA61FA47DFD00139E3A /* FetchChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CA31FA47DFD00139E3A /* FetchChainBuilder.swift */; };
+		B5215CA71FA47DFD00139E3A /* FetchChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CA31FA47DFD00139E3A /* FetchChainBuilder.swift */; };
+		B5215CA91FA4810300139E3A /* QueryChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CA81FA4810300139E3A /* QueryChainBuilder.swift */; };
+		B5215CAA1FA4810300139E3A /* QueryChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CA81FA4810300139E3A /* QueryChainBuilder.swift */; };
+		B5215CAB1FA4810300139E3A /* QueryChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CA81FA4810300139E3A /* QueryChainBuilder.swift */; };
+		B5215CAC1FA4810300139E3A /* QueryChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CA81FA4810300139E3A /* QueryChainBuilder.swift */; };
+		B5215CAE1FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CAD1FA4812500139E3A /* SectionMonitorBuilder.swift */; };
+		B5215CAF1FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CAD1FA4812500139E3A /* SectionMonitorBuilder.swift */; };
+		B5215CB01FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CAD1FA4812500139E3A /* SectionMonitorBuilder.swift */; };
+		B5215CB11FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215CAD1FA4812500139E3A /* SectionMonitorBuilder.swift */; };
 		B5220E081D0C5F8D009BC71E /* ObjectObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5220E071D0C5F8D009BC71E /* ObjectObserverTests.swift */; };
 		B5220E091D0C5F8D009BC71E /* ObjectObserverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5220E071D0C5F8D009BC71E /* ObjectObserverTests.swift */; };
 		B5220E0C1D0D0D19009BC71E /* ImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5220E0B1D0D0D19009BC71E /* ImportTests.swift */; };
@@ -184,7 +196,7 @@
 		B52DD1A71BE1F93200949AFE /* BaseDataTransaction+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EFE1AFF847B0064E85B /* BaseDataTransaction+Querying.swift */; };
 		B52DD1A81BE1F93200949AFE /* DataStack+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F061AFF847B0064E85B /* DataStack+Querying.swift */; };
 		B52DD1A91BE1F93200949AFE /* CoreStore+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F071AFF847B0064E85B /* CoreStore+Querying.swift */; };
-		B52DD1AA1BE1F93500949AFE /* ClauseTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */; };
+		B52DD1AA1BE1F93500949AFE /* TypeErasedClauses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* TypeErasedClauses.swift */; };
 		B52DD1AB1BE1F93900949AFE /* From.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F011AFF847B0064E85B /* From.swift */; };
 		B52DD1AC1BE1F93900949AFE /* Select.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F031AFF847B0064E85B /* Select.swift */; };
 		B52DD1AD1BE1F93900949AFE /* Where.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F051AFF847B0064E85B /* Where.swift */; };
@@ -324,6 +336,10 @@
 		B5519A601CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A5E1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift */; };
 		B5519A611CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A5E1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift */; };
 		B5519A621CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5519A5E1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift */; };
+		B55514EA1EED8BF900BAB888 /* From+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55514E91EED8BF900BAB888 /* From+Querying.swift */; };
+		B55514EB1EED8BF900BAB888 /* From+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55514E91EED8BF900BAB888 /* From+Querying.swift */; };
+		B55514EC1EED8BF900BAB888 /* From+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55514E91EED8BF900BAB888 /* From+Querying.swift */; };
+		B55514ED1EED8BF900BAB888 /* From+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55514E91EED8BF900BAB888 /* From+Querying.swift */; };
 		B55717441D15B09E009BDBCA /* CoreStoreBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = B55717421D15AF9C009BDBCA /* CoreStoreBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B55717451D15B09F009BDBCA /* CoreStoreBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = B55717421D15AF9C009BDBCA /* CoreStoreBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B55717461D15B0A1009BDBCA /* CoreStoreBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = B55717421D15AF9C009BDBCA /* CoreStoreBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -362,7 +378,7 @@
 		B56321921BD65216006C9394 /* BaseDataTransaction+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84EFE1AFF847B0064E85B /* BaseDataTransaction+Querying.swift */; };
 		B56321931BD65216006C9394 /* DataStack+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F061AFF847B0064E85B /* DataStack+Querying.swift */; };
 		B56321941BD65216006C9394 /* CoreStore+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F071AFF847B0064E85B /* CoreStore+Querying.swift */; };
-		B56321951BD65216006C9394 /* ClauseTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */; };
+		B56321951BD65216006C9394 /* TypeErasedClauses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* TypeErasedClauses.swift */; };
 		B56321961BD65216006C9394 /* From.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F011AFF847B0064E85B /* From.swift */; };
 		B56321971BD65216006C9394 /* Select.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F031AFF847B0064E85B /* Select.swift */; };
 		B56321981BD65216006C9394 /* Where.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F051AFF847B0064E85B /* Where.swift */; };
@@ -485,6 +501,10 @@
 		B59FA0B01CCBACA7007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
 		B59FA0B11CCBACA7007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
 		B59FA0B21CCBACA8007C9BCA /* ICloudStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */; };
+		B5A1DAC81F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
+		B5A1DAC91F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
+		B5A1DACA1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
+		B5A1DACB1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
 		B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A261201B64BFDB006EB6D3 /* MigrationType.swift */; };
 		B5A5F2661CAEC50F004AB9AF /* CSSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */; };
 		B5A5F2681CAEC50F004AB9AF /* CSSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */; };
@@ -508,6 +528,14 @@
 		B5C976E71C6E3A5A00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */; };
 		B5C976E81C6E3A5D00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */; };
 		B5C976E91C6E3A5E00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */; };
+		B5CA2B081F7E5ACA004B1936 /* WhereClauseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */; };
+		B5CA2B091F7E5ACA004B1936 /* WhereClauseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */; };
+		B5CA2B0A1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */; };
+		B5CA2B0B1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */; };
+		B5CA2B121F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */; };
+		B5CA2B131F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */; };
+		B5CA2B141F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */; };
+		B5CA2B151F81DBFF004B1936 /* DynamicKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */; };
 		B5D1E22C19FA9FBC003B2874 /* CoreStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */; };
 		B5D339B41E925C2B00C880DE /* DynamicModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */; };
 		B5D339B51E925C2B00C880DE /* DynamicModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */; };
@@ -630,7 +658,7 @@
 		B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */; };
 		B5E84F371AFF85470064E85B /* NSManagedObjectContext+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */; };
 		B5E84F391AFF85470064E85B /* NSManagedObjectContext+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */; };
-		B5E84F411AFF8CCD0064E85B /* ClauseTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */; };
+		B5E84F411AFF8CCD0064E85B /* TypeErasedClauses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F401AFF8CCD0064E85B /* TypeErasedClauses.swift */; };
 		B5ECDBDF1CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBDE1CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift */; };
 		B5ECDBE11CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBDE1CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift */; };
 		B5ECDBE21CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDBDE1CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift */; };
@@ -749,6 +777,9 @@
 		B51260921E9B28F100402229 /* EntityIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityIdentifier.swift; sourceTree = "<group>"; };
 		B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+CustomDebugStringConvertible.swift"; sourceTree = "<group>"; };
 		B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFetchedResultsController+Convenience.swift"; sourceTree = "<group>"; };
+		B5215CA31FA47DFD00139E3A /* FetchChainBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchChainBuilder.swift; sourceTree = "<group>"; };
+		B5215CA81FA4810300139E3A /* QueryChainBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueryChainBuilder.swift; sourceTree = "<group>"; };
+		B5215CAD1FA4812500139E3A /* SectionMonitorBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionMonitorBuilder.swift; sourceTree = "<group>"; };
 		B5220E071D0C5F8D009BC71E /* ObjectObserverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectObserverTests.swift; sourceTree = "<group>"; };
 		B5220E0B1D0D0D19009BC71E /* ImportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportTests.swift; sourceTree = "<group>"; };
 		B5220E0F1D0DA6AB009BC71E /* ListObserverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListObserverTests.swift; sourceTree = "<group>"; };
@@ -798,6 +829,7 @@
 		B5519A5E1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSAsynchronousDataTransaction.swift; sourceTree = "<group>"; };
 		B5548CD51BD65AE00077652A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B5548CD71BD65AE50077652A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
+		B55514E91EED8BF900BAB888 /* From+Querying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "From+Querying.swift"; sourceTree = "<group>"; };
 		B55717421D15AF9C009BDBCA /* CoreStoreBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreStoreBridge.h; sourceTree = "<group>"; };
 		B559CD421CAA8B6300E4D58B /* CSSetupResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSetupResult.swift; sourceTree = "<group>"; };
 		B559CD481CAA8C6D00E4D58B /* CSStorageInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSStorageInterface.swift; sourceTree = "<group>"; };
@@ -837,6 +869,7 @@
 		B596BBBA1DD5C39F001DCDD9 /* QueryableSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryableSource.swift; sourceTree = "<group>"; };
 		B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+Setup.swift"; sourceTree = "<group>"; };
 		B59FA0AD1CCBAC95007C9BCA /* ICloudStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudStore.swift; sourceTree = "<group>"; };
+		B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyPath+Querying.swift"; sourceTree = "<group>"; };
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
 		B5A5F2651CAEC50F004AB9AF /* CSSelect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSelect.swift; sourceTree = "<group>"; };
 		B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionLock.swift; sourceTree = "<group>"; };
@@ -847,6 +880,8 @@
 		B5BDC9271C2024F2008147CD /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = SOURCE_ROOT; };
 		B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UnsafeDataTransaction+Observing.swift"; sourceTree = "<group>"; };
 		B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreFetchedResultsController.swift; sourceTree = "<group>"; };
+		B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereClauseType.swift; sourceTree = "<group>"; };
+		B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicKeyPath.swift; sourceTree = "<group>"; };
 		B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreError.swift; sourceTree = "<group>"; };
 		B5D2D5A91F7558CB00A4DE67 /* .cocoapods.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cocoapods.yml; sourceTree = SOURCE_ROOT; };
 		B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicModelTests.swift; sourceTree = "<group>"; };
@@ -914,7 +949,7 @@
 		B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Setup.swift"; sourceTree = "<group>"; };
 		B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Transaction.swift"; sourceTree = "<group>"; };
 		B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Querying.swift"; sourceTree = "<group>"; };
-		B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClauseTypes.swift; sourceTree = "<group>"; };
+		B5E84F401AFF8CCD0064E85B /* TypeErasedClauses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeErasedClauses.swift; sourceTree = "<group>"; };
 		B5ECDBDE1CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSBaseDataTransaction+Querying.swift"; sourceTree = "<group>"; };
 		B5ECDBE41CA6BEA300C7F112 /* CSClauseTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSClauseTypes.swift; sourceTree = "<group>"; };
 		B5ECDBEB1CA6BF2000C7F112 /* CSFrom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSFrom.swift; sourceTree = "<group>"; };
@@ -1129,6 +1164,17 @@
 			name = Observing;
 			sourceTree = "<group>";
 		};
+		B5215CA21FA47BF300139E3A /* Chained Clauses */ = {
+			isa = PBXGroup;
+			children = (
+				B55514E91EED8BF900BAB888 /* From+Querying.swift */,
+				B5215CA31FA47DFD00139E3A /* FetchChainBuilder.swift */,
+				B5215CA81FA4810300139E3A /* QueryChainBuilder.swift */,
+				B5215CAD1FA4812500139E3A /* SectionMonitorBuilder.swift */,
+			);
+			name = "Chained Clauses";
+			sourceTree = "<group>";
+		};
 		B52F74391E9B8724005F3DAC /* Dynamic Schema */ = {
 			isa = PBXGroup;
 			children = (
@@ -1272,6 +1318,16 @@
 			name = Properties;
 			sourceTree = "<group>";
 		};
+		B5A1DAC61F111BBE003CF369 /* KeyPath Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */,
+				B5D339EB1E9495E500C880DE /* CoreStoreObject+Querying.swift */,
+				B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */,
+			);
+			name = "KeyPath Utilities";
+			sourceTree = "<group>";
+		};
 		B5A5F26B1CAFF8D0004AB9AF /* Swift */ = {
 			isa = PBXGroup;
 			children = (
@@ -1395,13 +1451,14 @@
 		B5E84EFD1AFF847B0064E85B /* Fetching and Querying */ = {
 			isa = PBXGroup;
 			children = (
-				B5D339EB1E9495E500C880DE /* CoreStoreObject+Querying.swift */,
 				B5E84EFE1AFF847B0064E85B /* BaseDataTransaction+Querying.swift */,
 				B5E84F061AFF847B0064E85B /* DataStack+Querying.swift */,
 				B5E84F071AFF847B0064E85B /* CoreStore+Querying.swift */,
 				B596BBB51DD5BC67001DCDD9 /* FetchableSource.swift */,
 				B596BBBA1DD5C39F001DCDD9 /* QueryableSource.swift */,
 				B549F65D1E569C7400FBAB2D /* QueryableAttributeType.swift */,
+				B5215CA21FA47BF300139E3A /* Chained Clauses */,
+				B5A1DAC61F111BBE003CF369 /* KeyPath Utilities */,
 				B5E84F0A1AFF847B0064E85B /* Protocol Clauses */,
 				B5E84EFF1AFF847B0064E85B /* Concrete Clauses */,
 			);
@@ -1424,7 +1481,8 @@
 		B5E84F0A1AFF847B0064E85B /* Protocol Clauses */ = {
 			isa = PBXGroup;
 			children = (
-				B5E84F401AFF8CCD0064E85B /* ClauseTypes.swift */,
+				B5E84F401AFF8CCD0064E85B /* TypeErasedClauses.swift */,
+				B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */,
 			);
 			name = "Protocol Clauses";
 			sourceTree = "<group>";
@@ -1696,32 +1754,32 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "John Rommel Estropia";
 				TargetAttributes = {
 					2F03A52F19C5C6DA005002A5 = {
 						CreatedOnToolsVersion = 6.0;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					2F03A53A19C5C6DA005002A5 = {
 						CreatedOnToolsVersion = 6.0;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					82BA18881C4BBCBA00A0916E = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					82BA18911C4BBCBA00A0916E = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					B52DD1731BE1F8CC00949AFE = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					B52DD17C1BE1F8CC00949AFE = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					B563216E1BD65082006C9394 = {
 						CreatedOnToolsVersion = 7.0.1;
@@ -1811,6 +1869,7 @@
 			files = (
 				B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */,
 				B5ECDBF91CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
+				B5CA2B081F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5C976E71C6E3A5A00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */,
 				B56923F51EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
 				B5F1DA901B9AA991007C5CBB /* ImportableUniqueObject.swift in Sources */,
@@ -1822,6 +1881,7 @@
 				B5D339D81E9489AB00C880DE /* CoreStoreObject.swift in Sources */,
 				B5D3F6451C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				B56923FA1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
+				B55514EA1EED8BF900BAB888 /* From+Querying.swift in Sources */,
 				B596BBBB1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B5ECDBFF1CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B5ECDC051CA8138100C7F112 /* CSOrderBy.swift in Sources */,
@@ -1882,10 +1942,11 @@
 				B501FDE71CA8D20500BE22EF /* CSListObserver.swift in Sources */,
 				B5E41EC01EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B501FDE21CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
+				B5A1DAC81F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */,
 				B5ECDC111CA816E500C7F112 /* CSTweak.swift in Sources */,
 				B56923C41EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
-				B5E84F411AFF8CCD0064E85B /* ClauseTypes.swift in Sources */,
+				B5E84F411AFF8CCD0064E85B /* TypeErasedClauses.swift in Sources */,
 				B5E84F0D1AFF847B0064E85B /* BaseDataTransaction+Querying.swift in Sources */,
 				B52F74451E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */,
 				B5FAD6AC1B51285300714891 /* MigrationManager.swift in Sources */,
@@ -1910,6 +1971,7 @@
 				B5E84F0F1AFF847B0064E85B /* From.swift in Sources */,
 				B5FAD6A91B50A4B400714891 /* Progress+Convenience.swift in Sources */,
 				B5E84EFC1AFF846E0064E85B /* SynchronousDataTransaction.swift in Sources */,
+				B5215CA91FA4810300139E3A /* QueryChainBuilder.swift in Sources */,
 				B5E222231CA4E12600BA2E95 /* CSSynchronousDataTransaction.swift in Sources */,
 				B5E84F281AFF84920064E85B /* NSManagedObject+Convenience.swift in Sources */,
 				B52F744A1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
@@ -1918,6 +1980,7 @@
 				B5E84F391AFF85470064E85B /* NSManagedObjectContext+Querying.swift in Sources */,
 				B56923E81EB827F5007C4DC9 /* InferredSchemaMappingProvider.swift in Sources */,
 				B53B275F1EE3B92E00E9B352 /* CoreStoreManagedObject.swift in Sources */,
+				B5215CA41FA47DFD00139E3A /* FetchChainBuilder.swift in Sources */,
 				B5D33A011E96012400C880DE /* Relationship.swift in Sources */,
 				B5E84EE81AFF84610064E85B /* CoreStoreLogger.swift in Sources */,
 				B56923C91EB82410007C4DC9 /* NSManagedObjectModel+Migration.swift in Sources */,
@@ -1941,10 +2004,12 @@
 				B549F65E1E569C7400FBAB2D /* QueryableAttributeType.swift in Sources */,
 				B5E84F211AFF84860064E85B /* CoreStore+Observing.swift in Sources */,
 				B559CD431CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
+				B5CA2B121F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */,
 				B5A991EC1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5FE4DA71C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B52F743D1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
 				B56923FF1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
+				B5215CAE1FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				B5ECDBEC1CA6BF2000C7F112 /* CSFrom.swift in Sources */,
 				B56923EC1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
 				B5E834B91B76311F001D3D50 /* BaseDataTransaction+Importing.swift in Sources */,
@@ -2000,6 +2065,7 @@
 			files = (
 				82BA18B61C4BBD3F00A0916E /* DataStack+Querying.swift in Sources */,
 				B5ECDBFB1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
+				B5CA2B091F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5C976E81C6E3A5D00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */,
 				B56923F61EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
 				82BA18A21C4BBD1D00A0916E /* CoreStoreError.swift in Sources */,
@@ -2011,6 +2077,7 @@
 				B5D339D91E9489AB00C880DE /* CoreStoreObject.swift in Sources */,
 				82BA18CE1C4BBD7100A0916E /* FetchedResultsControllerDelegate.swift in Sources */,
 				B56923FB1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
+				B55514EB1EED8BF900BAB888 /* From+Querying.swift in Sources */,
 				B596BBBC1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B5ECDC011CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B5ECDC071CA8138100C7F112 /* CSOrderBy.swift in Sources */,
@@ -2071,6 +2138,7 @@
 				B501FDE91CA8D20500BE22EF /* CSListObserver.swift in Sources */,
 				B5E41EC11EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B501FDE41CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
+				B5A1DAC91F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B5FE4DA31C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B5ECDC131CA816E500C7F112 /* CSTweak.swift in Sources */,
 				B56923C51EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
@@ -2099,6 +2167,7 @@
 				82BA18C71C4BBD5900A0916E /* CoreStore+Migration.swift in Sources */,
 				B5E222251CA4E12600BA2E95 /* CSSynchronousDataTransaction.swift in Sources */,
 				82BA18C41C4BBD5300A0916E /* ListMonitor.swift in Sources */,
+				B5215CAA1FA4810300139E3A /* QueryChainBuilder.swift in Sources */,
 				82BA18BA1C4BBD4A00A0916E /* Select.swift in Sources */,
 				B52F744B1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
 				B5AEFAB61C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
@@ -2107,6 +2176,7 @@
 				82BA18D81C4BBD7100A0916E /* WeakObject.swift in Sources */,
 				B56923E91EB827F5007C4DC9 /* InferredSchemaMappingProvider.swift in Sources */,
 				B53B27601EE3B92E00E9B352 /* CoreStoreManagedObject.swift in Sources */,
+				B5215CA51FA47DFD00139E3A /* FetchChainBuilder.swift in Sources */,
 				B5D33A021E96012400C880DE /* Relationship.swift in Sources */,
 				B559CD4B1CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
 				B56923CA1EB82410007C4DC9 /* NSManagedObjectModel+Migration.swift in Sources */,
@@ -2129,11 +2199,13 @@
 				82BA18A81C4BBD2900A0916E /* CoreStoreLogger.swift in Sources */,
 				B549F65F1E569C7400FBAB2D /* QueryableAttributeType.swift in Sources */,
 				B559CD451CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
-				82BA18B81C4BBD4200A0916E /* ClauseTypes.swift in Sources */,
+				82BA18B81C4BBD4200A0916E /* TypeErasedClauses.swift in Sources */,
+				B5CA2B131F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */,
 				B5A991ED1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5ECDBEE1CA6BF2000C7F112 /* CSFrom.swift in Sources */,
 				B52F743E1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
 				B56924001EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
+				B5215CAF1FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				82BA18D61C4BBD7100A0916E /* NSManagedObjectContext+Transaction.swift in Sources */,
 				B56923ED1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
 				82BA18B91C4BBD4A00A0916E /* From.swift in Sources */,
@@ -2189,6 +2261,7 @@
 			files = (
 				B5220E1E1D13080D009BC71E /* CSListMonitor.swift in Sources */,
 				B5DBE2D01C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
+				B5CA2B0B1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5677D411CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
 				B56923F81EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
 				B52DD1BE1BE1F94300949AFE /* Progress+Convenience.swift in Sources */,
@@ -2200,6 +2273,7 @@
 				B5D339DB1E9489AB00C880DE /* CoreStoreObject.swift in Sources */,
 				B52DD1951BE1F92500949AFE /* CoreStoreError.swift in Sources */,
 				B56923FD1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
+				B55514ED1EED8BF900BAB888 /* From+Querying.swift in Sources */,
 				B596BBBE1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B546F9601C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				B5ECDC0F1CA8161B00C7F112 /* CSGroupBy.swift in Sources */,
@@ -2260,6 +2334,7 @@
 				B559CD4D1CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
 				B5E41EC31EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B5ECDBE91CA6BEA300C7F112 /* CSClauseTypes.swift in Sources */,
+				B5A1DACB1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B52DD1B81BE1F94000949AFE /* DataStack+Migration.swift in Sources */,
 				B5ECDC091CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B56923C71EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
@@ -2288,6 +2363,7 @@
 				B52DD1CB1BE1F94600949AFE /* WeakObject.swift in Sources */,
 				B52DD1C11BE1F94600949AFE /* Functions.swift in Sources */,
 				B5220E1A1D130791009BC71E /* CoreStoreFetchedResultsController.swift in Sources */,
+				B5215CAC1FA4810300139E3A /* QueryChainBuilder.swift in Sources */,
 				B53FBA0F1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,
 				B52F744D1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
 				B59FA0B21CCBACA8007C9BCA /* ICloudStore.swift in Sources */,
@@ -2296,6 +2372,7 @@
 				B546F96C1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
 				B56923EB1EB827F5007C4DC9 /* InferredSchemaMappingProvider.swift in Sources */,
 				B53B27621EE3B92E00E9B352 /* CoreStoreManagedObject.swift in Sources */,
+				B5215CA71FA47DFD00139E3A /* FetchChainBuilder.swift in Sources */,
 				B5D33A041E96012400C880DE /* Relationship.swift in Sources */,
 				B52DD1C61BE1F94600949AFE /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				B56923CC1EB82410007C4DC9 /* NSManagedObjectModel+Migration.swift in Sources */,
@@ -2319,10 +2396,12 @@
 				B549F6611E569C7400FBAB2D /* QueryableAttributeType.swift in Sources */,
 				B52DD19B1BE1F92800949AFE /* CoreStoreLogger.swift in Sources */,
 				B52DD1991BE1F92800949AFE /* DefaultLogger.swift in Sources */,
+				B5CA2B151F81DBFF004B1936 /* DynamicKeyPath.swift in Sources */,
 				B5A991EF1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5220E201D130813009BC71E /* CSObjectMonitor.swift in Sources */,
 				B52F74401E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
 				B56924021EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
+				B5215CB11FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				B5220E171D1306DF009BC71E /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B56923EF1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
 				B53FBA081CAB300C00F0D40A /* CSMigrationType.swift in Sources */,
@@ -2333,7 +2412,7 @@
 				B5AEFAB81C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				B598514B1C90289F00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B5D339EA1E9493A500C880DE /* Entity.swift in Sources */,
-				B52DD1AA1BE1F93500949AFE /* ClauseTypes.swift in Sources */,
+				B52DD1AA1BE1F93500949AFE /* TypeErasedClauses.swift in Sources */,
 				B53FBA021CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B51FE5AF1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
 			);
@@ -2378,6 +2457,7 @@
 			files = (
 				B56321A91BD65219006C9394 /* Progress+Convenience.swift in Sources */,
 				B5ECDBFC1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
+				B5CA2B0A1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5C976E91C6E3A5E00B1AF90 /* CoreStoreFetchedResultsController.swift in Sources */,
 				B56923F71EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
 				B56321801BD65216006C9394 /* CoreStoreError.swift in Sources */,
@@ -2389,6 +2469,7 @@
 				B5D339DA1E9489AB00C880DE /* CoreStoreObject.swift in Sources */,
 				B5ECDC021CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B56923FC1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
+				B55514EC1EED8BF900BAB888 /* From+Querying.swift in Sources */,
 				B596BBBD1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B5ECDC081CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B5E1B59B1CAA0C23007FD580 /* CSObjectObserver.swift in Sources */,
@@ -2449,6 +2530,7 @@
 				B501FDE51CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
 				B5E41EC21EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B5ECDC141CA816E500C7F112 /* CSTweak.swift in Sources */,
+				B5A1DACA1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B56321AE1BD6521C006C9394 /* NotificationObserver.swift in Sources */,
 				B56321931BD65216006C9394 /* DataStack+Querying.swift in Sources */,
 				B56923C61EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
@@ -2477,6 +2559,7 @@
 				B563218E1BD65216006C9394 /* SaveResult.swift in Sources */,
 				B5E222261CA4E12600BA2E95 /* CSSynchronousDataTransaction.swift in Sources */,
 				B56321A21BD65216006C9394 /* ListObserver.swift in Sources */,
+				B5215CAB1FA4810300139E3A /* QueryChainBuilder.swift in Sources */,
 				B563218A1BD65216006C9394 /* SynchronousDataTransaction.swift in Sources */,
 				B52F744C1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
 				B5AEFAB71C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
@@ -2485,6 +2568,7 @@
 				B56321B61BD6521C006C9394 /* WeakObject.swift in Sources */,
 				B56923EA1EB827F5007C4DC9 /* InferredSchemaMappingProvider.swift in Sources */,
 				B53B27611EE3B92E00E9B352 /* CoreStoreManagedObject.swift in Sources */,
+				B5215CA61FA47DFD00139E3A /* FetchChainBuilder.swift in Sources */,
 				B5D33A031E96012400C880DE /* Relationship.swift in Sources */,
 				B559CD4C1CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
 				B56923CB1EB82410007C4DC9 /* NSManagedObjectModel+Migration.swift in Sources */,
@@ -2508,10 +2592,12 @@
 				B549F6601E569C7400FBAB2D /* QueryableAttributeType.swift in Sources */,
 				B559CD461CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
 				B56321A61BD65216006C9394 /* MigrationType.swift in Sources */,
+				B5CA2B141F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */,
 				B5A991EE1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5ECDBEF1CA6BF2000C7F112 /* CSFrom.swift in Sources */,
 				B52F743F1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
 				B56924011EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
+				B5215CB01FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				B56321B41BD6521C006C9394 /* NSManagedObjectContext+Transaction.swift in Sources */,
 				B56923EE1EB827F6007C4DC9 /* SchemaMappingProvider.swift in Sources */,
 				B56321861BD65216006C9394 /* CoreStoreLogger.swift in Sources */,
@@ -2524,7 +2610,7 @@
 				B5D339E91E9493A500C880DE /* Entity.swift in Sources */,
 				B56321A41BD65216006C9394 /* CoreStore+Migration.swift in Sources */,
 				B56321A01BD65216006C9394 /* ObjectObserver.swift in Sources */,
-				B56321951BD65216006C9394 /* ClauseTypes.swift in Sources */,
+				B56321951BD65216006C9394 /* TypeErasedClauses.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2558,7 +2644,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -2566,7 +2654,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -2600,6 +2692,8 @@
 				PRODUCT_NAME = CoreStore;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2617,7 +2711,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -2625,7 +2721,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -2652,6 +2752,8 @@
 				PRODUCT_NAME = CoreStore;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
@@ -2675,7 +2777,8 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2693,7 +2796,8 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -2713,7 +2817,8 @@
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2728,7 +2833,8 @@
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -2748,7 +2854,8 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Debug;
@@ -2769,7 +2876,8 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Release;
@@ -2787,7 +2895,8 @@
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Debug;
@@ -2805,7 +2914,8 @@
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = appletvos;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Release;
@@ -2829,7 +2939,8 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2853,7 +2964,8 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -2873,7 +2985,8 @@
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2893,7 +3006,8 @@
 				PRODUCT_NAME = CoreStoreTests;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "CoreStoreTests/CoreStoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -2914,7 +3028,8 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Debug;
@@ -2937,7 +3052,8 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 4;
 			};
 			name = Release;

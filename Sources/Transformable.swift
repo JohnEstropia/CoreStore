@@ -116,7 +116,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             initial: @autoclosure @escaping () -> V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -191,14 +191,13 @@ public enum TransformableContainer<O: CoreStoreObject> {
 
 
         // MARK: AttributeProtocol
-
+        
         internal static var attributeType: NSAttributeType {
 
             return .transformableAttributeType
         }
 
-        public let keyPath: RawKeyPath
-
+        internal let keyPath: KeyPathString
         internal let isOptional = false
         internal let isIndexed: Bool
         internal let isTransient: Bool
@@ -261,7 +260,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
 
         @available(*, deprecated: 3.2, renamed: "init(_:initial:isIndexed:isTransient:versionHashModifier:renamingIdentifier:customGetter:customSetter:affectedByKeyPaths:)")
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             `default`: @autoclosure @escaping () -> V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -339,7 +338,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
         public init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             initial: @autoclosure @escaping () -> V? = nil,
             isIndexed: Bool = false,
             isTransient: Bool = false,
@@ -420,8 +419,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return .transformableAttributeType
         }
 
-        public let keyPath: RawKeyPath
-
+        internal let keyPath: KeyPathString
         internal let isOptional = true
         internal let isIndexed: Bool
         internal let isTransient: Bool
@@ -484,7 +482,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
 
         @available(*, deprecated: 3.2, renamed: "init(_:initial:isIndexed:isTransient:versionHashModifier:renamingIdentifier:customGetter:customSetter:affectedByKeyPaths:)")
         public convenience init(
-            _ keyPath: RawKeyPath,
+            _ keyPath: KeyPathString,
             `default`: @autoclosure @escaping () -> V? = nil,
             isIndexed: Bool = false,
             isTransient: Bool = false,

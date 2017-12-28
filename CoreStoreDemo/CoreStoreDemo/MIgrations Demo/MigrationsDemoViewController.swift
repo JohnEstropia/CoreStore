@@ -109,7 +109,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
         
         let dna = (self.listMonitor?[indexPath] as? OrganismProtocol)?.dna.description ?? ""
         cell.dnaLabel?.text = "DNA: \(dna)"
-        cell.mutateButtonHandler = { [weak self] _ -> Void in
+        cell.mutateButtonHandler = { [weak self] () -> Void in
             
             guard let `self` = self,
                 let dataStack = self.dataStack,
@@ -287,8 +287,8 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
                 self.set(dataStack: dataStack, model: model, scrollToSelection: true)
                 
                 let count = dataStack.queryValue(
-                    From(model.entityType),
-                    Select<Int>(.count(#keyPath(OrganismV1.dna))))!
+                    From<NSManagedObject>(model.entityType)
+                        .select(Int.self, .count(#keyPath(OrganismV1.dna))))!
                 if count > 0 {
                     
                     self.setEnabled(true)
@@ -361,14 +361,18 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
             
             self.segmentedControl?.selectedSegmentIndex = self.models
                 .index(
-                    where: { (_, _, schemaHistory) -> Bool in
+                    where: { (arg) -> Bool in
                         
-                        schemaHistory.currentModelVersion == model.schemaHistory.currentModelVersion
+                        let (_, _, schemaHistory) = arg
+                        return schemaHistory.currentModelVersion == model.schemaHistory.currentModelVersion
                     }
                 )!
             
             self._dataStack = dataStack
-            let listMonitor = dataStack.monitorList(From(model.entityType), OrderBy(.descending("dna")))
+            let listMonitor = dataStack.monitorList(
+                From(model.entityType),
+                OrderBy<NSManagedObject>(.descending(#keyPath(OrganismV1.dna)))
+            )
             listMonitor.addObserver(self)
             self._listMonitor = listMonitor
             

@@ -117,8 +117,9 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
         
         var isValid = true
         var versionTree = [String: String]()
-        elements.forEach { (sourceVersion, destinationVersion) in
+        elements.forEach {
             
+            let (sourceVersion, destinationVersion) = $0
             guard let _ = versionTree.updateValue(destinationVersion, forKey: sourceVersion) else {
                 
                 return
@@ -130,8 +131,8 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
         }
         let leafVersions = Set(
             elements
-                .filter { versionTree[$1] == nil }
-                .map { $1 }
+                .filter { versionTree[$0.1] == nil }
+                .map { $0.1 }
         )
         
         let isVersionAmbiguous = { (start: String) -> Bool in

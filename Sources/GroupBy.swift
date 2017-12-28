@@ -32,12 +32,7 @@ import CoreData
 /**
  The `GroupBy` clause specifies that the result of a query be grouped accoording to the specified key path.
  */
-public struct GroupBy: QueryClause, Hashable {
-    
-    /**
-     The list of key path strings to group results with
-     */
-    public let keyPaths: [RawKeyPath]
+public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
     
     /**
      Initializes a `GroupBy` clause with an empty list of key path strings
@@ -53,7 +48,7 @@ public struct GroupBy: QueryClause, Hashable {
      - parameter keyPath: a key path string to group results with
      - parameter keyPaths: a series of key path strings to group results with
      */
-    public init(_ keyPath: RawKeyPath, _ keyPaths: RawKeyPath...) {
+    public init(_ keyPath: KeyPathString, _ keyPaths: KeyPathString...) {
         
         self.init([keyPath] + keyPaths)
     }
@@ -63,10 +58,17 @@ public struct GroupBy: QueryClause, Hashable {
      
      - parameter keyPaths: a list of key path strings to group results with
      */
-    public init(_ keyPaths: [RawKeyPath]) {
+    public init(_ keyPaths: [KeyPathString]) {
         
         self.keyPaths = keyPaths
     }
+    
+    
+    // MARK: GroupByClause
+    
+    public typealias ObjectType = D
+    
+    public let keyPaths: [KeyPathString]
     
     
     // MARK: QueryClause
@@ -99,4 +101,79 @@ public struct GroupBy: QueryClause, Hashable {
         
         return (self.keyPaths as NSArray).hashValue
     }
+}
+
+public extension GroupBy where D: NSManagedObject {
+    
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
+    public init<T>(_ keyPath: KeyPath<D, T>) {
+        
+        self.init([keyPath._kvcKeyPathString!])
+    }
+}
+
+public extension GroupBy where D: CoreStoreObject {
+    
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
+    public init<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Required<T>>) {
+        
+        self.init([D.meta[keyPath: keyPath].keyPath])
+    }
+    
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
+    public init<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Optional<T>>) {
+        
+        self.init([D.meta[keyPath: keyPath].keyPath])
+    }
+    
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
+    public init<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Required<T>>) {
+        
+        self.init([D.meta[keyPath: keyPath].keyPath])
+    }
+    
+    /**
+     Initializes a `GroupBy` clause with a key path
+     
+     - parameter keyPath: a key path to group results with
+     */
+    public init<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>) {
+        
+        self.init([D.meta[keyPath: keyPath].keyPath])
+    }
+}
+
+
+// MARK: - GroupByClause
+
+/**
+ Abstracts the `GroupBy` clause for protocol utilities.
+ */
+public protocol GroupByClause {
+    
+    /**
+     The `DynamicObject` type associated with the clause
+     */
+    associatedtype ObjectType: DynamicObject
+    
+    /**
+     The list of key path strings to group results with
+     */
+    var keyPaths: [KeyPathString] { get }
 }

@@ -36,7 +36,7 @@ import CoreData
  */
 @available(OSX 10.12, *)
 @objc
-public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
+public final class CSSectionBy: NSObject {
     
     /**
      Initializes a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
@@ -45,9 +45,9 @@ public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
      */
     @objc
-    public static func keyPath(_ sectionKeyPath: RawKeyPath) -> CSSectionBy {
+    public static func keyPath(_ sectionKeyPath: KeyPathString) -> CSSectionBy {
         
-        return self.init(SectionBy(sectionKeyPath))
+        return self.init(SectionBy<NSManagedObject>(sectionKeyPath))
     }
     
     /**
@@ -58,9 +58,9 @@ public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
      - returns: a `CSSectionBy` clause with the key path to use to group `CSListMonitor` objects into sections
      */
     @objc
-    public static func keyPath(_ sectionKeyPath: RawKeyPath, sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> CSSectionBy {
+    public static func keyPath(_ sectionKeyPath: KeyPathString, sectionIndexTransformer: @escaping (_ sectionName: String?) -> String?) -> CSSectionBy {
         
-        return self.init(SectionBy(sectionKeyPath, sectionIndexTransformer))
+        return self.init(SectionBy<NSManagedObject>(sectionKeyPath, sectionIndexTransformer))
     }
     
     
@@ -74,11 +74,11 @@ public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
     
     // MARK: CoreStoreObjectiveCType
     
-    public let bridgeToSwift: SectionBy
+    public let bridgeToSwift: SectionBy<NSManagedObject>
     
-    public init(_ swiftValue: SectionBy) {
+    public init<D>(_ swiftValue: SectionBy<D>) {
         
-        self.bridgeToSwift = swiftValue
+        self.bridgeToSwift = swiftValue.downcast()
         super.init()
     }
 }
@@ -87,12 +87,20 @@ public final class CSSectionBy: NSObject, CoreStoreObjectiveCType {
 // MARK: - SectionBy
 
 @available(OSX 10.12, *)
-extension SectionBy: CoreStoreSwiftType {
+extension SectionBy {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSSectionBy {
         
         return CSSectionBy(self)
+    }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> SectionBy<NSManagedObject> {
+        
+        return SectionBy<NSManagedObject>(self.sectionKeyPath, self.sectionIndexTransformer)
     }
 }

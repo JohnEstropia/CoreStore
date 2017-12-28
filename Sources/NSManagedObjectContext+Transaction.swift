@@ -179,7 +179,7 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func saveAsynchronouslyWithCompletion(_ completion: @escaping (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void = { _ in }) {
+    internal func saveAsynchronouslyWithCompletion(_ completion: @escaping (_ hasChanges: Bool, _ error: CoreStoreError?) -> Void = { (_, _) in }) {
         
         self.perform {
             

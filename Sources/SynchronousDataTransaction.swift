@@ -55,7 +55,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `CoreStoreObject` entity type and the destination configuration
      - returns: a new `NSManagedObject` or `CoreStoreObject` instance of the specified entity type.
      */
-    public override func create<T>(_ into: Into<T>) -> T {
+    public override func create<D>(_ into: Into<D>) -> D {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -71,7 +71,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter object: the `NSManagedObject` or `CoreStoreObject` to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public override func edit<T: DynamicObject>(_ object: T?) -> T? {
+    public override func edit<D: DynamicObject>(_ object: D?) -> D? {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -88,7 +88,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public override func edit<T>(_ into: Into<T>, _ objectID: NSManagedObjectID) -> T? {
+    public override func edit<D>(_ into: Into<D>, _ objectID: NSManagedObjectID) -> D? {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -103,7 +103,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      
      - parameter object: the `NSManagedObject` or `CoreStoreObject` type to be deleted
      */
-    public override func delete<T: DynamicObject>(_ object: T?) {
+    public override func delete<D: DynamicObject>(_ object: D?) {
         
         CoreStore.assert(
             !self.isCommitted,
@@ -120,7 +120,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      - parameter object2: another `DynamicObject` to be deleted
      - parameter objects: other `DynamicObject`s to be deleted
      */
-    public override func delete<T: DynamicObject>(_ object1: T?, _ object2: T?, _ objects: T?...) {
+    public override func delete<D: DynamicObject>(_ object1: D?, _ object2: D?, _ objects: D?...) {
         
         CoreStore.assert(
             !self.isCommitted,

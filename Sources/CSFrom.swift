@@ -145,7 +145,7 @@ public final class CSFrom: NSObject {
     
     public let bridgeToSwift: From<NSManagedObject>
     
-    public init<T: NSManagedObject>(_ swiftValue: From<T>) {
+    public init<D: NSManagedObject>(_ swiftValue: From<D>) {
         
         self.bridgeToSwift = swiftValue.downcast()
         super.init()
@@ -155,7 +155,7 @@ public final class CSFrom: NSObject {
 
 // MARK: - From
 
-extension From where T: NSManagedObject {
+extension From where D: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     

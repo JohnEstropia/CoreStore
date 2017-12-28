@@ -342,6 +342,7 @@ extension NSData: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSData
     
+    @nonobjc
     public class var cs_rawAttributeType: NSAttributeType {
         
         return .binaryDataAttributeType
@@ -371,6 +372,7 @@ extension NSDate: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSDate
     
+    @nonobjc
     public class var cs_rawAttributeType: NSAttributeType {
         
         return .dateAttributeType
@@ -411,6 +413,7 @@ extension NSManagedObjectID: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSManagedObjectID
     
+    @nonobjc
     public class var cs_rawAttributeType: NSAttributeType {
         
         return .objectIDAttributeType
@@ -440,6 +443,7 @@ extension NSNull: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNull
     
+    @nonobjc
     public class var cs_rawAttributeType: NSAttributeType {
         
         return .undefinedAttributeType
@@ -469,6 +473,7 @@ extension NSNumber: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSNumber
     
+    @objc
     public class var cs_rawAttributeType: NSAttributeType {
         
         return .integer64AttributeType
@@ -498,6 +503,7 @@ extension NSString: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSString
     
+    @nonobjc
     public class var cs_rawAttributeType: NSAttributeType {
         
         return .stringAttributeType
@@ -527,6 +533,7 @@ extension NSURL: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSString
     
+    @nonobjc
     public class var cs_rawAttributeType: NSAttributeType {
         
         return .stringAttributeType
@@ -552,6 +559,7 @@ extension NSUUID: QueryableAttributeType {
     
     public typealias QueryableNativeType = NSString
     
+    @nonobjc
     public class var cs_rawAttributeType: NSAttributeType {
         
         return .stringAttributeType

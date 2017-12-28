@@ -35,7 +35,7 @@ import CoreData
  - SeeAlso: `OrderBy`
  */
 @objc
-public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause, CoreStoreObjectiveCType {
+public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteClause {
     
     /**
      The list of sort descriptors
@@ -110,11 +110,11 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
     
     // MARK: CoreStoreObjectiveCType
     
-    public let bridgeToSwift: OrderBy
+    public let bridgeToSwift: OrderBy<NSManagedObject>
     
-    public init(_ swiftValue: OrderBy) {
+    public init<D: NSManagedObject>(_ swiftValue: OrderBy<D>) {
         
-        self.bridgeToSwift = swiftValue
+        self.bridgeToSwift = swiftValue.downcast()
         super.init()
     }
 }
@@ -122,12 +122,20 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
 
 // MARK: - OrderBy
 
-extension OrderBy: CoreStoreSwiftType {
+extension OrderBy where D: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     
     public var bridgeToObjectiveC: CSOrderBy {
         
         return CSOrderBy(self)
+    }
+    
+    
+    // MARK: FilePrivate
+    
+    fileprivate func downcast() -> OrderBy<NSManagedObject> {
+        
+        return OrderBy<NSManagedObject>(self.sortDescriptors)
     }
 }

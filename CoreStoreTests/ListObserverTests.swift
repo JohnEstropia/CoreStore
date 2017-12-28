@@ -43,7 +43,7 @@ class ListObserverTests: BaseTestDataTestCase {
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testBoolean)),
-                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -54,7 +54,7 @@ class ListObserverTests: BaseTestDataTestCase {
             var events = 0
             
             let willChangeExpectation = self.expectation(
-                forNotification: "listMonitorWillChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -68,7 +68,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didInsertSectionExpectation = self.expectation(
-                forNotification: "listMonitor:didInsertSection:toSectionIndex:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didInsertSection:toSectionIndex:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -88,7 +88,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didInsertObjectExpectation = self.expectation(
-                forNotification: "listMonitor:didInsertObject:toIndexPath:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didInsertObject:toIndexPath:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -120,7 +120,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didChangeExpectation = self.expectation(
-                forNotification: "listMonitorDidChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorDidChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -171,7 +171,7 @@ class ListObserverTests: BaseTestDataTestCase {
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testBoolean)),
-                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
@@ -185,7 +185,7 @@ class ListObserverTests: BaseTestDataTestCase {
             var events = 0
             
             let willChangeExpectation = self.expectation(
-                forNotification: "listMonitorWillChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -200,7 +200,7 @@ class ListObserverTests: BaseTestDataTestCase {
             )
             
             let didUpdateObjectExpectation = self.expectation(
-                forNotification: "listMonitor:didUpdateObject:atIndexPath:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didUpdateObject:atIndexPath:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -251,7 +251,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didChangeExpectation = self.expectation(
-                forNotification: "listMonitorDidChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorDidChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -270,7 +270,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     if let object = transaction.fetchOne(
                         From<TestEntity1>(),
-                        Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) {
+                        Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) {
                         
                         object.testNumber = NSNumber(value: 11)
                         object.testDecimal = NSDecimalNumber(string: "11")
@@ -284,7 +284,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     }
                     if let object = transaction.fetchOne(
                         From<TestEntity1>(),
-                        Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
+                        Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
                         
                         object.testNumber = NSNumber(value: 22)
                         object.testDecimal = NSDecimalNumber(string: "22")
@@ -323,14 +323,14 @@ class ListObserverTests: BaseTestDataTestCase {
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testBoolean)),
-                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
             var events = 0
             
             let willChangeExpectation = self.expectation(
-                forNotification: "listMonitorWillChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -344,7 +344,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didMoveObjectExpectation = self.expectation(
-                forNotification: "listMonitor:didMoveObject:fromIndexPath:toIndexPath:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didMoveObject:fromIndexPath:toIndexPath:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -377,7 +377,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didChangeExpectation = self.expectation(
-                forNotification: "listMonitorDidChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorDidChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -396,7 +396,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     if let object = transaction.fetchOne(
                         From<TestEntity1>(),
-                        Where(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
+                        Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
                         
                         object.testBoolean = NSNumber(value: true)
                     }
@@ -431,14 +431,14 @@ class ListObserverTests: BaseTestDataTestCase {
             let monitor = stack.monitorSectionedList(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testBoolean)),
-                OrderBy(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
+                OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
             )
             monitor.addObserver(observer)
             
             var events = 0
             
             let willChangeExpectation = self.expectation(
-                forNotification: "listMonitorWillChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorWillChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -452,7 +452,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didUpdateObjectExpectation = self.expectation(
-                forNotification: "listMonitor:didDeleteObject:fromIndexPath:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didDeleteObject:fromIndexPath:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -481,7 +481,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didDeleteSectionExpectation = self.expectation(
-                forNotification: "listMonitor:didDeleteSection:fromSectionIndex:",
+                forNotification: NSNotification.Name(rawValue: "listMonitor:didDeleteSection:fromSectionIndex:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -509,7 +509,7 @@ class ListObserverTests: BaseTestDataTestCase {
                 }
             )
             let didChangeExpectation = self.expectation(
-                forNotification: "listMonitorDidChange:",
+                forNotification: NSNotification.Name(rawValue: "listMonitorDidChange:"),
                 object: observer,
                 handler: { (note) -> Bool in
                     
@@ -528,7 +528,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     
                     let count = transaction.deleteAll(
                         From<TestEntity1>(),
-                        Where(#keyPath(TestEntity1.testBoolean), isEqualTo: false)
+                        Where<TestEntity1>(#keyPath(TestEntity1.testBoolean), isEqualTo: false)
                     )
                     XCTAssertEqual(count, 2)
                     return transaction.hasChanges

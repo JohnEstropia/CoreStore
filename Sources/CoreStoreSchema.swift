@@ -208,7 +208,7 @@ public final class CoreStoreSchema: DynamicSchema {
             }
             let rawModel = NSManagedObjectModel()
             var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
-            var allCustomGettersSetters: [DynamicEntity: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]] = [:]
+            var allCustomGettersSetters: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]] = [:]
             for entity in self.allEntities {
                 
                 let (entityDescription, customGetterSetterByKeyPaths) = self.entityDescription(
@@ -253,10 +253,10 @@ public final class CoreStoreSchema: DynamicSchema {
     private let allEntities: Set<DynamicEntity>
     
     private var entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription] = [:]
-    private var customGettersSettersByEntity: [DynamicEntity: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]] = [:]
+    private var customGettersSettersByEntity: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]] = [:]
     private weak var cachedRawModel: NSManagedObjectModel?
     
-    private func entityDescription(for entity: DynamicEntity, initializer: (DynamicEntity, ModelVersion) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter])) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]) {
+    private func entityDescription(for entity: DynamicEntity, initializer: (DynamicEntity, ModelVersion) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter])) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]) {
         
         if let cachedEntityDescription = self.entityDescriptionsByEntity[entity] {
             
@@ -269,7 +269,7 @@ public final class CoreStoreSchema: DynamicSchema {
         return (entityDescription, customGetterSetterByKeyPaths)
     }
     
-    private static func firstPassCreateEntityDescription(from entity: DynamicEntity, in modelVersion: ModelVersion) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]) {
+    private static func firstPassCreateEntityDescription(from entity: DynamicEntity, in modelVersion: ModelVersion) -> (entity: NSEntityDescription, customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]) {
         
         let entityDescription = NSEntityDescription()
         entityDescription.coreStoreEntity = entity
@@ -278,8 +278,8 @@ public final class CoreStoreSchema: DynamicSchema {
         entityDescription.versionHashModifier = entity.versionHashModifier
         entityDescription.managedObjectClassName = CoreStoreManagedObject.cs_subclassName(for: entity, in: modelVersion)
         
-        var keyPathsByAffectedKeyPaths: [RawKeyPath: Set<RawKeyPath>] = [:]
-        var customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter] = [:]
+        var keyPathsByAffectedKeyPaths: [KeyPathString: Set<KeyPathString>] = [:]
+        var customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter] = [:]
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
             
             var propertyDescriptions: [NSPropertyDescription] = []
@@ -290,7 +290,7 @@ public final class CoreStoreSchema: DynamicSchema {
                 case let attribute as AttributeProtocol:
                     let description = NSAttributeDescription()
                     description.name = attribute.keyPath
-                    description.attributeType = type(of: attribute).attributeType
+                    description.attributeType = Swift.type(of: attribute).attributeType
                     description.isOptional = attribute.isOptional
                     description.isIndexed = attribute.isIndexed
                     description.defaultValue = attribute.defaultValue()
@@ -443,9 +443,9 @@ public final class CoreStoreSchema: DynamicSchema {
         }
     }
     
-    private static func fourthPassSynthesizeManagedObjectClasses(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription], allCustomGettersSetters: [DynamicEntity: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]]) {
+    private static func fourthPassSynthesizeManagedObjectClasses(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription], allCustomGettersSetters: [DynamicEntity: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]]) {
         
-        func createManagedObjectSubclass(for entityDescription: NSEntityDescription, customGetterSetterByKeyPaths: [RawKeyPath: CoreStoreManagedObject.CustomGetterSetter]?) {
+        func createManagedObjectSubclass(for entityDescription: NSEntityDescription, customGetterSetterByKeyPaths: [KeyPathString: CoreStoreManagedObject.CustomGetterSetter]?) {
             
             let superEntity = entityDescription.superentity
             let className = entityDescription.managedObjectClassName!
@@ -527,7 +527,7 @@ public final class CoreStoreSchema: DynamicSchema {
             let origSelector = #selector(NSManagedObject.keyPathsForValuesAffectingValue(forKey:))
             
             let metaClass: AnyClass = object_getClass(managedObjectClass)!
-            let origMethod = class_getClassMethod(managedObjectClass, origSelector)
+            let origMethod = class_getClassMethod(managedObjectClass, origSelector)!
             
             let origImp = method_getImplementation(origMethod)
             let newImp = imp_implementationWithBlock(keyPathsForValuesAffectingValue)
@@ -538,7 +538,7 @@ public final class CoreStoreSchema: DynamicSchema {
             }
             else {
                 
-                let newMethod = class_getClassMethod(managedObjectClass, newSelector)
+                let newMethod = class_getClassMethod(managedObjectClass, newSelector)!
                 method_exchangeImplementations(origMethod, newMethod)
             }
         }
