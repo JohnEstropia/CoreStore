@@ -195,11 +195,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             return V.cs_rawAttributeType
         }
         
-        /**
-         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
-         */
-        public let keyPath: KeyPathString
-        
+        internal let keyPath: KeyPathString
         internal let isOptional = false
         internal let isIndexed: Bool
         internal let isTransient: Bool
@@ -424,11 +420,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             return V.cs_rawAttributeType
         }
         
-        /**
-         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
-         */
-        public let keyPath: KeyPathString
-        
+        internal let keyPath: KeyPathString
         internal let isOptional = true
         internal let isIndexed: Bool
         internal let isTransient: Bool

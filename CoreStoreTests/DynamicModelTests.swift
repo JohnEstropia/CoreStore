@@ -101,8 +101,8 @@ class Person: CoreStoreObject {
     static func keyPathsAffectingDisplayName() -> Set<String> {
         
         return [
-            self.keyPath({ $0.title }),
-            self.keyPath({ $0.name })
+            String(keyPath: \Person.title),
+            String(keyPath: \Person.name)
         ]
     }
 }
@@ -112,7 +112,8 @@ class Person: CoreStoreObject {
 
 class DynamicModelTests: BaseTestDataTestCase {
     
-    func testDynamicModels_CanBeDeclaredCorrectly() {
+    @objc
+    dynamic func test_ThatDynamicModels_CanBeDeclaredCorrectly() {
         
         let dataStack = DataStack(
             CoreStoreSchema(
@@ -131,13 +132,13 @@ class DynamicModelTests: BaseTestDataTestCase {
         )
         self.prepareStack(dataStack, configurations: [nil]) { (stack) in
             
-            let k1 = Animal.keyPath({ $0.species })
+            let k1 = String(keyPath: \Animal.species)
             XCTAssertEqual(k1, "species")
             
-            let k2 = Dog.keyPath({ $0.species })
+            let k2 = String(keyPath: \Dog.species)
             XCTAssertEqual(k2, "species")
             
-            let k3 = Dog.keyPath({ $0.nickname })
+            let k3 = String(keyPath: \Dog.nickname)
             XCTAssertEqual(k3, "nickname")
             
             let updateDone = self.expectation(description: "update-done")
@@ -271,6 +272,13 @@ class DynamicModelTests: BaseTestDataTestCase {
             )
             self.waitAndCheckExpectations()
         }
+    }
+    
+    @objc
+    dynamic func test_ThatDynamicModelKeyPaths_CanBeCreated() {
+        
+        XCTAssertEqual(String(keyPath: \Animal.species), "species")
+        XCTAssertEqual(String(keyPath: \Dog.species), "species")
     }
     
     @nonobjc

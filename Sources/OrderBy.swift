@@ -189,7 +189,7 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
         /**
          Indicates that the `KeyPathString` should be sorted in ascending order
          */
-        public static func ascending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: ValueContainer<D>.Required<T> {
+        public static func ascending<T>(_ attribute: KeyPath<D, ValueContainer<D>.Required<T>>) -> SortKey {
             
             return .ascending(D.meta[keyPath: attribute].keyPath)
         }
@@ -197,7 +197,7 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
         /**
          Indicates that the `KeyPathString` should be sorted in ascending order
          */
-        public static func ascending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: ValueContainer<D>.Optional<T> {
+        public static func ascending<T>(_ attribute: KeyPath<D, ValueContainer<D>.Optional<T>>) -> SortKey {
             
             return .ascending(D.meta[keyPath: attribute].keyPath)
         }
@@ -205,7 +205,7 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
         /**
          Indicates that the `KeyPathString` should be sorted in ascending order
          */
-        public static func ascending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: TransformableContainer<D>.Required<T> {
+        public static func ascending<T>(_ attribute: KeyPath<D, TransformableContainer<D>.Required<T>>) -> SortKey {
             
             return .ascending(D.meta[keyPath: attribute].keyPath)
         }
@@ -213,7 +213,7 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
         /**
          Indicates that the `KeyPathString` should be sorted in ascending order
          */
-        public static func ascending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: TransformableContainer<D>.Optional<T> {
+        public static func ascending<T>(_ attribute: KeyPath<D, TransformableContainer<D>.Optional<T>>) -> SortKey {
             
             return .ascending(D.meta[keyPath: attribute].keyPath)
         }
@@ -221,7 +221,7 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
         /**
          Indicates that the `KeyPathString` should be sorted in descending order
          */
-        public static func descending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: ValueContainer<D>.Required<T> {
+        public static func descending<T>(_ attribute: KeyPath<D, ValueContainer<D>.Required<T>>) -> SortKey {
             
             return .descending(D.meta[keyPath: attribute].keyPath)
         }
@@ -229,7 +229,7 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
         /**
          Indicates that the `KeyPathString` should be sorted in descending order
          */
-        public static func descending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: ValueContainer<D>.Optional<T> {
+        public static func descending<T>(_ attribute: KeyPath<D, ValueContainer<D>.Optional<T>>) -> SortKey {
             
             return .descending(D.meta[keyPath: attribute].keyPath)
         }
@@ -237,7 +237,7 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
         /**
          Indicates that the `KeyPathString` should be sorted in descending order
          */
-        public static func descending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: TransformableContainer<D>.Required<T> {
+        public static func descending<T>(_ attribute: KeyPath<D, TransformableContainer<D>.Required<T>>) -> SortKey {
             
             return .descending(D.meta[keyPath: attribute].keyPath)
         }
@@ -245,7 +245,7 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
         /**
          Indicates that the `KeyPathString` should be sorted in descending order
          */
-        public static func descending<A, T>(_ attribute: KeyPath<D, A>) -> SortKey where A: TransformableContainer<D>.Optional<T> {
+        public static func descending<T>(_ attribute: KeyPath<D, TransformableContainer<D>.Optional<T>>) -> SortKey {
             
             return .descending(D.meta[keyPath: attribute].keyPath)
         }
@@ -262,7 +262,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in ascending order
      */
-    public static func ascending<T: AnyCoreStoreKeyPath>(_ attribute: (D) -> T) -> OrderBy<D>.SortKey {
+    public static func ascending<K: DynamicKeyPath>(_ attribute: (D) -> K) -> OrderBy<D>.SortKey {
         
         return .ascending(attribute(D.meta).cs_keyPathString)
     }
@@ -270,7 +270,7 @@ public extension OrderBy.SortKey where D: CoreStoreObject {
     /**
      Indicates that the `KeyPathString` should be sorted in descending order
      */
-    public static func descending<T: AnyCoreStoreKeyPath>(_ attribute: (D) -> T) -> OrderBy<D>.SortKey {
+    public static func descending<K: DynamicKeyPath>(_ attribute: (D) -> K) -> OrderBy<D>.SortKey {
         
         return .descending(attribute(D.meta).cs_keyPathString)
     }

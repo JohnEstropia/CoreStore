@@ -53,6 +53,12 @@ private func XCTAssertAllEqual<D>(_ whereClauses: [Where<D>]) {
 final class WhereTests: XCTestCase {
     
     @objc
+    dynamic func test_ThatDynamicModelKeyPaths_CanBeCreated() {
+        
+        XCTAssertEqual(String(keyPath: \TestEntity1.testEntityID), "testEntityID")
+    }
+    
+    @objc
     dynamic func test_ThatWhereClauses_ConfigureCorrectly() {
         
         do {

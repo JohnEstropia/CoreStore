@@ -234,11 +234,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
         
-        /**
-         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
-         */
-        public let keyPath: KeyPathString
-        
+        internal let keyPath: KeyPathString
         internal let isToMany = false
         internal let isOrdered = false
         internal let deleteRule: NSDeleteRule
@@ -505,11 +501,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
         
-        /**
-         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
-         */
-        public let keyPath: KeyPathString
-        
+        internal let keyPath: KeyPathString
         internal let isToMany = true
         internal let isOptional = true
         internal let isOrdered = true
@@ -782,11 +774,7 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         
         // MARK: RelationshipProtocol
         
-        /**
-         The keyPath string represented by this property. Generally, there are more type-safe utilities for querying and other common tasks.
-         */
-        public let keyPath: KeyPathString
-        
+        internal let keyPath: KeyPathString
         internal let isToMany = true
         internal let isOptional = true
         internal let isOrdered = false
