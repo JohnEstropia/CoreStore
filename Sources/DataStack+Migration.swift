@@ -797,7 +797,7 @@ public extension DataStack {
         }
         
         let externalStorageDirName = "." + fileURL.deletingPathExtension().lastPathComponent + "_SUPPORT"
-        let temporaryExtenralStorageURL = temporaryDirectoryURL.appendingPathComponent(
+        let temporaryExternalStorageURL = temporaryDirectoryURL.appendingPathComponent(
             externalStorageDirName,
             isDirectory: true
         )
@@ -811,11 +811,11 @@ public extension DataStack {
                 resultingItemURL: nil
             )
             
-            if fileManager.fileExists(atPath: temporaryExtenralStorageURL.path) {
+            if fileManager.fileExists(atPath: temporaryExternalStorageURL.path) {
                 let extenralStorageURL = fileURL.deletingLastPathComponent().appendingPathComponent(externalStorageDirName,  isDirectory: true)
                 try fileManager.replaceItem(
                     at: extenralStorageURL as URL,
-                    withItemAt: temporaryExtenralStorageURL,
+                    withItemAt: temporaryExternalStorageURL,
                     backupItemName: nil,
                     options: [],
                     resultingItemURL: nil
@@ -827,7 +827,7 @@ public extension DataStack {
         catch {
             
             _ = try? fileManager.removeItem(at: temporaryFileURL)
-            _ = try? fileManager.removeItem(at: temporaryExtenralStorageURL)
+            _ = try? fileManager.removeItem(at: temporaryExternalStorageURL)
             throw CoreStoreError(error)
         }
     }
