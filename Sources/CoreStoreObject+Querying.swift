@@ -61,7 +61,7 @@ public extension ValueContainer.Required {
      */
     public static func < (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
-        return Where("%K < %@", attribute.keyPath, value)
+        return Where("%K < %@", attribute.keyPath, value.cs_toQueryableNativeType())
     }
     
     /**
@@ -72,7 +72,7 @@ public extension ValueContainer.Required {
      */
     public static func > (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
-        return Where("%K > %@", attribute.keyPath, value)
+        return Where("%K > %@", attribute.keyPath, value.cs_toQueryableNativeType())
     }
     
     /**
@@ -83,7 +83,7 @@ public extension ValueContainer.Required {
      */
     public static func <= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
-        return Where("%K <= %@", attribute.keyPath, value)
+        return Where("%K <= %@", attribute.keyPath, value.cs_toQueryableNativeType())
     }
     
     /**
@@ -94,7 +94,7 @@ public extension ValueContainer.Required {
      */
     public static func >= (_ attribute: ValueContainer<O>.Required<V>, _ value: V) -> Where<O> {
         
-        return Where("%K >= %@", attribute.keyPath, value)
+        return Where("%K >= %@", attribute.keyPath, value.cs_toQueryableNativeType())
     }
     
     /**
@@ -146,7 +146,7 @@ public extension ValueContainer.Optional {
         
         if let value = value {
             
-            return Where("%K < %@", attribute.keyPath, value)
+            return Where("%K < %@", attribute.keyPath, value.cs_toQueryableNativeType())
         }
         else {
             
@@ -164,7 +164,7 @@ public extension ValueContainer.Optional {
         
         if let value = value {
             
-            return Where("%K > %@", attribute.keyPath, value)
+            return Where("%K > %@", attribute.keyPath, value.cs_toQueryableNativeType())
         }
         else {
             
@@ -182,7 +182,7 @@ public extension ValueContainer.Optional {
         
         if let value = value {
             
-            return Where("%K <= %@", attribute.keyPath, value)
+            return Where("%K <= %@", attribute.keyPath, value.cs_toQueryableNativeType())
         }
         else {
             
@@ -200,7 +200,7 @@ public extension ValueContainer.Optional {
         
         if let value = value {
             
-            return Where("%K >= %@", attribute.keyPath, value)
+            return Where("%K >= %@", attribute.keyPath, value.cs_toQueryableNativeType())
         }
         else {
             

@@ -109,7 +109,7 @@ public func ~= <O: NSManagedObject, V: QueryableAttributeType & Equatable, S: Se
  */
 public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
     
-    return Where<O>("%K < %@", keyPath._kvcKeyPathString!, value)
+    return Where<O>("%K < %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
 }
 
 /**
@@ -120,7 +120,7 @@ public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
  */
 public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
     
-    return Where<O>("%K > %@", keyPath._kvcKeyPathString!, value)
+    return Where<O>("%K > %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
 }
 
 /**
@@ -131,7 +131,7 @@ public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
  */
 public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
     
-    return Where<O>("%K <= %@", keyPath._kvcKeyPathString!, value)
+    return Where<O>("%K <= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
 }
 
 /**
@@ -142,7 +142,7 @@ public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ ke
  */
 public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ keyPath: KeyPath<O, V>, _ value: V) -> Where<O> {
     
-    return Where<O>("%K >= %@", keyPath._kvcKeyPathString!, value)
+    return Where<O>("%K >= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
 }
 
 
@@ -158,7 +158,7 @@ public func < <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
     
     if let value = value {
         
-        return Where<O>("%K < %@", keyPath._kvcKeyPathString!, value)
+        return Where<O>("%K < %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
     }
     else {
         
@@ -176,7 +176,7 @@ public func > <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ key
     
     if let value = value {
         
-        return Where<O>("%K > %@", keyPath._kvcKeyPathString!, value)
+        return Where<O>("%K > %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
     }
     else {
         
@@ -194,7 +194,7 @@ public func <= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ ke
     
     if let value = value {
         
-        return Where<O>("%K <= %@", keyPath._kvcKeyPathString!, value)
+        return Where<O>("%K <= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
     }
     else {
         
@@ -212,7 +212,7 @@ public func >= <O: NSManagedObject, V: QueryableAttributeType & Comparable>(_ ke
     
     if let value = value {
         
-        return Where<O>("%K >= %@", keyPath._kvcKeyPathString!, value)
+        return Where<O>("%K >= %@", keyPath._kvcKeyPathString!, value.cs_toQueryableNativeType())
     }
     else {
         
@@ -441,7 +441,7 @@ public func ~= <O, V, S: Sequence>(_ sequence: S, _ keyPath: KeyPath<O, ValueCon
  */
 public func < <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
-    return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value)
+    return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
 }
 
 /**
@@ -452,7 +452,7 @@ public func < <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Require
  */
 public func > <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
-    return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value)
+    return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
 }
 
 /**
@@ -463,7 +463,7 @@ public func > <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Require
  */
 public func <= <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
-    return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value)
+    return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
 }
 
 /**
@@ -474,7 +474,7 @@ public func <= <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Requir
  */
 public func >= <O, V: Comparable>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<V>>, _ value: V) -> Where<O> {
     
-    return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value)
+    return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
 }
 
 
@@ -490,7 +490,7 @@ public func < <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ val
     
     if let value = value {
 
-        return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value)
+        return Where<O>("%K < %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
     }
     else {
 
@@ -508,7 +508,7 @@ public func > <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ val
     
     if let value = value {
         
-        return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value)
+        return Where<O>("%K > %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
     }
     else {
         
@@ -526,7 +526,7 @@ public func <= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
     
     if let value = value {
         
-        return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value)
+        return Where<O>("%K <= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
     }
     else {
         
@@ -544,7 +544,7 @@ public func >= <O, V>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<V>>, _ va
     
     if let value = value {
         
-        return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value)
+        return Where<O>("%K >= %@", O.meta[keyPath: keyPath].keyPath, value.cs_toQueryableNativeType())
     }
     else {
         
