@@ -215,9 +215,9 @@ let migrationProgress = dataStack.addStorage(
     completion: { (result) -> Void in
         switch result {
         case .success(let storage):
-            print("Successfully added sqlite store: \(storage)"
+            print("Successfully added sqlite store: \(storage)")
         case .failure(let error):
-            print("Failed adding sqlite store with error: \(error)"
+            print("Failed adding sqlite store with error: \(error)")
         }
     }
 )
