@@ -952,6 +952,8 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                 sectionBy: self.sectionBy,
                 applyFetchClauses: self.applyFetchClauses
             )
+            newFetchedResultsControllerDelegate.enabled = false
+            newFetchedResultsControllerDelegate.handler = self
             
             self.transactionQueue.async { [weak self] in
                 
@@ -973,7 +975,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                     }
                     
                     (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = (newFetchedResultsController, newFetchedResultsControllerDelegate)
-                    newFetchedResultsControllerDelegate.handler = self
+                    newFetchedResultsControllerDelegate.enabled = true
                     
                     self.isPendingRefetch = false
                     
