@@ -282,7 +282,7 @@ public enum CoreStoreErrorCode: Int {
 
 // MARK: - NSError
 
-public extension NSError {
+internal extension NSError {
     
     // MARK: Internal
     

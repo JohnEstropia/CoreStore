@@ -1071,7 +1071,7 @@ extension RelationshipContainer.ToManyOrdered {
         
         return relationship.nativeValue.elementsEqual(
             collection.lazy.map({ $0.rawObject! }),
-            by: { ($0 as! NSManagedObject) == ($1 as! NSManagedObject) }
+            by: { ($0 as! NSManagedObject) == $1 }
         )
     }
     
@@ -1089,7 +1089,7 @@ extension RelationshipContainer.ToManyOrdered {
         
         return relationship.nativeValue.elementsEqual(
             collection.lazy.map({ $0.rawObject! }),
-            by: { ($0 as! NSManagedObject) == ($1 as! NSManagedObject) }
+            by: { ($0 as! NSManagedObject) == $1 }
         )
     }
     

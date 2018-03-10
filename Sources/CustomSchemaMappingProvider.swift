@@ -56,8 +56,8 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         CoreStore.assert(
             cs_lazy {
                 
-                let sources = entityMappings.flatMap({ $0.entityMappingSourceEntity })
-                let destinations = entityMappings.flatMap({ $0.entityMappingDestinationEntity })
+                let sources = entityMappings.compactMap({ $0.entityMappingSourceEntity })
+                let destinations = entityMappings.compactMap({ $0.entityMappingDestinationEntity })
                 return sources.count == Set(sources).count
                     && destinations.count == Set(destinations).count
             },

@@ -37,7 +37,7 @@ internal protocol RelationshipProtocol: class {
     var deleteRule: NSDeleteRule { get }
     var inverse: (type: CoreStoreObject.Type, keyPath: () -> KeyPathString?) { get }
     var affectedByKeyPaths: () -> Set<String> { get }
-    weak var parentObject: CoreStoreObject? { get set }
+    var parentObject: CoreStoreObject? { get set }
     var versionHashModifier: () -> String? { get }
     var renamingIdentifier: () -> String? { get }
     var minCount: Int { get }

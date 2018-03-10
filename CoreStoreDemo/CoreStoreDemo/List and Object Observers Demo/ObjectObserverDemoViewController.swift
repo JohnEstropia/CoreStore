@@ -184,15 +184,15 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
         
         self.hsbLabel?.text = palette.colorText
         
-        if changedKeys == nil || changedKeys?.contains(Palette.keyPath{ $0.hue }) == true {
+        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.hue)) == true {
             
             self.hueSlider?.value = Float(palette.hue.value)
         }
-        if changedKeys == nil || changedKeys?.contains(Palette.keyPath{ $0.saturation }) == true {
+        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.saturation)) == true {
             
             self.saturationSlider?.value = palette.saturation.value
         }
-        if changedKeys == nil || changedKeys?.contains(Palette.keyPath{ $0.brightness }) == true {
+        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.hue)) == true {
             
             self.brightnessSlider?.value = palette.brightness.value
         }
