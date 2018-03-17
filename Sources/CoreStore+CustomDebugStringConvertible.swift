@@ -1177,7 +1177,6 @@ extension NSAttributeDescription: CoreStoreDebugStringConvertible {
             ("isOptional", self.isOptional),
             ("isTransient", self.isTransient),
             ("userInfo", self.userInfo as Any),
-            ("isIndexed", self.isIndexed),
             ("versionHash", self.versionHash),
             ("versionHashModifier", self.versionHashModifier as Any),
             ("isIndexedBySpotlight", self.isIndexedBySpotlight),
@@ -1248,13 +1247,17 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
             ("userInfo", self.userInfo as Any),
             ("versionHash", self.versionHash),
             ("versionHashModifier", self.versionHashModifier as Any),
-            ("renamingIdentifier", self.renamingIdentifier as Any),
-            ("compoundIndexes", self.compoundIndexes)
+            ("renamingIdentifier", self.renamingIdentifier as Any)
         ]
-        if #available(iOS 9.0, OSXApplicationExtension 10.11, OSX 10.11, *) {
+        if #available(iOS 11.0, OSX 10.13, watchOS 4.0, tvOS 11.0, *) {
             
-            info.append(("uniquenessConstraints", self.uniquenessConstraints))
+            info.append(("indexes", self.indexes))
         }
+        else {
+            
+            info.append(("compoundIndexes", self.compoundIndexes))
+        }
+        info.append(("uniquenessConstraints", self.uniquenessConstraints))
         return createFormattedString(
             "(", ")",
             info

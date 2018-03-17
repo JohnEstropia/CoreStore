@@ -103,7 +103,6 @@ public enum ValueContainer<O: CoreStoreObject> {
          ```
          - parameter keyPath: the permanent attribute name for this property.
          - parameter initial: the initial value for the property when the object is first created
-         - parameter isIndexed: `true` if the property should be indexed for searching, otherwise `false`. Defaults to `false` if not specified.
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
          - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
@@ -114,7 +113,6 @@ public enum ValueContainer<O: CoreStoreObject> {
         public init(
             _ keyPath: KeyPathString,
             initial: @autoclosure @escaping () -> V,
-            isIndexed: Bool = false,
             isTransient: Bool = false,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             renamingIdentifier: @autoclosure @escaping () -> String? = nil,
@@ -123,7 +121,6 @@ public enum ValueContainer<O: CoreStoreObject> {
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
-            self.isIndexed = isIndexed
             self.isTransient = isTransient
             self.defaultValue = { initial().cs_toQueryableNativeType() }
             self.versionHashModifier = versionHashModifier
@@ -197,7 +194,6 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         internal let keyPath: KeyPathString
         internal let isOptional = false
-        internal let isIndexed: Bool
         internal let isTransient: Bool
         internal let allowsExternalBinaryDataStorage = false
         internal let versionHashModifier: () -> String?
@@ -257,11 +253,11 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         // MARK: Deprecated
         
-        @available(*, deprecated: 3.2, renamed: "init(_:initial:isIndexed:isTransient:versionHashModifier:renamingIdentifier:customGetter:customSetter:affectedByKeyPaths:)")
+        @available(*, unavailable, message: "Indexes are now set through the Entity<T> initializer, which now supports compound indexes.")
         public convenience init(
             _ keyPath: KeyPathString,
-            `default`: @autoclosure @escaping () -> V,
-            isIndexed: Bool = false,
+            initial: @autoclosure @escaping () -> V,
+            isIndexed: Bool,
             isTransient: Bool = false,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             renamingIdentifier: @autoclosure @escaping () -> String? = nil,
@@ -269,17 +265,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(
-                keyPath,
-                initial: `default`,
-                isIndexed: isIndexed,
-                isTransient: isTransient,
-                versionHashModifier: versionHashModifier,
-                renamingIdentifier: renamingIdentifier,
-                customGetter: customGetter,
-                customSetter: customSetter,
-                affectedByKeyPaths: affectedByKeyPaths
-            )
+            fatalError()
         }
     }
     
@@ -325,7 +311,6 @@ public enum ValueContainer<O: CoreStoreObject> {
          ```
          - parameter keyPath: the permanent attribute name for this property.
          - parameter initial: the initial value for the property when the object is first created. Defaults to `nil` if not specified.
-         - parameter isIndexed: `true` if the property should be indexed for searching, otherwise `false`. Defaults to `false` if not specified.
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
          - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
@@ -341,7 +326,6 @@ public enum ValueContainer<O: CoreStoreObject> {
         public init(
             _ keyPath: KeyPathString,
             initial: @autoclosure @escaping () -> V? = nil,
-            isIndexed: Bool = false,
             isTransient: Bool = false,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             renamingIdentifier: @autoclosure @escaping () -> String? = nil,
@@ -350,7 +334,6 @@ public enum ValueContainer<O: CoreStoreObject> {
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
             self.keyPath = keyPath
-            self.isIndexed = isIndexed
             self.isTransient = isTransient
             self.defaultValue = { initial()?.cs_toQueryableNativeType() }
             self.versionHashModifier = versionHashModifier
@@ -423,7 +406,6 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         internal let keyPath: KeyPathString
         internal let isOptional = true
-        internal let isIndexed: Bool
         internal let isTransient: Bool
         internal let allowsExternalBinaryDataStorage = false
         internal let versionHashModifier: () -> String?
@@ -483,11 +465,11 @@ public enum ValueContainer<O: CoreStoreObject> {
         
         // MARK: Deprecated
         
-        @available(*, deprecated: 3.2, renamed: "init(_:initial:isIndexed:isTransient:versionHashModifier:renamingIdentifier:customGetter:customSetter:affectedByKeyPaths:)")
+        @available(*, unavailable, message: "Indexes are now set through the Entity<T> initializer, which now supports compound indexes.")
         public convenience init(
             _ keyPath: KeyPathString,
-            `default`: @autoclosure @escaping () -> V? = nil,
-            isIndexed: Bool = false,
+            initial: @autoclosure @escaping () -> V? = nil,
+            isIndexed: Bool,
             isTransient: Bool = false,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             renamingIdentifier: @autoclosure @escaping () -> String? = nil,
@@ -495,17 +477,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.init(
-                keyPath,
-                initial: `default`,
-                isIndexed: isIndexed,
-                isTransient: isTransient,
-                versionHashModifier: versionHashModifier,
-                renamingIdentifier: renamingIdentifier,
-                customGetter: customGetter,
-                customSetter: customSetter,
-                affectedByKeyPaths: affectedByKeyPaths
-            )
+            fatalError()
         }
     }
 }

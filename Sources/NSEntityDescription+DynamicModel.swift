@@ -50,7 +50,9 @@ internal extension NSEntityDescription {
             guard let userInfo = self.userInfo,
                 let typeName = userInfo[UserInfoKey.CoreStoreManagedObjectTypeName] as! String?,
                 let entityName = userInfo[UserInfoKey.CoreStoreManagedObjectEntityName] as! String?,
-                let isAbstract = userInfo[UserInfoKey.CoreStoreManagedObjectIsAbstract] as! Bool? else {
+                let isAbstract = userInfo[UserInfoKey.CoreStoreManagedObjectIsAbstract] as! Bool?,
+                let indexes = userInfo[UserInfoKey.CoreStoreManagedObjectIndexes] as! [[KeyPathString]]?,
+                let uniqueConstraints = userInfo[UserInfoKey.CoreStoreManagedObjectUniqueConstraints] as! [[KeyPathString]]? else {
                     
                     return nil
             }
@@ -58,7 +60,9 @@ internal extension NSEntityDescription {
                 type: NSClassFromString(typeName) as! CoreStoreObject.Type,
                 entityName: entityName,
                 isAbstract: isAbstract,
-                versionHashModifier: userInfo[UserInfoKey.CoreStoreManagedObjectVersionHashModifier] as! String?
+                versionHashModifier: userInfo[UserInfoKey.CoreStoreManagedObjectVersionHashModifier] as! String?,
+                indexes: indexes,
+                uniqueConstraints: uniqueConstraints
             )
         }
         set {
@@ -71,6 +75,8 @@ internal extension NSEntityDescription {
                     userInfo[UserInfoKey.CoreStoreManagedObjectEntityName] = newValue.entityName
                     userInfo[UserInfoKey.CoreStoreManagedObjectIsAbstract] = newValue.isAbstract
                     userInfo[UserInfoKey.CoreStoreManagedObjectVersionHashModifier] = newValue.versionHashModifier
+                    userInfo[UserInfoKey.CoreStoreManagedObjectIndexes] = newValue.indexes
+                    userInfo[UserInfoKey.CoreStoreManagedObjectUniqueConstraints] = newValue.uniqueConstraints
                 }
             }
             else {
@@ -81,6 +87,8 @@ internal extension NSEntityDescription {
                     userInfo[UserInfoKey.CoreStoreManagedObjectEntityName] = nil
                     userInfo[UserInfoKey.CoreStoreManagedObjectIsAbstract] = nil
                     userInfo[UserInfoKey.CoreStoreManagedObjectVersionHashModifier] = nil
+                    userInfo[UserInfoKey.CoreStoreManagedObjectIndexes] = nil
+                    userInfo[UserInfoKey.CoreStoreManagedObjectUniqueConstraints] = nil
                 }
             }
         }
@@ -139,6 +147,8 @@ internal extension NSEntityDescription {
         fileprivate static let CoreStoreManagedObjectEntityName = "CoreStoreManagedObjectEntityName"
         fileprivate static let CoreStoreManagedObjectIsAbstract = "CoreStoreManagedObjectIsAbstract"
         fileprivate static let CoreStoreManagedObjectVersionHashModifier = "CoreStoreManagedObjectVersionHashModifier"
+        fileprivate static let CoreStoreManagedObjectIndexes = "CoreStoreManagedObjectIndexes"
+        fileprivate static let CoreStoreManagedObjectUniqueConstraints = "CoreStoreManagedObjectUniqueConstraints"
         
         fileprivate static let CoreStoreManagedObjectKeyPathsByAffectedKeyPaths = "CoreStoreManagedObjectKeyPathsByAffectedKeyPaths"
         fileprivate static let CoreStoreManagedObjectCustomGetterSetterByKeyPaths = "CoreStoreManagedObjectCustomGetterSetterByKeyPaths"

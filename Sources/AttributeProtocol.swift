@@ -35,7 +35,6 @@ internal protocol AttributeProtocol: class {
     
     var keyPath: KeyPathString { get }
     var isOptional: Bool { get }
-    var isIndexed: Bool { get }
     var isTransient: Bool { get }
     var allowsExternalBinaryDataStorage: Bool { get }
     var versionHashModifier: () -> String? { get }

@@ -26,12 +26,23 @@
 import Foundation
 
 
+// MARK: - AnyDynamicKeyPath
+
+public protocol AnyDynamicKeyPath {
+    
+    /**
+     The keyPath string
+     */
+    var cs_keyPathString: String { get }
+}
+
+
 // MARK: - DynamicKeyPath
 
 /**
  Used only for utility methods.
  */
-public protocol DynamicKeyPath {
+public protocol DynamicKeyPath: AnyDynamicKeyPath {
     
     /**
      The DynamicObject type
@@ -42,11 +53,6 @@ public protocol DynamicKeyPath {
      The Value type
      */
     associatedtype ValueType
-    
-    /**
-     The keyPath string
-     */
-    var cs_keyPathString: String { get }
 }
 
 
