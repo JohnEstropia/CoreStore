@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Contacts
 import CoreLocation
 import MapKit
 import AddressBookUI
@@ -203,11 +204,23 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
             CLLocation(latitude: place.latitude, longitude: place.longitude),
             completionHandler: { [weak self] (placemarks, error) -> Void in
                 
-                if let placemark = placemarks?.first, let addressDictionary = placemark.addressDictionary {
+                if let placemark = placemarks?.first, let dictionary = placemark.addressDictionary {
                     
                     let place = transaction.edit(Static.placeController.object)
                     place?.title = placemark.name
-                    place?.subtitle = ABCreateStringWithAddressDictionary(addressDictionary, true)
+                    place?.subtitle = CNPostalAddressFormatter.string(
+                        from: autoreleasepool {
+                            
+                            let address = CNMutablePostalAddress()
+                            (dictionary["Street"] as? String).flatMap({ address.street = $0 })
+                            (dictionary["State"] as? String).flatMap({ address.state = $0 })
+                            (dictionary["City"] as? String).flatMap({ address.city = $0 })
+                            (dictionary["Country"] as? String).flatMap({ address.country = $0 })
+                            (dictionary["ZIP"] as? String).flatMap({ address.postalCode = $0 })
+                            return address
+                        },
+                        style: .mailingAddress
+                    )
                     transaction.commit { (_) -> Void in }
                 }
                 

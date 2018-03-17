@@ -268,7 +268,6 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         self.tableView.insertSections(IndexSet(integer: sectionIndex), with: .automatic)
     }
     
-    
     func listMonitor(_ monitor: ListMonitor<Palette>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int) {
         
         self.tableView.deleteSections(IndexSet(integer: sectionIndex), with: .automatic)
