@@ -199,6 +199,7 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let isOptional = false
         internal let isIndexed: Bool
         internal let isTransient: Bool
+        internal let allowsExternalBinaryDataStorage = false
         internal let versionHashModifier: () -> String?
         internal let renamingIdentifier: () -> String?
         internal let defaultValue: () -> Any?
@@ -424,6 +425,7 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let isOptional = true
         internal let isIndexed: Bool
         internal let isTransient: Bool
+        internal let allowsExternalBinaryDataStorage = false
         internal let versionHashModifier: () -> String?
         internal let renamingIdentifier: () -> String?
         internal let defaultValue: () -> Any?

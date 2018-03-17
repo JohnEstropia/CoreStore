@@ -109,6 +109,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
          - parameter initial: the initial value for the property when the object is first created. Defaults to the `ImportableAttributeType`'s empty value if not specified.
          - parameter isIndexed: `true` if the property should be indexed for searching, otherwise `false`. Defaults to `false` if not specified.
          - parameter isTransient: `true` if the property is transient, otherwise `false`. Defaults to `false` if not specified. The transient flag specifies whether or not a property's value is ignored when an object is saved to a persistent store. Transient properties are not saved to the persistent store, but are still managed for undo, redo, validation, and so on.
+         - parameter allowsExternalBinaryDataStorage: `true` if the attribute allows external binary storage, otherwise `false`.
          - parameter versionHashModifier: used to mark or denote a property as being a different "version" than another even if all of the values which affect persistence are equal. (Such a difference is important in cases where the properties are unchanged but the format or content of its data are changed.)
          - parameter renamingIdentifier: used to resolve naming conflicts between models. When creating an entity mapping between entities in two managed object models, a source entity property and a destination entity property that share the same identifier indicate that a property mapping should be configured to migrate from the source to the destination. If unset, the identifier will be the property's name.
          - parameter customGetter: use this closure as an "override" for the default property getter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.primitiveValue(for:)` instead of `PartialObject<O>.value(for:)`, which would unintentionally execute the same closure again recursively.
@@ -120,6 +121,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             initial: @autoclosure @escaping () -> V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
+            allowsExternalBinaryDataStorage: Bool = false,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
@@ -130,6 +132,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             self.defaultValue = initial
             self.isIndexed = isIndexed
             self.isTransient = isTransient
+            self.allowsExternalBinaryDataStorage = allowsExternalBinaryDataStorage
             self.versionHashModifier = versionHashModifier
             self.renamingIdentifier = renamingIdentifier
             self.customGetter = customGetter
@@ -201,6 +204,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
         internal let isOptional = false
         internal let isIndexed: Bool
         internal let isTransient: Bool
+        internal let allowsExternalBinaryDataStorage: Bool
         internal let versionHashModifier: () -> String?
         internal let renamingIdentifier: () -> String?
         internal let defaultValue: () -> Any?
@@ -264,6 +268,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
             `default`: @autoclosure @escaping () -> V,
             isIndexed: Bool = false,
             isTransient: Bool = false,
+            allowsExternalBinaryDataStorage: Bool = false,
             versionHashModifier: @autoclosure @escaping () -> String? = nil,
             renamingIdentifier: @autoclosure @escaping () -> String? = nil,
             customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,

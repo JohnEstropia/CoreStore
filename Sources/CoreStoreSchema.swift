@@ -219,7 +219,7 @@ public final class CoreStoreSchema: DynamicSchema {
                 allCustomGettersSetters[entity] = customGetterSetterByKeyPaths
             }
             CoreStoreSchema.secondPassConnectRelationshipAttributes(for: entityDescriptionsByEntity)
-            CoreStoreSchema.thirdPassConnectInheritanceTree(for: entityDescriptionsByEntity)
+            CoreStoreSchema.thirdPassConnectInheritanceTreeAndIndexes(for: entityDescriptionsByEntity)
             CoreStoreSchema.fourthPassSynthesizeManagedObjectClasses(
                 for: entityDescriptionsByEntity,
                 allCustomGettersSetters: allCustomGettersSetters
@@ -295,6 +295,7 @@ public final class CoreStoreSchema: DynamicSchema {
                     description.isIndexed = attribute.isIndexed
                     description.defaultValue = attribute.defaultValue()
                     description.isTransient = attribute.isTransient
+                    description.allowsExternalBinaryDataStorage = attribute.allowsExternalBinaryDataStorage
                     description.versionHashModifier = attribute.versionHashModifier()
                     description.renamingIdentifier = attribute.renamingIdentifier()
                     propertyDescriptions.append(description)
@@ -415,7 +416,7 @@ public final class CoreStoreSchema: DynamicSchema {
         }
     }
     
-    private static func thirdPassConnectInheritanceTree(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]) {
+    private static func thirdPassConnectInheritanceTreeAndIndexes(for entityDescriptionsByEntity: [DynamicEntity: NSEntityDescription]) {
         
         func connectBaseEntity(mirror: Mirror, entityDescription: NSEntityDescription) {
             

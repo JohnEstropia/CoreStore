@@ -37,6 +37,7 @@ internal protocol AttributeProtocol: class {
     var isOptional: Bool { get }
     var isIndexed: Bool { get }
     var isTransient: Bool { get }
+    var allowsExternalBinaryDataStorage: Bool { get }
     var versionHashModifier: () -> String? { get }
     var renamingIdentifier: () -> String? { get }
     var defaultValue: () -> Any? { get }
