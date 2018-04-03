@@ -108,7 +108,7 @@ public extension BaseDataTransaction {
             
             return try autoreleasepool {
                 
-                return try sourceArray.flatMap { (source) -> D? in
+                return try sourceArray.compactMap { (source) -> D? in
                   
                     let entityType = into.entityClass 
                     guard entityType.shouldInsert(from: source, in: self) else {
@@ -201,7 +201,7 @@ public extension BaseDataTransaction {
                 var importSourceByID = Dictionary<D.UniqueIDType, D.ImportSource>()
                 let sortedIDs = try autoreleasepool {
                   
-                    return try sourceArray.flatMap { (source) -> D.UniqueIDType? in
+                    return try sourceArray.compactMap { (source) -> D.UniqueIDType? in
                         
                         guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
                             

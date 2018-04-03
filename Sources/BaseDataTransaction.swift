@@ -181,7 +181,7 @@ public /*abstract*/ class BaseDataTransaction {
      */
     public func delete<D: DynamicObject>(_ object1: D?, _ object2: D?, _ objects: D?...) {
         
-        self.delete(([object1, object2] + objects).flatMap { $0 })
+        self.delete(([object1, object2] + objects).compactMap { $0 })
     }
     
     /**
@@ -230,7 +230,7 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access inserted objects from an already committed \(cs_typeName(self))."
         )
-        return Set(self.context.insertedObjects.flatMap({ entity.cs_matches(object: $0) ? entity.cs_fromRaw(object: $0) : nil }))
+        return Set(self.context.insertedObjects.compactMap({ entity.cs_matches(object: $0) ? entity.cs_fromRaw(object: $0) : nil }))
     }
     
     /**
@@ -267,7 +267,7 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access inserted objects IDs from an already committed \(cs_typeName(self))."
         )
-        return Set(self.context.insertedObjects.flatMap({ entity.cs_matches(object: $0) ? $0.objectID : nil }))
+        return Set(self.context.insertedObjects.compactMap({ entity.cs_matches(object: $0) ? $0.objectID : nil }))
     }
     
     /**
@@ -286,7 +286,7 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access updated objects from an already committed \(cs_typeName(self))."
         )
-        return Set(self.context.updatedObjects.flatMap({ entity.cs_matches(object: $0) ? entity.cs_fromRaw(object: $0) : nil }))
+        return Set(self.context.updatedObjects.compactMap({ entity.cs_matches(object: $0) ? entity.cs_fromRaw(object: $0) : nil }))
     }
     
     /**
@@ -323,7 +323,7 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access updated object IDs from an already committed \(cs_typeName(self))."
         )
-        return Set(self.context.updatedObjects.flatMap({ entity.cs_matches(object: $0) ? $0.objectID : nil }))
+        return Set(self.context.updatedObjects.compactMap({ entity.cs_matches(object: $0) ? $0.objectID : nil }))
     }
     
     /**
@@ -342,7 +342,7 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access deleted objects from an already committed \(cs_typeName(self))."
         )
-        return Set(self.context.deletedObjects.flatMap({ entity.cs_matches(object: $0) ? entity.cs_fromRaw(object: $0) : nil }))
+        return Set(self.context.deletedObjects.compactMap({ entity.cs_matches(object: $0) ? entity.cs_fromRaw(object: $0) : nil }))
     }
     
     /**
@@ -380,7 +380,7 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access deleted object IDs from an already committed \(cs_typeName(self))."
         )
-        return Set(self.context.deletedObjects.flatMap({ entity.cs_matches(object: $0) ? $0.objectID : nil }))
+        return Set(self.context.deletedObjects.compactMap({ entity.cs_matches(object: $0) ? $0.objectID : nil }))
     }
     
     
