@@ -127,7 +127,7 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
             "Attempted to delete an entities from an already committed \(cs_typeName(self))."
         )
         
-        super.delete(([object1, object2] + objects).flatMap { $0 })
+        super.delete(([object1, object2] + objects).compactMap { $0 })
     }
     
     /**
