@@ -882,7 +882,6 @@
 		B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreFetchedResultsController.swift; sourceTree = "<group>"; };
 		B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereClauseType.swift; sourceTree = "<group>"; };
 		B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicKeyPath.swift; sourceTree = "<group>"; };
-		B5CC19FA20552A4A00D1567F /* .swift-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-version"; sourceTree = SOURCE_ROOT; };
 		B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreError.swift; sourceTree = "<group>"; };
 		B5D2D5A91F7558CB00A4DE67 /* .cocoapods.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cocoapods.yml; sourceTree = SOURCE_ROOT; };
 		B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicModelTests.swift; sourceTree = "<group>"; };
@@ -1083,7 +1082,6 @@
 				B5BDC91A1C202269008147CD /* Cartfile */,
 				B5D2D5A91F7558CB00A4DE67 /* .cocoapods.yml */,
 				B5BDC9271C2024F2008147CD /* .travis.yml */,
-				B5CC19FA20552A4A00D1567F /* .swift-version */,
 				B5AD60CD1C90141E00F2B2E8 /* Package.swift */,
 			);
 			name = "Supporting Files";
