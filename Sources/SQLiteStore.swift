@@ -150,7 +150,15 @@ public final class SQLiteStore: LocalStorage {
      [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
      ```
      */
-    public let storeOptions: [AnyHashable: Any]? = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+    public let storeOptions: [AnyHashable: Any]? = autoreleasepool {
+        
+        var storeOptions: [AnyHashable: Any] = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
+        if #available(iOS 11, OSX 10.13, *) {
+            
+            storeOptions[NSBinaryStoreInsecureDecodingCompatibilityOption] = true
+        }
+        return storeOptions
+    }
     
     /**
      Do not call directly. Used by the `DataStack` internally.
@@ -212,11 +220,13 @@ public final class SQLiteStore: LocalStorage {
         
         _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: soureModelHint)) { (coordinator: NSPersistentStoreCoordinator) in
             
+            var storeOptions = self.storeOptions ?? [:]
+            storeOptions[NSSQLitePragmasOption] = ["journal_mode": "DELETE"]
             try coordinator.addPersistentStore(
                 ofType: type(of: self).storeType,
                 configurationName: self.configuration,
                 at: fileURL,
-                options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
+                options: storeOptions
             )
         }
         _ = try? FileManager.default.removeItem(atPath: "\(self.fileURL.path)-shm")
@@ -276,11 +286,13 @@ public final class SQLiteStore: LocalStorage {
             if let soureModel = soureModelHint ?? NSManagedObjectModel.mergedModel(from: nil, forStoreMetadata: metadata) {
                 
                 let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
+                var storeOptions = self.storeOptions ?? [:]
+                storeOptions[NSSQLitePragmasOption] = ["journal_mode": "DELETE"]
                 let store = try journalUpdatingCoordinator.addPersistentStore(
                     ofType: type(of: self).storeType,
                     configurationName: self.configuration,
                     at: fileURL,
-                    options: [NSSQLitePragmasOption: ["journal_mode": "DELETE"]]
+                    options: storeOptions
                 )
                 try journalUpdatingCoordinator.remove(store)
             }
