@@ -1503,15 +1503,15 @@ CoreStore provides type-safe wrappers for observing managed objects:
 To observe an object, implement the `ObjectObserver` protocol and specify the `EntityType`:
 ```swift
 class MyViewController: UIViewController, ObjectObserver {
-    func objectMonitor(monitor: ObjectMonitor<MyPersonEntity>, willUpdateObject object: MyPersonEntity) {
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) {
         // ...
     }
     
-    func objectMonitor(monitor: ObjectMonitor<MyPersonEntity>, didUpdateObject object: MyPersonEntity, changedPersistentKeys: Set<KeyPathString>) {
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didUpdateObject object: ObjectEntityType, changedPersistentKeys: Set<KeyPathString>) {
         // ...
     }
     
-    func objectMonitor(monitor: ObjectMonitor<MyPersonEntity>, didDeleteObject object: MyPersonEntity) {
+    func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, didDeleteObject object: ObjectEntityType) {
         // ...
     }
 }
@@ -1532,11 +1532,11 @@ While `ObjectMonitor` exposes `removeObserver(...)` as well, it only stores `wea
 To observe a list of objects, implement one of the `ListObserver` protocols and specify the `EntityType`:
 ```swift
 class MyViewController: UIViewController, ListObserver {
-    func listMonitorDidChange(monitor: ListMonitor<MyPersonEntity>) {
+    func listMonitorDidChange(_ monitor: ListMonitor<ListEntityType>) {
         // ...
     }
     
-    func listMonitorDidRefetch(monitor: ListMonitor<MyPersonEntity>) {
+    func listMonitorDidRefetch(_ monitor: ListMonitor<ListEntityType>) {
         // ...
     }
 }
@@ -1544,24 +1544,24 @@ class MyViewController: UIViewController, ListObserver {
 Including `ListObserver`, there are 3 observer protocols you can implement depending on how detailed you need to handle a change notification:
 - `ListObserver`: lets you handle these callback methods:
 ```swift
-    func listMonitorWillChange(_ monitor: ListMonitor<MyPersonEntity>)
-    func listMonitorDidChange(_ monitor: ListMonitor<MyPersonEntity>)
-    func listMonitorWillRefetch(_ monitor: ListMonitor<MyPersonEntity>)
-    func listMonitorDidRefetch(_ monitor: ListMonitor<MyPersonEntity>)
+    func listMonitorWillChange(_ monitor: ListMonitor<ListEntityType>)
+    func listMonitorDidChange(_ monitor: ListMonitor<ListEntityType>)
+    func listMonitorWillRefetch(_ monitor: ListMonitor<ListEntityType>)
+    func listMonitorDidRefetch(_ monitor: ListMonitor<ListEntityType>)
 ```
 `listMonitorDidChange(_:)` and `listMonitorDidRefetch(_:)` implementations are both required. `listMonitorDidChange(_:)` is called whenever the `ListMonitor`'s count, order, or filtered objects change. `listMonitorDidRefetch(_:)` is called when the `ListMonitor.refetch()` was executed or if the internal persistent store was changed. 
 
 - `ListObjectObserver`: in addition to `ListObserver` methods, also lets you handle object inserts, updates, and deletes:
 ```swift
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didInsertObject object: MyPersonEntity, toIndexPath indexPath: NSIndexPath)
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didDeleteObject object: MyPersonEntity, fromIndexPath indexPath: NSIndexPath)
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didUpdateObject object: MyPersonEntity, atIndexPath indexPath: NSIndexPath)
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didMoveObject object: MyPersonEntity, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
+    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: NSIndexPath)
+    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteObject object: ListEntityType, fromIndexPath indexPath: NSIndexPath)
+    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didUpdateObject object: ListEntityType, atIndexPath indexPath: NSIndexPath)
+    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didMoveObject object: ListEntityType, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
 ```
 - `ListSectionObserver`: in addition to `ListObjectObserver` methods, also lets you handle section inserts and deletes:
 ```swift
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
+    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int)
+    func listMonitor(_ monitor: ListMonitor<ListEntityType>, didDeleteSection sectionInfo: NSFetchedResultsSectionInfo, fromSectionIndex sectionIndex: Int)
 ```
 
 We then need to create a `ListMonitor` instance and register our `ListObserver` as an observer:
