@@ -192,7 +192,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
             
             self.saturationSlider?.value = palette.saturation.value
         }
-        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.hue)) == true {
+        if changedKeys == nil || changedKeys?.contains(String(keyPath: \Palette.brightness)) == true {
             
             self.brightnessSlider?.value = palette.brightness.value
         }
