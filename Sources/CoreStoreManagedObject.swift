@@ -37,7 +37,7 @@ import CoreData
     @nonobjc @inline(__always)
     internal static func cs_subclassName(for entity: DynamicEntity, in modelVersion: ModelVersion) -> String {
         
-        return "_\(String(reflecting: CoreStoreManagedObject.self))__\(modelVersion)__\(String(reflecting: entity.type))__\(entity.entityName)"
+        return "_\(NSStringFromClass(CoreStoreManagedObject.self))__\(modelVersion)__\(NSStringFromClass(entity.type))__\(entity.entityName)"
     }
 }
 
