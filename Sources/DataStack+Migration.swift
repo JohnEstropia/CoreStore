@@ -739,13 +739,13 @@ public extension DataStack {
                     
                     fakeProgress = 1
                 }
-                try storage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
+                _ = try? storage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
                 progress.completedUnitCount = progress.totalUnitCount
                 return
             }
             catch {
 
-                throw CoreStoreError(error)
+                // Lightweight migration failed somehow. Proceed using InferedMappingModel below
             }
         }
 
@@ -760,6 +760,11 @@ public extension DataStack {
             attributes: nil
         )
         
+        let externalStorageFolderName = ".\(fileURL.deletingPathExtension().lastPathComponent)_SUPPORT"
+        let temporaryExternalStorageURL = temporaryDirectoryURL.appendingPathComponent(
+            externalStorageFolderName,
+            isDirectory: true
+        )
         let temporaryFileURL = temporaryDirectoryURL.appendingPathComponent(
             fileURL.lastPathComponent,
             isDirectory: false
@@ -796,25 +801,22 @@ public extension DataStack {
             throw CoreStoreError(error)
         }
         
-        let externalStorageDirName = "." + fileURL.deletingPathExtension().lastPathComponent + "_SUPPORT"
-        let temporaryExternalStorageURL = temporaryDirectoryURL.appendingPathComponent(
-            externalStorageDirName,
-            isDirectory: true
-        )
         do {
             
             try fileManager.replaceItem(
-                at: fileURL as URL,
+                at: fileURL,
                 withItemAt: temporaryFileURL,
                 backupItemName: nil,
                 options: [],
                 resultingItemURL: nil
             )
-            
             if fileManager.fileExists(atPath: temporaryExternalStorageURL.path) {
-                let extenralStorageURL = fileURL.deletingLastPathComponent().appendingPathComponent(externalStorageDirName,  isDirectory: true)
+                
+                let externalStorageURL = fileURL
+                    .deletingLastPathComponent()
+                    .appendingPathComponent(externalStorageFolderName, isDirectory: true)
                 try fileManager.replaceItem(
-                    at: extenralStorageURL as URL,
+                    at: externalStorageURL,
                     withItemAt: temporaryExternalStorageURL,
                     backupItemName: nil,
                     options: [],
