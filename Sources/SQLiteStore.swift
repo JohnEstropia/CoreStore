@@ -153,8 +153,8 @@ public final class SQLiteStore: LocalStorage {
     public let storeOptions: [AnyHashable: Any]? = autoreleasepool {
         
         var storeOptions: [AnyHashable: Any] = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
-        if #available(iOS 11, OSX 10.13, *) {
-            
+        if #available(iOS 11.0, OSX 10.13, tvOSApplicationExtension 11.0, watchOSApplicationExtension 4.0, *) {
+
             storeOptions[NSBinaryStoreInsecureDecodingCompatibilityOption] = true
         }
         return storeOptions
