@@ -708,9 +708,9 @@ public extension DataStack {
                 var fakeProgress: Float = 0
                 
                 var recursiveCheck: () -> Void = {}
-                recursiveCheck = {
+                recursiveCheck = { [weak timerQueue] in
                     
-                    guard fakeProgress < 1 else {
+                    guard let timerQueue = timerQueue, fakeProgress < 1 else {
                         
                         return
                     }

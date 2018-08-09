@@ -42,7 +42,10 @@ internal final class MigrationManager: NSMigrationManager, ProgressReporting {
             return
         }
         let progress = self.progress
-        progress.completedUnitCount = Int64(Float(progress.totalUnitCount) * self.migrationProgress)
+        progress.completedUnitCount = max(
+            progress.completedUnitCount,
+            Int64(Float(progress.totalUnitCount) * self.migrationProgress)
+        )
     }
     
     
