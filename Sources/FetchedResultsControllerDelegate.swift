@@ -185,7 +185,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
                 )
                 return
             }
-            guard #available(iOS 9.0, tvOS 9.0, watchOS 9.0, *) else {
+            guard #available(iOS 9.0, tvOS 9.0, watchOS 3.0, *) else {
                 
                 return
             }
