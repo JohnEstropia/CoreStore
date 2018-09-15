@@ -2,7 +2,7 @@
 //  SQLiteStore.swift
 //  CoreStore
 //
-//  Copyright © 2016 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -153,7 +153,7 @@ public final class SQLiteStore: LocalStorage {
     public let storeOptions: [AnyHashable: Any]? = autoreleasepool {
         
         var storeOptions: [AnyHashable: Any] = [NSSQLitePragmasOption: ["journal_mode": "WAL"]]
-        if #available(iOS 11.0, OSX 10.13, tvOSApplicationExtension 11.0, watchOSApplicationExtension 4.0, *) {
+        if #available(iOS 11.0, macOS 10.13, tvOSApplicationExtension 11.0, watchOSApplicationExtension 4.0, *) {
 
             storeOptions[NSBinaryStoreInsecureDecodingCompatibilityOption] = true
         }

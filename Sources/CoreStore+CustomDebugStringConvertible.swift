@@ -2,7 +2,7 @@
 //  CoreStore+CustomDebugStringConvertible.swift
 //  CoreStore
 //
-//  Copyright © 2016 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -292,7 +292,7 @@ extension GroupBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible
 }
 
 
-#if os(iOS) || os(OSX)
+#if os(iOS) || os(macOS)
 
 // MARK: - ICloudStore
 
@@ -401,7 +401,7 @@ extension UnsafeDataModelSchema: CustomDebugStringConvertible, CoreStoreDebugStr
 
 // MARK: - ListMonitor
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 private struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertible {
     
     let sectionInfo: NSFetchedResultsSectionInfo
@@ -416,7 +416,7 @@ private struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertib
     }
 }
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 extension ListMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -610,7 +610,7 @@ extension MigrationType: CustomDebugStringConvertible, CoreStoreDebugStringConve
 
 // MARK: - ObjectMonitor
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 extension ObjectMonitor: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -695,7 +695,7 @@ extension SaveResult: CustomDebugStringConvertible, CoreStoreDebugStringConverti
 
 // MARK: - SectionBy
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 extension SectionBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
@@ -1249,7 +1249,7 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
             ("versionHashModifier", self.versionHashModifier as Any),
             ("renamingIdentifier", self.renamingIdentifier as Any)
         ]
-        if #available(iOS 11.0, OSX 10.13, watchOS 4.0, tvOS 11.0, *) {
+        if #available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *) {
             
             info.append(("indexes", self.indexes))
         }

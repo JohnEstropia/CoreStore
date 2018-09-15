@@ -2,7 +2,7 @@
 //  NSManagedObjectContext+Transaction.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -230,7 +230,7 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func refreshAndMergeAllObjects() {
         
-        if #available(iOS 8.3, OSX 10.11, *) {
+        if #available(iOS 8.3, macOS 10.11, *) {
             
             self.refreshAllObjects()
         }

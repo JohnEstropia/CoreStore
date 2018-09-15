@@ -2,7 +2,7 @@
 //  ImportableUniqueObject.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -125,7 +125,7 @@ public extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: 
         get {
             
             return self.cs_toRaw().getValue(
-                forKvcKey: type(of: self).uniqueIDKeyPath,
+                forKvcKey: cs_dynamicType(of: self).uniqueIDKeyPath,
                 didGetValue: { UniqueIDType.cs_fromQueryableNativeType($0 as! UniqueIDType.QueryableNativeType)! }
             )
         }
@@ -134,7 +134,7 @@ public extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: 
             self.cs_toRaw()
                 .setValue(
                     newValue,
-                    forKvcKey: type(of: self).uniqueIDKeyPath,
+                    forKvcKey: cs_dynamicType(of: self).uniqueIDKeyPath,
                     willSetValue: { ($0.cs_toQueryableNativeType() as CoreDataNativeType) }
             )
         }

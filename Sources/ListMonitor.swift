@@ -2,7 +2,7 @@
 //  ListMonitor.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ import CoreData
  ```
  In the example above, both `person1` and `person2` will contain the object at section=2, index=3.
  */
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 public final class ListMonitor<D: DynamicObject>: Hashable {
     
     // MARK: Public (Accessors)
@@ -1169,7 +1169,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
 // MARK: - ListMonitor where ListMonitor.ObjectType: NSManagedObject
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 extension ListMonitor where ListMonitor.ObjectType: NSManagedObject {
     
     /**
@@ -1212,7 +1212,7 @@ extension ListMonitor where ListMonitor.ObjectType: NSManagedObject {
 
 // MARK: - ListMonitor where ListMonitor.ObjectType: CoreStoreObject
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 extension ListMonitor where ListMonitor.ObjectType: CoreStoreObject {
     
     /**
@@ -1258,7 +1258,7 @@ extension ListMonitor where ListMonitor.ObjectType: CoreStoreObject {
 
 // MARK: - ListMonitor: FetchedResultsControllerHandler
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 extension ListMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
@@ -1369,7 +1369,7 @@ extension ListMonitor: FetchedResultsControllerHandler {
 
 // MARK: - Notification Keys
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 fileprivate extension Notification.Name {
     
     fileprivate static let listMonitorWillChangeList = Notification.Name(rawValue: "listMonitorWillChangeList")

@@ -2,7 +2,7 @@
 //  NSManagedObject+Convenience.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - DataStack
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 public extension DataStack {
     
     /**
@@ -114,7 +114,7 @@ public extension DataStack {
 
 // MARK: - UnsafeDataTransaction
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 public extension UnsafeDataTransaction {
     
     /**
@@ -200,7 +200,7 @@ public extension UnsafeDataTransaction {
 
 // MARK: - Private
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 fileprivate func createFRC<D: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<D>, sectionBy: SectionBy<D>? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
     
     let controller = CoreStoreFetchedResultsController(

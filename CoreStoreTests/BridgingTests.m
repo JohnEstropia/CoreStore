@@ -2,7 +2,7 @@
 //  BridgingTests.m
 //  CoreStore
 //
-//  Copyright © 2016 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -193,7 +193,17 @@
     XCTAssertEqualObjects([[sqliteStorage class] storeType], [CSSQLiteStore storeType]);
     XCTAssertEqualObjects([[sqliteStorage class] storeType], NSSQLiteStoreType);
     XCTAssertNil(sqliteStorage.configuration);
-    XCTAssertEqualObjects(sqliteStorage.storeOptions, @{ NSSQLitePragmasOption: @{ @"journal_mode": @"WAL" } });
+    NSDictionary *storeOptions;
+    if (@available(iOS 11.0, macOS 10.13, tvOS 11.0, *)) {
+        
+        storeOptions = @{ NSSQLitePragmasOption: @{ @"journal_mode": @"WAL" },
+                          NSBinaryStoreInsecureDecodingCompatibilityOption: @YES };
+    }
+    else {
+        
+        storeOptions = @{ NSSQLitePragmasOption: @{ @"journal_mode": @"WAL" }};
+    }
+    XCTAssertEqualObjects(sqliteStorage.storeOptions, storeOptions);
     XCTAssertNil(sqliteError);
 }
 

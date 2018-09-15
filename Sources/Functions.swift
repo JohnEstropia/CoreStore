@@ -2,7 +2,7 @@
 //  Functions.swift
 //  CoreStore
 //
-//  Copyright © 2014 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,15 @@
 //
 
 import Foundation
+
+// MARK: Associated Objects
+
+@inline(__always)
+/// type(of:) doesn't return the dynamic type anymore, use this to guarantee correct dispatch of class methods
+internal func cs_dynamicType<T: AnyObject>(of instance: T) -> T.Type {
+    
+    return object_getClass(instance) as! T.Type
+}
 
 // MARK: Associated Objects
 

@@ -18,7 +18,7 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 </p>
 
-* **Swift 4.1:** iOS 9+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
+* **Swift 4.2:** iOS 9+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
 * Other Swift versions: [Swift 3.2(version 4.2.3)](https://github.com/JohnEstropia/CoreStore/tree/4.2.3)
 
 Upgrading from CoreStore 4.2 (Swift 3.2) to 5.x (Swift 4.x)? Check out the [new features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).

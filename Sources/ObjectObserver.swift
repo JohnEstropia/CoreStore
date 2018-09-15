@@ -2,7 +2,7 @@
 //  ObjectObserver.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ import CoreData
  monitor.addObserver(self)
  ```
  */
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 public protocol ObjectObserver: class {
     
     /**
@@ -76,7 +76,7 @@ public protocol ObjectObserver: class {
 
 // MARK: - ObjectObserver (Default Implementations)
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 public extension ObjectObserver {
     
     public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) { }

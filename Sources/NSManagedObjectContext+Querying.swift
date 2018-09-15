@@ -2,7 +2,7 @@
 //  NSManagedObjectContext+Querying.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
                 
                 return object
             }
-            return type(of: object).cs_fromRaw(object: existingRawObject)
+            return cs_dynamicType(of: object).cs_fromRaw(object: existingRawObject)
         }
         catch {
             

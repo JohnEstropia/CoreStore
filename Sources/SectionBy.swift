@@ -2,7 +2,7 @@
 //  SectionBy.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ import CoreData
  )
  ```
  */
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 public struct SectionBy<D: DynamicObject> {
     
     /**
@@ -72,7 +72,7 @@ public struct SectionBy<D: DynamicObject> {
     internal let sectionIndexTransformer: (_ sectionName: String?) -> String?
 }
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 public extension SectionBy where D: NSManagedObject {
     
     /**
@@ -98,7 +98,7 @@ public extension SectionBy where D: NSManagedObject {
     }
 }
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 public extension SectionBy where D: CoreStoreObject {
     
     /**

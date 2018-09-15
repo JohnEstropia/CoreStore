@@ -2,7 +2,7 @@
 //  QueryableAttributeType.swift
 //  CoreStore
 //
-//  Copyright © 2017 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -100,7 +100,7 @@ extension Bool: QueryableAttributeType {
             
         case let decimal as NSDecimalNumber:
             // iOS: NSDecimalNumber(string: "0.5").boolValue // true
-            // OSX: NSDecimalNumber(string: "0.5").boolValue // false
+            // macOS: NSDecimalNumber(string: "0.5").boolValue // false
             return decimal != NSDecimalNumber.zero
             
         default:

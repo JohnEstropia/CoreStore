@@ -2,7 +2,7 @@
 //  CoreStoreSchema.swift
 //  CoreStore
 //
-//  Copyright © 2017 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -461,7 +461,7 @@ public final class CoreStoreSchema: DynamicSchema {
                 entityDescription.coreStoreEntity = entity // reserialize
             }
             let attributesByName = entityDescription.attributesByName
-            if #available(iOS 11.0, OSX 10.13, watchOS 4.0, tvOS 11.0, *) {
+            if #available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *) {
                 
                 entityDescription.indexes = entity.indexes.map { (compoundIndexes) in
                     
@@ -571,7 +571,7 @@ public final class CoreStoreSchema: DynamicSchema {
                 }
                 return []
             }
-            let origSelector = #selector(NSManagedObject.keyPathsForValuesAffectingValue(forKey:))
+            let origSelector = #selector(CoreStoreManagedObject.keyPathsForValuesAffectingValue(forKey:))
             
             let metaClass: AnyClass = object_getClass(managedObjectClass)!
             let origMethod = class_getClassMethod(managedObjectClass, origSelector)!

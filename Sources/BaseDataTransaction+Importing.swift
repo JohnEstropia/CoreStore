@@ -2,7 +2,7 @@
 //  BaseDataTransaction+Importing.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -80,7 +80,7 @@ public extension BaseDataTransaction {
             
             try autoreleasepool {
               
-                let entityType = type(of: object)
+                let entityType = cs_dynamicType(of: object)
                 guard entityType.shouldInsert(from: source, in: self) else {
                     
                     return

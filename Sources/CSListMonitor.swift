@@ -2,7 +2,7 @@
 //  CSListMonitor.swift
 //  CoreStore
 //
-//  Copyright © 2016 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ import CoreData
  
  - SeeAlso: `ListMonitor`
  */
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 @objc
 public final class CSListMonitor: NSObject {
     
@@ -545,7 +545,7 @@ public final class CSListMonitor: NSObject {
 
 // MARK: - ListMonitor
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 extension ListMonitor where ListMonitor.ObjectType: NSManagedObject {
     
     // MARK: CoreStoreSwiftType

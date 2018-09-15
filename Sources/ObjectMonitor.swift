@@ -2,7 +2,7 @@
 //  ObjectMonitor.swift
 //  CoreStore
 //
-//  Copyright © 2015 John Rommel Estropia
+//  Copyright © 2018 John Rommel Estropia
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ import CoreData
  
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 public final class ObjectMonitor<D: DynamicObject>: Equatable {
     
     /**
@@ -334,7 +334,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
 
 // MARK: - ObjectMonitor: FetchedResultsControllerHandler
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 extension ObjectMonitor: FetchedResultsControllerHandler {
     
     // MARK: FetchedResultsControllerHandler
@@ -384,7 +384,7 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
     
 // MARK: - Notification.Name
 
-@available(OSX 10.12, *)
+@available(macOS 10.12, *)
 fileprivate extension Notification.Name {
     
     fileprivate static let objectMonitorWillChangeObject = Notification.Name(rawValue: "objectMonitorWillChangeObject")
