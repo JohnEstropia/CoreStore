@@ -93,7 +93,7 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
         }
         if lhs.isMeta {
             
-            return type(of: lhs) == type(of: rhs)
+            return cs_dynamicType(of: lhs) == cs_dynamicType(of: rhs)
         }
         return lhs.rawObject!.isEqual(rhs.rawObject!)
     }
@@ -124,10 +124,10 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
             switch child.value {
                 
             case let property as AttributeProtocol:
-                property.parentObject = parentObject
+                property.rawObject = parentObject.rawObject
                     
             case let property as RelationshipProtocol:
-                property.parentObject = parentObject
+                property.rawObject = parentObject.rawObject
                 
             default:
                 continue

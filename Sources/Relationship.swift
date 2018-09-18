@@ -244,23 +244,23 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let versionHashModifier: () -> String?
         internal let renamingIdentifier: () -> String?
         internal let affectedByKeyPaths: () -> Set<String>
-        internal weak var parentObject: CoreStoreObject?
+        internal var rawObject: CoreStoreManagedObject?
         
         internal var nativeValue: NSManagedObject? {
             
             get {
                 
                 CoreStore.assert(
-                    self.parentObject != nil,
+                    self.rawObject != nil,
                     "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                return withExtendedLifetime(self.rawObject!) { (object) in
                     
                     CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        object.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
-                    return object.rawObject!.getValue(
+                    return object.getValue(
                         forKvcKey: self.keyPath,
                         didGetValue: { $0 as! NSManagedObject? }
                     )
@@ -269,20 +269,20 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             set {
                 
                 CoreStore.assert(
-                    self.parentObject != nil,
+                    self.rawObject != nil,
                     "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                return withExtendedLifetime(self.rawObject!) { (object) in
                     
                     CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        object.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        object.rawObject!.isEditableInContext() == true,
+                        object.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
-                    object.rawObject!.setValue(
+                    object.setValue(
                         newValue,
                         forKvcKey: self.keyPath
                     )
@@ -512,23 +512,23 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let versionHashModifier: () -> String?
         internal let renamingIdentifier: () -> String?
         internal let affectedByKeyPaths: () -> Set<String>
-        internal weak var parentObject: CoreStoreObject?
+        internal var rawObject: CoreStoreManagedObject?
         
         internal var nativeValue: NSOrderedSet {
             
             get {
                 
                 CoreStore.assert(
-                    self.parentObject != nil,
+                    self.rawObject != nil,
                     "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                return withExtendedLifetime(self.rawObject!) { (object) in
                     
                     CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        object.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
-                    return object.rawObject!.getValue(
+                    return object.getValue(
                         forKvcKey: self.keyPath,
                         didGetValue: { ($0 as! NSOrderedSet?) ?? [] }
                     )
@@ -537,20 +537,20 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             set {
                 
                 CoreStore.assert(
-                    self.parentObject != nil,
+                    self.rawObject != nil,
                     "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                return withExtendedLifetime(self.rawObject!) { (object) in
                     
                     CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        object.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        object.rawObject!.isEditableInContext() == true,
+                        object.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
-                    object.rawObject!.setValue(
+                    object.setValue(
                         newValue,
                         forKvcKey: self.keyPath
                     )
@@ -785,23 +785,23 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         internal let versionHashModifier: () -> String?
         internal let renamingIdentifier: () -> String?
         internal let affectedByKeyPaths: () -> Set<String>
-        internal weak var parentObject: CoreStoreObject?
+        internal var rawObject: CoreStoreManagedObject?
         
         internal var nativeValue: NSSet {
             
             get {
                 
                 CoreStore.assert(
-                    self.parentObject != nil,
+                    self.rawObject != nil,
                     "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                return withExtendedLifetime(self.rawObject!) { (object) in
                     
                     CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        object.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
-                    return object.rawObject!.getValue(
+                    return object.getValue(
                         forKvcKey: self.keyPath,
                         didGetValue: { ($0 as! NSSet?) ?? [] }
                     )
@@ -810,20 +810,20 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             set {
                 
                 CoreStore.assert(
-                    self.parentObject != nil,
+                    self.rawObject != nil,
                     "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.parentObject! as! O) { (object: O) in
+                return withExtendedLifetime(self.rawObject!) { (object) in
                     
                     CoreStore.assert(
-                        object.rawObject!.isRunningInAllowedQueue() == true,
+                        object.isRunningInAllowedQueue() == true,
                         "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
                     )
                     CoreStore.assert(
-                        object.rawObject!.isEditableInContext() == true,
+                        object.isEditableInContext() == true,
                         "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
                     )
-                    object.rawObject!.setValue(
+                    object.setValue(
                         newValue,
                         forKvcKey: self.keyPath
                     )

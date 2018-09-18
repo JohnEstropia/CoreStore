@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name = "CoreStore"
-    s.version = "5.3.0"
-    s.swift_version = "4.1"
+    s.version = "5.3.1"
+    s.swift_version = "4.2"
     s.license = "MIT"
     s.summary = "Unleashing the real power of Core Data with the elegance and safety of Swift"
     s.homepage = "https://github.com/JohnEstropia/CoreStore"
