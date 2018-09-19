@@ -173,9 +173,6 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             
             case (let error1 as NSError, let error2 as NSError):
                 return error1.isEqual(error2)
-                
-            default:
-                return false // shouldn't happen
             }
             
         case (.userCancelled, .userCancelled):
@@ -188,35 +185,37 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        let code = self._code
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self._code)
         switch self {
-            
+
         case .unknown:
-            return code.hashValue
-            
+            break
+
         case .differentStorageExistsAtURL(let existingPersistentStoreURL):
-            return code.hashValue ^ existingPersistentStoreURL.hashValue
-            
+            hasher.combine(existingPersistentStoreURL)
+
         case .mappingModelNotFound(let localStoreURL, let targetModel, let targetModelVersion):
-            return code.hashValue ^ localStoreURL.hashValue ^ targetModel.hashValue ^ targetModelVersion.hashValue
-            
+            hasher.combine(localStoreURL)
+            hasher.combine(targetModel)
+            hasher.combine(targetModelVersion)
+
         case .progressiveMigrationRequired(let localStoreURL):
-            return code.hashValue ^ localStoreURL.hashValue
-            
+            hasher.combine(localStoreURL)
+
         case .internalError(let nsError):
-            return code.hashValue ^ nsError.hashValue
-            
+            hasher.combine(nsError)
+
         case .userError(let error):
-            return code.hashValue ^ (error as NSError).hashValue
-            
+            hasher.combine(error as NSError)
+
         case .userCancelled:
-            return code.hashValue
+            break
         }
     }
-    
+
     
     // MARK: Internal
     

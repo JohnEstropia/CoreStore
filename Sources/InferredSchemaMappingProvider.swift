@@ -43,10 +43,10 @@ public final class InferredSchemaMappingProvider: Hashable, SchemaMappingProvide
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return ObjectIdentifier(type(of: self)).hashValue
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(ObjectIdentifier(type(of: self)))
     }
     
     

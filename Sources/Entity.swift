@@ -167,15 +167,13 @@ public /*abstract*/ class DynamicEntity: Hashable {
     }
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return ObjectIdentifier(self.type).hashValue
-            ^ self.entityName.hashValue
-            ^ self.isAbstract.hashValue
-            ^ (self.versionHashModifier ?? "").hashValue
-//            ^ self.indexes.hashValue
-//            ^ self.uniqueConstraints.hashValue
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(ObjectIdentifier(self.type))
+        hasher.combine(self.entityName)
+        hasher.combine(self.isAbstract)
+        hasher.combine(self.versionHashModifier ?? "")
     }
     
     

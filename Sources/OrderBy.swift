@@ -132,10 +132,10 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return (self.sortDescriptors as NSArray).hashValue
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self.sortDescriptors)
     }
     
     

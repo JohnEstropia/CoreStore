@@ -100,11 +100,12 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-    
-        return ObjectIdentifier(self).hashValue
-            ^ (self.isMeta ? 0 : self.rawObject!.hashValue)
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self.isMeta)
+        hasher.combine(ObjectIdentifier(self))
+        hasher.combine(self.rawObject)
     }
     
     

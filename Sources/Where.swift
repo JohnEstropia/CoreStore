@@ -287,10 +287,10 @@ public struct Where<D: DynamicObject>: WhereClauseType, FetchClause, QueryClause
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return self.predicate.hashValue
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self.predicate)
     }
 }
 

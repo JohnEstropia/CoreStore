@@ -96,10 +96,10 @@ public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return (self.keyPaths as NSArray).hashValue
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self.keyPaths)
     }
 }
 

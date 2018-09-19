@@ -105,16 +105,18 @@ public enum SetupResult<T: StorageInterface>: Hashable {
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
+
+    public func hash(into hasher: inout Hasher) {
         
         switch self {
             
         case .success(let storage):
-            return true.hashValue ^ ObjectIdentifier(storage).hashValue
+            hasher.combine(true)
+            hasher.combine(ObjectIdentifier(storage))
             
         case .failure(let error):
-            return false.hashValue ^ error.hashValue
+            hasher.combine(false)
+            hasher.combine(error)
         }
     }
     

@@ -146,24 +146,28 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         
         
         // MARK: Hashable
-        
-        public var hashValue: Int {
+
+        public func hash(into hasher: inout Hasher) {
             
             switch self {
                 
             case .deleteEntity(let sourceEntity):
-                return sourceEntity.hashValue
+                hasher.combine(0)
+                hasher.combine(sourceEntity)
                 
             case .insertEntity(let destinationEntity):
-                return destinationEntity.hashValue
+                hasher.combine(1)
+                hasher.combine(destinationEntity)
                 
             case .copyEntity(let sourceEntity, let destinationEntity):
-                return sourceEntity.hashValue
-                    ^ destinationEntity.hashValue
+                hasher.combine(2)
+                hasher.combine(sourceEntity)
+                hasher.combine(destinationEntity)
                 
             case .transformEntity(let sourceEntity, let destinationEntity, _):
-                return sourceEntity.hashValue
-                    ^ destinationEntity.hashValue
+                hasher.combine(3)
+                hasher.combine(sourceEntity)
+                hasher.combine(destinationEntity)
             }
         }
         
@@ -324,16 +328,17 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         
         return lhs.sourceVersion == rhs.sourceVersion
             && lhs.destinationVersion == rhs.destinationVersion
-            && type(of: lhs) == type(of: rhs)
+            && cs_dynamicType(of: lhs) == cs_dynamicType(of: rhs)
     }
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return self.sourceVersion.hashValue
-            ^ self.destinationVersion.hashValue
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self.sourceVersion)
+        hasher.combine(self.destinationVersion)
+        hasher.combine(ObjectIdentifier(cs_dynamicType(of: self)))
     }
     
     

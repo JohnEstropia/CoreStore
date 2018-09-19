@@ -75,11 +75,11 @@ public final class XcodeSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return self.sourceVersion.hashValue
-            ^ self.destinationVersion.hashValue
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self.sourceVersion)
+        hasher.combine(self.destinationVersion)
     }
     
     

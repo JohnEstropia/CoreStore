@@ -112,12 +112,12 @@ public struct Into<D: DynamicObject>: Hashable {
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-    
-        return ObjectIdentifier(self.entityClass).hashValue
-            ^ (self.configuration?.hashValue ?? 0)
-            ^ self.inferStoreIfPossible.hashValue
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(ObjectIdentifier(self.entityClass))
+        hasher.combine(self.configuration)
+        hasher.combine(self.inferStoreIfPossible)
     }
     
     

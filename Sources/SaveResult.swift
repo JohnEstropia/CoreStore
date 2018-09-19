@@ -44,39 +44,6 @@ public enum SaveResult: Hashable {
     }
     
     
-    // MARK: Equatable
-    
-    public static func == (lhs: SaveResult, rhs: SaveResult) -> Bool {
-        
-        switch (lhs, rhs) {
-            
-        case (.success(let hasChanges1), .success(let hasChanges2)):
-            return hasChanges1 == hasChanges2
-            
-        case (.failure(let error1), .failure(let error2)):
-            return error1 == error2
-            
-        default:
-            return false
-        }
-    }
-    
-    
-    // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        switch self {
-            
-        case .success(let hasChanges):
-            return self.boolValue.hashValue ^ hasChanges.hashValue
-            
-        case .failure(let error):
-            return self.boolValue.hashValue ^ error.hashValue
-        }
-    }
-    
-    
     // MARK: Internal
     
     internal init(hasChanges: Bool) {

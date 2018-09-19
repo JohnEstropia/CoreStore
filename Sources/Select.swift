@@ -257,19 +257,26 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
+
+    public func hash(into hasher: inout Hasher) {
+
         switch self {
             
         case ._attribute(let keyPath):
-            return 0 ^ keyPath.hashValue
+            hasher.combine(0)
+            hasher.combine(keyPath)
             
         case ._aggregate(let function, let keyPath, let alias, let nativeType):
-            return 1 ^ function.hashValue ^ keyPath.hashValue ^ alias.hashValue ^ nativeType.hashValue
+            hasher.combine(1)
+            hasher.combine(function)
+            hasher.combine(keyPath)
+            hasher.combine(alias)
+            hasher.combine(nativeType)
             
         case ._identity(let alias, let nativeType):
-            return 3 ^ alias.hashValue ^ nativeType.hashValue
+            hasher.combine(2)
+            hasher.combine(alias)
+            hasher.combine(nativeType)
         }
     }
     
@@ -700,10 +707,10 @@ public struct Select<D: DynamicObject, T: SelectResultType>: SelectClause, Hasha
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return self.selectTerms.map { $0.hashValue }.reduce(0, ^)
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self.selectTerms)
     }
     
     

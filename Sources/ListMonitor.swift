@@ -617,10 +617,10 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
     
     // MARK: Hashable
-    
-    public var hashValue: Int {
-        
-        return ObjectIdentifier(self).hashValue
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(ObjectIdentifier(self))
     }
     
     

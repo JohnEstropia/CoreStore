@@ -85,22 +85,4 @@ internal struct EntityIdentifier: Hashable {
             self.interfacedClassName = entityDescription.managedObjectClassName!
         }
     }
-    
-    
-    // MARK: Equatable
-    
-    static func == (lhs: EntityIdentifier, rhs: EntityIdentifier) -> Bool {
-        
-        return lhs.category == rhs.category
-            && lhs.interfacedClassName == rhs.interfacedClassName
-    }
-    
-    
-    // MARK: Hashable
-    
-    var hashValue: Int {
-        
-        return self.category.hashValue
-            ^ self.interfacedClassName.hashValue
-    }
 }

@@ -102,8 +102,10 @@ public final class CSObjectMonitor: NSObject {
     // MARK: NSObject
     
     public override var hash: Int {
-        
-        return self.bridgeToSwift.hashValue
+
+        var hasher = Hasher()
+        self.bridgeToSwift.hash(into: &hasher)
+        return hasher.finalize()
     }
     
     public override func isEqual(_ object: Any?) -> Bool {
