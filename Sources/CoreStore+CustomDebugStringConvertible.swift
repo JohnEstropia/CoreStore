@@ -158,6 +158,30 @@ extension CoreStoreError: CustomDebugStringConvertible, CoreStoreDebugStringConv
 }
 
 
+// MARK: - CoreStoreObject
+
+extension CoreStoreObject: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("rawObject", self.rawObject as Any)
+        )
+    }
+}
+
+
 // MARK: - CoreStoreSchema
 
 extension CoreStoreSchema: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
