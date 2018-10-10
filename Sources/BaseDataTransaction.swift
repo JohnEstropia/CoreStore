@@ -223,7 +223,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func insertedObjects<D: DynamicObject>(_ entity: D.Type) -> Set<D> {
         
         CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to access inserted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -241,7 +241,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func insertedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to access inserted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -260,7 +260,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func insertedObjectIDs<D: DynamicObject>(_ entity: D.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to access inserted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -279,7 +279,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func updatedObjects<D: DynamicObject>(_ entity: D.Type) -> Set<D> {
         
         CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to access updated objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -297,7 +297,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func updatedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to access updated object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -316,7 +316,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func updatedObjectIDs<D: DynamicObject>(_ entity: D.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to access updated object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -335,7 +335,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func deletedObjects<D: DynamicObject>(_ entity: D.Type) -> Set<D> {
         
         CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to access deleted objects from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -354,7 +354,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func deletedObjectIDs() -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to access deleted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
@@ -373,7 +373,7 @@ public /*abstract*/ class BaseDataTransaction {
     public func deletedObjectIDs<D: DynamicObject>(_ entity: D.Type) -> Set<NSManagedObjectID> {
         
         CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
+            self.isRunningInAllowedQueue(),
             "Attempted to access deleted object IDs from a \(cs_typeName(self)) outside its designated queue."
         )
         CoreStore.assert(
