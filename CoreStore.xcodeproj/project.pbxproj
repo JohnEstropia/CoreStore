@@ -10,6 +10,37 @@
 		2F03A53619C5C6DA005002A5 /* CoreStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A53519C5C6DA005002A5 /* CoreStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F03A54D19C5C872005002A5 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F03A54C19C5C872005002A5 /* CoreData.framework */; };
 		2F291E2719C6D3CF007AF63F /* CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F291E2619C6D3CF007AF63F /* CoreStore.swift */; };
+		7912067721A440550080AAEB /* BaseDataTransaction+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067621A440540080AAEB /* BaseDataTransaction+OffsetQuerying.swift */; };
+		7912067921A440550080AAEB /* BaseDataTransaction+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067621A440540080AAEB /* BaseDataTransaction+OffsetQuerying.swift */; };
+		7912067B21A440550080AAEB /* BaseDataTransaction+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067621A440540080AAEB /* BaseDataTransaction+OffsetQuerying.swift */; };
+		7912067C21A440550080AAEB /* BaseDataTransaction+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067621A440540080AAEB /* BaseDataTransaction+OffsetQuerying.swift */; };
+		7912067F21A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067E21A440890080AAEB /* CoreStore+OffsetQuerying.swift */; };
+		7912068021A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067E21A440890080AAEB /* CoreStore+OffsetQuerying.swift */; };
+		7912068121A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067E21A440890080AAEB /* CoreStore+OffsetQuerying.swift */; };
+		7912068221A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067E21A440890080AAEB /* CoreStore+OffsetQuerying.swift */; };
+		7912068321A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067E21A440890080AAEB /* CoreStore+OffsetQuerying.swift */; };
+		7912068421A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067E21A440890080AAEB /* CoreStore+OffsetQuerying.swift */; };
+		7912068521A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912067E21A440890080AAEB /* CoreStore+OffsetQuerying.swift */; };
+		7912068721A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912068621A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift */; };
+		7912068821A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912068621A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift */; };
+		7912068921A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912068621A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift */; };
+		7912068A21A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912068621A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift */; };
+		7912068C21A441080080AAEB /* CSDataStack+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912068B21A441080080AAEB /* CSDataStack+OffsetQuerying.swift */; };
+		7912068D21A441080080AAEB /* CSDataStack+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912068B21A441080080AAEB /* CSDataStack+OffsetQuerying.swift */; };
+		7912068E21A441080080AAEB /* CSDataStack+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912068B21A441080080AAEB /* CSDataStack+OffsetQuerying.swift */; };
+		7912068F21A441080080AAEB /* CSDataStack+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912068B21A441080080AAEB /* CSDataStack+OffsetQuerying.swift */; };
+		7912069121A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069021A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift */; };
+		7912069221A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069021A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift */; };
+		7912069321A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069021A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift */; };
+		7912069421A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069021A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift */; };
+		7912069621A441590080AAEB /* DataStack+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069521A441590080AAEB /* DataStack+OffsetQuerying.swift */; };
+		7912069721A441590080AAEB /* DataStack+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069521A441590080AAEB /* DataStack+OffsetQuerying.swift */; };
+		7912069821A441590080AAEB /* DataStack+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069521A441590080AAEB /* DataStack+OffsetQuerying.swift */; };
+		7912069921A441590080AAEB /* DataStack+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069521A441590080AAEB /* DataStack+OffsetQuerying.swift */; };
+		7912069B21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069A21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift */; };
+		7912069C21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069A21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift */; };
+		7912069D21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069A21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift */; };
+		7912069E21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7912069A21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift */; };
 		82BA18931C4BBCBA00A0916E /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82BA18891C4BBCBA00A0916E /* CoreStore.framework */; };
 		82BA18A01C4BBD1400A0916E /* CoreStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F03A53519C5C6DA005002A5 /* CoreStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		82BA18A11C4BBD1D00A0916E /* CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F291E2619C6D3CF007AF63F /* CoreStore.swift */; };
@@ -603,6 +634,13 @@
 		2F03A53E19C5C6DA005002A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2F03A54C19C5C872005002A5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2F291E2619C6D3CF007AF63F /* CoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CoreStore.swift; sourceTree = "<group>"; };
+		7912067621A440540080AAEB /* BaseDataTransaction+OffsetQuerying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+OffsetQuerying.swift"; sourceTree = "<group>"; };
+		7912067E21A440890080AAEB /* CoreStore+OffsetQuerying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+OffsetQuerying.swift"; sourceTree = "<group>"; };
+		7912068621A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSCoreStore+OffsetQuerying.swift"; sourceTree = "<group>"; };
+		7912068B21A441080080AAEB /* CSDataStack+OffsetQuerying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSDataStack+OffsetQuerying.swift"; sourceTree = "<group>"; };
+		7912069021A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSBaseDataTransaction+OffsetQuerying.swift"; sourceTree = "<group>"; };
+		7912069521A441590080AAEB /* DataStack+OffsetQuerying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataStack+OffsetQuerying.swift"; sourceTree = "<group>"; };
+		7912069A21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+OffsetQuerying.swift"; sourceTree = "<group>"; };
 		82BA18891C4BBCBA00A0916E /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BA18921C4BBCBA00A0916E /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BA18DE1C4BBE2600A0916E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -1100,8 +1138,11 @@
 			isa = PBXGroup;
 			children = (
 				B5ECDBDE1CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift */,
+				7912069021A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift */,
 				B5ECDC1C1CA81A2100C7F112 /* CSDataStack+Querying.swift */,
+				7912068B21A441080080AAEB /* CSDataStack+OffsetQuerying.swift */,
 				B5ECDC221CA81A3900C7F112 /* CSCoreStore+Querying.swift */,
+				7912068621A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift */,
 				B5ECDBEA1CA6BEAC00C7F112 /* Protocol Clauses */,
 				B5ECDBF11CA6BF2300C7F112 /* Concrete Clauses */,
 			);
@@ -1114,7 +1155,7 @@
 				B5F1DA8C1B9AA97D007C5CBB /* ImportableObject.swift */,
 				B5F1DA8F1B9AA991007C5CBB /* ImportableUniqueObject.swift */,
 				B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */,
-				B509C7F31E54511B0061C547 /* CoreStoreUniqueIDAttributeType.swift */,
+				B509C7F31E54511B0061C547 /* CoreStoreImportableAttributeType.swift */,
 			);
 			path = Importing;
 			sourceTree = "<group>";
@@ -1160,11 +1201,14 @@
 			isa = PBXGroup;
 			children = (
 				B5E84EFE1AFF847B0064E85B /* BaseDataTransaction+Querying.swift */,
+				7912067621A440540080AAEB /* BaseDataTransaction+OffsetQuerying.swift */,
 				B5E84F061AFF847B0064E85B /* DataStack+Querying.swift */,
+				7912069521A441590080AAEB /* DataStack+OffsetQuerying.swift */,
 				B5E84F071AFF847B0064E85B /* CoreStore+Querying.swift */,
+				7912067E21A440890080AAEB /* CoreStore+OffsetQuerying.swift */,
 				B596BBB51DD5BC67001DCDD9 /* FetchableSource.swift */,
 				B596BBBA1DD5C39F001DCDD9 /* QueryableSource.swift */,
-				B549F65D1E569C7400FBAB2D /* CoreStoreQueryingAttributeType.swift */,
+				B549F65D1E569C7400FBAB2D /* CoreStoreQueryableAttributeType.swift */,
 				B5E84F0A1AFF847B0064E85B /* Protocol Clauses */,
 				B5E84EFF1AFF847B0064E85B /* Concrete Clauses */,
 			);
@@ -1230,6 +1274,7 @@
 				B52FD3A91E3B3EF10001D919 /* NSManagedObject+Logging.swift */,
 				B5E84F2C1AFF849C0064E85B /* NSManagedObjectContext+CoreStore.swift */,
 				B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */,
+				7912069A21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift */,
 				B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */,
 				B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */,
 				B51BE0691B47FC4B0069F532 /* NSManagedObjectModel+Setup.swift */,
@@ -1568,10 +1613,12 @@
 				B5F1DA901B9AA991007C5CBB /* ImportableUniqueObject.swift in Sources */,
 				B504D0D61B02362500B2BBB1 /* CoreStore+Setup.swift in Sources */,
 				B529C2041CA4A2DB007E7EBD /* CSSaveResult.swift in Sources */,
+				7912069B21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift in Sources */,
 				B5D1E22C19FA9FBC003B2874 /* CoreStoreError.swift in Sources */,
 				B5E84F131AFF847B0064E85B /* Where.swift in Sources */,
 				B5D3F6451C887C0A00C7492A /* LegacySQLiteStore.swift in Sources */,
 				B596BBBB1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
+				7912068721A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift in Sources */,
 				B5ECDBFF1CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B5ECDC051CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B5E1B5981CAA0C23007FD580 /* CSObjectObserver.swift in Sources */,
@@ -1593,18 +1640,22 @@
 				B5E1B59D1CAA2568007FD580 /* CSDataStack+Observing.swift in Sources */,
 				B5ECDC231CA81A3900C7F112 /* CSCoreStore+Querying.swift in Sources */,
 				B549F6731E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
-				B509C7F41E54511B0061C547 /* CoreStoreUniqueIDAttributeType.swift in Sources */,
+				B509C7F41E54511B0061C547 /* CoreStoreImportableAttributeType.swift in Sources */,
 				B5E84F0E1AFF847B0064E85B /* Tweak.swift in Sources */,
 				B5E1B5931CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
 				B5ECDC291CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				B5E84F121AFF847B0064E85B /* OrderBy.swift in Sources */,
 				B546F9581C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
 				B5677D3D1CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
+				7912067721A440550080AAEB /* BaseDataTransaction+OffsetQuerying.swift in Sources */,
 				B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */,
+				7912067F21A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */,
+				7912069121A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift in Sources */,
 				B5FAD6AE1B518DCB00714891 /* CoreStore+Migration.swift in Sources */,
 				B5E84EE71AFF84610064E85B /* CoreStore+Logging.swift in Sources */,
 				B546F9731C9C553300D5AC55 /* SetupResult.swift in Sources */,
 				B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */,
+				7912068C21A441080080AAEB /* CSDataStack+OffsetQuerying.swift in Sources */,
 				B5E84F111AFF847B0064E85B /* Select.swift in Sources */,
 				B5FE4DA21C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B53FB9FE1CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
@@ -1665,7 +1716,8 @@
 				B5E84F301AFF849C0064E85B /* NSManagedObjectContext+CoreStore.swift in Sources */,
 				B546F9691C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
 				B53FBA1E1CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift in Sources */,
-				B549F65E1E569C7400FBAB2D /* CoreStoreQueryingAttributeType.swift in Sources */,
+				B549F65E1E569C7400FBAB2D /* CoreStoreQueryableAttributeType.swift in Sources */,
+				7912069621A441590080AAEB /* DataStack+OffsetQuerying.swift in Sources */,
 				B5E84F211AFF84860064E85B /* CoreStore+Observing.swift in Sources */,
 				B559CD431CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
 				B5FE4DA71C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
@@ -1691,6 +1743,7 @@
 				B5220E101D0DA6AB009BC71E /* ListObserverTests.swift in Sources */,
 				B5519A401CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B525577C1D0291FE00E51965 /* GroupByTests.swift in Sources */,
+				7912068021A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */,
 				B52557741D02791400E51965 /* WhereTests.swift in Sources */,
 				B5DC47C61C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B525576C1CFAF18F00E51965 /* IntoTests.swift in Sources */,
@@ -1724,10 +1777,12 @@
 				82BA18A21C4BBD1D00A0916E /* CoreStoreError.swift in Sources */,
 				82BA18B21C4BBD3900A0916E /* ImportableObject.swift in Sources */,
 				B529C2061CA4A2DB007E7EBD /* CSSaveResult.swift in Sources */,
+				7912069C21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift in Sources */,
 				82BA18AE1C4BBD3100A0916E /* DataStack+Transaction.swift in Sources */,
 				82BA18AB1C4BBD3100A0916E /* AsynchronousDataTransaction.swift in Sources */,
 				82BA18CE1C4BBD7100A0916E /* FetchedResultsControllerDelegate.swift in Sources */,
 				B596BBBC1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
+				7912068821A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift in Sources */,
 				B5ECDC011CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B5ECDC071CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B5E1B59A1CAA0C23007FD580 /* CSObjectObserver.swift in Sources */,
@@ -1749,18 +1804,22 @@
 				B5E1B59F1CAA2568007FD580 /* CSDataStack+Observing.swift in Sources */,
 				B5ECDC251CA81A3900C7F112 /* CSCoreStore+Querying.swift in Sources */,
 				B549F6741E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
-				B509C7F51E54511B0061C547 /* CoreStoreUniqueIDAttributeType.swift in Sources */,
+				B509C7F51E54511B0061C547 /* CoreStoreImportableAttributeType.swift in Sources */,
 				82BA18B31C4BBD3900A0916E /* ImportableUniqueObject.swift in Sources */,
 				B5E1B5951CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
 				B5ECDC2B1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				82BA18A11C4BBD1D00A0916E /* CoreStore.swift in Sources */,
 				B546F9591C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
 				B5677D3F1CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
+				7912067921A440550080AAEB /* BaseDataTransaction+OffsetQuerying.swift in Sources */,
 				82BA18CF1C4BBD7100A0916E /* Functions.swift in Sources */,
+				7912068121A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */,
+				7912069221A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift in Sources */,
 				82BA18A31C4BBD2200A0916E /* DataStack.swift in Sources */,
 				82BA18C81C4BBD5900A0916E /* MigrationChain.swift in Sources */,
 				B546F9741C9C553300D5AC55 /* SetupResult.swift in Sources */,
 				82BA18B11C4BBD3100A0916E /* SaveResult.swift in Sources */,
+				7912068D21A441080080AAEB /* CSDataStack+OffsetQuerying.swift in Sources */,
 				82BA18DD1C4BBE1400A0916E /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5FE4DA81C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B53FBA001CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
@@ -1821,7 +1880,8 @@
 				B546F96A1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
 				B53FBA201CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift in Sources */,
 				82BA18A81C4BBD2900A0916E /* CoreStoreLogger.swift in Sources */,
-				B549F65F1E569C7400FBAB2D /* CoreStoreQueryingAttributeType.swift in Sources */,
+				B549F65F1E569C7400FBAB2D /* CoreStoreQueryableAttributeType.swift in Sources */,
+				7912069721A441590080AAEB /* DataStack+OffsetQuerying.swift in Sources */,
 				B559CD451CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
 				82BA18B81C4BBD4200A0916E /* ClauseTypes.swift in Sources */,
 				B5ECDBEE1CA6BF2000C7F112 /* CSFrom.swift in Sources */,
@@ -1847,6 +1907,7 @@
 				B5220E111D0DA6AB009BC71E /* ListObserverTests.swift in Sources */,
 				B5519A411CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B525577D1D0291FE00E51965 /* GroupByTests.swift in Sources */,
+				7912068221A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */,
 				B52557751D02791400E51965 /* WhereTests.swift in Sources */,
 				B5DC47C71C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B5DBE2E01C9939E100B5CEFA /* BridgingTests.m in Sources */,
@@ -1880,10 +1941,12 @@
 				B52DD1BE1BE1F94300949AFE /* Progress+Convenience.swift in Sources */,
 				B5ECDC151CA816E500C7F112 /* CSTweak.swift in Sources */,
 				B546F9761C9C553300D5AC55 /* SetupResult.swift in Sources */,
+				7912069E21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift in Sources */,
 				B53FBA161CAB63CB00F0D40A /* Progress+ObjectiveC.swift in Sources */,
 				B5ECDC271CA81A3900C7F112 /* CSCoreStore+Querying.swift in Sources */,
 				B52DD1951BE1F92500949AFE /* CoreStoreError.swift in Sources */,
 				B596BBBE1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
+				7912068A21A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift in Sources */,
 				B546F9601C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				B5ECDC0F1CA8161B00C7F112 /* CSGroupBy.swift in Sources */,
 				B5ECDC211CA81A2100C7F112 /* CSDataStack+Querying.swift in Sources */,
@@ -1905,18 +1968,22 @@
 				B559CD471CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
 				B5ECDBF01CA6BF2000C7F112 /* CSFrom.swift in Sources */,
 				B549F6761E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
-				B509C7F71E54511B0061C547 /* CoreStoreUniqueIDAttributeType.swift in Sources */,
+				B509C7F71E54511B0061C547 /* CoreStoreImportableAttributeType.swift in Sources */,
 				B5220E1F1D130810009BC71E /* CSListObserver.swift in Sources */,
 				B52DD1941BE1F92500949AFE /* CoreStore.swift in Sources */,
 				B52DD1A61BE1F92F00949AFE /* BaseDataTransaction+Importing.swift in Sources */,
 				B5220E1D1D13080A009BC71E /* CSDataStack+Observing.swift in Sources */,
 				B52DD1A91BE1F93200949AFE /* CoreStore+Querying.swift in Sources */,
 				B5519A4D1CA1F4FB002BEF78 /* CSError.swift in Sources */,
+				7912067C21A440550080AAEB /* BaseDataTransaction+OffsetQuerying.swift in Sources */,
 				B5E1B5AC1CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
+				7912068421A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */,
+				7912069421A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift in Sources */,
 				B52DD1961BE1F92500949AFE /* DataStack.swift in Sources */,
 				B5ECDBFD1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
 				B52DD1BD1BE1F94300949AFE /* NSManagedObject+Convenience.swift in Sources */,
 				B52DD1AD1BE1F93900949AFE /* Where.swift in Sources */,
+				7912068F21A441080080AAEB /* CSDataStack+OffsetQuerying.swift in Sources */,
 				B53FBA1C1CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift in Sources */,
 				B5ECDBE31CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift in Sources */,
 				B5ECDC031CA80CBA00C7F112 /* CSWhere.swift in Sources */,
@@ -1977,7 +2044,8 @@
 				B52DD1BB1BE1F94000949AFE /* MigrationType.swift in Sources */,
 				B52DD1C91BE1F94600949AFE /* NSManagedObjectContext+Transaction.swift in Sources */,
 				B5220E151D130663009BC71E /* CoreStore+Observing.swift in Sources */,
-				B549F6611E569C7400FBAB2D /* CoreStoreQueryingAttributeType.swift in Sources */,
+				B549F6611E569C7400FBAB2D /* CoreStoreQueryableAttributeType.swift in Sources */,
+				7912069921A441590080AAEB /* DataStack+OffsetQuerying.swift in Sources */,
 				B52DD19B1BE1F92800949AFE /* CoreStoreLogger.swift in Sources */,
 				B52DD1991BE1F92800949AFE /* DefaultLogger.swift in Sources */,
 				B5220E201D130813009BC71E /* CSObjectMonitor.swift in Sources */,
@@ -2003,6 +2071,7 @@
 				B5220E271D1308D1009BC71E /* ObjectObserverTests.swift in Sources */,
 				B525577E1D0291FE00E51965 /* GroupByTests.swift in Sources */,
 				B52557761D02791400E51965 /* WhereTests.swift in Sources */,
+				7912068521A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */,
 				B5DC47C81C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B5DBE2E11C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B5220E0E1D0D0D19009BC71E /* ImportTests.swift in Sources */,
@@ -2036,10 +2105,12 @@
 				B56321801BD65216006C9394 /* CoreStoreError.swift in Sources */,
 				B56321AD1BD6521C006C9394 /* MigrationManager.swift in Sources */,
 				B529C2071CA4A2DC007E7EBD /* CSSaveResult.swift in Sources */,
+				7912069D21A441850080AAEB /* NSManagedObjectContext+OffsetQuerying.swift in Sources */,
 				B563219D1BD65216006C9394 /* DataStack+Observing.swift in Sources */,
 				B56321961BD65216006C9394 /* From.swift in Sources */,
 				B5ECDC021CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B596BBBD1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
+				7912068921A440CE0080AAEB /* CSCoreStore+OffsetQuerying.swift in Sources */,
 				B5ECDC081CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B5E1B59B1CAA0C23007FD580 /* CSObjectObserver.swift in Sources */,
 				B5519A611CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */,
@@ -2061,18 +2132,22 @@
 				B5ECDC261CA81A3900C7F112 /* CSCoreStore+Querying.swift in Sources */,
 				B563217F1BD65216006C9394 /* CoreStore.swift in Sources */,
 				B549F6751E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
-				B509C7F61E54511B0061C547 /* CoreStoreUniqueIDAttributeType.swift in Sources */,
+				B509C7F61E54511B0061C547 /* CoreStoreImportableAttributeType.swift in Sources */,
 				B5E1B5961CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
 				B5ECDC2C1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				B56321911BD65216006C9394 /* BaseDataTransaction+Importing.swift in Sources */,
 				B546F95A1C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
 				B5677D401CD3B1E400322BFC /* ICloudStoreObserver.swift in Sources */,
 				B56321941BD65216006C9394 /* CoreStore+Querying.swift in Sources */,
+				7912067B21A440550080AAEB /* BaseDataTransaction+OffsetQuerying.swift in Sources */,
 				B56321811BD65216006C9394 /* DataStack.swift in Sources */,
+				7912068321A440890080AAEB /* CoreStore+OffsetQuerying.swift in Sources */,
+				7912069321A4412F0080AAEB /* CSBaseDataTransaction+OffsetQuerying.swift in Sources */,
 				B56321A81BD65219006C9394 /* NSManagedObject+Convenience.swift in Sources */,
 				B546F9751C9C553300D5AC55 /* SetupResult.swift in Sources */,
 				B56321981BD65216006C9394 /* Where.swift in Sources */,
 				B5202CFD1C046E8400DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
+				7912068E21A441080080AAEB /* CSDataStack+OffsetQuerying.swift in Sources */,
 				B5FE4DA91C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B53FBA011CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B5DBE2D41C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
@@ -2133,7 +2208,8 @@
 				B546F96B1C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
 				B53FBA211CAB63FA00F0D40A /* NSFetchedResultsController+ObjectiveC.swift in Sources */,
 				B563218B1BD65216006C9394 /* UnsafeDataTransaction.swift in Sources */,
-				B549F6601E569C7400FBAB2D /* CoreStoreQueryingAttributeType.swift in Sources */,
+				B549F6601E569C7400FBAB2D /* CoreStoreQueryableAttributeType.swift in Sources */,
+				7912069821A441590080AAEB /* DataStack+OffsetQuerying.swift in Sources */,
 				B559CD461CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
 				B56321A61BD65216006C9394 /* MigrationType.swift in Sources */,
 				B5ECDBEF1CA6BF2000C7F112 /* CSFrom.swift in Sources */,

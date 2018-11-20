@@ -36,10 +36,21 @@ internal extension NSManagedObjectContext {
     @nonobjc
     internal func fetchOne(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObject? {
         
+        return fetchWithOffset(from, 1, nil, fetchClauses)?.first
+    }
+    
+    @nonobjc
+    internal func fetchWithOffset(_ from: CSFrom, _ offset: Int, _ limit: Int?, _ fetchClauses: [CSFetchClause]) -> [NSManagedObject]? {
+        
         let fetchRequest = CoreStoreFetchRequest()
         let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
-        fetchRequest.fetchLimit = 1
+        fetchRequest.fetchOffset = offset
+        
+        if let limit: Int = limit {
+            fetchRequest.fetchLimit = limit
+        }
+        
         fetchRequest.resultType = .managedObjectResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         
@@ -47,7 +58,7 @@ internal extension NSManagedObjectContext {
             
             return nil
         }
-        return self.fetchOne(fetchRequest.dynamicCast())
+        return self.fetchAll(fetchRequest.dynamicCast())
     }
     
     @nonobjc
