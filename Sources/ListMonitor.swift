@@ -232,7 +232,10 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(cs_typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return self.fetchedResultsController.fetchedObjects?.count ?? 0
+        return self.sections().reduce(0, { (numberOfObjects, sectionInfo) -> Int in
+            
+            return numberOfObjects + sectionInfo.numberOfObjects
+        })
     }
     
     /**
