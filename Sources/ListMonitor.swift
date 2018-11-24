@@ -144,7 +144,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
             
             return nil
         }
-        return ObjectType.cs_fromRaw(object: section.objects![itemIndex] as! NSManagedObject)
+        return self[IndexPath(indexes: [sectionIndex, itemIndex])]
     }
     
     /**
