@@ -217,6 +217,17 @@ extension CoreStoreError: CoreStoreSwiftType, _ObjectiveCBridgeableError {
                 return
             }
             self = .progressiveMigrationRequired(localStoreURL: localStoreURL)
+
+        case .asynchronousMigrationRequired:
+            guard
+                let localStoreURL = info["localStoreURL"] as? URL,
+                case let nsError as NSError = info["NSError"]
+                else {
+
+                    self = .unknown
+                    return
+            }
+            self = .asynchronousMigrationRequired(localStoreURL: localStoreURL, NSError: nsError)
             
         case .internalError:
             guard case let nsError as NSError = info["NSError"] else {

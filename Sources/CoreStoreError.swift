@@ -53,6 +53,11 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
      Progressive migrations are disabled for a store, but an `NSMappingModel` could not be found for a specific source and destination model versions.
      */
     case progressiveMigrationRequired(localStoreURL: URL)
+
+    /**
+     The `LocalStorage` was configured with `.allowSynchronousLightweightMigration`, but the model can only be migrated asynchronously.
+     */
+    case asynchronousMigrationRequired(localStoreURL: URL, NSError: NSError)
     
     /**
      An internal SDK call failed with the specified `NSError`.
@@ -92,6 +97,9 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             
         case .progressiveMigrationRequired:
             return CoreStoreErrorCode.progressiveMigrationRequired.rawValue
+
+        case .asynchronousMigrationRequired:
+            return CoreStoreErrorCode.asynchronousMigrationRequired.rawValue
             
         case .internalError:
             return CoreStoreErrorCode.internalError.rawValue
@@ -127,6 +135,12 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             return [
                 "localStoreURL": localStoreURL
             ]
+
+        case .asynchronousMigrationRequired(let localStoreURL, let nsError):
+            return [
+                "localStoreURL": localStoreURL,
+                "NSError": nsError
+            ]
             
         case .internalError(let nsError):
             return [
@@ -161,6 +175,10 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             
         case (.progressiveMigrationRequired(let url1), .progressiveMigrationRequired(let url2)):
             return url1 == url2
+
+        case (.asynchronousMigrationRequired(let url1, let NSError1), .asynchronousMigrationRequired(let url2, let NSError2)):
+            return url1 == url2
+                && NSError1.isEqual(NSError2)
             
         case (.internalError(let NSError1), .internalError(let NSError2)):
             return NSError1.isEqual(NSError2)
@@ -204,6 +222,10 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
 
         case .progressiveMigrationRequired(let localStoreURL):
             hasher.combine(localStoreURL)
+
+        case .asynchronousMigrationRequired(let localStoreURL, let nsError):
+            hasher.combine(localStoreURL)
+            hasher.combine(nsError)
 
         case .internalError(let nsError):
             hasher.combine(nsError)
@@ -261,6 +283,11 @@ public enum CoreStoreErrorCode: Int {
      Progressive migrations are disabled for a store, but an `NSMappingModel` could not be found for a specific source and destination model versions.
      */
     case progressiveMigrationRequired
+
+    /**
+     The `LocalStorage` was configured with `.allowSynchronousLightweightMigration`, but the model can only be migrated asynchronously.
+     */
+    case asynchronousMigrationRequired
     
     /**
      An internal SDK call failed with the specified "NSError" userInfo key.

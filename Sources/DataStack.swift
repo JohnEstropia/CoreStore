@@ -345,6 +345,18 @@ public final class DataStack: Equatable {
                     )
                     return storage
                 }
+                catch let error as NSError where storage.localStorageOptions.contains(.allowSynchronousLightweightMigration) && error.isCoreDataMigrationError {
+
+                    let storeError = CoreStoreError.asynchronousMigrationRequired(
+                        localStoreURL: fileURL,
+                        NSError: error
+                    )
+                    CoreStore.log(
+                        storeError,
+                        "Failed to add \(cs_typeName(storage)) to the stack."
+                    )
+                    throw storeError
+                }
             }
             catch {
                 
