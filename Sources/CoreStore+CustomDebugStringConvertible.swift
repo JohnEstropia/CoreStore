@@ -324,6 +324,7 @@ extension GroupBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible
 
 // MARK: - ICloudStore
 
+@available(*, deprecated, message: "Please see the release notes and Core Data documentation.")
 extension ICloudStore: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible

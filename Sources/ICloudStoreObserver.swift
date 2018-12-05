@@ -37,6 +37,7 @@ import Foundation
  - the `ICloudStore` was added to a `DataStack`
  - the `ICloudStore` and the `DataStack` are still persisted in memory
  */
+@available(*, deprecated, message: "Please see the release notes and Core Data documentation.")
 public protocol ICloudStoreObserver: class {
     
     /**
@@ -104,6 +105,7 @@ public protocol ICloudStoreObserver: class {
     func iCloudStoreDidRemoveContent(storage: ICloudStore, dataStack: DataStack)
 }
 
+@available(*, deprecated, message: "Please see the release notes and Core Data documentation.")
 public extension ICloudStoreObserver {
     
     public func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage: ICloudStore, dataStack: DataStack) {}

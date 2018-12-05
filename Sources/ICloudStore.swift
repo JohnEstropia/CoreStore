@@ -34,6 +34,7 @@ import CoreData
 /**
  A storage interface backed by an SQLite database managed by iCloud.
  */
+@available(*, deprecated, message: "Please see the release notes and Core Data documentation.")
 public final class ICloudStore: CloudStorage {
     
     /**

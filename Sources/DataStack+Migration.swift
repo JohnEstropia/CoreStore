@@ -748,12 +748,11 @@ public extension DataStack {
                 // Lightweight migration failed somehow. Proceed using InferedMappingModel below
             }
         }
-
-        let temporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+        let fileManager = FileManager.default
+        let temporaryDirectoryURL = fileManager.temporaryDirectory
             .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack")
             .appendingPathComponent(ProcessInfo().globallyUniqueString)
-        
-        let fileManager = FileManager.default
+
         try! fileManager.createDirectory(
             at: temporaryDirectoryURL,
             withIntermediateDirectories: true,

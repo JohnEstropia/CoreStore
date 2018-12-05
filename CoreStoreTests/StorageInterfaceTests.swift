@@ -107,8 +107,8 @@ final class StorageInterfaceTests: XCTestCase {
     @objc
     dynamic func test_ThatFileURLSQLiteStores_ConfigureCorrectly() {
         
-        let fileURL = NSURL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent(NSUUID().uuidString, isDirectory: false)!
+        let fileURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: false)
             .appendingPathExtension("db")
         let mappingProvider = XcodeSchemaMappingProvider(
             from: "V1", to: "V2",
