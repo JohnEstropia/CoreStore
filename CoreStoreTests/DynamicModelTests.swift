@@ -143,6 +143,9 @@ class DynamicModelTests: BaseTestDataTestCase {
             
             let updateDone = self.expectation(description: "update-done")
             let fetchDone = self.expectation(description: "fetch-done")
+            let willSetPriorObserverDone = self.expectation(description: "willSet-observe-prior-done")
+            let willSetNotPriorObserverDone = self.expectation(description: "willSet-observe-notPrior-done")
+            let didSetObserverDone = self.expectation(description: "didSet-observe-done")
             stack.perform(
                 asynchronous: { (transaction) in
                     
@@ -160,9 +163,42 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(dog.species.value, "Swift")
                     XCTAssertEqual(dog.nickname.value, nil)
                     XCTAssertEqual(dog.age.value, 1)
+
+                    let didSetObserver = dog.species.observe(options: [.new, .old]) { (object, change) in
+
+                        XCTAssertEqual(object, dog)
+                        XCTAssertEqual(change.kind, .setting)
+                        XCTAssertEqual(change.newValue, "Dog")
+                        XCTAssertEqual(change.oldValue, "Swift")
+                        XCTAssertFalse(change.isPrior)
+                        XCTAssertEqual(object.species.value, "Dog")
+                        didSetObserverDone.fulfill()
+                    }
+                    let willSetObserver = dog.species.observe(options: [.new, .old, .prior]) { (object, change) in
+
+                        XCTAssertEqual(object, dog)
+                        XCTAssertEqual(change.kind, .setting)
+                        XCTAssertEqual(change.oldValue, "Swift")
+
+                        if change.isPrior {
+
+                            XCTAssertNil(change.newValue)
+                            XCTAssertEqual(object.species.value, "Swift")
+                            willSetPriorObserverDone.fulfill()
+                        }
+                        else {
+
+                            XCTAssertEqual(change.newValue, "Dog")
+                            XCTAssertEqual(object.species.value, "Dog")
+                            willSetNotPriorObserverDone.fulfill()
+                        }
+                    }
                     
                     dog.species .= "Dog"
                     XCTAssertEqual(dog.species.value, "Dog")
+
+                    didSetObserver.invalidate()
+                    willSetObserver.invalidate()
                     
                     dog.nickname .= "Spot"
                     XCTAssertEqual(dog.nickname.value, "Spot")
