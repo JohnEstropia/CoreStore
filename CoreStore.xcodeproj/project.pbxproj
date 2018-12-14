@@ -955,6 +955,7 @@
 		B5E84F351AFF85470064E85B /* NSManagedObjectContext+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Querying.swift"; sourceTree = "<group>"; };
 		B5E84F401AFF8CCD0064E85B /* TypeErasedClauses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeErasedClauses.swift; sourceTree = "<group>"; };
 		B5E8A71F21C1015300EF006A /* CoreStoreObject+Observing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreStoreObject+Observing.swift"; sourceTree = "<group>"; };
+		B5E8A72621C3B85000EF006A /* Playground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Playground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B5ECDBDE1CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSBaseDataTransaction+Querying.swift"; sourceTree = "<group>"; };
 		B5ECDBE41CA6BEA300C7F112 /* CSClauseTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSClauseTypes.swift; sourceTree = "<group>"; };
 		B5ECDBEB1CA6BF2000C7F112 /* CSFrom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSFrom.swift; sourceTree = "<group>"; };
@@ -1045,6 +1046,7 @@
 		2F03A52619C5C6DA005002A5 = {
 			isa = PBXGroup;
 			children = (
+				B5E8A72621C3B85000EF006A /* Playground.playground */,
 				2F291E3119C6D4D3007AF63F /* Frameworks */,
 				2F03A53219C5C6DA005002A5 /* Sources */,
 				2F03A53C19C5C6DA005002A5 /* CoreStoreTests */,
