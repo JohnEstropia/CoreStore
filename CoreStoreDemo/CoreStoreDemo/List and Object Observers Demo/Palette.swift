@@ -25,6 +25,11 @@ final class Palette: CoreStoreObject {
         isTransient: true,
         customGetter: Palette.getColorName
     )
+
+    static func randomHue() -> Int {
+
+        return Int(arc4random_uniform(360))
+    }
     
     private static func getColorName(_ partialObject: PartialObject<Palette>) -> String? {
         
@@ -71,7 +76,7 @@ extension Palette {
     
     func setInitialValues(in transaction: BaseDataTransaction) {
         
-        self.hue .= Int(arc4random_uniform(360))
+        self.hue .= Palette.randomHue()
         self.saturation .= Float(1.0)
         self.brightness .= Float(arc4random_uniform(70) + 30) / 100.0
     }

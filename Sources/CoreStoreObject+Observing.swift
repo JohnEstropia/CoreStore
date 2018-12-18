@@ -47,6 +47,12 @@ public protocol CoreStoreObjectKeyValueObservation: class {
 
 extension ValueContainer.Required {
 
+    /**
+     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
+
+     - parameter options: The flags indicating which values to include in the change dictionary.
+     - parameter: changeHandler: The closure called when the value is updated.
+     */
     public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectValueDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
 
         return self.observe(with: options, changeHandler: changeHandler)
@@ -58,6 +64,12 @@ extension ValueContainer.Required {
 
 extension ValueContainer.Optional {
 
+    /**
+     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
+
+     - parameter options: The flags indicating which values to include in the change dictionary.
+     - parameter: changeHandler: The closure called when the value is updated.
+     */
     public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectValueDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
 
         return self.observe(with: options, changeHandler: changeHandler)
@@ -69,6 +81,12 @@ extension ValueContainer.Optional {
 
 extension TransformableContainer.Required {
 
+    /**
+     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
+
+     - parameter options: The flags indicating which values to include in the change dictionary.
+     - parameter: changeHandler: The closure called when the value is updated.
+     */
     public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectTransformableDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
 
         return self.observe(with: options, changeHandler: changeHandler)
@@ -80,6 +98,12 @@ extension TransformableContainer.Required {
 
 extension TransformableContainer.Optional {
 
+    /**
+     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
+
+     - parameter options: The flags indicating which values to include in the change dictionary.
+     - parameter: changeHandler: The closure called when the value is updated.
+     */
     public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectTransformableDiff<V>) -> Void) -> CoreStoreObjectKeyValueObservation {
 
         return self.observe(with: options, changeHandler: changeHandler)
@@ -91,6 +115,12 @@ extension TransformableContainer.Optional {
 
 extension RelationshipContainer.ToOne {
 
+    /**
+     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
+
+     - parameter options: The flags indicating which values to include in the change dictionary.
+     - parameter: changeHandler: The closure called when the value is updated.
+     */
     public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectObjectDiff<D>) -> Void) -> CoreStoreObjectKeyValueObservation {
 
         let result = _CoreStoreObjectKeyValueObservation(
@@ -120,6 +150,12 @@ extension RelationshipContainer.ToOne {
 
 extension RelationshipContainer.ToManyUnordered {
 
+    /**
+     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
+
+     - parameter options: The flags indicating which values to include in the change dictionary.
+     - parameter: changeHandler: The closure called when the value is updated.
+     */
     public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectUnorderedDiff<D>) -> Void) -> CoreStoreObjectKeyValueObservation {
 
         let result = _CoreStoreObjectKeyValueObservation(
@@ -149,6 +185,12 @@ extension RelationshipContainer.ToManyUnordered {
 
 extension RelationshipContainer.ToManyOrdered {
 
+    /**
+     Observes changes in the receiver value. When the returned `CoreStoreObjectKeyValueObservation` is deinited or invalidated, it will stop observing.
+
+     - parameter options: The flags indicating which values to include in the change dictionary.
+     - parameter: changeHandler: The closure called when the value is updated.
+     */
     public func observe(options: NSKeyValueObservingOptions = [], changeHandler: @escaping (O, CoreStoreObjectOrderedDiff<D>) -> Void) -> CoreStoreObjectKeyValueObservation {
 
         let result = _CoreStoreObjectKeyValueObservation(
@@ -177,6 +219,9 @@ extension RelationshipContainer.ToManyOrdered {
 
 // MARK: - CoreStoreObjectValueDiff
 
+/**
+ The object containing the changeset for an observed `ValueContainer.Required` and `ValueContainer.Optional` property.
+ */
 public final class CoreStoreObjectValueDiff<V: ImportableAttributeType> {
 
     /**
@@ -185,12 +230,12 @@ public final class CoreStoreObjectValueDiff<V: ImportableAttributeType> {
     public let kind: NSKeyValueChange
 
     /**
-     `newValue` and `oldValue` will only be non-nil if `.new`/`.old` is passed to `observe()`. In general, get the most up to date value by accessing it directly on the observed object instead.
+     `newValue` and `oldValue` will only be non-nil if `.new`/`.old` is passed to `observe()`. `newValue` will be `nil` if `isPrior` is `true`.
      */
     public private(set) lazy var newValue: V? = self.newNativeValue.flatMap(V.cs_fromQueryableNativeType)
 
     /**
-     `newValue` and `oldValue` will only be non-nil if `.new`/`.old` is passed to `observe()`. In general, get the most up to date value by accessing it directly on the observed object instead.
+     `newValue` and `oldValue` will only be non-nil if `.new`/`.old` is passed to `observe()`.
      */
     public private(set) lazy var oldValue: V? = self.oldNativeValue.flatMap(V.cs_fromQueryableNativeType)
 
@@ -220,6 +265,9 @@ public final class CoreStoreObjectValueDiff<V: ImportableAttributeType> {
 
 // MARK: - CoreStoreObjectValueDiff
 
+/**
+ The object containing the changeset for an observed `TransformableContainer.Required` or `TransformableContainer.Optional` property.
+ */
 public final class CoreStoreObjectTransformableDiff<V: NSCoding & NSCopying> {
 
     /**
@@ -257,6 +305,9 @@ public final class CoreStoreObjectTransformableDiff<V: NSCoding & NSCopying> {
 
 // MARK: - CoreStoreObjectObjectDiff
 
+/**
+ The object containing the changeset for an observed `RelationshipContainer.ToOne` property.
+ */
 public final class CoreStoreObjectObjectDiff<D: CoreStoreObject> {
 
     /**
@@ -300,6 +351,9 @@ public final class CoreStoreObjectObjectDiff<D: CoreStoreObject> {
 
 // MARK: - CoreStoreObjectUnorderedDiff
 
+/**
+ The object containing the changeset for an observed `RelationshipContainer.ToManyUnordered` property.
+ */
 public final class CoreStoreObjectUnorderedDiff<D: CoreStoreObject> {
 
     /**
@@ -343,6 +397,9 @@ public final class CoreStoreObjectUnorderedDiff<D: CoreStoreObject> {
 
 // MARK: - CoreStoreObjectOrderedDiff
 
+/**
+ The object containing the changeset for an observed `RelationshipContainer.Ordered` property.
+ */
 public final class CoreStoreObjectOrderedDiff<D: CoreStoreObject> {
 
     /**
@@ -451,6 +508,7 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
 
     // MARK: FilePrivate
 
+    @nonobjc
     fileprivate init(object: CoreStoreManagedObject, keyPath: KeyPathString, callback: @escaping (_ object: CoreStoreManagedObject, _ kind: NSKeyValueChange, _ newValue: Any?, _ oldValue: Any?, _ indexes: IndexSet?, _ isPrior: Bool) -> Void) {
 
         let _ = _CoreStoreObjectKeyValueObservation.swizzler
@@ -459,6 +517,7 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
         self.callback = callback
     }
 
+    @nonobjc
     fileprivate func start(_ options: NSKeyValueObservingOptions) {
         
         self.object?.addObserver(self, forKeyPath: self.keyPath, options: options, context: nil)
@@ -472,6 +531,7 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
 
     // MARK: DynamicObjectKeyValueObservation
 
+    @nonobjc
     public func invalidate() {
 
         self.object?.removeObserver(self, forKeyPath: self.keyPath, context: nil)
@@ -482,7 +542,8 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
     // MARK: Private
 
     // workaround for <rdar://problem/31640524> Erroneous (?) error when using bridging in the Foundation overlay
-    @nonobjc static var swizzler: Any? = cs_lazy {
+    @nonobjc
+    static var swizzler: Any? = cs_lazy {
 
         let bridgeClass: AnyClass = _CoreStoreObjectKeyValueObservation.self
         let rootObserveImpl = class_getInstanceMethod(
@@ -497,11 +558,17 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
         return nil
     }
 
-    @nonobjc private weak var object: CoreStoreManagedObject?
-    @nonobjc private let callback: (_ object: CoreStoreManagedObject, _ kind: NSKeyValueChange, _ newValue: Any?, _ oldValue: Any?, _ indexes: IndexSet?, _ isPrior: Bool) -> Void
-    @nonobjc private let keyPath: KeyPathString
+    @nonobjc
+    private weak var object: CoreStoreManagedObject?
 
-    @objc private dynamic func _cs_swizzle_me_observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSString: Any]?, context: UnsafeMutableRawPointer?) {
+    @nonobjc
+    private let callback: (_ object: CoreStoreManagedObject, _ kind: NSKeyValueChange, _ newValue: Any?, _ oldValue: Any?, _ indexes: IndexSet?, _ isPrior: Bool) -> Void
+
+    @nonobjc
+    private let keyPath: KeyPathString
+
+    @objc
+    private dynamic func _cs_swizzle_me_observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSString: Any]?, context: UnsafeMutableRawPointer?) {
 
         guard
             let object = object as? CoreStoreManagedObject,

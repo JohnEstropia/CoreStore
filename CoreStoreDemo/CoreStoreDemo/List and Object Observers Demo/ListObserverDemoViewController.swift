@@ -122,6 +122,11 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
                 target: self,
                 action: #selector(self.addBarButtonItemTouched(_:))
             ),
+            UIBarButtonItem(
+                barButtonSystemItem: .refresh,
+                target: self,
+                action: #selector(self.shuffleBarButtonItemTouched(_:))
+            ),
             filterBarButton
         ]
         self.filterBarButton = filterBarButton
@@ -301,6 +306,21 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
                 
                 let palette = transaction.create(Into<Palette>())
                 palette.setInitialValues(in: transaction)
+            },
+            completion: { _ in }
+        )
+    }
+
+    @IBAction private dynamic func shuffleBarButtonItemTouched(_ sender: AnyObject?) {
+
+        ColorsDemo.stack.perform(
+            asynchronous: { (transaction) in
+
+                for palette in (transaction.fetchAll(From<Palette>()) ?? []) {
+
+                    palette.hue .= Palette.randomHue()
+                    palette.colorName .= nil
+                }
             },
             completion: { _ in }
         )
