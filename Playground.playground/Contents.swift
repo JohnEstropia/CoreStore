@@ -1,6 +1,7 @@
 import UIKit
 import CoreStore
 
+/// Model Declaration =====
 class Animal: CoreStoreObject {
     let species = Value.Required<String>("species", initial: "Swift")
     let master = Relationship.ToOne<Person>("master")
@@ -8,11 +9,13 @@ class Animal: CoreStoreObject {
 }
 
 class Person: CoreStoreObject {
-    let name = Value.Required<String>("name", initial: "")
+    let name = Value.Optional<String>("name")
     let pets = Relationship.ToManyUnordered<Animal>("pets", inverse: { $0.master })
 }
+/// =======================
 
 
+/// Stack setup ===========
 let dataStack = DataStack(
     CoreStoreSchema(
         modelVersion: "V1",
@@ -22,8 +25,11 @@ let dataStack = DataStack(
         ]
     )
 )
-try dataStack.addStorageAndWait()
+try dataStack.addStorageAndWait(SQLiteStore(fileName: "data.sqlite"))
+/// =======================
 
+
+/// Transactions ==========
 dataStack.perform(synchronous: { transaction in
 
     let animal = transaction.create(Into<Animal>())
@@ -34,7 +40,10 @@ dataStack.perform(synchronous: { transaction in
     person.name .= "John"
     person.pets.value.insert(animal)
 })
+/// =======================
 
+
+/// Accessing Objects =====
 let bird = dataStack.fetchOne(From<Animal>().where(\.species == "Sparrow"))!
 bird.species.value
 bird.color.value
@@ -44,3 +53,4 @@ let owner = bird.master.value!
 owner.name.value
 owner.pets.count
 print(owner)
+/// =======================
