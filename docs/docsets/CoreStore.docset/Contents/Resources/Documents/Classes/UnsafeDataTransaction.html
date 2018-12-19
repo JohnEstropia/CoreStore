@@ -1,0 +1,2281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>UnsafeDataTransaction Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/UnsafeDataTransaction" class="dashAnchor"></a>
+
+    <a title="UnsafeDataTransaction Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          CoreStore Docs
+        </a>
+         (88% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/JohnEstropia/CoreStore">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">CoreStore Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      UnsafeDataTransaction Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/AsynchronousDataTransaction.html">AsynchronousDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/AsynchronousDataTransaction/Result.html">– Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/BaseDataTransaction.html">BaseDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSAsynchronousDataTransaction.html">CSAsynchronousDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSBaseDataTransaction.html">CSBaseDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSCoreStore.html">CSCoreStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSDataStack.html">CSDataStack</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSError.html">CSError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSFrom.html">CSFrom</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSGroupBy.html">CSGroupBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSInMemoryStore.html">CSInMemoryStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSInto.html">CSInto</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSListMonitor.html">CSListMonitor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSMigrationResult.html">CSMigrationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSMigrationType.html">CSMigrationType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSObjectMonitor.html">CSObjectMonitor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSOrderBy.html">CSOrderBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSQLiteStore.html">CSSQLiteStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSectionBy.html">CSSectionBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSelect.html">CSSelect</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSelectTerm.html">CSSelectTerm</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSetupResult.html">CSSetupResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSynchronousDataTransaction.html">CSSynchronousDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSTweak.html">CSTweak</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSUnsafeDataModelSchema.html">CSUnsafeDataModelSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSUnsafeDataTransaction.html">CSUnsafeDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSWhere.html">CSWhere</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSXcodeDataModelSchema.html">CSXcodeDataModelSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObject.html">CoreStoreObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectObjectDiff.html">CoreStoreObjectObjectDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectOrderedDiff.html">CoreStoreObjectOrderedDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectTransformableDiff.html">CoreStoreObjectTransformableDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectUnorderedDiff.html">CoreStoreObjectUnorderedDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectValueDiff.html">CoreStoreObjectValueDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreSchema.html">CoreStoreSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CustomSchemaMappingProvider.html">CustomSchemaMappingProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CustomSchemaMappingProvider/CustomMapping.html">– CustomMapping</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CustomSchemaMappingProvider/UnsafeSourceObject.html">– UnsafeSourceObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CustomSchemaMappingProvider/UnsafeDestinationObject.html">– UnsafeDestinationObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/DataStack.html">DataStack</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/DefaultLogger.html">DefaultLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/DynamicEntity.html">DynamicEntity</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Entity.html">Entity</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ICloudStore.html">ICloudStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/InMemoryStore.html">InMemoryStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/InferredSchemaMappingProvider.html">InferredSchemaMappingProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ListMonitor.html">ListMonitor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ObjectMonitor.html">ObjectMonitor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SQLiteStore.html">SQLiteStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SchemaHistory.html">SchemaHistory</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SynchronousDataTransaction.html">SynchronousDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/UnsafeDataModelSchema.html">UnsafeDataModelSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/UnsafeDataTransaction.html">UnsafeDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/UserInfo.html">UserInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/XcodeDataModelSchema.html">XcodeDataModelSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/XcodeSchemaMappingProvider.html">XcodeSchemaMappingProvider</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Global Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Global Variables.html#/s:9CoreStore0aB11ErrorDomainSSvp">CoreStoreErrorDomain</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CSErrorCode.html">CSErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CSLocalStorageOptions.html">CSLocalStorageOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CoreStore.html">CoreStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CoreStoreError.html">CoreStoreError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CoreStoreErrorCode.html">CoreStoreErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/s:9CoreStore8LogLevelO">LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MigrationResult.html">MigrationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MigrationType.html">MigrationType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/RelationshipContainer.html">RelationshipContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/RelationshipContainer/ToOne.html">– ToOne</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/RelationshipContainer/ToManyOrdered.html">– ToManyOrdered</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/RelationshipContainer/ToManyUnordered.html">– ToManyUnordered</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/SelectTerm.html">SelectTerm</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/SetupResult.html">SetupResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/TransformableContainer.html">TransformableContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/TransformableContainer/Required.html">– Required</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/TransformableContainer/Optional.html">– Optional</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ValueContainer.html">ValueContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ValueContainer/Required.html">– Required</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ValueContainer/Optional.html">– Optional</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Bool.html">Bool</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/CGFloat.html">CGFloat</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Date.html">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int16.html">Int16</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int32.html">Int32</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int64.html">Int64</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int8.html">Int8</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/KeyPath.html">KeyPath</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/KeyPathString.html">KeyPathString</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSData.html">NSData</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSDate.html">NSDate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSManagedObject.html">NSManagedObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSManagedObjectContext.html">NSManagedObjectContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSManagedObjectID.html">NSManagedObjectID</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSNull.html">NSNull</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSNumber.html">NSNumber</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSString.html">NSString</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSURL.html">NSURL</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSUUID.html">NSUUID</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Progress.html">Progress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/RawRepresentable.html">RawRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Sequence.html">Sequence</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/URL.html">URL</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/UUID.html">UUID</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GG_q_SgtAA0aB6ObjectCRbzAPRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GG_q_tAA0aB6ObjectCRbzAORb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_G_So17NSManagedObjectIDCtSo0gH0CRbzALRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAJRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAKRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_SgG_So17NSManagedObjectIDCtSo0gH0CRbzAMRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1loiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1loiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_SLR_r0_lF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1loiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1loiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2leoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2leoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_SLR_r0_lF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2leoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2leoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GG_q_SgtAA0aB6ObjectCRbzAPRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GG_q_tAA0aB6ObjectCRbzAORb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_G_So17NSManagedObjectIDCtSo0gH0CRbzALRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAJRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAKRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_SgG_So17NSManagedObjectIDCtSo0gH0CRbzAMRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1goiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1goiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_SLR_r0_lF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1goiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1goiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2geoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2geoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_SLR_r0_lF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2geoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2geoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GGtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GGtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GGtAA0aB6ObjectCRbzAORb_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_GtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_GtSo15NSManagedObjectCRbzAJRb_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_GtSo15NSManagedObjectCRbzAJRb_STR0_So0gH2IDC7ElementRt0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_SgGtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_SgGtSo15NSManagedObjectCRbzAKRb_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_SgGtSo15NSManagedObjectCRbzAKRb_STR0_So0gH2IDC7ElementRt0_r1_lF">~=(_:_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/AnyWhereClause.html">AnyWhereClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/c:@M@CoreStore@objc(pl)CSDeleteClause">CSDeleteClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSDynamicSchema.html">CSDynamicSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/c:@M@CoreStore@objc(pl)CSFetchClause">CSFetchClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSListObjectObserver.html">CSListObjectObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSListObserver.html">CSListObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSListSectionObserver.html">CSListSectionObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSLocalStorage.html">CSLocalStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSObjectObserver.html">CSObjectObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/c:@M@CoreStore@objc(pl)CSQueryClause">CSQueryClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSStorageInterface.html">CSStorageInterface</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CloudStorage.html">CloudStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/c:@M@CoreStore@objc(pl)CoreDataNativeType">CoreDataNativeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CoreStoreLogger.html">CoreStoreLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CoreStoreObjectKeyValueObservation.html">CoreStoreObjectKeyValueObservation</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CoreStoreObjectiveCType.html">CoreStoreObjectiveCType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CoreStoreSwiftType.html">CoreStoreSwiftType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore12DeleteClauseP">DeleteClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/DynamicKeyPath.html">DynamicKeyPath</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/DynamicObject.html">DynamicObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/DynamicSchema.html">DynamicSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/FetchChainableBuilderType.html">FetchChainableBuilderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/FetchableSource.html">FetchableSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/GroupByClause.html">GroupByClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ICloudStoreObserver.html">ICloudStoreObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore23ImportableAttributeTypeP">ImportableAttributeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ImportableObject.html">ImportableObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ImportableUniqueObject.html">ImportableUniqueObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ListObjectObserver.html">ListObjectObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ListObserver.html">ListObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ListSectionObserver.html">ListSectionObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/LocalStorage.html">LocalStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ObjectObserver.html">ObjectObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/OrderByClause.html">OrderByClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/QueryChainableBuilderType.html">QueryChainableBuilderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore11QueryClauseP">QueryClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/QueryableAttributeType.html">QueryableAttributeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/QueryableSource.html">QueryableSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SchemaMappingProvider.html">SchemaMappingProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore26SelectAttributesResultTypeP">SelectAttributesResultType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SelectClause.html">SelectClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore16SelectResultTypeP">SelectResultType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/StorageInterface.html">StorageInterface</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/WhereClauseType.html">WhereClauseType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CloudStorageOptions.html">CloudStorageOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/FetchChainBuilder.html">FetchChainBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/From.html">From</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/GroupBy.html">GroupBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Into.html">Into</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/LocalStorageOptions.html">LocalStorageOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/MigrationChain.html">MigrationChain</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/OrderBy.html">OrderBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/OrderBy/SortKey.html">– SortKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/PartialObject.html">PartialObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/QueryChainBuilder.html">QueryChainBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SectionBy.html">SectionBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SectionMonitorChainBuilder.html">SectionMonitorChainBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Select.html">Select</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Tweak.html">Tweak</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/VersionLock.html">VersionLock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Where.html">Where</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore9ClassNamea">ClassName</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore10EntityNamea">EntityName</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore13KeyPathStringa">KeyPathString</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore18ModelConfigurationa">ModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore12ModelVersiona">ModelVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore22XcodeDataModelFileNamea">XcodeDataModelFileName</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>UnsafeDataTransaction</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">UnsafeDataTransaction</span> <span class="p">:</span> <span class="kt"><a href="../Classes/BaseDataTransaction.html">BaseDataTransaction</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>The <code>UnsafeDataTransaction</code> provides an interface for non-contiguous <code>NSManagedObject</code> or <code><a href="../Classes/CoreStoreObject.html">CoreStoreObject</a></code> creates, updates, and deletes. This is useful for making temporary changes, such as partially filled forms. An unsafe transaction object should typically be only used from the main queue.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC6commityyyAA0aB5ErrorOSgcF"></a>
+                    <a name="//apple_ref/swift/Method/commit(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC6commityyyAA0aB5ErrorOSgcF">commit(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Saves the transaction changes asynchronously. For an <code>UnsafeDataTransaction</code>, multiple commits are allowed, although it is the developer&rsquo;s responsibility to ensure a reasonable leeway to prevent blocking the main thread.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">commit</span><span class="p">(</span><span class="n">_</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt"><a href="../Enums/CoreStoreError.html">CoreStoreError</a></span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the block executed after the save completes. Success or failure is reported by the optional <code>error</code> argument of the block.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC13commitAndWaityyKF"></a>
+                    <a name="//apple_ref/swift/Method/commitAndWait()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC13commitAndWaityyKF">commitAndWait()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Saves the transaction changes and waits for completion synchronously. For an <code>UnsafeDataTransaction</code>, multiple commits are allowed, although it is the developer&rsquo;s responsibility to ensure a reasonable leeway to prevent blocking the main thread.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    a <code><a href="../Enums/CoreStoreError.html">CoreStoreError</a></code> value indicating the failure.
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">commitAndWait</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC8rollbackyyF"></a>
+                    <a name="//apple_ref/swift/Method/rollback()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC8rollbackyyF">rollback()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Rolls back the transaction.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">rollback</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC4undoyyF"></a>
+                    <a name="//apple_ref/swift/Method/undo()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC4undoyyF">undo()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undo&rsquo;s the last change made to the transaction.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">undo</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC5flushyyF"></a>
+                    <a name="//apple_ref/swift/Method/flush()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC5flushyyF">flush()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Immediately flushes all pending changes to the transaction&rsquo;s observers. This is useful in conjunction with <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code>s and <code><a href="../Classes/ObjectMonitor.html">ObjectMonitor</a></code>s created from <code>UnsafeDataTransaction</code>s used to manage temporary <q>scratch</q> data.</p>
+<div class="aside aside-important">
+    <p class="aside-title">Important</p>
+    Note that unlike <code>commit()</code>, <code>flush()</code> does not propagate/save updates to the <code><a href="../Classes/DataStack.html">DataStack</a></code> and the persistent store. However, the flushed changes will be seen by children transactions created further from the current transaction (i.e. through <code>transaction.beginUnsafe()</code>)
+
+</div>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    an error thrown from <code>closure</code>, or an error thrown by Core Data (usually validation errors or conflict errors)
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">flush</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC5flush7closureyyyKXE_tKF"></a>
+                    <a name="//apple_ref/swift/Method/flush(closure:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC5flush7closureyyyKXE_tKF">flush(closure:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Flushes all pending changes to the transaction&rsquo;s observers at the end of the <code>closure</code>&lsquo;s execution. This is useful in conjunction with <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code>s and <code><a href="../Classes/ObjectMonitor.html">ObjectMonitor</a></code>s created from <code>UnsafeDataTransaction</code>s used to manage temporary <q>scratch</q> data.</p>
+<div class="aside aside-important">
+    <p class="aside-title">Important</p>
+    Note that unlike <code>commit()</code>, <code><a href="../Classes/UnsafeDataTransaction.html#/s:9CoreStore21UnsafeDataTransactionC5flushyyF">flush()</a></code> does not propagate/save updates to the <code><a href="../Classes/DataStack.html">DataStack</a></code> and the persistent store. However, the flushed changes will be seen by children transactions created further from the current transaction (i.e. through <code>transaction.beginUnsafe()</code>)
+
+</div>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    an error thrown from <code>closure</code>, or an error thrown by Core Data (usually validation errors or conflict errors)
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">flush</span><span class="p">(</span><span class="nv">closure</span><span class="p">:</span> <span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">rethrows</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>closure</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the closure where changes can be made prior to the flush</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC4redoyyF"></a>
+                    <a name="//apple_ref/swift/Method/redo()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC4redoyyF">redo()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Redo&rsquo;s the last undone change to the transaction.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">redo</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC05beginC012supportsUndoACSb_tF"></a>
+                    <a name="//apple_ref/swift/Method/beginUnsafe(supportsUndo:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC05beginC012supportsUndoACSb_tF">beginUnsafe(supportsUndo:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Begins a child transaction where <code>NSManagedObject</code> or <code><a href="../Classes/CoreStoreObject.html">CoreStoreObject</a></code> creates, updates, and deletes can be made. This is useful for making temporary changes, such as partially filled forms.</p>
+
+<ul>
+<li>prameter supportsUndo: <code><a href="../Classes/UnsafeDataTransaction.html#/s:9CoreStore21UnsafeDataTransactionC4undoyyF">undo()</a></code>, <code><a href="../Classes/UnsafeDataTransaction.html#/s:9CoreStore21UnsafeDataTransactionC4redoyyF">redo()</a></code>, and <code><a href="../Classes/UnsafeDataTransaction.html#/s:9CoreStore21UnsafeDataTransactionC8rollbackyyF">rollback()</a></code> methods are only available when this parameter is <code>true</code>, otherwise those method will raise an exception. Defaults to <code>false</code>. Note that turning on Undo support may heavily impact performance especially on iOS or watchOS where memory is limited.</li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">beginUnsafe</span><span class="p">(</span><span class="nv">supportsUndo</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UnsafeDataTransaction</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an <code>UnsafeDataTransaction</code> instance where creates, updates, and deletes can be made.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/CoreStoreSwiftType"></a>
+                <a name="//apple_ref/swift/Section/CoreStoreSwiftType" class="dashAnchor"></a>
+                <a href="#/CoreStoreSwiftType">
+                  <h3 class="section-name">CoreStoreSwiftType</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore0aB9SwiftTypeP18bridgeToObjectiveC0G5CTypeQzvp"></a>
+                    <a name="//apple_ref/swift/Property/bridgeToObjectiveC" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore0aB9SwiftTypeP18bridgeToObjectiveC0G5CTypeQzvp">bridgeToObjectiveC</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">bridgeToObjectiveC</span><span class="p">:</span> <span class="kt"><a href="../Classes/CSUnsafeDataTransaction.html">CSUnsafeDataTransaction</a></span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/CustomDebugStringConvertible"></a>
+                <a name="//apple_ref/swift/Section/CustomDebugStringConvertible" class="dashAnchor"></a>
+                <a href="#/CustomDebugStringConvertible">
+                  <h3 class="section-name">CustomDebugStringConvertible</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:s28CustomDebugStringConvertibleP16debugDescriptionSSvp"></a>
+                    <a name="//apple_ref/swift/Property/debugDescription" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s28CustomDebugStringConvertibleP16debugDescriptionSSvp">debugDescription</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">debugDescription</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/UnsafeDataTransaction"></a>
+                <a name="//apple_ref/swift/Section/UnsafeDataTransaction" class="dashAnchor"></a>
+                <a href="#/UnsafeDataTransaction">
+                  <h3 class="section-name">UnsafeDataTransaction</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC30createFetchedResultsControllerySo09NSFetchedhI0CyxGAA4FromVyxG_AA9SectionByVyxGAA11FetchClause_pdtSo15NSManagedObjectCRbzlF"></a>
+                    <a name="//apple_ref/swift/Method/createFetchedResultsController(_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC30createFetchedResultsControllerySo09NSFetchedhI0CyxGAA4FromVyxG_AA9SectionByVyxGAA11FetchClause_pdtSo15NSManagedObjectCRbzlF">createFetchedResultsController(_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Utility for creating an <code>NSFetchedResultsController</code> from the <code>UnsafeDataTransaction</code>. This is useful when an <code>NSFetchedResultsController</code> is preferred over the overhead of <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code>s abstraction.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>It is the caller&rsquo;s responsibility to call <code>performFetch()</code> on the created <code>NSFetchedResultsController</code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@nonobjc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="n">createFetchedResultsController</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">sectionBy</span><span class="p">:</span> <span class="kt"><a href="../Structs/SectionBy.html">SectionBy</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSFetchedResultsController</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">D</span> <span class="p">:</span> <span class="kt">NSManagedObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sectionBy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/SectionBy.html">SectionBy</a></code> clause indicating the keyPath for the attribute to use when sorting the list into sections</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an <code>NSFetchedResultsController</code> that observes the <code>UnsafeDataTransaction</code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC30createFetchedResultsControllerySo09NSFetchedhI0CyxGAA4FromVyxG_AA9SectionByVyxGSayAA11FetchClause_pGtSo15NSManagedObjectCRbzlF"></a>
+                    <a name="//apple_ref/swift/Method/createFetchedResultsController(_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC30createFetchedResultsControllerySo09NSFetchedhI0CyxGAA4FromVyxG_AA9SectionByVyxGSayAA11FetchClause_pGtSo15NSManagedObjectCRbzlF">createFetchedResultsController(_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Utility for creating an <code>NSFetchedResultsController</code> from the <code>UnsafeDataTransaction</code>. This is useful when an <code>NSFetchedResultsController</code> is preferred over the overhead of <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code>s abstraction.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>It is the caller&rsquo;s responsibility to call <code>performFetch()</code> on the created <code>NSFetchedResultsController</code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@nonobjc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="n">createFetchedResultsController</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">sectionBy</span><span class="p">:</span> <span class="kt"><a href="../Structs/SectionBy.html">SectionBy</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">NSFetchedResultsController</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">D</span> <span class="p">:</span> <span class="kt">NSManagedObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sectionBy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/SectionBy.html">SectionBy</a></code> clause indicating the keyPath for the attribute to use when sorting the list into sections</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an <code>NSFetchedResultsController</code> that observes the <code>UnsafeDataTransaction</code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC30createFetchedResultsControllerySo09NSFetchedhI0CyxGAA4FromVyxG_AA11FetchClause_pdtSo15NSManagedObjectCRbzlF"></a>
+                    <a name="//apple_ref/swift/Method/createFetchedResultsController(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC30createFetchedResultsControllerySo09NSFetchedhI0CyxGAA4FromVyxG_AA11FetchClause_pdtSo15NSManagedObjectCRbzlF">createFetchedResultsController(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Utility for creating an <code>NSFetchedResultsController</code> from the <code>UnsafeDataTransaction</code>. This is useful when an <code>NSFetchedResultsController</code> is preferred over the overhead of <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code>s abstraction.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>It is the caller&rsquo;s responsibility to call <code>performFetch()</code> on the created <code>NSFetchedResultsController</code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@nonobjc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="n">createFetchedResultsController</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSFetchedResultsController</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">D</span> <span class="p">:</span> <span class="kt">NSManagedObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an <code>NSFetchedResultsController</code> that observes the <code>UnsafeDataTransaction</code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC30createFetchedResultsControllerySo09NSFetchedhI0CyxGAA4FromVyxG_SayAA11FetchClause_pGtSo15NSManagedObjectCRbzlF"></a>
+                    <a name="//apple_ref/swift/Method/createFetchedResultsController(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC30createFetchedResultsControllerySo09NSFetchedhI0CyxGAA4FromVyxG_SayAA11FetchClause_pGtSo15NSManagedObjectCRbzlF">createFetchedResultsController(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Utility for creating an <code>NSFetchedResultsController</code> from the <code>UnsafeDataTransaction</code>. This is useful when an <code>NSFetchedResultsController</code> is preferred over the overhead of <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code>s abstraction.</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>It is the caller&rsquo;s responsibility to call <code>performFetch()</code> on the created <code>NSFetchedResultsController</code>.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@nonobjc</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="n">createFetchedResultsController</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">NSFetchedResultsController</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">D</span> <span class="p">:</span> <span class="kt">NSManagedObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>an <code>NSFetchedResultsController</code> that observes the <code>UnsafeDataTransaction</code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/UnsafeDataTransaction2"></a>
+                <a name="//apple_ref/swift/Section/UnsafeDataTransaction" class="dashAnchor"></a>
+                <a href="#/UnsafeDataTransaction2">
+                  <h3 class="section-name">UnsafeDataTransaction</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC13monitorObjectyAA0G7MonitorCyxGxAA07DynamicG0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorObject(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC13monitorObjectyAA0G7MonitorCyxGxAA07DynamicG0RzlF">monitorObject(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a <code><a href="../Classes/ObjectMonitor.html">ObjectMonitor</a></code> for the specified <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>. Multiple <code><a href="../Protocols/ObjectObserver.html">ObjectObserver</a></code>s may then register themselves to be notified when changes are made to the <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorObject</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ObjectMonitor.html">ObjectMonitor</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">D</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/DynamicObject.html">DynamicObject</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>object</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code> to observe changes from</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code><a href="../Classes/ObjectMonitor.html">ObjectMonitor</a></code> that monitors changes to <code>object</code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC11monitorListyAA0G7MonitorCyxGAA4FromVyxG_AA11FetchClause_pdtAA13DynamicObjectRzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorList(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC11monitorListyAA0G7MonitorCyxGAA4FromVyxG_AA11FetchClause_pdtAA13DynamicObjectRzlF">monitorList(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified fetch clauses. Multiple <code><a href="../Protocols/ListObserver.html">ListObserver</a></code>s may then register themselves to be notified when changes are made to the list.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorList</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">D</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/DynamicObject.html">DynamicObject</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> instance that monitors changes to the list</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC11monitorListyAA0G7MonitorCyxGAA4FromVyxG_SayAA11FetchClause_pGtAA13DynamicObjectRzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorList(_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC11monitorListyAA0G7MonitorCyxGAA4FromVyxG_SayAA11FetchClause_pGtAA13DynamicObjectRzlF">monitorList(_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified fetch clauses. Multiple <code><a href="../Protocols/ListObserver.html">ListObserver</a></code>s may then register themselves to be notified when changes are made to the list.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorList</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">D</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/DynamicObject.html">DynamicObject</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> instance that monitors changes to the list</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC11monitorListyAA0G7MonitorCy10ObjectTypeQzGxAA021FetchChainableBuilderJ0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorList(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC11monitorListyAA0G7MonitorCy10ObjectTypeQzGxAA021FetchChainableBuilderJ0RzlF">monitorList(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Asynchronously creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified <code><a href="../Protocols/FetchChainableBuilderType.html">FetchChainableBuilderType</a></code> built from a chain of clauses. Since <code>NSFetchedResultsController</code> greedily locks the persistent store on initial fetch, you may prefer this method instead of the synchronous counterpart to avoid deadlocks while background updates/saves are being executed.</p>
+<pre class="highlight swift"><code><span class="n">transaction</span><span class="o">.</span><span class="nf">monitorList</span><span class="p">(</span>
+    <span class="p">{</span> <span class="p">(</span><span class="n">monitor</span><span class="p">)</span> <span class="k">in</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">=</span> <span class="n">monitor</span>
+    <span class="p">},</span>
+    <span class="kt">From</span><span class="o">&lt;</span><span class="kt">MyPersonEntity</span><span class="o">&gt;</span><span class="p">()</span>
+        <span class="o">.</span><span class="nf">where</span><span class="p">(\</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;</span> <span class="mi">18</span><span class="p">)</span>
+        <span class="o">.</span><span class="nf">orderBy</span><span class="p">(</span><span class="o">.</span><span class="nf">ascending</span><span class="p">(\</span><span class="o">.</span><span class="n">age</span><span class="p">))</span>
+<span class="p">)</span>
+</code></pre>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorList</span><span class="o">&lt;</span><span class="kt">B</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">clauseChain</span><span class="p">:</span> <span class="kt">B</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">B</span><span class="o">.</span><span class="kt">ObjectType</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">B</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/FetchChainableBuilderType.html">FetchChainableBuilderType</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>createAsynchronously</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the closure that receives the created <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> instance</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clauseChain</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Protocols/FetchChainableBuilderType.html">FetchChainableBuilderType</a></code> built from a chain of clauses</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified <code><a href="../Protocols/FetchChainableBuilderType.html">FetchChainableBuilderType</a></code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC11monitorList20createAsynchronously__yyAA0G7MonitorCyxGc_AA4FromVyxGAA11FetchClause_pdtAA13DynamicObjectRzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorList(createAsynchronously:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC11monitorList20createAsynchronously__yyAA0G7MonitorCyxGc_AA4FromVyxGAA11FetchClause_pdtAA13DynamicObjectRzlF">monitorList(createAsynchronously:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Asynchronously creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified fetch clauses. Multiple <code><a href="../Protocols/ListObserver.html">ListObserver</a></code>s may then register themselves to be notified when changes are made to the list. Since <code>NSFetchedResultsController</code> greedily locks the persistent store on initial fetch, you may prefer this method instead of the synchronous counterpart to avoid deadlocks while background updates/saves are being executed.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorList</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">createAsynchronously</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="o">...</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>createAsynchronously</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the closure that receives the created <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> instance</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC11monitorList20createAsynchronously__yyAA0G7MonitorCyxGc_AA4FromVyxGSayAA11FetchClause_pGtAA13DynamicObjectRzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorList(createAsynchronously:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC11monitorList20createAsynchronously__yyAA0G7MonitorCyxGc_AA4FromVyxGSayAA11FetchClause_pGtAA13DynamicObjectRzlF">monitorList(createAsynchronously:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Asynchronously creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified fetch clauses. Multiple <code><a href="../Protocols/ListObserver.html">ListObserver</a></code>s may then register themselves to be notified when changes are made to the list. Since <code>NSFetchedResultsController</code> greedily locks the persistent store on initial fetch, you may prefer this method instead of the synchronous counterpart to avoid deadlocks while background updates/saves are being executed.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorList</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">createAsynchronously</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>createAsynchronously</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the closure that receives the created <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> instance</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedListyAA0H7MonitorCyxGAA4FromVyxG_AA9SectionByVyxGAA11FetchClause_pdtAA13DynamicObjectRzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorSectionedList(_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedListyAA0H7MonitorCyxGAA4FromVyxG_AA9SectionByVyxGAA11FetchClause_pdtAA13DynamicObjectRzlF">monitorSectionedList(_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a sectioned list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified fetch clauses. Multiple <code><a href="../Protocols/ListObserver.html">ListObserver</a></code>s may then register themselves to be notified when changes are made to the list.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorSectionedList</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">sectionBy</span><span class="p">:</span> <span class="kt"><a href="../Structs/SectionBy.html">SectionBy</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">D</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/DynamicObject.html">DynamicObject</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sectionBy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/SectionBy.html">SectionBy</a></code> clause indicating the keyPath for the attribute to use when sorting the list into sections.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> instance that monitors changes to the list</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedListyAA0H7MonitorCyxGAA4FromVyxG_AA9SectionByVyxGSayAA11FetchClause_pGtAA13DynamicObjectRzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorSectionedList(_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedListyAA0H7MonitorCyxGAA4FromVyxG_AA9SectionByVyxGSayAA11FetchClause_pGtAA13DynamicObjectRzlF">monitorSectionedList(_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a sectioned list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified fetch clauses. Multiple <code><a href="../Protocols/ListObserver.html">ListObserver</a></code>s may then register themselves to be notified when changes are made to the list.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorSectionedList</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">sectionBy</span><span class="p">:</span> <span class="kt"><a href="../Structs/SectionBy.html">SectionBy</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">D</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/DynamicObject.html">DynamicObject</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sectionBy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/SectionBy.html">SectionBy</a></code> clause indicating the keyPath for the attribute to use when sorting the list into sections.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> instance that monitors changes to the list</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedListyAA0H7MonitorCy10ObjectTypeQzGxAA07Sectioni7BuilderK0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorSectionedList(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedListyAA0H7MonitorCy10ObjectTypeQzGxAA07Sectioni7BuilderK0RzlF">monitorSectionedList(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a sectioned list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified <code><a href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a></code> built from a chain of clauses.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">monitor</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="nf">monitorSectionedList</span><span class="p">(</span>
+    <span class="kt">From</span><span class="o">&lt;</span><span class="kt">MyPersonEntity</span><span class="o">&gt;</span><span class="p">()</span>
+        <span class="o">.</span><span class="nf">sectionBy</span><span class="p">(\</span><span class="o">.</span><span class="n">age</span><span class="p">,</span> <span class="p">{</span> <span class="s">"</span><span class="se">\(</span><span class="nv">$0</span><span class="o">!</span><span class="se">)</span><span class="s"> years old"</span> <span class="p">})</span>
+        <span class="o">.</span><span class="nf">where</span><span class="p">(\</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;</span> <span class="mi">18</span><span class="p">)</span>
+        <span class="o">.</span><span class="nf">orderBy</span><span class="p">(</span><span class="o">.</span><span class="nf">ascending</span><span class="p">(\</span><span class="o">.</span><span class="n">age</span><span class="p">))</span>
+<span class="p">)</span>
+</code></pre>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorSectionedList</span><span class="o">&lt;</span><span class="kt">B</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">clauseChain</span><span class="p">:</span> <span class="kt">B</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">B</span><span class="o">.</span><span class="kt">ObjectType</span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">B</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clauseChain</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a></code> built from a chain of clauses</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified <code><a href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a></code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedList20createAsynchronously___yyAA0H7MonitorCyxGc_AA4FromVyxGAA9SectionByVyxGAA11FetchClause_pdtAA13DynamicObjectRzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorSectionedList(createAsynchronously:_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedList20createAsynchronously___yyAA0H7MonitorCyxGc_AA4FromVyxGAA9SectionByVyxGAA11FetchClause_pdtAA13DynamicObjectRzlF">monitorSectionedList(createAsynchronously:_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Asynchronously creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a sectioned list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified fetch clauses. Multiple <code><a href="../Protocols/ListObserver.html">ListObserver</a></code>s may then register themselves to be notified when changes are made to the list. Since <code>NSFetchedResultsController</code> greedily locks the persistent store on initial fetch, you may prefer this method instead of the synchronous counterpart to avoid deadlocks while background updates/saves are being executed.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorSectionedList</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">createAsynchronously</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">sectionBy</span><span class="p">:</span> <span class="kt"><a href="../Structs/SectionBy.html">SectionBy</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="o">...</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>createAsynchronously</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the closure that receives the created <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> instance</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sectionBy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/SectionBy.html">SectionBy</a></code> clause indicating the keyPath for the attribute to use when sorting the list into sections.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedList20createAsynchronously___yyAA0H7MonitorCyxGc_AA4FromVyxGAA9SectionByVyxGSayAA11FetchClause_pGtAA13DynamicObjectRzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorSectionedList(createAsynchronously:_:_:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedList20createAsynchronously___yyAA0H7MonitorCyxGc_AA4FromVyxGAA9SectionByVyxGSayAA11FetchClause_pGtAA13DynamicObjectRzlF">monitorSectionedList(createAsynchronously:_:_:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Asynchronously creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a sectioned list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified fetch clauses. Multiple <code><a href="../Protocols/ListObserver.html">ListObserver</a></code>s may then register themselves to be notified when changes are made to the list. Since <code>NSFetchedResultsController</code> greedily locks the persistent store on initial fetch, you may prefer this method instead of the synchronous counterpart to avoid deadlocks while background updates/saves are being executed.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorSectionedList</span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">createAsynchronously</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">from</span><span class="p">:</span> <span class="kt"><a href="../Structs/From.html">From</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">sectionBy</span><span class="p">:</span> <span class="kt"><a href="../Structs/SectionBy.html">SectionBy</a></span><span class="o">&lt;</span><span class="kt">D</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">_</span> <span class="nv">fetchClauses</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>createAsynchronously</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the closure that receives the created <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> instance</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>from</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/From.html">From</a></code> clause indicating the entity type</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sectionBy</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Structs/SectionBy.html">SectionBy</a></code> clause indicating the keyPath for the attribute to use when sorting the list into sections.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>fetchClauses</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a series of <code><a href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a></code> instances for fetching the object list. Accepts <code><a href="../Structs/Where.html">Where</a></code>, <code><a href="../Structs/OrderBy.html">OrderBy</a></code>, and <code><a href="../Structs/Tweak.html">Tweak</a></code> clauses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedList20createAsynchronously_yyAA0H7MonitorCy10ObjectTypeQzGc_xtAA07Sectionk7BuilderM0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/monitorSectionedList(createAsynchronously:_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore21UnsafeDataTransactionC20monitorSectionedList20createAsynchronously_yyAA0H7MonitorCy10ObjectTypeQzGc_xtAA07Sectionk7BuilderM0RzlF">monitorSectionedList(createAsynchronously:_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Asynchronously creates a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a sectioned list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified <code><a href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a></code> built from a chain of clauses.</p>
+<pre class="highlight swift"><code><span class="n">transaction</span><span class="o">.</span><span class="nf">monitorSectionedList</span><span class="p">(</span>
+    <span class="p">{</span> <span class="p">(</span><span class="n">monitor</span><span class="p">)</span> <span class="k">in</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">=</span> <span class="n">monitor</span>
+    <span class="p">},</span>
+    <span class="kt">From</span><span class="o">&lt;</span><span class="kt">MyPersonEntity</span><span class="o">&gt;</span><span class="p">()</span>
+        <span class="o">.</span><span class="nf">sectionBy</span><span class="p">(\</span><span class="o">.</span><span class="n">age</span><span class="p">,</span> <span class="p">{</span> <span class="s">"</span><span class="se">\(</span><span class="nv">$0</span><span class="o">!</span><span class="se">)</span><span class="s"> years old"</span> <span class="p">})</span>
+        <span class="o">.</span><span class="nf">where</span><span class="p">(\</span><span class="o">.</span><span class="n">age</span> <span class="o">&gt;</span> <span class="mi">18</span><span class="p">)</span>
+        <span class="o">.</span><span class="nf">orderBy</span><span class="p">(</span><span class="o">.</span><span class="nf">ascending</span><span class="p">(\</span><span class="o">.</span><span class="n">age</span><span class="p">))</span>
+<span class="p">)</span>
+</code></pre>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">monitorSectionedList</span><span class="o">&lt;</span><span class="kt">B</span><span class="p">:</span> <span class="kt"><a href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a></span><span class="o">&gt;</span><span class="p">(</span><span class="nv">createAsynchronously</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/ListMonitor.html">ListMonitor</a></span><span class="o">&lt;</span><span class="kt">B</span><span class="o">.</span><span class="kt">ObjectType</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">_</span> <span class="nv">clauseChain</span><span class="p">:</span> <span class="kt">B</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clauseChain</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a <code><a href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a></code> built from a chain of clauses</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>a <code><a href="../Classes/ListMonitor.html">ListMonitor</a></code> for a list of <code><a href="../Protocols/DynamicObject.html">DynamicObject</a></code>s that satisfy the specified <code><a href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a></code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2018 <a class="link" href="https://github.com/JohnEstropia" target="_blank" rel="external">John Estropia</a>. All rights reserved. (Last updated: 2018-12-19)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

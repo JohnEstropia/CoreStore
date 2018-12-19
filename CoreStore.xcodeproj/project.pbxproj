@@ -787,6 +787,7 @@
 		B5220E071D0C5F8D009BC71E /* ObjectObserverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectObserverTests.swift; sourceTree = "<group>"; };
 		B5220E0B1D0D0D19009BC71E /* ImportTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportTests.swift; sourceTree = "<group>"; };
 		B5220E0F1D0DA6AB009BC71E /* ListObserverTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListObserverTests.swift; sourceTree = "<group>"; };
+		B524E78721CA20AC00BEB794 /* .jazzy.yaml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .jazzy.yaml; sourceTree = SOURCE_ROOT; };
 		B525576B1CFAF18F00E51965 /* IntoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntoTests.swift; sourceTree = "<group>"; };
 		B525576F1D02561A00E51965 /* SelectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectTests.swift; sourceTree = "<group>"; };
 		B52557731D02791400E51965 /* WhereTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhereTests.swift; sourceTree = "<group>"; };
@@ -1089,6 +1090,7 @@
 				B5BDC91A1C202269008147CD /* Cartfile */,
 				B5D2D5A91F7558CB00A4DE67 /* .cocoapods.yml */,
 				B5BDC9271C2024F2008147CD /* .travis.yml */,
+				B524E78721CA20AC00BEB794 /* .jazzy.yaml */,
 				B5AD60CD1C90141E00F2B2E8 /* Package.swift */,
 			);
 			name = "Supporting Files";

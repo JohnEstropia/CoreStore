@@ -64,7 +64,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
         - [Starting migrations](#starting-migrations)
         - [Progressive migrations](#progressive-migrations)
         - [Forecasting migrations](#forecasting-migrations)
-        - [Custom migratoins](#custom-migrations)
+        - [Custom migrations](#custom-migrations)
     - [Saving and processing transactions](#saving-and-processing-transactions)
         - [Transaction types](#transaction-types)
             - [Asynchronous transactions](#asynchronous-transactions)

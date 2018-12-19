@@ -7,3 +7,4 @@ CoreStore.xcworkspace/xcuserdata
 .DS_Store
 DerivedData
 *.orig
+build

@@ -1,0 +1,1748 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/AsynchronousDataTransaction.swift",
+      "line": 220,
+      "symbol": "AsynchronousDataTransaction.commit(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/AsynchronousDataTransaction.swift",
+      "line": 245,
+      "symbol": "AsynchronousDataTransaction.beginSynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/BaseDataTransaction.swift",
+      "line": 450,
+      "symbol": "BaseDataTransaction.insertedObjects()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/BaseDataTransaction.swift",
+      "line": 464,
+      "symbol": "BaseDataTransaction.updatedObjects()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/BaseDataTransaction.swift",
+      "line": 478,
+      "symbol": "BaseDataTransaction.deletedObjects()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSAsynchronousDataTransaction.swift",
+      "line": 73,
+      "symbol": "CSAsynchronousDataTransaction.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSAsynchronousDataTransaction.swift",
+      "line": 155,
+      "symbol": "CSAsynchronousDataTransaction.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSAsynchronousDataTransaction.swift",
+      "line": 165,
+      "symbol": "CSAsynchronousDataTransaction.commitWithCompletion(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSAsynchronousDataTransaction.swift",
+      "line": 184,
+      "symbol": "CSAsynchronousDataTransaction.beginSynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSBaseDataTransaction.swift",
+      "line": 230,
+      "symbol": "CSBaseDataTransaction.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSBaseDataTransaction.swift",
+      "line": 235,
+      "symbol": "CSBaseDataTransaction.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSBaseDataTransaction.swift",
+      "line": 260,
+      "symbol": "CSBaseDataTransaction.insertedObjects()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSBaseDataTransaction.swift",
+      "line": 267,
+      "symbol": "CSBaseDataTransaction.updatedObjects()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSBaseDataTransaction.swift",
+      "line": 274,
+      "symbol": "CSBaseDataTransaction.deletedObjects()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSClauseTypes.swift",
+      "line": 41,
+      "symbol": "CSFetchClause.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSClauseTypes.swift",
+      "line": 56,
+      "symbol": "CSQueryClause.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSClauseTypes.swift",
+      "line": 71,
+      "symbol": "CSDeleteClause.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSCoreStore+Setup.swift",
+      "line": 134,
+      "symbol": "CSCoreStore.entityClassesByName",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSCoreStore+Setup.swift",
+      "line": 141,
+      "symbol": "CSCoreStore.entityClassWithName(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSCoreStore+Transaction.swift",
+      "line": 101,
+      "symbol": "CSCoreStore.beginSynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSDataStack+Transaction.swift",
+      "line": 141,
+      "symbol": "CSDataStack.beginSynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSDataStack.swift",
+      "line": 178,
+      "symbol": "CSDataStack.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSDataStack.swift",
+      "line": 183,
+      "symbol": "CSDataStack.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSDataStack.swift",
+      "line": 192,
+      "symbol": "CSDataStack.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSDataStack.swift",
+      "line": 213,
+      "symbol": "CSDataStack.init(modelName:bundle:versionChain:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSDataStack.swift",
+      "line": 226,
+      "symbol": "CSDataStack.init(model:versionChain:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSDataStack.swift",
+      "line": 238,
+      "symbol": "CSDataStack.init(model:versionTree:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSDataStack.swift",
+      "line": 250,
+      "symbol": "CSDataStack.entityClassesByName",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSDataStack.swift",
+      "line": 257,
+      "symbol": "CSDataStack.entityClassWithName(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSError.swift",
+      "line": 51,
+      "symbol": "CSError.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSError.swift",
+      "line": 56,
+      "symbol": "CSError.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSError.swift",
+      "line": 65,
+      "symbol": "CSError.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSError.swift",
+      "line": 93,
+      "symbol": "CSError.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSFrom.swift",
+      "line": 138,
+      "symbol": "CSFrom.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSFrom.swift",
+      "line": 146,
+      "symbol": "CSFrom.bridgeToSwift",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSFrom.swift",
+      "line": 148,
+      "symbol": "CSFrom.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSFrom.swift",
+      "line": 162,
+      "symbol": "From.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSGroupBy.swift",
+      "line": 74,
+      "symbol": "CSGroupBy.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSGroupBy.swift",
+      "line": 79,
+      "symbol": "CSGroupBy.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSGroupBy.swift",
+      "line": 88,
+      "symbol": "CSGroupBy.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSGroupBy.swift",
+      "line": 97,
+      "symbol": "CSGroupBy.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSGroupBy.swift",
+      "line": 105,
+      "symbol": "CSGroupBy.bridgeToSwift",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSGroupBy.swift",
+      "line": 107,
+      "symbol": "CSGroupBy.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSGroupBy.swift",
+      "line": 121,
+      "symbol": "GroupBy.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSInMemoryStore.swift",
+      "line": 90,
+      "symbol": "CSInMemoryStore.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSInMemoryStore.swift",
+      "line": 95,
+      "symbol": "CSInMemoryStore.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSInMemoryStore.swift",
+      "line": 104,
+      "symbol": "CSInMemoryStore.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSInto.swift",
+      "line": 91,
+      "symbol": "CSInto.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSInto.swift",
+      "line": 96,
+      "symbol": "CSInto.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSInto.swift",
+      "line": 105,
+      "symbol": "CSInto.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSInto.swift",
+      "line": 113,
+      "symbol": "CSInto.bridgeToSwift",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSInto.swift",
+      "line": 115,
+      "symbol": "CSInto.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSInto.swift",
+      "line": 129,
+      "symbol": "Into.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSListMonitor.swift",
+      "line": 512,
+      "symbol": "CSListMonitor.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSListMonitor.swift",
+      "line": 517,
+      "symbol": "CSListMonitor.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSListMonitor.swift",
+      "line": 526,
+      "symbol": "CSListMonitor.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSListMonitor.swift",
+      "line": 535,
+      "symbol": "CSListMonitor.bridgeToSwift",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSListMonitor.swift",
+      "line": 538,
+      "symbol": "CSListMonitor.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSListMonitor.swift",
+      "line": 553,
+      "symbol": "ListMonitor.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSMigrationResult.swift",
+      "line": 142,
+      "symbol": "CSMigrationResult.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSMigrationResult.swift",
+      "line": 147,
+      "symbol": "CSMigrationResult.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSMigrationResult.swift",
+      "line": 156,
+      "symbol": "CSMigrationResult.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSMigrationType.swift",
+      "line": 88,
+      "symbol": "CSMigrationType.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSMigrationType.swift",
+      "line": 93,
+      "symbol": "CSMigrationType.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSMigrationType.swift",
+      "line": 102,
+      "symbol": "CSMigrationType.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSObjectMonitor.swift",
+      "line": 104,
+      "symbol": "CSObjectMonitor.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSObjectMonitor.swift",
+      "line": 111,
+      "symbol": "CSObjectMonitor.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSObjectMonitor.swift",
+      "line": 120,
+      "symbol": "CSObjectMonitor.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSObjectMonitor.swift",
+      "line": 129,
+      "symbol": "CSObjectMonitor.bridgeToSwift",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSObjectMonitor.swift",
+      "line": 132,
+      "symbol": "CSObjectMonitor.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSObjectMonitor.swift",
+      "line": 147,
+      "symbol": "ObjectMonitor.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSOrderBy.swift",
+      "line": 82,
+      "symbol": "CSOrderBy.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSOrderBy.swift",
+      "line": 87,
+      "symbol": "CSOrderBy.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSOrderBy.swift",
+      "line": 96,
+      "symbol": "CSOrderBy.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSOrderBy.swift",
+      "line": 105,
+      "symbol": "CSOrderBy.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSOrderBy.swift",
+      "line": 113,
+      "symbol": "CSOrderBy.bridgeToSwift",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSOrderBy.swift",
+      "line": 115,
+      "symbol": "CSOrderBy.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSOrderBy.swift",
+      "line": 129,
+      "symbol": "OrderBy.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSQliteStore.swift",
+      "line": 165,
+      "symbol": "CSSQLiteStore.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSQliteStore.swift",
+      "line": 170,
+      "symbol": "CSSQLiteStore.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSQliteStore.swift",
+      "line": 179,
+      "symbol": "CSSQLiteStore.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSaveResult.swift",
+      "line": 34,
+      "symbol": "CSSaveResult",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSectionBy.swift",
+      "line": 69,
+      "symbol": "CSSectionBy.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSectionBy.swift",
+      "line": 77,
+      "symbol": "CSSectionBy.bridgeToSwift",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSectionBy.swift",
+      "line": 79,
+      "symbol": "CSSectionBy.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSectionBy.swift",
+      "line": 94,
+      "symbol": "SectionBy.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 161,
+      "symbol": "CSSelectTerm.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 166,
+      "symbol": "CSSelectTerm.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 178,
+      "symbol": "CSSelectTerm.bridgeToSwift",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 180,
+      "symbol": "CSSelectTerm.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 194,
+      "symbol": "SelectTerm.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 362,
+      "symbol": "CSSelect.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 368,
+      "symbol": "CSSelect.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 378,
+      "symbol": "CSSelect.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 386,
+      "symbol": "CSSelect.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 394,
+      "symbol": "CSSelect.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSelect.swift",
+      "line": 509,
+      "symbol": "Select.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSetupResult.swift",
+      "line": 128,
+      "symbol": "CSSetupResult.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSetupResult.swift",
+      "line": 137,
+      "symbol": "CSSetupResult.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSetupResult.swift",
+      "line": 147,
+      "symbol": "CSSetupResult.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSetupResult.swift",
+      "line": 155,
+      "symbol": "CSSetupResult.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSetupResult.swift",
+      "line": 184,
+      "symbol": "SetupResult.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSynchronousDataTransaction.swift",
+      "line": 61,
+      "symbol": "CSSynchronousDataTransaction.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSynchronousDataTransaction.swift",
+      "line": 142,
+      "symbol": "CSSynchronousDataTransaction.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSynchronousDataTransaction.swift",
+      "line": 152,
+      "symbol": "CSSynchronousDataTransaction.commitAndWait()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSSynchronousDataTransaction.swift",
+      "line": 163,
+      "symbol": "CSSynchronousDataTransaction.beginSynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSTweak.swift",
+      "line": 64,
+      "symbol": "CSTweak.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSTweak.swift",
+      "line": 73,
+      "symbol": "CSTweak.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSUnsafeDataModelSchema.swift",
+      "line": 58,
+      "symbol": "CSUnsafeDataModelSchema.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSUnsafeDataModelSchema.swift",
+      "line": 63,
+      "symbol": "CSUnsafeDataModelSchema.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSUnsafeDataModelSchema.swift",
+      "line": 72,
+      "symbol": "CSUnsafeDataModelSchema.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSUnsafeDataTransaction.swift",
+      "line": 182,
+      "symbol": "CSUnsafeDataTransaction.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSUnsafeDataTransaction.swift",
+      "line": 202,
+      "symbol": "CSUnsafeDataTransaction.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSUnsafeDataTransaction.swift",
+      "line": 212,
+      "symbol": "CSUnsafeDataTransaction.internalContext",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSUnsafeDataTransaction.swift",
+      "line": 219,
+      "symbol": "CSUnsafeDataTransaction.commit(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSUnsafeDataTransaction.swift",
+      "line": 240,
+      "symbol": "CSUnsafeDataTransaction.commitAndWait()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSWhere.swift",
+      "line": 121,
+      "symbol": "CSWhere.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSWhere.swift",
+      "line": 126,
+      "symbol": "CSWhere.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSWhere.swift",
+      "line": 135,
+      "symbol": "CSWhere.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSWhere.swift",
+      "line": 144,
+      "symbol": "CSWhere.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSWhere.swift",
+      "line": 152,
+      "symbol": "CSWhere.bridgeToSwift",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSWhere.swift",
+      "line": 154,
+      "symbol": "CSWhere.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSWhere.swift",
+      "line": 168,
+      "symbol": "Where.bridgeToObjectiveC",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSXcodeDataModelSchema.swift",
+      "line": 58,
+      "symbol": "CSXcodeDataModelSchema.hash",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSXcodeDataModelSchema.swift",
+      "line": 63,
+      "symbol": "CSXcodeDataModelSchema.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CSXcodeDataModelSchema.swift",
+      "line": 72,
+      "symbol": "CSXcodeDataModelSchema.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 44,
+      "symbol": "AsynchronousDataTransaction.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 71,
+      "symbol": "CloudStorageOptions.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 115,
+      "symbol": "CoreStoreError.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 179,
+      "symbol": "CoreStoreObject.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 203,
+      "symbol": "CoreStoreSchema.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 229,
+      "symbol": "DataStack.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 257,
+      "symbol": "Entity.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 284,
+      "symbol": "From.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 313,
+      "symbol": "GroupBy.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 340,
+      "symbol": "ICloudStore.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 369,
+      "symbol": "InMemoryStore.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 394,
+      "symbol": "Into.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 420,
+      "symbol": "UnsafeDataModelSchema.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 461,
+      "symbol": "ListMonitor.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 487,
+      "symbol": "LocalStorageOptions.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 535,
+      "symbol": "MigrationChain.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 589,
+      "symbol": "MigrationResult.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 623,
+      "symbol": "MigrationType.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 655,
+      "symbol": "ObjectMonitor.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 680,
+      "symbol": "OrderBy.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 740,
+      "symbol": "SectionBy.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 764,
+      "symbol": "SchemaHistory.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 790,
+      "symbol": "Select.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 814,
+      "symbol": "SelectTerm.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 858,
+      "symbol": "SetupResult.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 892,
+      "symbol": "SQLiteStore.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 921,
+      "symbol": "SynchronousDataTransaction.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 948,
+      "symbol": "Tweak.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 969,
+      "symbol": "UnsafeDataTransaction.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 994,
+      "symbol": "Where.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1045,
+      "symbol": "VersionLock.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1066,
+      "symbol": "XcodeDataModelSchema.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1139,
+      "symbol": "CoreStoreDebugStringConvertible",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1149,
+      "symbol": "Array.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1172,
+      "symbol": "Dictionary.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1195,
+      "symbol": "NSAttributeDescription.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1220,
+      "symbol": "NSAttributeType.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1245,
+      "symbol": "Bundle.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1253,
+      "symbol": "NSDeleteRule.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1267,
+      "symbol": "NSEntityDescription.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1299,
+      "symbol": "NSError.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1312,
+      "symbol": "NSManagedObjectModel.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1324,
+      "symbol": "NSManagedObjectID.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1337,
+      "symbol": "NSMappingModel.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1345,
+      "symbol": "NSPredicate.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1353,
+      "symbol": "NSRelationshipDescription.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1381,
+      "symbol": "NSSortDescriptor.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1394,
+      "symbol": "NSString.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1402,
+      "symbol": "NSURL.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1410,
+      "symbol": "Optional.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1422,
+      "symbol": "Selector.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1430,
+      "symbol": "String.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+CustomDebugStringConvertible.swift",
+      "line": 1438,
+      "symbol": "URL.coreStoreDumpString",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+Setup.swift",
+      "line": 147,
+      "symbol": "CoreStore.entityTypesByName",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+Transaction.swift",
+      "line": 92,
+      "symbol": "CoreStore.beginAsynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStore+Transaction.swift",
+      "line": 99,
+      "symbol": "CoreStore.beginSynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreLogger.swift",
+      "line": 36,
+      "symbol": "LogLevel.trace",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreLogger.swift",
+      "line": 37,
+      "symbol": "LogLevel.notice",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreLogger.swift",
+      "line": 38,
+      "symbol": "LogLevel.warning",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreLogger.swift",
+      "line": 39,
+      "symbol": "LogLevel.fatal",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 268,
+      "symbol": "DynamicObject.keyPath(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 274,
+      "symbol": "DynamicObject.keyPath(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 280,
+      "symbol": "DynamicObject.keyPath(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 286,
+      "symbol": "DynamicObject.keyPath(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 292,
+      "symbol": "DynamicObject.keyPath(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 298,
+      "symbol": "DynamicObject.where(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 304,
+      "symbol": "DynamicObject.orderBy(ascending:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 310,
+      "symbol": "DynamicObject.orderBy(ascending:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 316,
+      "symbol": "DynamicObject.orderBy(descending:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/CoreStoreObject+Querying.swift",
+      "line": 322,
+      "symbol": "DynamicObject.orderBy(descending:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/DataStack+Transaction.swift",
+      "line": 172,
+      "symbol": "DataStack.beginAsynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/DataStack+Transaction.swift",
+      "line": 194,
+      "symbol": "DataStack.beginSynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/DataStack.swift",
+      "line": 622,
+      "symbol": "DataStack.init(modelName:bundle:migrationChain:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/DataStack.swift",
+      "line": 633,
+      "symbol": "DataStack.init(model:migrationChain:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/DataStack.swift",
+      "line": 651,
+      "symbol": "DataStack.entityTypesByName",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/DynamicKeyPath.swift",
+      "line": 31,
+      "symbol": "AnyDynamicKeyPath",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/From+Querying.swift",
+      "line": 524,
+      "symbol": "FetchChainBuilder.where(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/GroupBy.swift",
+      "line": 76,
+      "symbol": "GroupBy.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/ImportableUniqueObject.swift",
+      "line": 146,
+      "symbol": "ImportableUniqueObject.shouldInsert(from:in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/ImportableUniqueObject.swift",
+      "line": 156,
+      "symbol": "ImportableUniqueObject.didInsert(from:in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/ListMonitor.swift",
+      "line": 603,
+      "symbol": "ListMonitor.==(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/ListMonitor.swift",
+      "line": 608,
+      "symbol": "ListMonitor.~=(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/ListMonitor.swift",
+      "line": 613,
+      "symbol": "ListMonitor.~=(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/NSFetchedResultsController+ObjectiveC.swift",
+      "line": 37,
+      "symbol": "CSDataStack.createFetchedResultsControllerFrom(_:sectionBy:fetchClauses:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/NSFetchedResultsController+ObjectiveC.swift",
+      "line": 56,
+      "symbol": "CSUnsafeDataTransaction.createFetchedResultsControllerFrom(_:sectionBy:fetchClauses:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/NSManagedObject+Convenience.swift",
+      "line": 215,
+      "symbol": "NSManagedObject.accessValueForKVCKey(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/NSManagedObject+Convenience.swift",
+      "line": 228,
+      "symbol": "NSManagedObject.accessValueForKVCKey(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/NSManagedObject+Convenience.swift",
+      "line": 240,
+      "symbol": "NSManagedObject.setValue(_:forKVCKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/NSManagedObject+Convenience.swift",
+      "line": 253,
+      "symbol": "NSManagedObject.setValue(_:forKVCKey:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/NSManagedObjectContext+Querying.swift",
+      "line": 372,
+      "symbol": "NSManagedObjectContext.internalContext()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/ObjectMonitor.swift",
+      "line": 135,
+      "symbol": "ObjectMonitor.==(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/ObjectMonitor.swift",
+      "line": 140,
+      "symbol": "ObjectMonitor.~=(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/ObjectMonitor.swift",
+      "line": 145,
+      "symbol": "ObjectMonitor.~=(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/ObjectMonitor.swift",
+      "line": 153,
+      "symbol": "ObjectMonitor.hash(into:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/OrderBy.swift",
+      "line": 112,
+      "symbol": "OrderBy.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/QueryableAttributeType.swift",
+      "line": 403,
+      "symbol": "NSDecimalNumber.cs_rawAttributeType",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/QueryableAttributeType.swift",
+      "line": 652,
+      "symbol": "RawRepresentable.QueryableNativeType",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/QueryableAttributeType.swift",
+      "line": 654,
+      "symbol": "RawRepresentable.cs_rawAttributeType",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/QueryableAttributeType.swift",
+      "line": 660,
+      "symbol": "RawRepresentable.cs_fromQueryableNativeType(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/QueryableAttributeType.swift",
+      "line": 666,
+      "symbol": "RawRepresentable.cs_toQueryableNativeType()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Relationship.swift",
+      "line": 855,
+      "symbol": "RelationshipContainer.DeleteRule",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/SaveResult.swift",
+      "line": null,
+      "symbol": "SaveResult",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/SaveResult.swift",
+      "line": null,
+      "symbol": "SaveResult",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/SaveResult.swift",
+      "line": 32,
+      "symbol": "SaveResult",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/SchemaHistory.swift",
+      "line": 154,
+      "symbol": "SchemaHistory.Element",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Select.swift",
+      "line": 46,
+      "symbol": "SelectAttributesResultType.cs_fromQueryResultsNativeType(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Select.swift",
+      "line": 286,
+      "symbol": "SelectTerm._attribute(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Select.swift",
+      "line": 287,
+      "symbol": "SelectTerm._aggregate(function:keyPath:alias:nativeType:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Select.swift",
+      "line": 288,
+      "symbol": "SelectTerm._identity(alias:nativeType:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Select.swift",
+      "line": 901,
+      "symbol": "NSDictionary.cs_fromQueryResultsNativeType(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/SynchronousDataTransaction.swift",
+      "line": 172,
+      "symbol": "SynchronousDataTransaction.commitAndWait()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/SynchronousDataTransaction.swift",
+      "line": 190,
+      "symbol": "SynchronousDataTransaction.commit()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/SynchronousDataTransaction.swift",
+      "line": 209,
+      "symbol": "SynchronousDataTransaction.beginSynchronous(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Tweak.swift",
+      "line": 66,
+      "symbol": "Tweak.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/TypeErasedClauses.swift",
+      "line": 37,
+      "symbol": "FetchClause.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/TypeErasedClauses.swift",
+      "line": 48,
+      "symbol": "QueryClause.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/TypeErasedClauses.swift",
+      "line": 59,
+      "symbol": "DeleteClause.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/UnsafeDataTransaction+Observing.swift",
+      "line": 147,
+      "symbol": "UnsafeDataTransaction.monitorList(createAsynchronously:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Where.swift",
+      "line": 267,
+      "symbol": "Where.applyToFetchRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Where.swift",
+      "line": 545,
+      "symbol": "Where.&&(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Where.swift",
+      "line": 555,
+      "symbol": "Where.&&(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Where.swift",
+      "line": 565,
+      "symbol": "Where.||(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore/Sources/Where.swift",
+      "line": 575,
+      "symbol": "Where.||(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/JohnEstropia/Documents/XCodeProjects/CoreStore"
+}

@@ -3,8 +3,9 @@ Pod::Spec.new do |s|
     s.version = "5.4.0"
     s.swift_version = "4.2"
     s.license = "MIT"
-    s.summary = "Unleashing the real power of Core Data with the elegance and safety of Swift"
     s.homepage = "https://github.com/JohnEstropia/CoreStore"
+    s.documentation_url = "https://JohnEstropia.github.io/CoreStore"
+    s.summary = "Unleashing the real power of Core Data with the elegance and safety of Swift"
     s.author = { "John Rommel Estropia" => "rommel.estropia@gmail.com" }
     s.source = { :git => "https://github.com/JohnEstropia/CoreStore.git", :tag => s.version.to_s }
 

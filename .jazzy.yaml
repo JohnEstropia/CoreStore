@@ -1,0 +1,15 @@
+author: John Estropia
+author_url: https://github.com/JohnEstropia
+github_url: https://github.com/JohnEstropia/CoreStore
+module: CoreStore
+readme: README.md
+include: Sources/*
+output: docs
+theme: fullwidth
+clean: true
+skip_undocumented: true
+xcodebuild_arguments:
+- -sdk
+- iphonesimulator
+- -scheme
+- CoreStore iOS

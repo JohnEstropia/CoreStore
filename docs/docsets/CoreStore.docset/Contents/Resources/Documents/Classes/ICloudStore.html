@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ICloudStore Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Class/ICloudStore" class="dashAnchor"></a>
+
+    <a title="ICloudStore Class Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          CoreStore Docs
+        </a>
+         (88% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/JohnEstropia/CoreStore">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">CoreStore Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      ICloudStore Class Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/AsynchronousDataTransaction.html">AsynchronousDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/AsynchronousDataTransaction/Result.html">– Result</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/BaseDataTransaction.html">BaseDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSAsynchronousDataTransaction.html">CSAsynchronousDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSBaseDataTransaction.html">CSBaseDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSCoreStore.html">CSCoreStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSDataStack.html">CSDataStack</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSError.html">CSError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSFrom.html">CSFrom</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSGroupBy.html">CSGroupBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSInMemoryStore.html">CSInMemoryStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSInto.html">CSInto</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSListMonitor.html">CSListMonitor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSMigrationResult.html">CSMigrationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSMigrationType.html">CSMigrationType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSObjectMonitor.html">CSObjectMonitor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSOrderBy.html">CSOrderBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSQLiteStore.html">CSSQLiteStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSectionBy.html">CSSectionBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSelect.html">CSSelect</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSelectTerm.html">CSSelectTerm</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSetupResult.html">CSSetupResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSSynchronousDataTransaction.html">CSSynchronousDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSTweak.html">CSTweak</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSUnsafeDataModelSchema.html">CSUnsafeDataModelSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSUnsafeDataTransaction.html">CSUnsafeDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSWhere.html">CSWhere</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CSXcodeDataModelSchema.html">CSXcodeDataModelSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObject.html">CoreStoreObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectObjectDiff.html">CoreStoreObjectObjectDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectOrderedDiff.html">CoreStoreObjectOrderedDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectTransformableDiff.html">CoreStoreObjectTransformableDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectUnorderedDiff.html">CoreStoreObjectUnorderedDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreObjectValueDiff.html">CoreStoreObjectValueDiff</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CoreStoreSchema.html">CoreStoreSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CustomSchemaMappingProvider.html">CustomSchemaMappingProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CustomSchemaMappingProvider/CustomMapping.html">– CustomMapping</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CustomSchemaMappingProvider/UnsafeSourceObject.html">– UnsafeSourceObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/CustomSchemaMappingProvider/UnsafeDestinationObject.html">– UnsafeDestinationObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/DataStack.html">DataStack</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/DefaultLogger.html">DefaultLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/DynamicEntity.html">DynamicEntity</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Entity.html">Entity</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ICloudStore.html">ICloudStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/InMemoryStore.html">InMemoryStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/InferredSchemaMappingProvider.html">InferredSchemaMappingProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ListMonitor.html">ListMonitor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/ObjectMonitor.html">ObjectMonitor</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SQLiteStore.html">SQLiteStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SchemaHistory.html">SchemaHistory</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/SynchronousDataTransaction.html">SynchronousDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/UnsafeDataModelSchema.html">UnsafeDataModelSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/UnsafeDataTransaction.html">UnsafeDataTransaction</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/UserInfo.html">UserInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/XcodeDataModelSchema.html">XcodeDataModelSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/XcodeSchemaMappingProvider.html">XcodeSchemaMappingProvider</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Global Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Global Variables.html#/s:9CoreStore0aB11ErrorDomainSSvp">CoreStoreErrorDomain</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CSErrorCode.html">CSErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CSLocalStorageOptions.html">CSLocalStorageOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CoreStore.html">CoreStore</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CoreStoreError.html">CoreStoreError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CoreStoreErrorCode.html">CoreStoreErrorCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums.html#/s:9CoreStore8LogLevelO">LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MigrationResult.html">MigrationResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/MigrationType.html">MigrationType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/RelationshipContainer.html">RelationshipContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/RelationshipContainer/ToOne.html">– ToOne</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/RelationshipContainer/ToManyOrdered.html">– ToManyOrdered</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/RelationshipContainer/ToManyUnordered.html">– ToManyUnordered</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/SelectTerm.html">SelectTerm</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/SetupResult.html">SetupResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/TransformableContainer.html">TransformableContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/TransformableContainer/Required.html">– Required</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/TransformableContainer/Optional.html">– Optional</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ValueContainer.html">ValueContainer</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ValueContainer/Required.html">– Required</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ValueContainer/Optional.html">– Optional</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Bool.html">Bool</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/CGFloat.html">CGFloat</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Data.html">Data</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Date.html">Date</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Double.html">Double</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Float.html">Float</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int.html">Int</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int16.html">Int16</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int32.html">Int32</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int64.html">Int64</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Int8.html">Int8</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/KeyPath.html">KeyPath</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/KeyPathString.html">KeyPathString</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSData.html">NSData</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSDate.html">NSDate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSManagedObject.html">NSManagedObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSManagedObjectContext.html">NSManagedObjectContext</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSManagedObjectID.html">NSManagedObjectID</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSNull.html">NSNull</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSNumber.html">NSNumber</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSString.html">NSString</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSURL.html">NSURL</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/NSUUID.html">NSUUID</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Progress.html">Progress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/RawRepresentable.html">RawRepresentable</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Sequence.html">Sequence</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/URL.html">URL</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/UUID.html">UUID</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GG_q_SgtAA0aB6ObjectCRbzAPRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GG_q_tAA0aB6ObjectCRbzAORb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_G_So17NSManagedObjectIDCtSo0gH0CRbzALRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAJRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAKRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2neoiyAA5WhereVyxGs7KeyPathCyxq_SgG_So17NSManagedObjectIDCtSo0gH0CRbzAMRb_r0_lF">!=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1loiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1loiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_SLR_r0_lF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1loiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1loiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&lt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2leoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2leoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_SLR_r0_lF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2leoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2leoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&lt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GG_q_SgtAA0aB6ObjectCRbzAPRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GG_q_tAA0aB6ObjectCRbzAORb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_G_So17NSManagedObjectIDCtSo0gH0CRbzALRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAJRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAKRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2eeoiyAA5WhereVyxGs7KeyPathCyxq_SgG_So17NSManagedObjectIDCtSo0gH0CRbzAMRb_r0_lF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1goiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1goiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_SLR_r0_lF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1goiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore1goiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&gt;(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2geoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GG_q_SgtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_r0_lF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2geoiyAA5WhereVyxGs7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GG_q_tAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_SLR_r0_lF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2geoiyAA5WhereVyxGs7KeyPathCyxq_G_q_tSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2geoiyAA5WhereVyxGs7KeyPathCyxq_SgG_AHtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_SLR_r0_lF">&gt;=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxAA14ValueContainerO8OptionalCyx_q_GGtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxAA14ValueContainerO8RequiredCyx_q_GGtAA0aB6ObjectCRbzAA23ImportableAttributeTypeR_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxAA21RelationshipContainerO5ToOneCyx_q_GGtAA0aB6ObjectCRbzAORb_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_GtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_GtSo15NSManagedObjectCRbzAJRb_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_GtSo15NSManagedObjectCRbzAJRb_STR0_So0gH2IDC7ElementRt0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_SgGtSo15NSManagedObjectCRbzAA22QueryableAttributeTypeR_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_SgGtSo15NSManagedObjectCRbzAKRb_7ElementQy0_Rs_STR0_r1_lF">~=(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Functions.html#/s:9CoreStore2teoiyAA5WhereVyxGq0__s7KeyPathCyxq_SgGtSo15NSManagedObjectCRbzAKRb_STR0_So0gH2IDC7ElementRt0_r1_lF">~=(_:_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/AnyWhereClause.html">AnyWhereClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/c:@M@CoreStore@objc(pl)CSDeleteClause">CSDeleteClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSDynamicSchema.html">CSDynamicSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/c:@M@CoreStore@objc(pl)CSFetchClause">CSFetchClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSListObjectObserver.html">CSListObjectObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSListObserver.html">CSListObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSListSectionObserver.html">CSListSectionObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSLocalStorage.html">CSLocalStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSObjectObserver.html">CSObjectObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/c:@M@CoreStore@objc(pl)CSQueryClause">CSQueryClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CSStorageInterface.html">CSStorageInterface</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CloudStorage.html">CloudStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/c:@M@CoreStore@objc(pl)CoreDataNativeType">CoreDataNativeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CoreStoreLogger.html">CoreStoreLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CoreStoreObjectKeyValueObservation.html">CoreStoreObjectKeyValueObservation</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CoreStoreObjectiveCType.html">CoreStoreObjectiveCType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CoreStoreSwiftType.html">CoreStoreSwiftType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore12DeleteClauseP">DeleteClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/DynamicKeyPath.html">DynamicKeyPath</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/DynamicObject.html">DynamicObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/DynamicSchema.html">DynamicSchema</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/FetchChainableBuilderType.html">FetchChainableBuilderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore11FetchClauseP">FetchClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/FetchableSource.html">FetchableSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/GroupByClause.html">GroupByClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ICloudStoreObserver.html">ICloudStoreObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore23ImportableAttributeTypeP">ImportableAttributeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ImportableObject.html">ImportableObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ImportableUniqueObject.html">ImportableUniqueObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ListObjectObserver.html">ListObjectObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ListObserver.html">ListObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ListSectionObserver.html">ListSectionObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/LocalStorage.html">LocalStorage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/ObjectObserver.html">ObjectObserver</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/OrderByClause.html">OrderByClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/QueryChainableBuilderType.html">QueryChainableBuilderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore11QueryClauseP">QueryClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/QueryableAttributeType.html">QueryableAttributeType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/QueryableSource.html">QueryableSource</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SchemaMappingProvider.html">SchemaMappingProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SectionMonitorBuilderType.html">SectionMonitorBuilderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore26SelectAttributesResultTypeP">SelectAttributesResultType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/SelectClause.html">SelectClause</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:9CoreStore16SelectResultTypeP">SelectResultType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/StorageInterface.html">StorageInterface</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/WhereClauseType.html">WhereClauseType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CloudStorageOptions.html">CloudStorageOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/FetchChainBuilder.html">FetchChainBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/From.html">From</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/GroupBy.html">GroupBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Into.html">Into</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/LocalStorageOptions.html">LocalStorageOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/MigrationChain.html">MigrationChain</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/OrderBy.html">OrderBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/OrderBy/SortKey.html">– SortKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/PartialObject.html">PartialObject</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/QueryChainBuilder.html">QueryChainBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SectionBy.html">SectionBy</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/SectionMonitorChainBuilder.html">SectionMonitorChainBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Select.html">Select</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Tweak.html">Tweak</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/VersionLock.html">VersionLock</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Where.html">Where</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore9ClassNamea">ClassName</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore10EntityNamea">EntityName</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore13KeyPathStringa">KeyPathString</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore18ModelConfigurationa">ModelConfiguration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore12ModelVersiona">ModelVersion</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:9CoreStore22XcodeDataModelFileNamea">XcodeDataModelFileName</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>ICloudStore</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">@available(*, deprecated, message: "Please see the release notes and Core Data documentation.")</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">ICloudStore</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/CloudStorage.html">CloudStorage</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>A storage interface backed by an SQLite database managed by iCloud.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C21ubiquitousContentName0dE27TransactionLogsSubdirectory0D11ContainerID0D9PeerToken13configuration19cloudStorageOptionsACSgSS_S2SSgA2kA05CloudpQ0Vtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(ubiquitousContentName:ubiquitousContentTransactionLogsSubdirectory:ubiquitousContainerID:ubiquitousPeerToken:configuration:cloudStorageOptions:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C21ubiquitousContentName0dE27TransactionLogsSubdirectory0D11ContainerID0D9PeerToken13configuration19cloudStorageOptionsACSgSS_S2SSgA2kA05CloudpQ0Vtcfc">init(ubiquitousContentName:ubiquitousContentTransactionLogsSubdirectory:ubiquitousContainerID:ubiquitousPeerToken:configuration:cloudStorageOptions:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes an iCloud store interface from the given ubiquitous store information. Returns <code>nil</code> if the container could not be located or if iCloud storage is unavailable for the current user or device</p>
+<pre class="highlight swift"><code><span class="k">guard</span> <span class="k">let</span> <span class="nv">storage</span> <span class="o">=</span> <span class="kt">ICloudStore</span><span class="p">(</span>
+    <span class="nv">ubiquitousContentName</span><span class="p">:</span> <span class="s">"MyAppCloudData"</span><span class="p">,</span>
+    <span class="nv">ubiquitousContentTransactionLogsSubdirectory</span><span class="p">:</span> <span class="s">"logs/config1"</span><span class="p">,</span>
+    <span class="nv">ubiquitousContainerID</span><span class="p">:</span> <span class="s">"iCloud.com.mycompany.myapp.containername"</span><span class="p">,</span>
+    <span class="nv">ubiquitousPeerToken</span><span class="p">:</span> <span class="s">"9614d658014f4151a95d8048fb717cf0"</span><span class="p">,</span>
+    <span class="nv">configuration</span><span class="p">:</span> <span class="s">"Config1"</span><span class="p">,</span>
+    <span class="nv">cloudStorageOptions</span><span class="p">:</span> <span class="o">.</span><span class="n">recreateLocalStoreOnModelMismatch</span>
+<span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// iCloud is not available on the device</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+<span class="kt">CoreStore</span><span class="o">.</span><span class="nf">addStorage</span><span class="p">(</span>
+    <span class="n">storage</span><span class="p">,</span>
+    <span class="nv">completion</span><span class="p">:</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+        <span class="c1">// ...</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">ubiquitousContentName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">ubiquitousContentTransactionLogsSubdirectory</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">ubiquitousContainerID</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">ubiquitousPeerToken</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:9CoreStore18ModelConfigurationa">ModelConfiguration</a></span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">cloudStorageOptions</span><span class="p">:</span> <span class="kt"><a href="../Structs/CloudStorageOptions.html">CloudStorageOptions</a></span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ubiquitousContentName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the name of the store in iCloud. This is required and should not be empty, and should not contain periods (<code>.</code>).</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ubiquitousContentTransactionLogsSubdirectory</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a required relative path for the transaction logs</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ubiquitousContainerID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a container if your app has multiple ubiquity container identifiers in its entitlements</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ubiquitousPeerToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>a per-application salt to allow multiple apps on the same device to share a Core Data store integrated with iCloud</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>configuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>an optional configuration name from the model file. If not specified, defaults to <code>nil</code>, the <q>Default</q> configuration. Note that if you have multiple configurations, you will need to specify a different <code>ubiquitousContentName</code> explicitly for each of them.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>cloudStorageOptions</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>When the <code>ICloudStore</code> is passed to the <code><a href="../Classes/DataStack.html">DataStack</a></code>&lsquo;s <code>addStorage()</code> methods, tells the <code><a href="../Classes/DataStack.html">DataStack</a></code> how to setup the persistent store. Defaults to <code>.None</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C11addObserveryyxAA0cbE0RzlF"></a>
+                    <a name="//apple_ref/swift/Method/addObserver(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C11addObserveryyxAA0cbE0RzlF">addObserver(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Registers an <code><a href="../Protocols/ICloudStoreObserver.html">ICloudStoreObserver</a></code> to start receive notifications from the ubiquitous store</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">addObserver</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">observer</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/ICloudStoreObserver.html">ICloudStoreObserver</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>observer</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the observer to start sending ubiquitous notifications to</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C14removeObserveryyAA0cbE0_pF"></a>
+                    <a name="//apple_ref/swift/Method/removeObserver(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C14removeObserveryyAA0cbE0_pF">removeObserver(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Unregisters an <code><a href="../Protocols/ICloudStoreObserver.html">ICloudStoreObserver</a></code> to stop receiving notifications from the ubiquitous store</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeObserver</span><span class="p">(</span><span class="n">_</span> <span class="nv">observer</span><span class="p">:</span> <span class="kt"><a href="../Protocols/ICloudStoreObserver.html">ICloudStoreObserver</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>observer</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the observer to stop sending ubiquitous notifications to</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/StorageInterface"></a>
+                <a name="//apple_ref/swift/Section/StorageInterface" class="dashAnchor"></a>
+                <a href="#/StorageInterface">
+                  <h3 class="section-name">StorageInterface</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C9storeTypeSSvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/storeType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C9storeTypeSSvpZ">storeType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The string identifier for the <code>NSPersistentStore</code>&lsquo;s <code>type</code> property. For <code><a href="../Classes/SQLiteStore.html">SQLiteStore</a></code>s, this is always set to <code>NSSQLiteStoreType</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">storeType</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C13configurationSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/configuration" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C13configurationSSSgvp">configuration</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The configuration name in the model file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:9CoreStore18ModelConfigurationa">ModelConfiguration</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C12storeOptionsSDys11AnyHashableVypGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/storeOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C12storeOptionsSDys11AnyHashableVypGSgvp">storeOptions</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The options dictionary for the <code>NSPersistentStore</code>. For <code><a href="../Classes/SQLiteStore.html">SQLiteStore</a></code>s, this is always set to</p>
+<pre class="highlight swift"><code><span class="p">[</span><span class="kt">NSSQLitePragmasOption</span><span class="p">:</span> <span class="p">[</span><span class="s">"journal_mode"</span><span class="p">:</span> <span class="s">"WAL"</span><span class="p">]]</span>
+</code></pre>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">storeOptions</span><span class="p">:</span> <span class="p">[</span><span class="kt">AnyHashable</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C20cs_didAddToDataStackyyAA0hI0CF"></a>
+                    <a name="//apple_ref/swift/Method/cs_didAddToDataStack(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C20cs_didAddToDataStackyyAA0hI0CF">cs_didAddToDataStack(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Do not call directly. Used by the <code><a href="../Classes/DataStack.html">DataStack</a></code> internally.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">cs_didAddToDataStack</span><span class="p">(</span><span class="n">_</span> <span class="nv">dataStack</span><span class="p">:</span> <span class="kt"><a href="../Classes/DataStack.html">DataStack</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C25cs_didRemoveFromDataStackyyAA0hI0CF"></a>
+                    <a name="//apple_ref/swift/Method/cs_didRemoveFromDataStack(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C25cs_didRemoveFromDataStackyyAA0hI0CF">cs_didRemoveFromDataStack(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Do not call directly. Used by the <code><a href="../Classes/DataStack.html">DataStack</a></code> internally.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">cs_didRemoveFromDataStack</span><span class="p">(</span><span class="n">_</span> <span class="nv">dataStack</span><span class="p">:</span> <span class="kt"><a href="../Classes/DataStack.html">DataStack</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/CloudStorage"></a>
+                <a name="//apple_ref/swift/Section/CloudStorage" class="dashAnchor"></a>
+                <a href="#/CloudStorage">
+                  <h3 class="section-name">CloudStorage</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C12cacheFileURL10Foundation0F0Vvp"></a>
+                    <a name="//apple_ref/swift/Property/cacheFileURL" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C12cacheFileURL10Foundation0F0Vvp">cacheFileURL</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The <code>NSURL</code> that points to the ubiquity container file</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">cacheFileURL</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C19cloudStorageOptionsAA05CloudeF0Vvp"></a>
+                    <a name="//apple_ref/swift/Property/cloudStorageOptions" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C19cloudStorageOptionsAA05CloudeF0Vvp">cloudStorageOptions</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Options that tell the <code><a href="../Classes/DataStack.html">DataStack</a></code> how to setup the persistent store</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">cloudStorageOptions</span><span class="p">:</span> <span class="kt"><a href="../Structs/CloudStorageOptions.html">CloudStorageOptions</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C10dictionary10forOptionsSDys11AnyHashableVypGSgAA012CloudStorageF0V_tF"></a>
+                    <a name="//apple_ref/swift/Method/dictionary(forOptions:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C10dictionary10forOptionsSDys11AnyHashableVypGSgAA012CloudStorageF0V_tF">dictionary(forOptions:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The options dictionary for the specified <code><a href="../Structs/CloudStorageOptions.html">CloudStorageOptions</a></code></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">dictionary</span><span class="p">(</span><span class="n">forOptions</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Structs/CloudStorageOptions.html">CloudStorageOptions</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">AnyHashable</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:9CoreStore06ICloudB0C22cs_eraseStorageAndWait10soureModelySo015NSManagedObjectJ0C_tKF"></a>
+                    <a name="//apple_ref/swift/Method/cs_eraseStorageAndWait(soureModel:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:9CoreStore06ICloudB0C22cs_eraseStorageAndWait10soureModelySo015NSManagedObjectJ0C_tKF">cs_eraseStorageAndWait(soureModel:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called by the <code><a href="../Classes/DataStack.html">DataStack</a></code> to perform actual deletion of the store file from disk. Do not call directly! The <code>sourceModel</code> argument is a hint for the existing store&rsquo;s model version. For <code><a href="../Classes/SQLiteStore.html">SQLiteStore</a></code>, this converts the database&rsquo;s WAL journaling mode to DELETE before deleting the file.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">cs_eraseStorageAndWait</span><span class="p">(</span><span class="nv">soureModel</span><span class="p">:</span> <span class="kt">NSManagedObjectModel</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/CustomDebugStringConvertible"></a>
+                <a name="//apple_ref/swift/Section/CustomDebugStringConvertible" class="dashAnchor"></a>
+                <a href="#/CustomDebugStringConvertible">
+                  <h3 class="section-name">CustomDebugStringConvertible</h3>
+                </a>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:s28CustomDebugStringConvertibleP16debugDescriptionSSvp"></a>
+                    <a name="//apple_ref/swift/Property/debugDescription" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s28CustomDebugStringConvertibleP16debugDescriptionSSvp">debugDescription</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">debugDescription</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2018 <a class="link" href="https://github.com/JohnEstropia" target="_blank" rel="external">John Estropia</a>. All rights reserved. (Last updated: 2018-12-19)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>
