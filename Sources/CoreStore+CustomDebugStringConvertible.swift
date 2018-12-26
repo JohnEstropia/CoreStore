@@ -687,6 +687,30 @@ extension OrderBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible
 }
 
 
+// MARK: - PartialObject
+
+extension PartialObject: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+    
+    // MARK: CustomDebugStringConvertible
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    
+    // MARK: CoreStoreDebugStringConvertible
+    
+    public var coreStoreDumpString: String {
+        
+        return createFormattedString(
+            "(", ")",
+            ("rawObject", self.rawObject as Any)
+        )
+    }
+}
+
+
 // MARK: - SaveResult
 
 @available(*, deprecated, message: "Use the new DataStack.perform(asynchronous:...) and DataStack.perform(synchronous:...) family of APIs")
