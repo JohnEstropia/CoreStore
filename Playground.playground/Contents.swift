@@ -14,7 +14,6 @@ class Person: CoreStoreObject {
 }
 /// =======================
 
-
 /// Stack setup ===========
 let dataStack = DataStack(
     CoreStoreSchema(
@@ -28,7 +27,6 @@ let dataStack = DataStack(
 try dataStack.addStorageAndWait(SQLiteStore(fileName: "data.sqlite"))
 /// =======================
 
-
 /// Transactions ==========
 dataStack.perform(synchronous: { transaction in
 
@@ -41,7 +39,6 @@ dataStack.perform(synchronous: { transaction in
     person.pets.value.insert(animal)
 })
 /// =======================
-
 
 /// Accessing Objects =====
 let bird = dataStack.fetchOne(From<Animal>().where(\.species == "Sparrow"))!

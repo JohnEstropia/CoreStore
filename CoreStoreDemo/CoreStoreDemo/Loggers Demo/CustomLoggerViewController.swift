@@ -16,11 +16,6 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
     
     // MARK: NSObject
     
-    deinit {
-        
-        CoreStore.logger = DefaultLogger()
-    }
-    
     let dataStack = DataStack()
     
     // MARK: UIViewController
@@ -30,13 +25,14 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         super.viewDidLoad()
         
         try! self.dataStack.addStorageAndWait(SQLiteStore(fileName: "emptyStore.sqlite"))
-        CoreStore.logger = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
         super.viewDidAppear(animated)
-        
+
+        CoreStore.logger = self
+
         let alert = UIAlertController(
             title: "Logger Demo",
             message: "This demo shows how to plug-in any logging framework to CoreStore.\n\nThe view controller implements CoreStoreLogger and appends all logs to the text view.",
@@ -44,6 +40,13 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         )
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+
+        super.viewDidDisappear(animated)
+
+        CoreStore.logger = DefaultLogger()
     }
 
     
