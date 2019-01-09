@@ -288,6 +288,10 @@ public final class CoreStoreSchema: DynamicSchema {
                 switch child.value {
                     
                 case let attribute as AttributeProtocol:
+                    CoreStore.assert(
+                        !NSManagedObject.instancesRespond(to: Selector(attribute.keyPath)),
+                        "Attribute Property name \"\(String(reflecting: entity.type)).\(attribute.keyPath)\" is not allowed because it collides with \"\(String(reflecting: NSManagedObject.self)).\(attribute.keyPath)\""
+                    )
                     let description = NSAttributeDescription()
                     description.name = attribute.keyPath
                     description.attributeType = Swift.type(of: attribute).attributeType
@@ -302,6 +306,10 @@ public final class CoreStoreSchema: DynamicSchema {
                     customGetterSetterByKeyPaths[attribute.keyPath] = (attribute.getter, attribute.setter)
                     
                 case let relationship as RelationshipProtocol:
+                    CoreStore.assert(
+                        !NSManagedObject.instancesRespond(to: Selector(relationship.keyPath)),
+                        "Relationship Property name \"\(String(reflecting: entity.type)).\(relationship.keyPath)\" is not allowed because it collides with \"\(String(reflecting: NSManagedObject.self)).\(relationship.keyPath)\""
+                    )
                     let description = NSRelationshipDescription()
                     description.name = relationship.keyPath
                     description.minCount = relationship.minCount
