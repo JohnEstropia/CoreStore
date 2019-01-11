@@ -42,7 +42,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
     /**
      Creates a `XcodeDataModelSchema` for each of the models declared in the specified (.xcdatamodeld) model file.
      - parameter modelName: the name of the (.xcdatamodeld) model file. If not specified, the application name (CFBundleName) will be used if it exists, or "CoreData" if it the bundle name was not set.
-     - parameter bundle: an optional bundle to load models from. If not specified, the main bundle will be used.
+     - parameter bundle: an optional bundle to load .xcdatamodeld models from. If not specified, the main bundle will be used.
      - parameter migrationChain: the `MigrationChain` that indicates the sequence of model versions to be used as the order for progressive migrations. If not specified, will default to a non-migrating data stack.
      - returns: a tuple containing all `XcodeDataModelSchema` for the models declared in the specified .xcdatamodeld file, and the current model version string declared or inferred from the file.
      */
