@@ -82,9 +82,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    public static func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> D? {
+    public static func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> D? {
         
-        return self.defaultStack.fetchOne(from, fetchClauses)
+        return try self.defaultStack.fetchOne(from, fetchClauses)
     }
     
     /**
@@ -94,9 +94,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    public static func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> D? {
+    public static func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D? {
         
-        return self.defaultStack.fetchOne(from, fetchClauses)
+        return try self.defaultStack.fetchOne(from, fetchClauses)
     }
     
     /**
@@ -111,9 +111,9 @@ public extension CoreStore {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType`
      */
-    public static func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType? {
+    public static func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> B.ObjectType? {
         
-        return self.defaultStack.fetchOne(clauseChain)
+        return try self.defaultStack.fetchOne(clauseChain)
     }
     
     /**
@@ -123,9 +123,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    public static func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> [D]? {
+    public static func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [D] {
         
-        return self.defaultStack.fetchAll(from, fetchClauses)
+        return try self.defaultStack.fetchAll(from, fetchClauses)
     }
     
     /**
@@ -135,9 +135,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    public static func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [D]? {
+    public static func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D] {
         
-        return self.defaultStack.fetchAll(from, fetchClauses)
+        return try self.defaultStack.fetchAll(from, fetchClauses)
     }
     
     /**
@@ -152,9 +152,9 @@ public extension CoreStore {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType`
      */
-    public static func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]? {
+    public static func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [B.ObjectType] {
         
-        return self.defaultStack.fetchAll(clauseChain)
+        return try self.defaultStack.fetchAll(clauseChain)
     }
     
     /**
@@ -164,9 +164,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public static func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Int? {
+    public static func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> Int {
         
-        return self.defaultStack.fetchCount(from, fetchClauses)
+        return try self.defaultStack.fetchCount(from, fetchClauses)
     }
     
     /**
@@ -176,9 +176,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public static func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Int? {
+    public static func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int {
         
-        return self.defaultStack.fetchCount(from, fetchClauses)
+        return try self.defaultStack.fetchCount(from, fetchClauses)
     }
     
     /**
@@ -193,9 +193,9 @@ public extension CoreStore {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the number `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
      */
-    public static func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int? {
+    public static func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> Int {
         
-        return self.defaultStack.fetchCount(clauseChain)
+        return try self.defaultStack.fetchCount(clauseChain)
     }
     
     /**

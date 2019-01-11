@@ -73,6 +73,11 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
      The transaction was cancelled by the user.
      */
     case userCancelled
+
+    /**
+     Attempted to perform a fetch but could not find any related persistent store.
+     */
+    case persistentStoreNotFound(entity: DynamicObject.Type)
     
     
     // MARK: CustomNSError
@@ -109,6 +114,9 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             
         case .userCancelled:
             return CoreStoreErrorCode.userCancelled.rawValue
+
+        case .persistentStoreNotFound:
+            return CoreStoreErrorCode.persistentStoreNotFound.rawValue
         }
     }
     
@@ -154,6 +162,11 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             
         case .userCancelled:
             return [:]
+
+        case .persistentStoreNotFound(let entity):
+            return [
+                "entity": entity
+            ]
         }
     }
     
@@ -195,6 +208,9 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
             
         case (.userCancelled, .userCancelled):
             return true
+
+        case (.persistentStoreNotFound(let entity1), .persistentStoreNotFound(let entity2)):
+            return entity1 == entity2
             
         default:
             return false
@@ -232,6 +248,9 @@ public enum CoreStoreError: Error, CustomNSError, Hashable {
 
         case .userError(let error):
             hasher.combine(error as NSError)
+
+        case .persistentStoreNotFound(let entity):
+            hasher.combine(ObjectIdentifier(entity))
 
         case .userCancelled:
             break
@@ -303,6 +322,11 @@ public enum CoreStoreErrorCode: Int {
      The transaction was cancelled by the user.
      */
     case userCancelled
+
+    /**
+     Attempted to perform a fetch but could not find any related persistent store.
+     */
+    case persistentStoreNotFound
 }
 
 

@@ -101,88 +101,76 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     }
     
     @nonobjc
-    public func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> D? {
+    public func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> D? {
         
-        return self.fetchOne(from, fetchClauses)
+        return try self.fetchOne(from, fetchClauses)
     }
     
     @nonobjc
-    public func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> D? {
+    public func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
+        try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .managedObjectResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.fetchOne(fetchRequest.dynamicCast()).flatMap(from.entityClass.cs_fromRaw)
+
+        return try self.fetchOne(fetchRequest.dynamicCast()).flatMap(from.entityClass.cs_fromRaw)
     }
     
     @nonobjc
-    public func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType? {
+    public func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> B.ObjectType? {
         
-        return self.fetchOne(clauseChain.from, clauseChain.fetchClauses)
+        return try self.fetchOne(clauseChain.from, clauseChain.fetchClauses)
     }
     
     @nonobjc
-    public func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> [D]? {
+    public func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [D] {
         
-        return self.fetchAll(from, fetchClauses)
+        return try self.fetchAll(from, fetchClauses)
     }
     
     @nonobjc
-    public func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [D]? {
+    public func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D] {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
+        try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
+
         let entityClass = from.entityClass
-        return self.fetchAll(fetchRequest.dynamicCast())?.map(entityClass.cs_fromRaw)
+        return try self.fetchAll(fetchRequest.dynamicCast())?.map(entityClass.cs_fromRaw)
     }
     
     @nonobjc
-    public func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]? {
+    public func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) throw -> [B.ObjectType] {
         
-        return self.fetchAll(clauseChain.from, clauseChain.fetchClauses)
+        return try self.fetchAll(clauseChain.from, clauseChain.fetchClauses)
     }
     
     @nonobjc
-    public func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Int? {
+    public func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> Int {
     
-        return self.fetchCount(from, fetchClauses)
+        return try self.fetchCount(from, fetchClauses)
     }
     
     @nonobjc
-    public func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Int? {
+    public func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
+        try from.applyToFetchRequest(fetchRequest, context: self)
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.fetchCount(fetchRequest.dynamicCast())
+
+        return try self.fetchCount(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    public func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int? {
+    public func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> Int {
         
-        return self.fetchCount(clauseChain.from, clauseChain.fetchClauses)
+        return try self.fetchCount(clauseChain.from, clauseChain.fetchClauses)
     }
     
     @nonobjc
@@ -207,8 +195,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
         }
         return self.fetchObjectID(fetchRequest.dynamicCast())
     }
-    
-    // TODO: docs
+
     @nonobjc
     public func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) -> NSManagedObjectID? {
         
@@ -225,7 +212,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     public func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.applyToFetchRequest(fetchRequest, context: self)
+        try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectIDResultType
@@ -237,8 +224,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
         }
         return self.fetchObjectIDs(fetchRequest.dynamicCast())
     }
-    
-    // TODO: docs
+
     @nonobjc
     public func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) -> [NSManagedObjectID]? {
         
@@ -383,7 +369,7 @@ internal extension NSManagedObjectContext {
     // MARK: Fetching
     
     @nonobjc
-    internal func fetchOne<D: NSManagedObject>(_ fetchRequest: NSFetchRequest<D>) -> D? {
+    internal func fetchOne<D: NSManagedObject>(_ fetchRequest: NSFetchRequest<D>) throws -> D? {
         
         var fetchResults: [D]?
         var fetchError: Error?
@@ -399,18 +385,19 @@ internal extension NSManagedObjectContext {
             }
         }
         if fetchResults == nil {
-            
+
+            let coreStoreError = CoreStoreError(fetchError)
             CoreStore.log(
-                CoreStoreError(fetchError),
+                coreStoreError,
                 "Failed executing fetch request."
             )
-            return nil
+            throw coreStoreError
         }
         return fetchResults?.first
     }
     
     @nonobjc
-    internal func fetchAll<D: NSManagedObject>(_ fetchRequest: NSFetchRequest<D>) -> [D]? {
+    internal func fetchAll<D: NSManagedObject>(_ fetchRequest: NSFetchRequest<D>) throws -> [D] {
         
         var fetchResults: [D]?
         var fetchError: Error?
@@ -426,18 +413,19 @@ internal extension NSManagedObjectContext {
             }
         }
         if fetchResults == nil {
-            
+
+            let coreStoreError = CoreStoreError(fetchError)
             CoreStore.log(
-                CoreStoreError(fetchError),
+                coreStoreError,
                 "Failed executing fetch request."
             )
-            return nil
+            throw coreStoreError
         }
         return fetchResults
     }
     
     @nonobjc
-    internal func fetchCount(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) -> Int? {
+    internal func fetchCount(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) throws -> Int {
         
         var count = 0
         var countError: Error?
@@ -453,12 +441,13 @@ internal extension NSManagedObjectContext {
             }
         }
         if count == NSNotFound {
-            
+
+            let coreStoreError = CoreStoreError(fetchError)
             CoreStore.log(
-                CoreStoreError(countError),
+                coreStoreError,
                 "Failed executing count request."
             )
-            return nil
+            throw coreStoreError
         }
         return count
     }

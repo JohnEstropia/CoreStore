@@ -138,13 +138,13 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    public func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> D? {
+    public func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> D? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.context.fetchOne(from, fetchClauses)
+        return try self.context.fetchOne(from, fetchClauses)
     }
     
     /**
@@ -154,13 +154,13 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    public func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> D? {
+    public func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.context.fetchOne(from, fetchClauses)
+        return try self.context.fetchOne(from, fetchClauses)
     }
     
     /**
@@ -175,13 +175,13 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType`
      */
-    public func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType? {
+    public func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> B.ObjectType? {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.context.fetchOne(clauseChain)
+        return try self.context.fetchOne(clauseChain)
     }
     
     /**
@@ -191,13 +191,13 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    public func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> [D]? {
+    public func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [D] {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.context.fetchAll(from, fetchClauses)
+        return try self.context.fetchAll(from, fetchClauses)
     }
     
     /**
@@ -207,13 +207,13 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    public func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [D]? {
+    public func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D] {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.context.fetchAll(from, fetchClauses)
+        return try self.context.fetchAll(from, fetchClauses)
     }
     
     /**
@@ -228,13 +228,13 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType`
      */
-    public func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]? {
+    public func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [B.ObjectType] {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.context.fetchAll(clauseChain)
+        return try self.context.fetchAll(clauseChain)
     }
     
     /**
@@ -244,13 +244,13 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Int? {
+    public func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> Int {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.context.fetchCount(from, fetchClauses)
+        return try self.context.fetchCount(from, fetchClauses)
     }
     
     /**
@@ -260,13 +260,13 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Int? {
+    public func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.context.fetchCount(from, fetchClauses)
+        return try self.context.fetchCount(from, fetchClauses)
     }
     
     /**
@@ -281,13 +281,13 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the number `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
      */
-    public func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int? {
+    public func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> Int {
         
         CoreStore.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.context.fetchCount(clauseChain)
+        return try self.context.fetchCount(clauseChain)
     }
     
     /**

@@ -541,7 +541,7 @@ public extension Sequence where Iterator.Element: WhereClauseType {
 
 public extension Where {
     
-    @available(*, deprecated: 4.0, renamed: "&&?")
+    @available(*, deprecated, renamed: "&&?")
     public static func && (left: Where<D>, right: Where<D>?) -> Where<D> {
         
         if let right = right {
@@ -551,7 +551,7 @@ public extension Where {
         return left
     }
     
-    @available(*, deprecated: 4.0, renamed: "&&?")
+    @available(*, deprecated, renamed: "&&?")
     public static func && (left: Where<D>?, right: Where<D>) -> Where<D> {
         
         if let left = left {
@@ -561,7 +561,7 @@ public extension Where {
         return right
     }
     
-    @available(*, deprecated: 4.0, renamed: "||?")
+    @available(*, deprecated, renamed: "||?")
     public static func || (left: Where<D>, right: Where<D>?) -> Where<D> {
         
         if let right = right {
@@ -571,7 +571,7 @@ public extension Where {
         return left
     }
     
-    @available(*, deprecated: 4.0, renamed: "||?")
+    @available(*, deprecated, renamed: "||?")
     public static func || (left: Where<D>?, right: Where<D>) -> Where<D> {
         
         if let left = left {

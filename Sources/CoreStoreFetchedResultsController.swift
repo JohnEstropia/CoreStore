@@ -58,7 +58,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         
         self.reapplyAffectedStores = { fetchRequest, context in
             
-            return from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
+            return try rom.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
         }
         
         super.init(
@@ -71,14 +71,8 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     
     @nonobjc
     internal func performFetchFromSpecifiedStores() throws {
-        
-        if !self.reapplyAffectedStores(self.fetchRequest, self.managedObjectContext) {
-            
-            CoreStore.log(
-                .warning,
-                message: "Attempted to perform a fetch on an \(cs_typeName(self)) but could not find any persistent store for the entity \(cs_typeName(self.fetchRequest.entityName))"
-            )
-        }
+
+        try self.reapplyAffectedStores(self.fetchRequest, self.managedObjectContext)
         try self.performFetch()
     }
     
@@ -97,5 +91,5 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     // MARK: Private
     
     @nonobjc
-    private let reapplyAffectedStores: (_ fetchRequest: NSFetchRequest<NSManagedObject>, _ context: NSManagedObjectContext) -> Bool
+    private let reapplyAffectedStores: (_ fetchRequest: NSFetchRequest<NSManagedObject>, _ context: NSManagedObjectContext) throws -> Bool
 }

@@ -34,85 +34,65 @@ internal extension NSManagedObjectContext {
     // MARK: Internal
     
     @nonobjc
-    internal func fetchOne(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObject? {
+    internal func fetchOne(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> NSManagedObject? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .managedObjectResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.fetchOne(fetchRequest.dynamicCast())
+
+        return try self.fetchOne(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func fetchAll<T: NSManagedObject>(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [T]? {
+    internal func fetchAll<T: NSManagedObject>(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> [T] {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.fetchAll(fetchRequest.dynamicCast())
+
+        return try self.fetchAll(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func fetchCount(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> Int? {
+    internal func fetchCount(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> Int {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.fetchCount(fetchRequest.dynamicCast())
+
+        return try self.fetchCount(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func fetchObjectID(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
+    internal func fetchObjectID(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> NSManagedObjectID? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .managedObjectIDResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.fetchObjectID(fetchRequest.dynamicCast())
+
+        return try self.fetchObjectID(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func fetchObjectIDs(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) -> [NSManagedObjectID]? {
+    internal func fetchObjectIDs(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> [NSManagedObjectID] {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectIDResultType
         fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.fetchObjectIDs(fetchRequest.dynamicCast())
+
+        return try self.fetchObjectIDs(fetchRequest.dynamicCast())
     }
     
     @nonobjc

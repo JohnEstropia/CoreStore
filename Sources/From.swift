@@ -139,29 +139,40 @@ public struct From<D: DynamicObject> {
         self.findPersistentStores = findPersistentStores
     }
     
-    internal func applyToFetchRequest<ResultType>(_ fetchRequest: NSFetchRequest<ResultType>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) -> Bool {
+    internal func applyToFetchRequest<U>(_ fetchRequest: NSFetchRequest<U>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) throws {
         
         fetchRequest.entity = context.parentStack!.entityDescription(for: EntityIdentifier(self.entityClass))!
         guard applyAffectedStores else {
             
-            return true
+            return
         }
-        if self.applyAffectedStoresForFetchedRequest(fetchRequest, context: context) {
-            
-            return true
+        do {
+
+            try self.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
         }
-        CoreStore.log(
-            .warning,
-            message: "Attempted to perform a fetch but could not find any persistent store for the entity \(cs_typeName(fetchRequest.entityName))"
-        )
-        return false
+        catch let error as CoreStoreError {
+
+            CoreStore.log(
+                error,
+                "Attempted to perform a fetch but could not find any persistent store for the entity \(cs_typeName(fetchRequest.entityName))"
+            )
+            throw error
+        }
+        catch {
+
+            throw error
+        }
     }
     
-    internal func applyAffectedStoresForFetchedRequest<U>(_ fetchRequest: NSFetchRequest<U>, context: NSManagedObjectContext) -> Bool {
+    internal func applyAffectedStoresForFetchedRequest<U>(_ fetchRequest: NSFetchRequest<U>, context: NSManagedObjectContext) throws {
         
         let stores = self.findPersistentStores(context)
         fetchRequest.affectedStores = stores
-        return stores?.isEmpty == false
+        if stores?.isEmpty == false {
+
+            return
+        }
+        throw CoreStoreError.persistentStoreNotFound(entity: self.entityClass)
     }
     
     

@@ -73,7 +73,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> D?
+    func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> D?
 
     /**
      Fetches the first `DynamicObject` instance that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -82,7 +82,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s
      */
-    func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> D?
+    func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D?
     
     /**
      Fetches the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType` built from a chain of clauses.
@@ -96,7 +96,7 @@ public protocol FetchableSource: class {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType`
      */
-    func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) -> B.ObjectType?
+    func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> B.ObjectType?
 
     /**
      Fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -105,7 +105,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> [D]?
+    func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [D]
 
     /**
      Fetches all `DynamicObject` instances that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -114,7 +114,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s
      */
-    func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [D]?
+    func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D]
     
     /**
      Fetches all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
@@ -128,7 +128,7 @@ public protocol FetchableSource: class {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType`
      */
-    func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) -> [B.ObjectType]?
+    func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [B.ObjectType]
 
     /**
      Fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -137,7 +137,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> Int?
+    func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> Int
 
     /**
      Fetches the number of `DynamicObject`s that satisfy the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
@@ -146,7 +146,7 @@ public protocol FetchableSource: class {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> Int?
+    func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int
     
     /**
      Fetches the number of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType` built from a chain of clauses.
@@ -160,7 +160,7 @@ public protocol FetchableSource: class {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the number `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
      */
-    func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) -> Int?
+    func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> Int
 
     /**
      Fetches the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
