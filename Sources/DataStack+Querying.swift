@@ -243,13 +243,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
-    public func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
+    public func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> NSManagedObjectID? {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.fetchObjectID(from, fetchClauses)
+        return try self.mainContext.fetchObjectID(from, fetchClauses)
     }
     
     /**
@@ -259,13 +259,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
-    public func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
+    public func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID? {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.fetchObjectID(from, fetchClauses)
+        return try self.mainContext.fetchObjectID(from, fetchClauses)
     }
     
     /**
@@ -280,13 +280,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType`
      */
-    public func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) -> NSManagedObjectID? {
+    public func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> NSManagedObjectID? {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.fetchObjectID(clauseChain)
+        return try self.mainContext.fetchObjectID(clauseChain)
     }
     
     /**
@@ -296,13 +296,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [NSManagedObjectID] {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.fetchObjectIDs(from, fetchClauses)
+        return try self.mainContext.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
@@ -312,13 +312,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID] {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.fetchObjectIDs(from, fetchClauses)
+        return try self.mainContext.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
@@ -333,13 +333,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
      */
-    public func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) -> [NSManagedObjectID]? {
+    public func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [NSManagedObjectID] {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.fetchObjectIDs(clauseChain)
+        return try self.mainContext.fetchObjectIDs(clauseChain)
     }
     
     
@@ -355,13 +355,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: QueryClause...) -> U? {
+    public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: QueryClause...) throws -> U? {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.queryValue(from, selectClause, queryClauses)
+        return try self.mainContext.queryValue(from, selectClause, queryClauses)
     }
     
     /**
@@ -374,13 +374,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) -> U? {
+    public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) throws -> U? {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.queryValue(from, selectClause, queryClauses)
+        return try self.mainContext.queryValue(from, selectClause, queryClauses)
     }
     
     /**
@@ -397,13 +397,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter clauseChain: a `QueryChainableBuilderType` indicating the property/aggregate to fetch and the series of queries for the request.
      - returns: the result of the the query as specified by the `QueryChainableBuilderType`
      */
-    public func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) -> B.ResultType? where B.ResultType: QueryableAttributeType {
+    public func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> B.ResultType? where B.ResultType: QueryableAttributeType {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.queryValue(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
+        return try self.mainContext.queryValue(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
     }
     
     /**
@@ -416,13 +416,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
+    public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: QueryClause...) throws -> [[String: Any]] {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.queryAttributes(from, selectClause, queryClauses)
+        return try self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }
     
     /**
@@ -435,13 +435,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
+    public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) throws -> [[String: Any]] {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.queryAttributes(from, selectClause, queryClauses)
+        return try self.mainContext.queryAttributes(from, selectClause, queryClauses)
     }
     
     /**
@@ -467,13 +467,13 @@ extension DataStack: FetchableSource, QueryableSource {
      - parameter clauseChain: a `QueryChainableBuilderType` indicating the properties to fetch and the series of queries for the request.
      - returns: the result of the the query as specified by the `QueryChainableBuilderType`
      */
-    public func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) -> [[String: Any]]? where B.ResultType == NSDictionary {
+    public func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> [[String: Any]] where B.ResultType == NSDictionary {
         
         CoreStore.assert(
             Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.mainContext.queryAttributes(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
+        return try self.mainContext.queryAttributes(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
     }
     
     

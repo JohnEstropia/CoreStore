@@ -93,7 +93,8 @@ public extension CSDataStack {
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.bridgeToSwift.mainContext.fetchOne(from, fetchClauses)
+        return (try? self.bridgeToSwift.mainContext.fetchOne(from, fetchClauses))?
+            .flatMap({ $0 })
     }
     
     /**
@@ -110,7 +111,8 @@ public extension CSDataStack {
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.bridgeToSwift.mainContext.fetchAll(from, fetchClauses)
+        return (try? self.bridgeToSwift.mainContext.fetchAll(from, fetchClauses))
+            .flatMap({ $0 })
     }
     
     /**
@@ -127,9 +129,8 @@ public extension CSDataStack {
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.bridgeToSwift.mainContext
-            .fetchCount(from, fetchClauses)
-            .flatMap { NSNumber(value: $0) }
+        return (try? self.bridgeToSwift.mainContext.fetchCount(from, fetchClauses))
+            .flatMap({ NSNumber(value: $0) })
     }
     
     /**
@@ -146,7 +147,8 @@ public extension CSDataStack {
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.bridgeToSwift.mainContext.fetchObjectID(from, fetchClauses)
+        return (try? self.bridgeToSwift.mainContext.fetchObjectID(from, fetchClauses))?
+            .flatMap({ $0 })
     }
     
     /**
@@ -163,7 +165,8 @@ public extension CSDataStack {
             Thread.isMainThread,
             "Attempted to fetch from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.bridgeToSwift.mainContext.fetchObjectIDs(from, fetchClauses)
+        return (try? self.bridgeToSwift.mainContext.fetchObjectIDs(from, fetchClauses))
+            .flatMap({ $0 })
     }
     
     /**
@@ -183,7 +186,8 @@ public extension CSDataStack {
             Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.bridgeToSwift.mainContext.queryValue(from, selectClause, queryClauses)
+        return (try? self.bridgeToSwift.mainContext.queryValue(from, selectClause, queryClauses))
+            .flatMap({ $0 })
     }
     
     /**
@@ -203,6 +207,7 @@ public extension CSDataStack {
             Thread.isMainThread,
             "Attempted to query from a \(cs_typeName(self)) outside the main thread."
         )
-        return self.bridgeToSwift.mainContext.queryAttributes(from, selectClause, queryClauses)
+        return (try? self.bridgeToSwift.mainContext.queryAttributes(from, selectClause, queryClauses))
+            .flatMap({ $0 })
     }
 }

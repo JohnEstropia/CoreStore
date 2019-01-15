@@ -25,7 +25,7 @@ private struct Static {
         _ = try? dataStack.perform(
             synchronous: { (transaction) in
                 
-                transaction.deleteAll(From<TimeZone>())
+                try transaction.deleteAll(From<TimeZone>())
                 
                 for name in NSTimeZone.knownTimeZoneNames {
                     
@@ -164,17 +164,17 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             title: "All Time Zones",
             fetch: { () -> [TimeZone] in
                 
-                return Static.timeZonesStack.fetchAll(
+                return try! Static.timeZonesStack.fetchAll(
                     From<TimeZone>()
                         .orderBy(.ascending(\.name))
-                )!
+                )
             }
         ),
         (
             title: "Time Zones in Asia",
             fetch: { () -> [TimeZone] in
                 
-                return Static.timeZonesStack.fetchAll(
+                return try! Static.timeZonesStack.fetchAll(
                     From<TimeZone>()
                         .where(
                             format: "%K BEGINSWITH[c] %@",
@@ -182,14 +182,14 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                             "Asia"
                         )
                         .orderBy(.ascending(\.secondsFromGMT))
-                )!
+                )
             }
         ),
         (
             title: "Time Zones in America and Europe",
             fetch: { () -> [TimeZone] in
                 
-                return Static.timeZonesStack.fetchAll(
+                return try! Static.timeZonesStack.fetchAll(
                     From<TimeZone>()
                         .where(
                             format: "%K BEGINSWITH[c] %@ OR %K BEGINSWITH[c] %@",
@@ -199,14 +199,14 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                             "Europe"
                         )
                         .orderBy(.ascending(\.secondsFromGMT))
-                )!
+                )
             }
         ),
         (
             title: "All Time Zones Except America",
             fetch: { () -> [TimeZone] in
                 
-                return Static.timeZonesStack.fetchAll(
+                return try! Static.timeZonesStack.fetchAll(
                     From<TimeZone>()
                         .where(
                             format: "%K BEGINSWITH[c] %@",
@@ -214,18 +214,18 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                             "America"
                         )
                         .orderBy(.ascending(\.secondsFromGMT))
-                    )!
+                    )
             }
         ),
         (
             title: "Time Zones with Summer Time",
             fetch: { () -> [TimeZone] in
                 
-                return Static.timeZonesStack.fetchAll(
+                return try! Static.timeZonesStack.fetchAll(
                     From<TimeZone>()
                         .where(\.hasDaylightSavingTime == true)
                         .orderBy(.ascending(\.name))
-                )!
+                )
             }
         )
     ]
@@ -235,28 +235,28 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
             title: "Number of Time Zones",
             query: { () -> Any in
                 
-                return Static.timeZonesStack.queryValue(
+                return try! Static.timeZonesStack.queryValue(
                     From<TimeZone>()
                         .select(NSNumber.self, .count(\.name))
-                )! as Any
+                )!
             }
         ),
         (
             title: "Abbreviation For Tokyo's Time Zone",
             query: { () -> Any in
                 
-                return Static.timeZonesStack.queryValue(
+                return try! Static.timeZonesStack.queryValue(
                     From<TimeZone>()
                         .select(String.self, .attribute(\.abbreviation))
                         .where(format: "%K ENDSWITH[c] %@", #keyPath(TimeZone.name), "Tokyo")
-                )! as Any
+                )!
             }
         ),
         (
             title: "All Abbreviations",
             query: { () -> Any in
                 
-                return Static.timeZonesStack.queryAttributes(
+                return try! Static.timeZonesStack.queryAttributes(
                     From<TimeZone>()
                         .select(
                             NSDictionary.self,
@@ -264,14 +264,14 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                             .attribute(\.abbreviation)
                         )
                         .orderBy(.ascending(\.name))
-                )!
+                )
             }
         ),
         (
             title: "Number of Countries per Time Zone",
             query: { () -> Any in
                 
-                return Static.timeZonesStack.queryAttributes(
+                return try! Static.timeZonesStack.queryAttributes(
                     From<TimeZone>()
                         .select(
                             NSDictionary.self,
@@ -283,14 +283,14 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                             .ascending(\.secondsFromGMT),
                             .ascending(\.name)
                         )
-                )!
+                )
             }
         ),
         (
             title: "Number of Countries with Summer Time",
             query: { () -> Any in
                 
-                return Static.timeZonesStack.queryAttributes(
+                return try! Static.timeZonesStack.queryAttributes(
                     From<TimeZone>()
                         .select(
                             NSDictionary.self,
@@ -302,7 +302,7 @@ class FetchingAndQueryingDemoViewController: UIViewController, UITableViewDataSo
                             .descending(\.hasDaylightSavingTime),
                             .ascending(\.name)
                         )
-                )!
+                )
             }
         )
     ]

@@ -95,7 +95,7 @@ class ImportTests: BaseTestDataTestCase {
                             ]
                         )
                         XCTAssertNil(object)
-                        XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 0)
+                        XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 0)
                     }
                 )
             }
@@ -103,7 +103,7 @@ class ImportTests: BaseTestDataTestCase {
                 
                 XCTFail()
             }
-            XCTAssertEqual(stack.fetchCount(From<TestEntity1>()), 0)
+            XCTAssertEqual(try stack.fetchCount(From<TestEntity1>()), 0)
         }
     }
     
@@ -137,9 +137,9 @@ class ImportTests: BaseTestDataTestCase {
                         catch _ as TestInsertError {
                             
                             errorExpectation.fulfill()
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 1)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 1)
                             
-                            let object = transaction.fetchOne(From<TestEntity1>())
+                            let object = try transaction.fetchOne(From<TestEntity1>())
                             XCTAssertNotNil(object)
                             XCTAssertNil(object?.testEntityID)
                             XCTAssertNil(object?.testBoolean)
@@ -182,7 +182,7 @@ class ImportTests: BaseTestDataTestCase {
                             ]
                         )
                         XCTAssertNotNil(object)
-                        XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 1)
+                        XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 1)
                         XCTAssertNil(object?.testEntityID)
                         XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
                         XCTAssertEqual(object?.testNumber, NSNumber(value: 1))
@@ -202,7 +202,7 @@ class ImportTests: BaseTestDataTestCase {
                                 #keyPath(TestEntity1.testDate): self.dateFormatter.date(from: "2000-01-02T00:00:00Z")!
                             ]
                         )
-                        XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 1)
+                        XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 1)
                         XCTAssertNil(object?.testEntityID)
                         XCTAssertEqual(object?.testBoolean, NSNumber(value: false))
                         XCTAssertEqual(object?.testNumber, NSNumber(value: 2))
@@ -254,7 +254,7 @@ class ImportTests: BaseTestDataTestCase {
                             sourceArray: sourceArray
                         )
                         XCTAssertEqual(objects.count, 1)
-                        XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 1)
+                        XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 1)
                         
                         let object = objects[0]
                         let dictionary = sourceArray[1]
@@ -316,9 +316,9 @@ class ImportTests: BaseTestDataTestCase {
                         catch _ as TestInsertError {
                             
                             errorExpectation.fulfill()
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 1)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 1)
                             
-                            let object = transaction.fetchOne(From<TestEntity1>())
+                            let object = try transaction.fetchOne(From<TestEntity1>())
                             XCTAssertNotNil(object)
                             XCTAssertNil(object?.testEntityID)
                             XCTAssertNil(object?.testBoolean)
@@ -372,7 +372,7 @@ class ImportTests: BaseTestDataTestCase {
                             sourceArray: sourceArray
                         )
                         XCTAssertEqual(objects.count, sourceArray.count)
-                        XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 2)
+                        XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 2)
                         
                         for i in 0 ..< sourceArray.count {
                             
@@ -424,7 +424,7 @@ class ImportTests: BaseTestDataTestCase {
                                 ]
                             )
                             XCTAssertNil(object)
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 5)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 5)
                         }
                         do {
                             
@@ -442,20 +442,19 @@ class ImportTests: BaseTestDataTestCase {
                                 ]
                             )
                             XCTAssertNil(object)
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 5)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 5)
                             
-                            let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
-                            XCTAssertNotNil(existingObjects)
-                            XCTAssertEqual(existingObjects?.count, 1)
+                            let existingObjects = try transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
+                            XCTAssertEqual(existingObjects.count, 1)
                             
-                            let existingObject = existingObjects?[0]
-                            XCTAssertEqual(existingObject?.testEntityID, NSNumber(value: 105))
-                            XCTAssertEqual(existingObject?.testBoolean, NSNumber(value: true))
-                            XCTAssertEqual(existingObject?.testNumber, NSNumber(value: 5))
-                            XCTAssertEqual(existingObject?.testDecimal, NSDecimalNumber(string: "5"))
-                            XCTAssertEqual(existingObject?.testString, "nil:TestEntity1:5")
-                            XCTAssertEqual(existingObject?.testData, ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue)!)
-                            XCTAssertEqual(existingObject?.testDate, self.dateFormatter.date(from: "2000-01-05T00:00:00Z")!)
+                            let existingObject = existingObjects[0]
+                            XCTAssertEqual(existingObject.testEntityID, NSNumber(value: 105))
+                            XCTAssertEqual(existingObject.testBoolean, NSNumber(value: true))
+                            XCTAssertEqual(existingObject.testNumber, NSNumber(value: 5))
+                            XCTAssertEqual(existingObject.testDecimal, NSDecimalNumber(string: "5"))
+                            XCTAssertEqual(existingObject.testString, "nil:TestEntity1:5")
+                            XCTAssertEqual(existingObject.testData, ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue)!)
+                            XCTAssertEqual(existingObject.testDate, self.dateFormatter.date(from: "2000-01-05T00:00:00Z")!)
                         }
                     }
                 )
@@ -504,7 +503,7 @@ class ImportTests: BaseTestDataTestCase {
                         )
                         
                         XCTAssertEqual(objects.count, 1)
-                        XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
+                        XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 6)
                         
                         let object = objects[0]
                         let dictionary = sourceArray[1]
@@ -618,9 +617,9 @@ class ImportTests: BaseTestDataTestCase {
                         catch _ as TestInsertError {
                             
                             errorExpectation.fulfill()
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 6)
                             
-                            let object = transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 106))
+                            let object = try transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 106))
                             XCTAssertNotNil(object)
                             XCTAssertEqual(object?.testEntityID, NSNumber(value: 106))
                             XCTAssertNil(object?.testBoolean)
@@ -657,21 +656,19 @@ class ImportTests: BaseTestDataTestCase {
                         catch _ as TestUpdateError {
                             
                             errorExpectation.fulfill()
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 6)
                             
-                            let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
-                            XCTAssertNotNil(existingObjects)
-                            XCTAssertEqual(existingObjects?.count, 1)
+                            let existingObjects = try transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
+                            XCTAssertEqual(existingObjects.count, 1)
                             
-                            let existingObject = existingObjects?[0]
-                            XCTAssertNotNil(existingObject)
-                            XCTAssertEqual(existingObject?.testEntityID, NSNumber(value: 105))
-                            XCTAssertEqual(existingObject?.testBoolean, NSNumber(value: true))
-                            XCTAssertEqual(existingObject?.testNumber, NSNumber(value: 5))
-                            XCTAssertEqual(existingObject?.testDecimal, NSDecimalNumber(string: "5"))
-                            XCTAssertEqual(existingObject?.testString, "nil:TestEntity1:5")
-                            XCTAssertEqual(existingObject?.testData, ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue)!)
-                            XCTAssertEqual(existingObject?.testDate, self.dateFormatter.date(from: "2000-01-05T00:00:00Z")!)
+                            let existingObject = existingObjects[0]
+                            XCTAssertEqual(existingObject.testEntityID, NSNumber(value: 105))
+                            XCTAssertEqual(existingObject.testBoolean, NSNumber(value: true))
+                            XCTAssertEqual(existingObject.testNumber, NSNumber(value: 5))
+                            XCTAssertEqual(existingObject.testDecimal, NSDecimalNumber(string: "5"))
+                            XCTAssertEqual(existingObject.testString, "nil:TestEntity1:5")
+                            XCTAssertEqual(existingObject.testData, ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue)!)
+                            XCTAssertEqual(existingObject.testDate, self.dateFormatter.date(from: "2000-01-05T00:00:00Z")!)
                         }
                         self.checkExpectationsImmediately()
                     }
@@ -710,7 +707,7 @@ class ImportTests: BaseTestDataTestCase {
                                 ]
                             )
                             XCTAssertNotNil(object)
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 6)
                             
                             XCTAssertEqual(object?.testEntityID, NSNumber(value: 106))
                             XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
@@ -735,7 +732,7 @@ class ImportTests: BaseTestDataTestCase {
                                     ]
                             )
                             XCTAssertNotNil(object)
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 6)
                             
                             XCTAssertEqual(object?.testEntityID, NSNumber(value: 106))
                             XCTAssertEqual(object?.testBoolean, NSNumber(value: false))
@@ -745,11 +742,10 @@ class ImportTests: BaseTestDataTestCase {
                             XCTAssertEqual(object?.testData, ("nil:TestEntity1:7" as NSString).data(using: String.Encoding.utf8.rawValue)!)
                             XCTAssertEqual(object?.testDate, self.dateFormatter.date(from: "2000-01-07T00:00:00Z")!)
                             
-                            let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 106))
-                            XCTAssertNotNil(existingObjects)
-                            XCTAssertEqual(existingObjects?.count, 1)
+                            let existingObjects = try transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 106))
+                            XCTAssertEqual(existingObjects.count, 1)
                             
-                            let existingObject = existingObjects?[0]
+                            let existingObject = existingObjects[0]
                             XCTAssertEqual(existingObject, object)
                         }
                     }
@@ -799,7 +795,7 @@ class ImportTests: BaseTestDataTestCase {
                             sourceArray: sourceArray
                         )
                         XCTAssertEqual(objects.count, 1)
-                        XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
+                        XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 6)
                         
                         let object = objects[0]
                         let dictionary = sourceArray[1]
@@ -864,10 +860,10 @@ class ImportTests: BaseTestDataTestCase {
                         catch _ as TestIDError {
                             
                             errorExpectation.fulfill()
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 5)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 5)
                             
-                            XCTAssertNil(transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 106)))
-                            XCTAssertNil(transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 107)))
+                            XCTAssertNil(try transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 106)))
+                            XCTAssertNil(try transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 107)))
                         }
                         transaction.unsafeContext().reset()
                         self.checkExpectationsImmediately()
@@ -910,7 +906,7 @@ class ImportTests: BaseTestDataTestCase {
                             
                             errorExpectation.fulfill()
                             
-                            let object = transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 106))
+                            let object = try transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 106))
                             XCTAssertNotNil(object)
                             XCTAssertEqual(object?.testEntityID, NSNumber(value: 106))
                             XCTAssertNil(object?.testBoolean)
@@ -951,9 +947,9 @@ class ImportTests: BaseTestDataTestCase {
                         catch _ as TestUpdateError {
                             
                             errorExpectation.fulfill()
-                            XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 5)
+                            XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 5)
                             
-                            let object = transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
+                            let object = try transaction.fetchOne(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
                             XCTAssertNotNil(object)
                             XCTAssertEqual(object?.testEntityID, NSNumber(value: 105))
                             XCTAssertEqual(object?.testBoolean, NSNumber(value: true))
@@ -963,11 +959,10 @@ class ImportTests: BaseTestDataTestCase {
                             XCTAssertEqual(object?.testData, ("nil:TestEntity1:5" as NSString).data(using: String.Encoding.utf8.rawValue)!)
                             XCTAssertEqual(object?.testDate, self.dateFormatter.date(from: "2000-01-05T00:00:00Z")!)
                             
-                            let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
-                            XCTAssertNotNil(existingObjects)
-                            XCTAssertEqual(existingObjects?.count, 1)
+                            let existingObjects = try transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
+                            XCTAssertEqual(existingObjects.count, 1)
                             
-                            let existingObject = existingObjects?[0]
+                            let existingObject = existingObjects[0]
                             XCTAssertEqual(existingObject, object)
                         }
                         transaction.context.reset()
@@ -1018,7 +1013,7 @@ class ImportTests: BaseTestDataTestCase {
                             sourceArray: sourceArray
                         )
                         XCTAssertEqual(objects.count, sourceArray.count)
-                        XCTAssertEqual(transaction.fetchCount(From<TestEntity1>()), 6)
+                        XCTAssertEqual(try transaction.fetchCount(From<TestEntity1>()), 6)
                         for i in 0 ..< sourceArray.count {
                             
                             let object = objects[i]
@@ -1032,11 +1027,10 @@ class ImportTests: BaseTestDataTestCase {
                             XCTAssertEqual(object.testData, dictionary[(#keyPath(TestEntity1.testData))] as? Data)
                             XCTAssertEqual(object.testDate, dictionary[(#keyPath(TestEntity1.testDate))] as? Date)
                         }
-                        let existingObjects = transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
-                        XCTAssertNotNil(existingObjects)
-                        XCTAssertEqual(existingObjects?.count, 1)
+                        let existingObjects = try transaction.fetchAll(From<TestEntity1>(), Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 105))
+                        XCTAssertEqual(existingObjects.count, 1)
                         
-                        let existingObject = existingObjects?[0]
+                        let existingObject = existingObjects[0]
                         XCTAssertEqual(existingObject, objects[0])
                     }
                 )

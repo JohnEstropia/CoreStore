@@ -26,7 +26,7 @@ private struct Static {
             )
         )
         
-        var place = CoreStore.fetchOne(From<Place>())
+        var place = try! CoreStore.fetchOne(From<Place>())
         if place == nil {
             
             _ = try? CoreStore.perform(
@@ -36,7 +36,7 @@ private struct Static {
                     place.setInitialValues()
                 }
             )
-            place = CoreStore.fetchOne(From<Place>())
+            place = try! CoreStore.fetchOne(From<Place>())
         }
         
         return CoreStore.monitorObject(place!)

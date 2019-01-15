@@ -49,7 +49,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     @nonobjc
     internal init<D>(context: NSManagedObjectContext, fetchRequest: NSFetchRequest<NSManagedObject>, from: From<D>, sectionBy: SectionBy<D>? = nil, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) {
         
-        _ = from.applyToFetchRequest(
+        _ = try? from.applyToFetchRequest(
             fetchRequest,
             context: context,
             applyAffectedStores: false
@@ -58,7 +58,7 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
         
         self.reapplyAffectedStores = { fetchRequest, context in
             
-            return try rom.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
+            try from.applyAffectedStoresForFetchedRequest(fetchRequest, context: context)
         }
         
         super.init(
@@ -91,5 +91,5 @@ internal final class CoreStoreFetchedResultsController: NSFetchedResultsControll
     // MARK: Private
     
     @nonobjc
-    private let reapplyAffectedStores: (_ fetchRequest: NSFetchRequest<NSManagedObject>, _ context: NSManagedObjectContext) throws -> Bool
+    private let reapplyAffectedStores: (_ fetchRequest: NSFetchRequest<NSManagedObject>, _ context: NSManagedObjectContext) throws -> Void
 }

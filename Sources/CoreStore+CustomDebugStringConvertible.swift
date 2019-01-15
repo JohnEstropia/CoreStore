@@ -152,6 +152,10 @@ extension CoreStoreError: CustomDebugStringConvertible, CoreStoreDebugStringConv
             
         case .userCancelled:
             firstLine = ".userCancelled"
+
+        case .persistentStoreNotFound(let entity):
+            firstLine = ".persistentStoreNotFound"
+            info.append(("entity", entity))
         }
         
         return createFormattedString(

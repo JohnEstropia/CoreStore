@@ -248,51 +248,51 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let p1 = Where<Animal>({ $0.species == "Sparrow" })
                     XCTAssertEqual(p1.predicate, NSPredicate(format: "%K == %@", "species", "Sparrow"))
                     
-                    let bird = transaction.fetchOne(From<Animal>(), p1)
+                    let bird = try transaction.fetchOne(From<Animal>(), p1)
                     XCTAssertNotNil(bird)
                     XCTAssertEqual(bird!.species.value, "Sparrow")
                     
                     let p2 = Where<Dog>({ $0.nickname == "Spot" })
                     XCTAssertEqual(p2.predicate, NSPredicate(format: "%K == %@", "nickname", "Spot"))
                     
-                    let dog = transaction.fetchOne(From<Dog>().where(\.nickname == "Spot"))
+                    let dog = try transaction.fetchOne(From<Dog>().where(\.nickname == "Spot"))
                     XCTAssertNotNil(dog)
                     XCTAssertEqual(dog!.nickname.value, "Spot")
                     XCTAssertEqual(dog!.species.value, "Dog")
                     
-                    let person = transaction.fetchOne(From<Person>())
+                    let person = try transaction.fetchOne(From<Person>())
                     XCTAssertNotNil(person)
                     XCTAssertEqual(person!.pets.value.first, dog)
                     
                     let p3 = Where<Dog>({ $0.age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))
                     
-                    _ = transaction.fetchAll(
+                    _ = try transaction.fetchAll(
                         From<Dog>()
                             .where(\Animal.species == "Dog" && \.age == 10)
                     )
-                    _ = transaction.fetchAll(
+                    _ = try transaction.fetchAll(
                         From<Dog>()
                             .where(\.age == 10 && \Animal.species == "Dog")
                             .orderBy(.ascending({ $0.species }))
                     )
-                    _ = transaction.fetchAll(
+                    _ = try transaction.fetchAll(
                         From<Dog>(),
                         Where<Dog>({ $0.age > 10 && $0.age <= 15 })
                     )
-                    _ = transaction.fetchAll(
+                    _ = try transaction.fetchAll(
                         From<Dog>(),
                         Where<Dog>({ $0.species == "Dog" && $0.age == 10 })
                     )
-                    _ = transaction.fetchAll(
+                    _ = try transaction.fetchAll(
                         From<Dog>(),
                         Where<Dog>({ $0.age == 10 && $0.species == "Dog" })
                     )
-                    _ = transaction.fetchAll(
+                    _ = try transaction.fetchAll(
                         From<Dog>(),
                         Where<Dog>({ $0.age > 10 && $0.age <= 15 })
                     )
-                    _ = transaction.fetchAll(
+                    _ = try transaction.fetchAll(
                         From<Dog>(),
                         (\Dog.age > 10 && \Dog.age <= 15)
                     )

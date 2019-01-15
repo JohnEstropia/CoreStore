@@ -116,7 +116,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         case 2?:
             DispatchQueue.global(qos: .background).async {
                 
-                _ = self.dataStack.fetchOne(From<Place>())
+                _ = try! self.dataStack.fetchOne(From<Place>())
             }
             
         default:

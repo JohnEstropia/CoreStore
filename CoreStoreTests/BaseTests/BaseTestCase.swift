@@ -36,8 +36,7 @@ class BaseTestCase: XCTestCase {
     // MARK: Internal
     
     @nonobjc
-    @discardableResult
-    func prepareStack<T>(configurations: [ModelConfiguration] = [nil], _ closure: (_ dataStack: DataStack) -> T) -> T {
+    func prepareStack(configurations: [ModelConfiguration] = [nil], _ closure: (_ dataStack: DataStack) throws -> Void) {
         
         let stack = DataStack(
             xcodeModelName: "Model",
@@ -57,16 +56,16 @@ class BaseTestCase: XCTestCase {
                     )
                 )
             }
+            try closure(stack)
         }
         catch let error as NSError {
             
             XCTFail(error.coreStoreDumpString)
         }
-        return closure(stack)
     }
     
     @nonobjc
-    func expectLogger<T>(_ expectations: [TestLogger.Expectation], closure: () -> T) -> T {
+    func expectLogger<T>(_ expectations: [TestLogger.Expectation], closure: () throws -> T) rethrows -> T {
         
         CoreStore.logger = TestLogger(self.prepareLoggerExpectations(expectations))
         defer {
@@ -74,7 +73,7 @@ class BaseTestCase: XCTestCase {
             self.checkExpectationsImmediately()
             CoreStore.logger = TestLogger([:])
         }
-        return closure()
+        return try closure()
     }
     
     @nonobjc

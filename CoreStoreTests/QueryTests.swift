@@ -47,7 +47,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Bool>(#keyPath(TestEntity1.testBoolean)),
                     queryClauses
@@ -57,7 +57,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int8>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
@@ -67,7 +67,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int16>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
@@ -77,7 +77,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int32>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
@@ -87,7 +87,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int64>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
@@ -97,7 +97,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
@@ -107,7 +107,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Double>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
@@ -117,7 +117,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Float>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
@@ -127,7 +127,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSNumber>(#keyPath(TestEntity1.testNumber)),
                     queryClauses
@@ -137,7 +137,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDecimalNumber>(#keyPath(TestEntity1.testDecimal)),
                     queryClauses
@@ -147,7 +147,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, String>(#keyPath(TestEntity1.testString)),
                     queryClauses
@@ -157,7 +157,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSString>(#keyPath(TestEntity1.testString)),
                     queryClauses
@@ -167,7 +167,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Data>(#keyPath(TestEntity1.testData)),
                     queryClauses
@@ -177,7 +177,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSData>(#keyPath(TestEntity1.testData)),
                     queryClauses
@@ -187,7 +187,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Date>(#keyPath(TestEntity1.testDate)),
                     queryClauses
@@ -197,7 +197,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDate>(#keyPath(TestEntity1.testDate)),
                     queryClauses
@@ -207,7 +207,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSManagedObjectID>(#keyPath(TestEntity1.testDate)),
                     queryClauses
@@ -232,7 +232,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Bool>(.average(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
@@ -242,7 +242,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int8>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -252,7 +252,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int16>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -262,7 +262,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int32>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -272,7 +272,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int64>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -282,7 +282,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -292,7 +292,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Double>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -302,7 +302,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Float>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -312,7 +312,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSNumber>(.average(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -322,7 +322,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDecimalNumber>(.average(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
@@ -332,7 +332,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, String>(.average(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -341,7 +341,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSString>(.average(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -350,7 +350,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Data>(.average(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -359,7 +359,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSData>(.average(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -368,7 +368,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Date>(.average(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -377,7 +377,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDate>(.average(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -386,7 +386,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSManagedObjectID>(#keyPath(TestEntity1.testEntityID)),
                     queryClauses
@@ -410,7 +410,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Bool>(.count(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
@@ -420,7 +420,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int8>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -430,7 +430,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int16>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -440,7 +440,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int32>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -450,7 +450,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int64>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -460,7 +460,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -470,7 +470,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Double>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -480,7 +480,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Float>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -490,7 +490,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSNumber>(.count(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -500,7 +500,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDecimalNumber>(.count(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
@@ -509,7 +509,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, String>(.count(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -518,7 +518,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSString>(.count(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -527,7 +527,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Data>(.count(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -536,7 +536,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSData>(.count(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -545,7 +545,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Date>(.count(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -554,7 +554,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDate>(.count(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -563,7 +563,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSManagedObjectID>(.count(#keyPath(TestEntity1.testEntityID))),
                     queryClauses
@@ -587,7 +587,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Bool>(.maximum(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
@@ -597,7 +597,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int8>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -607,7 +607,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int16>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -617,7 +617,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int32>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -627,7 +627,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int64>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -637,7 +637,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -647,7 +647,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Double>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -657,7 +657,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Float>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -667,7 +667,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSNumber>(.maximum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -677,7 +677,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDecimalNumber>(.maximum(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
@@ -687,7 +687,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, String>(.maximum(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -697,7 +697,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSString>(.maximum(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -707,7 +707,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Data>(.maximum(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -717,7 +717,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSData>(.maximum(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -727,7 +727,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Date>(.maximum(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -737,7 +737,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDate>(.maximum(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -747,7 +747,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSManagedObjectID>(.maximum(#keyPath(TestEntity1.testEntityID))),
                     queryClauses
@@ -771,7 +771,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Bool>(.minimum(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
@@ -781,7 +781,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int8>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -791,7 +791,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int16>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -801,7 +801,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int32>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -811,7 +811,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int64>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -821,7 +821,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -831,7 +831,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Double>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -841,7 +841,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Float>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -851,7 +851,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSNumber>(.minimum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -861,7 +861,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDecimalNumber>(.minimum(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
@@ -871,7 +871,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, String>(.minimum(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -881,7 +881,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSString>(.minimum(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -891,7 +891,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Data>(.minimum(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -901,7 +901,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSData>(.minimum(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -911,7 +911,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Date>(.minimum(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -921,7 +921,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDate>(.minimum(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -931,7 +931,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSManagedObjectID>(.minimum(#keyPath(TestEntity1.testEntityID))),
                     queryClauses
@@ -955,7 +955,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Bool>(.sum(#keyPath(TestEntity1.testBoolean))),
                     queryClauses
@@ -965,7 +965,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int8>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -975,7 +975,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int16>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -985,7 +985,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int32>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -995,7 +995,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int64>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -1005,7 +1005,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -1015,7 +1015,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Double>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -1025,7 +1025,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Float>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -1035,7 +1035,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSNumber>(.sum(#keyPath(TestEntity1.testNumber))),
                     queryClauses
@@ -1045,7 +1045,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDecimalNumber>(.sum(#keyPath(TestEntity1.testDecimal))),
                     queryClauses
@@ -1055,7 +1055,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, String>(.sum(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -1064,7 +1064,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSString>(.sum(#keyPath(TestEntity1.testString))),
                     queryClauses
@@ -1073,7 +1073,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Data>(.sum(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -1082,7 +1082,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSData>(.sum(#keyPath(TestEntity1.testData))),
                     queryClauses
@@ -1091,7 +1091,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Date>(.sum(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -1100,7 +1100,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDate>(.sum(#keyPath(TestEntity1.testDate))),
                     queryClauses
@@ -1109,7 +1109,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSManagedObjectID>(.sum(#keyPath(TestEntity1.testEntityID))),
                     queryClauses
@@ -1133,7 +1133,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Bool>(.objectID()),
                     queryClauses
@@ -1142,7 +1142,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int8>(.objectID()),
                     queryClauses
@@ -1151,7 +1151,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int16>(.objectID()),
                     queryClauses
@@ -1160,7 +1160,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int32>(.objectID()),
                     queryClauses
@@ -1169,7 +1169,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int64>(.objectID()),
                     queryClauses
@@ -1178,7 +1178,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Int>(.objectID()),
                     queryClauses
@@ -1187,7 +1187,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Double>(.objectID()),
                     queryClauses
@@ -1196,7 +1196,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Float>(.objectID()),
                     queryClauses
@@ -1205,7 +1205,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSNumber>(.objectID()),
                     queryClauses
@@ -1214,7 +1214,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDecimalNumber>(.objectID()),
                     queryClauses
@@ -1223,7 +1223,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, String>(.objectID()),
                     queryClauses
@@ -1232,7 +1232,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSString>(.objectID()),
                     queryClauses
@@ -1241,7 +1241,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Data>(.objectID()),
                     queryClauses
@@ -1250,7 +1250,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSData>(.objectID()),
                     queryClauses
@@ -1259,7 +1259,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, Date>(.objectID()),
                     queryClauses
@@ -1268,7 +1268,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSDate>(.objectID()),
                     queryClauses
@@ -1277,7 +1277,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let value = stack.queryValue(
+                let value = try stack.queryValue(
                     from,
                     Select<TestEntity1, NSManagedObjectID>(.objectID()),
                     queryClauses
@@ -1302,7 +1302,7 @@ class QueryTests: BaseTestDataTestCase {
             ]
             do {
                 
-                let values = stack.queryAttributes(
+                let values = try stack.queryAttributes(
                     from,
                     Select<TestEntity1, NSDictionary>(
                         #keyPath(TestEntity1.testBoolean),
@@ -1353,7 +1353,7 @@ class QueryTests: BaseTestDataTestCase {
             let queryClauses: [QueryClause] = []
             do {
                 
-                let values = stack.queryAttributes(
+                let values = try stack.queryAttributes(
                     from,
                     Select<TestEntity1, NSDictionary>(
                         .sum(#keyPath(TestEntity1.testBoolean)),
@@ -1380,7 +1380,7 @@ class QueryTests: BaseTestDataTestCase {
             }
             do {
                 
-                let values = stack.queryAttributes(
+                let values = try stack.queryAttributes(
                     from,
                     Select(
                         .sum(#keyPath(TestEntity1.testBoolean), as: "testSum"),

@@ -96,57 +96,45 @@ internal extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func deleteAll(_ from: CSFrom, _ deleteClauses: [CSDeleteClause]) -> Int? {
+    internal func deleteAll(_ from: CSFrom, _ deleteClauses: [CSDeleteClause]) throws -> Int {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
         fetchRequest.returnsObjectsAsFaults = true
         fetchRequest.includesPropertyValues = false
         deleteClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.deleteAll(fetchRequest.dynamicCast())
+
+        return try self.deleteAll(fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func queryValue(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> Any? {
+    internal func queryValue(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) throws -> Any? {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
         selectClause.applyToFetchRequest(fetchRequest)
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.queryValue(selectClause.selectTerms, fetchRequest: fetchRequest.dynamicCast())
+
+        return try self.queryValue(selectClause.selectTerms, fetchRequest: fetchRequest.dynamicCast())
     }
     
     @nonobjc
-    internal func queryAttributes(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) -> [[String: Any]]? {
+    internal func queryAttributes(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) throws -> [[String: Any]] {
         
         let fetchRequest = CoreStoreFetchRequest()
-        let storeFound = from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
+        try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
         selectClause.applyToFetchRequest(fetchRequest)
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-        
-        guard storeFound else {
-            
-            return nil
-        }
-        return self.queryAttributes(fetchRequest.dynamicCast())
+
+        return try self.queryAttributes(fetchRequest.dynamicCast())
     }
 }

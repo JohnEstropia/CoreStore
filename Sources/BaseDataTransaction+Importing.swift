@@ -151,7 +151,7 @@ public extension BaseDataTransaction {
                     return nil
                 }
                 
-                if let object = self.fetchOne(From(entityType), Where<D>(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
+                if let object = try self.fetchOne(From(entityType), Where<D>(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
                     guard entityType.shouldUpdate(from: source, in: self) else {
                         
@@ -215,7 +215,8 @@ public extension BaseDataTransaction {
                 importSourceByID = try autoreleasepool { try preProcess(importSourceByID) }
 
                 var existingObjectsByID = Dictionary<D.UniqueIDType, D>()
-                self.fetchAll(From(entityType), Where<D>(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))?
+                try self
+                    .fetchAll(From(entityType), Where<D>(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))
                     .forEach { existingObjectsByID[$0.uniqueIDValue] = $0 }
               
                 var processedObjectIDs = Set<D.UniqueIDType>()

@@ -205,9 +205,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
-    public static func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> NSManagedObjectID? {
+    public static func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> NSManagedObjectID? {
         
-        return self.defaultStack.fetchObjectID(from, fetchClauses)
+        return try self.defaultStack.fetchObjectID(from, fetchClauses)
     }
     
     /**
@@ -217,9 +217,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s
      */
-    public static func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> NSManagedObjectID? {
+    public static func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID? {
         
-        return self.defaultStack.fetchObjectID(from, fetchClauses)
+        return try self.defaultStack.fetchObjectID(from, fetchClauses)
     }
     
     /**
@@ -234,9 +234,9 @@ public extension CoreStore {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType`
      */
-    public static func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) -> NSManagedObjectID? {
+    public static func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> NSManagedObjectID? {
         
-        return self.defaultStack.fetchObjectID(clauseChain)
+        return try self.defaultStack.fetchObjectID(clauseChain)
     }
     
     /**
@@ -246,9 +246,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public static func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> [NSManagedObjectID]? {
+    public static func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [NSManagedObjectID] {
         
-        return self.defaultStack.fetchObjectIDs(from, fetchClauses)
+        return try self.defaultStack.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
@@ -258,9 +258,9 @@ public extension CoreStore {
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s
      */
-    public static func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> [NSManagedObjectID]? {
+    public static func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID] {
         
-        return self.defaultStack.fetchObjectIDs(from, fetchClauses)
+        return try self.defaultStack.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
@@ -275,9 +275,9 @@ public extension CoreStore {
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
      */
-    public static func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) -> [NSManagedObjectID]? {
+    public static func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [NSManagedObjectID] {
         
-        return self.defaultStack.fetchObjectIDs(clauseChain)
+        return try self.defaultStack.fetchObjectIDs(clauseChain)
     }
     
     /**
@@ -290,9 +290,9 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: QueryClause...) -> U? {
+    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: QueryClause...) throws -> U? {
         
-        return self.defaultStack.queryValue(from, selectClause, queryClauses)
+        return try self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
     
     /**
@@ -305,9 +305,9 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) -> U? {
+    public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) throws -> U? {
         
-        return self.defaultStack.queryValue(from, selectClause, queryClauses)
+        return try self.defaultStack.queryValue(from, selectClause, queryClauses)
     }
     
     /**
@@ -324,9 +324,9 @@ public extension CoreStore {
      - parameter clauseChain: a `QueryChainableBuilderType` indicating the property/aggregate to fetch and the series of queries for the request.
      - returns: the result of the the query as specified by the `QueryChainableBuilderType`
      */
-    public static func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) -> B.ResultType? where B.ResultType: QueryableAttributeType {
+    public static func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> B.ResultType? where B.ResultType: QueryableAttributeType {
         
-        return self.defaultStack.queryValue(clauseChain)
+        return try self.defaultStack.queryValue(clauseChain)
     }
     
     /**
@@ -339,9 +339,9 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: QueryClause...) -> [[String: Any]]? {
+    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: QueryClause...) throws -> [[String: Any]] {
         
-        return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
+        return try self.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }
     
     /**
@@ -354,9 +354,9 @@ public extension CoreStore {
      - parameter queryClauses: a series of `QueryClause` instances for the query request. Accepts `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.
      - returns: the result of the the query. The type of the return value is specified by the generic type of the `Select<U>` parameter.
      */
-    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) -> [[String: Any]]? {
+    public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) throws -> [[String: Any]] {
         
-        return self.defaultStack.queryAttributes(from, selectClause, queryClauses)
+        return try self.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }
     
     /**
@@ -382,8 +382,8 @@ public extension CoreStore {
      - parameter clauseChain: a `QueryChainableBuilderType` indicating the properties to fetch and the series of queries for the request.
      - returns: the result of the the query as specified by the `QueryChainableBuilderType`
      */
-    public static func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) -> [[String: Any]]? where B.ResultType == NSDictionary {
+    public static func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> [[String: Any]] where B.ResultType == NSDictionary {
         
-        return self.defaultStack.queryAttributes(clauseChain)
+        return try self.defaultStack.queryAttributes(clauseChain)
     }
 }

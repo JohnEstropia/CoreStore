@@ -36,7 +36,7 @@ private struct Static {
         _ = try? dataStack.perform(
             synchronous: { (transaction) in
                 
-                transaction.deleteAll(From<UserAccount>())
+                try transaction.deleteAll(From<UserAccount>())
                 
                 let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
                 account1.accountType = "Facebook"
@@ -74,7 +74,7 @@ private struct Static {
         _ = try? dataStack.perform(
             synchronous: { (transaction) in
                 
-                transaction.deleteAll(From<UserAccount>())
+                try transaction.deleteAll(From<UserAccount>())
                 
                 let account1 = transaction.create(Into<MaleAccount>(maleConfiguration))
                 account1.accountType = "Twitter"
@@ -99,8 +99,8 @@ private struct Static {
 class StackSetupDemoViewController: UITableViewController {
     
     let accounts = [
-        Static.facebookStack.fetchAll(From(UserAccount.self)) ?? [],
-        Static.twitterStack.fetchAll(From(UserAccount.self)) ?? []
+        try! Static.facebookStack.fetchAll(From<UserAccount>()),
+        try! Static.twitterStack.fetchAll(From<UserAccount>())
     ]
     
     

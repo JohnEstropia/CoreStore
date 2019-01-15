@@ -79,7 +79,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
     func listMonitorDidChange(_ monitor: ListMonitor<NSManagedObject>) {
         
         if self.lastSelectedIndexPath == nil,
-            let numberOfObjectsInSection = self.listMonitor?.numberOfObjectsInSection(0),
+            let numberOfObjectsInSection = self.listMonitor?.numberOfObjects(in: 0),
             numberOfObjectsInSection > 0 {
             
             self.tableView?.reloadData()
@@ -100,7 +100,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
     
     @objc dynamic func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return self.listMonitor?.numberOfObjectsInSection(0) ?? 0
+        return self.listMonitor?.numberOfObjects(in: 0) ?? 0
     }
     
     @objc dynamic func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -286,7 +286,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
                 
                 self.set(dataStack: dataStack, model: model, scrollToSelection: true)
                 
-                let count = dataStack.queryValue(
+                let count = try! dataStack.queryValue(
                     From<NSManagedObject>(model.entityType)
                         .select(Int.self, .count(#keyPath(OrganismV1.dna))))!
                 if count > 0 {
@@ -378,7 +378,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
             
             if self.lastSelectedIndexPath == nil  {
                 
-                if listMonitor.numberOfObjectsInSection(0) > 0 {
+                if listMonitor.numberOfObjects(in: 0) > 0 {
                     
                     self.setSelectedIndexPath(IndexPath(row: 0, section: 0), scrollToSelection: true)
                 }
