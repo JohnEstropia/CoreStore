@@ -32,24 +32,30 @@ import Foundation
 internal extension NSEntityDescription {
     
     @nonobjc
-    internal func cs_resolvedAttributeRenamingIdentities() -> [String: (attribute: NSAttributeDescription, versionHash: Data)] {
-        
-        var mapping: [String: (attribute: NSAttributeDescription, versionHash: Data)] = [:]
-        for (attributeName, attributeDescription) in self.attributesByName {
-            
-            mapping[attributeDescription.renamingIdentifier ?? attributeName] = (attributeDescription, attributeDescription.versionHash)
-        }
-        return mapping
+    internal func cs_resolveAttributeNames() -> [String: (attribute: NSAttributeDescription, versionHash: Data)] {
+        return self.attributesByName.reduce(into: [:], { (result, attribute: (name: String, description: NSAttributeDescription)) in
+            result[attribute.name] = (attribute.description, attribute.description.versionHash)
+        })
     }
     
     @nonobjc
-    internal func cs_resolvedRelationshipRenamingIdentities() -> [String: (relationship: NSRelationshipDescription, versionHash: Data)] {
-        
-        var mapping: [String: (relationship: NSRelationshipDescription, versionHash: Data)] = [:]
-        for (relationshipName, relationshipDescription) in self.relationshipsByName {
-            
-            mapping[relationshipDescription.renamingIdentifier ?? relationshipName] = (relationshipDescription, relationshipDescription.versionHash)
-        }
-        return mapping
+    internal func cs_resolveAttributeRenamingIdentities() -> [String: (attribute: NSAttributeDescription, versionHash: Data)] {
+        return self.attributesByName.reduce(into: [:], { (result, attribute: (name: String, description: NSAttributeDescription)) in
+            result[attribute.description.renamingIdentifier ?? attribute.name] = (attribute.description, attribute.description.versionHash)
+        })
+    }
+    
+    @nonobjc
+    internal func cs_resolveRelationshipNames() -> [String: (relationship: NSRelationshipDescription, versionHash: Data)] {
+        return self.relationshipsByName.reduce(into: [:], { (result, relationship: (name: String, description: NSRelationshipDescription)) in
+            result[relationship.name] = (relationship.description, relationship.description.versionHash)
+        })
+    }
+    
+    @nonobjc
+    internal func cs_resolveRelationshipRenamingIdentities() -> [String: (relationship: NSRelationshipDescription, versionHash: Data)] {
+        return self.relationshipsByName.reduce(into: [:], { (result, relationship: (name: String, description: NSRelationshipDescription)) in
+            result[relationship.description.renamingIdentifier ?? relationship.name] = (relationship.description, relationship.description.versionHash)
+        })
     }
 }
