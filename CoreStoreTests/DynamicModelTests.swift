@@ -266,6 +266,9 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     let p3 = Where<Dog>({ $0.age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))
+
+                    let totalAge = try transaction.queryValue(From<Dog>().select(Int.self, .sum(\Dog.age)))
+                    XCTAssertEqual(totalAge, 1)
                     
                     _ = try transaction.fetchAll(
                         From<Dog>()
