@@ -739,8 +739,11 @@ final class TransactionTests: BaseTestCase {
 
                         do {
 
-                            XCTAssertEqual(try stack.fetchCount(From<TestEntity1>("Config1")), 0)
-                            XCTAssertEqual(try stack.fetchCount(From<TestEntity1>(nil)), 0)
+                            let configCount = try stack.fetchCount(From<TestEntity1>("Config1"))
+                            XCTAssertEqual(configCount, 0)
+
+                            let defaultCount = try stack.fetchCount(From<TestEntity1>(nil))
+                            XCTAssertEqual(defaultCount, 0)
 
                             deleteExpectation.fulfill()
                         }
