@@ -215,6 +215,9 @@ public extension From {
     }
 }
 
+
+// MARK: - From where D: NSManagedObject
+
 public extension From where D: NSManagedObject {
     
     /**
@@ -255,6 +258,9 @@ public extension From where D: NSManagedObject {
     }
 }
 
+
+// MARK: - From where D: CoreStoreObject
+
 public extension From where D: CoreStoreObject {
     
     /**
@@ -266,6 +272,11 @@ public extension From where D: CoreStoreObject {
     public func `where`<T: AnyWhereClause>(_ clause: (D) -> T) -> FetchChainBuilder<D> {
         
         return self.fetchChain(appending: clause(D.meta))
+    }
+
+    public func `where`(combinedByAnd clause: Where<D>, _ others: Where<D>...) -> FetchChainBuilder<D> {
+
+        return self.fetchChain(appending: ([clause] + others).combinedByAnd())
     }
     
     /**
@@ -417,6 +428,9 @@ public extension From where D: CoreStoreObject {
     }
 }
 
+
+// MARK: - FetchChainBuilder
+
 public extension FetchChainBuilder {
     
     /**
@@ -519,6 +533,9 @@ public extension FetchChainBuilder {
     }
 }
 
+
+// MARK: - FetchChainBuilder where D: CoreStoreObject
+
 public extension FetchChainBuilder where D: CoreStoreObject {
     
     public func `where`<T: AnyWhereClause>(_ clause: (D) -> T) -> FetchChainBuilder<D> {
@@ -526,6 +543,9 @@ public extension FetchChainBuilder where D: CoreStoreObject {
         return self.fetchChain(appending: clause(D.meta))
     }
 }
+
+
+// MARK: - QueryChainBuilder
 
 public extension QueryChainBuilder {
     
@@ -665,6 +685,9 @@ public extension QueryChainBuilder {
     }
 }
 
+
+// MARK: - QueryChainBuilder where D: NSManagedObject
+
 public extension QueryChainBuilder where D: NSManagedObject {
     
     /**
@@ -678,6 +701,9 @@ public extension QueryChainBuilder where D: NSManagedObject {
         return self.groupBy(GroupBy<D>(keyPath))
     }
 }
+
+
+// MARK: - QueryChainBuilder where D: CoreStoreObject
 
 public extension QueryChainBuilder where D: CoreStoreObject {
     
@@ -736,6 +762,9 @@ public extension QueryChainBuilder where D: CoreStoreObject {
         return self.groupBy(GroupBy<D>(keyPath))
     }
 }
+
+
+// MARK: - SectionMonitorChainBuilder
 
 @available(macOS 10.12, *)
 public extension SectionMonitorChainBuilder {
@@ -841,6 +870,9 @@ public extension SectionMonitorChainBuilder {
         )
     }
 }
+
+
+// MARK: - SectionMonitorChainBuilder where D: CoreStoreObject
 
 @available(macOS 10.12, *)
 public extension SectionMonitorChainBuilder where D: CoreStoreObject {
