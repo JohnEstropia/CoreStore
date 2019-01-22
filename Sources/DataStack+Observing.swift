@@ -152,7 +152,7 @@ public extension DataStack {
      
      ```
      dataStack.monitorList(
-         { (monitor) in
+         createAsynchronously: { (monitor) in
              self.monitor = monitor
          },
          From<MyPersonEntity>()
@@ -162,7 +162,6 @@ public extension DataStack {
      ```
      - parameter createAsynchronously: the closure that receives the created `ListMonitor` instance
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
-     - returns: a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
      */
     public func monitorList<B: FetchChainableBuilderType>(createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void, _ clauseChain: B) {
         
@@ -288,7 +287,7 @@ public extension DataStack {
      Asynchronously creates a `ListMonitor` for a sectioned list of `DynamicObject`s that satisfy the specified `SectionMonitorBuilderType` built from a chain of clauses.
      ```
      dataStack.monitorSectionedList(
-         { (monitor) in
+         createAsynchronously: { (monitor) in
              self.monitor = monitor
          },
          From<MyPersonEntity>()
@@ -297,8 +296,8 @@ public extension DataStack {
              .orderBy(.ascending(\.age))
      )
      ```
+     - parameter createAsynchronously: the closure that receives the created `ListMonitor` instance
      - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
-     - returns: a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `SectionMonitorBuilderType`
      */
     public func monitorSectionedList<B: SectionMonitorBuilderType>(createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void, _ clauseChain: B) {
         

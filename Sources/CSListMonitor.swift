@@ -132,7 +132,7 @@ public final class CSListMonitor: NSObject {
     @objc
     public func hasObjectsInSection(_ section: Int) -> Bool {
         
-        return self.bridgeToSwift.hasObjectsInSection(section)
+        return self.bridgeToSwift.hasObjects(in: section)
     }
     
     /**
@@ -155,7 +155,7 @@ public final class CSListMonitor: NSObject {
     @objc
     public func objectsInSection(_ section: Int) -> [NSManagedObject] {
         
-        return self.bridgeToSwift.objectsInSection(section)
+        return self.bridgeToSwift.objects(in: section)
     }
     
     /**
@@ -167,7 +167,7 @@ public final class CSListMonitor: NSObject {
     @objc
     public func objectsInSafeSection(safeSectionIndex section: Int) -> [NSManagedObject]? {
         
-        return self.bridgeToSwift.objectsInSection(safeSectionIndex: section)
+        return self.bridgeToSwift.objects(safelyIn: section)
     }
 
     /**
@@ -201,7 +201,7 @@ public final class CSListMonitor: NSObject {
     @objc
     public func numberOfObjectsInSection(_ section: Int) -> Int {
         
-        return self.bridgeToSwift.numberOfObjectsInSection(section)
+        return self.bridgeToSwift.numberOfObjects(in: section)
     }
     
     /**
@@ -214,7 +214,7 @@ public final class CSListMonitor: NSObject {
     public func numberOfObjectsInSafeSection(safeSectionIndex section: Int) -> NSNumber? {
         
         return self.bridgeToSwift
-            .numberOfObjectsInSection(safeSectionIndex: section)
+            .numberOfObjects(safelyIn: section)
             .flatMap { NSNumber(value: $0) }
     }
     
@@ -227,7 +227,7 @@ public final class CSListMonitor: NSObject {
     @objc
     public func sectionInfoAtIndex(_ section: Int) -> NSFetchedResultsSectionInfo {
         
-        return self.bridgeToSwift.sectionInfoAtIndex(section)
+        return self.bridgeToSwift.sectionInfo(at: section)
     }
     
     /**
@@ -239,7 +239,7 @@ public final class CSListMonitor: NSObject {
     @objc
     public func sectionInfoAtSafeSectionIndex(safeSectionIndex section: Int) -> NSFetchedResultsSectionInfo? {
         
-        return self.bridgeToSwift.sectionInfoAtIndex(safeSectionIndex: section)
+        return self.bridgeToSwift.sectionInfo(safelyAt: section)
     }
     
     /**
@@ -263,7 +263,7 @@ public final class CSListMonitor: NSObject {
     @objc
     public func targetSectionForSectionIndexTitle(title: String, index: Int) -> Int {
         
-        return self.bridgeToSwift.targetSectionForSectionIndex(title: title, index: index)
+        return self.bridgeToSwift.targetSection(forSectionIndexTitle: title, at: index)
     }
     
     /**
@@ -287,7 +287,7 @@ public final class CSListMonitor: NSObject {
     public func indexOf(_ object: NSManagedObject) -> NSNumber? {
         
         return self.bridgeToSwift
-            .indexOf(object)
+            .index(of: object)
             .flatMap { NSNumber(value: $0) }
     }
     
@@ -300,7 +300,7 @@ public final class CSListMonitor: NSObject {
     @objc
     public func indexPathOf(_ object: NSManagedObject) -> IndexPath? {
         
-        return self.bridgeToSwift.indexPathOf(object)
+        return self.bridgeToSwift.indexPath(of: object)
     }
     
     

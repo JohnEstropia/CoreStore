@@ -50,7 +50,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     required init?(coder aDecoder: NSCoder) {
         
-        if let palette = ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.hue))) {
+        if let palette = try! ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.hue))) {
             
             self.monitor = ColorsDemo.stack.monitorObject(palette)
         }
@@ -64,7 +64,7 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
                 }
             )
             
-            let palette = ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.hue)))!
+            let palette = try! ColorsDemo.stack.fetchOne(From<Palette>().orderBy(.ascending(\.hue)))!
             self.monitor = ColorsDemo.stack.monitorObject(palette)
         }
         

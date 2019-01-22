@@ -298,6 +298,9 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
     }
 }
 
+
+// MARK: - SelectTerm where D: NSManagedObject
+
 extension SelectTerm where D: NSManagedObject {
     
     /**
@@ -365,6 +368,9 @@ extension SelectTerm where D: NSManagedObject {
         return self.sum(keyPath._kvcKeyPathString!, as: alias)
     }
 }
+
+
+// MARK: - SelectTerm where D: CoreStoreObject
 
 extension SelectTerm where D: CoreStoreObject {
     

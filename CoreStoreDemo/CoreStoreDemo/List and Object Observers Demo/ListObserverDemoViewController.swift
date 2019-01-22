@@ -160,7 +160,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return ColorsDemo.palettes.numberOfObjectsInSection(section)
+        return ColorsDemo.palettes.numberOfObjects(in: section)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -208,7 +208,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        return ColorsDemo.palettes.sectionInfoAtIndex(section).name
+        return ColorsDemo.palettes.sectionInfo(at: section).name
     }
     
     
@@ -288,7 +288,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         ColorsDemo.stack.perform(
             asynchronous: { (transaction) in
                 
-                transaction.deleteAll(From<Palette>())
+                try transaction.deleteAll(From<Palette>())
             },
             completion: { _ in }
         )
@@ -316,7 +316,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
         ColorsDemo.stack.perform(
             asynchronous: { (transaction) in
 
-                for palette in (transaction.fetchAll(From<Palette>()) ?? []) {
+                for palette in try transaction.fetchAll(From<Palette>()) {
 
                     palette.hue .= Palette.randomHue()
                     palette.colorName .= nil

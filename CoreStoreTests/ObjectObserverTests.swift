@@ -41,7 +41,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack)
             
-            guard let object = stack.fetchOne(
+            guard let object = try stack.fetchOne(
                 From<TestEntity1>(),
                 Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
                     
@@ -138,7 +138,7 @@ class ObjectObserverTests: BaseTestDataTestCase {
             
             self.prepareTestDataForStack(stack)
             
-            guard let object = stack.fetchOne(
+            guard let object = try stack.fetchOne(
                 From<TestEntity1>(),
                 Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) else {
                     

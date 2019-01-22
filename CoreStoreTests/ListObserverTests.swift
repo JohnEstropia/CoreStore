@@ -76,7 +76,7 @@ class ListObserverTests: BaseTestDataTestCase {
                     XCTAssertEqual(
                         ((note.userInfo as NSDictionary?) ?? [:]),
                         [
-                            "sectionInfo": monitor.sectionInfoAtIndex(0),
+                            "sectionInfo": monitor.sectionInfo(at: 0),
                             "sectionIndex": 0
                         ] as NSDictionary
                     )
@@ -178,9 +178,9 @@ class ListObserverTests: BaseTestDataTestCase {
             XCTAssertTrue(monitor.hasSections())
             XCTAssertEqual(monitor.numberOfSections(), 2)
             XCTAssertTrue(monitor.hasObjects())
-            XCTAssertTrue(monitor.hasObjectsInSection(0))
-            XCTAssertEqual(monitor.numberOfObjectsInSection(0), 2)
-            XCTAssertEqual(monitor.numberOfObjectsInSection(1), 3)
+            XCTAssertTrue(monitor.hasObjects(in: 0))
+            XCTAssertEqual(monitor.numberOfObjects(in: 0), 2)
+            XCTAssertEqual(monitor.numberOfObjects(in: 1), 3)
             
             var events = 0
             
@@ -268,7 +268,7 @@ class ListObserverTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) -> Bool in
                     
-                    if let object = transaction.fetchOne(
+                    if let object = try transaction.fetchOne(
                         From<TestEntity1>(),
                         Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 101)) {
                         
@@ -282,7 +282,7 @@ class ListObserverTests: BaseTestDataTestCase {
                         
                         XCTFail()
                     }
-                    if let object = transaction.fetchOne(
+                    if let object = try transaction.fetchOne(
                         From<TestEntity1>(),
                         Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
                         
@@ -394,7 +394,7 @@ class ListObserverTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) -> Bool in
                     
-                    if let object = transaction.fetchOne(
+                    if let object = try transaction.fetchOne(
                         From<TestEntity1>(),
                         Where<TestEntity1>(#keyPath(TestEntity1.testEntityID), isEqualTo: 102)) {
                         
@@ -526,7 +526,7 @@ class ListObserverTests: BaseTestDataTestCase {
             stack.perform(
                 asynchronous: { (transaction) -> Bool in
                     
-                    let count = transaction.deleteAll(
+                    let count = try transaction.deleteAll(
                         From<TestEntity1>(),
                         Where<TestEntity1>(#keyPath(TestEntity1.testBoolean), isEqualTo: false)
                     )

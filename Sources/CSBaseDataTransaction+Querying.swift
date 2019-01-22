@@ -93,7 +93,8 @@ public extension CSBaseDataTransaction {
             self.swiftTransaction.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.swiftTransaction.context.fetchOne(from, fetchClauses)
+        return (try? self.swiftTransaction.context.fetchOne(from, fetchClauses))?
+            .flatMap({ $0 })
     }
     
     /**
@@ -110,7 +111,8 @@ public extension CSBaseDataTransaction {
             self.swiftTransaction.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.swiftTransaction.context.fetchAll(from, fetchClauses)
+        return (try? self.swiftTransaction.context.fetchAll(from, fetchClauses))
+            .flatMap({ $0 })
     }
     
     /**
@@ -127,9 +129,8 @@ public extension CSBaseDataTransaction {
             self.swiftTransaction.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.swiftTransaction.context
-            .fetchCount(from, fetchClauses)
-            .flatMap { NSNumber(value: $0) }
+        return (try? self.swiftTransaction.context.fetchCount(from, fetchClauses))
+            .flatMap({ NSNumber(value: $0) })
     }
     
     /**
@@ -146,7 +147,8 @@ public extension CSBaseDataTransaction {
             self.swiftTransaction.isRunningInAllowedQueue(),
             "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.swiftTransaction.context.fetchObjectID(from, fetchClauses)
+        return (try? self.swiftTransaction.context.fetchObjectID(from, fetchClauses))
+            .flatMap({ $0 })
     }
     
     /**
@@ -166,7 +168,8 @@ public extension CSBaseDataTransaction {
             self.swiftTransaction.isRunningInAllowedQueue(),
             "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.swiftTransaction.context.queryValue(from, selectClause, queryClauses)
+        return (try? self.swiftTransaction.context.queryValue(from, selectClause, queryClauses))
+            .flatMap({ $0 })
     }
     
     /**
@@ -186,6 +189,7 @@ public extension CSBaseDataTransaction {
             self.swiftTransaction.isRunningInAllowedQueue(),
             "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
         )
-        return self.swiftTransaction.context.queryAttributes(from, selectClause, queryClauses)
+        return (try? self.swiftTransaction.context.queryAttributes(from, selectClause, queryClauses))
+            .flatMap({ $0 })
     }
 }

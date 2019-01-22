@@ -113,7 +113,7 @@ public extension CoreStore {
      
      ```
      CoreStore.monitorList(
-         { (monitor) in
+         createAsynchronously: { (monitor) in
              self.monitor = monitor
          },
          From<MyPersonEntity>()
@@ -123,7 +123,6 @@ public extension CoreStore {
      ```
      - parameter createAsynchronously: the closure that receives the created `ListMonitor` instance
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
-     - returns: a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
      */
     public static func monitorList<B: FetchChainableBuilderType>(createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void, _ clauseChain: B) {
         
@@ -212,7 +211,7 @@ public extension CoreStore {
      Asynchronously creates a `ListMonitor` for a sectioned list of `DynamicObject`s that satisfy the specified `SectionMonitorBuilderType` built from a chain of clauses.
      ```
      CoreStore.monitorSectionedList(
-         { (monitor) in
+         createAsynchronously: { (monitor) in
              self.monitor = monitor
          },
          From<MyPersonEntity>()
@@ -221,8 +220,8 @@ public extension CoreStore {
              .orderBy(.ascending(\.age))
      )
      ```
+     - parameter createAsynchronously: the closure that receives the created `ListMonitor` instance
      - parameter clauseChain: a `SectionMonitorBuilderType` built from a chain of clauses
-     - returns: a `ListMonitor` for a list of `DynamicObject`s that satisfy the specified `SectionMonitorBuilderType`
      */
     public static func monitorSectionedList<B: SectionMonitorBuilderType>(createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void, _ clauseChain: B) {
         

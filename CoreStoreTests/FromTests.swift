@@ -75,8 +75,7 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>()
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -90,11 +89,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -116,8 +115,8 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>()
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
+                XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -131,8 +130,8 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
+                XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -146,11 +145,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -164,11 +163,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>()
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -182,11 +181,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -200,11 +199,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -226,8 +225,8 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>()
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
+                XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -241,8 +240,8 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
+                XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -256,11 +255,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -274,8 +273,8 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>()
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
+                XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -289,11 +288,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -307,11 +306,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -333,8 +332,8 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>()
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
+                XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -348,8 +347,8 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
+                XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -363,11 +362,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity1>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -381,8 +380,8 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>()
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
+                XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -396,11 +395,11 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config1")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = self.expectLogger([.logWarning]) {
+                let storesFound: Void? = try? self.expectLogger([.logError]) {
                     
-                    from.applyToFetchRequest(request, context: dataStack.mainContext)
+                    try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 }
-                XCTAssertFalse(storesFound)
+                XCTAssertNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 
@@ -414,8 +413,8 @@ final class FromTests: BaseTestCase {
                 let from = From<TestEntity2>("Config2")
                 
                 let request = CoreStoreFetchRequest()
-                let storesFound = from.applyToFetchRequest(request, context: dataStack.mainContext)
-                XCTAssertTrue(storesFound)
+                let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
+                XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores)
                 

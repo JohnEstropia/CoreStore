@@ -247,6 +247,14 @@ extension CoreStoreError: CoreStoreSwiftType, _ObjectiveCBridgeableError {
             
         case .userCancelled:
             self = .userCancelled
+
+        case .persistentStoreNotFound:
+            guard let entity = info["entity"] as? DynamicObject.Type else {
+
+                self = .unknown
+                return
+            }
+            self = .persistentStoreNotFound(entity: entity)
         }
     }
 }
