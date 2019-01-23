@@ -72,7 +72,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s, or `nil` if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> D?
 
@@ -82,7 +82,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchClause`s, or `nil` if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D?
     
@@ -97,7 +97,7 @@ public protocol FetchableSource: class {
      ```
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the first `DynamicObject` instance that satisfies the specified `FetchChainableBuilderType`, or `nil` if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> B.ObjectType?
 
@@ -107,7 +107,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s, or an empty array if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [D]
 
@@ -117,7 +117,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: all `DynamicObject` instances that satisfy the specified `FetchClause`s, or an empty array if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D]
     
@@ -132,7 +132,7 @@ public protocol FetchableSource: class {
      ```
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: all `DynamicObject` instances that satisfy the specified `FetchChainableBuilderType`, or an empty array if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [B.ObjectType]
 
@@ -142,7 +142,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number of `DynamicObject`s that satisfy the specified `FetchClause`s
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> Int
 
@@ -152,7 +152,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the number of `DynamicObject`s that satisfy the specified `FetchClause`s
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int
     
@@ -167,7 +167,7 @@ public protocol FetchableSource: class {
      ```
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the number of `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> Int
 
@@ -177,7 +177,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s, or `nil` if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> NSManagedObjectID?
 
@@ -187,7 +187,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchClause`s, or `nil` if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID?
     
@@ -202,7 +202,7 @@ public protocol FetchableSource: class {
      ```
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the `NSManagedObjectID` for the first `DynamicObject` that satisfies the specified `FetchChainableBuilderType`, or `nil` if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> NSManagedObjectID?
 
@@ -212,7 +212,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s, or an empty array if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [NSManagedObjectID]
 
@@ -222,7 +222,7 @@ public protocol FetchableSource: class {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for the fetch request. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchClause`s, or an empty array if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID]
     
@@ -237,7 +237,7 @@ public protocol FetchableSource: class {
      ```
      - parameter clauseChain: a `FetchChainableBuilderType` built from a chain of clauses
      - returns: the `NSManagedObjectID` for all `DynamicObject`s that satisfy the specified `FetchChainableBuilderType`, or an empty array if no match was found
-     - throws: a `CoreStoreError` value indicating the failure if the specified entity could not be found in any store's schema.
+     - throws: `CoreStoreError.persistentStoreNotFound` if the specified entity could not be found in any store's schema.
      */
     func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [NSManagedObjectID]
     

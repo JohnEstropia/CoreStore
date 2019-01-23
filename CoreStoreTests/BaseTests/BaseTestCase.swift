@@ -81,6 +81,33 @@ class BaseTestCase: XCTestCase {
         
         CoreStore.logger = TestLogger(expectations)
     }
+
+    @nonobjc
+    func expectError<T>(code: CoreStoreErrorCode, closure: () throws -> T) {
+
+        CoreStore.logger = TestLogger(self.prepareLoggerExpectations([.logError]))
+        defer {
+
+            self.checkExpectationsImmediately()
+            CoreStore.logger = TestLogger([:])
+        }
+        do {
+
+            _ = try closure()
+        }
+        catch let error as CoreStoreError {
+
+            if error.errorCode == code.rawValue {
+
+                return
+            }
+            XCTFail("Expected error code \(code) different from actual error: \((error as NSError).coreStoreDumpString)")
+        }
+        catch {
+
+            XCTFail("Error not wrapped as \(cs_typeName(CoreStoreError.self)): \((error as NSError).coreStoreDumpString)")
+        }
+    }
     
     @nonobjc
     func prepareLoggerExpectations(_ expectations: [TestLogger.Expectation]) -> [TestLogger.Expectation: XCTestExpectation] {

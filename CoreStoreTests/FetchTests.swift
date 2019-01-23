@@ -376,17 +376,14 @@ final class FetchTests: BaseTestDataTestCase {
                         Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1),
                         OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                     ]
-                    let object = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchOne(from, fetchClauses)
                     }
-                    XCTAssertNil(object as Any?)
-                    
-                    let objectID = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchObjectID(from, fetchClauses)
                     }
-                    XCTAssertNil(objectID as Any?)
                 }
                 do {
                     
@@ -394,17 +391,14 @@ final class FetchTests: BaseTestDataTestCase {
                         Where<TestEntity1>("%K < %@", #keyPath(TestEntity1.testNumber), 4),
                         OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                     ]
-                    let object = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchOne(from, fetchClauses)
                     }
-                    XCTAssertNil(object as Any?)
-                    
-                    let objectID = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchObjectID(from, fetchClauses)
                     }
-                    XCTAssertNil(objectID as Any?)
                 }
             }
         }
@@ -559,17 +553,14 @@ final class FetchTests: BaseTestDataTestCase {
                         Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1),
                         OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                     ]
-                    let object = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchOne(from, fetchClauses)
                     }
-                    XCTAssertNil(object as Any?)
-                    
-                    let objectID = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchObjectID(from, fetchClauses)
                     }
-                    XCTAssertNil(objectID as Any?)
                 }
                 do {
                     
@@ -577,17 +568,14 @@ final class FetchTests: BaseTestDataTestCase {
                         Where<TestEntity1>("%K < %@", #keyPath(TestEntity1.testNumber), 4),
                         OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                     ]
-                    let object = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchOne(from, fetchClauses)
                     }
-                    XCTAssertNil(object as Any?)
-                    
-                    let objectID = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchObjectID(from, fetchClauses)
                     }
-                    XCTAssertNil(objectID as Any?)
                 }
             }
         }
@@ -881,17 +869,14 @@ final class FetchTests: BaseTestDataTestCase {
                         Where<TestEntity1>("%K < %@", #keyPath(TestEntity1.testNumber), 4),
                         OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                     ]
-                    let objects = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchAll(from, fetchClauses)
                     }
-                    XCTAssertNil(objects)
-                    
-                    let objectIDs = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchObjectIDs(from, fetchClauses)
                     }
-                    XCTAssertNil(objectIDs)
                 }
                 do {
                     
@@ -899,17 +884,14 @@ final class FetchTests: BaseTestDataTestCase {
                         Where<TestEntity1>(#keyPath(TestEntity1.testNumber), isEqualTo: 0),
                         OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                     ]
-                    let objects = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchAll(from, fetchClauses)
                     }
-                    XCTAssertNil(objects)
-                    
-                    let objectIDs = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchObjectIDs(from, fetchClauses)
                     }
-                    XCTAssertNil(objectIDs)
                 }
                 do {
                     
@@ -917,17 +899,14 @@ final class FetchTests: BaseTestDataTestCase {
                         Where<TestEntity1>(#keyPath(TestEntity1.testNumber), isEqualTo: nil),
                         OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                     ]
-                    let objects = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchAll(from, fetchClauses)
                     }
-                    XCTAssertNil(objects)
-                    
-                    let objectIDs = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchObjectIDs(from, fetchClauses)
                     }
-                    XCTAssertNil(objectIDs)
                 }
             }
         }
@@ -1119,34 +1098,28 @@ final class FetchTests: BaseTestDataTestCase {
                     let fetchClauses: [FetchClause] = [
                         OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                     ]
-                    let objects = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchAll(from, fetchClauses)
                     }
-                    XCTAssertNil(objects)
-                    
-                    let objectIDs = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchObjectIDs(from, fetchClauses)
                     }
-                    XCTAssertNil(objectIDs)
                 }
                 do {
                     
                     let fetchClauses: [FetchClause] = [
                         OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                     ]
-                    let objects = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchAll(from, fetchClauses)
                     }
-                    XCTAssertNil(objects)
-                    
-                    let objectIDs = try? self.expectLogger([.logError]) {
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchObjectIDs(from, fetchClauses)
                     }
-                    XCTAssertNil(objectIDs)
                 }
             }
         }
@@ -1411,8 +1384,8 @@ final class FetchTests: BaseTestDataTestCase {
                 
                 let from = From<TestEntity1>("Config1")
                 do {
-                    
-                    let count = try? self.expectLogger([.logError]) {
+
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchCount(
                             from,
@@ -1420,11 +1393,10 @@ final class FetchTests: BaseTestDataTestCase {
                             OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                         )
                     }
-                    XCTAssertNil(count)
                 }
                 do {
-                    
-                    let count = try? self.expectLogger([.logError]) {
+
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchCount(
                             from,
@@ -1432,11 +1404,10 @@ final class FetchTests: BaseTestDataTestCase {
                             OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                         )
                     }
-                    XCTAssertNil(count)
                 }
                 do {
-                    
-                    let count = try? self.expectLogger([.logError]) {
+
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchCount(
                             from,
@@ -1444,7 +1415,6 @@ final class FetchTests: BaseTestDataTestCase {
                             OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                         )
                     }
-                    XCTAssertNil(count)
                 }
             }
         }
@@ -1561,8 +1531,8 @@ final class FetchTests: BaseTestDataTestCase {
                 
                 let from = From<TestEntity1>("Config2")
                 do {
-                    
-                    let count = try? self.expectLogger([.logError]) {
+
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchCount(
                             from,
@@ -1570,11 +1540,10 @@ final class FetchTests: BaseTestDataTestCase {
                             OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                         )
                     }
-                    XCTAssertNil(count)
                 }
                 do {
-                    
-                    let count = try? self.expectLogger([.logError]) {
+
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchCount(
                             from,
@@ -1582,11 +1551,10 @@ final class FetchTests: BaseTestDataTestCase {
                             OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                         )
                     }
-                    XCTAssertNil(count)
                 }
                 do {
-                    
-                    let count = try? self.expectLogger([.logError]) {
+
+                    self.expectError(code: .persistentStoreNotFound) {
                         
                         try stack.fetchCount(
                             from,
@@ -1594,7 +1562,6 @@ final class FetchTests: BaseTestDataTestCase {
                             OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                         )
                     }
-                    XCTAssertNil(count)
                 }
             }
         }
@@ -1821,17 +1788,14 @@ final class FetchTests: BaseTestDataTestCase {
                             Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1),
                             OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                         ]
-                        let object = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchOne(from, fetchClauses)
                         }
-                        XCTAssertNil(object as Any?)
-                        
-                        let objectID = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchObjectID(from, fetchClauses)
                         }
-                        XCTAssertNil(objectID as Any?)
                     }
                     do {
                         
@@ -1839,17 +1803,14 @@ final class FetchTests: BaseTestDataTestCase {
                             Where<TestEntity1>("%K < %@", #keyPath(TestEntity1.testNumber), 4),
                             OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                         ]
-                        let object = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchOne(from, fetchClauses)
                         }
-                        XCTAssertNil(object as Any?)
-                        
-                        let objectID = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchObjectID(from, fetchClauses)
                         }
-                        XCTAssertNil(objectID as Any?)
                     }
                     try transaction.cancel()
                 }
@@ -2015,17 +1976,14 @@ final class FetchTests: BaseTestDataTestCase {
                             Where<TestEntity1>("%K > %@", #keyPath(TestEntity1.testNumber), 1),
                             OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                         ]
-                        let object = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchOne(from, fetchClauses)
                         }
-                        XCTAssertNil(object as Any?)
-                        
-                        let objectID = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchObjectID(from, fetchClauses)
                         }
-                        XCTAssertNil(objectID as Any?)
                     }
                     do {
                         
@@ -2033,17 +1991,14 @@ final class FetchTests: BaseTestDataTestCase {
                             Where<TestEntity1>("%K < %@", #keyPath(TestEntity1.testNumber), 4),
                             OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                         ]
-                        let object = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchOne(from, fetchClauses)
                         }
-                        XCTAssertNil(object as Any?)
-                        
-                        let objectID = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchObjectID(from, fetchClauses)
                         }
-                        XCTAssertNil(objectID as Any?)
                     }
                     try transaction.cancel()
                 }
@@ -2353,17 +2308,14 @@ final class FetchTests: BaseTestDataTestCase {
                             Where<TestEntity1>("%K < %@", #keyPath(TestEntity1.testNumber), 4),
                             OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                         ]
-                        let objects = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchAll(from, fetchClauses)
                         }
-                        XCTAssertNil(objects)
-                        
-                        let objectIDs = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchObjectIDs(from, fetchClauses)
                         }
-                        XCTAssertNil(objectIDs)
                     }
                     do {
                         
@@ -2371,17 +2323,14 @@ final class FetchTests: BaseTestDataTestCase {
                             Where<TestEntity1>(#keyPath(TestEntity1.testNumber), isEqualTo: 0),
                             OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                         ]
-                        let objects = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchAll(from, fetchClauses)
                         }
-                        XCTAssertNil(objects)
-                        
-                        let objectIDs = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchObjectIDs(from, fetchClauses)
                         }
-                        XCTAssertNil(objectIDs)
                     }
                     do {
                         
@@ -2389,17 +2338,14 @@ final class FetchTests: BaseTestDataTestCase {
                             Where<TestEntity1>(#keyPath(TestEntity1.testNumber), isEqualTo: nil),
                             OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                         ]
-                        let objects = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchAll(from, fetchClauses)
                         }
-                        XCTAssertNil(objects)
-                        
-                        let objectIDs = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchObjectIDs(from, fetchClauses)
                         }
-                        XCTAssertNil(objectIDs)
                     }
                     try transaction.cancel()
                 }
@@ -2614,34 +2560,28 @@ final class FetchTests: BaseTestDataTestCase {
                         let fetchClauses: [FetchClause] = [
                             OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                         ]
-                        let objects = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchAll(from, fetchClauses)
                         }
-                        XCTAssertNil(objects)
-                        
-                        let objectIDs = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchObjectIDs(from, fetchClauses)
                         }
-                        XCTAssertNil(objectIDs)
                     }
                     do {
                         
                         let fetchClauses: [FetchClause] = [
                             OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                         ]
-                        let objects = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchAll(from, fetchClauses)
                         }
-                        XCTAssertNil(objects)
-                        
-                        let objectIDs = try? self.expectLogger([.logError]) {
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchObjectIDs(from, fetchClauses)
                         }
-                        XCTAssertNil(objectIDs)
                     }
                     try transaction.cancel()
                 }
@@ -2940,8 +2880,8 @@ final class FetchTests: BaseTestDataTestCase {
                     
                     let from = From<TestEntity1>("Config1")
                     do {
-                        
-                        let count = try? self.expectLogger([.logError]) {
+
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchCount(
                                 from,
@@ -2949,11 +2889,10 @@ final class FetchTests: BaseTestDataTestCase {
                                 OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                             )
                         }
-                        XCTAssertNil(count)
                     }
                     do {
-                        
-                        let count = try? self.expectLogger([.logError]) {
+
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchCount(
                                 from,
@@ -2961,11 +2900,10 @@ final class FetchTests: BaseTestDataTestCase {
                                 OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                             )
                         }
-                        XCTAssertNil(count)
                     }
                     do {
-                        
-                        let count = try? self.expectLogger([.logError]) {
+
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchCount(
                                 from,
@@ -2973,7 +2911,6 @@ final class FetchTests: BaseTestDataTestCase {
                                 OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                             )
                         }
-                        XCTAssertNil(count)
                     }
                     try transaction.cancel()
                 }
@@ -3101,8 +3038,8 @@ final class FetchTests: BaseTestDataTestCase {
                     
                     let from = From<TestEntity1>("Config2")
                     do {
-                        
-                        let count = try? self.expectLogger([.logError]) {
+
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchCount(
                                 from,
@@ -3110,11 +3047,10 @@ final class FetchTests: BaseTestDataTestCase {
                                 OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testEntityID)))
                             )
                         }
-                        XCTAssertNil(count)
                     }
                     do {
-                        
-                        let count = try? self.expectLogger([.logError]) {
+
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchCount(
                                 from,
@@ -3122,11 +3058,10 @@ final class FetchTests: BaseTestDataTestCase {
                                 OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                             )
                         }
-                        XCTAssertNil(count)
                     }
                     do {
-                        
-                        let count = try? self.expectLogger([.logError]) {
+
+                        self.expectError(code: .persistentStoreNotFound) {
                             
                             try transaction.fetchCount(
                                 from,
@@ -3134,7 +3069,6 @@ final class FetchTests: BaseTestDataTestCase {
                                 OrderBy<TestEntity1>(.descending(#keyPath(TestEntity1.testEntityID)))
                             )
                         }
-                        XCTAssertNil(count)
                     }
                     try transaction.cancel()
                 }
