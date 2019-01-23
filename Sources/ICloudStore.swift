@@ -35,7 +35,7 @@ import CoreData
  A storage interface backed by an SQLite database managed by iCloud.
  */
 @available(*, deprecated, message: "Please see the release notes and Core Data documentation.")
-public final class ICloudStore: CloudStorage {
+public final class ICloudStore: CloudStorage, CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
     
     /**
      Initializes an iCloud store interface from the given ubiquitous store information. Returns `nil` if the container could not be located or if iCloud storage is unavailable for the current user or device
@@ -446,6 +446,65 @@ public final class ICloudStore: CloudStorage {
                 options: options
             )
         }
+    }
+
+
+    // MARK: CustomDebugStringConvertible
+
+    public var debugDescription: String {
+
+        func formattedValue(_ any: Any) -> String {
+
+            switch any {
+
+            case let any as CoreStoreDebugStringConvertible:
+                return any.coreStoreDumpString
+
+            default:
+                return "\(any)"
+            }
+        }
+        var string = "(\(String(reflecting: type(of: self)))) "
+        string.append(formattedValue(self))
+        return string
+    }
+
+
+    // MARK: CoreStoreDebugStringConvertible
+
+    public var coreStoreDumpString: String {
+
+        func formattedValue(_ any: Any) -> String {
+
+            switch any {
+
+            case let any as CoreStoreDebugStringConvertible:
+                return any.coreStoreDumpString
+
+            default:
+                return "\(any)"
+            }
+        }
+        func createFormattedString(_ firstLine: String, _ lastLine: String, _ info: [(key: String, value: Any)]) -> String {
+
+            var string = firstLine
+            for (key, value) in info {
+
+                string.append("\n.\(key) = \(formattedValue(value));")
+            }
+            string = string.replacingOccurrences(of: "\n", with: "\n\(String(repeating: " ", count: 4))")
+            string.append("\n\(lastLine)")
+            return string
+        }
+        return createFormattedString(
+            "(", ")",
+            [
+                ("configuration", self.configuration as Any),
+                ("storeOptions", self.storeOptions as Any),
+                ("cacheFileURL", self.cacheFileURL),
+                ("cloudStorageOptions", self.cloudStorageOptions)
+            ]
+        )
     }
     
     

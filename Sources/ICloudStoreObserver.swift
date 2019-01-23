@@ -47,7 +47,7 @@ public protocol ICloudStoreObserver: class {
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
     func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage: ICloudStore, dataStack: DataStack)
-    
+
     /**
      Notifies that the initial ubiquitous store import completed
      
@@ -103,26 +103,6 @@ public protocol ICloudStoreObserver: class {
      - parameter dataStack: the `DataStack` that manages the peristent store
      */
     func iCloudStoreDidRemoveContent(storage: ICloudStore, dataStack: DataStack)
-}
-
-@available(*, deprecated, message: "Please see the release notes and Core Data documentation.")
-public extension ICloudStoreObserver {
-    
-    public func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage: ICloudStore, dataStack: DataStack) {}
-    
-    public func iCloudStoreDidFinishUbiquitousStoreInitialImport(storage: ICloudStore, dataStack: DataStack) {}
-    
-    public func iCloudStoreWillAddAccount(storage: ICloudStore, dataStack: DataStack) {}
-    
-    public func iCloudStoreDidAddAccount(storage: ICloudStore, dataStack: DataStack) {}
-    
-    public func iCloudStoreWillRemoveAccount(storage: ICloudStore, dataStack: DataStack) {}
-    
-    public func iCloudStoreDidRemoveAccount(storage: ICloudStore, dataStack: DataStack) {}
-    
-    public func iCloudStoreWillRemoveContent(storage: ICloudStore, dataStack: DataStack) {}
-    
-    public func iCloudStoreDidRemoveContent(storage: ICloudStore, dataStack: DataStack) {}
 }
 
 #endif

@@ -86,8 +86,12 @@ public extension KeyPathString {
 
 // MARK: - KeyPath: DynamicKeyPath
 
-// TODO: SE-0143 is not implemented: https://github.com/apple/swift-evolution/blob/master/proposals/0143-conditional-conformances.md
-//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: ImportableAttributeType {
+// TODO: SE-0143 (https://github.com/apple/swift-evolution/blob/master/proposals/0143-conditional-conformances.md) is implemented but multiple conformances for the same type currently cannot be declared.
+//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: ImportableAttributeType
+//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: ImportableAttributeType?
+//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: NSManagedObject?
+//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: NSSet
+//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: NSOrderedSet
 extension KeyPath: DynamicKeyPath {
 
     public typealias ObjectType = Root

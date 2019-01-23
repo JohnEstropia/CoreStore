@@ -324,38 +324,6 @@ extension GroupBy: CustomDebugStringConvertible, CoreStoreDebugStringConvertible
 }
 
 
-#if os(iOS) || os(macOS)
-
-// MARK: - ICloudStore
-
-@available(*, deprecated, message: "Please see the release notes and Core Data documentation.")
-extension ICloudStore: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return formattedDebugDescription(self)
-    }
-    
-    
-    // MARK: CoreStoreDebugStringConvertible
-    
-    public var coreStoreDumpString: String {
-        
-        return createFormattedString(
-            "(", ")",
-            ("configuration", self.configuration as Any),
-            ("storeOptions", self.storeOptions as Any),
-            ("cacheFileURL", self.cacheFileURL),
-            ("cloudStorageOptions", self.cloudStorageOptions)
-        )
-    }
-}
-    
-#endif
-
-
 // MARK: - InMemoryStore
 
 extension InMemoryStore: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
