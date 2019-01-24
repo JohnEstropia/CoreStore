@@ -6,9 +6,9 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 <br />
 <a href="https://travis-ci.org/JohnEstropia/CoreStore"><img alt="Build Status" src="https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg?style=flat" /></a>
+<a href="https://github.com/JohnEstropia/CoreStore/commits"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/johnestropia/corestore.svg?style=flat" /></a>
 <a href="http://cocoadocs.org/docsets/CoreStore"><img alt="Platform" src="https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat" /></a>
 <a href="https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE"><img alt="License" src="https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat" /></a>
-<a href="https://github.com/JohnEstropia/CoreStore/commits"><imd alt="Last Commit" src="https://img.shields.io/github/last-commit/johnestropia/corestore.svg?style=flat" /></a>
 <br /><br />Dependency managers<br />
 <a href="https://cocoapods.org/pods/CoreStore"><img alt="Cocoapods compatible" src="https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat&label=Cocoapods" /></a>
 <a href="https://github.com/Carthage/Carthage"><img alt="Carthage compatible" src="https://img.shields.io/badge/Carthage-compatible-16a085.svg?style=flat" /></a>
