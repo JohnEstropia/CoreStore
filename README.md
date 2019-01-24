@@ -8,20 +8,21 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <a href="https://travis-ci.org/JohnEstropia/CoreStore"><img alt="Build Status" src="https://img.shields.io/travis/JohnEstropia/CoreStore/master.svg?style=flat" /></a>
 <a href="http://cocoadocs.org/docsets/CoreStore"><img alt="Platform" src="https://img.shields.io/cocoapods/p/CoreStore.svg?style=flat" /></a>
 <a href="https://raw.githubusercontent.com/JohnEstropia/CoreStore/master/LICENSE"><img alt="License" src="https://img.shields.io/cocoapods/l/CoreStore.svg?style=flat" /></a>
+<a href="https://github.com/JohnEstropia/CoreStore/commits"><imd alt="Last Commit" src="https://img.shields.io/github/last-commit/johnestropia/corestore.svg?style=flat" /></a>
 <br /><br />Dependency managers<br />
 <a href="https://cocoapods.org/pods/CoreStore"><img alt="Cocoapods compatible" src="https://img.shields.io/cocoapods/v/CoreStore.svg?style=flat&label=Cocoapods" /></a>
 <a href="https://github.com/Carthage/Carthage"><img alt="Carthage compatible" src="https://img.shields.io/badge/Carthage-compatible-16a085.svg?style=flat" /></a>
-<a href="https://swiftpkgs.ng.bluemix.net/package/JohnEstropia/CoreStore"><img alt="Swift Package Manager compatible" src="https://img.shields.io/badge/Swift_Package_Manager-compatible-orange.svg?style=flat" /></a>
+<a href="https://swift.org/source-compatibility/#current-list-of-projects"><img alt="Swift Package Manager compatible" src="https://img.shields.io/badge/Swift_Package_Manager-compatible-orange.svg?style=flat" /></a>
 <br /><br />Contact<br />
 <a href="http://swift-corestore-slack.herokuapp.com/"><img alt="Join us on Slack!" src="http://swift-corestore-slack.herokuapp.com/badge.svg" /></a>
 <a href="https://twitter.com/JohnEstropia"><img alt="Reach me on Twitter!" src="https://img.shields.io/badge/twitter-%40JohnEstropia-3498db.svg" /></a>
 <br />
 </p>
 
-* **Swift 4.2:** iOS 9+ / macOS 10.10+ / watchOS 2.0+ / tvOS 9.0+
+* **Swift 4.2:** iOS 10+ / macOS 10.12+ / watchOS 3.0+ / tvOS 10.0+
 * Other Swift versions: [Swift 3.2(version 4.2.3)](https://github.com/JohnEstropia/CoreStore/tree/4.2.3)
 
-Upgrading from CoreStore 4.2 (Swift 3.2) to 5.x (Swift 4.x)? Check out the [new features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
+Upgrading from CoreStore 5.x (min iOS 9) to 6.x (min iOS 10)? Check out the [new features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
 
 CoreStore is now part of the [Swift Source Compatibility projects](https://swift.org/source-compatibility/#current-list-of-projects).
 
@@ -86,6 +87,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
             - [`GroupBy` clause](#groupby-clause)
     - [Logging and error reporting](#logging-and-error-reporting)
     - [Observing changes and notifications](#observing-changes-and-notifications)
+        - [Observe a single property](#observe-a-single-property)
         - [Observe a single object](#observe-a-single-object)
         - [Observe a list of objects](#observe-a-list-of-objects)
     - [Objective-C support](#objective-c-support)
@@ -139,12 +141,12 @@ CoreStore.perform(
 
 Fetching objects (simple):
 ```swift
-let people = CoreStore.fetchAll(From<MyPersonEntity>())
+let people = try CoreStore.fetchAll(From<MyPersonEntity>())
 ```
 
 Fetching objects (complex):
 ```swift
-let people = CoreStore.fetchAll(
+let people = try CoreStore.fetchAll(
     From<MyPersonEntity>()
         .where(\.age > 30),
         .orderBy(.ascending(\.name), .descending(.\age)),
@@ -154,7 +156,7 @@ let people = CoreStore.fetchAll(
 
 Querying values:
 ```swift
-let maxAge = CoreStore.queryValue(
+let maxAge = try CoreStore.queryValue(
     From<MyPersonEntity>()
         .select(Int.self, .maximum(\.age))
 )
@@ -851,7 +853,7 @@ To update an existing object, fetch the object's instance from the transaction:
 ```swift
 CoreStore.perform(
     asynchronous: { (transaction) -> Void in
-        let person = transaction.fetchOne(
+        let person = try transaction.fetchOne(
             From<MyPersonEntity>()
                 .where(\.name == "Jane Smith")
         )
@@ -913,8 +915,8 @@ let jane: MyPersonEntity = // ...
 
 CoreStore.perform(
     asynchronous: { (transaction) -> Void in
-        transaction.delete(john, jane)
-        // transaction.delete([john, jane]) is also allowed
+        try transaction.delete(john, jane)
+        // try transaction.delete([john, jane]) is also allowed
     },
     completion: { _ in }
 )
@@ -923,7 +925,7 @@ If you do not have references yet to the objects to be deleted, transactions hav
 ```swift
 CoreStore.perform(
     asynchronous: { (transaction) -> Void in
-        transaction.deleteAll(
+        try transaction.deleteAll(
             From<MyPersonEntity>()
                 .where(\.age > 30)
         )
@@ -971,7 +973,7 @@ var peopleIDs: [NSManagedObjectID] = // ...
 
 CoreStore.perform(
     asynchronous: { (transaction) -> Void in
-        let jane = transaction.fetchOne(
+        let jane = try transaction.fetchOne(
             From<MyPersonEntity>()
                 .where(\.name == "Jane Smith")
         )
@@ -1184,17 +1186,17 @@ Before we dive in, be aware that CoreStore distinguishes between *fetching* and 
 #### `From` clause
 The search conditions for fetches and queries are specified using *clauses*. All fetches and queries require a `From` clause that indicates the target entity type:
 ```swift
-let people = CoreStore.fetchAll(From<MyPersonEntity>())
+let people = try CoreStore.fetchAll(From<MyPersonEntity>())
 ```
 `people` in the example above will be of type `[MyPersonEntity]`. The `From<MyPersonEntity>()` clause indicates a fetch to all persistent stores that `MyPersonEntity` belong to.
 
 If the entity exists in multiple configurations and you need to only search from a particular configuration, indicate in the `From` clause the configuration name for the destination persistent store:
 ```swift
-let people = CoreStore.fetchAll(From<MyPersonEntity>("Config1")) // ignore objects in persistent stores other than the "Config1" configuration
+let people = try CoreStore.fetchAll(From<MyPersonEntity>("Config1")) // ignore objects in persistent stores other than the "Config1" configuration
 ```
 or if the persistent store is the auto-generated "Default" configuration, specify `nil`:
 ```swift
-let person = CoreStore.fetchAll(From<MyPersonEntity>(nil))
+let person = try CoreStore.fetchAll(From<MyPersonEntity>(nil))
 ```
 Now we know how to use a `From` clause, let's move on to fetching and querying.
 
@@ -1214,11 +1216,11 @@ Each method's purpose is straightforward, but we need to understand how to set t
 
 The `Where` clause is CoreStore's `NSPredicate` wrapper. It specifies the search filter to use when fetching (or querying). It implements all initializers that `NSPredicate` does (except for `-predicateWithBlock:`, which Core Data does not support):
 ```swift
-var people = CoreStore.fetchAll(
+var people = try CoreStore.fetchAll(
     From<MyPersonEntity>(),
     Where<MyPersonEntity>("%K > %d", "age", 30) // string format initializer
 )
-people = CoreStore.fetchAll(
+people = try CoreStore.fetchAll(
     From<MyPersonEntity>(),
     Where<MyPersonEntity>(true) // boolean initializer
 )
@@ -1233,14 +1235,14 @@ var people = CoreStore.fetchAll(
 ```
 ⭐️Starting CoreStore 5.0, `Where` clauses became more type-safe and are now generic types. To avoid verbose repetition of the generic object type, fetch methods now support **Fetch Chain builders**. We can also use Swift's Smart KeyPaths as the `Where` clause expression:
 ```swift
-var people = CoreStore.fetchAll(
+var people = try CoreStore.fetchAll(
     From<MyPersonEntity>()
         .where(\.age > 30) // Type-safe!
 )
 ```
 `Where` clauses also implement the `&&`, `||`, and `!` logic operators, so you can provide logical conditions without writing too much `AND`, `OR`, and `NOT` strings:
 ```swift
-var people = CoreStore.fetchAll(
+var people = try CoreStore.fetchAll(
     From<MyPersonEntity>()
         .where(\.age > 30 && \.gender == "M")
 )
@@ -1251,7 +1253,7 @@ If you do not provide a `Where` clause, all objects that belong to the specified
 
 The `OrderBy` clause is CoreStore's `NSSortDescriptor` wrapper. Use it to specify attribute keys in which to sort the fetch (or query) results with.
 ```swift
-var mostValuablePeople = CoreStore.fetchAll(
+var mostValuablePeople = try CoreStore.fetchAll(
     From<MyPersonEntity>(),
     OrderBy<MyPersonEntity>(.descending("rating"), .ascending("surname"))
 )
@@ -1259,7 +1261,7 @@ var mostValuablePeople = CoreStore.fetchAll(
 As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.ascending` or `.descending`.
 ⭐️As with `Where` clauses, CoreStore 5.0 turned `OrderBy` clauses into generic types. To avoid verbose repetition of the generic object type, fetch methods now support **Fetch Chain builders**. We can also use Swift's Smart KeyPaths as the `OrderBy` clause expression:
 ```swift
-var people = CoreStore.fetchAll(
+var people = try CoreStore.fetchAll(
     From<MyPersonEntity>()
         .orderBy(.descending(\.rating), .ascending(\.surname)) // Type-safe!
 )
@@ -1271,7 +1273,7 @@ var orderBy = OrderBy<MyPersonEntity>(.descending(\.rating))
 if sortFromYoungest {
     orderBy += OrderBy(.ascending(\.age))
 }
-var mostValuablePeople = CoreStore.fetchAll(
+var mostValuablePeople = try CoreStore.fetchAll(
     From<MyPersonEntity>(),
     orderBy
 )
@@ -1281,7 +1283,7 @@ var mostValuablePeople = CoreStore.fetchAll(
 
 The `Tweak` clause lets you, uh, *tweak* the fetch (or query). `Tweak` exposes the `NSFetchRequest` in a closure where you can make changes to its properties:
 ```swift
-var people = CoreStore.fetchAll(
+var people = try CoreStore.fetchAll(
     From<MyPersonEntity>(),
     Where<MyPersonEntity>("age > %d", 30),
     OrderBy<MyPersonEntity>(.ascending("surname")),
@@ -1294,7 +1296,7 @@ var people = CoreStore.fetchAll(
 ```
 `Tweak` also supports **Fetch Chain builders**:
 ```swift
-var people = CoreStore.fetchAll(
+var people = try CoreStore.fetchAll(
     From<MyPersonEntity>(),
         .where(\.age > 30)
         .orderBy(.ascending(\.surname))
@@ -1325,7 +1327,7 @@ Setting up the `From`, `Where`, `OrderBy`, and `Tweak` clauses is similar to how
 
 The `Select<T>` clause specifies the target attribute/aggregate key, as well as the expected return type: 
 ```swift
-let johnsAge = CoreStore.queryValue(
+let johnsAge = try CoreStore.queryValue(
     From<MyPersonEntity>(),
     Select<Int>("age"),
     Where("name == %@", "John Smith")
@@ -1335,14 +1337,14 @@ The example above queries the "age" property for the first object that matches t
 
 For `queryAttributes(...)`, only `NSDictionary` is valid for `Select`, thus you are allowed to omit the generic type:
 ```swift
-let allAges = CoreStore.queryAttributes(
+let allAges = try CoreStore.queryAttributes(
     From<MyPersonEntity>(),
     Select("age")
 )
 ```
 ⭐️Starting CoreStore 5.0, query methods now support **Query Chain builders**. We can also use Swift's Smart KeyPaths to use in the expressions:
 ```swift
-let johnsAge = CoreStore.queryValue(
+let johnsAge = try CoreStore.queryValue(
     From<MyPersonEntity>()
         .select(\.age) // binds the result to Int
         .where(\.name == "John Smith")
@@ -1357,7 +1359,7 @@ If you only need a value for a particular attribute, you can just specify the ke
 - `.sum(...)`
 
 ```swift
-let oldestAge = CoreStore.queryValue(
+let oldestAge = try CoreStore.queryValue(
     From<MyPersonEntity>(),
     Select<Int>(.maximum("age"))
 )
@@ -1365,7 +1367,7 @@ let oldestAge = CoreStore.queryValue(
 
 For `queryAttributes(...)` which returns an array of dictionaries, you can specify multiple attributes/aggregates to `Select`:
 ```swift
-let personJSON = CoreStore.queryAttributes(
+let personJSON = try CoreStore.queryAttributes(
     From<MyPersonEntity>(),
     Select("name", "age")
 )
@@ -1385,7 +1387,7 @@ let personJSON = CoreStore.queryAttributes(
 ```
 You can also include an aggregate as well:
 ```swift
-let personJSON = CoreStore.queryAttributes(
+let personJSON = try CoreStore.queryAttributes(
     From<MyPersonEntity>(),
     Select("name", .count("friends"))
 )
@@ -1405,7 +1407,7 @@ which returns:
 ```
 The `"count(friends)"` key name was automatically used by CoreStore, but you can specify your own key alias if you need:
 ```swift
-let personJSON = CoreStore.queryAttributes(
+let personJSON = try CoreStore.queryAttributes(
     From<MyPersonEntity>(),
     Select("name", .count("friends", as: "friendsCount"))
 )
@@ -1428,7 +1430,7 @@ which now returns:
 
 The `GroupBy` clause lets you group results by a specified attribute/aggregate. This is useful only for `queryAttributes(...)` since `queryValue(...)` just returns the first value.
 ```swift
-let personJSON = CoreStore.queryAttributes(
+let personJSON = try CoreStore.queryAttributes(
     From<MyPersonEntity>(),
     Select("age", .count("age", as: "count")),
     GroupBy("age")
@@ -1436,7 +1438,7 @@ let personJSON = CoreStore.queryAttributes(
 ```
 ⭐️Starting CoreStore 5.0, `GroupBy` clauses are now also generic types and now support **Query Chain builders**. We can also use Swift's Smart KeyPaths to use in the expressions:
 ```swift
-let personJSON = CoreStore.queryAttributes(
+let personJSON = try CoreStore.queryAttributes(
     From<MyPersonEntity>()
         .select(.attribute(\.age), .count(\.age, as: "count"))
         .groupBy(\.age)
@@ -1491,16 +1493,35 @@ A couple of examples, `ListMonitor`:
 These are all implemented with `CustomDebugStringConvertible.debugDescription`, so they work with lldb's `po` command as well.
 
 ## Observing changes and notifications
-> (unavailable on macOS versions below 10.12)
 
 CoreStore provides type-safe wrappers for observing managed objects:
 
 - `ObjectMonitor`: use to monitor changes to a single `NSManagedObject` or `CoreStoreObject` instance (instead of Key-Value Observing)
 - `ListMonitor`: use to monitor changes to a list of `NSManagedObject` or `CoreStoreObject` instances (instead of `NSFetchedResultsController`)
 
+### Observe a single property
+To get notifications for single property changes in an object, there are two methods depending on the object's base class.
+
+- For `NSManagedObject` subclasses: Use the standard KVO method:
+```swift
+let observer = person.observe(\.age, options: [.new]) { (person, change)
+    print("Happy \(change.newValue)th birthday!")
+}
+```
+
+- For `CoreStoreObject` subclasses: Call the `observe(...)` method directly on the property. You'll notice that the API itself is a bit similar to the KVO method:
+```swift
+let observer = person.age.observe(options: [.new]) { (person, change)
+    print("Happy \(change.newValue)th birthday!")
+}
+```
+
+For both methods, you will need to keep a reference to the returned `observer` for the duration of the observation.  
+
+
 ### Observe a single object
 
-To observe an object, implement the `ObjectObserver` protocol and specify the `EntityType`:
+To observe an object itself as a whole, implement the `ObjectObserver` protocol and specify the `EntityType`:
 ```swift
 class MyViewController: UIViewController, ObjectObserver {
     func objectMonitor(monitor: ObjectMonitor<MyPersonEntity>, willUpdateObject object: MyPersonEntity) {
@@ -1796,7 +1817,7 @@ let keyPath: String = Dog.keyPath { $0.nickname }
 ```
 as well as `Where` and `OrderBy` clauses
 ```swift
-let puppies = CoreStore.fetchAll(
+let puppies = try CoreStore.fetchAll(
     From<Dog>()
         .where(\.age < 1)
         .orderBy(.ascending(\.age))
@@ -1841,8 +1862,8 @@ Once the version lock is set, any changes in the properties or to the model will
 
 # Installation
 - Requires:
-    - iOS 8 SDK and above
-    - Swift 4 (Xcode 9+)
+    - iOS 10 SDK and above
+    - Swift 4.2 (Xcode 10+)
 - Dependencies:
     - *None*
 - Other notes:
@@ -1851,7 +1872,7 @@ Once the version lock is set, any changes in the properties or to the model will
 ### Install with CocoaPods
 In your `Podfile`, add
 ```
-pod 'CoreStore', '~> 5.0'
+pod 'CoreStore', '~> 6.0'
 ```
 and run 
 ```
@@ -1862,7 +1883,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 5.0.0
+github "JohnEstropia/CoreStore" >= 6.0.0
 ```
 and run 
 ```
@@ -1870,17 +1891,19 @@ carthage update
 ```
 This installs CoreStore as a framework. Declare `import CoreStore` in your swift file to use the library.
 
+#### Install with Swift Package Manager:
+```swift
+dependencies: [
+    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "6.0.0"))
+]
+```
+Declare `import CoreStore` in your swift file to use the library.
+
 ### Install as Git Submodule
 ```
 git submodule add https://github.com/JohnEstropia/CoreStore.git <destination directory>
 ```
 Drag and drop **CoreStore.xcodeproj** to your project.
-
-#### To install as a framework:
-Drag and drop **CoreStore.xcodeproj** to your project.
-
-#### To include directly in your app module:
-Add all *.swift* files to your project.
 
 
 ### Objective-C support
