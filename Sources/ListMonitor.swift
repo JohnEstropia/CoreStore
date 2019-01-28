@@ -90,7 +90,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
         if self.isSectioned {
             
-            return ObjectType.cs_fromRaw(object: self.fetchedResultsController.fetchedObjects![index])
+            return ObjectType.cs_fromRaw(object: (self.fetchedResultsController.fetchedObjects as NSArray?)![index] as! NSManagedObject)
         }
         return self[0, index]
     }
@@ -105,10 +105,10 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         
         if self.isSectioned {
             
-            let fetchedObjects = self.fetchedResultsController.fetchedObjects!
+            let fetchedObjects = (self.fetchedResultsController.fetchedObjects as NSArray?)!
             if index < fetchedObjects.count && index >= 0 {
                 
-                return ObjectType.cs_fromRaw(object: fetchedObjects[index])
+                return ObjectType.cs_fromRaw(object: fetchedObjects[index] as! NSManagedObject)
             }
             return nil
         }
@@ -353,7 +353,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
         if self.isSectioned {
             
-            return self.fetchedResultsController.fetchedObjects?.index(of: object.cs_toRaw())
+            return (self.fetchedResultsController.fetchedObjects as NSArray?)?.index(of: object.cs_toRaw())
         }
         return self.fetchedResultsController.indexPath(forObject: object.cs_toRaw())?[1]
     }
