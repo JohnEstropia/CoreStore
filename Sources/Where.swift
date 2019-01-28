@@ -121,6 +121,16 @@ public struct Where<D: DynamicObject>: WhereClauseType, FetchClause, QueryClause
         
         self.init(true)
     }
+
+    /**
+     Initializes a `Where` clause with an existing `Where` clause.
+
+     - parameter clause: the existing `Where` clause.
+     */
+    public init(_ clause: Where<D>) {
+
+        self.init(clause.predicate)
+    }
     
     /**
      Initializes a `Where` clause with a predicate that always evaluates to the specified boolean value
