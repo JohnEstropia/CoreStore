@@ -555,7 +555,8 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      `refetch(...)` broadcasts `listMonitorWillRefetch(...)` to its observers immediately, and then `listMonitorDidRefetch(...)` after the new fetch request completes.
      
-     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
      */
     public func refetch(_ fetchClauses: FetchClause...) {
         
@@ -567,7 +568,8 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      `refetch(...)` broadcasts `listMonitorWillRefetch(...)` to its observers immediately, and then `listMonitorDidRefetch(...)` after the new fetch request completes.
      
-     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
      */
     public func refetch(_ fetchClauses: [FetchClause]) {
         

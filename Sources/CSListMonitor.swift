@@ -495,7 +495,8 @@ public final class CSListMonitor: NSObject {
      
      `refetch(...)` broadcasts `listMonitorWillRefetch(...)` to its observers immediately, and then `listMonitorDidRefetch(...)` after the new fetch request completes.
      
-     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses. Note that only specified clauses will be changed; unspecified clauses will use previous values.
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - Important: Starting CoreStore 4.0, all `CSFetchClause`s required by the `CSListMonitor` should be provided in the arguments list of `refetch(...)`.
      */
     @objc
     public func refetch(_ fetchClauses: [CSFetchClause]) {
