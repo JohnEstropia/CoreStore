@@ -30,7 +30,7 @@ import CoreData
 // MARK: - CSCoreStore
 
 @available(macOS 10.12, *)
-public extension CSCoreStore {
+extension CSCoreStore {
     
     /**
      Using the `defaultStack`, creates an `CSObjectMonitor` for the specified `NSManagedObject`. Multiple `CSObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.

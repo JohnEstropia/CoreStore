@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - NSManagedObject
 
-public extension NSManagedObject {
+extension NSManagedObject {
     
     /**
      Returns this object's parent `UnsafeDataTransaction` instance if it was created from one. Returns `nil` if the parent transaction is either an `AsynchronousDataTransaction` or a `SynchronousDataTransaction`, or if the object is not managed by CoreStore.

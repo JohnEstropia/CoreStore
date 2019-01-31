@@ -262,7 +262,7 @@ extension CoreStoreError: CoreStoreSwiftType, _ObjectiveCBridgeableError {
 
 // MARK: Internal
 
-internal extension Error {
+extension Error {
     
     internal var bridgeToSwift: CoreStoreError {
         

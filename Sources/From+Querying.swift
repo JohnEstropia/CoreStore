@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - From
 
-public extension From {
+extension From {
     
     /**
      Creates a `FetchChainBuilder` that starts with the specified `Where` clause
@@ -240,7 +240,7 @@ public extension From {
 
 // MARK: - From where D: NSManagedObject
 
-public extension From where D: NSManagedObject {
+extension From where D: NSManagedObject {
     
     /**
      Creates a `QueryChainBuilder` that starts with a `Select` clause created from the specified key path
@@ -283,7 +283,7 @@ public extension From where D: NSManagedObject {
 
 // MARK: - From where D: CoreStoreObject
 
-public extension From where D: CoreStoreObject {
+extension From where D: CoreStoreObject {
     
     /**
      Creates a `FetchChainBuilder` that starts with the specified `Where` clause
@@ -453,7 +453,7 @@ public extension From where D: CoreStoreObject {
 
 // MARK: - FetchChainBuilder
 
-public extension FetchChainBuilder {
+extension FetchChainBuilder {
     
     /**
      Adds a `Where` clause to the `FetchChainBuilder`
@@ -580,7 +580,7 @@ public extension FetchChainBuilder {
 
 // MARK: - FetchChainBuilder where D: CoreStoreObject
 
-public extension FetchChainBuilder where D: CoreStoreObject {
+extension FetchChainBuilder where D: CoreStoreObject {
     
     public func `where`<T: AnyWhereClause>(_ clause: (D) -> T) -> FetchChainBuilder<D> {
         
@@ -591,7 +591,7 @@ public extension FetchChainBuilder where D: CoreStoreObject {
 
 // MARK: - QueryChainBuilder
 
-public extension QueryChainBuilder {
+extension QueryChainBuilder {
     
     /**
      Adds a `Where` clause to the `QueryChainBuilder`
@@ -754,7 +754,7 @@ public extension QueryChainBuilder {
 
 // MARK: - QueryChainBuilder where D: NSManagedObject
 
-public extension QueryChainBuilder where D: NSManagedObject {
+extension QueryChainBuilder where D: NSManagedObject {
     
     /**
      Adds a `GroupBy` clause to the `QueryChainBuilder`
@@ -771,7 +771,7 @@ public extension QueryChainBuilder where D: NSManagedObject {
 
 // MARK: - QueryChainBuilder where D: CoreStoreObject
 
-public extension QueryChainBuilder where D: CoreStoreObject {
+extension QueryChainBuilder where D: CoreStoreObject {
     
     /**
      Adds a `Where` clause to the `QueryChainBuilder`
@@ -833,7 +833,7 @@ public extension QueryChainBuilder where D: CoreStoreObject {
 // MARK: - SectionMonitorChainBuilder
 
 @available(macOS 10.12, *)
-public extension SectionMonitorChainBuilder {
+extension SectionMonitorChainBuilder {
     
     /**
      Adds a `Where` clause to the `SectionMonitorChainBuilder`
@@ -963,7 +963,7 @@ public extension SectionMonitorChainBuilder {
 // MARK: - SectionMonitorChainBuilder where D: CoreStoreObject
 
 @available(macOS 10.12, *)
-public extension SectionMonitorChainBuilder where D: CoreStoreObject {
+extension SectionMonitorChainBuilder where D: CoreStoreObject {
     
     /**
      Adds a `Where` clause to the `SectionMonitorChainBuilder`

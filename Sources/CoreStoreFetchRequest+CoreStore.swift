@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CoreStoreFetchRequest
 
-internal extension CoreStoreFetchRequest {
+extension CoreStoreFetchRequest {
     
     // MARK: Internal
     

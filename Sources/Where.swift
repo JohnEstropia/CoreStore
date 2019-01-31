@@ -45,7 +45,7 @@ public struct Where<D: DynamicObject>: WhereClauseType, FetchClause, QueryClause
         
         return Where<D>(NSCompoundPredicate(type: .and, subpredicates: [left.predicate, right.predicate]))
     }
-    
+
     /**
      Combines two `Where` predicates together using `OR` operator
      */
@@ -307,7 +307,7 @@ public struct Where<D: DynamicObject>: WhereClauseType, FetchClause, QueryClause
 
 // MARK: - Where where D: NSManagedObject
 
-public extension Where where D: NSManagedObject {
+extension Where where D: NSManagedObject {
     
     /**
      Initializes a `Where` clause that compares equality to `nil`
@@ -401,7 +401,7 @@ public extension Where where D: NSManagedObject {
 
 // MARK: - Where where D: CoreStoreObject
 
-public extension Where where D: CoreStoreObject {
+extension Where where D: CoreStoreObject {
     
     /**
      Initializes a `Where` clause that compares equality to `nil`
@@ -527,7 +527,7 @@ public extension Where where D: CoreStoreObject {
 
 // MARK: - Sequence where Iterator.Element: WhereClauseType
 
-public extension Sequence where Iterator.Element: WhereClauseType {
+extension Sequence where Iterator.Element: WhereClauseType {
     
     /**
      Combines multiple `Where` predicates together using `AND` operator
@@ -549,7 +549,7 @@ public extension Sequence where Iterator.Element: WhereClauseType {
 
 // MARK: - Deprecated
 
-public extension Where {
+extension Where {
     
     @available(*, deprecated, renamed: "&&?")
     public static func && (left: Where<D>, right: Where<D>?) -> Where<D> {

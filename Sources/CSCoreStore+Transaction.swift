@@ -28,7 +28,7 @@ import Foundation
 
 // MARK: - CSCoreStore
 
-public extension CSCoreStore {
+extension CSCoreStore {
     
     /**
      Using the `defaultStack`, begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.

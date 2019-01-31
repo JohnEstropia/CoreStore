@@ -28,7 +28,7 @@ import Foundation
 
 // MARK: - CSDataStack
 
-public extension CSDataStack {
+extension CSDataStack {
     
     /**
      Begins a transaction asynchronously where `NSManagedObject` creates, updates, and deletes can be made.

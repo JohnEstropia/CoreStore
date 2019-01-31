@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CoreStore
 
-public extension CoreStore {
+extension CoreStore {
 
     /**
      Asynchronously adds a `StorageInterface` to the `defaultStack`. Migrations are also initiated by default.

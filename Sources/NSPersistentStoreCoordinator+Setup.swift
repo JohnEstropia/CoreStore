@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - NSPersistentStoreCoordinator
 
-internal extension NSPersistentStoreCoordinator {
+extension NSPersistentStoreCoordinator {
     
     @nonobjc
     internal func performAsynchronously(_ closure: @escaping () -> Void) {

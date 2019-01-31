@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CSCoreStore
 
-public extension CSCoreStore {
+extension CSCoreStore {
     
     /**
      Returns the `defaultStack`'s model version. The version string is the same as the name of the version-specific .xcdatamodeld file.

@@ -29,7 +29,7 @@ import Foundation
 
 // MARK: - DynamicObject
 
-public extension DynamicObject where Self: CoreStoreObject {
+extension DynamicObject where Self: CoreStoreObject {
     
     /**
      The containing type for relationships. `Relationship`s can be any `CoreStoreObject` subclass.

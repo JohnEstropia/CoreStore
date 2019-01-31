@@ -1111,7 +1111,7 @@ private func createFormattedString(_ firstLine: String, _ lastLine: String, _ in
     return string
 }
 
-fileprivate extension String {
+extension String {
     
     fileprivate static func indention(_ level: Int = 1) -> String {
         

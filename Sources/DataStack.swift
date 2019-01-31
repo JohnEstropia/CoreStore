@@ -656,13 +656,13 @@ public final class DataStack: Equatable {
     
     // MARK: Obsolete
     
-    @available(*, obsoleted: 3.1, renamed: "entityDescription(for:)")
+    @available(swift, obsoleted: 3.1, renamed: "entityDescription(for:)")
     public func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
         return self.entityDescription(for: type)
     }
     
-    @available(*, obsoleted: 3.1, renamed: "objectID(forURIRepresentation:)")
+    @available(swift, obsoleted: 3.1, renamed: "objectID(forURIRepresentation:)")
     public func objectIDForURIRepresentation(_ url: URL) -> NSManagedObjectID? {
         
         return self.objectID(forURIRepresentation: url)

@@ -28,7 +28,7 @@ import Foundation
 
 // MARK: - DispatchQueue
 
-internal extension DispatchQueue {
+extension DispatchQueue {
     
     @nonobjc @inline(__always)
     internal static func serial(_ label: String, qos: DispatchQoS = .default) -> DispatchQueue {

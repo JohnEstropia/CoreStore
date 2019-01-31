@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - NSManagedObjectContext
 
-internal extension NSManagedObjectContext {
+extension NSManagedObjectContext {
     
     // MARK: Internal
     

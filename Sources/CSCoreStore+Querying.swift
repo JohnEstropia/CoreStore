@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CSCoreStore
 
-public extension CSCoreStore {
+extension CSCoreStore {
     
     /**
      Using the `defaultStack`, fetches the `NSManagedObject` instance in the transaction's context from a reference created from a transaction or from a different managed object context.

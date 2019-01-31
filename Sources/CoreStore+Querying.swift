@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CoreStore
 
-public extension CoreStore {
+extension CoreStore {
     
     /**
      Using the `defaultStack`, fetches the `DynamicObject` instance in the `DataStack`'s context from a reference created from a transaction or from a different managed object context.

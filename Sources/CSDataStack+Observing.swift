@@ -30,7 +30,7 @@ import CoreData
 // MARK: - CSDataStack
 
 @available(macOS 10.12, *)
-public extension CSDataStack {
+extension CSDataStack {
     
     /**
      Creates a `CSObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.

@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CSBaseDataTransaction
 
-public extension CSBaseDataTransaction {
+extension CSBaseDataTransaction {
     
     /**
      Fetches the `NSManagedObject` instance in the transaction's context from a reference created from a transaction or from a different managed object context.

@@ -1453,7 +1453,7 @@ extension ListMonitor: FetchedResultsControllerHandler {
 // MARK: - Notification Keys
 
 @available(macOS 10.12, *)
-fileprivate extension Notification.Name {
+extension Notification.Name {
     
     fileprivate static let listMonitorWillChangeList = Notification.Name(rawValue: "listMonitorWillChangeList")
     fileprivate static let listMonitorDidChangeList = Notification.Name(rawValue: "listMonitorDidChangeList")

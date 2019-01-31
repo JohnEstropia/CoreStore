@@ -29,7 +29,7 @@ import Foundation
 
 // MARK: - DynamicSchema
 
-public extension DynamicSchema {
+extension DynamicSchema {
     
     /**
      Prints the `DynamicSchema` as their corresponding `CoreStoreObject` Swift declarations. This is useful for converting current `XcodeDataModelSchema`-based models into the new `CoreStoreSchema` framework. Additional adjustments may need to be done to the generated source code; for example: `Transformable` concrete types need to be provided, as well as `default` values.

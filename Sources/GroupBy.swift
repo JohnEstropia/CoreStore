@@ -103,7 +103,7 @@ public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
     }
 }
 
-public extension GroupBy where D: NSManagedObject {
+extension GroupBy where D: NSManagedObject {
     
     /**
      Initializes a `GroupBy` clause with a key path
@@ -116,7 +116,7 @@ public extension GroupBy where D: NSManagedObject {
     }
 }
 
-public extension GroupBy where D: CoreStoreObject {
+extension GroupBy where D: CoreStoreObject {
     
     /**
      Initializes a `GroupBy` clause with a key path

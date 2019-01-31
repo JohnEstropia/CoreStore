@@ -29,7 +29,7 @@ import Foundation
 
 // MARK: - DynamicObject
 
-public extension DynamicObject where Self: CoreStoreObject {
+extension DynamicObject where Self: CoreStoreObject {
     
     /**
      The containing type for transformable properties. `Transformable` properties support types that conforms to `NSCoding & NSCopying`.

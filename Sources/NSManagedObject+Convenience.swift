@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - NSManagedObject
 
-public extension NSManagedObject {
+extension NSManagedObject {
     
     /**
      Exposes a `FetchableSource` that can fetch sibling objects of this `NSManagedObject` instance. This may be the `DataStack`, a `BaseDataTransaction`, the `NSManagedObjectContext` itself, or `nil` if the obejct's parent is already deallocated.

@@ -345,7 +345,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
 
 // MARK: - NSManagedObjectContext (Internal)
 
-internal extension NSManagedObjectContext {
+extension NSManagedObjectContext {
     
     // MARK: Fetching
     

@@ -28,7 +28,7 @@ import Foundation
 
 // MARK: - Progress
 
-public extension Progress {
+extension Progress {
     
     /**
      Sets a closure that the `NSProgress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.
@@ -36,7 +36,7 @@ public extension Progress {
      - parameter closure: the closure to execute on progress change
      */
     @objc
-    public func cs_setProgressHandler(_ closure: ((_ progress: Progress) -> Void)?) {
+    dynamic public func cs_setProgressHandler(_ closure: ((_ progress: Progress) -> Void)?) {
         
         self.setProgressHandler(closure)
     }

@@ -28,7 +28,7 @@ import Foundation
 
 // MARK: - Progress
 
-public extension Progress {
+extension Progress {
     
     /**
      Sets a closure that the `Progress` calls whenever its `fractionCompleted` changes. You can use this instead of setting up KVO.

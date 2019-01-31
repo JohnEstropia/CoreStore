@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - NSManagedObject
 
-internal extension NSManagedObject {
+extension NSManagedObject {
     
     @nonobjc
     internal weak var coreStoreObject: CoreStoreObject? {

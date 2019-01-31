@@ -58,7 +58,7 @@ public protocol DynamicKeyPath: AnyDynamicKeyPath {
 
 // MARK: - KeyPathString
 
-public extension KeyPathString {
+extension KeyPathString {
     
     /**
      Extracts the keyPath string from the property.
@@ -78,7 +78,7 @@ public extension KeyPathString {
      ```
      */
     public init<O: CoreStoreObject, K: DynamicKeyPath>(keyPath: KeyPath<O, K>) {
-        
+
         self = O.meta[keyPath: keyPath].cs_keyPathString
     }
 }

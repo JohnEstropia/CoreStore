@@ -73,7 +73,7 @@ public struct SectionBy<D: DynamicObject> {
 }
 
 @available(macOS 10.12, *)
-public extension SectionBy where D: NSManagedObject {
+extension SectionBy where D: NSManagedObject {
     
     /**
      Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections
@@ -99,7 +99,7 @@ public extension SectionBy where D: NSManagedObject {
 }
 
 @available(macOS 10.12, *)
-public extension SectionBy where D: CoreStoreObject {
+extension SectionBy where D: CoreStoreObject {
     
     /**
      Initializes a `SectionBy` clause with the key path to use to group `ListMonitor` objects into sections

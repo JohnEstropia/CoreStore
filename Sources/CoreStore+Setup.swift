@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CoreStore
 
-public extension CoreStore {
+extension CoreStore {
     
     /**
      Returns the `defaultStack`'s model version. The version string is the same as the name of a version-specific .xcdatamodeld file or `CoreStoreSchema`.
@@ -152,7 +152,7 @@ public extension CoreStore {
     
     // MARK: Obsolete
     
-    @available(*, obsoleted: 3.1, renamed: "entityDescription(for:)")
+    @available(swift, obsoleted: 3.1, renamed: "entityDescription(for:)")
     public static func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
         
         return self.entityDescription(for: type)

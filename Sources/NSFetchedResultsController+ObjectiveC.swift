@@ -30,7 +30,7 @@ import CoreData
 // MARK: - CSDataStack
 
 @available(macOS 10.12, *)
-public extension CSDataStack {
+extension CSDataStack {
     
     @available(*, deprecated, message: "CoreStore will obsolete NSFetchedResultsController support in the future in favor of CSListMonitor")
     @objc
@@ -49,7 +49,7 @@ public extension CSDataStack {
 // MARK: - CSUnsafeDataTransaction
 
 @available(macOS 10.12, *)
-public extension CSUnsafeDataTransaction {
+extension CSUnsafeDataTransaction {
     
     @available(*, deprecated, message: "CoreStore will obsolete NSFetchedResultsController support in the future in favor of CSListMonitor")
     @objc

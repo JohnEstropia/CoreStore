@@ -116,11 +116,11 @@ public protocol ImportableUniqueObject: ImportableObject {
 }
 
 
-// MARK: - ImportableUniqueObject (Default Implementations)
+// MARK: - ImportableUniqueObject where UniqueIDType.QueryableNativeType: CoreDataNativeType
 
-public extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: CoreDataNativeType {
+extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: CoreDataNativeType {
     
-    var uniqueIDValue: UniqueIDType {
+    public var uniqueIDValue: UniqueIDType {
         
         get {
             
@@ -141,19 +141,22 @@ public extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: 
     }
 }
 
-public extension ImportableUniqueObject {
+
+// MARK: - ImportableUniqueObject
+
+extension ImportableUniqueObject {
     
-    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
+    public static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldUpdate(from: source, in: transaction)
     }
     
-    static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool{
+    public static func shouldUpdate(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool{
         
         return true
     }
     
-    func didInsert(from source: Self.ImportSource, in transaction: BaseDataTransaction) throws {
+    public func didInsert(from source: Self.ImportSource, in transaction: BaseDataTransaction) throws {
         
         try self.update(from: source, in: transaction)
     }
@@ -161,32 +164,32 @@ public extension ImportableUniqueObject {
     
     // MARK: Obsolete
     
-    @available(*, obsoleted: 3.1, renamed: "shouldInsert(from:in:)")
-    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+    @available(swift, obsoleted: 3.1, renamed: "shouldInsert(from:in:)")
+    public static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldInsert(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 3.1, renamed: "shouldUpdate(from:in:)")
-    static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+    @available(swift, obsoleted: 3.1, renamed: "shouldUpdate(from:in:)")
+    public static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldUpdate(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 3.1, renamed: "uniqueID(from:in:)")
-    static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType? {
+    @available(swift, obsoleted: 3.1, renamed: "uniqueID(from:in:)")
+    public static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType? {
         
         return try Self.uniqueID(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 3.1, renamed: "didInsert(from:in:)")
-    func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+    @available(swift, obsoleted: 3.1, renamed: "didInsert(from:in:)")
+    public func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.didInsert(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 3.1, renamed: "update(from:in:)")
-    func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+    @available(swift, obsoleted: 3.1, renamed: "update(from:in:)")
+    public func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.update(from: source, in: transaction)
     }

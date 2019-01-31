@@ -140,7 +140,7 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
 
 // MARK: - DynamicObject where Self: CoreStoreObject
 
-public extension DynamicObject where Self: CoreStoreObject {
+extension DynamicObject where Self: CoreStoreObject {
     
     /**
      Returns the `PartialObject` instance for the object, which acts as a fast, type-safe KVC interface for `CoreStoreObject`.

@@ -554,7 +554,7 @@ public final class ICloudStore: CloudStorage, CustomDebugStringConvertible, Core
 
 // MARK: - Notification Keys
     
-fileprivate extension Notification.Name {
+extension Notification.Name {
     
     fileprivate static let iCloudUbiquitousStoreWillFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreWillFinishInitialImport")
     fileprivate static let iCloudUbiquitousStoreDidFinishInitialImport = Notification.Name(rawValue: "iCloudUbiquitousStoreDidFinishInitialImport")

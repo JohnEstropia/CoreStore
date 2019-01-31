@@ -511,7 +511,7 @@ extension DataStack: FetchableSource, QueryableSource {
     
     // MARK: Obsoleted
     
-    @available(*, obsoleted: 3.1, renamed: "unsafeContext()")
+    @available(swift, obsoleted: 3.1, renamed: "unsafeContext()")
     public func internalContext() -> NSManagedObjectContext {
         
         fatalError()

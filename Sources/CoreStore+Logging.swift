@@ -28,7 +28,7 @@ import Foundation
 
 // MARK: - CoreStore
 
-public extension CoreStore {
+extension CoreStore {
     
     /**
     The `CoreStoreLogger` instance to be used. The default logger is an instance of a `DefaultLogger`.

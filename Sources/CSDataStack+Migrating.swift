@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - CSDataStack
 
-public extension CSDataStack {
+extension CSDataStack {
     
     /**
      Asynchronously adds a `CSInMemoryStore` to the stack. Migrations are also initiated by default.

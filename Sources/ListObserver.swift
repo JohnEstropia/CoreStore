@@ -83,7 +83,7 @@ public protocol ListObserver: class {
 // MARK: - ListObserver (Default Implementations)
 
 @available(macOS 10.12, *)
-public extension ListObserver {
+extension ListObserver {
     
     public func listMonitorWillChange(_ monitor: ListMonitor<ListEntityType>) { }
     
@@ -152,7 +152,7 @@ public protocol ListObjectObserver: ListObserver {
 // MARK: - ListObjectObserver (Default Implementations)
 
 @available(macOS 10.12, *)
-public extension ListObjectObserver {
+extension ListObjectObserver {
     
     public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertObject object: ListEntityType, toIndexPath indexPath: IndexPath) { }
     
@@ -205,7 +205,7 @@ public protocol ListSectionObserver: ListObjectObserver {
 // MARK: - ListSectionObserver (Default Implementations)
 
 @available(macOS 10.12, *)
-public extension ListSectionObserver {
+extension ListSectionObserver {
     
     public func listMonitor(_ monitor: ListMonitor<ListEntityType>, didInsertSection sectionInfo: NSFetchedResultsSectionInfo, toSectionIndex sectionIndex: Int) { }
     

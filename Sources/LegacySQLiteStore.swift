@@ -32,22 +32,22 @@ import CoreData
 /**
  A storage interface backed by an SQLite database that was created before CoreStore 2.0.0.
  */
-@available(*, obsoleted: 3.1, message: "`LegacySQLiteStore` previous users should now use `SQLiteStore`'s new SQLiteStore.legacy(fileName:configuration:migrationMappingProviders:localStorageOptions:) or SQLiteStore.legacy() methods to create an `SQLiteStore` with legacy paths.")
+@available(swift, obsoleted: 3.1, message: "`LegacySQLiteStore` previous users should now use `SQLiteStore`'s new SQLiteStore.legacy(fileName:configuration:migrationMappingProviders:localStorageOptions:) or SQLiteStore.legacy() methods to create an `SQLiteStore` with legacy paths.")
 public final class LegacySQLiteStore: LocalStorage {
     
-    @available(*, obsoleted: 3.1, message: "Use `SQLiteStore`'s new SQLiteStore.init(fileURL:configuration:migrationMappingProviders:localStorageOptions:) initializer.")
+    @available(swift, obsoleted: 3.1, message: "Use `SQLiteStore`'s new SQLiteStore.init(fileURL:configuration:migrationMappingProviders:localStorageOptions:) initializer.")
     public init(fileURL: URL, configuration: ModelConfiguration = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
         
         fatalError()
     }
     
-    @available(*, obsoleted: 3.1, message: "Use `SQLiteStore`'s new SQLiteStore.legacy(fileName:configuration:migrationMappingProviders:localStorageOptions:) factory method.")
+    @available(swift, obsoleted: 3.1, message: "Use `SQLiteStore`'s new SQLiteStore.legacy(fileName:configuration:migrationMappingProviders:localStorageOptions:) factory method.")
     public init(fileName: String, configuration: ModelConfiguration = nil, mappingModelBundles: [Bundle] = Bundle.allBundles, localStorageOptions: LocalStorageOptions = nil) {
         
         fatalError()
     }
     
-    @available(*, obsoleted: 3.1, message: "Use `SQLiteStore`'s new SQLiteStore.legacy(...) factory method.")
+    @available(swift, obsoleted: 3.1, message: "Use `SQLiteStore`'s new SQLiteStore.legacy(...) factory method.")
     public init() {
         
         fatalError()

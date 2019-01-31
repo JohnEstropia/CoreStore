@@ -808,7 +808,7 @@ public struct Select<D: DynamicObject, T: SelectResultType>: SelectClause, Hasha
     }
 }
 
-public extension Select where T: NSManagedObjectID {
+extension Select where T: NSManagedObjectID {
     
     /**
      Initializes a `Select` that queries for `NSManagedObjectID` results
@@ -819,7 +819,7 @@ public extension Select where T: NSManagedObjectID {
     }
 }
 
-public extension Select where D: NSManagedObject {
+extension Select where D: NSManagedObject {
     
     /**
      Initializes a `Select` that queries the value of an attribute pertained by a keyPath
@@ -831,7 +831,7 @@ public extension Select where D: NSManagedObject {
     }
 }
 
-public extension Select where D: CoreStoreObject, T: ImportableAttributeType {
+extension Select where D: CoreStoreObject, T: ImportableAttributeType {
     
     /**
      Initializes a `Select` that queries the value of an attribute pertained by a keyPath
@@ -852,7 +852,7 @@ public extension Select where D: CoreStoreObject, T: ImportableAttributeType {
     }
 }
 
-public extension Select where D: CoreStoreObject, T: ImportableAttributeType & NSCoding & NSCopying {
+extension Select where D: CoreStoreObject, T: ImportableAttributeType & NSCoding & NSCopying {
     
     /**
      Initializes a `Select` that queries the value of an attribute pertained by a keyPath

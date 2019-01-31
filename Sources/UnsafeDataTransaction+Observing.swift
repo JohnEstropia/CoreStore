@@ -30,7 +30,7 @@ import CoreData
 // MARK: - UnsafeDataTransaction
 
 @available(macOS 10.12, *)
-public extension UnsafeDataTransaction {
+extension UnsafeDataTransaction {
     
     /**
      Creates a `ObjectMonitor` for the specified `DynamicObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `DynamicObject`.

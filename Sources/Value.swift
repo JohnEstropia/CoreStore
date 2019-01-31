@@ -29,7 +29,7 @@ import Foundation
 
 // MARK: - DynamicObject
 
-public extension DynamicObject where Self: CoreStoreObject {
+extension DynamicObject where Self: CoreStoreObject {
     
     /**
      The containing type for value propertiess. `Value` properties support any type that conforms to `ImportableAttributeType`.

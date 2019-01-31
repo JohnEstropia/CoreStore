@@ -385,7 +385,7 @@ extension ObjectMonitor: FetchedResultsControllerHandler {
 // MARK: - Notification.Name
 
 @available(macOS 10.12, *)
-fileprivate extension Notification.Name {
+extension Notification.Name {
     
     fileprivate static let objectMonitorWillChangeObject = Notification.Name(rawValue: "objectMonitorWillChangeObject")
     fileprivate static let objectMonitorDidDeleteObject = Notification.Name(rawValue: "objectMonitorDidDeleteObject")

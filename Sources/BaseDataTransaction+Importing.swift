@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - BaseDataTransaction
 
-public extension BaseDataTransaction {
+extension BaseDataTransaction {
     
     /**
      Creates an `ImportableObject` by importing from the specified import source.

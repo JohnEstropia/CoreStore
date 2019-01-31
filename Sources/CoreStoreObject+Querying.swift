@@ -29,7 +29,7 @@ import Foundation
 
 // MARK: - ValueContainer.Required
 
-public extension ValueContainer.Required {
+extension ValueContainer.Required {
     
     /**
      Creates a `Where` clause by comparing if a property is equal to a value
@@ -112,7 +112,7 @@ public extension ValueContainer.Required {
 
 // MARK: - ValueContainer.Optional
 
-public extension ValueContainer.Optional {
+extension ValueContainer.Optional {
     
     /**
      Creates a `Where` clause by comparing if a property is equal to a value
@@ -223,7 +223,7 @@ public extension ValueContainer.Optional {
 
 // MARK: - RelationshipContainer.ToOne
 
-public extension RelationshipContainer.ToOne {
+extension RelationshipContainer.ToOne {
     
     /**
      Creates a `Where` clause by comparing if a property is equal to a value

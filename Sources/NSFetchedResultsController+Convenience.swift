@@ -30,7 +30,7 @@ import CoreData
 // MARK: - DataStack
 
 @available(macOS 10.12, *)
-public extension DataStack {
+extension DataStack {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `DataStack`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.
@@ -115,7 +115,7 @@ public extension DataStack {
 // MARK: - UnsafeDataTransaction
 
 @available(macOS 10.12, *)
-public extension UnsafeDataTransaction {
+extension UnsafeDataTransaction {
     
     /**
      Utility for creating an `NSFetchedResultsController` from the `UnsafeDataTransaction`. This is useful when an `NSFetchedResultsController` is preferred over the overhead of `ListMonitor`s abstraction.

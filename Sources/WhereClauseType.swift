@@ -39,7 +39,7 @@ public protocol WhereClauseType: AnyWhereClause {
     associatedtype ObjectType: DynamicObject
 }
 
-public extension WhereClauseType {
+extension WhereClauseType where Self.ObjectType: CoreStoreObject {
     
     /**
      Combines two `Where` predicates together using `AND` operator.

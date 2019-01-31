@@ -29,7 +29,7 @@ import Foundation
 
 // MARK: - NSEntityDescription
 
-internal extension NSEntityDescription {
+extension NSEntityDescription {
     
     @nonobjc
     internal var dynamicObjectType: DynamicObject.Type? {

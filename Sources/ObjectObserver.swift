@@ -77,7 +77,7 @@ public protocol ObjectObserver: class {
 // MARK: - ObjectObserver (Default Implementations)
 
 @available(macOS 10.12, *)
-public extension ObjectObserver {
+extension ObjectObserver {
     
     public func objectMonitor(_ monitor: ObjectMonitor<ObjectEntityType>, willUpdateObject object: ObjectEntityType) { }
     

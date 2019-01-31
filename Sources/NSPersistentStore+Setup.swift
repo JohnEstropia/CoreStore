@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - NSPersistentStore
 
-internal extension NSPersistentStore {
+extension NSPersistentStore {
     
     // MARK: Internal
     

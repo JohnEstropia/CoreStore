@@ -29,7 +29,7 @@ import Foundation
 
 // MARK: - FilePrivate
 
-internal extension NSManagedObjectModel {
+extension NSManagedObjectModel {
     
     @nonobjc
     internal func cs_resolveNames() -> [String: (entity: NSEntityDescription, versionHash: Data)] {

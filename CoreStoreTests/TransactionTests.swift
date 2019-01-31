@@ -303,8 +303,8 @@ final class TransactionTests: BaseTestCase {
             do {
                 
                 let createExpectation = self.expectation(description: "create")
-                let dataPrepared: Void? = try? stack.perform(
-                    synchronous: { (transaction) in
+                try stack.perform(
+                    synchronous: { (transaction) -> Void in
                         
                         let object = transaction.create(Into<TestEntity1>())
                         object.testEntityID = NSNumber(value: 1)
@@ -313,10 +313,7 @@ final class TransactionTests: BaseTestCase {
                         object.testDate = testDate
                     }
                 )
-                if dataPrepared != nil {
-                    
-                    createExpectation.fulfill()
-                }
+                createExpectation.fulfill()
                 self.checkExpectationsImmediately()
             }
             do {

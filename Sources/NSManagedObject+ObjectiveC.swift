@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - NSManagedObject
 
-public extension NSManagedObject {
+extension NSManagedObject {
     
     /**
      Provides a convenience wrapper for accessing `-primitiveValueForKey:` with proper calls to `-willAccessValueForKey:` and `-didAccessValueForKey:`. This is useful when implementing accessor methods for transient attributes.

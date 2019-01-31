@@ -152,7 +152,7 @@ public protocol LocalStorage: StorageInterface {
     func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws
 }
 
-internal extension LocalStorage {
+extension LocalStorage {
     
     internal func matchesPersistentStore(_ persistentStore: NSPersistentStore) -> Bool {
         
@@ -239,7 +239,7 @@ public protocol CloudStorage: StorageInterface {
 
 // MARK: - Internal
 
-internal extension CloudStorage {
+extension CloudStorage {
     
     internal func matchesPersistentStore(_ persistentStore: NSPersistentStore) -> Bool {
         

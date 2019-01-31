@@ -80,9 +80,9 @@ public protocol ImportableObject: DynamicObject {
 
 // MARK: - ImportableObject (Default Implementations)
 
-public extension ImportableObject {
+extension ImportableObject {
     
-    static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
+    public static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool {
         
         return true
     }
@@ -90,14 +90,14 @@ public extension ImportableObject {
     
     // MARK: Obsolete
     
-    @available(*, obsoleted: 3.0.0, renamed: "shouldInsert(from:in:)")
-    static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
+    @available(swift, obsoleted: 3.0.0, renamed: "shouldInsert(from:in:)")
+    public static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
         
         return Self.shouldInsert(from: source, in: transaction)
     }
     
-    @available(*, obsoleted: 3.0.0, renamed: "didInsert(from:in:)")
-    func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
+    @available(swift, obsoleted: 3.0.0, renamed: "didInsert(from:in:)")
+    public func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
         
         try self.didInsert(from: source, in: transaction)
     }

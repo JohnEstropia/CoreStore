@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - DataStack
 
-public extension DataStack {
+extension DataStack {
     
     /**
      Performs a transaction asynchronously where `NSManagedObject` or `CoreStoreObject` creates, updates, and deletes can be made. The changes are commited automatically after the `task` closure returns. On success, the value returned from closure will be the wrapped as `.success(userInfo: T)` in the `completion`'s `Result<T>`. Any errors thrown from inside the `task` will be reported as `.failure(error: CoreStoreError)`. To cancel/rollback changes, call `try transaction.cancel()`, which throws a `CoreStoreError.userCancelled`.
