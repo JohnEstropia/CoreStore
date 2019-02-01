@@ -47,7 +47,7 @@ public protocol DynamicKeyPath: AnyDynamicKeyPath {
     /**
      The DynamicObject type
      */
-    associatedtype ObjectType
+    associatedtype ObjectType: DynamicObject
     
     /**
      The Value type
@@ -66,7 +66,7 @@ extension KeyPathString {
      let keyPath = String(keyPath: \Person.nickname)
      ```
      */
-    public init<O: NSManagedObject, V>(keyPath: KeyPath<O, V>) {
+    public init<O: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(keyPath: KeyPath<O, V>) {
         
         self = keyPath.cs_keyPathString
     }
@@ -81,18 +81,24 @@ extension KeyPathString {
 
         self = O.meta[keyPath: keyPath].cs_keyPathString
     }
+
+    /**
+     Extracts the keyPath string from the property.
+     ```
+     let keyPath = String(keyPath: \Person.nickname)
+     ```
+     */
+    public init<O: DynamicObject, T, V>(keyPath: Where<O>.Expression<T, V>) {
+
+        self = keyPath.cs_keyPathString
+    }
 }
+
 
 
 // MARK: - KeyPath: DynamicKeyPath
 
-// TODO: SE-0143 (https://github.com/apple/swift-evolution/blob/master/proposals/0143-conditional-conformances.md) is implemented but multiple conformances for the same type currently cannot be declared.
-//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: ImportableAttributeType
-//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: ImportableAttributeType?
-//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: NSManagedObject?
-//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: NSSet
-//extension KeyPath: DynamicKeyPath where Root: NSManagedObject, Value: NSOrderedSet
-extension KeyPath: DynamicKeyPath {
+extension KeyPath: DynamicKeyPath, AnyDynamicKeyPath where Root: DynamicObject, Value: AllowedObjectiveCKeyPathValue {
 
     public typealias ObjectType = Root
     public typealias ValueType = Value

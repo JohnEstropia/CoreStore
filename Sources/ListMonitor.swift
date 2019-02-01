@@ -1390,6 +1390,9 @@ extension ListMonitor: FetchedResultsControllerHandler {
                     "\(String(describing: IndexPath.self)).New": newIndexPath!
                 ]
             )
+            
+        @unknown default:
+            fatalError()
         }
     }
     

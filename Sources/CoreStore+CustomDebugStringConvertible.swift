@@ -1232,6 +1232,8 @@ extension NSAttributeType: CoreStoreDebugStringConvertible {
         case .objectIDAttributeType:        return ".objectIDAttributeType"
         case .UUIDAttributeType:            return ".UUIDAttributeType"
         case .URIAttributeType:             return ".URIAttributeType"
+        @unknown default:
+            fatalError()
         }
     }
 }
@@ -1254,6 +1256,8 @@ extension NSDeleteRule: CoreStoreDebugStringConvertible {
         case .nullifyDeleteRule:    return ".nullifyDeleteRule"
         case .cascadeDeleteRule:    return ".cascadeDeleteRule"
         case .denyDeleteRule:       return ".denyDeleteRule"
+        @unknown default:
+            fatalError()
         }
     }
 }

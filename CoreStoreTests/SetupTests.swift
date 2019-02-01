@@ -330,7 +330,14 @@ class SetupTests: BaseTestDataTestCase {
                     xcodeModelName: "Model",
                     bundle: Bundle(for: type(of: self))
                 )
-                try! stack.addStorageAndWait(sqliteStore)
+                try! stack.addStorageAndWait(
+                    SQLiteStore.legacy(
+                        fileName: sqliteStore.fileURL.lastPathComponent,
+                        configuration: sqliteStore.configuration,
+                        migrationMappingProviders: sqliteStore.migrationMappingProviders,
+                        localStorageOptions: .recreateStoreOnModelMismatch
+                    )
+                )
                 self.prepareTestDataForStack(stack)
             }
             XCTAssertTrue(fileManager.fileExists(atPath: sqliteStore.fileURL.path))

@@ -66,8 +66,8 @@ extension CoreStore {
     internal static func assert( _ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
         
         self.logger.assert(
-            condition,
-            message: message,
+            condition(),
+            message: message(),
             fileName: fileName,
             lineNumber: lineNumber,
             functionName: functionName

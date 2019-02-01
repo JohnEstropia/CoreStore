@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="17G2307" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="TestEntity1AAA" representedClassName="CoreStoreTests.TestEntity1" syncable="YES">
         <attribute name="testBoolean" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testData" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -9,6 +9,8 @@
         <attribute name="testNil" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="testNumber" optional="YES" attributeType="Integer 32" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testString" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="testToManyUnordered" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TestEntity1AAA" inverseName="testToOne" inverseEntity="TestEntity1AAA" syncable="YES"/>
+        <relationship name="testToOne" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TestEntity1AAA" inverseName="testToManyUnordered" inverseEntity="TestEntity1AAA" syncable="YES"/>
     </entity>
     <entity name="TestEntity2" representedClassName="CoreStoreTests.TestEntity2" syncable="YES">
         <attribute name="testBoolean" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
@@ -19,6 +21,8 @@
         <attribute name="testNil" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="testNumber" optional="YES" attributeType="Integer 32" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="testString" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="testToManyOrdered" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="TestEntity2" inverseName="testToOne" inverseEntity="TestEntity2" syncable="YES"/>
+        <relationship name="testToOne" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TestEntity2" inverseName="testToManyOrdered" inverseEntity="TestEntity2" syncable="YES"/>
     </entity>
     <configuration name="Config1">
         <memberEntity name="TestEntity1AAA"/>
@@ -27,7 +31,7 @@
         <memberEntity name="TestEntity2"/>
     </configuration>
     <elements>
-        <element name="TestEntity1AAA" positionX="-63" positionY="-18" width="128" height="165"/>
-        <element name="TestEntity2" positionX="-63" positionY="9" width="128" height="165"/>
+        <element name="TestEntity1AAA" positionX="-63" positionY="-18" width="128" height="195"/>
+        <element name="TestEntity2" positionX="-63" positionY="9" width="128" height="195"/>
     </elements>
 </model>

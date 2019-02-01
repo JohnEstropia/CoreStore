@@ -36,4 +36,6 @@ class TestEntity1: NSManagedObject {
     @NSManaged var testDecimal: NSDecimalNumber?
     @NSManaged var testData: Data?
     @NSManaged var testNil: String?
+    @NSManaged var testToOne: TestEntity1?
+    @NSManaged var testToManyUnordered: NSSet?
 }
