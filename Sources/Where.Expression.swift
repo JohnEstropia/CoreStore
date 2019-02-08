@@ -91,7 +91,7 @@ extension Where {
 }
 
 
-// MARK: - ~ Operator (Where.Expression Creation Operators)
+// MARK: - ~ (Where.Expression Creation Operators)
 
 // MARK: ~ where D: NSManagedObject
 
@@ -218,6 +218,29 @@ public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ e
 }
 
 
+// MARK: - Where.Expression where V: QueryableAttributeType & Comparable
+
+public func < <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+
+    return  Where<D>(expression: lhs, function: "<", operand: rhs)
+}
+
+public func <= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+
+    return  Where<D>(expression: lhs, function: "<=", operand: rhs)
+}
+
+public func > <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+
+    return  Where<D>(expression: lhs, function: ">", operand: rhs)
+}
+
+public func >= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+
+    return  Where<D>(expression: lhs, function: ">=", operand: rhs)
+}
+
+
 // MARK: - Where.Expression where V: Optional<QueryableAttributeType>
 
 public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
@@ -246,11 +269,44 @@ public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ e
 }
 
 
+// MARK: - Where.Expression where V: Optional<QueryableAttributeType & Comparable>
+
+public func < <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+
+    return Where<D>(expression: lhs, function: "<", operand: rhs)
+}
+
+public func <= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+
+    return Where<D>(expression: lhs, function: "<=", operand: rhs)
+}
+
+public func > <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+
+    return Where<D>(expression: lhs, function: ">", operand: rhs)
+}
+
+public func >= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+
+    return Where<D>(expression: lhs, function: ">=", operand: rhs)
+}
+
+
+// MARK: - KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCCollectionKeyPathValue
+
+extension KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCCollectionKeyPathValue {
+
+    public func count() -> Where<Root>.Expression<Where<Root>.CollectionTarget, Int> {
+
+        return .init(self.cs_keyPathString, "@count")
+    }
+}
+
 // MARK: - Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCCollectionKeyPathValue
 
 extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCCollectionKeyPathValue {
 
-    public func count() -> Where<D>.Expression<Where<D>.CollectionTarget, Int> {
+    public func count() -> Where<D>.Expression<T, Int> {
 
         return .init(self.cs_keyPathString, "@count")
     }
@@ -261,19 +317,30 @@ extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTar
 
 extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCKeyPathValue {
 
-    public func any() -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+    public func any() -> Where<D>.Expression<T, V> {
 
         return .init("ANY " + self.cs_keyPathString)
     }
 
-    public func all() -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+    public func all() -> Where<D>.Expression<T, V> {
 
         return .init("ALL " + self.cs_keyPathString)
     }
 
-    public func none() -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+    public func none() -> Where<D>.Expression<T, V> {
 
         return .init("NONE " + self.cs_keyPathString)
+    }
+}
+
+
+// MARK: - KeyPath where Root: CoreStoreObject, Value: AllowedObjectiveCCollectionKeyPathValue
+
+extension KeyPath where Root: CoreStoreObject, Value: AllowedCoreStoreObjectCollectionKeyPathValue {
+
+    public func count() -> Where<Root>.Expression<Where<Root>.CollectionTarget, Int> {
+
+        return .init(Root.meta[keyPath: self].cs_keyPathString, "@count")
     }
 }
 
@@ -282,23 +349,65 @@ extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTar
 
 extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTarget {
 
-    public func count() -> Where<D>.Expression<Where<D>.CollectionTarget, Int> {
+    public func count() -> Where<D>.Expression<T, Int> {
 
         return .init(self.cs_keyPathString, "@count")
     }
 
-    public func any() -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+    public func any() -> Where<D>.Expression<T, V> {
 
         return .init("ANY " + self.cs_keyPathString)
     }
 
-    public func all() -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+    public func all() -> Where<D>.Expression<T, V> {
 
         return .init("ALL " + self.cs_keyPathString)
     }
 
-    public func none() -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+    public func none() -> Where<D>.Expression<T, V> {
 
         return .init("NONE " + self.cs_keyPathString)
+    }
+}
+
+
+// MARK: - Where
+
+extension Where {
+
+    // MARK: FilePrivate
+
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V>, function: String, operand: V) {
+
+        self.init("\(expression.cs_keyPathString) \(function) %@", operand.cs_toQueryableNativeType())
+    }
+
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V?>, function: String, operand: V) {
+
+        self.init("\(expression.cs_keyPathString) \(function) %@", operand.cs_toQueryableNativeType())
+    }
+
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V>, function: String, operand: V?) {
+
+        if let operand = operand {
+
+            self.init("\(expression.cs_keyPathString) \(function) %@", operand.cs_toQueryableNativeType())
+        }
+        else {
+
+            self.init("\(expression.cs_keyPathString) \(function) nil")
+        }
+    }
+
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V?>, function: String, operand: V?) {
+
+        if let operand = operand {
+
+            self.init("\(expression.cs_keyPathString) \(function) %@", operand.cs_toQueryableNativeType())
+        }
+        else {
+
+            self.init("\(expression.cs_keyPathString) \(function) nil")
+        }
     }
 }

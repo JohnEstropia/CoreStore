@@ -66,14 +66,17 @@ final class WhereTests: XCTestCase {
 
             XCTAssertEqual(
                 #keyPath(TestEntity1.testToOne.testEntityID),
+                (\TestEntity1.testToOne ~ \.testEntityID).description,
                 String(keyPath: \TestEntity1.testToOne ~ \.testEntityID)
             )
             XCTAssertEqual(
                 #keyPath(TestEntity1.testToOne.testToOne.testToManyUnordered),
+                (\TestEntity1.testToOne ~ \.testToOne ~ \.testToManyUnordered).description,
                 String(keyPath: \TestEntity1.testToOne ~ \.testToOne ~ \.testToManyUnordered)
             )
             XCTAssertEqual(
                 #keyPath(TestEntity2.testToOne.testToOne.testToManyOrdered),
+                (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).description,
                 String(keyPath: \TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered)
             )
         }
@@ -81,14 +84,17 @@ final class WhereTests: XCTestCase {
 
             XCTAssertEqual(
                 "master.pets",
+                (\Animal.master ~ \.pets).description,
                 String(keyPath: \Animal.master ~ \.pets)
             )
             XCTAssertEqual(
                 "master.pets.species",
+                (\Animal.master ~ \.pets ~ \.species).description,
                 String(keyPath: \Animal.master ~ \.pets ~ \.species)
             )
             XCTAssertEqual(
                 "master.pets.master",
+                (\Animal.master ~ \.pets ~ \.master).description,
                 String(keyPath: \Animal.master ~ \.pets ~ \.master)
             )
         }
@@ -96,84 +102,99 @@ final class WhereTests: XCTestCase {
 
             XCTAssertEqual(
                 #keyPath(TestEntity1.testToOne.testToManyUnordered) + ".@count",
-                (\TestEntity1.testToOne ~ \.testToManyUnordered).count().description
+                (\TestEntity1.testToOne ~ \.testToManyUnordered).count().description,
+                String(keyPath: (\TestEntity1.testToOne ~ \.testToManyUnordered).count())
             )
             XCTAssertEqual(
                 #keyPath(TestEntity2.testToOne.testToOne.testToManyOrdered) + ".@count",
-                (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).count().description
+                (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).count().description,
+                String(keyPath: (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).count())
             )
         }
         do {
 
             XCTAssertEqual(
                 "master.pets.@count",
-                (\Animal.master ~ \.pets).count().description
+                (\Animal.master ~ \.pets).count().description,
+                String(keyPath: (\Animal.master ~ \.pets).count())
             )
         }
         do {
 
             XCTAssertEqual(
                 "ANY " + #keyPath(TestEntity1.testToOne.testToManyUnordered),
-                (\TestEntity1.testToOne ~ \.testToManyUnordered).any().description
+                (\TestEntity1.testToOne ~ \.testToManyUnordered).any().description,
+                String(keyPath: (\TestEntity1.testToOne ~ \.testToManyUnordered).any())
             )
             XCTAssertEqual(
                 "ANY " + #keyPath(TestEntity2.testToOne.testToOne.testToManyOrdered),
-                (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).any().description
+                (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).any().description,
+                String(keyPath: (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).any())
             )
         }
         do {
 
             XCTAssertEqual(
                 "ANY master.pets",
-                (\Animal.master ~ \.pets).any().description
+                (\Animal.master ~ \.pets).any().description,
+                String(keyPath: (\Animal.master ~ \.pets).any())
             )
             XCTAssertEqual(
                 "ANY master.pets.species",
-                (\Animal.master ~ \.pets ~ \.species).any().description
+                (\Animal.master ~ \.pets ~ \.species).any().description,
+                String(keyPath: (\Animal.master ~ \.pets ~ \.species).any())
             )
         }
         do {
 
             XCTAssertEqual(
                 "ALL " + #keyPath(TestEntity1.testToOne.testToManyUnordered),
-                (\TestEntity1.testToOne ~ \.testToManyUnordered).all().description
+                (\TestEntity1.testToOne ~ \.testToManyUnordered).all().description,
+                String(keyPath: (\TestEntity1.testToOne ~ \.testToManyUnordered).all())
             )
             XCTAssertEqual(
                 "ALL " + #keyPath(TestEntity2.testToOne.testToOne.testToManyOrdered),
-                (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).all().description
+                (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).all().description,
+                String(keyPath: (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).all())
             )
         }
         do {
 
             XCTAssertEqual(
                 "ALL master.pets",
-                (\Animal.master ~ \.pets).all().description
+                (\Animal.master ~ \.pets).all().description,
+                String(keyPath: (\Animal.master ~ \.pets).all())
             )
             XCTAssertEqual(
                 "ALL master.pets.species",
-                (\Animal.master ~ \.pets ~ \.species).all().description
+                (\Animal.master ~ \.pets ~ \.species).all().description,
+                String(keyPath: (\Animal.master ~ \.pets ~ \.species).all())
             )
         }
         do {
 
             XCTAssertEqual(
                 "NONE " + #keyPath(TestEntity1.testToOne.testToManyUnordered),
-                (\TestEntity1.testToOne ~ \.testToManyUnordered).none().description
+                (\TestEntity1.testToOne ~ \.testToManyUnordered).none().description,
+                String(keyPath: (\TestEntity1.testToOne ~ \.testToManyUnordered).none())
             )
             XCTAssertEqual(
                 "NONE " + #keyPath(TestEntity2.testToOne.testToOne.testToManyOrdered),
-                (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).none().description
+                (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).none().description,
+                String(keyPath: (\TestEntity2.testToOne ~ \.testToOne ~ \.testToManyOrdered).none())
             )
         }
         do {
 
             XCTAssertEqual(
                 "NONE master.pets",
-                (\Animal.master ~ \.pets).none().description
+                (\Animal.master ~ \.pets).none().description,
+                String(keyPath: (\Animal.master ~ \.pets).none())
             )
             XCTAssertEqual(
                 "NONE master.pets.species",
-                (\Animal.master ~ \.pets ~ \.species).none().description
+                (\Animal.master ~ \.pets ~ \.species).none().description,
+                String(keyPath: (\Animal.master ~ \.pets ~ \.species).none())
             )
         }
     }
