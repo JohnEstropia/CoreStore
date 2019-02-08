@@ -71,8 +71,13 @@ class Person: CoreStoreObject {
         customGetter: Person.getDisplayName(_:),
         affectedByKeyPaths: Person.keyPathsAffectingDisplayName()
     )
+
+    let spouse = Relationship.ToOne<Person>("spouse")
     
     let pets = Relationship.ToManyUnordered<Animal>("pets", inverse: { $0.master })
+
+    private let _spouse = Relationship.ToOne<Person>("_spouseInverse", inverse: { $0.spouse })
+
     
     private static func setTitle(_ partialObject: PartialObject<Person>, _ newValue: String) {
         
@@ -127,7 +132,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                 versionLock: [
                     "Animal": [0x1b59d511019695cf, 0xdeb97e86c5eff179, 0x1cfd80745646cb3, 0x4ff99416175b5b9a],
                     "Dog": [0xe3f0afeb109b283a, 0x29998d292938eb61, 0x6aab788333cfc2a3, 0x492ff1d295910ea7],
-                    "Person": [0x66d8bbfd8b21561f, 0xcecec69ecae3570f, 0xc4b73d71256214ef, 0x89b99bfe3e013e8b]
+                    "Person": [0x2831cf046084d96d, 0xbe19b13ace54641, 0x635a082728b0f6f0, 0x3d4ef2dd4b74a87c]
                 ]
             )
         )
