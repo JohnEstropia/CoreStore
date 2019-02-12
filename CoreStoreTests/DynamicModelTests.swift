@@ -141,10 +141,8 @@ class DynamicModelTests: BaseTestDataTestCase {
             let k1 = String(keyPath: \Animal.species)
             XCTAssertEqual(k1, "species")
 
-            #if swift(<5.0)
             let k2 = String(keyPath: \Dog.species)
             XCTAssertEqual(k2, "species")
-            #endif
             
             let k3 = String(keyPath: \Dog.nickname)
             XCTAssertEqual(k3, "nickname")
@@ -325,9 +323,7 @@ class DynamicModelTests: BaseTestDataTestCase {
     dynamic func test_ThatDynamicModelKeyPaths_CanBeCreated() {
         
         XCTAssertEqual(String(keyPath: \Animal.species), "species")
-        #if swift(<5.0)
         XCTAssertEqual(String(keyPath: \Dog.species), "species")
-        #endif
     }
     
     @nonobjc
