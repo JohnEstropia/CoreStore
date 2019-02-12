@@ -1286,7 +1286,10 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
             
             info.append(("compoundIndexes", self.compoundIndexes))
         }
-        info.append(("uniquenessConstraints", self.uniquenessConstraints))
+        if #available(macOS 10.11, *) {
+            
+            info.append(("uniquenessConstraints", self.uniquenessConstraints))
+        }
         return createFormattedString(
             "(", ")",
             info

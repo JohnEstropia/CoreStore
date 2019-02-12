@@ -1,3 +1,4 @@
+// swift-tools-version:4.2
 //
 //  Package.swift
 //  CoreStore
@@ -25,21 +26,18 @@
 
 import PackageDescription
 
-let targets: [Target]
-#if os(iOS)
-targets = [Target(name: "CoreStore iOS")]
-#elseif os(macOS)
-targets = [Target(name: "CoreStore OSX")]
-#elseif os(watchOS)
-targets = [Target(name: "CoreStore watchOS")]
-#elseif os(tvOS)
-targets = [Target(name: "CoreStore tvOS")]
-#else
-targets = []
-#endif
-
 let package = Package(
     name: "CoreStore",
-    targets: targets,
-    exclude: ["Carthage", "CoreStoreDemo", "Sources/libA/images"]
+    products: [
+        .library(name: "CoreStore", type: .static, targets: ["CoreStore"])
+    ],
+    dependencies: [],
+    targets: [
+        .target(
+            name: "CoreStore",
+            dependencies: [],
+            path: "Sources",
+            exclude: ["CoreStoreBridge.h", "CoreStoreBridge.m"]
+        )
+    ]
 )

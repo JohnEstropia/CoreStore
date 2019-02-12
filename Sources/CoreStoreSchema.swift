@@ -450,15 +450,18 @@ public final class CoreStoreSchema: DynamicSchema {
             )
         }
         for (entity, entityDescription) in entityDescriptionsByEntity {
-            
-            let uniqueConstraints = entity.uniqueConstraints.filter({ !$0.isEmpty })
-            if !uniqueConstraints.isEmpty {
+
+            if #available(macOS 10.11, *) {
                 
-                CoreStore.assert(
-                    entityDescription.superentity == nil,
-                    "Uniqueness constraints must be defined at the highest level possible."
-                )
-                entityDescription.uniquenessConstraints = entity.uniqueConstraints.map { $0.map { $0 as NSString } }
+                let uniqueConstraints = entity.uniqueConstraints.filter({ !$0.isEmpty })
+                if !uniqueConstraints.isEmpty {
+
+                    CoreStore.assert(
+                        entityDescription.superentity == nil,
+                        "Uniqueness constraints must be defined at the highest level possible."
+                    )
+                    entityDescription.uniquenessConstraints = entity.uniqueConstraints.map { $0.map { $0 as NSString } }
+                }
             }
             guard !entity.indexes.isEmpty else {
                 

@@ -749,7 +749,16 @@ extension DataStack {
             }
         }
         let fileManager = FileManager.default
-        let temporaryDirectoryURL = fileManager.temporaryDirectory
+        let systemTemporaryDirectoryURL: URL
+        if #available(macOS 10.12, *) {
+
+            systemTemporaryDirectoryURL = fileManager.temporaryDirectory
+        }
+        else {
+
+            systemTemporaryDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+        }
+        let temporaryDirectoryURL = systemTemporaryDirectoryURL
             .appendingPathComponent(Bundle.main.bundleIdentifier ?? "com.CoreStore.DataStack")
             .appendingPathComponent(ProcessInfo().globallyUniqueString)
 

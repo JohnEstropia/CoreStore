@@ -205,7 +205,7 @@ fileprivate func createFRC<D: NSManagedObject>(fromContext context: NSManagedObj
     
     let controller = CoreStoreFetchedResultsController(
         context: context,
-        fetchRequest: CoreStoreFetchRequest().dynamicCast(),
+        fetchRequest: NSFetchRequest<NSManagedObject>(),
         from: from,
         sectionBy: sectionBy,
         applyFetchClauses: { (fetchRequest) in

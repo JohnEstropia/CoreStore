@@ -165,10 +165,6 @@
 		B52557881D02DE8100E51965 /* FetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52557871D02DE8100E51965 /* FetchTests.swift */; };
 		B52557891D02DE8100E51965 /* FetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52557871D02DE8100E51965 /* FetchTests.swift */; };
 		B525578A1D02DE8100E51965 /* FetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52557871D02DE8100E51965 /* FetchTests.swift */; };
-		B52661401CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B526613F1CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift */; };
-		B52661421CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B526613F1CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift */; };
-		B52661431CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B526613F1CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift */; };
-		B52661441CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B526613F1CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift */; };
 		B529C2041CA4A2DB007E7EBD /* CSSaveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B529C2031CA4A2DB007E7EBD /* CSSaveResult.swift */; };
 		B529C2061CA4A2DB007E7EBD /* CSSaveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B529C2031CA4A2DB007E7EBD /* CSSaveResult.swift */; };
 		B529C2071CA4A2DC007E7EBD /* CSSaveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B529C2031CA4A2DB007E7EBD /* CSSaveResult.swift */; };
@@ -477,6 +473,12 @@
 		B5831B7B1F34ACBA00A9F647 /* Transformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5831B791F34ACBA00A9F647 /* Transformable.swift */; };
 		B5831B7C1F34ACBA00A9F647 /* Transformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5831B791F34ACBA00A9F647 /* Transformable.swift */; };
 		B5831B7D1F34ACBA00A9F647 /* Transformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5831B791F34ACBA00A9F647 /* Transformable.swift */; };
+		B5831F4022126FEC00D8604C /* KeyPathGenericBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAFB492203E01D003FCCD0 /* KeyPathGenericBindings.swift */; };
+		B5831F4122126FEC00D8604C /* KeyPathGenericBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAFB492203E01D003FCCD0 /* KeyPathGenericBindings.swift */; };
+		B5831F4222126FED00D8604C /* KeyPathGenericBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAFB492203E01D003FCCD0 /* KeyPathGenericBindings.swift */; };
+		B5831F432212700400D8604C /* Where.Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAFB472203D9F8003FCCD0 /* Where.Expression.swift */; };
+		B5831F442212700500D8604C /* Where.Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAFB472203D9F8003FCCD0 /* Where.Expression.swift */; };
+		B5831F452212700500D8604C /* Where.Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAFB472203D9F8003FCCD0 /* Where.Expression.swift */; };
 		B58B22F51C93C1BA00521925 /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F03A53019C5C6DA005002A5 /* CoreStore.framework */; };
 		B58D0C631EAA0C7E003EDD87 /* NSManagedObject+DynamicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58D0C621EAA0C7E003EDD87 /* NSManagedObject+DynamicModel.swift */; };
 		B58D0C641EAA0C7E003EDD87 /* NSManagedObject+DynamicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58D0C621EAA0C7E003EDD87 /* NSManagedObject+DynamicModel.swift */; };
@@ -798,7 +800,6 @@
 		B525577F1D029D2500E51965 /* TweakTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweakTests.swift; sourceTree = "<group>"; };
 		B52557831D02A07400E51965 /* SectionByTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionByTests.swift; sourceTree = "<group>"; };
 		B52557871D02DE8100E51965 /* FetchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchTests.swift; sourceTree = "<group>"; };
-		B526613F1CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStoreFetchRequest+CoreStore.swift"; sourceTree = "<group>"; };
 		B529C2031CA4A2DB007E7EBD /* CSSaveResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSaveResult.swift; sourceTree = "<group>"; };
 		B52DD1741BE1F8CC00949AFE /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52DD17D1BE1F8CC00949AFE /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -862,7 +863,7 @@
 		B56923F41EB828BF007C4DC9 /* CSDynamicSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSDynamicSchema.swift; sourceTree = "<group>"; };
 		B56923F91EB82956007C4DC9 /* CSXcodeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSXcodeDataModelSchema.swift; sourceTree = "<group>"; };
 		B56923FE1EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSUnsafeDataModelSchema.swift; sourceTree = "<group>"; };
-		B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "DataStack+Migration.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		B56964D31B22FFAD0075EE4A /* DataStack+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "DataStack+Migration.swift"; sourceTree = "<group>"; };
 		B56965231B356B820075EE4A /* MigrationResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationResult.swift; sourceTree = "<group>"; };
 		B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTestDataTestCase.swift; sourceTree = "<group>"; };
 		B57D27C11D0BC20100539C58 /* QueryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryTests.swift; sourceTree = "<group>"; };
@@ -1537,7 +1538,6 @@
 				B5831B6F1F34AC3400A9F647 /* AttributeProtocol.swift */,
 				B5831B741F34AC7A00A9F647 /* RelationshipProtocol.swift */,
 				B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */,
-				B526613F1CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift */,
 				B53B275E1EE3B92E00E9B352 /* CoreStoreManagedObject.swift */,
 				B533C4DA1D7D4BFA001383CB /* DispatchQueue+CoreStore.swift */,
 				B51260921E9B28F100402229 /* EntityIdentifier.swift */,
@@ -1947,7 +1947,6 @@
 				B53FB9FE1CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B5DBE2D21C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
 				B50392F91C478FF3009900CA /* NSManagedObject+Transaction.swift in Sources */,
-				B52661401CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift in Sources */,
 				B53FBA181CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift in Sources */,
 				B5202CFA1C04688100DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5519A591CA2008C002BEF78 /* CSBaseDataTransaction.swift in Sources */,
@@ -2136,9 +2135,11 @@
 				82BA18A31C4BBD2200A0916E /* DataStack.swift in Sources */,
 				82BA18C81C4BBD5900A0916E /* MigrationChain.swift in Sources */,
 				B546F9741C9C553300D5AC55 /* SetupResult.swift in Sources */,
+				B5831F4022126FEC00D8604C /* KeyPathGenericBindings.swift in Sources */,
 				B53CA9A31EF1EF1600E0F440 /* PartialObject.swift in Sources */,
 				82BA18B11C4BBD3100A0916E /* SaveResult.swift in Sources */,
 				82BA18DD1C4BBE1400A0916E /* NSFetchedResultsController+Convenience.swift in Sources */,
+				B5831F432212700400D8604C /* Where.Expression.swift in Sources */,
 				B51260941E9B28F100402229 /* EntityIdentifier.swift in Sources */,
 				B5FE4DA81C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B53FBA001CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
@@ -2146,7 +2147,6 @@
 				82BA18B41C4BBD3900A0916E /* BaseDataTransaction+Importing.swift in Sources */,
 				B53FBA1A1CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift in Sources */,
 				82BA18CA1C4BBD5900A0916E /* MigrationResult.swift in Sources */,
-				B52661421CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift in Sources */,
 				B5519A5A1CA2008C002BEF78 /* CSBaseDataTransaction.swift in Sources */,
 				B5ECDBE11CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift in Sources */,
 				82BA18C11C4BBD5300A0916E /* CoreStore+Observing.swift in Sources */,
@@ -2333,9 +2333,11 @@
 				B52DD1961BE1F92500949AFE /* DataStack.swift in Sources */,
 				B5ECDBFD1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
 				B52DD1BD1BE1F94300949AFE /* NSManagedObject+Convenience.swift in Sources */,
+				B5831F4222126FED00D8604C /* KeyPathGenericBindings.swift in Sources */,
 				B53CA9A51EF1EF1600E0F440 /* PartialObject.swift in Sources */,
 				B52DD1AD1BE1F93900949AFE /* Where.swift in Sources */,
 				B53FBA1C1CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift in Sources */,
+				B5831F452212700500D8604C /* Where.Expression.swift in Sources */,
 				B51260961E9B28F100402229 /* EntityIdentifier.swift in Sources */,
 				B5ECDBE31CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift in Sources */,
 				B5ECDC031CA80CBA00C7F112 /* CSWhere.swift in Sources */,
@@ -2344,7 +2346,6 @@
 				B52DD1C71BE1F94600949AFE /* NSManagedObjectContext+Querying.swift in Sources */,
 				B52DD1C81BE1F94600949AFE /* NSManagedObjectContext+Setup.swift in Sources */,
 				B52DD1C31BE1F94600949AFE /* NotificationObserver.swift in Sources */,
-				B52661441CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift in Sources */,
 				B52DD1A81BE1F93200949AFE /* DataStack+Querying.swift in Sources */,
 				B5220E221D130818009BC71E /* CSSectionBy.swift in Sources */,
 				B52DD1BC1BE1F94000949AFE /* MigrationResult.swift in Sources */,
@@ -2530,14 +2531,15 @@
 				B56321A81BD65219006C9394 /* NSManagedObject+Convenience.swift in Sources */,
 				B546F9751C9C553300D5AC55 /* SetupResult.swift in Sources */,
 				B56321981BD65216006C9394 /* Where.swift in Sources */,
+				B5831F4122126FEC00D8604C /* KeyPathGenericBindings.swift in Sources */,
 				B53CA9A41EF1EF1600E0F440 /* PartialObject.swift in Sources */,
 				B5202CFD1C046E8400DED140 /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B5FE4DA91C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
+				B5831F442212700500D8604C /* Where.Expression.swift in Sources */,
 				B51260951E9B28F100402229 /* EntityIdentifier.swift in Sources */,
 				B53FBA011CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B5DBE2D41C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
 				B50392FA1C47963F009900CA /* NSManagedObject+Transaction.swift in Sources */,
-				B52661431CADD585007B85D9 /* CoreStoreFetchRequest+CoreStore.swift in Sources */,
 				B53FBA1B1CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift in Sources */,
 				B5519A5B1CA2008C002BEF78 /* CSBaseDataTransaction.swift in Sources */,
 				B5ECDBE21CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift in Sources */,
@@ -2717,7 +2719,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TVOS_DEPLOYMENT_TARGET = 10.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2779,7 +2781,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TVOS_DEPLOYMENT_TARGET = 10.0;
 				VALIDATE_PRODUCT = YES;

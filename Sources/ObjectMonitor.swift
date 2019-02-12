@@ -261,7 +261,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     private init(context: NSManagedObjectContext, object: ObjectType) {
         
         let objectID = object.cs_id()
-        let fetchRequest = CoreStoreFetchRequest()
+        let fetchRequest = NSFetchRequest<NSManagedObject>()
         fetchRequest.entity = objectID.entity
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
@@ -271,7 +271,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
         
         let fetchedResultsController = CoreStoreFetchedResultsController(
             context: context,
-            fetchRequest: fetchRequest.dynamicCast(),
+            fetchRequest: fetchRequest,
             from: From<ObjectType>([objectID.persistentStore?.configurationName]),
             applyFetchClauses: Where<ObjectType>("SELF", isEqualTo: objectID).applyToFetchRequest
         )

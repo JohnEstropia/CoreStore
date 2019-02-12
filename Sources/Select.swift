@@ -722,7 +722,7 @@ public struct Select<D: DynamicObject, T: SelectResultType>: SelectClause, Hasha
     
     // MARK: Internal
     
-    internal func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSFetchRequestResult>) {
+    internal func applyToFetchRequest(_ fetchRequest: NSFetchRequest<NSDictionary>) {
         
         fetchRequest.includesPendingChanges = false
         fetchRequest.resultType = .dictionaryResultType

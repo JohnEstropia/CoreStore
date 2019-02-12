@@ -1047,7 +1047,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
     private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: NSFetchRequest<NSManagedObject>) -> Void) -> (controller: CoreStoreFetchedResultsController, delegate: FetchedResultsControllerDelegate) {
         
-        let fetchRequest = CoreStoreFetchRequest()
+        let fetchRequest = NSFetchRequest<NSManagedObject>()
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
         fetchRequest.fetchBatchSize = 20
@@ -1056,7 +1056,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         
         let fetchedResultsController = CoreStoreFetchedResultsController(
             context: context,
-            fetchRequest: fetchRequest.dynamicCast(),
+            fetchRequest: fetchRequest,
             from: from,
             sectionBy: sectionBy,
             applyFetchClauses: applyFetchClauses
@@ -1114,7 +1114,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                 self.isPersistentStoreChanging = true
                 
                 guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init),
-                    !Set((self.fetchedResultsController.fetchRequest as Any as! CoreStoreFetchRequest).safeAffectedStores ?? []).intersection(removedStores).isEmpty else {
+                    !Set(self.fetchedResultsController.fetchRequest.affectedStores ?? []).intersection(removedStores).isEmpty else {
                         
                         return
                 }
@@ -1135,7 +1135,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                 
                 if !self.isPendingRefetch {
                     
-                    let previousStores = Set((self.fetchedResultsController.fetchRequest as Any as! CoreStoreFetchRequest).safeAffectedStores ?? [])
+                    let previousStores = Set(self.fetchedResultsController.fetchRequest.affectedStores ?? [])
                     let currentStores = previousStores
                         .subtracting(note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore] ?? [])
                         .union(note.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore] ?? [])

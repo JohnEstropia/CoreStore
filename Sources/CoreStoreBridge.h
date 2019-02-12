@@ -564,16 +564,4 @@ CORESTORE_EXTERN
 CSWhere *_Nonnull CSWherePredicate(NSPredicate *_Nonnull predicate) CORESTORE_RETURNS_RETAINED;
 
 
-#pragma mark CoreStoreFetchRequest
-
-// Bugfix for NSFetchRequest messing up memory management for `affectedStores`
-// http://stackoverflow.com/questions/14396375/nsfetchedresultscontroller-crashes-in-ios-6-if-affectedstores-is-specified
-NS_SWIFT_NAME(CoreStoreFetchRequest)
-@interface _CSFetchRequest: NSFetchRequest
-
-@property (nullable, nonatomic, copy, readonly) NSArray<NSPersistentStore *> *safeAffectedStores;
-
-@end
-
-
 #endif /* CoreStoreBridge_h */
