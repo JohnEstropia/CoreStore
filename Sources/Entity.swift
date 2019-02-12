@@ -100,8 +100,7 @@ public final class Entity<O: CoreStoreObject>: DynamicEntity {
             entityName,
             isAbstract: isAbstract,
             versionHashModifier: versionHashModifier,
-            indexes: indexes,
-            uniqueConstraints: []
+            indexes: indexes
         )
     }
     
