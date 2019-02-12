@@ -1,11 +1,11 @@
-import UIKit
+import AppKit
 import CoreStore
 
 /// Model Declaration =====
 class Animal: CoreStoreObject {
     let species = Value.Required<String>("species", initial: "Swift")
     let master = Relationship.ToOne<Person>("master")
-    let color = Transformable.Optional<UIColor>("color", initial: .orange)
+    let color = Transformable.Optional<NSColor>("color", initial: .orange)
 }
 
 class Person: CoreStoreObject {
@@ -28,26 +28,28 @@ try dataStack.addStorageAndWait(SQLiteStore(fileName: "data.sqlite"))
 /// =======================
 
 /// Transactions ==========
-dataStack.perform(synchronous: { transaction in
+try dataStack.perform(
+    synchronous: { transaction in
 
-    let animal = transaction.create(Into<Animal>())
-    animal.species .= "Sparrow"
-    animal.color .= .yellow
+        let animal = transaction.create(Into<Animal>())
+        animal.species .= "Sparrow"
+        animal.color .= .yellow
 
-    let person = transaction.create(Into<Person>())
-    person.name .= "John"
-    person.pets.value.insert(animal)
-})
+        let person = transaction.create(Into<Person>())
+        person.name .= "John"
+        person.pets.value.insert(animal)
+}
+)
 /// =======================
 
 /// Accessing Objects =====
-let bird = dataStack.fetchOne(From<Animal>().where(\.species == "Sparrow"))!
+let bird = try dataStack.fetchOne(From<Animal>().where(\.species == "Sparrow"))!
 print(bird.species.value)
 print(bird.color.value as Any)
 print(bird)
 
 let owner = bird.master.value!
-print(owner.name.value)
-print(owner.pets.count as Any)
+print(owner.name.value as Any)
+print(owner.pets.count)
 print(owner)
 /// =======================
