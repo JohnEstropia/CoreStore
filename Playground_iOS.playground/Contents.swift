@@ -1,5 +1,8 @@
 import UIKit
 import CoreStore
+import PlaygroundSupport
+
+PlaygroundPage.current.needsIndefiniteExecution = true
 
 /// Model Declaration =====
 class Animal: CoreStoreObject {
@@ -24,30 +27,53 @@ let dataStack = DataStack(
         ]
     )
 )
-try dataStack.addStorageAndWait(SQLiteStore(fileName: "data.sqlite"))
-/// =======================
+dataStack.addStorage(
+    SQLiteStore(fileName: "data.sqlite"),
+    completion: { result in
 
-/// Transactions ==========
-dataStack.perform(synchronous: { transaction in
+        switch result {
 
-    let animal = transaction.create(Into<Animal>())
-    animal.species .= "Sparrow"
-    animal.color .= .yellow
+        case .failure(let error):
+            print(error)
 
-    let person = transaction.create(Into<Person>())
-    person.name .= "John"
-    person.pets.value.insert(animal)
-})
-/// =======================
+        case .success:
+            /// Transactions ==========
+            dataStack.perform(
+                asynchronous: { transaction in
 
-/// Accessing Objects =====
-let bird = dataStack.fetchOne(From<Animal>().where(\.species == "Sparrow"))!
-print(bird.species.value)
-print(bird.color.value as Any)
-print(bird)
+                    let animal = transaction.create(Into<Animal>())
+                    animal.species .= "Sparrow"
+                    animal.color .= .yellow
 
-let owner = bird.master.value!
-print(owner.name.value)
-print(owner.pets.count as Any)
-print(owner)
-/// =======================
+                    let person = transaction.create(Into<Person>())
+                    person.name .= "John"
+                    person.pets.value.insert(animal)
+                },
+                completion: { result in
+
+                    switch result {
+
+                    case .failure(let error):
+                        print(error)
+
+                    case .success:
+                        /// Accessing Objects =====
+                        let bird = try! dataStack.fetchOne(From<Animal>().where(\.species == "Sparrow"))!
+                        print(bird.species.value)
+                        print(bird.color.value as Any)
+                        print(bird)
+
+                        let owner = bird.master.value!
+                        print(owner.name.value as Any)
+                        print(owner.pets.count)
+                        print(owner)
+                        /// =======================
+                    }
+                }
+            )
+            /// =======================
+        }
+    }
+)
+
+

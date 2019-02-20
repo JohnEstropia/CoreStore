@@ -29,7 +29,7 @@ import Foundation
 // MARK: - WhereClauseType
 
 /**
- Abstracts the `Where` clause for protocol utilities.
+ Abstracts the `Where` clause for protocol utilities. Typically used only for utility method generic constraints.
  */
 public protocol WhereClauseType: AnyWhereClause {
     
