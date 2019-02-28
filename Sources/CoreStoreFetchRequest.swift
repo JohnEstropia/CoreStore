@@ -64,7 +64,7 @@ internal final class CoreStoreFetchRequest<T: NSFetchRequestResult>: NSFetchRequ
         }
         set {
 
-            if #available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0) {
+            if #available(iOS 11.0, macOS 10.13, watchOS 4.0, tvOS 11.0, *) {
 
                 self.copiedAffectedStores = (newValue as NSArray?)?.copy() as! NSArray?
                 super.affectedStores = newValue
