@@ -179,7 +179,7 @@ final class OrderByTests: XCTestCase {
     dynamic func test_ThatOrderByClauses_ApplyToFetchRequestsCorrectly() {
         
         let orderBy = OrderBy<NSManagedObject>(.ascending("key"))
-        let request = NSFetchRequest<NSFetchRequestResult>()
+        let request = CoreStoreFetchRequest<NSFetchRequestResult>()
         orderBy.applyToFetchRequest(request)
         XCTAssertNotNil(request.sortDescriptors)
         XCTAssertEqual(request.sortDescriptors ?? [], orderBy.sortDescriptors)

@@ -109,7 +109,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     public func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D? {
         
-        let fetchRequest = NSFetchRequest<NSManagedObject>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObject>()
         try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
@@ -134,7 +134,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     public func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D] {
         
-        let fetchRequest = NSFetchRequest<NSManagedObject>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObject>()
         try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
@@ -160,7 +160,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     public func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int {
         
-        let fetchRequest = NSFetchRequest<NSNumber>()
+        let fetchRequest = CoreStoreFetchRequest<NSNumber>()
         try from.applyToFetchRequest(fetchRequest, context: self)
 
         fetchRequest.resultType = .countResultType
@@ -184,7 +184,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     public func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID? {
         
-        let fetchRequest = NSFetchRequest<NSManagedObjectID>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObjectID>()
         try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
@@ -209,7 +209,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     public func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID] {
 
-        let fetchRequest = NSFetchRequest<NSManagedObjectID>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObjectID>()
         try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
@@ -226,7 +226,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     }
     
     @nonobjc
-    internal func fetchObjectIDs(_ fetchRequest: NSFetchRequest<NSManagedObjectID>) throws -> [NSManagedObjectID] {
+    internal func fetchObjectIDs(_ fetchRequest: CoreStoreFetchRequest<NSManagedObjectID>) throws -> [NSManagedObjectID] {
         
         var fetchResults: [NSManagedObjectID]?
         var fetchError: Error?
@@ -234,7 +234,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
             
             do {
                 
-                fetchResults = try self.fetch(fetchRequest)
+                fetchResults = try self.fetch(fetchRequest.dynamicCast())
             }
             catch {
                 
@@ -265,12 +265,12 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) throws -> U? {
         
-        let fetchRequest = NSFetchRequest<NSDictionary>()
+        let fetchRequest = CoreStoreFetchRequest<NSDictionary>()
         try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
-        selectClause.applyToFetchRequest(fetchRequest)
+        selectClause.applyToFetchRequest(fetchRequest.staticCast())
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.queryValue(selectClause.selectTerms, fetchRequest: fetchRequest)
@@ -291,12 +291,12 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) throws -> [[String: Any]] {
         
-        let fetchRequest = NSFetchRequest<NSDictionary>()
+        let fetchRequest = CoreStoreFetchRequest<NSDictionary>()
         try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
-        selectClause.applyToFetchRequest(fetchRequest)
+        selectClause.applyToFetchRequest(fetchRequest.staticCast())
         queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.queryAttributes(fetchRequest)
@@ -322,7 +322,7 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
     @nonobjc
     internal func deleteAll<D>(_ from: From<D>, _ deleteClauses: [FetchClause]) throws -> Int {
         
-        let fetchRequest = NSFetchRequest<NSManagedObject>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObject>()
         try from.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
@@ -352,7 +352,7 @@ extension NSManagedObjectContext {
     // MARK: Fetching
     
     @nonobjc
-    internal func fetchOne<D: NSManagedObject>(_ fetchRequest: NSFetchRequest<D>) throws -> D? {
+    internal func fetchOne<D: NSManagedObject>(_ fetchRequest: CoreStoreFetchRequest<D>) throws -> D? {
         
         var fetchResults: [D]?
         var fetchError: Error?
@@ -360,7 +360,7 @@ extension NSManagedObjectContext {
             
             do {
                 
-                fetchResults = try self.fetch(fetchRequest)
+                fetchResults = try self.fetch(fetchRequest.staticCast())
             }
             catch {
                 
@@ -380,7 +380,7 @@ extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func fetchAll<D: NSManagedObject>(_ fetchRequest: NSFetchRequest<D>) throws -> [D] {
+    internal func fetchAll<D: NSManagedObject>(_ fetchRequest: CoreStoreFetchRequest<D>) throws -> [D] {
         
         var fetchResults: [D]?
         var fetchError: Error?
@@ -388,7 +388,7 @@ extension NSManagedObjectContext {
             
             do {
                 
-                fetchResults = try self.fetch(fetchRequest)
+                fetchResults = try self.fetch(fetchRequest.staticCast())
             }
             catch {
                 
@@ -408,7 +408,7 @@ extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func fetchCount(_ fetchRequest: NSFetchRequest<NSNumber>) throws -> Int {
+    internal func fetchCount(_ fetchRequest: CoreStoreFetchRequest<NSNumber>) throws -> Int {
         
         var count = 0
         var countError: Error?
@@ -416,7 +416,7 @@ extension NSManagedObjectContext {
             
             do {
                 
-                count = try self.count(for: fetchRequest)
+                count = try self.count(for: fetchRequest.staticCast())
             }
             catch {
                 
@@ -436,7 +436,7 @@ extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func fetchObjectID(_ fetchRequest: NSFetchRequest<NSManagedObjectID>) throws -> NSManagedObjectID? {
+    internal func fetchObjectID(_ fetchRequest: CoreStoreFetchRequest<NSManagedObjectID>) throws -> NSManagedObjectID? {
         
         var fetchResults: [NSManagedObjectID]?
         var fetchError: Error?
@@ -444,7 +444,7 @@ extension NSManagedObjectContext {
             
             do {
                 
-                fetchResults = try self.fetch(fetchRequest)
+                fetchResults = try self.fetch(fetchRequest.staticCast())
             }
             catch {
                 
@@ -467,7 +467,7 @@ extension NSManagedObjectContext {
     // MARK: Querying
     
     @nonobjc
-    internal func queryValue<D, U: QueryableAttributeType>(_ selectTerms: [SelectTerm<D>], fetchRequest: NSFetchRequest<NSDictionary>) throws -> U? {
+    internal func queryValue<D, U: QueryableAttributeType>(_ selectTerms: [SelectTerm<D>], fetchRequest: CoreStoreFetchRequest<NSDictionary>) throws -> U? {
         
         var fetchResults: [Any]?
         var fetchError: Error?
@@ -475,7 +475,7 @@ extension NSManagedObjectContext {
             
             do {
                 
-                fetchResults = try self.fetch(fetchRequest)
+                fetchResults = try self.fetch(fetchRequest.staticCast())
             }
             catch {
                 
@@ -500,7 +500,7 @@ extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func queryValue<D>(_ selectTerms: [SelectTerm<D>], fetchRequest: NSFetchRequest<NSDictionary>) throws -> Any? {
+    internal func queryValue<D>(_ selectTerms: [SelectTerm<D>], fetchRequest: CoreStoreFetchRequest<NSDictionary>) throws -> Any? {
         
         var fetchResults: [Any]?
         var fetchError: Error?
@@ -508,7 +508,7 @@ extension NSManagedObjectContext {
             
             do {
                 
-                fetchResults = try self.fetch(fetchRequest)
+                fetchResults = try self.fetch(fetchRequest.staticCast())
             }
             catch {
                 
@@ -533,7 +533,7 @@ extension NSManagedObjectContext {
     }
     
     @nonobjc
-    internal func queryAttributes(_ fetchRequest: NSFetchRequest<NSDictionary>) throws -> [[String: Any]] {
+    internal func queryAttributes(_ fetchRequest: CoreStoreFetchRequest<NSDictionary>) throws -> [[String: Any]] {
         
         var fetchResults: [Any]?
         var fetchError: Error?
@@ -541,7 +541,7 @@ extension NSManagedObjectContext {
             
             do {
                 
-                fetchResults = try self.fetch(fetchRequest)
+                fetchResults = try self.fetch(fetchRequest.staticCast())
             }
             catch {
                 
@@ -564,7 +564,7 @@ extension NSManagedObjectContext {
     // MARK: Deleting
     
     @nonobjc
-    internal func deleteAll<D: NSManagedObject>(_ fetchRequest: NSFetchRequest<D>) throws -> Int {
+    internal func deleteAll<D: NSManagedObject>(_ fetchRequest: CoreStoreFetchRequest<D>) throws -> Int {
         
         var numberOfDeletedObjects: Int?
         var fetchError: Error?
@@ -574,7 +574,7 @@ extension NSManagedObjectContext {
                 
                 do {
                     
-                    let fetchResults = try self.fetch(fetchRequest)
+                    let fetchResults = try self.fetch(fetchRequest.staticCast())
                     for object in fetchResults {
                         
                         self.delete(object)

@@ -68,7 +68,7 @@ extension CSDataStack {
             sectionBy: nil,
             applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
             }
         ).bridgeToObjectiveC
     }
@@ -97,7 +97,7 @@ extension CSDataStack {
             sectionBy: nil,
             applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
             },
             createAsynchronously: {
                 
@@ -131,7 +131,7 @@ extension CSDataStack {
             sectionBy: sectionBy.bridgeToSwift,
             applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
             }
         ).bridgeToObjectiveC
     }
@@ -160,7 +160,7 @@ extension CSDataStack {
             sectionBy: sectionBy.bridgeToSwift,
             applyFetchClauses: { (fetchRequest) in
                 
-                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
             },
             createAsynchronously: {
                 

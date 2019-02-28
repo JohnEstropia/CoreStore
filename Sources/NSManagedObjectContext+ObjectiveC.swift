@@ -36,12 +36,12 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func fetchOne(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> NSManagedObject? {
         
-        let fetchRequest = NSFetchRequest<NSManagedObject>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObject>()
         try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .managedObjectResultType
-        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.fetchOne(fetchRequest)
     }
@@ -49,12 +49,12 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func fetchAll<T: NSManagedObject>(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> [T] {
         
-        let fetchRequest = NSFetchRequest<T>()
+        let fetchRequest = CoreStoreFetchRequest<T>()
         try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
-        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.fetchAll(fetchRequest)
     }
@@ -62,11 +62,11 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func fetchCount(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> Int {
         
-        let fetchRequest = NSFetchRequest<NSNumber>()
+        let fetchRequest = CoreStoreFetchRequest<NSNumber>()
         try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
 
         fetchRequest.resultType = .countResultType
-        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.fetchCount(fetchRequest)
     }
@@ -74,12 +74,12 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func fetchObjectID(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> NSManagedObjectID? {
         
-        let fetchRequest = NSFetchRequest<NSManagedObjectID>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObjectID>()
         try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 1
         fetchRequest.resultType = .managedObjectIDResultType
-        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.fetchObjectID(fetchRequest)
     }
@@ -87,12 +87,12 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func fetchObjectIDs(_ from: CSFrom, _ fetchClauses: [CSFetchClause]) throws -> [NSManagedObjectID] {
         
-        let fetchRequest = NSFetchRequest<NSManagedObjectID>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObjectID>()
         try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectIDResultType
-        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+        fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.fetchObjectIDs(fetchRequest)
     }
@@ -100,14 +100,14 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func deleteAll(_ from: CSFrom, _ deleteClauses: [CSDeleteClause]) throws -> Int {
         
-        let fetchRequest = NSFetchRequest<NSManagedObject>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObject>()
         try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
         fetchRequest.returnsObjectsAsFaults = true
         fetchRequest.includesPropertyValues = false
-        deleteClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+        deleteClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.deleteAll(fetchRequest)
     }
@@ -115,13 +115,13 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func queryValue(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) throws -> Any? {
         
-        let fetchRequest = NSFetchRequest<NSDictionary>()
+        let fetchRequest = CoreStoreFetchRequest<NSDictionary>()
         try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
-        selectClause.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
-        queryClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+        selectClause.applyToFetchRequest(fetchRequest)
+        queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.queryValue(selectClause.selectTerms, fetchRequest: fetchRequest)
     }
@@ -129,13 +129,13 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func queryAttributes(_ from: CSFrom, _ selectClause: CSSelect, _ queryClauses: [CSQueryClause]) throws -> [[String: Any]] {
         
-        let fetchRequest = NSFetchRequest<NSDictionary>()
+        let fetchRequest = CoreStoreFetchRequest<NSDictionary>()
         try from.bridgeToSwift.applyToFetchRequest(fetchRequest, context: self)
         
         fetchRequest.fetchLimit = 0
         
-        selectClause.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
-        queryClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+        selectClause.applyToFetchRequest(fetchRequest)
+        queryClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
 
         return try self.queryAttributes(fetchRequest)
     }

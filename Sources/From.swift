@@ -139,7 +139,7 @@ public struct From<D: DynamicObject> {
         self.findPersistentStores = findPersistentStores
     }
     
-    internal func applyToFetchRequest<U>(_ fetchRequest: NSFetchRequest<U>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) throws {
+    internal func applyToFetchRequest<U>(_ fetchRequest: CoreStoreFetchRequest<U>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) throws {
         
         fetchRequest.entity = context.parentStack!.entityDescription(for: EntityIdentifier(self.entityClass))!
         guard applyAffectedStores else {
@@ -164,7 +164,7 @@ public struct From<D: DynamicObject> {
         }
     }
     
-    internal func applyAffectedStoresForFetchedRequest<U>(_ fetchRequest: NSFetchRequest<U>, context: NSManagedObjectContext) throws {
+    internal func applyAffectedStoresForFetchedRequest<U>(_ fetchRequest: CoreStoreFetchRequest<U>, context: NSManagedObjectContext) throws {
         
         let stores = self.findPersistentStores(context)
         fetchRequest.affectedStores = stores

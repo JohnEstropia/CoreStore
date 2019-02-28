@@ -261,7 +261,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     private init(context: NSManagedObjectContext, object: ObjectType) {
         
         let objectID = object.cs_id()
-        let fetchRequest = NSFetchRequest<NSManagedObject>()
+        let fetchRequest = CoreStoreFetchRequest<NSManagedObject>()
         fetchRequest.entity = objectID.entity
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType

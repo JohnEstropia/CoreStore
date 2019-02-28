@@ -43,7 +43,7 @@ final class TweakTests: XCTestCase {
             $0.fetchLimit = 200
             $0.predicate = predicate
         }
-        let request = NSFetchRequest<NSFetchRequestResult>()
+        let request = CoreStoreFetchRequest<NSFetchRequestResult>()
         tweak.applyToFetchRequest(request)
         XCTAssertEqual(request.fetchOffset, 100)
         XCTAssertEqual(request.fetchLimit, 200)

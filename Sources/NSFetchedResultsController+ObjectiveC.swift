@@ -72,12 +72,12 @@ fileprivate func createFRC(fromContext context: NSManagedObjectContext, from: CS
     
     let controller = CoreStoreFetchedResultsController(
         context: context,
-        fetchRequest: NSFetchRequest<NSManagedObject>(),
+        fetchRequest: CoreStoreFetchRequest(),
         from: from.bridgeToSwift,
         sectionBy: sectionBy?.bridgeToSwift,
         applyFetchClauses: { (fetchRequest) in
             
-            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
             
             CoreStore.assert(
                 fetchRequest.sortDescriptors?.isEmpty == false,

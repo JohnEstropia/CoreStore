@@ -503,7 +503,7 @@ public final class CSListMonitor: NSObject {
         
         self.bridgeToSwift.refetch { (fetchRequest) in
             
-            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest as! NSFetchRequest<NSFetchRequestResult>) }
+            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
         }
     }
     
