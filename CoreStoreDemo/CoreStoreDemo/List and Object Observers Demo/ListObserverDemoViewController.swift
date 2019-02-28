@@ -313,6 +313,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
 
     @IBAction private dynamic func shuffleBarButtonItemTouched(_ sender: AnyObject?) {
 
+        self.setTable(enabled: false)
         ColorsDemo.stack.perform(
             asynchronous: { (transaction) in
 
@@ -322,12 +323,16 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
                     palette.colorName .= nil
                 }
             },
-            completion: { _ in }
+            completion: { _ in
+
+                self.setTable(enabled: true)
+            }
         )
     }
     
     private func setTable(enabled: Bool) {
-        
+
+        tableView.isUserInteractionEnabled = enabled
         UIView.animate(
             withDuration: 0.2,
             delay: 0,
@@ -337,7 +342,6 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
                 if let tableView = self.tableView {
                     
                     tableView.alpha = enabled ? 1.0 : 0.5
-                    tableView.isUserInteractionEnabled = enabled
                 }
             },
             completion: nil
