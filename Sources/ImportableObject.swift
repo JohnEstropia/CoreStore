@@ -86,19 +86,4 @@ extension ImportableObject {
         
         return true
     }
-    
-    
-    // MARK: Obsolete
-    
-    @available(swift, obsoleted: 3.0.0, renamed: "shouldInsert(from:in:)")
-    public static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
-        
-        return Self.shouldInsert(from: source, in: transaction)
-    }
-    
-    @available(swift, obsoleted: 3.0.0, renamed: "didInsert(from:in:)")
-    public func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
-        
-        try self.didInsert(from: source, in: transaction)
-    }
 }

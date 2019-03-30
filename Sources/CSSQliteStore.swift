@@ -191,23 +191,6 @@ public final class CSSQLiteStore: NSObject, CSLocalStorage, CoreStoreObjectiveCT
         self.bridgeToSwift = swiftValue
         super.init()
     }
-    
-    
-    // MARK: Obsoleted
-    
-    @available(swift, obsoleted: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new -[CSSQLiteStore initWithFileURL:configuration:localStorageOptions:]) initializer instead.")
-    @objc
-    public convenience init(fileURL: URL, configuration: ModelConfiguration, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
-        
-        fatalError()
-    }
-    
-    @available(swift, obsoleted: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new -[CSSQLiteStore initWithFileName:configuration:localStorageOptions:]) initializer instead.")
-    @objc
-    public convenience init(fileName: String, configuration: ModelConfiguration, mappingModelBundles: [Bundle]?, localStorageOptions: Int) {
-        
-        fatalError()
-    }
 }
 
 

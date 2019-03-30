@@ -442,49 +442,4 @@ public /*abstract*/ class BaseDataTransaction {
         
         self.context.reset()
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, message: "Use insertedObjects(_:) and pass the specific entity type")
-    public func insertedObjects() -> Set<NSManagedObject> {
-        
-        CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to access inserted objects from a \(cs_typeName(self)) outside its designated queue."
-        )
-        CoreStore.assert(
-            !self.isCommitted,
-            "Attempted to access inserted objects from an already committed \(cs_typeName(self))."
-        )
-        return self.context.insertedObjects
-    }
-    
-    @available(*, deprecated, message: "Use updatedObjects(_:) and pass the specific entity type")
-    public func updatedObjects() -> Set<NSManagedObject> {
-        
-        CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to access updated objects from a \(cs_typeName(self)) outside its designated queue."
-        )
-        CoreStore.assert(
-            !self.isCommitted,
-            "Attempted to access updated objects from an already committed \(cs_typeName(self))."
-        )
-        return self.context.updatedObjects
-    }
-    
-    @available(*, deprecated, message: "Use deletedObjects(_:) and pass the specific entity type")
-    public func deletedObjects() -> Set<NSManagedObject> {
-        
-        CoreStore.assert(
-            self.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to access deleted objects from a \(cs_typeName(self)) outside its designated queue."
-        )
-        CoreStore.assert(
-            !self.isCommitted,
-            "Attempted to access deleted objects from an already committed \(cs_typeName(self))."
-        )
-        return self.context.deletedObjects
-    }
 }

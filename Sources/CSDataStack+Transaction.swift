@@ -131,21 +131,4 @@ extension CSDataStack {
         
         self.bridgeToSwift.refreshAndMergeAllObjects()
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, message: "Use the new -[CSDataStack beginSynchronous:error:] API that reports failure using an error instance.")
-    @objc
-    @discardableResult
-    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginSynchronous { (transaction) in
-                
-                closure(transaction.bridgeToObjectiveC)
-            }
-        }
-    }
 }

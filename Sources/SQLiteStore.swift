@@ -352,19 +352,4 @@ public final class SQLiteStore: LocalStorage {
     // MARK: Private
     
     private weak var dataStack: DataStack?
-    
-    
-    // MARK: Obsoleted
-    
-    @available(swift, obsoleted: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new SQLiteStore.init(fileURL:configuration:migrationMappingProviders:localStorageOptions:) initializer instead.")
-    public convenience init(fileURL: URL, configuration: ModelConfiguration = nil, mappingModelBundles: [Bundle], localStorageOptions: LocalStorageOptions = nil) {
-        
-        fatalError()
-    }
-    
-    @available(swift, obsoleted: 3.1, message: "The `mappingModelBundles` argument of this method is ignored. Use the new SQLiteStore.init(fileName:configuration:migrationMappingProviders:localStorageOptions:) initializer instead.")
-    public convenience init(fileName: String, configuration: ModelConfiguration = nil, mappingModelBundles: [Bundle], localStorageOptions: LocalStorageOptions = nil) {
-        
-        fatalError()
-    }
 }

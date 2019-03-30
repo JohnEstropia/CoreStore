@@ -143,33 +143,6 @@ public final class CSSynchronousDataTransaction: CSBaseDataTransaction, CoreStor
         
         super.init(swiftValue)
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, message: "Use the new -[CSSynchronousDataTransaction commitAndWaitWithError:] method")
-    @objc
-    public func commitAndWait() -> CSSaveResult {
-        
-        return bridge {
-            
-            self.bridgeToSwift.commitAndWait()
-        }
-    }
-    
-    @available(*, deprecated, message: "Secondary tasks spawned from CSAsynchronousDataTransactions and CSSynchronousDataTransactions are no longer supported. ")
-    @objc
-    @discardableResult
-    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginSynchronous { (transaction) in
-                
-                closure(transaction.bridgeToObjectiveC)
-            }
-        }
-    }
 }
 
 

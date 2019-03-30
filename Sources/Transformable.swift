@@ -254,25 +254,6 @@ public enum TransformableContainer<O: CoreStoreObject> {
 
         private let customGetter: ((_ partialObject: PartialObject<O>) -> V)?
         private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)?
-        
-        
-        // MARK: Deprecated
-        
-        @available(*, unavailable, message: "Indexes are now set through the Entity<T> initializer, which now supports compound indexes.")
-        public convenience init(
-            _ keyPath: KeyPathString,
-            initial: @autoclosure @escaping () -> V,
-            isIndexed: Bool,
-            isTransient: Bool = false,
-            allowsExternalBinaryDataStorage: Bool = false,
-            versionHashModifier: @autoclosure @escaping () -> String? = nil,
-            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
-            customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
-            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
-            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
-            
-            fatalError()
-        }
     }
 
 
@@ -467,25 +448,6 @@ public enum TransformableContainer<O: CoreStoreObject> {
 
         private let customGetter: ((_ partialObject: PartialObject<O>) -> V?)?
         private let customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)?
-        
-        
-        // MARK: Deprecated
-        
-        @available(*, unavailable, message: "Indexes are now set through the Entity<T> initializer, which now supports compound indexes.")
-        public convenience init(
-            _ keyPath: KeyPathString,
-            initial: @autoclosure @escaping () -> V? = nil,
-            isIndexed: Bool,
-            isTransient: Bool = false,
-            allowsExternalBinaryDataStorage: Bool = false,
-            versionHashModifier: @autoclosure @escaping () -> String? = nil,
-            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
-            customGetter: ((_ partialObject: PartialObject<O>) -> V?)? = nil,
-            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)? = nil,
-            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
-            
-            fatalError()
-        }
     }
 }
 

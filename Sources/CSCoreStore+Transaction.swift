@@ -91,15 +91,4 @@ extension CSCoreStore {
         
         CoreStore.refreshAndMergeAllObjects()
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, message: "Use the new +[CSCoreStore beginSynchronous:error:] API that reports failure using an error instance.")
-    @objc
-    @discardableResult
-    public static func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
-        
-        return self.defaultStack.beginSynchronous(closure)
-    }
 }

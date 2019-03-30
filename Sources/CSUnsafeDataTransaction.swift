@@ -203,51 +203,6 @@ public final class CSUnsafeDataTransaction: CSBaseDataTransaction, CoreStoreObje
         
         super.init(swiftValue)
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, renamed: "unsafeContext()")
-    @objc
-    public var internalContext: NSManagedObjectContext {
-        
-        return self.bridgeToSwift.context
-    }
-    
-    @available(*, deprecated, message: "Use the new -[CSUnsafeDataTransaction commitWithSuccess:failure:] method")
-    @objc
-    public func commit(_ completion: ((_ result: CSSaveResult) -> Void)?) {
-        
-        self.bridgeToSwift.context.saveAsynchronouslyWithCompletion { (hasChanges, error) in
-            
-            defer {
-                
-                withExtendedLifetime(self, {})
-            }
-            if let error = error {
-                
-                completion?(SaveResult(error).bridgeToObjectiveC)
-            }
-            else {
-                
-                completion?(SaveResult(hasChanges: hasChanges).bridgeToObjectiveC)
-            }
-        }
-    }
-    
-    @available(*, deprecated, message: "Use the new -[CSUnsafeDataTransaction commitAndWaitWithError:] method")
-    @objc
-    public func commitAndWait() -> CSSaveResult {
-        
-        return bridge { () -> SaveResult in
-            
-            switch self.bridgeToSwift.context.saveSynchronously(waitForMerge: true) {
-                
-            case (let hasChanges, nil): return SaveResult(hasChanges: hasChanges)
-            case (_, let error?):       return SaveResult(error)
-            }
-        }
-    }
 }
 
 

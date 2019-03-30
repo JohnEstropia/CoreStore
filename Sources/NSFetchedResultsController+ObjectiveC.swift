@@ -25,44 +25,6 @@
 
 import Foundation
 import CoreData
-
-
-// MARK: - CSDataStack
-
-@available(macOS 10.12, *)
-extension CSDataStack {
-    
-    @available(*, deprecated, message: "CoreStore will obsolete NSFetchedResultsController support in the future in favor of CSListMonitor")
-    @objc
-    public func createFetchedResultsControllerFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
-        
-        return createFRC(
-            fromContext: self.bridgeToSwift.mainContext,
-            from: from,
-            sectionBy: sectionBy,
-            fetchClauses: fetchClauses
-        )
-    }
-}
-    
-    
-// MARK: - CSUnsafeDataTransaction
-
-@available(macOS 10.12, *)
-extension CSUnsafeDataTransaction {
-    
-    @available(*, deprecated, message: "CoreStore will obsolete NSFetchedResultsController support in the future in favor of CSListMonitor")
-    @objc
-    public func createFetchedResultsControllerFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
-        
-        return createFRC(
-            fromContext: self.bridgeToSwift.context,
-            from: from,
-            sectionBy: sectionBy,
-            fetchClauses: fetchClauses
-        )
-    }
-}
     
     
 // MARK: - Private

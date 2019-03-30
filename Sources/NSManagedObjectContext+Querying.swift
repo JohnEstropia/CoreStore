@@ -333,15 +333,6 @@ extension NSManagedObjectContext: FetchableSource, QueryableSource {
 
         return try self.deleteAll(fetchRequest)
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, renamed: "unsafeContext()")
-    public func internalContext() -> NSManagedObjectContext {
-        
-        return self.unsafeContext()
-    }
 }
 
 

@@ -139,22 +139,4 @@ extension CoreStore {
         
         return try self.defaultStack.addStorageAndWait(storage)
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, message: "Use the new CoreStore.entityTypesByName(for:) method passing `NSManagedObject.self` as argument.")
-    public static var entityTypesByName: [EntityName: NSManagedObject.Type] {
-        
-        return self.defaultStack.entityTypesByName
-    }
-    
-    
-    // MARK: Obsolete
-    
-    @available(swift, obsoleted: 3.1, renamed: "entityDescription(for:)")
-    public static func entityDescriptionForType(_ type: NSManagedObject.Type) -> NSEntityDescription? {
-        
-        return self.entityDescription(for: type)
-    }
 }

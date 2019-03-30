@@ -160,37 +160,4 @@ extension ImportableUniqueObject {
         
         try self.update(from: source, in: transaction)
     }
-    
-    
-    // MARK: Obsolete
-    
-    @available(swift, obsoleted: 3.1, renamed: "shouldInsert(from:in:)")
-    public static func shouldInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
-        
-        return Self.shouldInsert(from: source, in: transaction)
-    }
-    
-    @available(swift, obsoleted: 3.1, renamed: "shouldUpdate(from:in:)")
-    public static func shouldUpdateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) -> Bool {
-        
-        return Self.shouldUpdate(from: source, in: transaction)
-    }
-    
-    @available(swift, obsoleted: 3.1, renamed: "uniqueID(from:in:)")
-    public static func uniqueIDFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws -> UniqueIDType? {
-        
-        return try Self.uniqueID(from: source, in: transaction)
-    }
-    
-    @available(swift, obsoleted: 3.1, renamed: "didInsert(from:in:)")
-    public func didInsertFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
-        
-        try self.didInsert(from: source, in: transaction)
-    }
-    
-    @available(swift, obsoleted: 3.1, renamed: "update(from:in:)")
-    public func updateFromImportSource(_ source: ImportSource, inTransaction transaction: BaseDataTransaction) throws {
-        
-        try self.update(from: source, in: transaction)
-    }
 }

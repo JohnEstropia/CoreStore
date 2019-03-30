@@ -84,20 +84,4 @@ extension CoreStore {
         
         self.defaultStack.refreshAndMergeAllObjects()
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, message: "Use the new auto-commiting methods `perform(asynchronous:completion:)` or `perform(asynchronous:success:failure:)`. Please read the documentation on the behavior of the new methods.")
-    public static func beginAsynchronous(_ closure: @escaping (_ transaction: AsynchronousDataTransaction) -> Void) {
-        
-        self.defaultStack.beginAsynchronous(closure)
-    }
-    
-    @available(*, deprecated, message: "Use the new auto-commiting method `perform(synchronous:)`. Please read the documentation on the behavior of the new methods.")
-    @discardableResult
-    public static func beginSynchronous(_ closure: @escaping (_ transaction: SynchronousDataTransaction) -> Void) -> SaveResult? {
-        
-        return self.defaultStack.beginSynchronous(closure)
-    }
 }

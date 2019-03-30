@@ -204,60 +204,6 @@ public final class CSDataStack: NSObject, CoreStoreObjectiveCType {
         self.bridgeToSwift = swiftValue
         super.init()
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, message: "Use the -[initWithXcodeModelName:bundle:versionChain:] initializer.")
-    @objc
-    public convenience init(modelName: XcodeDataModelFileName?, bundle: Bundle?, versionChain: [String]?) {
-        
-        self.init(
-            DataStack(
-                xcodeModelName: modelName ?? DataStack.applicationName,
-                bundle: bundle ?? Bundle.main,
-                migrationChain: versionChain.flatMap { MigrationChain($0) } ?? nil
-            )
-        )
-    }
-    
-    @available(*, deprecated, message: "Use the -[initWithModelName:bundle:versionChain:] initializer.")
-    @objc
-    public convenience init(model: NSManagedObjectModel, versionChain: [String]?) {
-        
-        self.init(
-            DataStack(
-                model: model,
-                migrationChain: versionChain.flatMap { MigrationChain($0) } ?? nil
-            )
-        )
-    }
-    
-    @available(*, deprecated, message: "Use the -[initWithModelName:bundle:versionTree:] initializer.")
-    @objc
-    public convenience init(model: NSManagedObjectModel, versionTree: [String]?) {
-        
-        self.init(
-            DataStack(
-                model: model,
-                migrationChain: versionTree.flatMap { MigrationChain($0) } ?? nil
-            )
-        )
-    }
-    
-    @available(*, deprecated, message: "Use the new -entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
-    @objc
-    public var entityClassesByName: [EntityName: NSManagedObject.Type] {
-        
-        return self.bridgeToSwift.entityTypesByName
-    }
-    
-    @available(*, deprecated, message: "Use the new -entityTypesByNameForType: method passing `[NSManagedObject class]` as argument.")
-    @objc
-    public func entityClassWithName(_ name: EntityName) -> NSManagedObject.Type? {
-        
-        return self.bridgeToSwift.entityTypesByName[name]
-    }
 }
 
 

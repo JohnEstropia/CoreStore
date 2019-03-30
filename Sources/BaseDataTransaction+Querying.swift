@@ -561,13 +561,4 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
         
         return self.context
     }
-    
-    
-    // MARK: Obsoleted
-    
-    @available(swift, obsoleted: 3.1, renamed: "unsafeContext()")
-    public func internalContext() -> NSManagedObjectContext {
-        
-        fatalError()
-    }
 }

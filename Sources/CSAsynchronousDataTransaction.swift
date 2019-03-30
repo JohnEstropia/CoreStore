@@ -156,41 +156,6 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction, CoreSto
         
         super.init(swiftValue)
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, message: "Use the new -[CSAsynchronousDataTransaction commitWithSuccess:failure:] method.")
-    @objc
-    public func commitWithCompletion(_ completion: ((_ result: CSSaveResult) -> Void)?) {
-        
-        CoreStore.assert(
-            self.bridgeToSwift.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
-        )
-        CoreStore.assert(
-            !self.bridgeToSwift.isCommitted,
-            "Attempted to commit a \(cs_typeName(self)) more than once."
-        )
-        self.bridgeToSwift.commit { (result) in
-            
-            completion?(result.bridgeToObjectiveC)
-        }
-    }
-    
-    @available(*, deprecated, message: "Secondary tasks spawned from CSAsynchronousDataTransactions and CSSynchronousDataTransactions are no longer supported. ")
-    @objc
-    @discardableResult
-    public func beginSynchronous(_ closure: @escaping (_ transaction: CSSynchronousDataTransaction) -> Void) -> CSSaveResult? {
-        
-        return bridge {
-            
-            self.bridgeToSwift.beginSynchronous { (transaction) in
-                
-                closure(transaction.bridgeToObjectiveC)
-            }
-        }
-    }
 }
 
 

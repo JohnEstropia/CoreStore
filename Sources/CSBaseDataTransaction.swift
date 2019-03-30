@@ -251,28 +251,4 @@ public class CSBaseDataTransaction: NSObject {
         self.swiftTransaction = swiftValue
         super.init()
     }
-    
-    
-    // MARK: Deprecated
-    
-    @available(*, deprecated, message: "Use -[insertedObjectsOfType:] and pass the specific entity class")
-    @objc
-    public func insertedObjects() -> Set<NSManagedObject> {
-        
-        return self.swiftTransaction.insertedObjects()
-    }
-    
-    @available(*, deprecated, message: "Use -[updatedObjectsOfType:] and pass the specific entity class")
-    @objc
-    public func updatedObjects() -> Set<NSManagedObject> {
-        
-        return self.swiftTransaction.updatedObjects()
-    }
-    
-    @available(*, deprecated, message: "Use -[deletedObjectsOfType:] and pass the specific entity class")
-    @objc
-    public func deletedObjects() -> Set<NSManagedObject> {
-        
-        return self.swiftTransaction.deletedObjects()
-    }
 }
