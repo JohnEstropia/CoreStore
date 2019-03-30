@@ -403,9 +403,16 @@ extension UnsafeDataModelSchema: CustomDebugStringConvertible, CoreStoreDebugStr
 // MARK: - ListMonitor
 
 @available(macOS 10.12, *)
-private struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertible {
+fileprivate struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertible {
     
-    let sectionInfo: NSFetchedResultsSectionInfo
+    // MARK: CustomDebugStringConvertible
+    
+    var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    // MARK: CoreStoreDebugStringConvertible
     
     var coreStoreDumpString: String {
         
@@ -415,6 +422,10 @@ private struct CoreStoreFetchedSectionInfoWrapper: CoreStoreDebugStringConvertib
             ("indexTitle", self.sectionInfo.indexTitle as Any)
         )
     }
+    
+    // MARK: FilePrivate
+    
+    let sectionInfo: NSFetchedResultsSectionInfo
 }
 
 @available(macOS 10.12, *)
@@ -546,41 +557,7 @@ extension MigrationChain: CustomDebugStringConvertible, CoreStoreDebugStringConv
 
 // MARK: - MigrationType
 
-extension MigrationResult: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return formattedDebugDescription(self)
-    }
-    
-    
-    // MARK: CoreStoreDebugStringConvertible
-    
-    public var coreStoreDumpString: String {
-        
-        switch self {
-            
-        case .success(let migrationTypes):
-            return createFormattedString(
-                ".success (", ")",
-                ("migrationTypes", migrationTypes)
-            )
-            
-        case .failure(let error):
-            return createFormattedString(
-                ".failure (", ")",
-                ("error", error)
-            )
-        }
-    }
-}
-
-
-// MARK: - MigrationType
-
-extension MigrationType: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
+extension MigrationType: CoreStoreDebugStringConvertible {
     
     // MARK: CustomDebugStringConvertible
     
@@ -679,41 +656,6 @@ extension PartialObject: CustomDebugStringConvertible, CoreStoreDebugStringConve
             "(", ")",
             ("rawObject", self.rawObject as Any)
         )
-    }
-}
-
-
-// MARK: - SaveResult
-
-@available(*, deprecated, message: "Use the new DataStack.perform(asynchronous:...) and DataStack.perform(synchronous:...) family of APIs")
-extension SaveResult: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return formattedDebugDescription(self)
-    }
-    
-    
-    // MARK: CoreStoreDebugStringConvertible
-    
-    public var coreStoreDumpString: String {
-        
-        switch self {
-            
-        case .success(let hasChanges):
-            return createFormattedString(
-                ".success (", ")",
-                ("hasChanges", hasChanges)
-            )
-            
-        case .failure(let error):
-            return createFormattedString(
-                ".failure (", ")",
-                ("error", error)
-            )
-        }
     }
 }
 
@@ -831,40 +773,6 @@ extension SelectTerm: CustomDebugStringConvertible, CoreStoreDebugStringConverti
                 ".identity (", ")",
                 ("alias", alias),
                 ("nativeType", nativeType)
-            )
-        }
-    }
-}
-
-
-// MARK: - SetupResult
-
-extension SetupResult: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return formattedDebugDescription(self)
-    }
-    
-    
-    // MARK: CoreStoreDebugStringConvertible
-    
-    public var coreStoreDumpString: String {
-        
-        switch self {
-            
-        case .success(let storage):
-            return createFormattedString(
-                ".success (", ")",
-                ("storage", storage)
-            )
-            
-        case .failure(let error):
-            return createFormattedString(
-                ".failure (", ")",
-                ("error", error)
             )
         }
     }
@@ -1132,7 +1040,7 @@ extension String {
 
 // MARK: - Private: CoreStoreDebugStringConvertible
 
-public protocol CoreStoreDebugStringConvertible {
+public protocol CoreStoreDebugStringConvertible: CustomDebugStringConvertible {
     
     var coreStoreDumpString: String { get }
 }
@@ -1213,6 +1121,11 @@ extension NSAttributeDescription: CoreStoreDebugStringConvertible {
 
 extension NSAttributeType: CoreStoreDebugStringConvertible {
     
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
     public var coreStoreDumpString: String {
         
         switch self {
@@ -1247,6 +1160,11 @@ extension Bundle: CoreStoreDebugStringConvertible {
 }
 
 extension NSDeleteRule: CoreStoreDebugStringConvertible {
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
     
     public var coreStoreDumpString: String {
         
@@ -1420,7 +1338,38 @@ extension Optional: CoreStoreDebugStringConvertible {
     }
 }
 
+extension Result: CoreStoreDebugStringConvertible {
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
+    
+    public var coreStoreDumpString: String {
+        
+        switch self {
+            
+        case .success(let info):
+            return createFormattedString(
+                ".success (", ")",
+                ("info", info)
+            )
+            
+        case .failure(let error):
+            return createFormattedString(
+                ".failure (", ")",
+                ("error", error)
+            )
+        }
+    }
+}
+
 extension Selector: CoreStoreDebugStringConvertible {
+    
+    public var debugDescription: String {
+        
+        return formattedDebugDescription(self)
+    }
     
     public var coreStoreDumpString: String {
         

@@ -55,7 +55,7 @@ extension DataStack {
                 
                 DispatchQueue.main.async {
                     
-                    completion(SetupResult(storage))
+                    completion(.success(storage))
                 }
                 return
             }
@@ -70,7 +70,7 @@ extension DataStack {
                 
                 DispatchQueue.main.async {
                     
-                    completion(SetupResult(storage))
+                    completion(.success(storage))
                 }
             }
             catch {
@@ -82,7 +82,7 @@ extension DataStack {
                 )
                 DispatchQueue.main.async {
                     
-                    completion(SetupResult(storeError))
+                    completion(.failure(storeError))
                 }
             }
         }
@@ -119,7 +119,7 @@ extension DataStack {
                 
                 DispatchQueue.main.async {
                     
-                    completion(SetupResult(storage))
+                    completion(.success(storage))
                 }
                 return nil
             }
@@ -131,7 +131,7 @@ extension DataStack {
                     
                     DispatchQueue.main.async {
                         
-                        completion(SetupResult(existingStorage))
+                        completion(.success(existingStorage))
                     }
                     return nil
                 }
@@ -143,7 +143,7 @@ extension DataStack {
                 )
                 DispatchQueue.main.async {
                     
-                    completion(SetupResult(error))
+                    completion(.failure(error))
                 }
                 return nil
             }
@@ -181,17 +181,17 @@ extension DataStack {
                                     
                                     DispatchQueue.main.async {
                                         
-                                        completion(SetupResult(storage))
+                                        completion(.success(storage))
                                     }
                                 }
                                 catch {
                                     
-                                    completion(SetupResult(error))
+                                    completion(.failure(CoreStoreError(error)))
                                 }
                                 return
                             }
                             
-                            completion(SetupResult(error))
+                            completion(.failure(CoreStoreError(error)))
                             return
                         }
                         
@@ -201,12 +201,12 @@ extension DataStack {
                             
                             DispatchQueue.main.async {
                                 
-                                completion(SetupResult(storage))
+                                completion(.success(storage))
                             }
                         }
                         catch {
                             
-                            completion(SetupResult(error))
+                            completion(.failure(CoreStoreError(error)))
                         }
                     }
                 )
@@ -220,14 +220,14 @@ extension DataStack {
                         
                         DispatchQueue.main.async {
                             
-                            completion(SetupResult(storage))
+                            completion(.success(storage))
                         }
                     }
                     catch {
                         
                         DispatchQueue.main.async {
                             
-                            completion(SetupResult(error))
+                            completion(.failure(CoreStoreError(error)))
                         }
                     }
                     return nil
@@ -241,7 +241,7 @@ extension DataStack {
                 )
                 DispatchQueue.main.async {
                     
-                    completion(SetupResult(storeError))
+                    completion(.failure(storeError))
                 }
                 return nil
             }
@@ -284,7 +284,7 @@ extension DataStack {
                 
                 DispatchQueue.main.async {
                     
-                    completion(SetupResult(storage))
+                    completion(.success(storage))
                 }
                 return
             }
@@ -296,7 +296,7 @@ extension DataStack {
                     
                     DispatchQueue.main.async {
                         
-                        completion(SetupResult(existingStorage))
+                        completion(.success(existingStorage))
                     }
                     return
                 }
@@ -308,7 +308,7 @@ extension DataStack {
                 )
                 DispatchQueue.main.async {
                     
-                    completion(SetupResult(error))
+                    completion(.failure(error))
                 }
                 return
             }
@@ -328,7 +328,7 @@ extension DataStack {
                     )
                     DispatchQueue.main.async {
                         
-                        completion(SetupResult(storage))
+                        completion(.success(storage))
                     }
                 }
                 catch let error as NSError where storage.cloudStorageOptions.contains(.recreateLocalStoreOnModelMismatch) && error.isCoreDataMigrationError {
@@ -358,14 +358,14 @@ extension DataStack {
                         
                         DispatchQueue.main.async {
                             
-                            completion(SetupResult(storage))
+                            completion(.success(storage))
                         }
                     }
                     catch {
                         
                         DispatchQueue.main.async {
                             
-                            completion(SetupResult(error))
+                            completion(.failure(CoreStoreError(error)))
                         }
                     }
             }
@@ -378,7 +378,7 @@ extension DataStack {
                 )
                 DispatchQueue.main.async {
                     
-                    completion(SetupResult(storeError))
+                    completion(.failure(storeError))
                 }
             }
         }
@@ -514,7 +514,7 @@ extension DataStack {
             
             DispatchQueue.main.async {
                 
-                completion(MigrationResult(error))
+                completion(.failure(error))
             }
             return nil
         }
@@ -524,7 +524,7 @@ extension DataStack {
             
             DispatchQueue.main.async {
                 
-                completion(MigrationResult([]))
+                completion(.success([]))
                 return
             }
             return nil
@@ -538,7 +538,7 @@ extension DataStack {
             )
             DispatchQueue.main.async {
                 
-                completion(MigrationResult(error))
+                completion(.failure(error))
             }
             return nil
         }
@@ -586,7 +586,7 @@ extension DataStack {
                                 migrationError,
                                 "Failed to migrate version model \"\(migrationType.sourceVersion)\" to version \"\(migrationType.destinationVersion)\"."
                             )
-                            migrationResult = MigrationResult(migrationError)
+                            migrationResult = .failure(migrationError)
                             cancelled = true
                         }
                     }
@@ -609,7 +609,7 @@ extension DataStack {
             DispatchQueue.main.async {
                 
                 progress.setProgressHandler(nil)
-                completion(migrationResult ?? MigrationResult(migrationTypes))
+                completion(migrationResult ?? .success(migrationTypes))
                 return
             }
         }

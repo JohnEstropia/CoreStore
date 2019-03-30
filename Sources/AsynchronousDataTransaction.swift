@@ -50,45 +50,11 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
     // MARK: - Result
     
     /**
-     The `Result` contains the success or failure information for a completed transaction
+     The `Result` contains the success or failure information for a completed transaction.
+     `Result<T>.success` indicates that the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated `userInfo` is the value returned from the transaction closure.
+     `Result<T>.failure` indicates that the transaction either failed or was cancelled. The associated object for this value is a `CoreStoreError` enum value.
      */
-    public enum Result<T> {
-        
-        /**
-         `Result<T>.success` indicates that the transaction succeeded, either because the save succeeded or because there were no changes to save. The associated `userInfo` is the value returned from the transaction closure.
-         */
-        case success(userInfo: T)
-        
-        /**
-         `Result<T>.failure` indicates that the transaction either failed or was cancelled. The associated object for this value is a `CoreStoreError` enum value.
-         */
-        case failure(error: CoreStoreError)
-        
-        /**
-         Returns `true` if the result indicates `.success`, `false` if the result is `.failure`.
-         */
-        public var boolValue: Bool {
-            
-            switch self {
-                
-            case .success: return true
-            case .failure: return false
-            }
-        }
-        
-        
-        // MARK: Internal
-        
-        internal init(userInfo: T) {
-            
-            self = .success(userInfo: userInfo)
-        }
-        
-        internal init(error: CoreStoreError) {
-            
-            self = .failure(error: error)
-        }
-    }
+    public typealias Result<UserInfoType> = Swift.Result<UserInfoType, CoreStoreError>
     
     // MARK: -
     

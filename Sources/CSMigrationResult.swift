@@ -43,7 +43,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
     @objc
     public var isSuccess: Bool {
         
-        return self.bridgeToSwift.isSuccess
+        return (try? self.bridgeToSwift.get()) != nil
     }
     
     /**
@@ -52,7 +52,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
     @objc
     public var isFailure: Bool {
         
-        return !self.bridgeToSwift.isSuccess
+        return !self.isSuccess
     }
     
     /**
@@ -173,7 +173,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
 
 // MARK: - MigrationResult
 
-extension MigrationResult: CoreStoreSwiftType {
+extension MigrationResult {
     
     // MARK: CoreStoreSwiftType
     

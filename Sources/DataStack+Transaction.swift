@@ -32,7 +32,7 @@ import CoreData
 extension DataStack {
     
     /**
-     Performs a transaction asynchronously where `NSManagedObject` or `CoreStoreObject` creates, updates, and deletes can be made. The changes are commited automatically after the `task` closure returns. On success, the value returned from closure will be the wrapped as `.success(userInfo: T)` in the `completion`'s `Result<T>`. Any errors thrown from inside the `task` will be reported as `.failure(error: CoreStoreError)`. To cancel/rollback changes, call `try transaction.cancel()`, which throws a `CoreStoreError.userCancelled`.
+     Performs a transaction asynchronously where `NSManagedObject` or `CoreStoreObject` creates, updates, and deletes can be made. The changes are commited automatically after the `task` closure returns. On success, the value returned from closure will be the wrapped as `.success(T)` in the `completion`'s `Result<T>`. Any errors thrown from inside the `task` will be reported as `.failure(CoreStoreError)`. To cancel/rollback changes, call `try transaction.cancel()`, which throws a `CoreStoreError.userCancelled`.
      
      - parameter task: the asynchronous closure where creates, updates, and deletes can be made to the transaction. Transaction blocks are executed serially in a background queue, and all changes are made from a concurrent `NSManagedObjectContext`.
      - parameter completion: the closure executed after the save completes. The `Result` argument of the closure will either wrap the return value of `task`, or any uncaught errors thrown from within `task`. Cancelled `task`s will be indicated by `.failure(error: CoreStoreError.userCancelled)`. Custom errors thrown by the user will be wrapped in `CoreStoreError.userError(error: Error)`.
@@ -41,8 +41,8 @@ extension DataStack {
         
         self.perform(
             asynchronous: task,
-            success: { completion(.init(userInfo: $0)) },
-            failure: { completion(.init(error: $0)) }
+            success: { completion(.success($0)) },
+            failure: { completion(.failure($0)) }
         )
     }
     

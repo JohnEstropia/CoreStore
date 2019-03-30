@@ -177,7 +177,7 @@ public final class CSSetupResult: NSObject {
 
 // MARK: - SetupResult
 
-extension SetupResult where T: CoreStoreSwiftType, T.ObjectiveCType: CSStorageInterface {
+extension SetupResult where Success: StorageInterface, Success: CoreStoreSwiftType, Success.ObjectiveCType: CSStorageInterface, Failure == CoreStoreError {
     
     // MARK: CoreStoreSwiftType
     

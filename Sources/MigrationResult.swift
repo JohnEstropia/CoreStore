@@ -30,7 +30,8 @@ import Foundation
 
 /**
  The `MigrationResult` indicates the result of a migration.
- The `MigrationResult` can be treated as a boolean:
+ `MigrationResult.success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
+ `MigrationResult.failure` indicates that the migration failed. The associated object for this value is the a `CoreStoreError` enum value.
  ```
  CoreStore.upgradeStorageIfNeeded(SQLiteStorage(fileName: "data.sqlite")) { (result) in
      switch result {
@@ -42,46 +43,4 @@ import Foundation
  }
  ```
  */
-public enum MigrationResult: Hashable {
-    
-    /**
-     `MigrationResult.success` indicates either the migration succeeded, or there were no migrations needed. The associated value is an array of `MigrationType`s reflecting the migration steps completed.
-     */
-    case success([MigrationType])
-    
-    /**
-     `SaveResult.failure` indicates that the migration failed. The associated object for this value is the a `CoreStoreError` enum value.
-     */
-    case failure(CoreStoreError)
-    
-    
-    /**
-     Returns `true` if the result indicates `.success`, `false` if the result is `.failure`.
-     */
-    public var isSuccess: Bool {
-        
-        switch self {
-            
-        case .success: return true
-        case .failure: return false
-        }
-    }
-    
-    
-    // MARK: Internal
-    
-    internal init(_ migrationTypes: [MigrationType]) {
-        
-        self = .success(migrationTypes)
-    }
-    
-    internal init(_ error: CoreStoreError) {
-        
-        self = .failure(error)
-    }
-    
-    internal init(_ error: Error) {
-        
-        self = .failure(CoreStoreError(error))
-    }
-}
+public typealias MigrationResult = Swift.Result<[MigrationType], CoreStoreError>
