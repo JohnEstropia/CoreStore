@@ -19,8 +19,8 @@ Unleashing the real power of Core Data with the elegance and safety of Swift
 <br />
 </p>
 
-* **Swift 4.2:** iOS 10+ / macOS 10.12+ / watchOS 3.0+ / tvOS 10.0+
-* Other Swift versions: [Swift 3.2(version 4.2.3)](https://github.com/JohnEstropia/CoreStore/tree/4.2.3)
+* **Swift 5.0:** iOS 10+ / macOS 10.12+ / watchOS 3.0+ / tvOS 10.0+
+* Previously supported Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1)
 
 Upgrading from CoreStore 5.x (min iOS 9) to 6.x (min iOS 10)? Check out the [new features](#features) and make sure to read the [Change logs](https://github.com/JohnEstropia/CoreStore/releases).
 
@@ -59,7 +59,6 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
     - [Setting up](#setting-up)
         - [In-memory store](#in-memory-store)
         - [Local store](#local-store)
-        - [iCloud store](#icloud-store)
     - [Migrations](#migrations)
         - [Declaring model versions](#declaring-model-versions)
         - [Starting migrations](#starting-migrations)
@@ -312,66 +311,6 @@ public protocol LocalStorage: StorageInterface {
 }
 ```
 If you have custom `NSIncrementalStore` or `NSAtomicStore` subclasses, you can implement this protocol and use it similarly to `SQLiteStore`.
-
-### iCloud Store
-> ⚠️**Important:** The iCloud Store is being deprecated. Please use with caution. If you have any concerns please do send me a message on [Twitter](https://twitter.com/JohnEstropia) or on the [CoreStore Slack Team](http://swift-corestore-slack.herokuapp.com/)
-
-As a counterpart to `LocalStorage`, the `CloudStorage` protocol abstracts stores managed in the cloud. CoreStore currently provides the concrete class `ICloudStore`. Unlike `InMemoryStore` and `SQLiteStore` though, the `ICloudStore`'s initializer may return `nil` if the iCloud container could not be located or if iCloud is not available on the device:
-```swift
-guard let storage = ICloudStore(
-    ubiquitousContentName: "MyAppCloudData", // the name of the store in iCloud
-    ubiquitousContentTransactionLogsSubdirectory: "logs/config1", // optional. Subdirectory path for the transaction logs
-    ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername", // optional. The container if your app has multiple ubiquity container identifiers in its entitlements
-    ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0", // optional. A per-application salt to allow multiple apps on the same device to share a Core Data store integrated with iCloud
-    configuration: "Config1", // optional. Use entities from the "Config1" configuration in the .xcdatamodeld file
-    cloudStorageOptions: .recreateLocalStoreOnModelMismatch // optional. Provides settings that tells the DataStack how to setup the persistent store
-) else {
-    // The iCloud container could not be located or if iCloud is not available on the device.
-    // Handle appropriately
-    return    
-}
-CoreStore.addStorage(,
-    storage,
-    completion: { result in
-        switch result {
-        case .success(let storage): // ...
-        case .failure(let error): // ...
-        }
-    }
-)
-```
-
-If your app is using iCloud stores, you may want to be notified of particular iCloud events. The `ICloudStoreObserver` functions are all optional, so you may implement only the ones your app is interested in:
-```swift
-public protocol ICloudStoreObserver: class {
-    func iCloudStoreWillFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack)
-    func iCloudStoreDidFinishUbiquitousStoreInitialImport(storage storage: ICloudStore, dataStack: DataStack)
-    func iCloudStoreWillAddAccount(storage storage: ICloudStore, dataStack: DataStack)
-    func iCloudStoreDidAddAccount(storage storage: ICloudStore, dataStack: DataStack)
-    func iCloudStoreWillRemoveAccount(storage storage: ICloudStore, dataStack: DataStack)
-    func iCloudStoreDidRemoveAccount(storage storage: ICloudStore, dataStack: DataStack)
-    func iCloudStoreWillRemoveContent(storage storage: ICloudStore, dataStack: DataStack)
-    func iCloudStoreDidRemoveContent(storage storage: ICloudStore, dataStack: DataStack)
-}
-```
-To register your `ICloudStoreObserver`, call `addObserver(_:)` on the `ICloudStore` instance:
-
-```swift
-guard let storage = ICloudStore(/* ... */) else {
-    return    
-}
-storage.addObserver(self) // assuming self implements ICloudStoreObserver
-CoreStore.addStorage(,
-    storage,
-    completion: { result in
-        switch result {
-        case .success(let storage): // ... You may also call storage.addObserver(_:) here
-        case .failure(let error): // ...
-        }
-    }
-)
-```
-The `ICloudStore` only keeps weak references of the registered observers. You may call `removeObserver(_:)` for precise deregistration, but `ICloudStore` automatically removes deallocated observers.
 
 
 ## Migrations
@@ -1675,14 +1614,13 @@ CoreStore.perform(
 <td><pre lang=objc>
 [CSCoreStore beginAsynchronous:^(CSAsynchronousDataTransaction *transaction) {
     // ...
-    [transaction commitWithCompletion:^(CSSaveResult *result) {
-        if (result.isSuccess) {
-            NSLog(@"Done");
-        }
-        else if (result.isFailure) {
-            NSLog(@"error: %@", result.error);
-        }
-    }];
+    [transaction 
+     commitWithSuccess:^{
+        NSLog(@"Done");
+     }
+     failure: ^(CSError *error) {
+        NSLog(@"error: %@", result.error);
+     }];
 }];
 </pre></td>
 </tr>
@@ -1863,7 +1801,8 @@ Once the version lock is set, any changes in the properties or to the model will
 # Installation
 - Requires:
     - iOS 10 SDK and above
-    - Swift 4.2 (Xcode 10+)
+    - Swift 5.0 (Xcode 10+)
+    - For previous Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1)
 - Dependencies:
     - *None*
 - Other notes:
@@ -1872,7 +1811,7 @@ Once the version lock is set, any changes in the properties or to the model will
 ### Install with CocoaPods
 In your `Podfile`, add
 ```
-pod 'CoreStore', '~> 6.1'
+pod 'CoreStore', '~> 6.3'
 ```
 and run 
 ```
@@ -1883,7 +1822,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 ### Install with Carthage
 In your `Cartfile`, add
 ```
-github "JohnEstropia/CoreStore" >= 6.2.1
+github "JohnEstropia/CoreStore" >= 6.3.0
 ```
 and run 
 ```
@@ -1894,7 +1833,7 @@ This installs CoreStore as a framework. Declare `import CoreStore` in your swift
 #### Install with Swift Package Manager:
 ```swift
 dependencies: [
-    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "6.2.1"))
+    .package(url: "https://github.com/JohnEstropia/CoreStore.git", from: "6.3.0"))
 ]
 ```
 Declare `import CoreStore` in your swift file to use the library.
