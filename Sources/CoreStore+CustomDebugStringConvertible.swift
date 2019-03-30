@@ -1015,7 +1015,7 @@ extension VersionLock: CustomStringConvertible, CustomDebugStringConvertible, Co
             
             let data = keyValue.value
             let count = data.count
-            let bytes = data.withUnsafeBytes { (pointer: UnsafePointer<HashElement>) in
+            let bytes = data.withUnsafeBytes { (pointer) in
                 
                 return (0 ..< (count / MemoryLayout<HashElement>.size))
                     .map({ "\("0x\(String(pointer[$0], radix: 16, uppercase: false))")" })

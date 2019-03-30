@@ -87,7 +87,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
             return
         }
 
-        if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *) {}
+        if #available(iOS 10.3, tvOS 10.3, watchOS 3.2, macOS 10.13, *) {}
         else {
 
             self.deletedSections = []
@@ -120,7 +120,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
             return
         }
 
-        if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *) {
+        if #available(iOS 10.3, tvOS 10.3, watchOS 3.2, macOS 10.13, *) {
 
             self.handler?.controller(
                 controller,
@@ -227,7 +227,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
             return
         }
 
-        if #available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *) {}
+        if #available(iOS 10.3, tvOS 10.3, watchOS 3.2, macOS 10.13, *) {}
         else {
 
             switch type {
@@ -237,7 +237,7 @@ internal final class FetchedResultsControllerDelegate: NSObject, NSFetchedResult
             default: break
             }
         }
-        
+    
         self.handler?.controller(
             controller,
             didChangeSection: sectionInfo,

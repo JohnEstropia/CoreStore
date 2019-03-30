@@ -360,7 +360,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
         if let dataStack = dataStack, let model = model {
             
             self.segmentedControl?.selectedSegmentIndex = self.models
-                .index(
+                .firstIndex(
                     where: { (arg) -> Bool in
                         
                         let (_, _, schemaHistory) = arg
@@ -386,7 +386,7 @@ class MigrationsDemoViewController: UIViewController, ListObserver, UITableViewD
         }
         else {
            
-            self.segmentedControl?.selectedSegmentIndex = UISegmentedControlNoSegment
+            self.segmentedControl?.selectedSegmentIndex = UISegmentedControl.noSegment
             self._listMonitor = nil
             self._dataStack = nil
         }

@@ -30,7 +30,7 @@ class FetchingResultsViewController: UITableViewController {
         super.viewDidLoad()
         
         self.tableView.estimatedRowHeight = 60
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.rowHeight = UITableView.automaticDimension
     }
     
     
