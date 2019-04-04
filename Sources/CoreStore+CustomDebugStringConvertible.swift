@@ -922,11 +922,11 @@ extension VersionLock: CustomStringConvertible, CustomDebugStringConvertible, Co
         for (index, keyValue) in self.hashesByEntityName.sorted(by: { $0.key < $1.key }).enumerated() {
             
             let data = keyValue.value
-            let count = data.count
             let bytes = data.withUnsafeBytes { (pointer) in
                 
-                return (0 ..< (count / MemoryLayout<HashElement>.size))
-                    .map({ "\("0x\(String(pointer[$0], radix: 16, uppercase: false))")" })
+                return pointer
+                    .bindMemory(to: VersionLock.HashElement.self)
+                    .map({ "\("0x\(String($0, radix: 16, uppercase: false))")" })
             }
             string.append("\(index == 0 ? "\n" : ",\n")\"\(keyValue.key)\": [\(bytes.joined(separator: ", "))]")
         }
