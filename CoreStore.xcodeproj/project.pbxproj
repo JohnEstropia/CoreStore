@@ -491,6 +491,9 @@
 		B59851491C90289D00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B598514A1C90289E00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B598514B1C90289F00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
+		B59A51832256C85E00CEF3C5 /* VersionLockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59A51822256C85E00CEF3C5 /* VersionLockTests.swift */; };
+		B59A51842256C85E00CEF3C5 /* VersionLockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59A51822256C85E00CEF3C5 /* VersionLockTests.swift */; };
+		B59A51852256C85E00CEF3C5 /* VersionLockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59A51822256C85E00CEF3C5 /* VersionLockTests.swift */; };
 		B59AFF411C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */; };
 		B5A1DAC81F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
 		B5A1DAC91F111BFA003CF369 /* KeyPath+Querying.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */; };
@@ -858,6 +861,7 @@
 		B596BBAD1DD59FDB001DCDD9 /* ConvenienceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvenienceTests.swift; sourceTree = "<group>"; };
 		B596BBB51DD5BC67001DCDD9 /* FetchableSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchableSource.swift; sourceTree = "<group>"; };
 		B596BBBA1DD5C39F001DCDD9 /* QueryableSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryableSource.swift; sourceTree = "<group>"; };
+		B59A51822256C85E00CEF3C5 /* VersionLockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionLockTests.swift; sourceTree = "<group>"; };
 		B59AFF401C6593E400C0ABE2 /* NSPersistentStoreCoordinator+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStoreCoordinator+Setup.swift"; sourceTree = "<group>"; };
 		B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyPath+Querying.swift"; sourceTree = "<group>"; };
 		B5A261201B64BFDB006EB6D3 /* MigrationType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationType.swift; sourceTree = "<group>"; };
@@ -1110,6 +1114,7 @@
 				B5489F3C1CF5EEBC008B4978 /* TestEntities */,
 				B5489F451CF5F017008B4978 /* TransactionTests.swift */,
 				B525577F1D029D2500E51965 /* TweakTests.swift */,
+				B59A51822256C85E00CEF3C5 /* VersionLockTests.swift */,
 				B52557731D02791400E51965 /* WhereTests.swift */,
 			);
 			path = CoreStoreTests;
@@ -2043,6 +2048,7 @@
 				B5489F461CF5F017008B4978 /* TransactionTests.swift in Sources */,
 				B52557801D029D2500E51965 /* TweakTests.swift in Sources */,
 				B580857A1CDF808C004C2EEB /* SetupTests.swift in Sources */,
+				B59A51832256C85E00CEF3C5 /* VersionLockTests.swift in Sources */,
 				B5489F4C1CF5F743008B4978 /* BaseTestCase.swift in Sources */,
 				B5DBE2DF1C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B57D27BE1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */,
@@ -2237,6 +2243,7 @@
 				B52557711D02561A00E51965 /* SelectTests.swift in Sources */,
 				B5489F471CF5F017008B4978 /* TransactionTests.swift in Sources */,
 				B52557811D029D2500E51965 /* TweakTests.swift in Sources */,
+				B59A51842256C85E00CEF3C5 /* VersionLockTests.swift in Sources */,
 				B5489F4D1CF5F743008B4978 /* BaseTestCase.swift in Sources */,
 				82BA18DC1C4BBD9C00A0916E /* Model.xcdatamodeld in Sources */,
 				B57D27BF1D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */,
@@ -2431,6 +2438,7 @@
 				B5489F481CF5F017008B4978 /* TransactionTests.swift in Sources */,
 				B52557821D029D2500E51965 /* TweakTests.swift in Sources */,
 				B5489F4E1CF5F743008B4978 /* BaseTestCase.swift in Sources */,
+				B59A51852256C85E00CEF3C5 /* VersionLockTests.swift in Sources */,
 				B5598BCC1BE2093D0092EFCE /* Model.xcdatamodeld in Sources */,
 				B5220E261D1308C2009BC71E /* ListObserverTests.swift in Sources */,
 				B57D27C01D0BBE8200539C58 /* BaseTestDataTestCase.swift in Sources */,

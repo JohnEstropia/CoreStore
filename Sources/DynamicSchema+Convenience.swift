@@ -153,11 +153,10 @@ extension DynamicSchema {
                         valueType = Data.self
                         if let defaultValue = (attribute.defaultValue as! Data.QueryableNativeType?).flatMap(Data.cs_fromQueryableNativeType) {
                             
-                            let count = defaultValue.count
                             let bytes = defaultValue.withUnsafeBytes { (pointer) in
-                                
-                                return (0 ..< (count / MemoryLayout<UInt8>.size))
-                                    .map({ "\("0x\(String(pointer[$0], radix: 16, uppercase: false))")" })
+                                return pointer
+                                    .bindMemory(to: UInt64.self)
+                                    .map({ "\("0x\(String($0, radix: 16, uppercase: false))")" })
                             }
                             defaultString = ", initial: Data(bytes: [\(bytes.joined(separator: ", "))])"
                         }
