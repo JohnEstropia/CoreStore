@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol OrganismProtocol: class {
+protocol OrganismProtocol: AnyObject {
     
     var dna: Int64 { get set }
     

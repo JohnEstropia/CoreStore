@@ -32,7 +32,7 @@ import CoreData
 /**
  Encapsulates containers which manages an internal `NSManagedObjectContext`, such as `DataStack`s and transactions, that can be used for fetching objects. CoreStore provides implementations for this protocol and should be used as a read-only abstraction.
  */
-public protocol FetchableSource: class {
+public protocol FetchableSource: AnyObject {
     
     /**
      Fetches the `DynamicObject` instance in the `FetchableSource`'s context from a reference created from another managed object context.

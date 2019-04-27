@@ -30,7 +30,7 @@ import CoreData
 // MARK: - FetchedResultsControllerHandler
 
 @available(macOS 10.12, *)
-internal protocol FetchedResultsControllerHandler: class {
+internal protocol FetchedResultsControllerHandler: AnyObject {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeObject anObject: Any, atIndexPath indexPath: IndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: IndexPath?)
     

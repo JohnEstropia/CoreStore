@@ -34,7 +34,7 @@ import CoreData
 
  `invalidate()` will be called automatically when an `CoreStoreObjectKeyValueObservation` is deinited.
  */
-public protocol CoreStoreObjectKeyValueObservation: class {
+public protocol CoreStoreObjectKeyValueObservation: AnyObject {
 
     /**
      `invalidate()` will be called automatically when an `CoreStoreObjectKeyValueObservation` is deinited.
