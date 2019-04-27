@@ -40,7 +40,7 @@ import CoreData
  ```
  */
 @available(macOS 10.12, *)
-public protocol ListObserver: class {
+public protocol ListObserver: AnyObject {
     
     /**
      The `NSManagedObject` type for the observed list

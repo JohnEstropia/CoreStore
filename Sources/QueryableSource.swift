@@ -32,7 +32,7 @@ import CoreData
 /**
  Encapsulates containers which manages an internal `NSManagedObjectContext`, such as `DataStack`s and transactions, that can be used for querying values. CoreStore provides implementations for this protocol and should be used as a read-only abstraction.
  */
-public protocol QueryableSource: class {
+public protocol QueryableSource: AnyObject {
     
     /**
      Queries aggregate values as specified by the `QueryClause`s. Requires at least a `Select` clause, and optional `Where`, `OrderBy`, `GroupBy`, and `Tweak` clauses.

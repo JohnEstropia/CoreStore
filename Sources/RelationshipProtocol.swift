@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - RelationshipProtocol
 
-internal protocol RelationshipProtocol: class {
+internal protocol RelationshipProtocol: AnyObject {
     
     var keyPath: KeyPathString { get }
     var isToMany: Bool { get }

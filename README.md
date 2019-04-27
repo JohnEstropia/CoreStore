@@ -964,7 +964,7 @@ You can even use external types from popular 3rd-party JSON libraries, or just s
 #### `ImportableObject`
 `ImportableObject` is a very simple protocol:
 ```swift
-public protocol ImportableObject: class {
+public protocol ImportableObject: AnyObject {
     typealias ImportSource
     static func shouldInsert(from source: ImportSource, in transaction: BaseDataTransaction) -> Bool
     func didInsert(from source: ImportSource, in transaction: BaseDataTransaction) throws

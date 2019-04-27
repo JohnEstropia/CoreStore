@@ -37,7 +37,7 @@ import CoreData
  ```
  */
 @available(macOS 10.12, *)
-public protocol ObjectObserver: class {
+public protocol ObjectObserver: AnyObject {
     
     /**
      The `DynamicObject` type for the observed object

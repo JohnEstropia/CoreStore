@@ -29,7 +29,7 @@ import CoreData
 
 // MARK: - AttributeProtocol
 
-internal protocol AttributeProtocol: class {
+internal protocol AttributeProtocol: AnyObject {
     
     static var attributeType: NSAttributeType { get }
     
