@@ -144,12 +144,12 @@ public protocol LocalStorage: StorageInterface {
     /**
      Called by the `DataStack` to perform checkpoint operations on the storage. (SQLite stores for example, can convert the database's WAL journaling mode to DELETE to force a checkpoint)
      */
-    func cs_finalizeStorageAndWait(soureModelHint: NSManagedObjectModel) throws
+    func cs_finalizeStorageAndWait(sourceModelHint: NSManagedObjectModel) throws
     
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (SQLite stores for example, can convert WAL journaling mode to DELETE before deleting)
      */
-    func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws
+    func cs_eraseStorageAndWait(metadata: [String: Any], sourceModelHint: NSManagedObjectModel?) throws
 }
 
 extension LocalStorage {
@@ -233,7 +233,7 @@ public protocol CloudStorage: StorageInterface {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. **Do not call directly!** The `sourceModel` argument is a hint for the existing store's model version. Implementers can use the `sourceModel` to perform necessary store operations. (Cloud stores for example, can set the NSPersistentStoreRemoveUbiquitousMetadataOption option before deleting)
      */
-    func cs_eraseStorageAndWait(soureModel: NSManagedObjectModel) throws
+    func cs_eraseStorageAndWait(sourceModel: NSManagedObjectModel) throws
 }
 
 

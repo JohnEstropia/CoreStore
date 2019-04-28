@@ -335,7 +335,7 @@ public final class DataStack: Equatable {
                     )
                     try storage.cs_eraseStorageAndWait(
                         metadata: metadata,
-                        soureModelHint: self.schemaHistory.schema(for: metadata)?.rawModel()
+                        sourceModelHint: self.schemaHistory.schema(for: metadata)?.rawModel()
                     )
                     let finalStoreOptions = storage.dictionary(forOptions: storage.localStorageOptions)
                     _ = try self.createPersistentStoreFromStorage(
@@ -442,7 +442,7 @@ public final class DataStack: Equatable {
                     )
                     _ = try self.schemaHistory
                         .schema(for: metadata)
-                        .flatMap({ try storage.cs_eraseStorageAndWait(soureModel: $0.rawModel()) })
+                        .flatMap({ try storage.cs_eraseStorageAndWait(sourceModel: $0.rawModel()) })
                     _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,

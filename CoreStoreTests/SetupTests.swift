@@ -231,7 +231,7 @@ class SetupTests: BaseTestDataTestCase {
             )
             try sqliteStore.cs_eraseStorageAndWait(
                 metadata: metadata,
-                soureModelHint: stack.schemaHistory.schema(for: metadata)?.rawModel()
+                sourceModelHint: stack.schemaHistory.schema(for: metadata)?.rawModel()
             )
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
@@ -244,7 +244,7 @@ class SetupTests: BaseTestDataTestCase {
         do {
             
             let metadata = try createStore()
-            try sqliteStore.cs_eraseStorageAndWait(metadata: metadata, soureModelHint: nil)
+            try sqliteStore.cs_eraseStorageAndWait(metadata: metadata, sourceModelHint: nil)
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
@@ -358,7 +358,7 @@ class SetupTests: BaseTestDataTestCase {
             )
             try sqliteStore.cs_eraseStorageAndWait(
                 metadata: metadata,
-                soureModelHint: stack.schemaHistory.schema(for: metadata)?.rawModel()
+                sourceModelHint: stack.schemaHistory.schema(for: metadata)?.rawModel()
             )
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
@@ -371,7 +371,7 @@ class SetupTests: BaseTestDataTestCase {
         do {
             
             let metadata = try createStore()
-            try sqliteStore.cs_eraseStorageAndWait(metadata: metadata, soureModelHint: nil)
+            try sqliteStore.cs_eraseStorageAndWait(metadata: metadata, sourceModelHint: nil)
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-wal")))
             XCTAssertFalse(fileManager.fileExists(atPath: sqliteStore.fileURL.path.appending("-shm")))
