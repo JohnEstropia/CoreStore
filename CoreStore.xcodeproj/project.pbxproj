@@ -723,6 +723,9 @@
 		B5FEC18F1C9166E600532541 /* NSPersistentStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FEC18D1C9166E200532541 /* NSPersistentStore+Setup.swift */; };
 		B5FEC1901C9166E700532541 /* NSPersistentStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FEC18D1C9166E200532541 /* NSPersistentStore+Setup.swift */; };
 		B5FEC1911C9166E700532541 /* NSPersistentStore+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FEC18D1C9166E200532541 /* NSPersistentStore+Setup.swift */; };
+		E6B8DCE522229E340007BBA9 /* MigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B8DCE422229E330007BBA9 /* MigrationTests.swift */; };
+		E6B8DCE622229E340007BBA9 /* MigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B8DCE422229E330007BBA9 /* MigrationTests.swift */; };
+		E6B8DCE722229E340007BBA9 /* MigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B8DCE422229E330007BBA9 /* MigrationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -968,6 +971,7 @@
 		B5FE4DA61C84FB4400FA6A91 /* InMemoryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryStore.swift; sourceTree = "<group>"; };
 		B5FE4DAB1C85D44E00FA6A91 /* SQLiteStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SQLiteStore.swift; sourceTree = "<group>"; };
 		B5FEC18D1C9166E200532541 /* NSPersistentStore+Setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentStore+Setup.swift"; sourceTree = "<group>"; };
+		E6B8DCE422229E330007BBA9 /* MigrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigrationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1101,6 +1105,7 @@
 				B5220E0B1D0D0D19009BC71E /* ImportTests.swift */,
 				B525576B1CFAF18F00E51965 /* IntoTests.swift */,
 				B5220E0F1D0DA6AB009BC71E /* ListObserverTests.swift */,
+				E6B8DCE422229E330007BBA9 /* MigrationTests.swift */,
 				B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */,
 				B5220E071D0C5F8D009BC71E /* ObjectObserverTests.swift */,
 				B52557771D02826E00E51965 /* OrderByTests.swift */,
@@ -2039,6 +2044,7 @@
 				B5220E0C1D0D0D19009BC71E /* ImportTests.swift in Sources */,
 				B5D339B41E925C2B00C880DE /* DynamicModelTests.swift in Sources */,
 				B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */,
+				E6B8DCE522229E340007BBA9 /* MigrationTests.swift in Sources */,
 				B52557881D02DE8100E51965 /* FetchTests.swift in Sources */,
 				B5489F501CF603D5008B4978 /* FromTests.swift in Sources */,
 				B52557781D02826E00E51965 /* OrderByTests.swift in Sources */,
@@ -2234,6 +2240,7 @@
 				B5220E0D1D0D0D19009BC71E /* ImportTests.swift in Sources */,
 				B5D339B51E925C2B00C880DE /* DynamicModelTests.swift in Sources */,
 				B525576D1CFAF18F00E51965 /* IntoTests.swift in Sources */,
+				E6B8DCE622229E340007BBA9 /* MigrationTests.swift in Sources */,
 				B580857B1CDF808D004C2EEB /* SetupTests.swift in Sources */,
 				B52557891D02DE8100E51965 /* FetchTests.swift in Sources */,
 				B5489F511CF603D5008B4978 /* FromTests.swift in Sources */,
@@ -2429,6 +2436,7 @@
 				B525576E1CFAF18F00E51965 /* IntoTests.swift in Sources */,
 				B5D339B61E925C2B00C880DE /* DynamicModelTests.swift in Sources */,
 				B580857C1CDF808F004C2EEB /* SetupTests.swift in Sources */,
+				E6B8DCE722229E340007BBA9 /* MigrationTests.swift in Sources */,
 				B525578A1D02DE8100E51965 /* FetchTests.swift in Sources */,
 				B5220E281D1308E5009BC71E /* SectionByTests.swift in Sources */,
 				B5489F521CF603D5008B4978 /* FromTests.swift in Sources */,
