@@ -365,7 +365,6 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             entityMapping.sourceEntityName = sourceEntity.name
             entityMapping.sourceEntityVersionHash = sourceEntity.versionHash
             entityMapping.mappingType = .removeEntityMappingType
-            entityMapping.sourceExpression = expression(forSource: sourceEntity)
             
             entityMappings.append(entityMapping)
         }
