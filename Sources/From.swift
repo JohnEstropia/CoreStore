@@ -140,8 +140,16 @@ public struct From<D: DynamicObject> {
     }
     
     internal func applyToFetchRequest<U>(_ fetchRequest: CoreStoreFetchRequest<U>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) throws {
-        
-        fetchRequest.entity = context.parentStack!.entityDescription(for: EntityIdentifier(self.entityClass))!
+
+        guard let parentStack = context.parentStack else {
+
+            CoreStore.log(
+                .warning,
+                message: "Attempted to perform a fetch but the \(cs_typeName(DataStack.self)) has already been deallocated."
+            )
+            throw CoreStoreError.unknown
+        }
+        fetchRequest.entity = parentStack.entityDescription(for: EntityIdentifier(self.entityClass))!
         guard applyAffectedStores else {
             
             return

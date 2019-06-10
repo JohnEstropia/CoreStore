@@ -963,8 +963,15 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                     
                     return
                 }
-                
-                try! newFetchedResultsController.performFetchFromSpecifiedStores()
+                do {
+
+                    try newFetchedResultsController.performFetchFromSpecifiedStores()
+                }
+                catch {
+
+                    // DataStack may have been deallocated
+                    return
+                }
                 self.fetchedResultsControllerDelegate.taskGroup.notify(queue: .main) {
                     
                     self.fetchedResultsControllerDelegate.enabled = false
