@@ -44,4 +44,5 @@ internal protocol AttributeProtocol: AnyObject {
     var rawObject: CoreStoreManagedObject? { get set }
     var getter: CoreStoreManagedObject.CustomGetter? { get }
     var setter: CoreStoreManagedObject.CustomSetter? { get }
+    var valueForSnapshot: Any { get }
 }

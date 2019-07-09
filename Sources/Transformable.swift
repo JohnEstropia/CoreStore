@@ -267,6 +267,10 @@ public enum TransformableContainer<O: CoreStoreObject> {
                 )
             }
         }
+        
+        internal var valueForSnapshot: Any {
+            return self.value
+        }
 
 
         // MARK: Private
@@ -479,6 +483,10 @@ public enum TransformableContainer<O: CoreStoreObject> {
                     newValue as! V?
                 )
             }
+        }
+        
+        internal var valueForSnapshot: Any {
+            return self.value as Any
         }
 
 

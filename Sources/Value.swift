@@ -263,6 +263,10 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
         }
         
+        internal var valueForSnapshot: Any {
+            return self.value
+        }
+        
         
         // MARK: Private
         
@@ -474,6 +478,10 @@ public enum ValueContainer<O: CoreStoreObject> {
                     (newValue as! V.QueryableNativeType?).flatMap(V.cs_fromQueryableNativeType)
                 )
             }
+        }
+        
+        internal var valueForSnapshot: Any {
+            return self.value as Any
         }
         
         

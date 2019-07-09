@@ -1,0 +1,103 @@
+---
+format_version: '7'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: ios
+trigger_map:
+- push_branch: "*"
+  workflow: ci
+- pull_request_source_branch: "*"
+  workflow: ci
+workflows:
+  ci:
+    steps:
+    - activate-ssh-key:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone: {}
+    - cache-pull: {}
+    - certificate-and-profile-installer: {}
+    ################ PLATFORM = tvOS
+    - xcode-test:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "CoreStore tvOS"
+        - is_clean_build: "yes"
+        - xcodebuild_test_options: "-configuration Debug"
+        - simulator_platform: "tvOS Simulator"
+        - simulator_device: "Apple TV"
+        - should_retry_test_on_fail: "yes"
+    - xcode-test:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "CoreStore tvOS"
+        - is_clean_build: "yes"
+        - xcodebuild_test_options: "-configuration Release"
+        - simulator_platform: "tvOS Simulator"
+        - simulator_device: "Apple TV"
+        - should_retry_test_on_fail: "yes"
+    - xcode-test:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "CoreStore tvOS"
+        - is_clean_build: "yes"
+        - simulator_platform: "tvOS Simulator"
+        - simulator_device: "Apple TV 4K"
+        - should_retry_test_on_fail: "yes"
+    - xcode-test:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "CoreStore tvOS"
+        - is_clean_build: "yes"
+        - simulator_platform: "tvOS Simulator"
+        - simulator_device: "Apple TV 4K (at 1080p)"
+        - should_retry_test_on_fail: "yes"
+    ################ PLATFORM = iOS
+    - xcode-test:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "CoreStore iOS"
+        - is_clean_build: "yes"
+        - simulator_platform: "iOS Simulator"
+        - simulator_device: "iPhone XS"
+        - simulator_os_version: "12.0"
+        - should_retry_test_on_fail: "yes"
+    - xcode-test:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "CoreStore iOS"
+        - is_clean_build: "yes"
+        - simulator_platform: "iOS Simulator"
+        - simulator_device: "iPhone 8"
+        - simulator_os_version: "11.4"
+        - should_retry_test_on_fail: "yes"
+    - xcode-test:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "CoreStore iOS"
+        - is_clean_build: "yes"
+        - simulator_platform: "iOS Simulator"
+        - simulator_device: "iPhone 7"
+        - simulator_os_version: "10.3.1"
+        - should_retry_test_on_fail: "yes"
+    ################ PLATFORM = macOS
+    - xcode-test-mac:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "CoreStore OSX"
+        - is_clean_build: "yes"
+        - xcodebuild_test_options: "-configuration Debug"
+        - destination: "platform=macos,arch=x86_64"
+        - should_retry_test_on_fail: "yes"
+    - xcode-test-mac:
+        inputs:
+        - project_path: "$BITRISE_PROJECT_PATH"
+        - scheme: "CoreStore OSX"
+        - is_clean_build: "yes"
+        - xcodebuild_test_options: "-configuration Release"
+        - destination: "platform=macos,arch=x86_64"
+        - should_retry_test_on_fail: "yes"
+    - cache-push: {}
+app:
+  envs:
+  - opts:
+      is_expand: false
+    BITRISE_PROJECT_PATH: CoreStore.xcworkspace

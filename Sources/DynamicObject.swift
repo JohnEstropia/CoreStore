@@ -60,6 +60,17 @@ public protocol DynamicObject: AnyObject {
     func cs_toRaw() -> NSManagedObject
 }
 
+extension DynamicObject {
+    
+    // MARK: Internal
+    
+    internal func runtimeType() -> Self.Type {
+        
+        // Self.self does not return runtime-created types
+        return object_getClass(self)! as! Self.Type
+    }
+}
+
 
 // MARK: - NSManagedObject
 
@@ -95,6 +106,16 @@ extension NSManagedObject: DynamicObject {
     public func cs_toRaw() -> NSManagedObject {
         
         return self
+    }
+}
+
+extension DynamicObject where Self: NSManagedObject {
+    
+    // MARK: Public
+    
+    public func createSnapshot() -> ObjectSnapshot<Self> {
+        
+        return ObjectSnapshot(from: self)
     }
 }
 
@@ -148,5 +169,15 @@ extension CoreStoreObject {
     public func cs_toRaw() -> NSManagedObject {
         
         return self.rawObject!
+    }
+}
+
+extension DynamicObject where Self: CoreStoreObject {
+    
+    // MARK: Public
+    
+    public func createSnapshot() -> ObjectSnapshot<Self> {
+        
+        return ObjectSnapshot(from: self)
     }
 }

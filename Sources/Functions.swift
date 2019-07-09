@@ -28,15 +28,6 @@ import Foundation
 // MARK: Associated Objects
 
 @inline(__always)
-/// type(of:) doesn't return the dynamic type anymore, use this to guarantee correct dispatch of class methods
-internal func cs_dynamicType<T: AnyObject>(of instance: T) -> T.Type {
-    
-    return object_getClass(instance) as! T.Type
-}
-
-// MARK: Associated Objects
-
-@inline(__always)
 internal func cs_getAssociatedObjectForKey<T: AnyObject>(_ key: UnsafeRawPointer, inObject object: Any) -> T? {
     
     switch objc_getAssociatedObject(object, key) {

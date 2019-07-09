@@ -156,7 +156,7 @@ extension LocalStorage {
     
     internal func matchesPersistentStore(_ persistentStore: NSPersistentStore) -> Bool {
         
-        return persistentStore.type == type(of: self).storeType
+        return persistentStore.type == Self.storeType
             && persistentStore.configurationName == (self.configuration ?? DataStack.defaultConfigurationName)
             && persistentStore.url == self.fileURL
     }
@@ -243,7 +243,7 @@ extension CloudStorage {
     
     internal func matchesPersistentStore(_ persistentStore: NSPersistentStore) -> Bool {
         
-        guard persistentStore.type == type(of: self).storeType
+        guard persistentStore.type == Self.storeType
             && persistentStore.configurationName == (self.configuration ?? DataStack.defaultConfigurationName) else {
                 
                 return false

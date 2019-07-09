@@ -40,7 +40,7 @@ class BaseTestCase: XCTestCase {
         
         let stack = DataStack(
             xcodeModelName: "Model",
-            bundle: Bundle(for: type(of: self))
+            bundle: Bundle(for: Self.self)
         )
         do {
             
@@ -50,7 +50,7 @@ class BaseTestCase: XCTestCase {
                     SQLiteStore(
                         fileURL: SQLiteStore.defaultRootDirectory
                             .appendingPathComponent(UUID().uuidString)
-                            .appendingPathComponent("\(type(of: self))_\(($0 ?? "-null-")).sqlite"),
+                            .appendingPathComponent("\(Self.self)_\(($0 ?? "-null-")).sqlite"),
                         configuration: $0,
                         localStorageOptions: .recreateStoreOnModelMismatch
                     )

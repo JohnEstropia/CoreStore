@@ -223,7 +223,7 @@ public final class SQLiteStore: LocalStorage {
             var storeOptions = self.storeOptions ?? [:]
             storeOptions[NSSQLitePragmasOption] = ["journal_mode": "DELETE"]
             try coordinator.addPersistentStore(
-                ofType: type(of: self).storeType,
+                ofType: Self.storeType,
                 configurationName: self.configuration,
                 at: fileURL,
                 options: storeOptions
@@ -289,7 +289,7 @@ public final class SQLiteStore: LocalStorage {
                 var storeOptions = self.storeOptions ?? [:]
                 storeOptions[NSSQLitePragmasOption] = ["journal_mode": "DELETE"]
                 let store = try journalUpdatingCoordinator.addPersistentStore(
-                    ofType: type(of: self).storeType,
+                    ofType: Self.storeType,
                     configurationName: self.configuration,
                     at: fileURL,
                     options: storeOptions

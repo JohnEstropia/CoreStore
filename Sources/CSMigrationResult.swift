@@ -155,7 +155,7 @@ public final class CSMigrationResult: NSObject, CoreStoreObjectiveCType {
     
     public override var description: String {
         
-        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     

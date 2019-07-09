@@ -328,7 +328,6 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         
         return lhs.sourceVersion == rhs.sourceVersion
             && lhs.destinationVersion == rhs.destinationVersion
-            && cs_dynamicType(of: lhs) == cs_dynamicType(of: rhs)
     }
     
     
@@ -338,7 +337,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         
         hasher.combine(self.sourceVersion)
         hasher.combine(self.destinationVersion)
-        hasher.combine(ObjectIdentifier(cs_dynamicType(of: self)))
+        hasher.combine(ObjectIdentifier(Self.self))
     }
     
     

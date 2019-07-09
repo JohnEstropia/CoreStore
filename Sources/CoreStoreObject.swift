@@ -69,7 +69,10 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
         
         self.isMeta = false
         self.rawObject = (rawObject as! CoreStoreManagedObject)
-        self.initializeAttributes(Mirror(reflecting: self), self)
+        self.registerReceiver(
+            mirror: Mirror(reflecting: self),
+            object: self
+        )
     }
     
     /**
@@ -93,7 +96,7 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
         }
         if lhs.isMeta {
             
-            return cs_dynamicType(of: lhs) == cs_dynamicType(of: rhs)
+            return lhs.runtimeType() == rhs.runtimeType()
         }
         return lhs.rawObject!.isEqual(rhs.rawObject!)
     }
@@ -117,18 +120,24 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     // MARK: Private
     
-    private func initializeAttributes(_ mirror: Mirror, _ parentObject: CoreStoreObject) {
+    private func registerReceiver(mirror: Mirror, object: CoreStoreObject) {
         
-        _ = mirror.superclassMirror.flatMap({ self.initializeAttributes($0, parentObject) })
+        if let superclassMirror = mirror.superclassMirror {
+            
+            self.registerReceiver(
+                mirror: superclassMirror,
+                object: object
+            )
+        }
         for child in mirror.children {
             
             switch child.value {
                 
             case let property as AttributeProtocol:
-                property.rawObject = parentObject.rawObject
+                property.rawObject = object.rawObject
                     
             case let property as RelationshipProtocol:
-                property.rawObject = parentObject.rawObject
+                property.rawObject = object.rawObject
                 
             default:
                 continue
@@ -158,14 +167,14 @@ extension DynamicObject where Self: CoreStoreObject {
     // MARK: Internal
     
     internal static var meta: Self {
-
-        let key = ObjectIdentifier(self)
-        if case let meta as Self = Static.metaCache[key] {
-
+        
+        let cacheKey = ObjectIdentifier(self)
+        if case let meta as Self = Static.metaCache[cacheKey] {
+            
             return meta
         }
         let meta = self.init(asMeta: ())
-        Static.metaCache[key] = meta
+        Static.metaCache[cacheKey] = meta
         return meta
     }
 }
@@ -174,6 +183,8 @@ extension DynamicObject where Self: CoreStoreObject {
 // MARK: - Static
 
 fileprivate enum Static {
-
+    
+    // MARK: FilePrivate
+    
     fileprivate static var metaCache: [ObjectIdentifier: Any] = [:]
 }

@@ -47,7 +47,7 @@ public final class InferredSchemaMappingProvider: Hashable, SchemaMappingProvide
 
     public func hash(into hasher: inout Hasher) {
 
-        hasher.combine(ObjectIdentifier(type(of: self)))
+        hasher.combine(ObjectIdentifier(Self.self))
     }
     
     

@@ -80,7 +80,7 @@ extension BaseDataTransaction {
             
             try autoreleasepool {
               
-                let entityType = cs_dynamicType(of: object)
+                let entityType = object.runtimeType()
                 guard entityType.shouldInsert(from: source, in: self) else {
                     
                     return

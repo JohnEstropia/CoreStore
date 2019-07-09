@@ -64,7 +64,7 @@ public final class CSError: NSError, CoreStoreObjectiveCType {
     
     public override var description: String {
         
-        return "(\(String(reflecting: type(of: self)))) \(self.bridgeToSwift.coreStoreDumpString)"
+        return "(\(String(reflecting: Self.self))) \(self.bridgeToSwift.coreStoreDumpString)"
     }
     
     
@@ -274,7 +274,7 @@ extension Error {
         case let error as CSError:
             return error.bridgeToSwift
             
-        case let error as NSError where type(of: self) is NSError.Type:
+        case let error as NSError where Self.self is NSError.Type:
             return .internalError(NSError: error)
             
         default:

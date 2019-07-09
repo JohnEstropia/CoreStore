@@ -39,7 +39,7 @@ class SetupTests: BaseTestDataTestCase {
             let schemaHistory = SchemaHistory(
                 XcodeDataModelSchema.from(
                     modelName: "Model",
-                    bundle: Bundle(for: type(of: self))
+                    bundle: Bundle(for: Self.self)
                 )
             )
             let stack = DataStack(schemaHistory: schemaHistory)
@@ -68,7 +68,7 @@ class SetupTests: BaseTestDataTestCase {
                 
                 DataStack(
                     xcodeModelName: "Model",
-                    bundle: Bundle(for: type(of: self)),
+                    bundle: Bundle(for: Self.self),
                     migrationChain: migrationChain
                 )
             }
@@ -85,7 +85,7 @@ class SetupTests: BaseTestDataTestCase {
         
         let stack = DataStack(
             xcodeModelName: "Model",
-            bundle: Bundle(for: type(of: self))
+            bundle: Bundle(for: Self.self)
         )
         do {
             
@@ -140,7 +140,7 @@ class SetupTests: BaseTestDataTestCase {
         
         let stack = DataStack(
             xcodeModelName: "Model",
-            bundle: Bundle(for: type(of: self))
+            bundle: Bundle(for: Self.self)
         )
         do {
             
@@ -208,7 +208,7 @@ class SetupTests: BaseTestDataTestCase {
                 
                 let stack = DataStack(
                     xcodeModelName: "Model",
-                    bundle: Bundle(for: type(of: self))
+                    bundle: Bundle(for: Self.self)
                 )
                 try! stack.addStorageAndWait(sqliteStore)
                 self.prepareTestDataForStack(stack)
@@ -227,7 +227,7 @@ class SetupTests: BaseTestDataTestCase {
             let metadata = try createStore()
             let stack = DataStack(
                 xcodeModelName: "Model",
-                bundle: Bundle(for: type(of: self))
+                bundle: Bundle(for: Self.self)
             )
             try sqliteStore.cs_eraseStorageAndWait(
                 metadata: metadata,
@@ -260,7 +260,7 @@ class SetupTests: BaseTestDataTestCase {
         
         let stack = DataStack(
             xcodeModelName: "Model",
-            bundle: Bundle(for: type(of: self))
+            bundle: Bundle(for: Self.self)
         )
         do {
             
@@ -328,7 +328,7 @@ class SetupTests: BaseTestDataTestCase {
                 
                 let stack = DataStack(
                     xcodeModelName: "Model",
-                    bundle: Bundle(for: type(of: self))
+                    bundle: Bundle(for: Self.self)
                 )
                 try! stack.addStorageAndWait(
                     SQLiteStore.legacy(
@@ -354,7 +354,7 @@ class SetupTests: BaseTestDataTestCase {
             let metadata = try createStore()
             let stack = DataStack(
                 xcodeModelName: "Model",
-                bundle: Bundle(for: type(of: self))
+                bundle: Bundle(for: Self.self)
             )
             try sqliteStore.cs_eraseStorageAndWait(
                 metadata: metadata,

@@ -252,7 +252,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     func listMonitor(_ monitor: ListMonitor<Palette>, didUpdateObject object: Palette, atIndexPath indexPath: IndexPath) {
         
         if let cell = self.tableView.cellForRow(at: indexPath) as? PaletteTableViewCell {
-            
+
             let palette = ColorsDemo.palettes[indexPath]
             cell.colorView?.backgroundColor = palette.color
             cell.label?.text = palette.colorText
@@ -261,8 +261,7 @@ class ListObserverDemoViewController: UITableViewController, ListSectionObserver
     
     func listMonitor(_ monitor: ListMonitor<Palette>, didMoveObject object: Palette, fromIndexPath: IndexPath, toIndexPath: IndexPath) {
         
-        self.tableView.deleteRows(at: [fromIndexPath], with: .automatic)
-        self.tableView.insertRows(at: [toIndexPath], with: .automatic)
+        self.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
     }
     
     

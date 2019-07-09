@@ -213,7 +213,9 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertTrue(person.pets.value.isEmpty)
                     
                     XCTAssertEqual(
-                        cs_dynamicType(of: person.rawObject!).keyPathsForValuesAffectingValue(forKey: "displayName"),
+                        person.rawObject!
+                            .runtimeType()
+                            .keyPathsForValuesAffectingValue(forKey: "displayName"),
                         ["title", "name"]
                     )
                     
@@ -229,8 +231,22 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(person.name.value, "John")
                     XCTAssertEqual(person.displayName.value, "Mr. John") // Custom getter
                     
+                    let personSnapshot1 = person.createSnapshot()
+                    XCTAssertEqual(person.name.value, personSnapshot1.name)
+                    XCTAssertEqual(person.title.value, personSnapshot1.title)
+                    XCTAssertEqual(person.displayName.value, personSnapshot1.displayName)
+                    
                     person.title .= "Sir"
                     XCTAssertEqual(person.displayName.value, "Sir John")
+                    
+                    XCTAssertEqual(personSnapshot1.name, "John")
+                    XCTAssertEqual(personSnapshot1.title, "Mr.")
+                    XCTAssertEqual(personSnapshot1.displayName, "Mr. John")
+                    
+                    let personSnapshot2 = person.createSnapshot()
+                    XCTAssertEqual(person.name.value, personSnapshot2.name)
+                    XCTAssertEqual(person.title.value, personSnapshot2.title)
+                    XCTAssertEqual(person.displayName.value, personSnapshot2.displayName)
                     
                     person.pets.value.insert(dog)
                     XCTAssertEqual(person.pets.count, 1)
@@ -337,7 +353,7 @@ class DynamicModelTests: BaseTestDataTestCase {
                     SQLiteStore(
                         fileURL: SQLiteStore.defaultRootDirectory
                             .appendingPathComponent(UUID().uuidString)
-                            .appendingPathComponent("\(type(of: self))_\((configuration ?? "-null-")).sqlite"),
+                            .appendingPathComponent("\(Self.self)_\((configuration ?? "-null-")).sqlite"),
                         configuration: configuration,
                         localStorageOptions: .recreateStoreOnModelMismatch
                     )
