@@ -26,7 +26,6 @@
 import CoreData
 import Foundation
 
-
 // MARK: - ValueContainer.Required
 
 extension ValueContainer.Required {
