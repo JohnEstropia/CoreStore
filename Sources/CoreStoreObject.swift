@@ -153,9 +153,27 @@ extension DynamicObject where Self: CoreStoreObject {
         )
         return PartialObject<Self>(self.rawObject!)
     }
+
+
+    // MARK: Internal
     
     internal static var meta: Self {
-        
-        return self.init(asMeta: ())
+
+        let key = ObjectIdentifier(self)
+        if case let meta as Self = Static.metaCache[key] {
+
+            return meta
+        }
+        let meta = self.init(asMeta: ())
+        Static.metaCache[key] = meta
+        return meta
     }
+}
+
+
+// MARK: - Static
+
+fileprivate enum Static {
+
+    fileprivate static var metaCache: [ObjectIdentifier: Any] = [:]
 }

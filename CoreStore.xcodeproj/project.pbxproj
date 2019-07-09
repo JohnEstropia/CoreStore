@@ -94,6 +94,8 @@
 		B51260941E9B28F100402229 /* EntityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51260921E9B28F100402229 /* EntityIdentifier.swift */; };
 		B51260951E9B28F100402229 /* EntityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51260921E9B28F100402229 /* EntityIdentifier.swift */; };
 		B51260961E9B28F100402229 /* EntityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51260921E9B28F100402229 /* EntityIdentifier.swift */; };
+		B51B5C2B22D43931009FA3BA /* String+KeyPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51B5C2A22D43931009FA3BA /* String+KeyPaths.swift */; };
+		B51B5C2D22D43E38009FA3BA /* KeyPath+KeyPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51B5C2C22D43E38009FA3BA /* KeyPath+KeyPaths.swift */; };
 		B51FE5AB1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */; };
 		B51FE5AD1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */; };
 		B51FE5AE1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */; };
@@ -526,10 +528,10 @@
 		B5CA2B091F7E5ACA004B1936 /* WhereClauseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */; };
 		B5CA2B0A1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */; };
 		B5CA2B0B1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */; };
-		B5CA2B121F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */; };
-		B5CA2B131F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */; };
-		B5CA2B141F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */; };
-		B5CA2B151F81DBFF004B1936 /* DynamicKeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */; };
+		B5CA2B121F81DBFE004B1936 /* KeyPathStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* KeyPathStringConvertible.swift */; };
+		B5CA2B131F81DBFE004B1936 /* KeyPathStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* KeyPathStringConvertible.swift */; };
+		B5CA2B141F81DBFE004B1936 /* KeyPathStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* KeyPathStringConvertible.swift */; };
+		B5CA2B151F81DBFF004B1936 /* KeyPathStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA2B111F81DBFE004B1936 /* KeyPathStringConvertible.swift */; };
 		B5D1E22C19FA9FBC003B2874 /* CoreStoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */; };
 		B5D339B41E925C2B00C880DE /* DynamicModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */; };
 		B5D339B51E925C2B00C880DE /* DynamicModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */; };
@@ -770,6 +772,8 @@
 		B512607E1E97A18000402229 /* CoreStoreObject+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStoreObject+Convenience.swift"; sourceTree = "<group>"; };
 		B51260881E9B252B00402229 /* NSEntityDescription+DynamicModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSEntityDescription+DynamicModel.swift"; sourceTree = "<group>"; };
 		B51260921E9B28F100402229 /* EntityIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityIdentifier.swift; sourceTree = "<group>"; };
+		B51B5C2A22D43931009FA3BA /* String+KeyPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+KeyPaths.swift"; sourceTree = "<group>"; };
+		B51B5C2C22D43E38009FA3BA /* KeyPath+KeyPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyPath+KeyPaths.swift"; sourceTree = "<group>"; };
 		B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+CustomDebugStringConvertible.swift"; sourceTree = "<group>"; };
 		B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSFetchedResultsController+Convenience.swift"; sourceTree = "<group>"; };
 		B5215CA31FA47DFD00139E3A /* FetchChainBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchChainBuilder.swift; sourceTree = "<group>"; };
@@ -877,7 +881,7 @@
 		B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UnsafeDataTransaction+Observing.swift"; sourceTree = "<group>"; };
 		B5C976E61C6E3A5900B1AF90 /* CoreStoreFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreFetchedResultsController.swift; sourceTree = "<group>"; };
 		B5CA2B071F7E5ACA004B1936 /* WhereClauseType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhereClauseType.swift; sourceTree = "<group>"; };
-		B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicKeyPath.swift; sourceTree = "<group>"; };
+		B5CA2B111F81DBFE004B1936 /* KeyPathStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPathStringConvertible.swift; sourceTree = "<group>"; };
 		B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreError.swift; sourceTree = "<group>"; };
 		B5D2D5A91F7558CB00A4DE67 /* .cocoapods.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .cocoapods.yml; sourceTree = SOURCE_ROOT; };
 		B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicModelTests.swift; sourceTree = "<group>"; };
@@ -1165,6 +1169,17 @@
 			name = Observing;
 			sourceTree = "<group>";
 		};
+		B51B5C2922D43854009FA3BA /* KeyPaths */ = {
+			isa = PBXGroup;
+			children = (
+				B5CA2B111F81DBFE004B1936 /* KeyPathStringConvertible.swift */,
+				B5DAFB492203E01D003FCCD0 /* KeyPathGenericBindings.swift */,
+				B51B5C2C22D43E38009FA3BA /* KeyPath+KeyPaths.swift */,
+				B51B5C2A22D43931009FA3BA /* String+KeyPaths.swift */,
+			);
+			name = KeyPaths;
+			sourceTree = "<group>";
+		};
 		B5215CA21FA47BF300139E3A /* Chained Clauses */ = {
 			isa = PBXGroup;
 			children = (
@@ -1323,8 +1338,6 @@
 			children = (
 				B5A1DAC71F111BFA003CF369 /* KeyPath+Querying.swift */,
 				B5D339EB1E9495E500C880DE /* CoreStoreObject+Querying.swift */,
-				B5CA2B111F81DBFE004B1936 /* DynamicKeyPath.swift */,
-				B5DAFB492203E01D003FCCD0 /* KeyPathGenericBindings.swift */,
 			);
 			name = "KeyPath Utilities";
 			sourceTree = "<group>";
@@ -1337,6 +1350,7 @@
 				B549F6721E56A92800FBAB2D /* CoreDataNativeType.swift */,
 				B5D339F01E94AF5800C880DE /* CoreStoreStrings.swift */,
 				B5E84EDA1AFF84500064E85B /* Setup */,
+				B51B5C2922D43854009FA3BA /* KeyPaths */,
 				B5E84EE21AFF84610064E85B /* Logging */,
 				B5E84EE91AFF846E0064E85B /* Transactions */,
 				B5E834B61B7630BD001D3D50 /* Importing */,
@@ -1902,6 +1916,7 @@
 				B5C976E31C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B53FBA121CAB63CB00F0D40A /* Progress+ObjectiveC.swift in Sources */,
 				B5831B751F34AC7A00A9F647 /* RelationshipProtocol.swift in Sources */,
+				B51B5C2D22D43E38009FA3BA /* KeyPath+KeyPaths.swift in Sources */,
 				B5E1B5A81CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
 				B5D339F11E94AF5800C880DE /* CoreStoreStrings.swift in Sources */,
 				B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */,
@@ -1991,6 +2006,7 @@
 				B5E84F201AFF84860064E85B /* DataStack+Observing.swift in Sources */,
 				B501FDDD1CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
 				B538BA771D15B3E30003A766 /* CoreStoreBridge.m in Sources */,
+				B51B5C2B22D43931009FA3BA /* String+KeyPaths.swift in Sources */,
 				B512607F1E97A18000402229 /* CoreStoreObject+Convenience.swift in Sources */,
 				B5E84EF81AFF846E0064E85B /* CoreStore+Transaction.swift in Sources */,
 				B5E84F301AFF849C0064E85B /* NSManagedObjectContext+CoreStore.swift in Sources */,
@@ -2000,7 +2016,7 @@
 				B549F65E1E569C7400FBAB2D /* QueryableAttributeType.swift in Sources */,
 				B5E84F211AFF84860064E85B /* CoreStore+Observing.swift in Sources */,
 				B559CD431CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
-				B5CA2B121F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */,
+				B5CA2B121F81DBFE004B1936 /* KeyPathStringConvertible.swift in Sources */,
 				B5A991EC1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5FE4DA71C84FB4400FA6A91 /* InMemoryStore.swift in Sources */,
 				B52F743D1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
@@ -2195,7 +2211,7 @@
 				B549F65F1E569C7400FBAB2D /* QueryableAttributeType.swift in Sources */,
 				B559CD451CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
 				82BA18B81C4BBD4200A0916E /* TypeErasedClauses.swift in Sources */,
-				B5CA2B131F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */,
+				B5CA2B131F81DBFE004B1936 /* KeyPathStringConvertible.swift in Sources */,
 				B5A991ED1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5ECDBEE1CA6BF2000C7F112 /* CSFrom.swift in Sources */,
 				B52F743E1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
@@ -2390,7 +2406,7 @@
 				B549F6611E569C7400FBAB2D /* QueryableAttributeType.swift in Sources */,
 				B52DD19B1BE1F92800949AFE /* CoreStoreLogger.swift in Sources */,
 				B52DD1991BE1F92800949AFE /* DefaultLogger.swift in Sources */,
-				B5CA2B151F81DBFF004B1936 /* DynamicKeyPath.swift in Sources */,
+				B5CA2B151F81DBFF004B1936 /* KeyPathStringConvertible.swift in Sources */,
 				B5A991EF1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5220E201D130813009BC71E /* CSObjectMonitor.swift in Sources */,
 				B52F74401E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
@@ -2585,7 +2601,7 @@
 				B549F6601E569C7400FBAB2D /* QueryableAttributeType.swift in Sources */,
 				B559CD461CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
 				B56321A61BD65216006C9394 /* MigrationType.swift in Sources */,
-				B5CA2B141F81DBFE004B1936 /* DynamicKeyPath.swift in Sources */,
+				B5CA2B141F81DBFE004B1936 /* KeyPathStringConvertible.swift in Sources */,
 				B5A991EE1E9DC2CE0091A2E3 /* VersionLock.swift in Sources */,
 				B5ECDBEF1CA6BF2000C7F112 /* CSFrom.swift in Sources */,
 				B52F743F1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
