@@ -213,6 +213,25 @@ public /*abstract*/ class BaseDataTransaction {
     
     
     // MARK: Inspecting Pending Objects
+
+    /**
+     Returns `true` if the object has any property values changed. This method should not be called after the `commit()` method was called.
+
+     - parameter entity: the `DynamicObject` instance
+     - returns: `true` if the object has any property values changed.
+     */
+    public func objectHasPersistentChangedValues<D: DynamicObject>(_ entity: D) -> Bool {
+
+        CoreStore.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to access inserted objects from a \(cs_typeName(self)) outside its designated queue."
+        )
+        CoreStore.assert(
+            !self.isCommitted,
+            "Attempted to access inserted objects from an already committed \(cs_typeName(self))."
+        )
+        return entity.cs_toRaw().hasPersistentChangedValues
+    }
     
     /**
      Returns all pending `DynamicObject`s of the specified type that were inserted to the transaction. This method should not be called after the `commit()` method was called.

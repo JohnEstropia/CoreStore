@@ -73,7 +73,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
      ```
      - Important: `Transformable.Required` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
-    public final class Required<V: NSCoding & NSCopying>: AttributeProtocol {
+    public final class Required<V: NSCoding & NSCopying>: AttributeKeyPathStringConvertible, AttributeProtocol {
 
         /**
          Initializes the metadata for the property.
@@ -138,9 +138,9 @@ public enum TransformableContainer<O: CoreStoreObject> {
         }
 
         /**
-         The property value.
+         The attribute value
          */
-        public var value: V {
+        public var value: ReturnValueType {
 
             get {
 
@@ -188,6 +188,25 @@ public enum TransformableContainer<O: CoreStoreObject> {
                 }
             }
         }
+
+
+        // MARK: AnyKeyPathStringConvertible
+
+        public var cs_keyPathString: String {
+
+            return self.keyPath
+        }
+
+
+        // MARK: KeyPathStringConvertible
+
+        public typealias ObjectType = O
+        public typealias DestinationValueType = V
+
+
+        // MARK: AttributeKeyPathStringConvertible
+
+        public typealias ReturnValueType = DestinationValueType
 
 
         // MARK: AttributeProtocol
@@ -270,7 +289,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
      ```
      - Important: `Transformable.Optional` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
-    public final class Optional<V: NSCoding & NSCopying>: AttributeProtocol {
+    public final class Optional<V: NSCoding & NSCopying>: AttributeKeyPathStringConvertible, AttributeProtocol {
 
         /**
          Initializes the metadata for the property.
@@ -332,9 +351,9 @@ public enum TransformableContainer<O: CoreStoreObject> {
         }
 
         /**
-         The property value.
+         The attribute value
          */
-        public var value: V? {
+        public var value: ReturnValueType {
 
             get {
 
@@ -382,6 +401,25 @@ public enum TransformableContainer<O: CoreStoreObject> {
                 }
             }
         }
+
+
+        // MARK: AnyKeyPathStringConvertible
+
+        public var cs_keyPathString: String {
+
+            return self.keyPath
+        }
+
+
+        // MARK: KeyPathStringConvertible
+
+        public typealias ObjectType = O
+        public typealias DestinationValueType = V
+
+
+        // MARK: AttributeKeyPathStringConvertible
+
+        public typealias ReturnValueType = DestinationValueType?
 
 
         // MARK: AttributeProtocol

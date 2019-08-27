@@ -30,7 +30,7 @@ import CoreData
 // MARK: - ~
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
 ```
 let owner = CoreStore.fetchOne(
     From<Pet>().where(
@@ -65,7 +65,7 @@ extension Where {
      )
      ```
      */
-    public struct Expression<T: WhereExpressionTrait, V>: CustomStringConvertible, DynamicKeyPath {
+    public struct Expression<T: WhereExpressionTrait, V>: CustomStringConvertible, KeyPathStringConvertible {
 
         /**
          Currently supports `SingleTarget` and `CollectionTarget`.
@@ -73,15 +73,15 @@ extension Where {
         public typealias Trait = T
 
 
-        // MARK: AnyDynamicKeyPath
+        // MARK: AnyKeyPathStringConvertible
 
         public let cs_keyPathString: String
 
 
-        // MARK: DynamicKeyPath
+        // MARK: KeyPathStringConvertible
 
         public typealias ObjectType = D
-        public typealias ValueType = V
+        public typealias DestinationValueType = V
 
 
         // MARK: CustomStringConvertible
@@ -128,7 +128,7 @@ extension Where {
 // MARK: ~ where D: NSManagedObject
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
@@ -139,7 +139,7 @@ public func ~<D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPat
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
@@ -150,29 +150,29 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPa
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCCollectionKeyPathValue>(_ lhs: KeyPath<D, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<D, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCCollectionKeyPathValue>(_ lhs: KeyPath<D, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<D, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let johnsSonInLaw = CoreStore.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
  ```
@@ -183,7 +183,7 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKe
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let johnsSonInLaw = CoreStore.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
  ```
@@ -194,34 +194,34 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKe
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let spouseHasSiblings = CoreStore.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCCollectionKeyPathValue>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let spouseHasSiblings = CoreStore.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCCollectionKeyPathValue>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let spousesWithBadNamingSense = CoreStore.fetchAll(From<Person>().where((\.spouse ~ \.pets ~ \.name).any() == "Spot"))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, C: AllowedObjectiveCCollectionKeyPathValue, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<D>.Expression<T, C>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <D: NSManagedObject, O: NSManagedObject, T, C: AllowedObjectiveCToManyRelationshipKeyPathValue, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<D>.Expression<T, C>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -230,12 +230,12 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, C: AllowedObjectiveCCo
 // MARK: - ~ where D: CoreStoreObject
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: AllowedCoreStoreObjectKeyPathValue>(_ lhs: KeyPath<D, RelationshipContainer<D>.ToOne<O>>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.SingleTarget, K.ValueType> where K.ObjectType == O {
+public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: KeyPathStringConvertible>(_ lhs: KeyPath<D, RelationshipContainer<D>.ToOne<O>>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.SingleTarget, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         D.meta[keyPath: lhs].cs_keyPathString, 
@@ -244,12 +244,12 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: AllowedCoreStoreObject
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: AllowedCoreStoreObjectKeyPathValue>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<T, K.ValueType> where K.ObjectType == O {
+public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<T, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         lhs.cs_keyPathString,
@@ -258,12 +258,12 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: AllowedCoreStoreObj
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let owner = CoreStore.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: AllowedCoreStoreObjectKeyPathValue>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<T, K.ValueType> where K.ObjectType == O {
+public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<T, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         lhs.cs_keyPathString,
@@ -272,12 +272,12 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: AllowedCoreStoreObj
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: AllowedCoreStoreObjectCollectionKeyPathValue>(_ lhs: KeyPath<D, RelationshipContainer<D>.ToOne<O>>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.ValueType> where K.ObjectType == O {
+public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: KeyPath<D, RelationshipContainer<D>.ToOne<O>>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         D.meta[keyPath: lhs].cs_keyPathString,
@@ -286,12 +286,12 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: AllowedCoreStoreObject
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: AllowedCoreStoreObjectCollectionKeyPathValue>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.ValueType> where K.ObjectType == O {
+public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         lhs.cs_keyPathString,
@@ -300,12 +300,12 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: AllowedCoreStoreObj
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let happyPets = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: AllowedCoreStoreObjectCollectionKeyPathValue>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.ValueType> where K.ObjectType == O {
+public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         lhs.cs_keyPathString,
@@ -314,12 +314,12 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: AllowedCoreStoreObj
 }
 
 /**
- Connects multiple `DynamicKeyPath`s to create a type-safe chain usable in query/fetch expressions
+ Connects multiple `KeyPathStringConvertible`s to create a type-safe chain usable in query/fetch expressions
  ```
  let spousesWithBadNamingSense = CoreStore.fetchAll(From<Pet>().where((\.master ~ \.pets ~ \.name).any() == "Spot"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, KC: AllowedCoreStoreObjectCollectionKeyPathValue, KV: AllowedCoreStoreObjectKeyPathValue>(_ lhs: Where<D>.Expression<T, KC>, _ rhs: KeyPath<O, KV>) -> Where<D>.Expression<Where<D>.CollectionTarget, KV.ValueType> where KC.ObjectType == D, KV.ObjectType == O {
+public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, KC: ToManyRelationshipKeyPathStringConvertible, KV: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, KC>, _ rhs: KeyPath<O, KV>) -> Where<D>.Expression<Where<D>.CollectionTarget, KV.DestinationValueType> where KC.ObjectType == D, KV.ObjectType == O {
 
     return .init(
         lhs.cs_keyPathString,
@@ -516,9 +516,9 @@ public func >= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Ex
 }
 
 
-// MARK: - KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCCollectionKeyPathValue
+// MARK: - KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCToManyRelationshipKeyPathValue
 
-extension KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCCollectionKeyPathValue {
+extension KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCToManyRelationshipKeyPathValue {
 
     /**
      Creates a `Where.Expression` clause for COUNT
@@ -532,9 +532,9 @@ extension KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCCollectio
     }
 }
 
-// MARK: - Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCCollectionKeyPathValue
+// MARK: - Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue
 
-extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCCollectionKeyPathValue {
+extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue {
 
     /**
      Creates a `Where.Expression` clause for COUNT
@@ -588,9 +588,9 @@ extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTar
 }
 
 
-// MARK: - KeyPath where Root: CoreStoreObject, Value: AllowedObjectiveCCollectionKeyPathValue
+// MARK: - KeyPath where Root: CoreStoreObject, Value: AllowedObjectiveCToManyRelationshipKeyPathValue
 
-extension KeyPath where Root: CoreStoreObject, Value: AllowedCoreStoreObjectCollectionKeyPathValue {
+extension KeyPath where Root: CoreStoreObject, Value: ToManyRelationshipKeyPathStringConvertible {
 
     /**
      Creates a `Where.Expression` clause for COUNT

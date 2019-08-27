@@ -92,49 +92,87 @@ extension UUID: AllowedOptionalObjectiveCKeyPathValue {}
 extension Optional: AllowedObjectiveCKeyPathValue where Wrapped: AllowedOptionalObjectiveCKeyPathValue {}
 
 
-// MARK: - AllowedObjectiveCCollectionKeyPathValue
+// MARK: - AllowedObjectiveCAttributeKeyPathValue
 
 /**
  Used only for utility methods. Types allowed as `Value` generic type to `KeyPath` utilities.
  */
-public protocol AllowedObjectiveCCollectionKeyPathValue: AllowedOptionalObjectiveCKeyPathValue {}
+public protocol AllowedObjectiveCAttributeKeyPathValue: AllowedObjectiveCKeyPathValue {}
 
-extension NSSet: AllowedObjectiveCCollectionKeyPathValue {}
+extension Bool: AllowedObjectiveCAttributeKeyPathValue {}
 
-extension NSOrderedSet: AllowedObjectiveCCollectionKeyPathValue {}
+extension CGFloat: AllowedObjectiveCAttributeKeyPathValue {}
 
-extension Optional: AllowedObjectiveCCollectionKeyPathValue, AllowedOptionalObjectiveCKeyPathValue where Wrapped: AllowedObjectiveCCollectionKeyPathValue {}
+extension Data: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension Date: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension Double: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension Float: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension Int: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension Int8: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension Int16: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension Int32: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension Int64: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension NSData: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension NSDate: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension NSNumber: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension NSString: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension NSURL: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension NSUUID: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension String: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension URL: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension UUID: AllowedObjectiveCAttributeKeyPathValue {}
+
+extension Optional: AllowedObjectiveCAttributeKeyPathValue where Wrapped: AllowedObjectiveCAttributeKeyPathValue, Wrapped: AllowedOptionalObjectiveCKeyPathValue {}
 
 
-// MARK: - AllowedCoreStoreObjectKeyPathValue
+// MARK: - AllowedObjectiveCRelationshipKeyPathValue
 
 /**
  Used only for utility methods. Types allowed as `Value` generic type to `KeyPath` utilities.
  */
-public protocol AllowedCoreStoreObjectKeyPathValue: DynamicKeyPath {}
+public protocol AllowedObjectiveCRelationshipKeyPathValue: AllowedOptionalObjectiveCKeyPathValue {}
 
-extension ValueContainer.Required: AllowedCoreStoreObjectKeyPathValue {}
+extension NSManagedObject: AllowedObjectiveCRelationshipKeyPathValue {}
 
-extension ValueContainer.Optional: AllowedCoreStoreObjectKeyPathValue {}
+extension NSSet: AllowedObjectiveCRelationshipKeyPathValue {}
 
-extension TransformableContainer.Required: AllowedCoreStoreObjectKeyPathValue {}
+extension NSOrderedSet: AllowedObjectiveCRelationshipKeyPathValue {}
 
-extension TransformableContainer.Optional: AllowedCoreStoreObjectKeyPathValue {}
-
-extension RelationshipContainer.ToOne: AllowedCoreStoreObjectKeyPathValue {}
-
-extension RelationshipContainer.ToManyOrdered: AllowedCoreStoreObjectKeyPathValue {}
-
-extension RelationshipContainer.ToManyUnordered: AllowedCoreStoreObjectKeyPathValue {}
+extension Optional: AllowedOptionalObjectiveCKeyPathValue, AllowedObjectiveCRelationshipKeyPathValue where Wrapped: AllowedObjectiveCRelationshipKeyPathValue {}
 
 
-// MARK: - AllowedCoreStoreObjectCollectionKeyPathValue
+// MARK: - AllowedObjectiveCToManyRelationshipKeyPathValue
 
 /**
  Used only for utility methods. Types allowed as `Value` generic type to `KeyPath` utilities.
  */
-public protocol AllowedCoreStoreObjectCollectionKeyPathValue: AllowedCoreStoreObjectKeyPathValue {}
+public protocol AllowedObjectiveCToManyRelationshipKeyPathValue: AllowedOptionalObjectiveCKeyPathValue {}
 
-extension RelationshipContainer.ToManyOrdered: AllowedCoreStoreObjectCollectionKeyPathValue {}
+extension NSSet: AllowedObjectiveCToManyRelationshipKeyPathValue {}
 
-extension RelationshipContainer.ToManyUnordered: AllowedCoreStoreObjectCollectionKeyPathValue {}
+extension NSOrderedSet: AllowedObjectiveCToManyRelationshipKeyPathValue {}
+
+extension Optional: AllowedObjectiveCToManyRelationshipKeyPathValue where Wrapped: AllowedObjectiveCToManyRelationshipKeyPathValue, Wrapped: AllowedObjectiveCRelationshipKeyPathValue {}
+
+
+// MARK: - Deprecated
+
+@available(*, deprecated, renamed: "AllowedObjectiveCToManyRelationshipKeyPathValue")
+public typealias AllowedCoreStoreObjectCollectionKeyPathValue = AllowedObjectiveCToManyRelationshipKeyPathValue

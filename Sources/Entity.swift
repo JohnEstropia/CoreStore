@@ -124,7 +124,7 @@ public final class Entity<O: CoreStoreObject>: DynamicEntity {
             
             return $0.map {
                 
-                return (meta[keyPath: $0] as! AnyDynamicKeyPath).cs_keyPathString
+                return (meta[keyPath: $0] as! AnyKeyPathStringConvertible).cs_keyPathString
             }
         }
         super.init(
@@ -156,7 +156,7 @@ public final class Entity<O: CoreStoreObject>: DynamicEntity {
 
             return $0.map {
 
-                return (meta[keyPath: $0] as! AnyDynamicKeyPath).cs_keyPathString
+                return (meta[keyPath: $0] as! AnyKeyPathStringConvertible).cs_keyPathString
             }
         }
         super.init(

@@ -73,7 +73,7 @@ public enum ValueContainer<O: CoreStoreObject> {
      ```
      - Important: `Value.Required` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
-    public final class Required<V: ImportableAttributeType>: AttributeProtocol {
+    public final class Required<V: ImportableAttributeType>: AttributeKeyPathStringConvertible, AttributeProtocol {
         
         /**
          Initializes the metadata for the property.
@@ -129,11 +129,11 @@ public enum ValueContainer<O: CoreStoreObject> {
             self.customSetter = customSetter
             self.affectedByKeyPaths = affectedByKeyPaths
         }
-        
+
         /**
-         The property value.
+         The attribute value
          */
-        public var value: V {
+        public var value: ReturnValueType {
             
             get {
                 
@@ -183,6 +183,25 @@ public enum ValueContainer<O: CoreStoreObject> {
                 }
             }
         }
+
+
+        // MARK: AnyKeyPathStringConvertible
+
+        public var cs_keyPathString: String {
+
+            return self.keyPath
+        }
+
+
+        // MARK: KeyPathStringConvertible
+
+        public typealias ObjectType = O
+        public typealias DestinationValueType = V
+
+
+        // MARK: AttributeKeyPathStringConvertible
+
+        public typealias ReturnValueType = DestinationValueType
         
         
         // MARK: AttributeProtocol
@@ -265,7 +284,7 @@ public enum ValueContainer<O: CoreStoreObject> {
      ```
      - Important: `Value.Optional` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
-    public final class Optional<V: ImportableAttributeType>: AttributeProtocol {
+    public final class Optional<V: ImportableAttributeType>: AttributeKeyPathStringConvertible, AttributeProtocol {
         
         /**
          Initializes the metadata for the property.
@@ -324,11 +343,11 @@ public enum ValueContainer<O: CoreStoreObject> {
             self.customSetter = customSetter
             self.affectedByKeyPaths = affectedByKeyPaths
         }
-        
+
         /**
-         The property value.
+         The attribute value
          */
-        public var value: V? {
+        public var value: ReturnValueType {
             
             get {
                 
@@ -377,6 +396,25 @@ public enum ValueContainer<O: CoreStoreObject> {
                 }
             }
         }
+
+
+        // MARK: AnyKeyPathStringConvertible
+
+        public var cs_keyPathString: String {
+
+            return self.keyPath
+        }
+
+
+        // MARK: KeyPathStringConvertible
+
+        public typealias ObjectType = O
+        public typealias DestinationValueType = V
+
+
+        // MARK: AttributeKeyPathStringConvertible
+
+        public typealias ReturnValueType = DestinationValueType?
         
         
         // MARK: AttributeProtocol

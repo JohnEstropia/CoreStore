@@ -766,13 +766,13 @@ While the syntax is straightforward, CoreStore does not just naively insert a ne
 - If the entity belongs to multiple stores, an assertion failure will be raised. **This is also a programmer error and should never occur in production code.** Normally, with Core Data you can insert an object in this state but saving the `NSManagedObjectContext` will always fail. CoreStore checks this for you at creation time when it makes sense (not during save).
 
 If the entity exists in multiple configurations, you need to provide the configuration name for the destination persistent store:
-
-    let person = transaction.create(Into<MyPersonEntity>("Config1"))
-
+```swift
+let person = transaction.create(Into<MyPersonEntity>("Config1"))
+```
 or if the persistent store is the auto-generated "Default" configuration, specify `nil`:
-
-    let person = transaction.create(Into<MyPersonEntity>(nil))
-
+```swift
+let person = transaction.create(Into<MyPersonEntity>(nil))
+```
 Note that if you do explicitly specify the configuration name, CoreStore will only try to insert the created object to that particular store and will fail if that store is not found; it will not fall back to any other configuration that the entity belongs to. 
 
 ### Updating objects
