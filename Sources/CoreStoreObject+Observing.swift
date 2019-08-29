@@ -462,8 +462,8 @@ extension AttributeProtocol {
 
                 let notification = CoreStoreObjectValueDiff<V>(
                     kind: kind,
-                    newNativeValue: newValue as! V.QueryableNativeType?,
-                    oldNativeValue: oldValue as! V.QueryableNativeType?,
+                    newNativeValue: newValue as? V.QueryableNativeType,
+                    oldNativeValue: oldValue as? V.QueryableNativeType,
                     isPrior: isPrior
                 )
                 changeHandler(
@@ -485,8 +485,8 @@ extension AttributeProtocol {
 
                 let notification = CoreStoreObjectTransformableDiff<V>(
                     kind: kind,
-                    newValue: newValue as! V?,
-                    oldValue: oldValue as! V?,
+                    newValue: newValue as? V,
+                    oldValue: oldValue as? V,
                     isPrior: isPrior
                 )
                 changeHandler(

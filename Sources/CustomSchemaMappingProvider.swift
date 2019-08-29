@@ -121,7 +121,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
         
         // MARK: Equatable
         
-        public static func ==(lhs: CustomMapping, rhs: CustomMapping) -> Bool {
+        public static func == (lhs: CustomMapping, rhs: CustomMapping) -> Bool {
             
             switch (lhs, rhs) {
             
@@ -324,7 +324,7 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
     
     // MARK: Equatable
     
-    public static func ==(lhs: CustomSchemaMappingProvider, rhs: CustomSchemaMappingProvider) -> Bool {
+    public static func == (lhs: CustomSchemaMappingProvider, rhs: CustomSchemaMappingProvider) -> Bool {
         
         return lhs.sourceVersion == rhs.sourceVersion
             && lhs.destinationVersion == rhs.destinationVersion
