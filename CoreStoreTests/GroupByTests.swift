@@ -68,7 +68,7 @@ final class GroupByTests: BaseTestCase {
             
             let groupBy = GroupBy<NSManagedObject>(#keyPath(TestEntity1.testString))
             
-            let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+            let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
             try From<TestEntity1>().applyToFetchRequest(request, context: dataStack.mainContext)
             groupBy.applyToFetchRequest(request)
             

@@ -74,7 +74,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>()
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 try from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(request.entity)
                 XCTAssertNotNil(request.safeAffectedStores())
@@ -88,7 +88,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>("Config1")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -113,7 +113,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>()
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
@@ -128,7 +128,7 @@ final class FromTests: BaseTestCase {
 
                 let from = From<TestEntity1>("Config1")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
@@ -143,7 +143,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>("Config2")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -160,7 +160,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity2>()
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -177,7 +177,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity2>("Config1")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -194,7 +194,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity2>("Config2")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -219,7 +219,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>()
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
@@ -234,7 +234,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>("Config1")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
@@ -249,7 +249,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>("Config2")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -266,7 +266,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity2>()
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
@@ -281,7 +281,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity2>("Config1")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -298,7 +298,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity2>("Config2")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -323,7 +323,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>()
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
@@ -338,7 +338,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>("Config1")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
@@ -353,7 +353,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity1>("Config2")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -370,7 +370,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity2>()
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)
@@ -385,7 +385,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity2>("Config1")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 self.expectError(code: .persistentStoreNotFound) {
                     
                     try from.applyToFetchRequest(request, context: dataStack.mainContext)
@@ -402,7 +402,7 @@ final class FromTests: BaseTestCase {
                 
                 let from = From<TestEntity2>("Config2")
                 
-                let request = CoreStoreFetchRequest<NSFetchRequestResult>()
+                let request = Internals.CoreStoreFetchRequest<NSFetchRequestResult>()
                 let storesFound: Void? = try? from.applyToFetchRequest(request, context: dataStack.mainContext)
                 XCTAssertNotNil(storesFound)
                 XCTAssertNotNil(request.entity)

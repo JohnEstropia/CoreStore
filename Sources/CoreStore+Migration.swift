@@ -29,6 +29,7 @@ import CoreData
 
 // MARK: - CoreStore
 
+@available(*, deprecated, message: "Call methods directly from the DataStack instead")
 extension CoreStore {
 
     /**
@@ -49,7 +50,7 @@ extension CoreStore {
      */
     public static func addStorage<T>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
         
-        self.defaultStack.addStorage(storage, completion: completion)
+        Shared.defaultStack.addStorage(storage, completion: completion)
     }
 
     /**
@@ -71,7 +72,7 @@ extension CoreStore {
      */
     public static func addStorage<T: LocalStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) -> Progress? {
         
-        return self.defaultStack.addStorage(storage, completion: completion)
+        return Shared.defaultStack.addStorage(storage, completion: completion)
     }
     
     /**
@@ -103,7 +104,7 @@ extension CoreStore {
      */
     public static func addStorage<T: CloudStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
         
-        self.defaultStack.addStorage(storage, completion: completion)
+        Shared.defaultStack.addStorage(storage, completion: completion)
     }
 
     /**
@@ -116,7 +117,7 @@ extension CoreStore {
      */
     public static func upgradeStorageIfNeeded<T: LocalStorage>(_ storage: T, completion: @escaping (MigrationResult) -> Void) throws -> Progress? {
         
-        return try self.defaultStack.upgradeStorageIfNeeded(storage, completion: completion)
+        return try Shared.defaultStack.upgradeStorageIfNeeded(storage, completion: completion)
     }
     
     /**
@@ -128,6 +129,6 @@ extension CoreStore {
      */
     public static func requiredMigrationsForStorage<T: LocalStorage>(_ storage: T) throws -> [MigrationType] {
         
-        return try self.defaultStack.requiredMigrationsForStorage(storage)
+        return try Shared.defaultStack.requiredMigrationsForStorage(storage)
     }
 }

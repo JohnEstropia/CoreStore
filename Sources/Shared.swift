@@ -1,5 +1,5 @@
 //
-//  WeakObject.swift
+//  Shared.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -23,17 +23,48 @@
 //  SOFTWARE.
 //
 
+import Foundation
 
-// MARK: - WeakObject
 
-internal final class WeakObject {
-    
-    // MARK: Internal
-    
-    internal init(_ object: AnyObject) {
-        
-        self.object = object
+// MARK: - Shared
+
+/**
+Global utilities
+*/
+public enum Shared {
+
+    /**
+    The `CoreStoreLogger` instance to be used. The default logger is an instance of a `DefaultLogger`.
+    */
+    public static var logger: CoreStoreLogger = DefaultLogger()
+
+    @available(*, deprecated, message: "Call methods directly from the DataStack instead")
+    public static var defaultStack: DataStack {
+
+        get {
+
+            self.defaultStackBarrierQueue.sync(flags: .barrier) {
+
+                if self.defaultStackInstance == nil {
+
+                    self.defaultStackInstance = DataStack()
+                }
+            }
+            return self.defaultStackInstance!
+        }
+        set {
+
+            self.defaultStackBarrierQueue.async(flags: .barrier) {
+
+                self.defaultStackInstance = newValue
+            }
+        }
     }
-    
-    internal private(set) weak var object: AnyObject?
+
+
+    // MARK: Private
+
+    private static let defaultStackBarrierQueue = DispatchQueue.concurrent("com.coreStore.defaultStackBarrierQueue")
+
+    private static var defaultStackInstance: DataStack?
 }

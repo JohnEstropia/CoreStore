@@ -467,9 +467,9 @@ public final class CSSelect: NSObject {
                 }
                 else {
                     
-                    CoreStore.log(
+                    Internals.log(
                         .warning,
-                        message: "The key path \"\(keyPath)\" could not be resolved in entity \(cs_typeName(entityDescription.managedObjectClassName)) as an attribute and will be ignored by \(cs_typeName(self)) query clause."
+                        message: "The key path \"\(keyPath)\" could not be resolved in entity \(Internals.typeName(entityDescription.managedObjectClassName)) as an attribute and will be ignored by \(Internals.typeName(self)) query clause."
                     )
                 }
                 

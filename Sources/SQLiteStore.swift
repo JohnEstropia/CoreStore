@@ -303,7 +303,7 @@ public final class SQLiteStore: LocalStorage {
     
     // MARK: Internal
     
-    internal static let defaultRootDirectory: URL = cs_lazy {
+    internal static let defaultRootDirectory: URL = Internals.with {
         
         #if os(tvOS)
             let systemDirectorySearchPath = FileManager.SearchPathDirectory.cachesDirectory
@@ -328,7 +328,7 @@ public final class SQLiteStore: LocalStorage {
         )
         .appendingPathExtension("sqlite")
     
-    internal static let legacyDefaultRootDirectory: URL = cs_lazy {
+    internal static let legacyDefaultRootDirectory: URL = Internals.with {
         
         #if os(tvOS)
             let systemDirectorySearchPath = FileManager.SearchPathDirectory.cachesDirectory
@@ -341,7 +341,7 @@ public final class SQLiteStore: LocalStorage {
             in: .userDomainMask).first!
     }
     
-    internal static let legacyDefaultFileURL = cs_lazy {
+    internal static let legacyDefaultFileURL = Internals.with {
         
         return SQLiteStore.legacyDefaultRootDirectory
         .appendingPathComponent(DataStack.applicationName, isDirectory: false)

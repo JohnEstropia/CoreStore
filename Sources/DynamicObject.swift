@@ -60,6 +60,16 @@ public protocol DynamicObject: AnyObject {
     func cs_toRaw() -> NSManagedObject
 }
 
+extension DynamicObject {
+
+    // MARK: Internal
+    
+    internal static func keyPathBuilder() -> DynamicObjectMeta<Never, Self> {
+
+        return .init(keyPathString: "SELF")
+    }
+}
+
 
 // MARK: - NSManagedObject
 

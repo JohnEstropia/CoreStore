@@ -161,8 +161,8 @@ public final class CoreStoreSchema: DynamicSchema {
         let allEntities = Set(entityConfigurations.keys)
         actualEntitiesByConfiguration[DataStack.defaultConfigurationName] = allEntities
         
-        CoreStore.assert(
-            cs_lazy {
+        Internals.assert(
+            Internals.with {
                 
                 let expectedCount = allEntities.count
                 return Set(allEntities.map({ ObjectIdentifier($0.type) })).count == expectedCount
@@ -177,17 +177,17 @@ public final class CoreStoreSchema: DynamicSchema {
         
         if let versionLock = versionLock {
             
-            CoreStore.assert(
+            Internals.assert(
                 versionLock == VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName),
-                "A \(cs_typeName(VersionLock.self)) was provided for the \(cs_typeName(CoreStoreSchema.self)) with version \"\(modelVersion)\", but the actual hashes do not match. This may result in unwanted migrations or unusable persistent stores.\nExpected lock values: \(versionLock)\nActual lock values: \(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
+                "A \(Internals.typeName(VersionLock.self)) was provided for the \(Internals.typeName(CoreStoreSchema.self)) with version \"\(modelVersion)\", but the actual hashes do not match. This may result in unwanted migrations or unusable persistent stores.\nExpected lock values: \(versionLock)\nActual lock values: \(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
             )
         }
         else {
             
             #if DEBUG
-                CoreStore.log(
+                Internals.log(
                     .notice,
-                    message: "These are hashes for the \(cs_typeName(CoreStoreSchema.self)) with version name \"\(modelVersion)\". Copy the dictionary below and pass it to the \(cs_typeName(CoreStoreSchema.self)) initializer's \"versionLock\" argument:\nversionLock: \(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
+                    message: "These are hashes for the \(Internals.typeName(CoreStoreSchema.self)) with version name \"\(modelVersion)\". Copy the dictionary below and pass it to the \(Internals.typeName(CoreStoreSchema.self)) initializer's \"versionLock\" argument:\nversionLock: \(VersionLock(entityVersionHashesByName: self.rawModel().entityVersionHashesByName))"
                 )
             #endif
         }
@@ -288,7 +288,7 @@ public final class CoreStoreSchema: DynamicSchema {
                 switch child.value {
                     
                 case let attribute as AttributeProtocol:
-                    CoreStore.assert(
+                    Internals.assert(
                         !NSManagedObject.instancesRespond(to: Selector(attribute.keyPath)),
                         "Attribute Property name \"\(String(reflecting: entity.type)).\(attribute.keyPath)\" is not allowed because it collides with \"\(String(reflecting: NSManagedObject.self)).\(attribute.keyPath)\""
                     )
@@ -306,7 +306,7 @@ public final class CoreStoreSchema: DynamicSchema {
                     customGetterSetterByKeyPaths[attribute.keyPath] = (attribute.getter, attribute.setter)
                     
                 case let relationship as RelationshipProtocol:
-                    CoreStore.assert(
+                    Internals.assert(
                         !NSManagedObject.instancesRespond(to: Selector(relationship.keyPath)),
                         "Relationship Property name \"\(String(reflecting: entity.type)).\(relationship.keyPath)\" is not allowed because it collides with \"\(String(reflecting: NSManagedObject.self)).\(relationship.keyPath)\""
                     )
@@ -352,13 +352,13 @@ public final class CoreStoreSchema: DynamicSchema {
             }
             if matchedEntities.isEmpty {
                 
-                CoreStore.abort(
-                    "No \(cs_typeName("Entity<\(type)>")) instance found in the \(cs_typeName(CoreStoreSchema.self))."
+                Internals.abort(
+                    "No \(Internals.typeName("Entity<\(type)>")) instance found in the \(Internals.typeName(CoreStoreSchema.self))."
                 )
             }
             else {
                 
-                CoreStore.abort(
+                Internals.abort(
                     "Ambiguous entity types or entity names were found in the model. Ensure that the entity types and entity names are unique to each other. Entities: \(matchedEntities)"
                 )
             }
@@ -370,8 +370,8 @@ public final class CoreStoreSchema: DynamicSchema {
                 
                 return relationshipDescription
             }
-            CoreStore.abort(
-                "The inverse relationship for \"\(destinationEntity.type).\(destinationKeyPath)\" could not be found. Make sure to set the `inverse:` initializer argument for one of the paired \(cs_typeName("Relationship.ToOne<T>")), \(cs_typeName("Relationship.ToManyOrdered<T>")), or \(cs_typeName("Relationship.ToManyUnozrdered<T>"))"
+            Internals.abort(
+                "The inverse relationship for \"\(destinationEntity.type).\(destinationKeyPath)\" could not be found. Make sure to set the `inverse:` initializer argument for one of the paired \(Internals.typeName("Relationship.ToOne<T>")), \(Internals.typeName("Relationship.ToManyOrdered<T>")), or \(Internals.typeName("Relationship.ToManyUnozrdered<T>"))"
             )
         }
         
@@ -411,13 +411,13 @@ public final class CoreStoreSchema: DynamicSchema {
             
             for (name, relationshipDescription) in entityDescription.relationshipsByName {
                 
-                CoreStore.assert(
+                Internals.assert(
                     relationshipDescription.destinationEntity != nil,
                     "The destination entity for relationship \"\(entity.type).\(name)\" could not be resolved."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     relationshipDescription.inverseRelationship != nil,
-                    "The inverse relationship for \"\(entity.type).\(name)\" could not be found. Make sure to set the `inverse:` argument of the initializer for one of the paired \(cs_typeName("Relationship.ToOne<T>")), \(cs_typeName("Relationship.ToManyOrdered<T>")), or \(cs_typeName("Relationship.ToManyUnozrdered<T>"))"
+                    "The inverse relationship for \"\(entity.type).\(name)\" could not be found. Make sure to set the `inverse:` argument of the initializer for one of the paired \(Internals.typeName("Relationship.ToOne<T>")), \(Internals.typeName("Relationship.ToManyOrdered<T>")), or \(Internals.typeName("Relationship.ToManyUnozrdered<T>"))"
                 )
             }
         }
@@ -456,7 +456,7 @@ public final class CoreStoreSchema: DynamicSchema {
                 let uniqueConstraints = entity.uniqueConstraints.filter({ !$0.isEmpty })
                 if !uniqueConstraints.isEmpty {
 
-                    CoreStore.assert(
+                    Internals.assert(
                         entityDescription.superentity == nil,
                         "Uniqueness constraints must be defined at the highest level possible."
                     )
@@ -518,7 +518,7 @@ public final class CoreStoreSchema: DynamicSchema {
                     customGetterSetterByKeyPaths: superEntity.coreStoreEntity.flatMap({ allCustomGettersSetters[$0] })
                 )
             }
-            let superClass = cs_lazy { () -> CoreStoreManagedObject.Type in
+            let superClass = Internals.with { () -> CoreStoreManagedObject.Type in
                 
                 if let superClassName = superEntity?.managedObjectClassName,
                     let superClass = NSClassFromString(superClassName) {
@@ -562,7 +562,7 @@ public final class CoreStoreSchema: DynamicSchema {
                             imp_implementationWithBlock(getter),
                             "@@:") else {
                                 
-                                CoreStore.abort("Could not dynamically add getter method \"\(getterName)\" to class \(cs_typeName(managedObjectClass))")
+                                Internals.abort("Could not dynamically add getter method \"\(getterName)\" to class \(Internals.typeName(managedObjectClass))")
                         }
                     }
                     if let setter = customGetterSetters.setter {
@@ -574,7 +574,7 @@ public final class CoreStoreSchema: DynamicSchema {
                             imp_implementationWithBlock(setter),
                             "v@:@") else {
                                 
-                                CoreStore.abort("Could not dynamically add setter method \"\(setterName)\" to class \(cs_typeName(managedObjectClass))")
+                                Internals.abort("Could not dynamically add setter method \"\(setterName)\" to class \(Internals.typeName(managedObjectClass))")
                         }
                     }
             }

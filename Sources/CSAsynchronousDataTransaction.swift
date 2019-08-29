@@ -46,13 +46,13 @@ public final class CSAsynchronousDataTransaction: CSBaseDataTransaction, CoreSto
     @objc
     public func commitWithSuccess(_ success: (() -> Void)?, failure: ((CSError) -> Void)?) {
         
-        CoreStore.assert(
+        Internals.assert(
             self.bridgeToSwift.transactionQueue.cs_isCurrentExecutionContext(),
-            "Attempted to commit a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to commit a \(Internals.typeName(self)) outside its designated queue."
         )
-        CoreStore.assert(
+        Internals.assert(
             !self.bridgeToSwift.isCommitted,
-            "Attempted to commit a \(cs_typeName(self)) more than once."
+            "Attempted to commit a \(Internals.typeName(self)) more than once."
         )
         self.bridgeToSwift.autoCommit { (_, error) in
             

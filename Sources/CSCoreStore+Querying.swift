@@ -29,6 +29,7 @@ import CoreData
 
 // MARK: - CSCoreStore
 
+@available(*, deprecated, message: "Call methods directly from the DataStack instead")
 extension CSCoreStore {
     
     /**

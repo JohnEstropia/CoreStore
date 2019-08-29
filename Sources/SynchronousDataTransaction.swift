@@ -57,9 +57,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      */
     public override func create<D>(_ into: Into<D>) -> D {
         
-        CoreStore.assert(
+        Internals.assert(
             !self.isCommitted,
-            "Attempted to create an entity of type \(cs_typeName(into.entityClass)) from an already committed \(cs_typeName(self))."
+            "Attempted to create an entity of type \(Internals.typeName(into.entityClass)) from an already committed \(Internals.typeName(self))."
         )
         
         return super.create(into)
@@ -73,9 +73,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      */
     public override func edit<D: DynamicObject>(_ object: D?) -> D? {
         
-        CoreStore.assert(
+        Internals.assert(
             !self.isCommitted,
-            "Attempted to update an entity of type \(cs_typeName(object)) from an already committed \(cs_typeName(self))."
+            "Attempted to update an entity of type \(Internals.typeName(object)) from an already committed \(Internals.typeName(self))."
         )
         
         return super.edit(object)
@@ -90,9 +90,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      */
     public override func edit<D>(_ into: Into<D>, _ objectID: NSManagedObjectID) -> D? {
         
-        CoreStore.assert(
+        Internals.assert(
             !self.isCommitted,
-            "Attempted to update an entity of type \(cs_typeName(into.entityClass)) from an already committed \(cs_typeName(self))."
+            "Attempted to update an entity of type \(Internals.typeName(into.entityClass)) from an already committed \(Internals.typeName(self))."
         )
         
         return super.edit(into, objectID)
@@ -105,9 +105,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      */
     public override func delete<D: DynamicObject>(_ object: D?) {
         
-        CoreStore.assert(
+        Internals.assert(
             !self.isCommitted,
-            "Attempted to delete an entity of type \(cs_typeName(object)) from an already committed \(cs_typeName(self))."
+            "Attempted to delete an entity of type \(Internals.typeName(object)) from an already committed \(Internals.typeName(self))."
         )
         
         super.delete(object)
@@ -122,9 +122,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      */
     public override func delete<D: DynamicObject>(_ object1: D?, _ object2: D?, _ objects: D?...) {
         
-        CoreStore.assert(
+        Internals.assert(
             !self.isCommitted,
-            "Attempted to delete an entities from an already committed \(cs_typeName(self))."
+            "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
         )
         
         super.delete(([object1, object2] + objects).compactMap { $0 })
@@ -137,9 +137,9 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
      */
     public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: DynamicObject {
         
-        CoreStore.assert(
+        Internals.assert(
             !self.isCommitted,
-            "Attempted to delete an entities from an already committed \(cs_typeName(self))."
+            "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
         )
         
         super.delete(objects)

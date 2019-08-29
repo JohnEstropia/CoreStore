@@ -29,6 +29,7 @@ import CoreData
 
 // MARK: - CoreStore
 
+@available(*, deprecated, message: "Call methods directly from the DataStack instead")
 extension CoreStore {
     
     /**
@@ -39,7 +40,7 @@ extension CoreStore {
      */
     public static func fetchExisting<D: DynamicObject>(_ object: D) -> D? {
         
-        return self.defaultStack.fetchExisting(object)
+        return Shared.defaultStack.fetchExisting(object)
     }
     
     /**
@@ -50,7 +51,7 @@ extension CoreStore {
      */
     public static func fetchExisting<D: DynamicObject>(_ objectID: NSManagedObjectID) -> D? {
         
-        return self.defaultStack.fetchExisting(objectID)
+        return Shared.defaultStack.fetchExisting(objectID)
     }
     
     /**
@@ -61,7 +62,7 @@ extension CoreStore {
      */
     public static func fetchExisting<D: DynamicObject, S: Sequence>(_ objects: S) -> [D] where S.Iterator.Element == D {
         
-        return self.defaultStack.fetchExisting(objects)
+        return Shared.defaultStack.fetchExisting(objects)
     }
     
     /**
@@ -72,7 +73,7 @@ extension CoreStore {
      */
     public static func fetchExisting<D: DynamicObject, S: Sequence>(_ objectIDs: S) -> [D] where S.Iterator.Element == NSManagedObjectID {
         
-        return self.defaultStack.fetchExisting(objectIDs)
+        return Shared.defaultStack.fetchExisting(objectIDs)
     }
     
     /**
@@ -85,7 +86,7 @@ extension CoreStore {
      */
     public static func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> D? {
         
-        return try self.defaultStack.fetchOne(from, fetchClauses)
+        return try Shared.defaultStack.fetchOne(from, fetchClauses)
     }
     
     /**
@@ -98,7 +99,7 @@ extension CoreStore {
      */
     public static func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D? {
         
-        return try self.defaultStack.fetchOne(from, fetchClauses)
+        return try Shared.defaultStack.fetchOne(from, fetchClauses)
     }
     
     /**
@@ -116,7 +117,7 @@ extension CoreStore {
      */
     public static func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> B.ObjectType? {
         
-        return try self.defaultStack.fetchOne(clauseChain)
+        return try Shared.defaultStack.fetchOne(clauseChain)
     }
     
     /**
@@ -129,7 +130,7 @@ extension CoreStore {
      */
     public static func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [D] {
         
-        return try self.defaultStack.fetchAll(from, fetchClauses)
+        return try Shared.defaultStack.fetchAll(from, fetchClauses)
     }
     
     /**
@@ -142,7 +143,7 @@ extension CoreStore {
      */
     public static func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D] {
         
-        return try self.defaultStack.fetchAll(from, fetchClauses)
+        return try Shared.defaultStack.fetchAll(from, fetchClauses)
     }
     
     /**
@@ -160,7 +161,7 @@ extension CoreStore {
      */
     public static func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [B.ObjectType] {
         
-        return try self.defaultStack.fetchAll(clauseChain)
+        return try Shared.defaultStack.fetchAll(clauseChain)
     }
     
     /**
@@ -173,7 +174,7 @@ extension CoreStore {
      */
     public static func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> Int {
         
-        return try self.defaultStack.fetchCount(from, fetchClauses)
+        return try Shared.defaultStack.fetchCount(from, fetchClauses)
     }
     
     /**
@@ -186,7 +187,7 @@ extension CoreStore {
      */
     public static func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int {
         
-        return try self.defaultStack.fetchCount(from, fetchClauses)
+        return try Shared.defaultStack.fetchCount(from, fetchClauses)
     }
     
     /**
@@ -204,7 +205,7 @@ extension CoreStore {
      */
     public static func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> Int {
         
-        return try self.defaultStack.fetchCount(clauseChain)
+        return try Shared.defaultStack.fetchCount(clauseChain)
     }
     
     /**
@@ -217,7 +218,7 @@ extension CoreStore {
      */
     public static func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> NSManagedObjectID? {
         
-        return try self.defaultStack.fetchObjectID(from, fetchClauses)
+        return try Shared.defaultStack.fetchObjectID(from, fetchClauses)
     }
     
     /**
@@ -230,7 +231,7 @@ extension CoreStore {
      */
     public static func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID? {
         
-        return try self.defaultStack.fetchObjectID(from, fetchClauses)
+        return try Shared.defaultStack.fetchObjectID(from, fetchClauses)
     }
     
     /**
@@ -248,7 +249,7 @@ extension CoreStore {
      */
     public static func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> NSManagedObjectID? {
         
-        return try self.defaultStack.fetchObjectID(clauseChain)
+        return try Shared.defaultStack.fetchObjectID(clauseChain)
     }
     
     /**
@@ -261,7 +262,7 @@ extension CoreStore {
      */
     public static func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [NSManagedObjectID] {
         
-        return try self.defaultStack.fetchObjectIDs(from, fetchClauses)
+        return try Shared.defaultStack.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
@@ -274,7 +275,7 @@ extension CoreStore {
      */
     public static func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID] {
         
-        return try self.defaultStack.fetchObjectIDs(from, fetchClauses)
+        return try Shared.defaultStack.fetchObjectIDs(from, fetchClauses)
     }
     
     /**
@@ -292,7 +293,7 @@ extension CoreStore {
      */
     public static func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [NSManagedObjectID] {
         
-        return try self.defaultStack.fetchObjectIDs(clauseChain)
+        return try Shared.defaultStack.fetchObjectIDs(clauseChain)
     }
     
     /**
@@ -308,7 +309,7 @@ extension CoreStore {
      */
     public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: QueryClause...) throws -> U? {
         
-        return try self.defaultStack.queryValue(from, selectClause, queryClauses)
+        return try Shared.defaultStack.queryValue(from, selectClause, queryClauses)
     }
     
     /**
@@ -324,7 +325,7 @@ extension CoreStore {
      */
     public static func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) throws -> U? {
         
-        return try self.defaultStack.queryValue(from, selectClause, queryClauses)
+        return try Shared.defaultStack.queryValue(from, selectClause, queryClauses)
     }
     
     /**
@@ -344,7 +345,7 @@ extension CoreStore {
      */
     public static func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> B.ResultType? where B.ResultType: QueryableAttributeType {
         
-        return try self.defaultStack.queryValue(clauseChain)
+        return try Shared.defaultStack.queryValue(clauseChain)
     }
     
     /**
@@ -360,7 +361,7 @@ extension CoreStore {
      */
     public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: QueryClause...) throws -> [[String: Any]] {
         
-        return try self.defaultStack.queryAttributes(from, selectClause, queryClauses)
+        return try Shared.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }
     
     /**
@@ -376,7 +377,7 @@ extension CoreStore {
      */
     public static func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) throws -> [[String: Any]] {
         
-        return try self.defaultStack.queryAttributes(from, selectClause, queryClauses)
+        return try Shared.defaultStack.queryAttributes(from, selectClause, queryClauses)
     }
     
     /**
@@ -405,6 +406,6 @@ extension CoreStore {
      */
     public static func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> [[String: Any]] where B.ResultType == NSDictionary {
         
-        return try self.defaultStack.queryAttributes(clauseChain)
+        return try Shared.defaultStack.queryAttributes(clauseChain)
     }
 }

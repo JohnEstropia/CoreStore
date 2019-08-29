@@ -45,9 +45,9 @@ extension CSDataStack {
                 closure(csTransaction)
                 if !transaction.isCommitted && transaction.hasChanges {
                     
-                    CoreStore.log(
+                    Internals.log(
                         .warning,
-                        message: "The closure for the \(cs_typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
+                        message: "The closure for the \(Internals.typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
                     )
                 }
                 try transaction.cancel()
@@ -77,9 +77,9 @@ extension CSDataStack {
                         closure(csTransaction)
                         if !transaction.isCommitted && transaction.hasChanges {
                             
-                            CoreStore.log(
+                            Internals.log(
                                 .warning,
-                                message: "The closure for the \(cs_typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
+                                message: "The closure for the \(Internals.typeName(csTransaction)) completed without being committed. All changes made within the transaction were discarded."
                             )
                         }
                         try transaction.cancel()

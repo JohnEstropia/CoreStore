@@ -56,9 +56,6 @@ class SetupTests: BaseTestDataTestCase {
             XCTAssertTrue(stack.schemaHistory.migrationChain.isEmpty)
             XCTAssertTrue(stack.schemaHistory.migrationChain.rootVersions.isEmpty)
             XCTAssertTrue(stack.schemaHistory.migrationChain.leafVersions.isEmpty)
-            
-            CoreStore.defaultStack = stack
-            XCTAssertEqual(CoreStore.defaultStack, stack)
         }
         do {
             
@@ -74,9 +71,6 @@ class SetupTests: BaseTestDataTestCase {
             }
             XCTAssertEqual(stack.modelVersion, "Model")
             XCTAssertEqual(stack.schemaHistory.migrationChain, migrationChain)
-            
-            CoreStore.defaultStack = stack
-            XCTAssertEqual(CoreStore.defaultStack, stack)
         }
     }
     

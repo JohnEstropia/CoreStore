@@ -97,7 +97,7 @@ public final class CSFrom: NSObject {
             self.init(From(entityClass, nil))
             
         default:
-            CoreStore.abort("The configuration argument only accepts NSString and NSNull values")
+            Internals.abort("The configuration argument only accepts NSString and NSNull values")
         }
     }
     
@@ -126,7 +126,7 @@ public final class CSFrom: NSObject {
                 arguments.append(nil)
                 
             default:
-                CoreStore.abort("The configurations argument only accepts NSString and NSNull values")
+                Internals.abort("The configurations argument only accepts NSString and NSNull values")
             }
         }
         self.init(From(entityClass, arguments))

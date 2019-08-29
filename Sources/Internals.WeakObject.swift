@@ -1,5 +1,5 @@
 //
-//  MigrationManager.swift
+//  Internals.WeakObject.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -24,42 +24,23 @@
 //
 
 import Foundation
-import CoreData
 
 
-// MARK: - MigrationManager
+// MARK: - Internal
 
-internal final class MigrationManager: NSMigrationManager, ProgressReporting {
-    
-    // MARK: NSObject
-    
-    override func didChangeValue(forKey key: String) {
-        
-        super.didChangeValue(forKey: key)
-        
-        guard key == #keyPath(NSMigrationManager.migrationProgress) else {
-            
-            return
+extension Internals {
+
+    // MARK: - WeakObject
+
+    internal final class WeakObject {
+
+        // MARK: Internal
+
+        internal init(_ object: AnyObject) {
+
+            self.object = object
         }
-        let progress = self.progress
-        progress.completedUnitCount = max(
-            progress.completedUnitCount,
-            Int64(Float(progress.totalUnitCount) * self.migrationProgress)
-        )
-    }
-    
-    
-    // MARK: NSMigrationManager
 
-    init(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, progress: Progress) {
-        
-        self.progress = progress
-        
-        super.init(sourceModel: sourceModel, destinationModel: destinationModel)
+        internal private(set) weak var object: AnyObject?
     }
-    
-
-    // MARK: ProgressReporting
-    
-    let progress: Progress
 }

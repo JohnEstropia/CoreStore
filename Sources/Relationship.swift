@@ -269,15 +269,15 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             
             get {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
                     return object.getValue(
                         forKvcKey: self.keyPath,
@@ -287,19 +287,19 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             }
             set {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isEditableInContext() == true,
-                        "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                        "Attempted to update a \(Internals.typeName(O.self))'s value from outside a transaction."
                     )
                     object.setValue(
                         newValue,
@@ -556,15 +556,15 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             
             get {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
                     return object.getValue(
                         forKvcKey: self.keyPath,
@@ -574,19 +574,19 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             }
             set {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isEditableInContext() == true,
-                        "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                        "Attempted to update a \(Internals.typeName(O.self))'s value from outside a transaction."
                     )
                     object.setValue(
                         newValue,
@@ -848,15 +848,15 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             
             get {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
                     return object.getValue(
                         forKvcKey: self.keyPath,
@@ -866,19 +866,19 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             }
             set {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isEditableInContext() == true,
-                        "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                        "Attempted to update a \(Internals.typeName(O.self))'s value from outside a transaction."
                     )
                     object.setValue(
                         newValue,

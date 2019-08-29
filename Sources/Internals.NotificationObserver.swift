@@ -1,5 +1,5 @@
 //
-//  NotificationObserver.swift
+//  Internals.NotificationObserver.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -26,26 +26,31 @@
 import Foundation
 
 
-// MARK: - NotificationObserver
+// MARK: - Internal
 
-internal final class NotificationObserver {
-    
-    // MARK: Public
-    
-    let observer: NSObjectProtocol
-    
-    init(notificationName: Notification.Name, object: Any?, queue: OperationQueue? = nil, closure: @escaping (_ note: Notification) -> Void) {
-        
-        self.observer = NotificationCenter.default.addObserver(
-            forName: notificationName,
-            object: object,
-            queue: queue,
-            using: closure
-        )
-    }
-    
-    deinit {
-        
-        NotificationCenter.default.removeObserver(self.observer)
+extension Internals {
+
+    // MARK: - NotificationObserver
+
+    internal final class NotificationObserver {
+
+        // MARK: Public
+
+        let observer: NSObjectProtocol
+
+        init(notificationName: Notification.Name, object: Any?, queue: OperationQueue? = nil, closure: @escaping (_ note: Notification) -> Void) {
+
+            self.observer = NotificationCenter.default.addObserver(
+                forName: notificationName,
+                object: object,
+                queue: queue,
+                using: closure
+            )
+        }
+
+        deinit {
+
+            NotificationCenter.default.removeObserver(self.observer)
+        }
     }
 }

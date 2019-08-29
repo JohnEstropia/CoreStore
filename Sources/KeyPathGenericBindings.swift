@@ -33,7 +33,13 @@ import CoreData
 /**
  Used only for utility methods. Types allowed as `Value` generic type to `KeyPath` utilities.
  */
-public protocol AllowedObjectiveCKeyPathValue {}
+public protocol AllowedObjectiveCKeyPathValue {
+
+    /**
+     The destination value type
+     */
+    associatedtype DestinationValueType
+}
 
 
 // MARK: - AllowedOptionalObjectiveCKeyPathValue
@@ -43,53 +49,125 @@ public protocol AllowedObjectiveCKeyPathValue {}
  */
 public protocol AllowedOptionalObjectiveCKeyPathValue: AllowedObjectiveCKeyPathValue {}
 
-extension Bool: AllowedObjectiveCKeyPathValue {}
+extension Bool: AllowedObjectiveCKeyPathValue {
 
-extension CGFloat: AllowedObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Bool
+}
 
-extension Data: AllowedOptionalObjectiveCKeyPathValue {}
+extension CGFloat: AllowedObjectiveCKeyPathValue {
 
-extension Date: AllowedOptionalObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = CGFloat
+}
 
-extension Double: AllowedObjectiveCKeyPathValue {}
+extension Data: AllowedOptionalObjectiveCKeyPathValue {
 
-extension Float: AllowedObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Data
+}
 
-extension Int: AllowedObjectiveCKeyPathValue {}
+extension Date: AllowedOptionalObjectiveCKeyPathValue {
 
-extension Int8: AllowedObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Date
+}
 
-extension Int16: AllowedObjectiveCKeyPathValue {}
+extension Double: AllowedObjectiveCKeyPathValue {
 
-extension Int32: AllowedObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Double
+}
 
-extension Int64: AllowedObjectiveCKeyPathValue {}
+extension Float: AllowedObjectiveCKeyPathValue {
 
-extension NSData: AllowedOptionalObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Float
+}
 
-extension NSDate: AllowedOptionalObjectiveCKeyPathValue {}
+extension Int: AllowedObjectiveCKeyPathValue {
 
-extension NSManagedObject: AllowedOptionalObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Int
+}
 
-extension NSNumber: AllowedOptionalObjectiveCKeyPathValue {}
+extension Int8: AllowedObjectiveCKeyPathValue {
 
-extension NSString: AllowedOptionalObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Int8
+}
 
-extension NSSet: AllowedOptionalObjectiveCKeyPathValue {}
+extension Int16: AllowedObjectiveCKeyPathValue {
 
-extension NSOrderedSet: AllowedOptionalObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Int16
+}
 
-extension NSURL: AllowedOptionalObjectiveCKeyPathValue {}
+extension Int32: AllowedObjectiveCKeyPathValue {
 
-extension NSUUID: AllowedOptionalObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Int32
+}
 
-extension String: AllowedOptionalObjectiveCKeyPathValue {}
+extension Int64: AllowedObjectiveCKeyPathValue {
 
-extension URL: AllowedOptionalObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Int64
+}
 
-extension UUID: AllowedOptionalObjectiveCKeyPathValue {}
+extension NSData: AllowedOptionalObjectiveCKeyPathValue {
 
-extension Optional: AllowedObjectiveCKeyPathValue where Wrapped: AllowedOptionalObjectiveCKeyPathValue {}
+    public typealias DestinationValueType = Self
+}
+
+extension NSDate: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = Self
+}
+
+extension NSManagedObject: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = Self
+}
+
+extension NSNumber: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = Self
+}
+
+extension NSString: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = Self
+}
+
+extension NSSet: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = Self
+}
+
+extension NSOrderedSet: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = Self
+}
+
+extension NSURL: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = Self
+}
+
+extension NSUUID: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = Self
+}
+
+extension String: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = String
+}
+
+extension URL: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = URL
+}
+
+extension UUID: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = UUID
+}
+
+extension Optional: AllowedObjectiveCKeyPathValue where Wrapped: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias DestinationValueType = Wrapped.DestinationValueType
+}
 
 
 // MARK: - AllowedObjectiveCAttributeKeyPathValue
@@ -97,49 +175,118 @@ extension Optional: AllowedObjectiveCKeyPathValue where Wrapped: AllowedOptional
 /**
  Used only for utility methods. Types allowed as `Value` generic type to `KeyPath` utilities.
  */
-public protocol AllowedObjectiveCAttributeKeyPathValue: AllowedObjectiveCKeyPathValue {}
+public protocol AllowedObjectiveCAttributeKeyPathValue: AllowedObjectiveCKeyPathValue {
 
-extension Bool: AllowedObjectiveCAttributeKeyPathValue {}
+    /**
+     The attribute value type
+     */
+    associatedtype ReturnValueType
+}
 
-extension CGFloat: AllowedObjectiveCAttributeKeyPathValue {}
+extension Bool: AllowedObjectiveCAttributeKeyPathValue {
 
-extension Data: AllowedObjectiveCAttributeKeyPathValue {}
+    public typealias ReturnValueType = Bool
+}
 
-extension Date: AllowedObjectiveCAttributeKeyPathValue {}
+extension CGFloat: AllowedObjectiveCAttributeKeyPathValue {
 
-extension Double: AllowedObjectiveCAttributeKeyPathValue {}
+    public typealias ReturnValueType = CGFloat
+}
 
-extension Float: AllowedObjectiveCAttributeKeyPathValue {}
+extension Data: AllowedObjectiveCAttributeKeyPathValue {
 
-extension Int: AllowedObjectiveCAttributeKeyPathValue {}
+    public typealias ReturnValueType = Data
+}
 
-extension Int8: AllowedObjectiveCAttributeKeyPathValue {}
+extension Date: AllowedObjectiveCAttributeKeyPathValue {
 
-extension Int16: AllowedObjectiveCAttributeKeyPathValue {}
+    public typealias ReturnValueType = Date
+}
 
-extension Int32: AllowedObjectiveCAttributeKeyPathValue {}
+extension Double: AllowedObjectiveCAttributeKeyPathValue {
 
-extension Int64: AllowedObjectiveCAttributeKeyPathValue {}
+    public typealias ReturnValueType = Double
+}
 
-extension NSData: AllowedObjectiveCAttributeKeyPathValue {}
+extension Float: AllowedObjectiveCAttributeKeyPathValue {
 
-extension NSDate: AllowedObjectiveCAttributeKeyPathValue {}
+    public typealias ReturnValueType = Float
+}
 
-extension NSNumber: AllowedObjectiveCAttributeKeyPathValue {}
+extension Int: AllowedObjectiveCAttributeKeyPathValue {
 
-extension NSString: AllowedObjectiveCAttributeKeyPathValue {}
+    public typealias ReturnValueType = Int
+}
 
-extension NSURL: AllowedObjectiveCAttributeKeyPathValue {}
+extension Int8: AllowedObjectiveCAttributeKeyPathValue {
 
-extension NSUUID: AllowedObjectiveCAttributeKeyPathValue {}
+    public typealias ReturnValueType = Int8
+}
 
-extension String: AllowedObjectiveCAttributeKeyPathValue {}
+extension Int16: AllowedObjectiveCAttributeKeyPathValue {
 
-extension URL: AllowedObjectiveCAttributeKeyPathValue {}
+    public typealias ReturnValueType = Int16
+}
 
-extension UUID: AllowedObjectiveCAttributeKeyPathValue {}
+extension Int32: AllowedObjectiveCAttributeKeyPathValue {
 
-extension Optional: AllowedObjectiveCAttributeKeyPathValue where Wrapped: AllowedObjectiveCAttributeKeyPathValue, Wrapped: AllowedOptionalObjectiveCKeyPathValue {}
+    public typealias ReturnValueType = Int32
+}
+
+extension Int64: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = Int64
+}
+
+extension NSData: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = Self
+}
+
+extension NSDate: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = Self
+}
+
+extension NSNumber: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = Self
+}
+
+extension NSString: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = Self
+}
+
+extension NSURL: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = Self
+}
+
+extension NSUUID: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = Self
+}
+
+extension String: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = String
+}
+
+extension URL: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = URL
+}
+
+extension UUID: AllowedObjectiveCAttributeKeyPathValue {
+
+    public typealias ReturnValueType = UUID
+}
+
+extension Optional: AllowedObjectiveCAttributeKeyPathValue where Wrapped: AllowedObjectiveCAttributeKeyPathValue, Wrapped: AllowedOptionalObjectiveCKeyPathValue {
+
+    public typealias ReturnValueType = Optional
+}
 
 
 // MARK: - AllowedObjectiveCRelationshipKeyPathValue

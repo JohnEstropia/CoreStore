@@ -54,11 +54,11 @@ extension CSDataStack {
     @objc
     public func monitorListFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
-        CoreStore.assert(
+        Internals.assert(
             Thread.isMainThread,
-            "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
+            "Attempted to observe objects from \(Internals.typeName(self)) outside the main thread."
         )
-        CoreStore.assert(
+        Internals.assert(
             fetchClauses.contains { $0 is CSOrderBy },
             "A CSListMonitor requires a CSOrderBy clause."
         )
@@ -83,11 +83,11 @@ extension CSDataStack {
     @objc
     public func monitorListByCreatingAsynchronously(_ createAsynchronously: @escaping (CSListMonitor) -> Void, from: CSFrom, fetchClauses: [CSFetchClause]) {
         
-        CoreStore.assert(
+        Internals.assert(
             Thread.isMainThread,
-            "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
+            "Attempted to observe objects from \(Internals.typeName(self)) outside the main thread."
         )
-        CoreStore.assert(
+        Internals.assert(
             fetchClauses.contains { $0 is CSOrderBy },
             "A CSListMonitor requires an CSOrderBy clause."
         )
@@ -117,11 +117,11 @@ extension CSDataStack {
     @objc
     public func monitorSectionedListFrom(_ from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) -> CSListMonitor {
         
-        CoreStore.assert(
+        Internals.assert(
             Thread.isMainThread,
-            "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
+            "Attempted to observe objects from \(Internals.typeName(self)) outside the main thread."
         )
-        CoreStore.assert(
+        Internals.assert(
             fetchClauses.contains { $0 is CSOrderBy },
             "A CSListMonitor requires an CSOrderBy clause."
         )
@@ -146,11 +146,11 @@ extension CSDataStack {
      */
     public func monitorSectionedListByCreatingAsynchronously(_ createAsynchronously: @escaping (CSListMonitor) -> Void, from: CSFrom, sectionBy: CSSectionBy, fetchClauses: [CSFetchClause]) {
         
-        CoreStore.assert(
+        Internals.assert(
             Thread.isMainThread,
-            "Attempted to observe objects from \(cs_typeName(self)) outside the main thread."
+            "Attempted to observe objects from \(Internals.typeName(self)) outside the main thread."
         )
-        CoreStore.assert(
+        Internals.assert(
             fetchClauses.contains { $0 is CSOrderBy },
             "A CSListMonitor requires an CSOrderBy clause."
         )

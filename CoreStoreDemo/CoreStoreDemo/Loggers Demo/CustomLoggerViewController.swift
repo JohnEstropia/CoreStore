@@ -31,7 +31,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
         
         super.viewDidAppear(animated)
 
-        CoreStore.logger = self
+        Shared.logger = self
 
         let alert = UIAlertController(
             title: "Logger Demo",
@@ -46,7 +46,7 @@ class CustomLoggerViewController: UIViewController, CoreStoreLogger {
 
         super.viewDidDisappear(animated)
 
-        CoreStore.logger = DefaultLogger()
+        Shared.logger = DefaultLogger()
     }
 
     

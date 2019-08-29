@@ -88,9 +88,9 @@ public final class InferredSchemaMappingProvider: Hashable, SchemaMappingProvide
         catch {
 
             let coreStoreError = CoreStoreError(error)
-            CoreStore.log(
+            Internals.log(
                 coreStoreError,
-                "\(cs_typeName(self)) failed to find migration mappings from version model \"\(sourceSchema.modelVersion)\" to \"\(destinationSchema.modelVersion)\" in the \(cs_typeName(storage)) at URL \"\(storage.fileURL)\". The local storage may be corrupt or the \(cs_typeName(storage)) initializer may be missing the correct \(cs_typeName(SchemaMappingProvider.self))"
+                "\(Internals.typeName(self)) failed to find migration mappings from version model \"\(sourceSchema.modelVersion)\" to \"\(destinationSchema.modelVersion)\" in the \(Internals.typeName(storage)) at URL \"\(storage.fileURL)\". The local storage may be corrupt or the \(Internals.typeName(storage)) initializer may be missing the correct \(Internals.typeName(SchemaMappingProvider.self))"
             )
             throw coreStoreError
         }

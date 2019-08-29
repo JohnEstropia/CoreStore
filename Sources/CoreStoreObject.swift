@@ -93,7 +93,7 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
         }
         if lhs.isMeta {
             
-            return cs_dynamicType(of: lhs) == cs_dynamicType(of: rhs)
+            return Internals.dynamicObjectType(of: lhs) == Internals.dynamicObjectType(of: rhs)
         }
         return lhs.rawObject!.isEqual(rhs.rawObject!)
     }
@@ -147,9 +147,9 @@ extension DynamicObject where Self: CoreStoreObject {
      */
     public func partialObject() -> PartialObject<Self> {
         
-        CoreStore.assert(
+        Internals.assert(
             !self.isMeta,
-            "Attempted to create a \(cs_typeName(PartialObject<Self>.self)) from a meta object. Meta objects are only used for querying keyPaths and infering types."
+            "Attempted to create a \(Internals.typeName(PartialObject<Self>.self)) from a meta object. Meta objects are only used for querying keyPaths and infering types."
         )
         return PartialObject<Self>(self.rawObject!)
     }

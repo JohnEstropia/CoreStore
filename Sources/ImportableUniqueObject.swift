@@ -125,7 +125,7 @@ extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: CoreDat
         get {
             
             return self.cs_toRaw().getValue(
-                forKvcKey: cs_dynamicType(of: self).uniqueIDKeyPath,
+                forKvcKey: Internals.dynamicObjectType(of: self).uniqueIDKeyPath,
                 didGetValue: { UniqueIDType.cs_fromQueryableNativeType($0 as! UniqueIDType.QueryableNativeType)! }
             )
         }
@@ -134,7 +134,7 @@ extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: CoreDat
             self.cs_toRaw()
                 .setValue(
                     newValue,
-                    forKvcKey: cs_dynamicType(of: self).uniqueIDKeyPath,
+                    forKvcKey: Internals.dynamicObjectType(of: self).uniqueIDKeyPath,
                     willSetValue: { ($0.cs_toQueryableNativeType() as CoreDataNativeType) }
             )
         }

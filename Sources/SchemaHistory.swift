@@ -92,17 +92,17 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
         
         if allSchema.isEmpty {
             
-            CoreStore.abort("The \"allSchema\" argument of the \(cs_typeName(SchemaHistory.self)) initializer cannot be empty.")
+            Internals.abort("The \"allSchema\" argument of the \(Internals.typeName(SchemaHistory.self)) initializer cannot be empty.")
         }
-        CoreStore.assert(
+        Internals.assert(
             migrationChain.isValid,
-            "Invalid migration chain passed to the \(cs_typeName(SchemaHistory.self)). Check that the model versions' order are correct and that no repetitions or ambiguities exist."
+            "Invalid migration chain passed to the \(Internals.typeName(SchemaHistory.self)). Check that the model versions' order are correct and that no repetitions or ambiguities exist."
         )
         var schemaByVersion: [ModelVersion: DynamicSchema] = [:]
         for schema in allSchema {
             
             let modelVersion = schema.modelVersion
-            CoreStore.assert(
+            Internals.assert(
                 schemaByVersion[modelVersion] == nil,
                 "Multiple model schema found for model version \"\(modelVersion)\"."
             )
@@ -114,11 +114,11 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
             
             if !migrationChain.isEmpty && !migrationChain.contains(exactCurrentModelVersion) {
                 
-                CoreStore.abort("An \"exactCurrentModelVersion\" argument was provided to \(cs_typeName(SchemaHistory.self)) initializer but a matching schema could not be found from the provided \(cs_typeName(MigrationChain.self)).")
+                Internals.abort("An \"exactCurrentModelVersion\" argument was provided to \(Internals.typeName(SchemaHistory.self)) initializer but a matching schema could not be found from the provided \(Internals.typeName(MigrationChain.self)).")
             }
             if schemaByVersion[exactCurrentModelVersion] == nil {
                 
-                CoreStore.abort("An \"exactCurrentModelVersion\" argument was provided to \(cs_typeName(SchemaHistory.self)) initializer but a matching schema could not be found from the \(cs_typeName(DynamicSchema.self)) list.")
+                Internals.abort("An \"exactCurrentModelVersion\" argument was provided to \(Internals.typeName(SchemaHistory.self)) initializer but a matching schema could not be found from the \(Internals.typeName(DynamicSchema.self)) list.")
             }
             currentModelVersion = exactCurrentModelVersion
         }
@@ -132,13 +132,13 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
             switch candidateVersions.count {
                 
             case 0:
-                CoreStore.abort("None of the \(cs_typeName(MigrationChain.self)) leaf versions provided to the \(cs_typeName(SchemaHistory.self)) initializer matches any scheme from the \(cs_typeName(DynamicSchema.self)) list.")
+                Internals.abort("None of the \(Internals.typeName(MigrationChain.self)) leaf versions provided to the \(Internals.typeName(SchemaHistory.self)) initializer matches any scheme from the \(Internals.typeName(DynamicSchema.self)) list.")
                 
             case 1:
                 currentModelVersion = candidateVersions.first!
                 
             default:
-                CoreStore.abort("Could not resolve the \(cs_typeName(SchemaHistory.self)) current model version because the \(cs_typeName(MigrationChain.self)) have ambiguous leaf versions: \(candidateVersions)")
+                Internals.abort("Could not resolve the \(Internals.typeName(SchemaHistory.self)) current model version because the \(Internals.typeName(MigrationChain.self)) have ambiguous leaf versions: \(candidateVersions)")
             }
         }
         
@@ -168,12 +168,12 @@ public final class SchemaHistory: ExpressibleByArrayLiteral {
     internal let schemaByVersion: [ModelVersion: DynamicSchema]
     internal let rawModel: NSManagedObjectModel
     
-    internal private(set) lazy var entityDescriptionsByEntityIdentifier: [EntityIdentifier: NSEntityDescription] = cs_lazy { [unowned self] in
+    internal private(set) lazy var entityDescriptionsByEntityIdentifier: [Internals.EntityIdentifier: NSEntityDescription] = Internals.with { [unowned self] in
         
-        var mapping: [EntityIdentifier: NSEntityDescription] = [:]
+        var mapping: [Internals.EntityIdentifier: NSEntityDescription] = [:]
         self.rawModel.entities.forEach { (entityDescription) in
             
-            let entityIdentifier = EntityIdentifier(entityDescription)
+            let entityIdentifier = Internals.EntityIdentifier(entityDescription)
             mapping[entityIdentifier] = entityDescription
         }
         return mapping

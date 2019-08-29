@@ -29,6 +29,7 @@ import CoreData
 
 // MARK: - CoreStore
 
+@available(*, deprecated, message: "Call methods directly from the DataStack instead")
 @available(macOS 10.12, *)
 extension CoreStore {
     
@@ -40,7 +41,7 @@ extension CoreStore {
      */
     public static func monitorObject<D>(_ object: D) -> ObjectMonitor<D> {
         
-        return self.defaultStack.monitorObject(object)
+        return Shared.defaultStack.monitorObject(object)
     }
     
     /**
@@ -52,7 +53,7 @@ extension CoreStore {
      */
     public static func monitorList<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
         
-        return self.defaultStack.monitorList(from, fetchClauses)
+        return Shared.defaultStack.monitorList(from, fetchClauses)
     }
     
     /**
@@ -64,7 +65,7 @@ extension CoreStore {
      */
     public static func monitorList<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
         
-        return self.defaultStack.monitorList(from, fetchClauses)
+        return Shared.defaultStack.monitorList(from, fetchClauses)
     }
     
     /**
@@ -81,7 +82,7 @@ extension CoreStore {
      */
     public static func monitorList<B: FetchChainableBuilderType>(_ clauseChain: B) -> ListMonitor<B.ObjectType> {
         
-        return self.defaultStack.monitorList(clauseChain.from, clauseChain.fetchClauses)
+        return Shared.defaultStack.monitorList(clauseChain.from, clauseChain.fetchClauses)
     }
     
     /**
@@ -93,7 +94,7 @@ extension CoreStore {
      */
     public static func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: FetchClause...) {
         
-        self.defaultStack.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
+        Shared.defaultStack.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
     
     /**
@@ -105,7 +106,7 @@ extension CoreStore {
      */
     public static func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: [FetchClause])  {
         
-        self.defaultStack.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
+        Shared.defaultStack.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
     
     /**
@@ -126,7 +127,7 @@ extension CoreStore {
      */
     public static func monitorList<B: FetchChainableBuilderType>(createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void, _ clauseChain: B) {
         
-        self.defaultStack.monitorList(
+        Shared.defaultStack.monitorList(
             createAsynchronously: createAsynchronously,
             clauseChain.from,
             clauseChain.fetchClauses
@@ -143,7 +144,7 @@ extension CoreStore {
      */
     public static func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
         
-        return self.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)
+        return Shared.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)
     }
     
     /**
@@ -156,7 +157,7 @@ extension CoreStore {
      */
     public static func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
         
-        return self.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)
+        return Shared.defaultStack.monitorSectionedList(from, sectionBy, fetchClauses)
     }
     
     /**
@@ -174,7 +175,7 @@ extension CoreStore {
      */
     public static func monitorSectionedList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> ListMonitor<B.ObjectType> {
         
-        return self.defaultStack.monitorSectionedList(
+        return Shared.defaultStack.monitorSectionedList(
             clauseChain.from,
             clauseChain.sectionBy,
             clauseChain.fetchClauses
@@ -191,7 +192,7 @@ extension CoreStore {
      */
     public static func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) {
         
-        self.defaultStack.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
+        Shared.defaultStack.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
     
     /**
@@ -204,7 +205,7 @@ extension CoreStore {
      */
     public static func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) {
         
-        self.defaultStack.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
+        Shared.defaultStack.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
     
     /**
@@ -225,7 +226,7 @@ extension CoreStore {
      */
     public static func monitorSectionedList<B: SectionMonitorBuilderType>(createAsynchronously: @escaping (ListMonitor<B.ObjectType>) -> Void, _ clauseChain: B) {
         
-        self.defaultStack.monitorSectionedList(
+        Shared.defaultStack.monitorSectionedList(
             createAsynchronously: createAsynchronously,
             clauseChain.from,
             clauseChain.sectionBy,

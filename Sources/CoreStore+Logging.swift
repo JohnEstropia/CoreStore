@@ -26,22 +26,16 @@
 import Foundation
 
 
-// MARK: - CoreStore
+// MARK: - Internal
 
-extension CoreStore {
-    
-    /**
-    The `CoreStoreLogger` instance to be used. The default logger is an instance of a `DefaultLogger`.
-    */
-    public static var logger: CoreStoreLogger = DefaultLogger()
-    
-    
+extension Internals {
+
     // MARK: Internal
-    
+
     @inline(__always)
     internal static func log(_ level: LogLevel, message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
-        
-        self.logger.log(
+
+        Shared.logger.log(
             level: level,
             message: message,
             fileName: fileName,
@@ -49,11 +43,11 @@ extension CoreStore {
             functionName: functionName
         )
     }
-    
+
     @inline(__always)
     internal static func log(_ error: CoreStoreError, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
-        
-        self.logger.log(
+
+        Shared.logger.log(
             error: error,
             message: message,
             fileName: fileName,
@@ -61,11 +55,11 @@ extension CoreStore {
             functionName: functionName
         )
     }
-    
+
     @inline(__always)
     internal static func assert( _ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
-        
-        self.logger.assert(
+
+        Shared.logger.assert(
             condition(),
             message: message(),
             fileName: fileName,
@@ -73,11 +67,11 @@ extension CoreStore {
             functionName: functionName
         )
     }
-    
+
     @inline(__always)
     internal static func abort(_ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) -> Never  {
-        
-        self.logger.abort(
+
+        Shared.logger.abort(
             message,
             fileName: fileName,
             lineNumber: lineNumber,

@@ -33,6 +33,7 @@ import Foundation
  
  - SeeAlso: `CoreStore`
  */
+@available(*, deprecated, message: "Call methods directly from the CSDataStack instead")
 @objc
 public final class CSCoreStore: NSObject {
     
@@ -45,14 +46,8 @@ public final class CSCoreStore: NSObject {
     @objc
     public static var defaultStack: CSDataStack {
         
-        get {
-            
-            return CoreStore.defaultStack.bridgeToObjectiveC
-        }
-        set {
-            
-            CoreStore.defaultStack = newValue.bridgeToSwift
-        }
+        get { return Shared.defaultStack.bridgeToObjectiveC }
+        set { Shared.defaultStack = newValue.bridgeToSwift }
     }
     
     

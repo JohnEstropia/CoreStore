@@ -113,9 +113,9 @@ public struct OrderBy<D: DynamicObject>: OrderByClause, FetchClause, QueryClause
         
         if let sortDescriptors = fetchRequest.sortDescriptors, sortDescriptors != self.sortDescriptors {
             
-            CoreStore.log(
+            Internals.log(
                 .warning,
-                message: "Existing sortDescriptors for the \(cs_typeName(fetchRequest)) was overwritten by \(cs_typeName(self)) query clause."
+                message: "Existing sortDescriptors for the \(Internals.typeName(fetchRequest)) was overwritten by \(Internals.typeName(self)) query clause."
             )
         }
         

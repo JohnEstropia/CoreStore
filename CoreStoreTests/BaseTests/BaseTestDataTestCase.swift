@@ -34,7 +34,7 @@ import CoreStore
 class BaseTestDataTestCase: BaseTestCase {
     
     @nonobjc
-    let dateFormatter: DateFormatter = cs_lazy {
+    let dateFormatter: DateFormatter = Internals.with {
         
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "en_US_POSIX")
