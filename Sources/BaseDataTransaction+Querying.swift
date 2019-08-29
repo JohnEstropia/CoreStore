@@ -41,9 +41,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
     @discardableResult
     public func deleteAll<D>(_ from: From<D>, _ deleteClauses: DeleteClause...) throws -> Int {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to delete from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to delete from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.deleteAll(from, deleteClauses)
     }
@@ -58,9 +58,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
     @discardableResult
     public func deleteAll<D>(_ from: From<D>, _ deleteClauses: [DeleteClause]) throws -> Int {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to delete from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to delete from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.deleteAll(from, deleteClauses)
     }
@@ -76,9 +76,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
     @discardableResult
     public func deleteAll<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> Int {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to delete from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to delete from a \(Internals.typeName(self)) outside its designated queue."
         )
         
         return try self.context.deleteAll(clauseChain.from, clauseChain.fetchClauses)
@@ -141,9 +141,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchOne<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> D? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchOne(from, fetchClauses)
     }
@@ -158,9 +158,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchOne<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> D? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchOne(from, fetchClauses)
     }
@@ -180,9 +180,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchOne<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> B.ObjectType? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchOne(clauseChain)
     }
@@ -197,9 +197,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchAll<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [D] {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchAll(from, fetchClauses)
     }
@@ -214,9 +214,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchAll<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [D] {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchAll(from, fetchClauses)
     }
@@ -236,9 +236,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchAll<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [B.ObjectType] {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchAll(clauseChain)
     }
@@ -253,9 +253,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchCount<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> Int {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchCount(from, fetchClauses)
     }
@@ -270,9 +270,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchCount<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> Int {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchCount(from, fetchClauses)
     }
@@ -292,9 +292,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchCount<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> Int {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchCount(clauseChain)
     }
@@ -309,9 +309,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> NSManagedObjectID? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchObjectID(from, fetchClauses)
     }
@@ -326,9 +326,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchObjectID<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> NSManagedObjectID? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchObjectID(from, fetchClauses)
     }
@@ -348,9 +348,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchObjectID<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> NSManagedObjectID? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchObjectID(clauseChain)
     }
@@ -365,9 +365,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: FetchClause...) throws -> [NSManagedObjectID] {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchObjectIDs(from, fetchClauses)
     }
@@ -382,9 +382,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchObjectIDs<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) throws -> [NSManagedObjectID] {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchObjectIDs(from, fetchClauses)
     }
@@ -404,9 +404,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func fetchObjectIDs<B: FetchChainableBuilderType>(_ clauseChain: B) throws -> [NSManagedObjectID] {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.fetchObjectIDs(clauseChain)
     }
@@ -427,9 +427,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: QueryClause...) throws -> U? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to query from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.queryValue(from, selectClause, queryClauses)
     }
@@ -447,9 +447,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func queryValue<D, U: QueryableAttributeType>(_ from: From<D>, _ selectClause: Select<D, U>, _ queryClauses: [QueryClause]) throws -> U? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to query from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.queryValue(from, selectClause, queryClauses)
     }
@@ -471,9 +471,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func queryValue<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> B.ResultType? where B.ResultType: QueryableAttributeType {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to query from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.queryValue(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
     }
@@ -491,9 +491,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: QueryClause...) throws -> [[String: Any]] {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to query from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.queryAttributes(from, selectClause, queryClauses)
     }
@@ -511,9 +511,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func queryAttributes<D>(_ from: From<D>, _ selectClause: Select<D, NSDictionary>, _ queryClauses: [QueryClause]) throws -> [[String: Any]] {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to query from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.queryAttributes(from, selectClause, queryClauses)
     }
@@ -544,9 +544,9 @@ extension BaseDataTransaction: FetchableSource, QueryableSource {
      */
     public func queryAttributes<B: QueryChainableBuilderType>(_ clauseChain: B) throws -> [[String: Any]] where B.ResultType == NSDictionary {
         
-        CoreStore.assert(
+        Internals.assert(
             self.isRunningInAllowedQueue(),
-            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to query from a \(Internals.typeName(self)) outside its designated queue."
         )
         return try self.context.queryAttributes(clauseChain.from, clauseChain.select, clauseChain.queryClauses)
     }

@@ -158,7 +158,7 @@ extension DataStack {
      */
     public func refreshAndMergeAllObjects() {
         
-        CoreStore.assert(
+        Internals.assert(
             Thread.isMainThread,
             "Attempted to refresh entities outside their designated queue."
         )

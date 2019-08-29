@@ -53,8 +53,8 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
      */
     public required init(from sourceVersion: ModelVersion, to destinationVersion: ModelVersion, entityMappings: Set<CustomMapping> = []) {
         
-        CoreStore.assert(
-            cs_lazy {
+        Internals.assert(
+            Internals.with {
                 
                 let sources = entityMappings.compactMap({ $0.entityMappingSourceEntity })
                 let destinations = entityMappings.compactMap({ $0.entityMappingDestinationEntity })
@@ -611,70 +611,70 @@ public class CustomSchemaMappingProvider: Hashable, SchemaMappingProvider {
             switch mapping {
             
             case .deleteEntity(let sourceEntity):
-                CoreStore.assert(
+                Internals.assert(
                     sourceEntityNames[sourceEntity] != nil,
-                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' passed to \(cs_typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(cs_typeName(NSEntityDescription.self)) from the source \(cs_typeName(NSManagedObjectModel.self))."
+                    "A \(Internals.typeName(CustomMapping.self)) with value '\(mapping)' passed to \(Internals.typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(Internals.typeName(NSEntityDescription.self)) from the source \(Internals.typeName(NSManagedObjectModel.self))."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     allMappedSourceKeys[sourceEntity] == nil,
-                    "Duplicate \(cs_typeName(CustomMapping.self))s found for source entity name \"\(sourceEntity)\" in \(cs_typeName(CustomSchemaMappingProvider.self))."
+                    "Duplicate \(Internals.typeName(CustomMapping.self))s found for source entity name \"\(sourceEntity)\" in \(Internals.typeName(CustomSchemaMappingProvider.self))."
                 )
                 deleteMappings.insert(mapping)
                 allMappedSourceKeys[sourceEntity] = ""
             
             case .insertEntity(let destinationEntity):
-                CoreStore.assert(
+                Internals.assert(
                     destinationEntityNames[destinationEntity] != nil,
-                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' passed to \(cs_typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(cs_typeName(NSEntityDescription.self)) from the destination \(cs_typeName(NSManagedObjectModel.self))."
+                    "A \(Internals.typeName(CustomMapping.self)) with value '\(mapping)' passed to \(Internals.typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(Internals.typeName(NSEntityDescription.self)) from the destination \(Internals.typeName(NSManagedObjectModel.self))."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     allMappedDestinationKeys[destinationEntity] == nil,
-                    "Duplicate \(cs_typeName(CustomMapping.self))s found for destination entity name \"\(destinationEntity)\" in \(cs_typeName(CustomSchemaMappingProvider.self))."
+                    "Duplicate \(Internals.typeName(CustomMapping.self))s found for destination entity name \"\(destinationEntity)\" in \(Internals.typeName(CustomSchemaMappingProvider.self))."
                 )
                 insertMappings.insert(mapping)
                 allMappedDestinationKeys[destinationEntity] = ""
             
             case .transformEntity(let sourceEntity, let destinationEntity, _):
-                CoreStore.assert(
+                Internals.assert(
                     sourceEntityNames[sourceEntity] != nil,
-                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' passed to \(cs_typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(cs_typeName(NSEntityDescription.self)) from the source \(cs_typeName(NSManagedObjectModel.self))."
+                    "A \(Internals.typeName(CustomMapping.self)) with value '\(mapping)' passed to \(Internals.typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(Internals.typeName(NSEntityDescription.self)) from the source \(Internals.typeName(NSManagedObjectModel.self))."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     destinationEntityNames[destinationEntity] != nil,
-                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' passed to \(cs_typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(cs_typeName(NSEntityDescription.self)) from the destination \(cs_typeName(NSManagedObjectModel.self))."
+                    "A \(Internals.typeName(CustomMapping.self)) with value '\(mapping)' passed to \(Internals.typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(Internals.typeName(NSEntityDescription.self)) from the destination \(Internals.typeName(NSManagedObjectModel.self))."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     allMappedSourceKeys[sourceEntity] == nil,
-                    "Duplicate \(cs_typeName(CustomMapping.self))s found for source entity name \"\(sourceEntity)\" in \(cs_typeName(CustomSchemaMappingProvider.self))."
+                    "Duplicate \(Internals.typeName(CustomMapping.self))s found for source entity name \"\(sourceEntity)\" in \(Internals.typeName(CustomSchemaMappingProvider.self))."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     allMappedDestinationKeys[destinationEntity] == nil,
-                    "Duplicate \(cs_typeName(CustomMapping.self))s found for destination entity name \"\(destinationEntity)\" in \(cs_typeName(CustomSchemaMappingProvider.self))."
+                    "Duplicate \(Internals.typeName(CustomMapping.self))s found for destination entity name \"\(destinationEntity)\" in \(Internals.typeName(CustomSchemaMappingProvider.self))."
                 )
                 transformMappings.insert(mapping)
                 allMappedSourceKeys[sourceEntity] = destinationEntity
                 allMappedDestinationKeys[destinationEntity] = sourceEntity
             
             case .copyEntity(let sourceEntity, let destinationEntity):
-                CoreStore.assert(
+                Internals.assert(
                     sourceEntityNames[sourceEntity] != nil,
-                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' passed to \(cs_typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(cs_typeName(NSEntityDescription.self)) from the source \(cs_typeName(NSManagedObjectModel.self))."
+                    "A \(Internals.typeName(CustomMapping.self)) with value '\(mapping)' passed to \(Internals.typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(Internals.typeName(NSEntityDescription.self)) from the source \(Internals.typeName(NSManagedObjectModel.self))."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     destinationEntityNames[destinationEntity] != nil,
-                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' passed to \(cs_typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(cs_typeName(NSEntityDescription.self)) from the destination \(cs_typeName(NSManagedObjectModel.self))."
+                    "A \(Internals.typeName(CustomMapping.self)) with value '\(mapping)' passed to \(Internals.typeName(CustomSchemaMappingProvider.self)) could not be mapped to any \(Internals.typeName(NSEntityDescription.self)) from the destination \(Internals.typeName(NSManagedObjectModel.self))."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     sourceEntityNames[sourceEntity]!.versionHash == destinationEntityNames[destinationEntity]!.versionHash,
-                    "A \(cs_typeName(CustomMapping.self)) with value '\(mapping)' was passed to \(cs_typeName(CustomSchemaMappingProvider.self)) but the \(cs_typeName(NSEntityDescription.self))'s \"versionHash\" of the source and destination entities do not match."
+                    "A \(Internals.typeName(CustomMapping.self)) with value '\(mapping)' was passed to \(Internals.typeName(CustomSchemaMappingProvider.self)) but the \(Internals.typeName(NSEntityDescription.self))'s \"versionHash\" of the source and destination entities do not match."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     allMappedSourceKeys[sourceEntity] == nil,
-                    "Duplicate \(cs_typeName(CustomMapping.self))s found for source entity name \"\(sourceEntity)\" in \(cs_typeName(CustomSchemaMappingProvider.self))."
+                    "Duplicate \(Internals.typeName(CustomMapping.self))s found for source entity name \"\(sourceEntity)\" in \(Internals.typeName(CustomSchemaMappingProvider.self))."
                 )
-                CoreStore.assert(
+                Internals.assert(
                     allMappedDestinationKeys[destinationEntity] == nil,
-                    "Duplicate \(cs_typeName(CustomMapping.self))s found for destination entity name \"\(destinationEntity)\" in \(cs_typeName(CustomSchemaMappingProvider.self))."
+                    "Duplicate \(Internals.typeName(CustomMapping.self))s found for destination entity name \"\(destinationEntity)\" in \(Internals.typeName(CustomSchemaMappingProvider.self))."
                 )
                 copyMappings.insert(mapping)
                 allMappedSourceKeys[sourceEntity] = destinationEntity

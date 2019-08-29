@@ -36,14 +36,14 @@ extension NSManagedObject {
         
         get {
             
-            return cs_getAssociatedObjectForKey(
+            return Internals.getAssociatedObjectForKey(
                 &PropertyKeys.coreStoreObject,
                 inObject: self
             )
         }
         set {
             
-            cs_setAssociatedWeakObject(
+            Internals.setAssociatedWeakObject(
                 newValue,
                 forKey: &PropertyKeys.coreStoreObject,
                 inObject: self

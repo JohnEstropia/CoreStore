@@ -1,5 +1,5 @@
 //
-//  NSFetchedResultsController+ObjectiveC.swift
+//  Internals.MigrationManager.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -25,27 +25,46 @@
 
 import Foundation
 import CoreData
-    
-    
-// MARK: - Private
 
-@available(macOS 10.12, *)
-fileprivate func createFRC(fromContext context: NSManagedObjectContext, from: CSFrom, sectionBy: CSSectionBy?, fetchClauses: [CSFetchClause]) -> NSFetchedResultsController<NSManagedObject> {
-    
-    let controller = CoreStoreFetchedResultsController(
-        context: context,
-        fetchRequest: CoreStoreFetchRequest(),
-        from: from.bridgeToSwift,
-        sectionBy: sectionBy?.bridgeToSwift,
-        applyFetchClauses: { (fetchRequest) in
-            
-            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-            
-            CoreStore.assert(
-                fetchRequest.sortDescriptors?.isEmpty == false,
-                "An \(cs_typeName(NSFetchedResultsController<NSManagedObject>.self)) requires a sort information. Specify from a \(cs_typeName(CSOrderBy.self)) clause or any custom \(cs_typeName(CSFetchClause.self)) that provides a sort descriptor."
+
+// MARK: - Internal
+
+extension Internals {
+
+    // MARK: - MigrationManager
+
+    internal final class MigrationManager: NSMigrationManager, ProgressReporting {
+
+        // MARK: NSObject
+
+        override func didChangeValue(forKey key: String) {
+
+            super.didChangeValue(forKey: key)
+
+            guard key == #keyPath(NSMigrationManager.migrationProgress) else {
+
+                return
+            }
+            let progress = self.progress
+            progress.completedUnitCount = max(
+                progress.completedUnitCount,
+                Int64(Float(progress.totalUnitCount) * self.migrationProgress)
             )
         }
-    )
-    return controller.dynamicCast()
+
+
+        // MARK: NSMigrationManager
+
+        init(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel, progress: Progress) {
+
+            self.progress = progress
+
+            super.init(sourceModel: sourceModel, destinationModel: destinationModel)
+        }
+
+
+        // MARK: ProgressReporting
+
+        let progress: Progress
+    }
 }

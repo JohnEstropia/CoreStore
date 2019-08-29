@@ -44,7 +44,7 @@ extension DataStack {
     @nonobjc
     public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
         
-        return createFRC(
+        return Internals.createFRC(
             fromContext: self.mainContext,
             from: from,
             sectionBy: sectionBy,
@@ -64,7 +64,7 @@ extension DataStack {
     @nonobjc
     public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
         
-        return createFRC(
+        return Internals.createFRC(
             fromContext: self.mainContext,
             from: from,
             sectionBy: sectionBy,
@@ -83,7 +83,7 @@ extension DataStack {
     @nonobjc
     public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
         
-        return createFRC(
+        return Internals.createFRC(
             fromContext: self.mainContext,
             from: from,
             sectionBy: nil,
@@ -102,7 +102,7 @@ extension DataStack {
     @nonobjc
     public func createFetchedResultsController<D: NSManagedObject>(forDataStack dataStack: DataStack, _ from: From<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
         
-        return createFRC(
+        return Internals.createFRC(
             fromContext: self.mainContext,
             from: from,
             sectionBy: nil,
@@ -129,7 +129,7 @@ extension UnsafeDataTransaction {
     @nonobjc
     public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
         
-        return createFRC(
+        return Internals.createFRC(
             fromContext: self.context,
             from: from,
             sectionBy: sectionBy,
@@ -149,7 +149,7 @@ extension UnsafeDataTransaction {
     @nonobjc
     public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
         
-        return createFRC(
+        return Internals.createFRC(
             fromContext: self.context,
             from: from,
             sectionBy: sectionBy,
@@ -168,7 +168,7 @@ extension UnsafeDataTransaction {
     @nonobjc
     public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ fetchClauses: FetchClause...) -> NSFetchedResultsController<D> {
         
-        return createFRC(
+        return Internals.createFRC(
             fromContext: self.context,
             from: from,
             sectionBy: nil,
@@ -187,7 +187,7 @@ extension UnsafeDataTransaction {
     @nonobjc
     public func createFetchedResultsController<D: NSManagedObject>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
         
-        return createFRC(
+        return Internals.createFRC(
             fromContext: self.context,
             from: from,
             sectionBy: nil,
@@ -198,25 +198,30 @@ extension UnsafeDataTransaction {
 
 
 
-// MARK: - Private
+// MARK: - Internals
 
-@available(macOS 10.12, *)
-fileprivate func createFRC<D: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<D>, sectionBy: SectionBy<D>? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
-    
-    let controller = CoreStoreFetchedResultsController(
-        context: context,
-        fetchRequest: CoreStoreFetchRequest(),
-        from: from,
-        sectionBy: sectionBy,
-        applyFetchClauses: { (fetchRequest) in
-            
-            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
-            
-            CoreStore.assert(
-                fetchRequest.sortDescriptors?.isEmpty == false,
-                "An \(cs_typeName(NSFetchedResultsController<D>.self)) requires a sort information. Specify from a \(cs_typeName(OrderBy<D>.self)) clause or any custom \(cs_typeName(FetchClause.self)) that provides a sort descriptor."
-            )
-        }
-    )
-    return controller.dynamicCast()
+extension Internals {
+
+    // MARK: FilePrivate
+
+    @available(macOS 10.12, *)
+    fileprivate static func createFRC<D: NSManagedObject>(fromContext context: NSManagedObjectContext, from: From<D>, sectionBy: SectionBy<D>? = nil, fetchClauses: [FetchClause]) -> NSFetchedResultsController<D> {
+
+        let controller = Internals.CoreStoreFetchedResultsController(
+            context: context,
+            fetchRequest: Internals.CoreStoreFetchRequest(),
+            from: from,
+            sectionBy: sectionBy,
+            applyFetchClauses: { (fetchRequest) in
+
+                fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+
+                Internals.assert(
+                    fetchRequest.sortDescriptors?.isEmpty == false,
+                    "An \(Internals.typeName(NSFetchedResultsController<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                )
+            }
+        )
+        return controller.dynamicCast()
+    }
 }

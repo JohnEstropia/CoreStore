@@ -77,9 +77,9 @@ public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
         
         if let keyPaths = fetchRequest.propertiesToGroupBy as? [String], keyPaths != self.keyPaths {
             
-            CoreStore.log(
+            Internals.log(
                 .warning,
-                message: "An existing \"propertiesToGroupBy\" for the \(cs_typeName(NSFetchRequest<ResultType>.self)) was overwritten by \(cs_typeName(self)) query clause."
+                message: "An existing \"propertiesToGroupBy\" for the \(Internals.typeName(NSFetchRequest<ResultType>.self)) was overwritten by \(Internals.typeName(self)) query clause."
             )
         }
         

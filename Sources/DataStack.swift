@@ -193,7 +193,7 @@ public final class DataStack: Equatable {
      */
     public func entityDescription(for type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return self.entityDescription(for: EntityIdentifier(type))
+        return self.entityDescription(for: Internals.EntityIdentifier(type))
     }
     
     /**
@@ -201,7 +201,7 @@ public final class DataStack: Equatable {
      */
     public func entityDescription(for type: CoreStoreObject.Type) -> NSEntityDescription? {
         
-        return self.entityDescription(for: EntityIdentifier(type))
+        return self.entityDescription(for: Internals.EntityIdentifier(type))
     }
     
     /**
@@ -257,9 +257,9 @@ public final class DataStack: Equatable {
         catch {
             
             let storeError = CoreStoreError(error)
-            CoreStore.log(
+            Internals.log(
                 storeError,
-                "Failed to add \(cs_typeName(storage)) to the stack."
+                "Failed to add \(Internals.typeName(storage)) to the stack."
             )
             throw storeError
         }
@@ -280,9 +280,9 @@ public final class DataStack: Equatable {
         return try self.coordinator.performSynchronously {
             
             let fileURL = storage.fileURL
-            CoreStore.assert(
+            Internals.assert(
                 fileURL.isFileURL,
-                "The specified store URL for the \"\(cs_typeName(storage))\" is invalid: \"\(fileURL)\""
+                "The specified store URL for the \"\(Internals.typeName(storage))\" is invalid: \"\(fileURL)\""
             )
             
             if let _ = self.persistentStoreForStorage(storage) {
@@ -299,9 +299,9 @@ public final class DataStack: Equatable {
                 }
                 
                 let error = CoreStoreError.differentStorageExistsAtURL(existingPersistentStoreURL: fileURL)
-                CoreStore.log(
+                Internals.log(
                     error,
-                    "Failed to add \(cs_typeName(storage)) at \"\(fileURL)\" because a different \(cs_typeName(NSPersistentStore.self)) at that URL already exists."
+                    "Failed to add \(Internals.typeName(storage)) at \"\(fileURL)\" because a different \(Internals.typeName(NSPersistentStore.self)) at that URL already exists."
                 )
                 throw error
             }
@@ -351,9 +351,9 @@ public final class DataStack: Equatable {
                         localStoreURL: fileURL,
                         NSError: error
                     )
-                    CoreStore.log(
+                    Internals.log(
                         storeError,
-                        "Failed to add \(cs_typeName(storage)) to the stack."
+                        "Failed to add \(Internals.typeName(storage)) to the stack."
                     )
                     throw storeError
                 }
@@ -361,9 +361,9 @@ public final class DataStack: Equatable {
             catch {
                 
                 let storeError = CoreStoreError(error)
-                CoreStore.log(
+                Internals.log(
                     storeError,
-                    "Failed to add \(cs_typeName(storage)) to the stack."
+                    "Failed to add \(Internals.typeName(storage)) to the stack."
                 )
                 throw storeError
             }
@@ -410,9 +410,9 @@ public final class DataStack: Equatable {
                 }
                 
                 let error = CoreStoreError.differentStorageExistsAtURL(existingPersistentStoreURL: cacheFileURL)
-                CoreStore.log(
+                Internals.log(
                     error,
-                    "Failed to add \(cs_typeName(storage)) at \"\(cacheFileURL)\" because a different \(cs_typeName(NSPersistentStore.self)) at that URL already exists."
+                    "Failed to add \(Internals.typeName(storage)) at \"\(cacheFileURL)\" because a different \(Internals.typeName(NSPersistentStore.self)) at that URL already exists."
                 )
                 throw error
             }
@@ -454,9 +454,9 @@ public final class DataStack: Equatable {
             catch {
                 
                 let storeError = CoreStoreError(error)
-                CoreStore.log(
+                Internals.log(
                     storeError,
-                    "Failed to add \(cs_typeName(storage)) to the stack."
+                    "Failed to add \(Internals.typeName(storage)) to the stack."
                 )
                 throw storeError
             }
@@ -497,7 +497,7 @@ public final class DataStack: Equatable {
     internal let schemaHistory: SchemaHistory
     internal let childTransactionQueue = DispatchQueue.serial("com.coreStore.dataStack.childTransactionQueue")
     internal let storeMetadataUpdateQueue = DispatchQueue.concurrent("com.coreStore.persistentStoreBarrierQueue")
-    internal let migrationQueue: OperationQueue = cs_lazy {
+    internal let migrationQueue: OperationQueue = Internals.with {
         
         let migrationQueue = OperationQueue()
         migrationQueue.maxConcurrentOperationCount = 1
@@ -514,7 +514,7 @@ public final class DataStack: Equatable {
             .first
     }
     
-    internal func persistentStores(for entityIdentifier: EntityIdentifier) -> [NSPersistentStore]? {
+    internal func persistentStores(for entityIdentifier: Internals.EntityIdentifier) -> [NSPersistentStore]? {
         
         var returnValue: [NSPersistentStore]? = nil
         self.storeMetadataUpdateQueue.sync(flags: .barrier) {
@@ -525,7 +525,7 @@ public final class DataStack: Equatable {
         return returnValue
     }
     
-    internal func persistentStore(for entityIdentifier: EntityIdentifier, configuration: ModelConfiguration, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
+    internal func persistentStore(for entityIdentifier: Internals.EntityIdentifier, configuration: ModelConfiguration, inferStoreIfPossible: Bool) -> (store: NSPersistentStore?, isAmbiguous: Bool) {
         
         return self.storeMetadataUpdateQueue.sync(flags: .barrier) { () -> (store: NSPersistentStore?, isAmbiguous: Bool) in
             
@@ -573,11 +573,11 @@ public final class DataStack: Equatable {
             for entityDescription in (self.coordinator.managedObjectModel.entities(forConfigurationName: configurationName) ?? []) {
                 
                 let managedObjectClassName = entityDescription.managedObjectClassName!
-                CoreStore.assert(
+                Internals.assert(
                     NSClassFromString(managedObjectClassName) != nil,
-                    "The class \(cs_typeName(managedObjectClassName)) for the entity \(cs_typeName(entityDescription.name)) does not exist. Check if the subclass type and module name are properly configured."
+                    "The class \(Internals.typeName(managedObjectClassName)) for the entity \(Internals.typeName(entityDescription.name)) does not exist. Check if the subclass type and module name are properly configured."
                 )
-                let entityIdentifier = EntityIdentifier(entityDescription)
+                let entityIdentifier = Internals.EntityIdentifier(entityDescription)
                 if self.finalConfigurationsByEntityIdentifier[entityIdentifier] == nil {
                     
                     self.finalConfigurationsByEntityIdentifier[entityIdentifier] = []
@@ -589,7 +589,7 @@ public final class DataStack: Equatable {
         return persistentStore
     }
     
-    internal func entityDescription(for entityIdentifier: EntityIdentifier) -> NSEntityDescription? {
+    internal func entityDescription(for entityIdentifier: Internals.EntityIdentifier) -> NSEntityDescription? {
         
         return self.schemaHistory.entityDescriptionsByEntityIdentifier[entityIdentifier]
     }
@@ -598,7 +598,7 @@ public final class DataStack: Equatable {
     // MARK: Private
     
     private var persistentStoresByFinalConfiguration = [String: NSPersistentStore]()
-    private var finalConfigurationsByEntityIdentifier = [EntityIdentifier: Set<String>]()
+    private var finalConfigurationsByEntityIdentifier = [Internals.EntityIdentifier: Set<String>]()
     
     deinit {
         

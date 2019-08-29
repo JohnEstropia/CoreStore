@@ -462,8 +462,8 @@ extension AttributeProtocol {
 
                 let notification = CoreStoreObjectValueDiff<V>(
                     kind: kind,
-                    newNativeValue: newValue as! V.QueryableNativeType?,
-                    oldNativeValue: oldValue as! V.QueryableNativeType?,
+                    newNativeValue: newValue as? V.QueryableNativeType,
+                    oldNativeValue: oldValue as? V.QueryableNativeType,
                     isPrior: isPrior
                 )
                 changeHandler(
@@ -485,8 +485,8 @@ extension AttributeProtocol {
 
                 let notification = CoreStoreObjectTransformableDiff<V>(
                     kind: kind,
-                    newValue: newValue as! V?,
-                    oldValue: oldValue as! V?,
+                    newValue: newValue as? V,
+                    oldValue: oldValue as? V,
                     isPrior: isPrior
                 )
                 changeHandler(
@@ -543,7 +543,7 @@ fileprivate final class _CoreStoreObjectKeyValueObservation: NSObject, CoreStore
 
     // workaround for <rdar://problem/31640524> Erroneous (?) error when using bridging in the Foundation overlay
     @nonobjc
-    static var swizzler: Any? = cs_lazy {
+    static var swizzler: Any? = Internals.with {
 
         let bridgeClass: AnyClass = _CoreStoreObjectKeyValueObservation.self
         let rootObserveImpl = class_getInstanceMethod(

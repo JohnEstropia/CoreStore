@@ -67,7 +67,7 @@ extension UnsafeDataTransaction {
      */
     public func monitorList<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
         
-        CoreStore.assert(
+        Internals.assert(
             fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
@@ -126,7 +126,7 @@ extension UnsafeDataTransaction {
      */
     public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: [FetchClause])  {
         
-        CoreStore.assert(
+        Internals.assert(
             fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
@@ -191,7 +191,7 @@ extension UnsafeDataTransaction {
      */
     public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
         
-        CoreStore.assert(
+        Internals.assert(
             fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
@@ -252,7 +252,7 @@ extension UnsafeDataTransaction {
      */
     public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) {
         
-        CoreStore.assert(
+        Internals.assert(
             fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )

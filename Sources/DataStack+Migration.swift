@@ -76,9 +76,9 @@ extension DataStack {
             catch {
                 
                 let storeError = CoreStoreError(error)
-                CoreStore.log(
+                Internals.log(
                     storeError,
-                    "Failed to add \(cs_typeName(storage)) to the stack."
+                    "Failed to add \(Internals.typeName(storage)) to the stack."
                 )
                 DispatchQueue.main.async {
                     
@@ -108,9 +108,9 @@ extension DataStack {
     public func addStorage<T: LocalStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) -> Progress? {
         
         let fileURL = storage.fileURL
-        CoreStore.assert(
+        Internals.assert(
             fileURL.isFileURL,
-            "The specified URL for the \(cs_typeName(storage)) is invalid: \"\(fileURL)\""
+            "The specified URL for the \(Internals.typeName(storage)) is invalid: \"\(fileURL)\""
         )
         
         return self.coordinator.performSynchronously {
@@ -137,9 +137,9 @@ extension DataStack {
                 }
                 
                 let error = CoreStoreError.differentStorageExistsAtURL(existingPersistentStoreURL: fileURL)
-                CoreStore.log(
+                Internals.log(
                     error,
-                    "Failed to add \(cs_typeName(storage)) at \"\(fileURL)\" because a different \(cs_typeName(NSPersistentStore.self)) at that URL already exists."
+                    "Failed to add \(Internals.typeName(storage)) at \"\(fileURL)\" because a different \(Internals.typeName(NSPersistentStore.self)) at that URL already exists."
                 )
                 DispatchQueue.main.async {
                     
@@ -235,9 +235,9 @@ extension DataStack {
             catch {
                 
                 let storeError = CoreStoreError(error)
-                CoreStore.log(
+                Internals.log(
                     storeError,
-                    "Failed to load SQLite \(cs_typeName(NSPersistentStore.self)) metadata."
+                    "Failed to load SQLite \(Internals.typeName(NSPersistentStore.self)) metadata."
                 )
                 DispatchQueue.main.async {
                     
@@ -302,9 +302,9 @@ extension DataStack {
                 }
                 
                 let error = CoreStoreError.differentStorageExistsAtURL(existingPersistentStoreURL: cacheFileURL)
-                CoreStore.log(
+                Internals.log(
                     error,
-                    "Failed to add \(cs_typeName(storage)) at \"\(cacheFileURL)\" because a different \(cs_typeName(NSPersistentStore.self)) at that URL already exists."
+                    "Failed to add \(Internals.typeName(storage)) at \"\(cacheFileURL)\" because a different \(Internals.typeName(NSPersistentStore.self)) at that URL already exists."
                 )
                 DispatchQueue.main.async {
                     
@@ -372,9 +372,9 @@ extension DataStack {
             catch {
                 
                 let storeError = CoreStoreError(error)
-                CoreStore.log(
+                Internals.log(
                     storeError,
-                    "Failed to load \(cs_typeName(NSPersistentStore.self)) metadata."
+                    "Failed to load \(Internals.typeName(NSPersistentStore.self)) metadata."
                 )
                 DispatchQueue.main.async {
                     
@@ -399,9 +399,9 @@ extension DataStack {
             let fileURL = storage.fileURL
             do {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.persistentStoreForStorage(storage) == nil,
-                    "Attempted to migrate an already added \(cs_typeName(storage)) at URL \"\(fileURL)\""
+                    "Attempted to migrate an already added \(Internals.typeName(storage)) at URL \"\(fileURL)\""
                 )
                 
                 let metadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
@@ -418,9 +418,9 @@ extension DataStack {
             catch {
                 
                 let metadataError = CoreStoreError(error)
-                CoreStore.log(
+                Internals.log(
                     metadataError,
-                    "Failed to load \(cs_typeName(storage)) metadata from URL \"\(fileURL)\"."
+                    "Failed to load \(Internals.typeName(storage)) metadata from URL \"\(fileURL)\"."
                 )
                 throw metadataError
             }
@@ -440,9 +440,9 @@ extension DataStack {
             
             let fileURL = storage.fileURL
             
-            CoreStore.assert(
+            Internals.assert(
                 self.persistentStoreForStorage(storage) == nil,
-                "Attempted to query required migrations for an already added \(cs_typeName(storage)) at URL \"\(fileURL)\""
+                "Attempted to query required migrations for an already added \(Internals.typeName(storage)) at URL \"\(fileURL)\""
             )
             do {
                 
@@ -459,9 +459,9 @@ extension DataStack {
                         targetModel: self.schemaHistory.rawModel,
                         targetModelVersion: self.modelVersion
                     )
-                    CoreStore.log(
+                    Internals.log(
                         error,
-                        "Failed to find migration steps from the \(cs_typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\"."
+                        "Failed to find migration steps from the \(Internals.typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\"."
                     )
                     throw error
                 }
@@ -469,9 +469,9 @@ extension DataStack {
                 if migrationSteps.count > 1 && storage.localStorageOptions.contains(.preventProgressiveMigration) {
                     
                     let error = CoreStoreError.progressiveMigrationRequired(localStoreURL: fileURL)
-                    CoreStore.log(
+                    Internals.log(
                         error,
-                        "Failed to find migration mapping from the \(cs_typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
+                        "Failed to find migration mapping from the \(Internals.typeName(storage)) at URL \"\(fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
                     )
                     throw error
                 }
@@ -486,9 +486,9 @@ extension DataStack {
             catch {
                 
                 let metadataError = CoreStoreError(error)
-                CoreStore.log(
+                Internals.log(
                     metadataError,
-                    "Failed to load \(cs_typeName(storage)) metadata from URL \"\(fileURL)\"."
+                    "Failed to load \(Internals.typeName(storage)) metadata from URL \"\(fileURL)\"."
                 )
                 throw metadataError
             }
@@ -507,9 +507,9 @@ extension DataStack {
                 targetModel: self.schemaHistory.rawModel,
                 targetModelVersion: self.modelVersion
             )
-            CoreStore.log(
+            Internals.log(
                 error,
-                "Failed to find migration steps from \(cs_typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.schemaHistory.rawModel)\"."
+                "Failed to find migration steps from \(Internals.typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.schemaHistory.rawModel)\"."
             )
             
             DispatchQueue.main.async {
@@ -532,9 +532,9 @@ extension DataStack {
         else if numberOfMigrations > 1 && storage.localStorageOptions.contains(.preventProgressiveMigration) {
             
             let error = CoreStoreError.progressiveMigrationRequired(localStoreURL: storage.fileURL)
-            CoreStore.log(
+            Internals.log(
                 error,
-                "Failed to find migration mapping from the \(cs_typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
+                "Failed to find migration mapping from the \(Internals.typeName(storage)) at URL \"\(storage.fileURL)\" to version model \"\(self.modelVersion)\" without requiring progessive migrations."
             )
             DispatchQueue.main.async {
                 
@@ -582,7 +582,7 @@ extension DataStack {
                         catch {
                         
                             let migrationError = CoreStoreError(error)
-                            CoreStore.log(
+                            Internals.log(
                                 migrationError,
                                 "Failed to migrate version model \"\(migrationType.sourceVersion)\" to version \"\(migrationType.destinationVersion)\"."
                             )
@@ -778,7 +778,7 @@ extension DataStack {
             isDirectory: false
         )
         
-        let migrationManager = MigrationManager(
+        let migrationManager = Internals.MigrationManager(
             sourceModel: sourceModel,
             destinationModel: destinationModel,
             progress: progress

@@ -54,14 +54,14 @@ extension Progress {
         
         get {
             
-            let object: ProgressObserver? = cs_getAssociatedObjectForKey(&PropertyKeys.progressObserver, inObject: self)
+            let object: ProgressObserver? = Internals.getAssociatedObjectForKey(&PropertyKeys.progressObserver, inObject: self)
             if let observer = object {
                 
                 return observer
             }
             
             let observer = ProgressObserver(self)
-            cs_setAssociatedRetainedObject(
+            Internals.setAssociatedRetainedObject(
                 observer,
                 forKey: &PropertyKeys.progressObserver,
                 inObject: self

@@ -38,7 +38,7 @@ extension NSManagedObjectContext {
         
         get {
             
-            let number: NSNumber? = cs_getAssociatedObjectForKey(
+            let number: NSNumber? = Internals.getAssociatedObjectForKey(
                 &PropertyKeys.shouldCascadeSavesToParent,
                 inObject: self
             )
@@ -46,7 +46,7 @@ extension NSManagedObjectContext {
         }
         set {
             
-            cs_setAssociatedCopiedObject(
+            Internals.setAssociatedCopiedObject(
                 NSNumber(value: newValue),
                 forKey: &PropertyKeys.shouldCascadeSavesToParent,
                 inObject: self
@@ -58,7 +58,7 @@ extension NSManagedObjectContext {
     internal func setupForCoreStoreWithContextName(_ contextName: String) {
         
         self.name = contextName
-        self.observerForWillSaveNotification = NotificationObserver(
+        self.observerForWillSaveNotification = Internals.NotificationObserver(
             notificationName: NSNotification.Name.NSManagedObjectContextWillSave,
             object: self,
             closure: { (note) -> Void in
@@ -77,7 +77,7 @@ extension NSManagedObjectContext {
                 }
                 catch {
                     
-                    CoreStore.log(
+                    Internals.log(
                         CoreStoreError(error),
                         "Failed to obtain permanent ID(s) for \(numberOfInsertedObjects) inserted object(s)."
                     )
@@ -96,18 +96,18 @@ extension NSManagedObjectContext {
     }
     
     @nonobjc
-    private var observerForWillSaveNotification: NotificationObserver? {
+    private var observerForWillSaveNotification: Internals.NotificationObserver? {
         
         get {
             
-            return cs_getAssociatedObjectForKey(
+            return Internals.getAssociatedObjectForKey(
                 &PropertyKeys.observerForWillSaveNotification,
                 inObject: self
             )
         }
         set {
             
-            cs_setAssociatedRetainedObject(
+            Internals.setAssociatedRetainedObject(
                 newValue,
                 forKey: &PropertyKeys.observerForWillSaveNotification,
                 inObject: self

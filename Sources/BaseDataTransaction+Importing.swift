@@ -43,9 +43,9 @@ extension BaseDataTransaction {
         _ into: Into<D>,
         source: D.ImportSource) throws -> D? {
             
-            CoreStore.assert(
+            Internals.assert(
                 self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
+                "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
             )
         
             return try autoreleasepool {
@@ -73,9 +73,9 @@ extension BaseDataTransaction {
         _ object: D,
         source: D.ImportSource) throws {
             
-            CoreStore.assert(
+            Internals.assert(
                 self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(cs_typeName(object)) outside the transaction's designated queue."
+                "Attempted to import an object of type \(Internals.typeName(object)) outside the transaction's designated queue."
             )
             
             try autoreleasepool {
@@ -101,9 +101,9 @@ extension BaseDataTransaction {
         _ into: Into<D>,
         sourceArray: S) throws -> [D] where S.Iterator.Element == D.ImportSource {
             
-            CoreStore.assert(
+            Internals.assert(
                 self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
+                "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
             return try autoreleasepool {
@@ -137,9 +137,9 @@ extension BaseDataTransaction {
         _ into: Into<D>,
         source: D.ImportSource) throws -> D? {
             
-            CoreStore.assert(
+            Internals.assert(
                 self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
+                "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
             return try autoreleasepool {
@@ -190,9 +190,9 @@ extension BaseDataTransaction {
         sourceArray: S,
         preProcess: @escaping (_ mapping: [D.UniqueIDType: D.ImportSource]) throws -> [D.UniqueIDType: D.ImportSource] = { $0 }) throws -> [D] where S.Iterator.Element == D.ImportSource {
             
-            CoreStore.assert(
+            Internals.assert(
                 self.isRunningInAllowedQueue(),
-                "Attempted to import an object of type \(cs_typeName(into.entityClass)) outside the transaction's designated queue."
+                "Attempted to import an object of type \(Internals.typeName(into.entityClass)) outside the transaction's designated queue."
             )
             
             return try autoreleasepool {

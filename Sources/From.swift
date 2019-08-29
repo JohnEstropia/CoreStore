@@ -139,17 +139,17 @@ public struct From<D: DynamicObject> {
         self.findPersistentStores = findPersistentStores
     }
     
-    internal func applyToFetchRequest<U>(_ fetchRequest: CoreStoreFetchRequest<U>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) throws {
+    internal func applyToFetchRequest<U>(_ fetchRequest: Internals.CoreStoreFetchRequest<U>, context: NSManagedObjectContext, applyAffectedStores: Bool = true) throws {
 
         guard let parentStack = context.parentStack else {
 
-            CoreStore.log(
+            Internals.log(
                 .warning,
-                message: "Attempted to perform a fetch but the \(cs_typeName(DataStack.self)) has already been deallocated."
+                message: "Attempted to perform a fetch but the \(Internals.typeName(DataStack.self)) has already been deallocated."
             )
             throw CoreStoreError.unknown
         }
-        fetchRequest.entity = parentStack.entityDescription(for: EntityIdentifier(self.entityClass))!
+        fetchRequest.entity = parentStack.entityDescription(for: Internals.EntityIdentifier(self.entityClass))!
         guard applyAffectedStores else {
             
             return
@@ -160,9 +160,9 @@ public struct From<D: DynamicObject> {
         }
         catch let error as CoreStoreError {
 
-            CoreStore.log(
+            Internals.log(
                 error,
-                "Attempted to perform a fetch but could not find any persistent store for the entity \(cs_typeName(fetchRequest.entityName))"
+                "Attempted to perform a fetch but could not find any persistent store for the entity \(Internals.typeName(fetchRequest.entityName))"
             )
             throw error
         }
@@ -172,7 +172,7 @@ public struct From<D: DynamicObject> {
         }
     }
     
-    internal func applyAffectedStoresForFetchedRequest<U>(_ fetchRequest: CoreStoreFetchRequest<U>, context: NSManagedObjectContext) throws {
+    internal func applyAffectedStoresForFetchedRequest<U>(_ fetchRequest: Internals.CoreStoreFetchRequest<U>, context: NSManagedObjectContext) throws {
         
         let stores = self.findPersistentStores(context)
         fetchRequest.affectedStores = stores
@@ -191,7 +191,7 @@ public struct From<D: DynamicObject> {
         self.entityClass = entityClass
         self.configurations = configurations
         
-        let entityIdentifier = EntityIdentifier(entityClass)
+        let entityIdentifier = Internals.EntityIdentifier(entityClass)
         if let configurations = configurations {
             
             let configurationsSet = Set(configurations.map({ $0 ?? DataStack.defaultConfigurationName }))

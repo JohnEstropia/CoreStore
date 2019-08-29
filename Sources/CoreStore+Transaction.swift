@@ -28,6 +28,7 @@ import Foundation
 
 // MARK: - CoreStore
 
+@available(*, deprecated, message: "Call methods directly from the DataStack instead")
 extension CoreStore {
     
     /**
@@ -38,7 +39,7 @@ extension CoreStore {
      */
     public static func perform<T>(asynchronous task: @escaping (_ transaction: AsynchronousDataTransaction) throws -> T, completion: @escaping (AsynchronousDataTransaction.Result<T>) -> Void) {
         
-        self.defaultStack.perform(asynchronous: task, completion: completion)
+        Shared.defaultStack.perform(asynchronous: task, completion: completion)
     }
     
     /**
@@ -50,7 +51,7 @@ extension CoreStore {
      */
     public static func perform<T>(asynchronous task: @escaping (_ transaction: AsynchronousDataTransaction) throws -> T, success: @escaping (T) -> Void, failure: @escaping (CoreStoreError) -> Void) {
         
-        self.defaultStack.perform(asynchronous: task, success: success, failure: failure)
+        Shared.defaultStack.perform(asynchronous: task, success: success, failure: failure)
     }
     
     /**
@@ -63,7 +64,7 @@ extension CoreStore {
      */
     public static func perform<T>(synchronous task: ((_ transaction: SynchronousDataTransaction) throws -> T), waitForAllObservers: Bool = true) throws -> T {
         
-        return try self.defaultStack.perform(synchronous: task, waitForAllObservers: waitForAllObservers)
+        return try Shared.defaultStack.perform(synchronous: task, waitForAllObservers: waitForAllObservers)
     }
     
     /**
@@ -74,7 +75,7 @@ extension CoreStore {
      */
     public static func beginUnsafe(supportsUndo: Bool = false) -> UnsafeDataTransaction {
         
-        return self.defaultStack.beginUnsafe(supportsUndo: supportsUndo)
+        return Shared.defaultStack.beginUnsafe(supportsUndo: supportsUndo)
     }
     
     /**
@@ -82,6 +83,6 @@ extension CoreStore {
      */
     public static func refreshAndMergeAllObjects() {
         
-        self.defaultStack.refreshAndMergeAllObjects()
+        Shared.defaultStack.refreshAndMergeAllObjects()
     }
 }

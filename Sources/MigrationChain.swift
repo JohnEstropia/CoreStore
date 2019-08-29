@@ -89,7 +89,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
      */
     public init<T: Collection>(_ elements: T) where T.Iterator.Element == String {
         
-        CoreStore.assert(Set(elements).count == Array(elements).count, "\(cs_typeName(MigrationChain.self))'s migration chain could not be created due to duplicate version strings.")
+        Internals.assert(Set(elements).count == Array(elements).count, "\(Internals.typeName(MigrationChain.self))'s migration chain could not be created due to duplicate version strings.")
         
         var lastVersion: String?
         var versionTree = [String: String]()
@@ -125,7 +125,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
                 return
             }
             
-            CoreStore.assert(false, "\(cs_typeName(MigrationChain.self))'s migration chain could not be created due to ambiguous version paths.")
+            Internals.assert(false, "\(Internals.typeName(MigrationChain.self))'s migration chain could not be created due to ambiguous version paths.")
             
             isValid = false
         }
@@ -143,7 +143,7 @@ public struct MigrationChain: ExpressibleByNilLiteral, ExpressibleByStringLitera
                 
                 if checklist.contains(nextVersion) {
                     
-                    CoreStore.assert(false, "\(cs_typeName(MigrationChain.self))'s migration chain could not be created due to looping version paths.")
+                    Internals.assert(false, "\(Internals.typeName(MigrationChain.self))'s migration chain could not be created due to looping version paths.")
                     
                     return true
                 }

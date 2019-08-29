@@ -35,6 +35,7 @@ extension KeyPath: AnyKeyPathStringConvertible, KeyPathStringConvertible where R
 
     public var cs_keyPathString: String {
 
+//        return NSExpression(forKeyPath: self).keyPath // in case _kvcKeyPathString becomes private API
         return self._kvcKeyPathString!
     }
 

@@ -89,9 +89,9 @@ extension CSBaseDataTransaction {
     @objc
     public func fetchOneFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> Any? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.swiftTransaction.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return (try? self.swiftTransaction.context.fetchOne(from, fetchClauses))?
             .flatMap({ $0 })
@@ -107,9 +107,9 @@ extension CSBaseDataTransaction {
     @objc
     public func fetchAllFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> [Any]? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.swiftTransaction.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return (try? self.swiftTransaction.context.fetchAll(from, fetchClauses))
             .flatMap({ $0 })
@@ -125,9 +125,9 @@ extension CSBaseDataTransaction {
     @objc
     public func fetchCountFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSNumber? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.swiftTransaction.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return (try? self.swiftTransaction.context.fetchCount(from, fetchClauses))
             .flatMap({ NSNumber(value: $0) })
@@ -143,9 +143,9 @@ extension CSBaseDataTransaction {
     @objc
     public func fetchObjectIDFrom(_ from: CSFrom, fetchClauses: [CSFetchClause]) -> NSManagedObjectID? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.swiftTransaction.isRunningInAllowedQueue(),
-            "Attempted to fetch from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to fetch from a \(Internals.typeName(self)) outside its designated queue."
         )
         return (try? self.swiftTransaction.context.fetchObjectID(from, fetchClauses))
             .flatMap({ $0 })
@@ -164,9 +164,9 @@ extension CSBaseDataTransaction {
     @objc
     public func queryValueFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> Any? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.swiftTransaction.isRunningInAllowedQueue(),
-            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to query from a \(Internals.typeName(self)) outside its designated queue."
         )
         return (try? self.swiftTransaction.context.queryValue(from, selectClause, queryClauses))
             .flatMap({ $0 })
@@ -185,9 +185,9 @@ extension CSBaseDataTransaction {
     @objc
     public func queryAttributesFrom(_ from: CSFrom, selectClause: CSSelect, queryClauses: [CSQueryClause]) -> [[String: Any]]? {
         
-        CoreStore.assert(
+        Internals.assert(
             self.swiftTransaction.isRunningInAllowedQueue(),
-            "Attempted to query from a \(cs_typeName(self)) outside its designated queue."
+            "Attempted to query from a \(Internals.typeName(self)) outside its designated queue."
         )
         return (try? self.swiftTransaction.context.queryAttributes(from, selectClause, queryClauses))
             .flatMap({ $0 })

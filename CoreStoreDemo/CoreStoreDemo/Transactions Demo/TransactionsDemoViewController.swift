@@ -15,10 +15,12 @@ import CoreStore
 
 
 private struct Static {
-    
+
+    static let dataStack = DataStack()
+
     static let placeController: ObjectMonitor<Place> = {
         
-        try! CoreStore.addStorageAndWait(
+        try! Static.dataStack.addStorageAndWait(
             SQLiteStore(
                 fileName: "PlaceDemo.sqlite",
                 configuration: "TransactionsDemo",
@@ -26,20 +28,20 @@ private struct Static {
             )
         )
         
-        var place = try! CoreStore.fetchOne(From<Place>())
+        var place = try! Static.dataStack.fetchOne(From<Place>())
         if place == nil {
             
-            _ = try? CoreStore.perform(
+            _ = try? Static.dataStack.perform(
                 synchronous: { (transaction) in
                     
                     let place = transaction.create(Into<Place>())
                     place.setInitialValues()
                 }
             )
-            place = try! CoreStore.fetchOne(From<Place>())
+            place = try! Static.dataStack.fetchOne(From<Place>())
         }
         
-        return CoreStore.monitorObject(place!)
+        return Static.dataStack.monitorObject(place!)
     }()
 }
 
@@ -170,7 +172,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
                 gesture.location(in: mapView),
                 toCoordinateFrom: mapView
             )
-            CoreStore.perform(
+            Static.dataStack.perform(
                 asynchronous: { (transaction) in
                     
                     let place = transaction.edit(Static.placeController.object)
@@ -183,7 +185,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
     
     @IBAction dynamic func refreshButtonTapped(_ sender: AnyObject?) {
         
-        _ = try? CoreStore.perform(
+        _ = try? Static.dataStack.perform(
             synchronous: { (transaction) in
                 
                 let place = transaction.edit(Static.placeController.object)
@@ -194,7 +196,7 @@ class TransactionsDemoViewController: UIViewController, MKMapViewDelegate, Objec
     
     func geocode(place: Place) {
         
-        let transaction = CoreStore.beginUnsafe()
+        let transaction = Static.dataStack.beginUnsafe()
         
         self.geocoder?.cancelGeocode()
         

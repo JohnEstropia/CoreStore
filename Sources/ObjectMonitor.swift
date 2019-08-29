@@ -170,9 +170,9 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     
     internal func registerObserver<U: AnyObject>(_ observer: U, willChangeObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType, _ changedPersistentKeys: Set<String>) -> Void) {
         
-        CoreStore.assert(
+        Internals.assert(
             Thread.isMainThread,
-            "Attempted to add an observer of type \(cs_typeName(observer as AnyObject)) outside the main thread."
+            "Attempted to add an observer of type \(Internals.typeName(observer as AnyObject)) outside the main thread."
         )
         self.registerChangeNotification(
             &self.willChangeObjectKey,
@@ -231,15 +231,15 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     
     internal func unregisterObserver(_ observer: AnyObject) {
         
-        CoreStore.assert(
+        Internals.assert(
             Thread.isMainThread,
-            "Attempted to remove an observer of type \(cs_typeName(observer)) outside the main thread."
+            "Attempted to remove an observer of type \(Internals.typeName(observer)) outside the main thread."
         )
         
         let nilValue: AnyObject? = nil
-        cs_setAssociatedRetainedObject(nilValue, forKey: &self.willChangeObjectKey, inObject: observer)
-        cs_setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteObjectKey, inObject: observer)
-        cs_setAssociatedRetainedObject(nilValue, forKey: &self.didUpdateObjectKey, inObject: observer)
+        Internals.setAssociatedRetainedObject(nilValue, forKey: &self.willChangeObjectKey, inObject: observer)
+        Internals.setAssociatedRetainedObject(nilValue, forKey: &self.didDeleteObjectKey, inObject: observer)
+        Internals.setAssociatedRetainedObject(nilValue, forKey: &self.didUpdateObjectKey, inObject: observer)
     }
     
     deinit {
@@ -250,8 +250,8 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     
     // MARK: Private
     
-    private let fetchedResultsController: CoreStoreFetchedResultsController
-    private let fetchedResultsControllerDelegate: FetchedResultsControllerDelegate
+    private let fetchedResultsController: Internals.CoreStoreFetchedResultsController
+    private let fetchedResultsControllerDelegate: Internals.FetchedResultsControllerDelegate
     private var lastCommittedAttributes = [String: NSObject]()
     
     private var willChangeObjectKey: Void?
@@ -261,7 +261,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     private init(context: NSManagedObjectContext, object: ObjectType) {
         
         let objectID = object.cs_id()
-        let fetchRequest = CoreStoreFetchRequest<NSManagedObject>()
+        let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
         fetchRequest.entity = objectID.entity
         fetchRequest.fetchLimit = 0
         fetchRequest.resultType = .managedObjectResultType
@@ -269,14 +269,14 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
         fetchRequest.includesPendingChanges = false
         fetchRequest.shouldRefreshRefetchedObjects = true
         
-        let fetchedResultsController = CoreStoreFetchedResultsController(
+        let fetchedResultsController = Internals.CoreStoreFetchedResultsController(
             context: context,
             fetchRequest: fetchRequest,
             from: From<ObjectType>([objectID.persistentStore?.configurationName]),
             applyFetchClauses: Where<ObjectType>("SELF", isEqualTo: objectID).applyToFetchRequest
         )
         
-        let fetchedResultsControllerDelegate = FetchedResultsControllerDelegate()
+        let fetchedResultsControllerDelegate = Internals.FetchedResultsControllerDelegate()
         
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
@@ -290,8 +290,8 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     
     private func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ObjectMonitor<ObjectType>) -> Void) {
         
-        cs_setAssociatedRetainedObject(
-            NotificationObserver(
+        Internals.setAssociatedRetainedObject(
+            Internals.NotificationObserver(
                 notificationName: name,
                 object: self,
                 closure: { [weak self] _ in
@@ -310,8 +310,8 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     
     private func registerObjectNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void) {
         
-        cs_setAssociatedRetainedObject(
-            NotificationObserver(
+        Internals.setAssociatedRetainedObject(
+            Internals.NotificationObserver(
                 notificationName: name,
                 object: self,
                 closure: { [weak self] (note) in

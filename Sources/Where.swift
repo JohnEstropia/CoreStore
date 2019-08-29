@@ -278,9 +278,9 @@ public struct Where<D: DynamicObject>: WhereClauseType, FetchClause, QueryClause
         
         if let predicate = fetchRequest.predicate, predicate != self.predicate {
             
-            CoreStore.log(
+            Internals.log(
                 .warning,
-                message: "An existing predicate for the \(cs_typeName(fetchRequest)) was overwritten by \(cs_typeName(self)) query clause."
+                message: "An existing predicate for the \(Internals.typeName(fetchRequest)) was overwritten by \(Internals.typeName(self)) query clause."
             )
         }
         

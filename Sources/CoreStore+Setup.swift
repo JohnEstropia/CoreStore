@@ -29,6 +29,7 @@ import CoreData
 
 // MARK: - CoreStore
 
+@available(*, deprecated, message: "Call methods directly from the DataStack instead")
 extension CoreStore {
     
     /**
@@ -36,7 +37,7 @@ extension CoreStore {
      */
     public static var modelVersion: String {
         
-        return self.defaultStack.modelVersion
+        return Shared.defaultStack.modelVersion
     }
     
     /**
@@ -44,7 +45,7 @@ extension CoreStore {
      */
     public static func entityTypesByName(for type: NSManagedObject.Type) -> [EntityName: NSManagedObject.Type] {
         
-        return self.defaultStack.entityTypesByName(for: type)
+        return Shared.defaultStack.entityTypesByName(for: type)
     }
     
     /**
@@ -52,7 +53,7 @@ extension CoreStore {
      */
     public static func entityTypesByName(for type: CoreStoreObject.Type) -> [EntityName: CoreStoreObject.Type] {
         
-        return self.defaultStack.entityTypesByName(for: type)
+        return Shared.defaultStack.entityTypesByName(for: type)
     }
     
     /**
@@ -60,7 +61,7 @@ extension CoreStore {
      */
     public static func entityDescription(for type: NSManagedObject.Type) -> NSEntityDescription? {
         
-        return self.defaultStack.entityDescription(for: type)
+        return Shared.defaultStack.entityDescription(for: type)
     }
     
     /**
@@ -68,7 +69,7 @@ extension CoreStore {
      */
     public static func entityDescription(for type: CoreStoreObject.Type) -> NSEntityDescription? {
         
-        return self.defaultStack.entityDescription(for: type)
+        return Shared.defaultStack.entityDescription(for: type)
     }
     
     /**
@@ -81,7 +82,7 @@ extension CoreStore {
     @discardableResult
     public static func addStorageAndWait() throws -> SQLiteStore {
         
-        return try self.defaultStack.addStorageAndWait(SQLiteStore())
+        return try Shared.defaultStack.addStorageAndWait(SQLiteStore())
     }
     
     /**
@@ -96,7 +97,7 @@ extension CoreStore {
     @discardableResult
     public static func addStorageAndWait<T: StorageInterface>(_ storage: T) throws -> T {
         
-        return try self.defaultStack.addStorageAndWait(storage)
+        return try Shared.defaultStack.addStorageAndWait(storage)
     }
     
     /**
@@ -111,7 +112,7 @@ extension CoreStore {
     @discardableResult
     public static func addStorageAndWait<T: LocalStorage>(_ storage: T) throws -> T {
         
-        return try self.defaultStack.addStorageAndWait(storage)
+        return try Shared.defaultStack.addStorageAndWait(storage)
     }
     
     /**
@@ -137,6 +138,6 @@ extension CoreStore {
     @discardableResult
     public static func addStorageAndWait<T: CloudStorage>(_ storage: T) throws -> T {
         
-        return try self.defaultStack.addStorageAndWait(storage)
+        return try Shared.defaultStack.addStorageAndWait(storage)
     }
 }

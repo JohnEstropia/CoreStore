@@ -54,7 +54,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
             let foundModels = bundle
                 .paths(forResourcesOfType: "momd", inDirectory: nil)
                 .map({ ($0 as NSString).lastPathComponent })
-            CoreStore.abort("Could not find \"\(modelName).momd\" from the bundle \"\(bundle.bundleIdentifier ?? "<nil>")\". Other model files in bundle: \(foundModels.coreStoreDumpString)")
+            Internals.abort("Could not find \"\(modelName).momd\" from the bundle \"\(bundle.bundleIdentifier ?? "<nil>")\". Other model files in bundle: \(foundModels.coreStoreDumpString)")
         }
         
         let modelFileURL = URL(fileURLWithPath: modelFilePath)
@@ -63,7 +63,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
         guard let versionInfo = NSDictionary(contentsOf: versionInfoPlistURL),
             let versionHashes = versionInfo["NSManagedObjectModel_VersionHashes"] as? [String: AnyObject] else {
                 
-                CoreStore.abort("Could not load \(cs_typeName(NSManagedObjectModel.self)) metadata from path \"\(versionInfoPlistURL)\".")
+                Internals.abort("Could not load \(Internals.typeName(NSManagedObjectModel.self)) metadata from path \"\(versionInfoPlistURL)\".")
         }
         
         let modelVersions = Set(versionHashes.keys)
@@ -76,9 +76,9 @@ public final class XcodeDataModelSchema: DynamicSchema {
         }
         else if let resolvedVersion = modelVersions.intersection(modelVersionHints).first {
             
-            CoreStore.log(
+            Internals.log(
                 .warning,
-                message: "The \(cs_typeName(MigrationChain.self)) leaf versions do not include the model file's current version. Resolving to version \"\(resolvedVersion)\"."
+                message: "The \(Internals.typeName(MigrationChain.self)) leaf versions do not include the model file's current version. Resolving to version \"\(resolvedVersion)\"."
             )
             currentModelVersion = resolvedVersion
         }
@@ -86,16 +86,16 @@ public final class XcodeDataModelSchema: DynamicSchema {
             
             if !modelVersionHints.isEmpty {
                 
-                CoreStore.log(
+                Internals.log(
                     .warning,
-                    message: "The \(cs_typeName(MigrationChain.self)) leaf versions do not include any of the model file's embedded versions. Resolving to version \"\(resolvedVersion)\"."
+                    message: "The \(Internals.typeName(MigrationChain.self)) leaf versions do not include any of the model file's embedded versions. Resolving to version \"\(resolvedVersion)\"."
                 )
             }
             currentModelVersion = resolvedVersion
         }
         else {
             
-            CoreStore.abort("No model files were found in URL \"\(modelFileURL)\".")
+            Internals.abort("No model files were found in URL \"\(modelFileURL)\".")
         }
         var allSchema: [XcodeDataModelSchema] = []
         for modelVersion in modelVersions {
@@ -124,7 +124,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
             let foundModels = bundle
                 .paths(forResourcesOfType: "momd", inDirectory: nil)
                 .map({ ($0 as NSString).lastPathComponent })
-            CoreStore.abort("Could not find \"\(modelName).momd\" from the bundle \"\(bundle.bundleIdentifier ?? "<nil>")\". Other model files in bundle: \(foundModels.coreStoreDumpString)")
+            Internals.abort("Could not find \"\(modelName).momd\" from the bundle \"\(bundle.bundleIdentifier ?? "<nil>")\". Other model files in bundle: \(foundModels.coreStoreDumpString)")
         }
         
         let modelFileURL = URL(fileURLWithPath: modelFilePath)
@@ -144,7 +144,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
      */
     public required init(modelName: ModelVersion, modelVersionFileURL: URL) {
         
-        CoreStore.assert(
+        Internals.assert(
             NSManagedObjectModel(contentsOf: modelVersionFileURL) != nil,
             "Could not find the \"\(modelName).mom\" version file for the model at URL \"\(modelVersionFileURL)\"."
         )
@@ -169,7 +169,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
             self.cachedRawModel = rawModel
             return rawModel
         }
-        CoreStore.abort("Could not create an \(cs_typeName(NSManagedObjectModel.self)) from the model at URL \"\(self.modelVersionFileURL)\".")
+        Internals.abort("Could not create an \(Internals.typeName(NSManagedObjectModel.self)) from the model at URL \"\(self.modelVersionFileURL)\".")
     }
     
     
@@ -177,7 +177,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
     
     internal let modelVersionFileURL: URL
     
-    private lazy var rootModelFileURL: URL = cs_lazy { [unowned self] in
+    private lazy var rootModelFileURL: URL = Internals.with { [unowned self] in
      
         return self.modelVersionFileURL.deletingLastPathComponent()
     }

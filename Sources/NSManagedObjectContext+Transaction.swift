@@ -38,14 +38,14 @@ extension NSManagedObjectContext {
         
         get {
             
-            return cs_getAssociatedObjectForKey(
+            return Internals.getAssociatedObjectForKey(
                 &PropertyKeys.parentTransaction,
                 inObject: self
             )
         }
         set {
             
-            cs_setAssociatedWeakObject(
+            Internals.setAssociatedWeakObject(
                 newValue,
                 forKey: &PropertyKeys.parentTransaction,
                 inObject: self
@@ -58,7 +58,7 @@ extension NSManagedObjectContext {
         
         get {
             
-            let value: NSNumber? = cs_getAssociatedObjectForKey(
+            let value: NSNumber? = Internals.getAssociatedObjectForKey(
                 &PropertyKeys.isSavingSynchronously,
                 inObject: self
             )
@@ -66,7 +66,7 @@ extension NSManagedObjectContext {
         }
         set {
             
-            cs_setAssociatedWeakObject(
+            Internals.setAssociatedWeakObject(
                 newValue.flatMap { NSNumber(value: $0) },
                 forKey: &PropertyKeys.isSavingSynchronously,
                 inObject: self
@@ -79,7 +79,7 @@ extension NSManagedObjectContext {
         
         get {
             
-            let value: NSNumber? = cs_getAssociatedObjectForKey(
+            let value: NSNumber? = Internals.getAssociatedObjectForKey(
                 &PropertyKeys.isTransactionContext,
                 inObject: self
             )
@@ -87,7 +87,7 @@ extension NSManagedObjectContext {
         }
         set {
             
-            cs_setAssociatedCopiedObject(
+            Internals.setAssociatedCopiedObject(
                 NSNumber(value: newValue),
                 forKey: &PropertyKeys.isTransactionContext,
                 inObject: self
@@ -100,7 +100,7 @@ extension NSManagedObjectContext {
         
         get {
             
-            let value: NSNumber? = cs_getAssociatedObjectForKey(
+            let value: NSNumber? = Internals.getAssociatedObjectForKey(
                 &PropertyKeys.isDataStackContext,
                 inObject: self
             )
@@ -108,7 +108,7 @@ extension NSManagedObjectContext {
         }
         set {
             
-            cs_setAssociatedCopiedObject(
+            Internals.setAssociatedCopiedObject(
                 NSNumber(value: newValue),
                 forKey: &PropertyKeys.isDataStackContext,
                 inObject: self
@@ -158,9 +158,9 @@ extension NSManagedObjectContext {
             catch {
                 
                 let saveError = CoreStoreError(error)
-                CoreStore.log(
+                Internals.log(
                     saveError,
-                    "Failed to save \(cs_typeName(NSManagedObjectContext.self))."
+                    "Failed to save \(Internals.typeName(NSManagedObjectContext.self))."
                 )
                 result = (true, saveError)
                 return
@@ -200,9 +200,9 @@ extension NSManagedObjectContext {
             catch {
                 
                 let saveError = CoreStoreError(error)
-                CoreStore.log(
+                Internals.log(
                     saveError,
-                    "Failed to save \(cs_typeName(NSManagedObjectContext.self))."
+                    "Failed to save \(Internals.typeName(NSManagedObjectContext.self))."
                 )
                 DispatchQueue.main.async {
     

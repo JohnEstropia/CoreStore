@@ -67,11 +67,11 @@ class BaseTestCase: XCTestCase {
     @nonobjc
     func expectLogger<T>(_ expectations: [TestLogger.Expectation], closure: () throws -> T) rethrows -> T {
         
-        CoreStore.logger = TestLogger(self.prepareLoggerExpectations(expectations))
+        Shared.logger = TestLogger(self.prepareLoggerExpectations(expectations))
         defer {
             
             self.checkExpectationsImmediately()
-            CoreStore.logger = TestLogger([:])
+            Shared.logger = TestLogger([:])
         }
         return try closure()
     }
@@ -79,17 +79,17 @@ class BaseTestCase: XCTestCase {
     @nonobjc
     func expectLogger(_ expectations: [TestLogger.Expectation: XCTestExpectation]) {
         
-        CoreStore.logger = TestLogger(expectations)
+        Shared.logger = TestLogger(expectations)
     }
 
     @nonobjc
     func expectError<T>(code: CoreStoreErrorCode, closure: () throws -> T) {
 
-        CoreStore.logger = TestLogger(self.prepareLoggerExpectations([.logError]))
+        Shared.logger = TestLogger(self.prepareLoggerExpectations([.logError]))
         defer {
 
             self.checkExpectationsImmediately()
-            CoreStore.logger = TestLogger([:])
+            Shared.logger = TestLogger([:])
         }
         do {
 
@@ -105,7 +105,7 @@ class BaseTestCase: XCTestCase {
         }
         catch {
 
-            XCTFail("Error not wrapped as \(cs_typeName(CoreStoreError.self)): \((error as NSError).coreStoreDumpString)")
+            XCTFail("Error not wrapped as \(Internals.typeName(CoreStoreError.self)): \((error as NSError).coreStoreDumpString)")
         }
     }
     
@@ -138,12 +138,12 @@ class BaseTestCase: XCTestCase {
         
         super.setUp()
         self.deleteStores()
-        CoreStore.logger = TestLogger([:])
+        Shared.logger = TestLogger([:])
     }
     
     override func tearDown() {
         
-        CoreStore.logger = DefaultLogger()
+        Shared.logger = DefaultLogger()
         self.deleteStores()
         super.tearDown()
     }

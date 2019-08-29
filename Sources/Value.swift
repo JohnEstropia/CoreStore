@@ -137,15 +137,15 @@ public enum ValueContainer<O: CoreStoreObject> {
             
             get {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
                     if let customGetter = self.customGetter {
                         
@@ -158,19 +158,19 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
             set {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isEditableInContext() == true,
-                        "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                        "Attempted to update a \(Internals.typeName(O.self))'s value from outside a transaction."
                     )
                     if let customSetter = self.customSetter {
                         
@@ -221,7 +221,7 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let affectedByKeyPaths: () -> Set<String>
         internal var rawObject: CoreStoreManagedObject?
         
-        internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
+        internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = Internals.with { [unowned self] in
             
             guard let customGetter = self.customGetter else {
                 
@@ -241,7 +241,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
         }
         
-        internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
+        internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = Internals.with { [unowned self] in
             
             guard let customSetter = self.customSetter else {
                 
@@ -355,15 +355,15 @@ public enum ValueContainer<O: CoreStoreObject> {
             
             get {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
                     if let customGetter = self.customGetter {
                         
@@ -375,19 +375,19 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
             set {
                 
-                CoreStore.assert(
+                Internals.assert(
                     self.rawObject != nil,
-                    "Attempted to access values from a \(cs_typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
+                    "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
                 return withExtendedLifetime(self.rawObject!) { (object) in
                     
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isRunningInAllowedQueue() == true,
-                        "Attempted to access \(cs_typeName(O.self))'s value outside it's designated queue."
+                        "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
-                    CoreStore.assert(
+                    Internals.assert(
                         object.isEditableInContext() == true,
-                        "Attempted to update a \(cs_typeName(O.self))'s value from outside a transaction."
+                        "Attempted to update a \(Internals.typeName(O.self))'s value from outside a transaction."
                     )
                     if let customSetter = self.customSetter {
                         
@@ -438,7 +438,7 @@ public enum ValueContainer<O: CoreStoreObject> {
         internal let affectedByKeyPaths: () -> Set<String>
         internal var rawObject: CoreStoreManagedObject?
         
-        internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = cs_lazy { [unowned self] in
+        internal private(set) lazy var getter: CoreStoreManagedObject.CustomGetter? = Internals.with { [unowned self] in
             
             guard let customGetter = self.customGetter else {
                 
@@ -458,7 +458,7 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
         }
         
-        internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = cs_lazy { [unowned self] in
+        internal private(set) lazy var setter: CoreStoreManagedObject.CustomSetter? = Internals.with { [unowned self] in
             
             guard let customSetter = self.customSetter else {
                 
