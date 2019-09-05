@@ -44,9 +44,14 @@ class Animal: CoreStoreObject {
 }
 
 class Dog: Animal {
-    
+
+    typealias VV = ValueContainer<Dog>
     let nickname = Value.Optional<String>("nickname")
-    let age = Value.Required<Int>("age", initial: 1)
+
+
+    @ValueContainer<Dog>.Required("age", initial: 1)
+    var age: Int
+
     let friends = Relationship.ToManyOrdered<Dog>("friends")
     let friendedBy = Relationship.ToManyUnordered<Dog>("friendedBy", inverse: { $0.friends })
 }
@@ -58,6 +63,8 @@ class Person: CoreStoreObject {
         initial: "Mr.",
         customSetter: Person.setTitle
     )
+
+    typealias AAA = Value
     
     let name = Value.Required<String>(
         "name",
@@ -168,17 +175,13 @@ class DynamicModelTests: BaseTestDataTestCase {
                     let dog = transaction.create(Into<Dog>())
                     XCTAssertEqual(dog.species.value, "Swift")
                     XCTAssertEqual(dog.nickname.value, nil)
-                    XCTAssertEqual(dog.age.value, 1)
+                    XCTAssertEqual(dog.age, 1)
 
                     #if swift(>=5.1)
 
                     let dogKeyPathBuilder = Dog.keyPathBuilder()
                     XCTAssertEqual(dogKeyPathBuilder.species.keyPathString, "SELF.species")
                     XCTAssertEqual(dogKeyPathBuilder.master.title.keyPathString, "SELF.master.title")
-                    let a = dogKeyPathBuilder.master
-                    let b = dogKeyPathBuilder.master.spouse
-                    let c = dogKeyPathBuilder.master.spouse.pets
-                    let d = dogKeyPathBuilder.master.spouse.pets.color
                     XCTAssertEqual(dogKeyPathBuilder.master.spouse.pets.color.keyPathString, "SELF.master.spouse.pets.color")
 
                     #endif
@@ -299,40 +302,40 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertNotNil(person)
                     XCTAssertEqual(person!.pets.value.first, dog)
                     
-                    let p3 = Where<Dog>({ $0.age == 10 })
+                    let p3 = Where<Dog>({ $0.$age == 10 })
                     XCTAssertEqual(p3.predicate, NSPredicate(format: "%K == %d", "age", 10))
 
-                    let totalAge = try transaction.queryValue(From<Dog>().select(Int.self, .sum(\Dog.age)))
+                    let totalAge = try transaction.queryValue(From<Dog>().select(Int.self, .sum(\Dog.$age)))
                     XCTAssertEqual(totalAge, 1)
                     
                     _ = try transaction.fetchAll(
                         From<Dog>()
-                            .where(\Animal.species == "Dog" && \Dog.age == 10)
+                            .where(\Animal.species == "Dog" && \Dog.$age == 10)
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>()
-                            .where(\Dog.age == 10 && \Animal.species == "Dog")
+                            .where(\Dog.$age == 10 && \Animal.species == "Dog")
                             .orderBy(.ascending({ $0.species }))
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.age > 10 && $0.age <= 15 })
+                        Where<Dog>({ $0.$age > 10 && $0.$age <= 15 })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.species == "Dog" && $0.age == 10 })
+                        Where<Dog>({ $0.species == "Dog" && $0.$age == 10 })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.age == 10 && $0.species == "Dog" })
+                        Where<Dog>({ $0.$age == 10 && $0.species == "Dog" })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        Where<Dog>({ $0.age > 10 && $0.age <= 15 })
+                        Where<Dog>({ $0.$age > 10 && $0.$age <= 15 })
                     )
                     _ = try transaction.fetchAll(
                         From<Dog>(),
-                        (\Dog.age > 10 && \Dog.age <= 15)
+                        (\Dog.$age > 10 && \Dog.$age <= 15)
                     )
                 },
                 success: { _ in

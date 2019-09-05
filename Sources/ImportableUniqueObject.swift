@@ -131,11 +131,10 @@ extension ImportableUniqueObject where UniqueIDType.QueryableNativeType: CoreDat
         }
         set {
             
-            self.cs_toRaw()
-                .setValue(
-                    newValue,
-                    forKvcKey: self.runtimeType().uniqueIDKeyPath,
-                    willSetValue: { ($0.cs_toQueryableNativeType() as CoreDataNativeType) }
+            self.cs_toRaw().setValue(
+                newValue,
+                forKvcKey: self.runtimeType().uniqueIDKeyPath,
+                willSetValue: { ($0.cs_toQueryableNativeType() as CoreDataNativeType) }
             )
         }
     }
