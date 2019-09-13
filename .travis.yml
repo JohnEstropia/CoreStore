@@ -1,5 +1,5 @@
 language: objective-c
-osx_image: xcode10.2
+osx_image: xcode11
 sudo: false
 git:
   submodules: false
@@ -11,16 +11,16 @@ env:
   - LANG=en_US.UTF-8
   matrix:
     - DESTINATION="arch=x86_64"                         SCHEME="CoreStore OSX"     SDK=macosx10.14          RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=12.0,name=iPhone XS"              SCHEME="CoreStore iOS"     SDK=iphonesimulator12.0  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=11.0.1,name=iPhone 8"             SCHEME="CoreStore iOS"     SDK=iphonesimulator12.0  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=10.3.1,name=iPhone 7"             SCHEME="CoreStore iOS"     SDK=iphonesimulator12.0  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=10.1,name=iPhone 7"               SCHEME="CoreStore iOS"     SDK=iphonesimulator12.0  RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=4.0,name=Apple Watch - 42mm"      SCHEME="CoreStore watchOS" SDK=watchsimulator5.0    RUN_TESTS="NO"  POD_LINT="NO"
-    - DESTINATION="OS=3.2,name=Apple Watch - 42mm"      SCHEME="CoreStore watchOS" SDK=watchsimulator5.0    RUN_TESTS="NO"  POD_LINT="NO"
-    - DESTINATION="OS=2.2,name=Apple Watch - 42mm"      SCHEME="CoreStore watchOS" SDK=watchsimulator5.0    RUN_TESTS="NO"  POD_LINT="NO"
-    - DESTINATION="OS=12.0,name=Apple TV 4K"            SCHEME="CoreStore tvOS"    SDK=appletvsimulator12.0 RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=11.0,name=Apple TV 4K (at 1080p)" SCHEME="CoreStore tvOS"    SDK=appletvsimulator12.0 RUN_TESTS="YES" POD_LINT="NO"
-    - DESTINATION="OS=10.2,name=Apple TV 1080p"         SCHEME="CoreStore tvOS"    SDK=appletvsimulator12.0 RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=12.0,name=iPhone XS"              SCHEME="CoreStore iOS"     SDK=iphonesimulator13.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=11.0.1,name=iPhone 8"             SCHEME="CoreStore iOS"     SDK=iphonesimulator13.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=10.3.1,name=iPhone 7"             SCHEME="CoreStore iOS"     SDK=iphonesimulator13.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=10.1,name=iPhone 7"               SCHEME="CoreStore iOS"     SDK=iphonesimulator13.0  RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=4.0,name=Apple Watch - 42mm"      SCHEME="CoreStore watchOS" SDK=watchsimulator6.0    RUN_TESTS="NO"  POD_LINT="NO"
+    - DESTINATION="OS=3.2,name=Apple Watch - 42mm"      SCHEME="CoreStore watchOS" SDK=watchsimulator6.0    RUN_TESTS="NO"  POD_LINT="NO"
+    - DESTINATION="OS=2.2,name=Apple Watch - 42mm"      SCHEME="CoreStore watchOS" SDK=watchsimulator6.0    RUN_TESTS="NO"  POD_LINT="NO"
+    - DESTINATION="OS=12.0,name=Apple TV 4K"            SCHEME="CoreStore tvOS"    SDK=appletvsimulator13.0 RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=11.0,name=Apple TV 4K (at 1080p)" SCHEME="CoreStore tvOS"    SDK=appletvsimulator13.0 RUN_TESTS="YES" POD_LINT="NO"
+    - DESTINATION="OS=10.2,name=Apple TV 1080p"         SCHEME="CoreStore tvOS"    SDK=appletvsimulator13.0 RUN_TESTS="YES" POD_LINT="NO"
 before_install:
   - gem install cocoapods --no-rdoc --no-ri --no-document
   - gem install xcpretty --no-rdoc --no-ri --no-document
@@ -34,8 +34,8 @@ script:
       xcodebuild -workspace CoreStore.xcworkspace -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Debug ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
       xcodebuild -workspace CoreStore.xcworkspace -scheme "$SCHEME" -sdk "$SDK" -destination "$DESTINATION" -configuration Release ONLY_ACTIVE_ARCH=NO clean test | xcpretty -c;
     fi
-  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStoreDemo" -sdk "iphonesimulator12.0" -destination "OS=11.0.1,name=iPhone 8" -configuration Debug ONLY_ACTIVE_ARCH=NO build | xcpretty -c;
-  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStoreDemo" -sdk "iphonesimulator12.0" -destination "OS=11.0.1,name=iPhone 8" -configuration Release ONLY_ACTIVE_ARCH=NO build | xcpretty -c;
+  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStoreDemo" -sdk "iphonesimulator13.0" -destination "OS=13.0,name=iPhone 8" -configuration Debug ONLY_ACTIVE_ARCH=NO build | xcpretty -c;
+  - xcodebuild -workspace "CoreStore.xcworkspace" -scheme "CoreStoreDemo" -sdk "iphonesimulator13.0" -destination "OS=13.0,name=iPhone 8" -configuration Release ONLY_ACTIVE_ARCH=NO build | xcpretty -c;
   - if [ $POD_LINT == "YES" ]; then
       pod lib lint --quick;
     fi
