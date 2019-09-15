@@ -451,7 +451,7 @@ public final class CoreStoreSchema: DynamicSchema {
         }
         for (entity, entityDescription) in entityDescriptionsByEntity {
 
-            if #available(macOS 10.11, *) {
+            if #available(macOS 10.11, iOS 9.0, *) {
                 
                 let uniqueConstraints = entity.uniqueConstraints.filter({ !$0.isEmpty })
                 if !uniqueConstraints.isEmpty {
