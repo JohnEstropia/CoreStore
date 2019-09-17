@@ -307,7 +307,7 @@ public protocol LocalStorage: StorageInterface {
     var migrationMappingProviders: [SchemaMappingProvider] { get }
     var localStorageOptions: LocalStorageOptions { get }
     func dictionary(forOptions: LocalStorageOptions) -> [String: AnyObject]?
-    func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws
+    func cs_eraseStorageAndWait(metadata: [String: Any], sourceModelHint: NSManagedObjectModel?) throws
 }
 ```
 If you have custom `NSIncrementalStore` or `NSAtomicStore` subclasses, you can implement this protocol and use it similarly to `SQLiteStore`.
@@ -463,7 +463,7 @@ if you do so, any model mismatch will be thrown as an error.
 
 In general though, if migrations are expected the asynchronous variant `addStorage(_:completion:)` method is recommended instead:
 ```swift
-let migrationProgress: Progress? = try dataStack.addStorage(
+let migrationProgress: Progress? = dataStack.addStorage(
     SQLiteStore(
         fileName: "MyStore.sqlite",
         configuration: "Config2"

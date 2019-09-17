@@ -31,31 +31,38 @@ import Foundation
 
 extension NSEntityDescription {
     
-    @nonobjc
-    internal func cs_resolveAttributeNames() -> [String: (attribute: NSAttributeDescription, versionHash: Data)] {
-        return self.attributesByName.reduce(into: [:], { (result, attribute: (name: String, description: NSAttributeDescription)) in
-            result[attribute.name] = (attribute.description, attribute.description.versionHash)
+    /// Maps attributes of the current entity with the earlier-version source entity. Todo: Log a warning if the renaming identifier is used but not found in source.
+    internal func mapAttributes(in sourceEntity: NSEntityDescription) throws -> [NSAttributeDescription: NSAttributeDescription] {
+        let sourceAttributes: [String: NSAttributeDescription] = sourceEntity.attributesByName
+        return try self.properties.lazy.compactMap({ $0 as? NSAttributeDescription }).reduce(into: [:], { (result, attribute: NSAttributeDescription) in
+            if let sourceAttribute = attribute.renamingIdentifier.flatMap({ sourceAttributes[$0] }) ?? sourceAttributes[attribute.name] {
+                result[attribute] = sourceAttribute
+            } else if !attribute.isOptional && attribute.defaultValue == nil {
+                throw MappingError.cannotMapAttribute(attribute: attribute)
+            }
         })
     }
     
-    @nonobjc
-    internal func cs_resolveAttributeRenamingIdentities() -> [String: (attribute: NSAttributeDescription, versionHash: Data)] {
-        return self.attributesByName.reduce(into: [:], { (result, attribute: (name: String, description: NSAttributeDescription)) in
-            result[attribute.description.renamingIdentifier ?? attribute.name] = (attribute.description, attribute.description.versionHash)
+    /// Maps relationships of the current entity with the earlier-version source entity. Todo: Log a warning if the renaming identifier is used but not found in source.
+    internal func mapRelationships(in sourceEntity: NSEntityDescription) throws -> [NSRelationshipDescription: NSRelationshipDescription] {
+        let sourceRelationships: [String: NSRelationshipDescription] = sourceEntity.relationshipsByName
+        return try self.properties.lazy.compactMap({ $0 as? NSRelationshipDescription }).reduce(into: [:], { (result, relationship: NSRelationshipDescription) in
+            if let sourceRelationship = relationship.renamingIdentifier.flatMap({ sourceRelationships[$0] }) ?? sourceRelationships[relationship.name] {
+                result[relationship] = sourceRelationship
+            } else if !relationship.isOptional {
+                throw MappingError.cannotMapRelationship(relationship: relationship)
+            }
         })
     }
-    
-    @nonobjc
-    internal func cs_resolveRelationshipNames() -> [String: (relationship: NSRelationshipDescription, versionHash: Data)] {
-        return self.relationshipsByName.reduce(into: [:], { (result, relationship: (name: String, description: NSRelationshipDescription)) in
-            result[relationship.name] = (relationship.description, relationship.description.versionHash)
-        })
-    }
-    
-    @nonobjc
-    internal func cs_resolveRelationshipRenamingIdentities() -> [String: (relationship: NSRelationshipDescription, versionHash: Data)] {
-        return self.relationshipsByName.reduce(into: [:], { (result, relationship: (name: String, description: NSRelationshipDescription)) in
-            result[relationship.description.renamingIdentifier ?? relationship.name] = (relationship.description, relationship.description.versionHash)
-        })
+}
+
+extension NSEntityDescription {
+    internal enum MappingError: Swift.Error {
+        
+        /// The required attribute without default value could not be mapped in source entity. 
+        case cannotMapAttribute(attribute: NSAttributeDescription)
+        
+        /// The required relationship could not be mapped in source entity. 
+        case cannotMapRelationship(relationship: NSRelationshipDescription)
     }
 }

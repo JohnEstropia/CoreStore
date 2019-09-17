@@ -175,7 +175,7 @@ extension DataStack {
                                     
                                     try storage.cs_eraseStorageAndWait(
                                         metadata: metadata,
-                                        soureModelHint: self.schemaHistory.schema(for: metadata)?.rawModel()
+                                        sourceModelHint: self.schemaHistory.schema(for: metadata)?.rawModel()
                                     )
                                     _ = try self.addStorageAndWait(storage)
                                     
@@ -341,7 +341,7 @@ extension DataStack {
                     )
                     _ = try self.schemaHistory
                         .schema(for: metadata)
-                        .flatMap({ try storage.cs_eraseStorageAndWait(soureModel: $0.rawModel()) })
+                        .flatMap({ try storage.cs_eraseStorageAndWait(sourceModel: $0.rawModel()) })
                     _ = try self.createPersistentStoreFromStorage(
                         storage,
                         finalURL: cacheFileURL,
@@ -685,7 +685,7 @@ extension DataStack {
         
         do {
             
-            try storage.cs_finalizeStorageAndWait(soureModelHint: sourceModel)
+            try storage.cs_finalizeStorageAndWait(sourceModelHint: sourceModel)
         }
         catch {
             
@@ -739,7 +739,7 @@ extension DataStack {
                     
                     fakeProgress = 1
                 }
-                _ = try? storage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
+                _ = try? storage.cs_finalizeStorageAndWait(sourceModelHint: destinationModel)
                 progress.completedUnitCount = progress.totalUnitCount
                 return
             }
@@ -801,7 +801,7 @@ extension DataStack {
                 migrationMappingProviders: storage.migrationMappingProviders,
                 localStorageOptions: storage.localStorageOptions
             )
-            try temporaryStorage.cs_finalizeStorageAndWait(soureModelHint: destinationModel)
+            try temporaryStorage.cs_finalizeStorageAndWait(sourceModelHint: destinationModel)
         }
         catch {
             

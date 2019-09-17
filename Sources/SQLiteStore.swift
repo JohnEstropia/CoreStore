@@ -216,9 +216,9 @@ public final class SQLiteStore: LocalStorage {
     /**
      Called by the `DataStack` to perform checkpoint operations on the storage. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE to force a checkpoint.
      */
-    public func cs_finalizeStorageAndWait(soureModelHint: NSManagedObjectModel) throws {
+    public func cs_finalizeStorageAndWait(sourceModelHint: NSManagedObjectModel) throws {
         
-        _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: soureModelHint)) { (coordinator: NSPersistentStoreCoordinator) in
+        _ = try withExtendedLifetime(NSPersistentStoreCoordinator(managedObjectModel: sourceModelHint)) { (coordinator: NSPersistentStoreCoordinator) in
             
             var storeOptions = self.storeOptions ?? [:]
             storeOptions[NSSQLitePragmasOption] = ["journal_mode": "DELETE"]
@@ -235,7 +235,7 @@ public final class SQLiteStore: LocalStorage {
     /**
      Called by the `DataStack` to perform actual deletion of the store file from disk. Do not call directly! The `sourceModel` argument is a hint for the existing store's model version. For `SQLiteStore`, this converts the database's WAL journaling mode to DELETE before deleting the file.
      */
-    public func cs_eraseStorageAndWait(metadata: [String: Any], soureModelHint: NSManagedObjectModel?) throws {
+    public func cs_eraseStorageAndWait(metadata: [String: Any], sourceModelHint: NSManagedObjectModel?) throws {
         
         func deleteFiles(storeURL: URL, extraFiles: [String] = []) throws {
             
@@ -283,9 +283,9 @@ public final class SQLiteStore: LocalStorage {
         let fileURL = self.fileURL
         try autoreleasepool {
             
-            if let soureModel = soureModelHint ?? NSManagedObjectModel.mergedModel(from: nil, forStoreMetadata: metadata) {
+            if let sourceModel = sourceModelHint ?? NSManagedObjectModel.mergedModel(from: nil, forStoreMetadata: metadata) {
                 
-                let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: soureModel)
+                let journalUpdatingCoordinator = NSPersistentStoreCoordinator(managedObjectModel: sourceModel)
                 var storeOptions = self.storeOptions ?? [:]
                 storeOptions[NSSQLitePragmasOption] = ["journal_mode": "DELETE"]
                 let store = try journalUpdatingCoordinator.addPersistentStore(
