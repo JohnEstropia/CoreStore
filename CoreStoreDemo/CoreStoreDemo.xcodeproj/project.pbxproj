@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B50132242344E24300FC238B /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132232344E24300FC238B /* SwiftUIView.swift */; };
+		B50132262344E44B00FC238B /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132252344E44B00FC238B /* MenuViewController.swift */; };
+		B50132282344E5E900FC238B /* SwiftUIHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132272344E5E900FC238B /* SwiftUIHostingController.swift */; };
 		B503FADF1AFDC71700F90881 /* ListObserverDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FADB1AFDC71700F90881 /* ListObserverDemoViewController.swift */; };
 		B503FAE01AFDC71700F90881 /* ObjectObserverDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FADC1AFDC71700F90881 /* ObjectObserverDemoViewController.swift */; };
 		B503FAE11AFDC71700F90881 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B503FADD1AFDC71700F90881 /* Palette.swift */; };
@@ -59,6 +62,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B50132232344E24300FC238B /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
+		B50132252344E44B00FC238B /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		B50132272344E5E900FC238B /* SwiftUIHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIHostingController.swift; sourceTree = "<group>"; };
 		B503FADB1AFDC71700F90881 /* ListObserverDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListObserverDemoViewController.swift; sourceTree = "<group>"; };
 		B503FADC1AFDC71700F90881 /* ObjectObserverDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectObserverDemoViewController.swift; sourceTree = "<group>"; };
 		B503FADD1AFDC71700F90881 /* Palette.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
@@ -114,6 +120,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B50132222344E20B00FC238B /* SwiftUI Demo */ = {
+			isa = PBXGroup;
+			children = (
+				B50132232344E24300FC238B /* SwiftUIView.swift */,
+				B50132272344E5E900FC238B /* SwiftUIHostingController.swift */,
+			);
+			path = "SwiftUI Demo";
+			sourceTree = "<group>";
+		};
 		B503FADA1AFDC71700F90881 /* List and Object Observers Demo */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,6 +181,8 @@
 			isa = PBXGroup;
 			children = (
 				B54AAD4E1AF4D26E00848AE0 /* AppDelegate.swift */,
+				B50132252344E44B00FC238B /* MenuViewController.swift */,
+				B50132222344E20B00FC238B /* SwiftUI Demo */,
 				B566E3271B117AE700F4F0C6 /* Stack Setup Demo */,
 				B503FADA1AFDC71700F90881 /* List and Object Observers Demo */,
 				B52977DB1B120F2C003D50A5 /* Transactions Demo */,
@@ -311,6 +328,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B56965181B2E20CC0075EE4A /* TimeZone.swift in Sources */,
+				B50132262344E44B00FC238B /* MenuViewController.swift in Sources */,
 				B56965291B3582D30075EE4A /* MigrationDemo.xcdatamodeld in Sources */,
 				B5E599321B5240F50084BD5F /* OrganismTableViewCell.swift in Sources */,
 				B5EE25851B36E23C0000406B /* OrganismV1.swift in Sources */,
@@ -332,10 +350,12 @@
 				B560070F1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift in Sources */,
 				B503FADF1AFDC71700F90881 /* ListObserverDemoViewController.swift in Sources */,
 				B54AAD4F1AF4D26E00848AE0 /* AppDelegate.swift in Sources */,
+				B50132282344E5E900FC238B /* SwiftUIHostingController.swift in Sources */,
 				B56964D71B231AE90075EE4A /* StackSetupDemo.xcdatamodeld in Sources */,
 				B56964DC1B231BCB0075EE4A /* FemaleAccount.swift in Sources */,
 				B5EE259E1B3EC1B20000406B /* OrganismProtocol.swift in Sources */,
 				B5EE258C1B36E40D0000406B /* MigrationsDemoViewController.swift in Sources */,
+				B50132242344E24300FC238B /* SwiftUIView.swift in Sources */,
 				B569651C1B30889A0075EE4A /* QueryingResultsViewController.swift in Sources */,
 				B5125C121B521B78003A42C7 /* OrganismV2ToV3.xcmappingmodel in Sources */,
 			);

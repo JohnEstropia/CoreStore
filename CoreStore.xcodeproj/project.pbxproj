@@ -70,6 +70,14 @@
 		82BA18D81C4BBD7100A0916E /* Internals.WeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2D1AFF849C0064E85B /* Internals.WeakObject.swift */; };
 		82BA18DC1C4BBD9C00A0916E /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		82BA18DD1C4BBE1400A0916E /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
+		B501322A2344ECB500FC238B /* LiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* LiveList.swift */; };
+		B501322B2346A9AE00FC238B /* LiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* LiveList.swift */; };
+		B501322D2346A9B000FC238B /* LiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* LiveList.swift */; };
+		B501322E2346A9B100FC238B /* LiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* LiveList.swift */; };
+		B50132302346B76E00FC238B /* Internals.DiffDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501322F2346B76E00FC238B /* Internals.DiffDelegate.swift */; };
+		B50132312346B76E00FC238B /* Internals.DiffDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501322F2346B76E00FC238B /* Internals.DiffDelegate.swift */; };
+		B50132322346B76E00FC238B /* Internals.DiffDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501322F2346B76E00FC238B /* Internals.DiffDelegate.swift */; };
+		B50132332346B76E00FC238B /* Internals.DiffDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501322F2346B76E00FC238B /* Internals.DiffDelegate.swift */; };
 		B501FDDD1CA8D05000BE22EF /* CSSectionBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501FDDC1CA8D05000BE22EF /* CSSectionBy.swift */; };
 		B501FDDF1CA8D05000BE22EF /* CSSectionBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501FDDC1CA8D05000BE22EF /* CSSectionBy.swift */; };
 		B501FDE01CA8D05000BE22EF /* CSSectionBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501FDDC1CA8D05000BE22EF /* CSSectionBy.swift */; };
@@ -775,6 +783,8 @@
 		82BA18DE1C4BBE2600A0916E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		82BA18E01C4BBE2C00A0916E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
 		B500810F2290CDF800F4CEA5 /* bitrise.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = bitrise.yml; sourceTree = SOURCE_ROOT; };
+		B50132292344ECB500FC238B /* LiveList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveList.swift; sourceTree = "<group>"; };
+		B501322F2346B76E00FC238B /* Internals.DiffDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.DiffDelegate.swift; sourceTree = "<group>"; };
 		B501FDDC1CA8D05000BE22EF /* CSSectionBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSectionBy.swift; sourceTree = "<group>"; };
 		B501FDE11CA8D1F500BE22EF /* CSListMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSListMonitor.swift; sourceTree = "<group>"; };
 		B501FDE61CA8D20500BE22EF /* CSListObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSListObserver.swift; sourceTree = "<group>"; };
@@ -1536,6 +1546,7 @@
 				B5E84F1C1AFF84860064E85B /* ObjectMonitor.swift */,
 				B5E84F1F1AFF84860064E85B /* ObjectObserver.swift */,
 				B5E84F1D1AFF84860064E85B /* ListMonitor.swift */,
+				B50132292344ECB500FC238B /* LiveList.swift */,
 				B5E84F1E1AFF84860064E85B /* ListObserver.swift */,
 			);
 			name = Observing;
@@ -1564,6 +1575,7 @@
 				B5474D142227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift */,
 				B51260921E9B28F100402229 /* Internals.EntityIdentifier.swift */,
 				B54A6A541BA15F2A007870FD /* Internals.FetchedResultsControllerDelegate.swift */,
+				B501322F2346B76E00FC238B /* Internals.DiffDelegate.swift */,
 				B5FAD6AB1B51285300714891 /* Internals.MigrationManager.swift */,
 				B5E84F2B1AFF849C0064E85B /* Internals.NotificationObserver.swift */,
 				B5DE522A230BD7CC00A22534 /* Internals.swift */,
@@ -1921,6 +1933,7 @@
 				B5ECDBFF1CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B5ECDC051CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B5E1B5981CAA0C23007FD580 /* CSObjectObserver.swift in Sources */,
+				B501322A2344ECB500FC238B /* LiveList.swift in Sources */,
 				B5DAFB4A2203E01D003FCCD0 /* KeyPathGenericBindings.swift in Sources */,
 				B5519A5F1CA21954002BEF78 /* CSAsynchronousDataTransaction.swift in Sources */,
 				B52FD3AA1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
@@ -1943,6 +1956,7 @@
 				B51B5C2D22D43E38009FA3BA /* KeyPath+KeyPaths.swift in Sources */,
 				B5E5FA4E22D162F400330931 /* ObjectSnapshot.swift in Sources */,
 				B5E1B5A81CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
+				B50132302346B76E00FC238B /* Internals.DiffDelegate.swift in Sources */,
 				B5D339F11E94AF5800C880DE /* CoreStoreStrings.swift in Sources */,
 				B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */,
 				B5E1B59D1CAA2568007FD580 /* CSDataStack+Observing.swift in Sources */,
@@ -2170,6 +2184,7 @@
 				82BA18C11C4BBD5300A0916E /* CoreStore+Observing.swift in Sources */,
 				82BA18BC1C4BBD4A00A0916E /* OrderBy.swift in Sources */,
 				82BA18B01C4BBD3100A0916E /* NSManagedObject+Transaction.swift in Sources */,
+				B50132312346B76E00FC238B /* Internals.DiffDelegate.swift in Sources */,
 				82BA18D41C4BBD7100A0916E /* NSManagedObjectContext+Querying.swift in Sources */,
 				82BA18D51C4BBD7100A0916E /* NSManagedObjectContext+Setup.swift in Sources */,
 				B501FDE91CA8D20500BE22EF /* CSListObserver.swift in Sources */,
@@ -2244,6 +2259,7 @@
 				18166884232B9ED00097C275 /* KeyPath+KeyPaths.swift in Sources */,
 				B5E8A72121C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
 				B5474D162227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
+				B501322B2346A9AE00FC238B /* LiveList.swift in Sources */,
 				B56924001EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5215CAF1FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				82BA18D61C4BBD7100A0916E /* NSManagedObjectContext+Transaction.swift in Sources */,
@@ -2368,6 +2384,7 @@
 				B52DD1C81BE1F94600949AFE /* NSManagedObjectContext+Setup.swift in Sources */,
 				B52DD1C31BE1F94600949AFE /* Internals.NotificationObserver.swift in Sources */,
 				B52DD1A81BE1F93200949AFE /* DataStack+Querying.swift in Sources */,
+				B50132332346B76E00FC238B /* Internals.DiffDelegate.swift in Sources */,
 				B5220E221D130818009BC71E /* CSSectionBy.swift in Sources */,
 				B52DD1BC1BE1F94000949AFE /* MigrationResult.swift in Sources */,
 				B52DD19D1BE1F92C00949AFE /* BaseDataTransaction.swift in Sources */,
@@ -2442,6 +2459,7 @@
 				18166886232B9ED20097C275 /* KeyPath+KeyPaths.swift in Sources */,
 				B5E8A72321C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
 				B5474D182227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
+				B501322E2346A9B100FC238B /* LiveList.swift in Sources */,
 				B56924021EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5215CB11FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				B5220E171D1306DF009BC71E /* UnsafeDataTransaction+Observing.swift in Sources */,
@@ -2566,6 +2584,7 @@
 				B56321971BD65216006C9394 /* Select.swift in Sources */,
 				B56321AB1BD6521C006C9394 /* Internals.FetchedResultsControllerDelegate.swift in Sources */,
 				B563219C1BD65216006C9394 /* SectionBy.swift in Sources */,
+				B50132322346B76E00FC238B /* Internals.DiffDelegate.swift in Sources */,
 				B56321B21BD6521C006C9394 /* NSManagedObjectContext+Querying.swift in Sources */,
 				B5FE4DA41C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B56321B31BD6521C006C9394 /* NSManagedObjectContext+Setup.swift in Sources */,
@@ -2640,6 +2659,7 @@
 				18166885232B9ED10097C275 /* KeyPath+KeyPaths.swift in Sources */,
 				B5E8A72221C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
 				B5474D172227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
+				B501322D2346A9B000FC238B /* LiveList.swift in Sources */,
 				B56924011EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5215CB01FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				B56321B41BD6521C006C9394 /* NSManagedObjectContext+Transaction.swift in Sources */,
