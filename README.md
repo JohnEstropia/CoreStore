@@ -1513,10 +1513,10 @@ Including `ListObserver`, there are 3 observer protocols you can implement depen
 
 - `ListObjectObserver`: in addition to `ListObserver` methods, also lets you handle object inserts, updates, and deletes:
 ```swift
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didInsertObject object: MyPersonEntity, toIndexPath indexPath: NSIndexPath)
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didDeleteObject object: MyPersonEntity, fromIndexPath indexPath: NSIndexPath)
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didUpdateObject object: MyPersonEntity, atIndexPath indexPath: NSIndexPath)
-    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didMoveObject object: MyPersonEntity, fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath)
+    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didInsertObject object: MyPersonEntity, toIndexPath indexPath: IndexPath)
+    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didDeleteObject object: MyPersonEntity, fromIndexPath indexPath: IndexPath)
+    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didUpdateObject object: MyPersonEntity, atIndexPath indexPath: IndexPath)
+    func listMonitor(_ monitor: ListMonitor<MyPersonEntity>, didMoveObject object: MyPersonEntity, fromIndexPath: IndexPath, toIndexPath: IndexPath)
 ```
 - `ListSectionObserver`: in addition to `ListObjectObserver` methods, also lets you handle section inserts and deletes:
 ```swift
@@ -1573,9 +1573,9 @@ func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -
 }
 ```
 
-To access the objects of a sectioned list, use an `NSIndexPath` or a tuple:
+To access the objects of a sectioned list, use an `IndexPath` or a tuple:
 ```swift
-let indexPath = NSIndexPath(forRow: 2, inSection: 1)
+let indexPath = IndexPath(row: 2, section: 1)
 let person1 = self.monitor[indexPath]
 let person2 = self.monitor[1, 2]
 // person1 and person2 are the same object
