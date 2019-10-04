@@ -11,11 +11,23 @@
 import SwiftUI
 import CoreStore
 
+@available(iOS 13.0, *)
+struct DataStackEnvironment: EnvironmentKey {
+
+    static let defaultValue = ColorsDemo.stack
+}
+
+
 @available(iOS 13.0.0, *)
 extension EnvironmentValues {
-    
+
     var dataStack: DataStack {
-        return ColorsDemo.stack
+        get {
+            return self[DataStackEnvironment.self]
+        }
+        set {
+            self[DataStackEnvironment.self] = newValue
+        }
     }
 }
 
@@ -23,13 +35,13 @@ extension EnvironmentValues {
 struct SwiftUIView: View {
     
     @Environment(\.dataStack) var dataStack: DataStack
-    
-    var palettes = ColorsDemo.palettes
-    
+
+    @ObservedObject var palettes: LiveList<Palette>
+
     var body: some View {
         NavigationView {
             List {
-                ForEach(palettes.objectsInAllSections(), id: \.self) { palette in
+                ForEach(palettes.snapshot, id: \.self) { palette in
                     NavigationLink(
                         destination: DetailView(palette: palette)
                     ) {
@@ -40,7 +52,14 @@ struct SwiftUIView: View {
                         }
                     }
                 }.onDelete { indices in
-                    //                self.events.delete(at: indices, from: self.viewContext)
+                    let palettes = self.palettes.snapshot[indices]
+                    self.dataStack.perform(
+                        asynchronous: { transaction in
+
+                            palettes.forEach(transaction.delete(_:))
+                        },
+                        completion: { _ in }
+                    )
                 }
             }
             .navigationBarTitle(Text("Master"))
@@ -48,7 +67,7 @@ struct SwiftUIView: View {
                 leading: EditButton(),
                 trailing: Button(
                     action: {
-                        
+
                         self.dataStack.perform(
                             asynchronous: { transaction in
 
@@ -83,7 +102,12 @@ struct DetailView: View {
 @available(iOS 13.0.0, *)
 struct SwiftUIView_Previews: PreviewProvider {
     static var previews: some View {
-        SwiftUIView()
+        SwiftUIView(
+            palettes: DataStackEnvironment.defaultValue.liveList(
+                From<Palette>()
+                    .orderBy(.ascending(\.hue))
+            )
+        )
     }
 }
 

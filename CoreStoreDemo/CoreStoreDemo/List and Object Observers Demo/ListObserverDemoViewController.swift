@@ -52,7 +52,7 @@ struct ColorsDemo {
     
     static let stack: DataStack = {
      
-        return DataStack(
+        let dataStack = DataStack(
             CoreStoreSchema(
                 modelVersion: "ColorsDemo",
                 entities: [
@@ -63,16 +63,18 @@ struct ColorsDemo {
                 ]
             )
         )
-    }()
-    
-    static let palettes: ListMonitor<Palette> = {
-        
-        try! ColorsDemo.stack.addStorageAndWait(
+
+        try! dataStack.addStorageAndWait(
             SQLiteStore(
                 fileName: "ColorsDemo.sqlite",
                 localStorageOptions: .recreateStoreOnModelMismatch
             )
         )
+        return dataStack
+    }()
+    
+    static let palettes: ListMonitor<Palette> = {
+
         return ColorsDemo.stack.monitorSectionedList(
             From<Palette>()
                 .sectionBy(\.colorName)

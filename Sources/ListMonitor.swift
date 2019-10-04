@@ -948,7 +948,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                 return
             }
             
-            let (newFetchedResultsController, newFetchedResultsControllerDelegate) = ListMonitor.recreateFetchedResultsController(
+            let (newFetchedResultsController, newFetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
                 context: self.fetchedResultsController.managedObjectContext,
                 from: self.from,
                 sectionBy: self.sectionBy,
@@ -1083,7 +1083,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         self.isSectioned = (sectionBy != nil)
         self.from = from
         self.sectionBy = sectionBy
-        (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = ListMonitor.recreateFetchedResultsController(
+        (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
             context: context,
             from: from,
             sectionBy: sectionBy,

@@ -10,12 +10,21 @@
 
 import SwiftUI
 import UIKit
+import CoreStore
 
 @available(iOS 13.0.0, *)
 class SwiftUIHostingController: UIHostingController<SwiftUIView> {
 
     @objc required dynamic init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder, rootView: SwiftUIView())
+        super.init(
+            coder: aDecoder,
+            rootView: SwiftUIView(
+                palettes: DataStackEnvironment.defaultValue.liveList(
+                    From<Palette>()
+                        .orderBy(.ascending(\.hue))
+                )
+            )
+        )
     }
 }
 

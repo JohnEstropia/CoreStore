@@ -102,7 +102,10 @@ extension DataStack {
      */
     public func monitorList<B: FetchChainableBuilderType>(_ clauseChain: B) -> ListMonitor<B.ObjectType> {
         
-        return self.monitorList(clauseChain.from, clauseChain.fetchClauses)
+        return self.monitorList(
+            clauseChain.from,
+            clauseChain.fetchClauses
+        )
     }
     
     /**
@@ -114,7 +117,11 @@ extension DataStack {
      */
     public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: FetchClause...) {
         
-        self.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
+        self.monitorList(
+            createAsynchronously: createAsynchronously,
+            from,
+            fetchClauses
+        )
     }
     
     /**
@@ -182,7 +189,11 @@ extension DataStack {
      */
     public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
         
-        return self.monitorSectionedList(from, sectionBy, fetchClauses)
+        return self.monitorSectionedList(
+            from,
+            sectionBy,
+            fetchClauses
+        )
     }
     
     /**
@@ -248,7 +259,12 @@ extension DataStack {
      */
     public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) {
         
-        self.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
+        self.monitorSectionedList(
+            createAsynchronously: createAsynchronously,
+            from,
+            sectionBy,
+            fetchClauses
+        )
     }
     
     /**
