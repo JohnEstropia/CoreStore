@@ -1,5 +1,5 @@
 //
-//  Shared.swift
+//  SnapshotResult.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -23,47 +23,23 @@
 //  SOFTWARE.
 //
 
-import Foundation
+#if canImport(UIKit) || canImport(AppKit)
+
+#if canImport(UIKit)
+import UIKit
+
+#elseif canImport(AppKit)
+import AppKit
+
+#endif
 
 
-// MARK: - Shared
+// MARK: - SnapshotResult
 
-/**
-Global utilities
-*/
-public enum Shared {
-
-    /**
-    The `CoreStoreLogger` instance to be used. The default logger is an instance of a `DefaultLogger`.
-    */
-    public static var logger: CoreStoreLogger = DefaultLogger()
-
-    public static var defaultStack: DataStack {
-
-        get {
-
-            self.defaultStackBarrierQueue.sync(flags: .barrier) {
-
-                if self.defaultStackInstance == nil {
-
-                    self.defaultStackInstance = DataStack()
-                }
-            }
-            return self.defaultStackInstance!
-        }
-        set {
-
-            self.defaultStackBarrierQueue.async(flags: .barrier) {
-
-                self.defaultStackInstance = newValue
-            }
-        }
-    }
-
-
-    // MARK: Private
-
-    private static let defaultStackBarrierQueue = DispatchQueue.concurrent("com.coreStore.defaultStackBarrierQueue")
-
-    private static var defaultStackInstance: DataStack?
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
+public protocol SnapshotResult {
+    
+    associatedtype ObjectType: DynamicObject
 }
+
+#endif

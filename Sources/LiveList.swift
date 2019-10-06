@@ -35,6 +35,11 @@ import AppKit
 
 #endif
 
+#if canImport(Combine)
+import Combine
+
+#endif
+
 #if canImport(SwiftUI)
 import SwiftUI
 
@@ -44,58 +49,41 @@ import SwiftUI
 // MARK: - LiveList
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
-public final class LiveList<D: DynamicObject>: Hashable {
+public final class LiveList<D: DynamicObject> {
     
-    // MARK: Public (Accessors)
-    
-    /**
-     The type for the objects contained bye the `ListMonitor`
-     */
-    public typealias ObjectType = D
-    
-    public fileprivate(set) var snapshot: Snapshot = .empty {
+    // MARK: Public
 
-        didSet {
+    public fileprivate(set) var snapshot: ListSnapshot<ObjectType> = .init() {
 
-
+        willSet {
+            
             #if canImport(Combine)
-
-            let newValue = self.snapshot
+            
+            let oldValue = self.snapshot
             guard newValue != oldValue else {
 
                 return
             }
-
             #if canImport(SwiftUI)
             withAnimation {
-
                 self.objectWillChange.send()
             }
-
+            
             #else
             self.objectWillChange.send()
-
+            
             #endif
-
+            
             #endif
         }
     }
-
-
-    // MARK: Equatable
-
-    public static func == (_ lhs: LiveList<D>, _ rhs: LiveList<D>) -> Bool {
-
-        return lhs === rhs
-    }
-
-
-    // MARK: Hashable
-
-    public func hash(into hasher: inout Hasher) {
-
-        hasher.combine(ObjectIdentifier(self))
-    }
+    
+    
+    // MARK: LiveResult
+    
+    public typealias ObjectType = D
+    
+    public typealias SnapshotType = ListSnapshot<D>
 
 
     // MARK: Internal
@@ -273,7 +261,7 @@ public final class LiveList<D: DynamicObject>: Hashable {
 
 //            transactionQueue.async {
 //
-//                try! self.fetchedResultsController.performFetchFromSpecifiedStores()
+//                try!internal self.fetchedResultsController.performFetchFromSpecifiedStores()
 //                self.taskGroup.notify(queue: .main) {
 //
 //                    createAsynchronously(self)
@@ -283,108 +271,6 @@ public final class LiveList<D: DynamicObject>: Hashable {
         else {
 
             try! self.fetchedResultsController.performFetchFromSpecifiedStores()
-        }
-    }
-    
-    
-    // MARK: - Snapshot
-    
-    public struct Snapshot: RandomAccessCollection, Hashable {
-
-        public subscript(indices: IndexSet) -> [ObjectType] {
-
-            let context = self.context!
-            let objectIDs = self.snapshotStruct.itemIdentifiers
-            return indices.map { position in
-
-                let objectID = objectIDs[position]
-                return context.fetchExisting(objectID)!
-            }
-        }
-
-        // MARK: RandomAccessCollection
-        
-        public var startIndex: Index {
-
-            return 0
-        }
-
-        public var endIndex: Index {
-
-            return self.snapshotStruct.numberOfItems
-        }
-
-        public subscript(position: Index) -> ObjectType {
-
-            let context = self.context!
-            let objectID = self.snapshotStruct.itemIdentifiers[position]
-            return context.fetchExisting(objectID)!
-        }
-        
-        
-        // MARK: Sequence
-
-        public typealias Element = ObjectType
-
-        public typealias Index = Int
-
-//        public typealias SubSequence = Slice<Snapshot<ObjectType>>
-//
-//        /// A type that represents the indices that are valid for subscripting the
-//        /// collection, in ascending order.
-//        public typealias Indices = Range<Int>
-//
-//        /// A type that provides the collection's iteration interface and
-//        /// encapsulates its iteration state.
-//        ///
-//        /// By default, a collection conforms to the `Sequence` protocol by
-//        /// supplying `IndexingIterator` as its associated `Iterator`
-//        /// type.
-//        public typealias Iterator = IndexingIterator<FetchedResults<Result>>
-
-
-        // MARK: Equatable
-
-        public static func == (_ lhs: Snapshot, _ rhs: Snapshot) -> Bool {
-
-            return lhs.snapshotReference == rhs.snapshotReference
-        }
-
-
-        // MARK: Hashable
-
-        public func hash(into hasher: inout Hasher) {
-
-            hasher.combine(self.snapshotReference)
-        }
-
-
-        // MARK: Internal
-
-        internal static var empty: Snapshot {
-
-            return .init()
-        }
-
-        internal init(snapshotReference: NSDiffableDataSourceSnapshotReference, context: NSManagedObjectContext) {
-
-            self.snapshotReference = snapshotReference
-            self.snapshotStruct = snapshotReference as NSDiffableDataSourceSnapshot<NSString, NSManagedObjectID>
-            self.context = context
-        }
-
-
-        // MARK: Private
-        
-        private let snapshotReference: NSDiffableDataSourceSnapshotReference
-        private let snapshotStruct: NSDiffableDataSourceSnapshot<NSString, NSManagedObjectID>
-        private let context: NSManagedObjectContext?
-
-        private init() {
-
-            self.snapshotReference = .init()
-            self.snapshotStruct = self.snapshotReference as NSDiffableDataSourceSnapshot<NSString, NSManagedObjectID>
-            self.context = nil
         }
     }
 }
@@ -407,10 +293,10 @@ extension LiveList: FetchedDiffableDataSourceSnapshotHandler {
 #if canImport(Combine)
 import Combine
 
-// MARK: - LiveList: ObservableObject
+// MARK: - LiveList: LiveResult
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
-extension LiveList: ObservableObject {
+extension LiveList: LiveResult {
 
     // MARK: ObservableObject
 
