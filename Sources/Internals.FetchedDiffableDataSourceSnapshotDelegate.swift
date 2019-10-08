@@ -23,8 +23,6 @@
 //  SOFTWARE.
 //
 
-#if canImport(UIKit) || canImport(AppKit)
-
 import Foundation
 import CoreData
 
@@ -41,10 +39,9 @@ import AppKit
 
 // MARK: - FetchedDiffableDataSourceSnapshot
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
 internal protocol FetchedDiffableDataSourceSnapshotHandler: AnyObject {
 
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangContentWith snapshot: NSDiffableDataSourceSnapshotReference)
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangContentWith snapshot: Internals.DiffableDataSourceSnapshot)
 }
 
 
@@ -54,7 +51,6 @@ extension Internals {
 
     // MARK: - FetchedDiffableDataSourceSnapshotDelegate
 
-    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
     internal final class FetchedDiffableDataSourceSnapshotDelegate: NSObject, NSFetchedResultsControllerDelegate {
 
         // MARK: Internal
@@ -77,18 +73,71 @@ extension Internals {
             self.fetchedResultsController?.delegate = nil
         }
 
+        internal func initialFetch() {
+
+            #if canImport(UIKit) || canImport(AppKit)
+
+            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
+
+                return
+            }
+
+            #endif
+
+            guard let fetchedResultsController = self.fetchedResultsController else {
+
+                return
+            }
+            self.controllerDidChangeContent(fetchedResultsController.dynamicCast())
+        }
+
 
         // MARK: NSFetchedResultsControllerDelegate
 
+        #if canImport(UIKit) || canImport(AppKit)
+
+        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
         @objc
         dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
 
             self.handler?.controller(
                 controller,
-                didChangContentWith: snapshot
+                didChangContentWith: snapshot as NSDiffableDataSourceSnapshot<NSString, NSManagedObjectID>
             )
         }
+
+        #endif
+
+        @objc
+        dynamic func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+
+            self.reloadedIDs = []
+        }
+        
+        @objc
+        dynamic func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+
+            self.handler?.controller(
+                controller,
+                didChangContentWith: FallbackDiffableDataSourceSnapshot(
+                    sections: controller.sections ?? []
+                )
+            )
+            self.reloadedIDs = []
+        }
+
+//        @objc
+//        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+//
+//
+////            [1].difference(from: <#T##BidirectionalCollection#>)
+//            let managedObject = anObject as! NSManagedObject
+//            self.reloadedIDs.insert(managedObject.objectID)
+//        }
+
+
+        // MARK: Private
+
+        private var reloadedIDs: Set<NSManagedObjectID> = []
     }
 }
-
-#endif

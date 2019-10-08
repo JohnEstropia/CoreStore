@@ -23,17 +23,7 @@
 //  SOFTWARE.
 //
 
-#if canImport(UIKit) || canImport(AppKit)
-
 import CoreData
-
-#if canImport(UIKit)
-import UIKit
-
-#elseif canImport(AppKit)
-import AppKit
-
-#endif
 
 #if canImport(Combine)
 import Combine
@@ -48,7 +38,6 @@ import SwiftUI
 
 // MARK: - LiveList
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
 public final class LiveList<D: DynamicObject> {
     
     // MARK: Public
@@ -57,23 +46,22 @@ public final class LiveList<D: DynamicObject> {
 
         willSet {
             
-            #if canImport(Combine)
-            
-            let oldValue = self.snapshot
-            guard newValue != oldValue else {
+            guard #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) else {
 
                 return
             }
+            #if canImport(Combine)
+
             #if canImport(SwiftUI)
             withAnimation {
                 self.objectWillChange.send()
             }
-            
+
             #else
             self.objectWillChange.send()
-            
+
             #endif
-            
+
             #endif
         }
     }
@@ -182,13 +170,20 @@ public final class LiveList<D: DynamicObject> {
             applyFetchClauses: applyFetchClauses
         )
 
-        #if canImport(Combine)
-        self.rawObjectWillChange = ObservableObjectPublisher()
+        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
 
-        #else
-        self.rawObjectWillChange = nil
+            #if canImport(Combine)
+            self.rawObjectWillChange = ObservableObjectPublisher()
 
-        #endif
+            #else
+            self.rawObjectWillChange = nil
+
+            #endif
+        }
+        else {
+
+            self.rawObjectWillChange = nil
+        }
 
 
 //        if let sectionIndexTransformer = sectionBy?.sectionIndexTransformer {
@@ -278,14 +273,16 @@ public final class LiveList<D: DynamicObject> {
 
 // MARK: - LiveList: FetchedDiffableDataSourceSnapshotHandler
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
 extension LiveList: FetchedDiffableDataSourceSnapshotHandler {
 
     // MARK: FetchedDiffableDataSourceSnapshotHandler
 
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangContentWith snapshot: Internals.DiffableDataSourceSnapshot) {
 
-        self.snapshot = .init(snapshotReference: snapshot, context: controller.managedObjectContext)
+        self.snapshot = .init(
+            diffableSnapshot: snapshot,
+            context: controller.managedObjectContext
+        )
     }
 }
 
@@ -305,7 +302,5 @@ extension LiveList: LiveResult {
         return self.rawObjectWillChange! as! ObservableObjectPublisher
     }
 }
-
-#endif
 
 #endif

@@ -26,27 +26,32 @@ struct SwiftUIView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(palettes.snapshot, id: \.self) { palette in
-                    NavigationLink(
-                        destination: DetailView(palette: palette),
-                        label: {
-                            HStack {
-                                Color(palette.color)
-                                    .frame(width: 30, height: 30, alignment: .leading)
-                                Text(palette.colorText)
-                            }
+                ForEach(palettes.snapshot.sectionIdentifiers, id: \.self) { (sectionID: String) in
+                    Section(header: Text(sectionID)) {
+                        ForEach(self.palettes.snapshot[section: sectionID], id: \.self) { palette in
+                            NavigationLink(
+                                destination: DetailView(palette: palette),
+                                label: {
+                                    HStack {
+                                        Color(palette.color)
+                                            .cornerRadius(5)
+                                            .frame(width: 30, height: 30, alignment: .leading)
+                                        Text(palette.colorText)
+                                    }
+                                }
+                            )
                         }
-                    )
-                }
-                .onDelete { indices in
-                    let palettes = self.palettes.snapshot[indices]
-                    self.dataStack.perform(
-                        asynchronous: { transaction in
+                        .onDelete { itemIndices in
+                            let objectsToDelete = self.palettes.snapshot[section: sectionID, itemIndices: itemIndices]
+                            self.dataStack.perform(
+                                asynchronous: { transaction in
 
-                            transaction.delete(palettes)
-                        },
-                        completion: { _ in }
-                    )
+                                    transaction.delete(objectsToDelete)
+                                },
+                                completion: { _ in }
+                            )
+                        }
+                    }
                 }
             }
             .navigationBarTitle(Text("SwiftUI"))
@@ -90,16 +95,36 @@ struct SwiftUIView: View {
 
 @available(iOS 13.0.0, *)
 struct DetailView: View {
+
+    @Environment(\.dataStack)
+    var dataStack: DataStack
     
     @ObservedObject var palette: Palette
+
+    @State var hue: Float = 0
+    @State var saturation: Float = 0
+    @State var brightness: Float = 0
+
+    init(palette: Palette) {
+
+        self.palette = palette
+        self.hue = Float(palette.hue.value)
+        self.saturation = palette.saturation.value
+        self.brightness = palette.brightness.value
+    }
 
     var body: some View {
         ZStack {
             Color(palette.color)
                 .cornerRadius(20)
                 .padding(20)
-            Text(palette.colorText)
-                .navigationBarTitle(Text("Color"))
+            VStack {
+                Text(palette.colorText)
+                    .navigationBarTitle(Text("Color"))
+                Slider(value: $hue, in: 0.0 ... 359.0 as ClosedRange<Float>)
+                Slider(value: $saturation, in: 0.0 ... 1.0 as ClosedRange<Float>)
+                Slider(value: $brightness, in: 0.0 ... 0.1 as ClosedRange<Float>)
+            }
         }
     }
 }

@@ -29,9 +29,9 @@ public struct DataStackEnvironmentKey: EnvironmentKey {
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
 extension EnvironmentValues {
-    
+
     // MARK: Public
-    
+
     public var dataStack: DataStack {
         get {
             return self[DataStackEnvironmentKey.self]

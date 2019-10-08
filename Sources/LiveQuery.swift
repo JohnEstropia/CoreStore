@@ -23,143 +23,151 @@
 //  SOFTWARE.
 //
 
-#if canImport(SwiftUI) && canImport(Combine)
-
-import CoreData
-import Combine
-import SwiftUI
-
-
-#warning("TODO: autoupdating doesn't work yet")
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
-@propertyWrapper
-public struct LiveQuery<Result: LiveResult>: DynamicProperty {
-    
-    // MARK: Public
-    
-    @Environment(\.dataStack)
-    public var dataStack: DataStack
-    
-    public typealias ObjectType = Result.ObjectType
-    
-    
-    // MARK: @propertyWrapper
-    
-    public fileprivate(set) var wrappedValue: Result {
-        
-        get {
-
-            return self.nonMutatingWrappedValue.wrappedValue
-        }
-        set {
-            
-            self.nonMutatingWrappedValue = LazyNonmutating { newValue }
-        }
-    }
-    
-    public var projectedValue: Result {
-        
-        return self.wrappedValue
-    }
-    
-
-    // MARK: DynamicProperty
-
-    public mutating func update() {
-
-        SwiftUI.withAnimation {
-
-            let dataStack = self.dataStack
-            if self.set(dataStack: dataStack) {
-                
-                return
-            }
-            self.wrappedValue = self.newWrappedValue(dataStack)
-        }
-    }
-    
-    
-    // MARK: FilePrivate
-    
-    fileprivate let newWrappedValue: (DataStack) -> Result
-    
-    fileprivate init(newWrappedValue: @escaping (DataStack) -> Result) {
-        
-        self.newWrappedValue = newWrappedValue
-    }
-    
-    
-    // MARK: Private
-    
-    private var nonMutatingWrappedValue: LazyNonmutating<Result> = .init { fatalError() }
-    
-    private var currentDataStack: DataStack?
-    
-    private mutating func set(dataStack: DataStack) -> Bool {
-
-        guard self.currentDataStack != dataStack else {
-            
-            return false
-        }
-        self.currentDataStack = dataStack
-        
-        let newWrappedValue = self.newWrappedValue
-        self.nonMutatingWrappedValue = LazyNonmutating<Result> {
-            
-            newWrappedValue(dataStack)
-        }
-        return true
-    }
-    
-    
-    // MARK: - LazyNonmutating
-    
-    fileprivate final class LazyNonmutating<Value> {
-        
-        // MARK: FilePrivate
-        
-        lazy var wrappedValue: Value = self.initializer()
-
-        init(_ initializer: @escaping () -> Value) {
-            
-            self.initializer = initializer
-        }
-        
-
-        // MARK: Private
-        
-        private var initializer: () -> Value
-    }
-}
-
-
-#if canImport(UIKit) || canImport(AppKit)
-
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
-extension LiveQuery {
-
-    public init<D: DynamicObject>(liveList: LiveList<D>) where Result == LiveList<D> {
-
-        self.init(
-            newWrappedValue: { _ in liveList }
-        )
-    }
-
-    public init<D: DynamicObject>(_ clauseChain: FetchChainBuilder<D>) where Result == LiveList<D> {
-        
-        self.init(
-            newWrappedValue: { $0.liveList(clauseChain) }
-        )
-    }
-
-    public init<D: DynamicObject>(_ clauseChain: SectionMonitorChainBuilder<D>) where Result == LiveList<D> {
-        
-        self.init(
-            newWrappedValue: { $0.liveList(clauseChain) }
-        )
-    }
-}
-
-#endif
-
-#endif
+//#if canImport(SwiftUI) && canImport(Combine)
+//
+//import CoreData
+//import Combine
+//import SwiftUI
+//
+//
+//#warning("TODO: autoupdating doesn't work yet")
+//@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
+//@propertyWrapper
+//public struct LiveQuery<Result: LiveResult>: DynamicProperty {
+//    
+//    // MARK: Public
+//    
+//    @Environment(\.dataStack)
+//    public var dataStack: DataStack
+//    
+//    public typealias ObjectType = Result.ObjectType
+//    
+//    
+//    // MARK: @propertyWrapper
+//    
+//    public var wrappedValue: Result {
+//        
+//        get {
+//
+//            return self.backingWrapper!.wrappedValue
+//        }
+//        set {
+//
+//            self.backingWrapper!.wrappedValue = newValue
+//        }
+//    }
+//    
+//    public var projectedValue: ObservedObject<Result>.Wrapper {
+//
+//        return self.backingWrapper!.projectedValue
+//    }
+//    
+//
+//    // MARK: DynamicProperty
+//
+//    public mutating func update() {
+//
+//        SwiftUI.withAnimation {
+//
+//            let dataStack = self.dataStack
+//
+//            if self.backingWrapper == nil {
+//
+//                self.backingWrapper = ObservedObject(wrappedValue: self.newLiveResult(dataStack))
+//            }
+//            else {
+//
+//                self.backingWrapper!.wrappedValue = self.newLiveResult(dataStack)
+//            }
+//            self.backingWrapper!.update()
+//        }
+//    }
+//    
+//    
+//    // MARK: FilePrivate
+//    
+//    fileprivate let newLiveResult: (DataStack) -> Result
+//    
+//    fileprivate init(newLiveResult: @escaping (DataStack) -> Result) {
+//
+//        self.newLiveResult = newLiveResult
+//    }
+//    
+//    
+//    // MARK: Private
+//    
+////    private var nonMutatingWrappedValue: LazyNonmutating<Result> = .init { fatalError() }
+//    
+//    private var currentDataStack: DataStack?
+//    private var backingWrapper: ObservedObject<Result>?
+//    
+//    private mutating func set(dataStack: DataStack) -> Bool {
+//
+//        guard self.currentDataStack != dataStack else {
+//            
+//            return false
+//        }
+//        self.currentDataStack = dataStack
+//        if self.backingWrapper == nil {
+//
+//            self.backingWrapper = ObservedObject(wrappedValue: self.newLiveResult(dataStack))
+//        }
+//        else {
+//
+//            self.backingWrapper?.wrappedValue = self.newLiveResult(dataStack)
+//        }
+//        return true
+//    }
+//    
+//    
+//    // MARK: - LazyNonmutating
+//    
+//    fileprivate final class LazyNonmutating<Value> {
+//        
+//        // MARK: FilePrivate
+//        
+//        lazy var wrappedValue: Value = self.initializer()
+//
+//        init(_ initializer: @escaping () -> Value) {
+//            
+//            self.initializer = initializer
+//        }
+//        
+//
+//        // MARK: Private
+//        
+//        private var initializer: () -> Value
+//    }
+//}
+//
+//
+//#if canImport(UIKit) || canImport(AppKit)
+//
+//@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
+//extension LiveQuery {
+//
+//    public init<D: DynamicObject>(liveList: LiveList<D>) where Result == LiveList<D> {
+//
+//        self.init(
+//            newLiveResult: { _ in liveList }
+//        )
+//    }
+//
+//    public init<D: DynamicObject>(_ clauseChain: FetchChainBuilder<D>) where Result == LiveList<D> {
+//        
+//        self.init(
+//            newLiveResult: { $0.liveList(clauseChain) }
+//        )
+//    }
+//
+//    public init<D: DynamicObject>(_ clauseChain: SectionMonitorChainBuilder<D>) where Result == LiveList<D> {
+//        
+//        self.init(
+//            newLiveResult: { $0.liveList(clauseChain) }
+//        )
+//    }
+//}
+//
+//#endif
+//
+//#endif

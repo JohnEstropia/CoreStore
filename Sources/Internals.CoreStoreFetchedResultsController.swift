@@ -82,6 +82,11 @@ extension Internals {
             
             try self.reapplyAffectedStores(self.typedFetchRequest, self.managedObjectContext)
             try self.performFetch()
+
+            if case let delegate as FetchedDiffableDataSourceSnapshotDelegate = self.delegate {
+
+                delegate.initialFetch()
+            }
         }
         
         @nonobjc
