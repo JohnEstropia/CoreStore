@@ -1,5 +1,5 @@
 //
-//  Internals.NotificationObserver.swift
+//  Internals.SharedNotificationObserver.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -30,9 +30,9 @@ import Foundation
 
 extension Internals {
 
-    // MARK: - NotificationObserver
+    // MARK: - SharedNotificationObserver
 
-    internal final class NotificationObserver {
+    internal final class SharedNotificationObserver {
 
         // MARK: Internal
 

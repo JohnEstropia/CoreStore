@@ -38,40 +38,135 @@ import SwiftUI
 
 // MARK: - LiveList
 
-public final class LiveList<D: DynamicObject> {
+public final class LiveList<O: DynamicObject>: Hashable {
     
     // MARK: Public
 
-    public fileprivate(set) var snapshot: ListSnapshot<ObjectType> = .init() {
+    public typealias SectionID = SnapshotType.SectionID
+    public typealias ItemID = SnapshotType.ItemID
+
+    public fileprivate(set) var snapshot: SnapshotType = .init() {
 
         willSet {
-            
-            guard #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) else {
 
-                return
+            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
+
+                self.willChange()
             }
-            #if canImport(Combine)
-
-            #if canImport(SwiftUI)
-            withAnimation {
-                self.objectWillChange.send()
-            }
-
-            #else
-            self.objectWillChange.send()
-
-            #endif
-
-            #endif
         }
+    }
+
+    public var numberOfItems: Int {
+
+        return self.snapshot.numberOfItems
+    }
+
+    public var numberOfSections: Int {
+
+        return self.snapshot.numberOfSections
+    }
+
+    public var sections: [SectionID] {
+
+        return self.snapshot.sectionIDs
+    }
+
+    public subscript(section sectionID: SectionID) -> [LiveObject<O>] {
+
+        let context = self.context
+        return self.snapshot
+            .itemIdentifiers(inSection: sectionID)
+            .map({ context.liveObject(id: $0) })
+    }
+
+    public subscript(itemID itemID: ItemID) -> LiveObject<O>? {
+
+        guard let validID = self.snapshot.itemIdentifiers.first(where: { $0 == itemID }) else {
+
+            return nil
+        }
+        return self.context.liveObject(id: validID)
+    }
+
+    public subscript<S: Sequence>(section sectionID: SectionID, itemIndices itemIndices: S) -> [LiveObject<O>] where S.Element == Int {
+
+        let context = self.context
+        let itemIDs = self.snapshot.itemIdentifiers(inSection: sectionID)
+        return itemIndices.map { position in
+
+            let itemID = itemIDs[position]
+            return context.liveObject(id: itemID)
+        }
+    }
+
+    public var items: [LiveObject<O>] {
+
+        let context = self.context
+        return self.snapshot.itemIdentifiers
+            .map({ context.liveObject(id: $0) })
+    }
+
+    public func numberOfItems(inSection identifier: SectionID) -> Int {
+
+        return self.snapshot.numberOfItems(inSection: identifier)
+    }
+
+    public func items(inSection identifier: SectionID) -> [LiveObject<O>] {
+
+        let context = self.context
+        return self.snapshot
+            .itemIdentifiers(inSection: identifier)
+            .map({ context.liveObject(id: $0) })
+    }
+
+    public func items(inSection identifier: SectionID, atIndices indices: IndexSet) -> [LiveObject<O>] {
+
+        let context = self.context
+        let itemIDs = self.snapshot.itemIdentifiers(inSection: identifier)
+        return indices.map { position in
+
+            let itemID = itemIDs[position]
+            return context.liveObject(id: itemID)
+        }
+    }
+
+    public func section(containingItem item: LiveObject<O>) -> SectionID? {
+
+        return self.snapshot.sectionIdentifier(containingItem: item.id)
+    }
+
+    public func indexOfItem(_ item: LiveObject<O>) -> Int? {
+
+        return self.snapshot.indexOfItem(item.id)
+    }
+
+    public func indexOfSection(_ identifier: SectionID) -> Int? {
+
+        return self.snapshot.indexOfSection(identifier)
+    }
+
+
+    // MARK: Equatable
+
+    public static func == (_ lhs: LiveList, _ rhs: LiveList) -> Bool {
+
+        return lhs === rhs
+    }
+
+
+    // MARK: Hashable
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(ObjectIdentifier(self))
     }
     
     
     // MARK: LiveResult
     
-    public typealias ObjectType = D
+    public typealias ObjectType = O
     
-    public typealias SnapshotType = ListSnapshot<D>
+    public typealias SnapshotType = ListSnapshot<O>
 
 
     // MARK: Internal
@@ -137,6 +232,8 @@ public final class LiveList<D: DynamicObject> {
     private let from: From<ObjectType>
     private let sectionBy: SectionBy<ObjectType>?
 
+    private lazy var context: NSManagedObjectContext = self.fetchedResultsController.managedObjectContext
+
     private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) -> (controller: Internals.CoreStoreFetchedResultsController, delegate: Internals.FetchedDiffableDataSourceSnapshotDelegate) {
 
         let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
@@ -197,76 +294,7 @@ public final class LiveList<D: DynamicObject> {
         self.applyFetchClauses = applyFetchClauses
         self.fetchedResultsControllerDelegate.handler = self
 
-        guard let coordinator = context.parentStack?.coordinator else {
-
-            return
-        }
-
-        self.observerForWillChangePersistentStore = Internals.NotificationObserver(
-            notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresWillChange,
-            object: coordinator,
-            queue: OperationQueue.main,
-            closure: { [weak self] (note) -> Void in
-
-                guard let `self` = self else {
-
-                    return
-                }
-
-//                self.isPersistentStoreChanging = true
-//
-//                guard let removedStores = (note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore]).flatMap(Set.init),
-//                    !Set(self.fetchedResultsController.typedFetchRequest.safeAffectedStores() ?? []).intersection(removedStores).isEmpty else {
-//
-//                        return
-//                }
-//                self.refetch(self.applyFetchClauses)
-            }
-        )
-
-        self.observerForDidChangePersistentStore = Internals.NotificationObserver(
-            notificationName: NSNotification.Name.NSPersistentStoreCoordinatorStoresDidChange,
-            object: coordinator,
-            queue: OperationQueue.main,
-            closure: { [weak self] (note) -> Void in
-
-                guard let `self` = self else {
-
-                    return
-                }
-
-//                if !self.isPendingRefetch {
-//
-//                    let previousStores = Set(self.fetchedResultsController.typedFetchRequest.safeAffectedStores() ?? [])
-//                    let currentStores = previousStores
-//                        .subtracting(note.userInfo?[NSRemovedPersistentStoresKey] as? [NSPersistentStore] ?? [])
-//                        .union(note.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore] ?? [])
-//
-//                    if previousStores != currentStores {
-//
-//                        self.refetch(self.applyFetchClauses)
-//                    }
-//                }
-//
-//                self.isPersistentStoreChanging = false
-            }
-        )
-
-        if let createAsynchronously = createAsynchronously {
-
-//            transactionQueue.async {
-//
-//                try!internal self.fetchedResultsController.performFetchFromSpecifiedStores()
-//                self.taskGroup.notify(queue: .main) {
-//
-//                    createAsynchronously(self)
-//                }
-//            }
-        }
-        else {
-
-            try! self.fetchedResultsController.performFetchFromSpecifiedStores()
-        }
+        try! self.fetchedResultsController.performFetchFromSpecifiedStores()
     }
 }
 
@@ -300,6 +328,29 @@ extension LiveList: LiveResult {
     public var objectWillChange: ObservableObjectPublisher {
 
         return self.rawObjectWillChange! as! ObservableObjectPublisher
+    }
+
+    public func willChange() {
+
+        #if canImport(Combine)
+
+        #if canImport(SwiftUI)
+        withAnimation {
+
+            self.objectWillChange.send()
+        }
+
+        #else
+        self.objectWillChange.send()
+
+        #endif
+
+        #endif
+    }
+
+    public func didChange() {
+
+        // TODO:
     }
 }
 

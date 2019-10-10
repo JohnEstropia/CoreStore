@@ -308,6 +308,11 @@ public enum RelationshipContainer<O: CoreStoreObject> {
                 }
             }
         }
+
+        internal var valueForSnapshot: Any {
+
+            return self.value as Any
+        }
         
         
         // MARK: Private
@@ -594,6 +599,11 @@ public enum RelationshipContainer<O: CoreStoreObject> {
                     )
                 }
             }
+        }
+
+        internal var valueForSnapshot: Any {
+
+            return self.value as Any
         }
         
         
@@ -886,6 +896,11 @@ public enum RelationshipContainer<O: CoreStoreObject> {
                     )
                 }
             }
+        }
+
+        internal var valueForSnapshot: Any {
+
+            return self.value as Any
         }
         
         

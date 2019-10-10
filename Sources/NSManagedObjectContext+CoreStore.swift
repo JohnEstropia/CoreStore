@@ -85,6 +85,35 @@ extension NSManagedObjectContext {
             }
         )
     }
+
+    @nonobjc
+    internal func liveObject<D: DynamicObject>(id: NSManagedObjectID) -> LiveObject<D> {
+
+        let cache = self.liveObjectsCache(D.self)
+        return Internals.with {
+
+            if let liveObject = cache.object(forKey: id) {
+
+                return liveObject
+            }
+            let liveObject = LiveObject<D>(id: id, context: self)
+            cache.setObject(liveObject, forKey: id)
+            return liveObject
+        }
+    }
+
+    @nonobjc
+    private func liveObjectsCache<D: DynamicObject>(_ objectType: D.Type) -> NSMapTable<NSManagedObjectID, LiveObject<D>> {
+
+        let key = Internals.typeName(objectType)
+        if let cache = self.userInfo[key] {
+
+            return cache as! NSMapTable<NSManagedObjectID, LiveObject<D>>
+        }
+        let cache = NSMapTable<NSManagedObjectID, LiveObject<D>>.strongToWeakObjects()
+        self.userInfo[key] = cache
+        return cache
+    }
     
     
     // MARK: Private

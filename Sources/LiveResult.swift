@@ -41,6 +41,9 @@ public protocol LiveResult: ObservableObject {
     
     associatedtype ObjectType
     associatedtype SnapshotType: SnapshotResult where SnapshotType.ObjectType == Self.ObjectType
+
+    func willChange()
+    func didChange()
 }
 
 #endif

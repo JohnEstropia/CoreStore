@@ -34,44 +34,44 @@ import AppKit
 #endif
 
 
-// MARK: - LiveList
+// MARK: - ListSnapshot
 
-public struct ListSnapshot<D: DynamicObject>: SnapshotResult, RandomAccessCollection, Hashable {
+public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollection, Hashable {
 
     // MARK: Public
 
     public typealias SectionID = String
-    public typealias ItemID = D.ObjectID
+    public typealias ItemID = O.ObjectID
 
-    public subscript<S: Sequence>(indices indices: S) -> [ObjectType] where S.Element == Index {
+    public subscript<S: Sequence>(indices indices: S) -> [LiveObject<O>] where S.Element == Index {
 
         let context = self.context!
-        let objectIDs = self.diffableSnapshot.itemIdentifiers
+        let itemIDs = self.diffableSnapshot.allItemIDs
         return indices.map { position in
 
-            let objectID = objectIDs[position]
-            return context.fetchExisting(objectID)!
+            let itemID = itemIDs[position]
+            return LiveObject<O>(id: itemID, context: context)
         }
     }
 
-    public subscript(section sectionID: SectionID) -> [ObjectType] {
+    public subscript(section sectionID: SectionID) -> [LiveObject<O>] {
 
         let context = self.context!
-        let objectIDs = self.itemIdentifiers(inSection: sectionID)
-        return objectIDs.map {
-            
-            return context.fetchExisting($0)!
+        let itemIDs = self.diffableSnapshot.itemIDs(inSection: sectionID)
+        return itemIDs.map {
+
+            return LiveObject<O>(id: $0, context: context)
         }
     }
 
-    public subscript<S: Sequence>(section sectionID: SectionID, itemIndices itemIndices: S) -> [ObjectType] where S.Element == Int {
+    public subscript<S: Sequence>(section sectionID: SectionID, itemIndices itemIndices: S) -> [LiveObject<O>] where S.Element == Int {
 
         let context = self.context!
-        let objectIDs = self.itemIdentifiers(inSection: sectionID)
+        let itemIDs = self.diffableSnapshot.itemIDs(inSection: sectionID)
         return itemIndices.map { position in
 
-            let objectID = objectIDs[position]
-            return context.fetchExisting(objectID)!
+            let itemID = itemIDs[position]
+            return LiveObject<O>(id: itemID, context: context)
         }
     }
 
@@ -85,60 +85,60 @@ public struct ListSnapshot<D: DynamicObject>: SnapshotResult, RandomAccessCollec
         return self.diffableSnapshot.numberOfSections
     }
 
-    public var sectionIdentifiers: [String] {
+    public var sectionIDs: [SectionID] {
 
-        return self.diffableSnapshot.sectionIdentifiers as [String]
+        return self.diffableSnapshot.allSectionIDs
     }
 
     public var itemIdentifiers: [ItemID] {
 
-        return self.diffableSnapshot.itemIdentifiers as [ItemID]
+        return self.diffableSnapshot.allItemIDs
     }
 
     public func numberOfItems(inSection identifier: SectionID) -> Int {
 
-        return self.diffableSnapshot.numberOfItems(inSection: identifier as NSString)
+        return self.diffableSnapshot.numberOfItems(inSection: identifier)
     }
 
     public func itemIdentifiers(inSection identifier: SectionID) -> [ItemID] {
 
-        return self.diffableSnapshot.itemIdentifiers(inSection: identifier as NSString)
+        return self.diffableSnapshot.itemIDs(inSection: identifier)
     }
 
     public func itemIdentifiers(inSection identifier: SectionID, atIndices indices: IndexSet) -> [ItemID] {
 
-        let itemIDs = self.itemIdentifiers(inSection: identifier)
+        let itemIDs = self.diffableSnapshot.itemIDs(inSection: identifier)
         return indices.map({ itemIDs[$0] })
     }
 
     public func sectionIdentifier(containingItem identifier: ItemID) -> SectionID? {
 
-        return self.diffableSnapshot.sectionIdentifier(containingItem: identifier) as SectionID?
+        return self.diffableSnapshot.sectionIDs(containingItem: identifier)
     }
 
     public func indexOfItem(_ identifier: ItemID) -> Index? {
 
-        return self.diffableSnapshot.indexOfItem(identifier)
+        return self.diffableSnapshot.indexOfItemID(identifier)
     }
 
     public func indexOfSection(_ identifier: SectionID) -> Int? {
 
-        return self.diffableSnapshot.indexOfSection(identifier as NSString)
+        return self.diffableSnapshot.indexOfSectionID(identifier)
     }
 
     public mutating func appendItems(_ identifiers: [ItemID], toSection sectionIdentifier: SectionID? = nil) {
 
-        self.diffableSnapshot.appendItems(identifiers, toSection: sectionIdentifier as NSString?)
+        self.diffableSnapshot.appendItems(identifiers, toSection: sectionIdentifier, nextStateTag: .init())
     }
 
     public mutating func insertItems(_ identifiers: [ItemID], beforeItem beforeIdentifier: ItemID) {
 
-        self.diffableSnapshot.insertItems(identifiers, beforeItem: beforeIdentifier)
+        self.diffableSnapshot.insertItems(identifiers, beforeItem: beforeIdentifier, nextStateTag: .init())
     }
 
     public mutating func insertItems(_ identifiers: [ItemID], afterItem afterIdentifier: ItemID) {
 
-        self.diffableSnapshot.insertItems(identifiers, afterItem: afterIdentifier)
+        self.diffableSnapshot.insertItems(identifiers, afterItem: afterIdentifier, nextStateTag: .init())
     }
 
     public mutating func deleteItems(_ identifiers: [ItemID]) {
@@ -163,73 +163,73 @@ public struct ListSnapshot<D: DynamicObject>: SnapshotResult, RandomAccessCollec
 
     public mutating func reloadItems(_ identifiers: [ItemID]) {
 
-        self.diffableSnapshot.reloadItems(identifiers)
+        self.diffableSnapshot.reloadItems(identifiers, nextStateTag: .init())
     }
 
     public mutating func appendSections(_ identifiers: [SectionID]) {
 
-        self.diffableSnapshot.appendSections(identifiers as [NSString])
+        self.diffableSnapshot.appendSections(identifiers, nextStateTag: .init())
     }
 
     public mutating func insertSections(_ identifiers: [SectionID], beforeSection toIdentifier: SectionID) {
 
-        self.diffableSnapshot.insertSections(identifiers as [NSString], beforeSection: toIdentifier as NSString)
+        self.diffableSnapshot.insertSections(identifiers, beforeSection: toIdentifier, nextStateTag: .init())
     }
 
     public mutating func insertSections(_ identifiers: [SectionID], afterSection toIdentifier: SectionID) {
 
-        self.diffableSnapshot.insertSections(identifiers as [NSString], afterSection: toIdentifier as NSString)
+        self.diffableSnapshot.insertSections(identifiers, afterSection: toIdentifier, nextStateTag: .init())
     }
 
     public mutating func deleteSections(_ identifiers: [SectionID]) {
 
-        self.diffableSnapshot.deleteSections(identifiers as [NSString])
+        self.diffableSnapshot.deleteSections(identifiers)
     }
 
     public mutating func moveSection(_ identifier: SectionID, beforeSection toIdentifier: SectionID) {
 
-        self.diffableSnapshot.moveSection(identifier as NSString, beforeSection: toIdentifier as NSString)
+        self.diffableSnapshot.moveSection(identifier, beforeSection: toIdentifier)
     }
 
     public mutating func moveSection(_ identifier: SectionID, afterSection toIdentifier: SectionID) {
 
-        self.diffableSnapshot.moveSection(identifier as NSString, afterSection: toIdentifier as NSString)
+        self.diffableSnapshot.moveSection(identifier, afterSection: toIdentifier)
     }
 
     public mutating func reloadSections(_ identifiers: [SectionID]) {
 
-        self.diffableSnapshot.reloadSections(identifiers as [NSString])
+        self.diffableSnapshot.reloadSections(identifiers, nextStateTag: .init())
     }
     
     
     // MARK: SnapshotResult
     
-    public typealias ObjectType = D
+    public typealias ObjectType = O
     
     
     // MARK: RandomAccessCollection
     
     public var startIndex: Index {
         
-        return self.diffableSnapshot.itemIdentifiers.startIndex
+        return self.diffableSnapshot.allItemIDs.startIndex
     }
     
     public var endIndex: Index {
         
-        return self.diffableSnapshot.itemIdentifiers.endIndex
+        return self.diffableSnapshot.allItemIDs.endIndex
     }
     
-    public subscript(position: Index) -> ObjectType {
+    public subscript(position: Index) -> Element {
         
         let context = self.context!
-        let objectID = self.diffableSnapshot.itemIdentifiers[position]
-        return context.fetchExisting(objectID)!
+        let itemID = self.diffableSnapshot.allItemIDs[position]
+        return LiveObject<O>(id: itemID, context: context)
     }
     
     
     // MARK: Sequence
     
-    public typealias Element = ObjectType
+    public typealias Element = LiveObject<O>
     
     public typealias Index = Int
     
@@ -254,7 +254,7 @@ public struct ListSnapshot<D: DynamicObject>: SnapshotResult, RandomAccessCollec
     
     internal init() {
 
-        self.diffableSnapshot = Internals.FallbackDiffableDataSourceSnapshot()
+        self.diffableSnapshot = .init()
         self.context = nil
     }
     
@@ -263,11 +263,22 @@ public struct ListSnapshot<D: DynamicObject>: SnapshotResult, RandomAccessCollec
         self.diffableSnapshot = diffableSnapshot
         self.context = context
     }
+
+    internal var nextStateTag: UUID {
+
+        return self.diffableSnapshot.nextStateTag
+    }
+
+    internal func itemIDs(where stateCondition: @escaping (UUID) -> Bool) -> [ItemID] {
+
+        return self.diffableSnapshot.itemIDs(where: stateCondition)
+    }
     
     
     // MARK: Private
     
     private let id: UUID = .init()
     private let context: NSManagedObjectContext?
+
     private var diffableSnapshot: Internals.DiffableDataSourceSnapshot
 }

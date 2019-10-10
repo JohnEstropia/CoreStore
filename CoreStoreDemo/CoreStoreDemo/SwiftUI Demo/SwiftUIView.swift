@@ -19,30 +19,36 @@ struct SwiftUIView: View {
 
     @ObservedObject
     var palettes: LiveList<Palette>
-    
-    @State
-    private var needsShowAlert = false
+
+    @available(iOS 13.0.0, *)
+    struct ColorCell: View {
+
+        @ObservedObject
+        var palette: LiveObject<Palette>
+
+        var body: some View {
+            HStack {
+                Color(palette.color)
+                    .cornerRadius(5)
+                    .frame(width: 30, height: 30, alignment: .leading)
+                Text(palette.colorText)
+            }
+        }
+    }
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(palettes.snapshot.sectionIdentifiers, id: \.self) { (sectionID: String) in
+                ForEach(palettes.sections, id: \.self) { (sectionID) in
                     Section(header: Text(sectionID)) {
-                        ForEach(self.palettes.snapshot[section: sectionID], id: \.self) { palette in
+                        ForEach(self.palettes[section: sectionID], id: \.self) { palette in
                             NavigationLink(
                                 destination: DetailView(palette: palette),
-                                label: {
-                                    HStack {
-                                        Color(palette.color)
-                                            .cornerRadius(5)
-                                            .frame(width: 30, height: 30, alignment: .leading)
-                                        Text(palette.colorText)
-                                    }
-                                }
+                                label: { ColorCell(palette: palette) }
                             )
                         }
                         .onDelete { itemIndices in
-                            let objectsToDelete = self.palettes.snapshot[section: sectionID, itemIndices: itemIndices]
+                            let objectsToDelete = self.palettes[section: sectionID, itemIndices: itemIndices].map({ $0.object })
                             self.dataStack.perform(
                                 asynchronous: { transaction in
 
@@ -91,6 +97,9 @@ struct SwiftUIView: View {
         }
         .colorScheme(.dark)
     }
+
+    @State
+    private var needsShowAlert = false
 }
 
 @available(iOS 13.0.0, *)
@@ -98,19 +107,20 @@ struct DetailView: View {
 
     @Environment(\.dataStack)
     var dataStack: DataStack
-    
-    @ObservedObject var palette: Palette
+
+    @ObservedObject
+    var palette: LiveObject<Palette>
 
     @State var hue: Float = 0
     @State var saturation: Float = 0
     @State var brightness: Float = 0
 
-    init(palette: Palette) {
+    init(palette: LiveObject<Palette>) {
 
         self.palette = palette
-        self.hue = Float(palette.hue.value)
-        self.saturation = palette.saturation.value
-        self.brightness = palette.brightness.value
+        self.hue = Float(palette.hue)
+        self.saturation = palette.saturation
+        self.brightness = palette.brightness
     }
 
     var body: some View {

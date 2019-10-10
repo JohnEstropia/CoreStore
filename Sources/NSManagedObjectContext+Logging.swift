@@ -1,5 +1,5 @@
 //
-//  Internals.NotificationObserver.swift
+//  NSManagedObjectContext+Logging.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -24,33 +24,38 @@
 //
 
 import Foundation
+import CoreData
 
 
-// MARK: - Internal
+// MARK: - NSManagedObjectContext
 
-extension Internals {
+extension NSManagedObjectContext {
 
-    // MARK: - NotificationObserver
+    @nonobjc
+    internal func isRunningInAllowedQueue() -> Bool? {
 
-    internal final class NotificationObserver {
+        if self.isTransactionContext {
 
-        // MARK: Internal
-
-        let observer: NSObjectProtocol
-
-        init(notificationName: Notification.Name, object: Any?, queue: OperationQueue? = nil, closure: @escaping (_ note: Notification) -> Void) {
-
-            self.observer = NotificationCenter.default.addObserver(
-                forName: notificationName,
-                object: object,
-                queue: queue,
-                using: closure
-            )
+            return self.parentTransaction?.isRunningInAllowedQueue()
         }
+        if self.isDataStackContext {
 
-        deinit {
-
-            NotificationCenter.default.removeObserver(self.observer)
+            return Thread.isMainThread
         }
+        return nil
+    }
+
+    @nonobjc
+    internal func isEditableInContext() -> Bool? {
+
+        if self.isTransactionContext {
+
+            return true
+        }
+        if self.isDataStackContext {
+
+            return false
+        }
+        return nil
     }
 }

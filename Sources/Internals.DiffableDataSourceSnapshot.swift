@@ -40,88 +40,111 @@ import AppKit
 
 extension Internals {
 
-    // MARK: Internal
 
-    internal typealias DiffableDataSourceSnapshot = _Internal_DiffableDataSourceSnapshot
-
-
-    // MARK: - FallbackDiffableDataSourceSnapshot
+    // MARK: - DiffableDataSourceSnapshot
 
     // Implementation based on https://github.com/ra1028/DiffableDataSources
-    internal struct FallbackDiffableDataSourceSnapshot: DiffableDataSourceSnapshot {
+    internal struct DiffableDataSourceSnapshot {
 
         // MARK: Internal
 
-        init(sections: [NSFetchedResultsSectionInfo]) {
-
-            self.structure = .init(sections: sections)
-        }
-
-        // MARK: DiffableDataSourceSnapshot
+        internal let nextStateTag: UUID
 
         init() {
 
             self.structure = .init()
+            self.nextStateTag = .init()
+        }
+
+        init(sections: [NSFetchedResultsSectionInfo], previousStateTag: UUID, nextStateTag: UUID) {
+
+            self.structure = .init(sections: sections, previousStateTag: previousStateTag)
+            self.nextStateTag = nextStateTag
         }
 
         var numberOfItems: Int {
 
-            return self.itemIdentifiers.count
+            return self.structure.allItemIDs.count
         }
 
         var numberOfSections: Int {
 
-            return self.sectionIdentifiers.count
+            return self.structure.allSectionIDs.count
         }
 
-        var sectionIdentifiers: [NSString] {
+        var allSectionIDs: [String] {
 
             return self.structure.allSectionIDs
         }
 
-        var itemIdentifiers: [NSManagedObjectID] {
+        var allSectionStateIDs: [SectionStateID] {
 
-            self.structure.allItemIDs
+            return self.structure.allSectionStateIDs
         }
 
-        func numberOfItems(inSection identifier: NSString) -> Int {
+        var allItemIDs: [NSManagedObjectID] {
 
-            return self.itemIdentifiers(inSection: identifier).count
+            return self.structure.allItemIDs
         }
 
-        func itemIdentifiers(inSection identifier: NSString) -> [NSManagedObjectID] {
+        var allItemStateIDs: [ItemStateID] {
+
+            return self.structure.allItemStateIDs
+        }
+
+        func numberOfItems(inSection identifier: String) -> Int {
+
+            return self.itemIDs(inSection: identifier).count
+        }
+
+        func itemIDs(inSection identifier: String) -> [NSManagedObjectID] {
 
             return self.structure.items(in: identifier)
         }
 
-        func sectionIdentifier(containingItem identifier: NSManagedObjectID) -> NSString? {
+        func itemStateIDs(inSection identifier: String) -> [ItemStateID] {
+
+            return self.structure.itemStateIDs(in: identifier)
+        }
+
+        func sectionIDs(containingItem identifier: NSManagedObjectID) -> String? {
 
             return self.structure.section(containing: identifier)
         }
 
-        func indexOfItem(_ identifier: NSManagedObjectID) -> Int? {
+        func sectionStateIDs(containingItem identifier: NSManagedObjectID) -> SectionStateID? {
 
-            return self.itemIdentifiers.firstIndex(of: identifier)
+            return self.structure.sectionStateID(containing: identifier)
         }
 
-        func indexOfSection(_ identifier: NSString) -> Int? {
+        func indexOfItemID(_ identifier: NSManagedObjectID) -> Int? {
 
-            return self.sectionIdentifiers.firstIndex(of: identifier)
+            return self.structure.allItemIDs.firstIndex(of: identifier)
         }
 
-        mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: NSString?) {
+        func indexOfSectionID(_ identifier: String) -> Int? {
 
-            self.structure.append(itemIDs: identifiers, to: sectionIdentifier)
+            return self.structure.allSectionIDs.firstIndex(of: identifier)
         }
 
-        mutating func insertItems(_ identifiers: [NSManagedObjectID], beforeItem beforeIdentifier: NSManagedObjectID) {
+        func itemIDs(where stateCondition: @escaping (UUID) -> Bool) -> [NSManagedObjectID] {
 
-            self.structure.insert(itemIDs: identifiers, before: beforeIdentifier)
+            return self.structure.itemsIDs(where: stateCondition)
         }
 
-        mutating func insertItems(_ identifiers: [NSManagedObjectID], afterItem afterIdentifier: NSManagedObjectID) {
+        mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?, nextStateTag: UUID) {
 
-            self.structure.insert(itemIDs: identifiers, after: afterIdentifier)
+            self.structure.append(itemIDs: identifiers, to: sectionIdentifier, nextStateTag: nextStateTag)
+        }
+
+        mutating func insertItems(_ identifiers: [NSManagedObjectID], beforeItem beforeIdentifier: NSManagedObjectID, nextStateTag: UUID) {
+
+            self.structure.insert(itemIDs: identifiers, before: beforeIdentifier, nextStateTag: nextStateTag)
+        }
+
+        mutating func insertItems(_ identifiers: [NSManagedObjectID], afterItem afterIdentifier: NSManagedObjectID, nextStateTag: UUID) {
+
+            self.structure.insert(itemIDs: identifiers, after: afterIdentifier, nextStateTag: nextStateTag)
         }
 
         mutating func deleteItems(_ identifiers: [NSManagedObjectID]) {
@@ -144,44 +167,44 @@ extension Internals {
             self.structure.move(itemID: identifier, after: toIdentifier)
         }
 
-        mutating func reloadItems(_ identifiers: [NSManagedObjectID]) {
+        mutating func reloadItems<S: Sequence>(_ identifiers: S, nextStateTag: UUID) where S.Element == NSManagedObjectID {
 
-            self.structure.update(itemIDs: identifiers)
+            self.structure.update(itemIDs: identifiers, nextStateTag: nextStateTag)
         }
 
-        mutating func appendSections(_ identifiers: [NSString]) {
+        mutating func appendSections(_ identifiers: [String], nextStateTag: UUID) {
 
-            self.structure.append(sectionIDs: identifiers)
+            self.structure.append(sectionIDs: identifiers, nextStateTag: nextStateTag)
         }
 
-        mutating func insertSections(_ identifiers: [NSString], beforeSection toIdentifier: NSString) {
+        mutating func insertSections(_ identifiers: [String], beforeSection toIdentifier: String, nextStateTag: UUID) {
 
-            self.structure.insert(sectionIDs: identifiers, before: toIdentifier)
+            self.structure.insert(sectionIDs: identifiers, before: toIdentifier, nextStateTag: nextStateTag)
         }
 
-        mutating func insertSections(_ identifiers: [NSString], afterSection toIdentifier: NSString) {
+        mutating func insertSections(_ identifiers: [String], afterSection toIdentifier: String, nextStateTag: UUID) {
 
-            self.structure.insert(sectionIDs: identifiers, after: toIdentifier)
+            self.structure.insert(sectionIDs: identifiers, after: toIdentifier, nextStateTag: nextStateTag)
         }
 
-        mutating func deleteSections(_ identifiers: [NSString]) {
+        mutating func deleteSections(_ identifiers: [String]) {
 
             self.structure.remove(sectionIDs: identifiers)
         }
 
-        mutating func moveSection(_ identifier: NSString, beforeSection toIdentifier: NSString) {
+        mutating func moveSection(_ identifier: String, beforeSection toIdentifier: String) {
 
             self.structure.move(sectionID: identifier, before: toIdentifier)
         }
 
-        mutating func moveSection(_ identifier: NSString, afterSection toIdentifier: NSString) {
+        mutating func moveSection(_ identifier: String, afterSection toIdentifier: String) {
 
             self.structure.move(sectionID: identifier, after: toIdentifier)
         }
 
-        mutating func reloadSections(_ identifiers: [NSString]) {
+        mutating func reloadSections<S: Sequence>(_ identifiers: S, nextStateTag: UUID) where S.Element == String {
 
-            self.structure.update(sectionIDs: identifiers)
+            self.structure.update(sectionIDs: identifiers, nextStateTag: nextStateTag)
         }
 
 
@@ -190,9 +213,54 @@ extension Internals {
         private var structure: BackingStructure
 
 
+        // MARK: - ItemStateID
+
+        internal struct ItemStateID: Identifiable, Equatable {
+
+            let stateTag: UUID
+
+            init(id: NSManagedObjectID, stateTag: UUID) {
+
+                self.id = id
+                self.stateTag = stateTag
+            }
+
+            func isContentEqual(to source: ItemStateID) -> Bool {
+
+                return self.id == source.id && self.stateTag == source.stateTag
+            }
+
+            // MARK: Identifiable
+
+            let id: NSManagedObjectID
+        }
+
+
+        // MARK: - SectionStateID
+
+        internal struct SectionStateID: Identifiable, Equatable {
+
+            let stateTag: UUID
+
+            init(id: String, stateTag: UUID) {
+                self.id = id
+                self.stateTag = stateTag
+            }
+
+            func isContentEqual(to source: SectionStateID) -> Bool {
+
+                return self.id == source.id && self.stateTag == source.stateTag
+            }
+
+            // MARK: Identifiable
+
+            let id: String
+        }
+
+
         // MARK: - BackingStructure
 
-        internal struct BackingStructure {
+        fileprivate struct BackingStructure {
 
             // MARK: Internal
 
@@ -203,23 +271,28 @@ extension Internals {
                 self.sections = []
             }
 
-            init(sections: [NSFetchedResultsSectionInfo]) {
+            init(sections: [NSFetchedResultsSectionInfo], previousStateTag: UUID) {
 
                 self.sections = sections.map {
 
                     Section(
-                        id: $0.name as NSString,
+                        id: $0.name,
                         items: $0.objects?
                             .compactMap({ ($0 as? NSManagedObject)?.objectID })
-                            .map(Item.init(id:)) ?? [],
-                        isReloaded: false
+                            .map({ Item(id: $0, stateTag: previousStateTag) }) ?? [],
+                        stateTag: previousStateTag
                     )
                 }
             }
 
-            var allSectionIDs: [NSString] {
+            var allSectionIDs: [String] {
 
                 return self.sections.map({ $0.id })
+            }
+
+            var allSectionStateIDs: [SectionStateID] {
+
+                return self.sections.map({ $0.stateID })
             }
 
             var allItemIDs: [NSManagedObjectID] {
@@ -227,7 +300,12 @@ extension Internals {
                 return self.sections.lazy.flatMap({ $0.elements }).map({ $0.id })
             }
 
-            func items(in sectionID: NSString) -> [NSManagedObjectID] {
+            var allItemStateIDs: [ItemStateID] {
+
+                return self.sections.lazy.flatMap({ $0.elements }).map({ $0.stateID })
+            }
+
+            func items(in sectionID: String) -> [NSManagedObjectID] {
 
                 guard let sectionIndex = self.sectionIndex(of: sectionID) else {
 
@@ -236,12 +314,33 @@ extension Internals {
                 return self.sections[sectionIndex].elements.map({ $0.id })
             }
 
-            func section(containing itemID: NSManagedObjectID) -> NSString? {
+            func itemsIDs(where stateCondition: @escaping (UUID) -> Bool) -> [NSManagedObjectID] {
+
+                return self.sections.lazy
+                    .flatMap({ $0.elements.filter({ stateCondition($0.stateTag) }) })
+                    .map({ $0.id })
+            }
+
+            func itemStateIDs(in sectionID: String) -> [ItemStateID] {
+
+                guard let sectionIndex = self.sectionIndex(of: sectionID) else {
+
+                    Internals.abort("Section \"\(sectionID)\" does not exist")
+                }
+                return self.sections[sectionIndex].elements.map({ $0.stateID })
+            }
+
+            func section(containing itemID: NSManagedObjectID) -> String? {
 
                 return self.itemPositionMap()[itemID]?.section.id
             }
 
-            mutating func append(itemIDs: [NSManagedObjectID], to sectionID: NSString?) {
+            func sectionStateID(containing itemID: NSManagedObjectID) -> SectionStateID? {
+
+                return self.itemPositionMap()[itemID]?.section.stateID
+            }
+
+            mutating func append(itemIDs: [NSManagedObjectID], to sectionID: String?, nextStateTag: UUID) {
 
                 let index: Array<Section>.Index
                 if let sectionID = sectionID {
@@ -261,23 +360,22 @@ extension Internals {
                     }
                     index = section.index(before: section.endIndex)
                 }
-
-                let items = itemIDs.lazy.map(Item.init)
+                let items = itemIDs.lazy.map({ Item(id: $0, stateTag: nextStateTag) })
                 self.sections[index].elements.append(contentsOf: items)
             }
 
-            mutating func insert(itemIDs: [NSManagedObjectID], before beforeItemID: NSManagedObjectID) {
+            mutating func insert(itemIDs: [NSManagedObjectID], before beforeItemID: NSManagedObjectID, nextStateTag: UUID) {
 
                 guard let itemPosition = self.itemPositionMap()[beforeItemID] else {
 
                     Internals.abort("Item \(beforeItemID) does not exist")
                 }
-                let items = itemIDs.lazy.map(Item.init)
+                let items = itemIDs.lazy.map({ Item(id: $0, stateTag: nextStateTag) })
                 self.sections[itemPosition.sectionIndex].elements
                     .insert(contentsOf: items, at: itemPosition.itemRelativeIndex)
             }
 
-            mutating func insert(itemIDs: [NSManagedObjectID], after afterItemID: NSManagedObjectID) {
+            mutating func insert(itemIDs: [NSManagedObjectID], after afterItemID: NSManagedObjectID, nextStateTag: UUID) {
 
                 guard let itemPosition = self.itemPositionMap()[afterItemID] else {
 
@@ -285,7 +383,7 @@ extension Internals {
                 }
                 let itemIndex = self.sections[itemPosition.sectionIndex].elements
                     .index(after: itemPosition.itemRelativeIndex)
-                let items = itemIDs.lazy.map(Item.init)
+                let items = itemIDs.lazy.map({ Item(id: $0, stateTag: nextStateTag) })
                 self.sections[itemPosition.sectionIndex].elements
                     .insert(contentsOf: items, at: itemIndex)
             }
@@ -351,47 +449,48 @@ extension Internals {
                     .insert(removed, at: itemIndex)
             }
 
-            mutating func update(itemIDs: [NSManagedObjectID]) {
+            mutating func update<S: Sequence>(itemIDs: S, nextStateTag: UUID) where S.Element == NSManagedObjectID {
 
                 let itemPositionMap = self.itemPositionMap()
                 for itemID in itemIDs {
 
                     guard let itemPosition = itemPositionMap[itemID] else {
 
-                        Internals.abort("Item \(itemID) does not exist")
+                        continue
                     }
-                    self.sections[itemPosition.sectionIndex].elements[itemPosition.itemRelativeIndex].isReloaded = true
+                    self.sections[itemPosition.sectionIndex]
+                        .elements[itemPosition.itemRelativeIndex].stateTag = nextStateTag
                 }
             }
 
-            mutating func append(sectionIDs: [NSString]) {
+            mutating func append(sectionIDs: [String], nextStateTag: UUID) {
 
-                let newSections = sectionIDs.lazy.map(Section.init)
+                let newSections = sectionIDs.lazy.map({ Section(id: $0, stateTag: nextStateTag) })
                 self.sections.append(contentsOf: newSections)
             }
 
-            mutating func insert(sectionIDs: [NSString], before beforeSectionID: NSString) {
+            mutating func insert(sectionIDs: [String], before beforeSectionID: String, nextStateTag: UUID) {
 
                 guard let sectionIndex = self.sectionIndex(of: beforeSectionID) else {
 
                     Internals.abort("Section \"\(beforeSectionID)\" does not exist")
                 }
-                let newSections = sectionIDs.lazy.map(Section.init)
+                let newSections = sectionIDs.lazy.map({ Section(id: $0, stateTag: nextStateTag) })
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
-            mutating func insert(sectionIDs: [NSString], after afterSectionID: NSString) {
+            mutating func insert(sectionIDs: [String], after afterSectionID: String, nextStateTag: UUID) {
 
                 guard let beforeIndex = self.sectionIndex(of: afterSectionID) else {
 
                     Internals.abort("Section \"\(afterSectionID)\" does not exist")
                 }
                 let sectionIndex = self.sections.index(after: beforeIndex)
-                let newSections = sectionIDs.lazy.map(Section.init)
+                let newSections = sectionIDs.lazy.map({ Section(id: $0, stateTag: nextStateTag) })
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
-            mutating func remove(sectionIDs: [NSString]) {
+            mutating func remove(sectionIDs: [String]) {
 
                 for sectionID in sectionIDs {
 
@@ -399,7 +498,7 @@ extension Internals {
                 }
             }
 
-            mutating func move(sectionID: NSString, before beforeSectionID: NSString) {
+            mutating func move(sectionID: String, before beforeSectionID: String) {
 
                 guard let removed = self.remove(sectionID: sectionID) else {
 
@@ -412,7 +511,7 @@ extension Internals {
                 self.sections.insert(removed, at: sectionIndex)
             }
 
-            mutating func move(sectionID: NSString, after afterSectionID: NSString) {
+            mutating func move(sectionID: String, after afterSectionID: String) {
 
                 guard let removed = self.remove(sectionID: sectionID) else {
 
@@ -426,7 +525,7 @@ extension Internals {
                 self.sections.insert(removed, at: sectionIndex)
             }
 
-            mutating func update(sectionIDs: [NSString]) {
+            mutating func update<S: Sequence>(sectionIDs: S, nextStateTag: UUID) where S.Element == String {
 
                 for sectionID in sectionIDs {
 
@@ -434,14 +533,16 @@ extension Internals {
 
                         continue
                     }
-                    self.sections[sectionIndex].isReloaded = true
+                    self.sections[sectionIndex].stateTag = nextStateTag
                 }
             }
 
 
             // MARK: Private
 
-            private func sectionIndex(of sectionID: NSString) -> Array<Section>.Index? {
+            private static let zeroUUID: UUID = .init(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
+
+            private func sectionIndex(of sectionID: String) -> Array<Section>.Index? {
 
                 return self.sections.firstIndex(where: { $0.id == sectionID })
             }
@@ -458,7 +559,7 @@ extension Internals {
             }
 
             @discardableResult
-            private mutating func remove(sectionID: NSString) -> Section? {
+            private mutating func remove(sectionID: String) -> Section? {
 
                 guard let sectionIndex = self.sectionIndex(of: sectionID) else {
 
@@ -486,63 +587,63 @@ extension Internals {
 
             // MARK: - Item
 
-            internal struct Item: Identifiable, Equatable {
+            fileprivate struct Item: Identifiable, Equatable {
 
-                var isReloaded: Bool
+                var stateTag: UUID
 
-                init(id: NSManagedObjectID, isReloaded: Bool) {
+                init(id: NSManagedObjectID, stateTag: UUID) {
 
                     self.id = id
-                    self.isReloaded = isReloaded
+                    self.stateTag = stateTag
                 }
 
-                init(id: NSManagedObjectID) {
+                var stateID: ItemStateID {
 
-                    self.init(id: id, isReloaded: false)
+                    return .init(id: self.id, stateTag: self.stateTag)
                 }
 
                 func isContentEqual(to source: Item) -> Bool {
 
-                    return !self.isReloaded && self.id == source.id
+                    return self.id == source.id && self.stateTag == source.stateTag
                 }
 
                 // MARK: Identifiable
 
-                var id: NSManagedObjectID
+                let id: NSManagedObjectID
             }
 
 
             // MARK: - Section
 
-            internal struct Section: Identifiable, Equatable {
+            fileprivate struct Section: Identifiable, Equatable {
 
                 var elements: [Item] = []
-                var isReloaded: Bool
+                var stateTag: UUID
 
-                init(id: NSString, items: [Item], isReloaded: Bool) {
+                init(id: String, items: [Item] = [], stateTag: UUID) {
                     self.id = id
                     self.elements = items
-                    self.isReloaded = isReloaded
-                }
-
-                init(id: NSString) {
-
-                    self.init(id: id, items: [], isReloaded: false)
+                    self.stateTag = stateTag
                 }
 
                 init<S: Sequence>(source: Section, elements: S) where S.Element == Item {
 
-                    self.init(id: source.id, items: Array(elements), isReloaded: source.isReloaded)
+                    self.init(id: source.id, items: Array(elements), stateTag: source.stateTag)
+                }
+
+                var stateID: SectionStateID {
+
+                    return .init(id: self.id, stateTag: self.stateTag)
                 }
 
                 func isContentEqual(to source: Section) -> Bool {
 
-                    return !self.isReloaded && self.id == source.id
+                    return self.id == source.id && self.stateTag == source.stateTag
                 }
 
                 // MARK: Identifiable
 
-                var id: NSString
+                let id: String
             }
 
 
@@ -550,57 +651,14 @@ extension Internals {
 
             fileprivate struct ItemPosition {
 
-                var item: Item
-                var itemRelativeIndex: Int
-                var section: Section
-                var sectionIndex: Int
+                let item: Item
+                let itemRelativeIndex: Int
+                let section: Section
+                let sectionIndex: Int
             }
         }
     }
 }
-
-
-// MARK: - NSDiffableDataSourceSnapshot: Internals.DiffableDataSourceSnapshot
-
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
-extension NSDiffableDataSourceSnapshot: Internals.DiffableDataSourceSnapshot where SectionIdentifierType == NSString, ItemIdentifierType == NSManagedObjectID {}
-
-
-// MARK: - Internals.DiffableDataSourceSnapshot
-
-internal protocol _Internal_DiffableDataSourceSnapshot {
-
-    init()
-
-    var numberOfItems: Int { get }
-    var numberOfSections: Int { get }
-    var sectionIdentifiers: [NSString] { get }
-    var itemIdentifiers: [NSManagedObjectID] { get }
-
-    func numberOfItems(inSection identifier: NSString) -> Int
-    func itemIdentifiers(inSection identifier: NSString) -> [NSManagedObjectID]
-    func sectionIdentifier(containingItem identifier: NSManagedObjectID) -> NSString?
-    func indexOfItem(_ identifier: NSManagedObjectID) -> Int?
-    func indexOfSection(_ identifier: NSString) -> Int?
-
-    mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: NSString?)
-    mutating func insertItems(_ identifiers: [NSManagedObjectID], beforeItem beforeIdentifier: NSManagedObjectID)
-    mutating func insertItems(_ identifiers: [NSManagedObjectID], afterItem afterIdentifier: NSManagedObjectID)
-    mutating func deleteItems(_ identifiers: [NSManagedObjectID])
-    mutating func deleteAllItems()
-    mutating func moveItem(_ identifier: NSManagedObjectID, beforeItem toIdentifier: NSManagedObjectID)
-    mutating func moveItem(_ identifier: NSManagedObjectID, afterItem toIdentifier: NSManagedObjectID)
-    mutating func reloadItems(_ identifiers: [NSManagedObjectID])
-    mutating func appendSections(_ identifiers: [NSString])
-    mutating func insertSections(_ identifiers: [NSString], beforeSection toIdentifier: NSString)
-    mutating func insertSections(_ identifiers: [NSString], afterSection toIdentifier: NSString)
-    mutating func deleteSections(_ identifiers: [NSString])
-    mutating func moveSection(_ identifier: NSString, beforeSection toIdentifier: NSString)
-    mutating func moveSection(_ identifier: NSString, afterSection toIdentifier: NSString)
-    mutating func reloadSections(_ identifiers: [NSString])
-}
-
-
 
 
 #endif

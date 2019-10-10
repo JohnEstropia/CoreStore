@@ -24,58 +24,78 @@
 //
 
 import CoreData
-import Foundation
+
+#if canImport(UIKit)
+import UIKit
+
+#elseif canImport(AppKit)
+import AppKit
+
+#endif
 
 
 // MARK: - ObjectSnapshot
 
-/**
- An `ObjectSnapshot` contains "snapshot" values from a `DynamicObject` instance copied at a specific point in time.
- */
 @dynamicMemberLookup
-public struct ObjectSnapshot<O: DynamicObject> {
-    
-    // MARK: FilePrivate
-    
-    fileprivate var attributes: [KeyPathString: Any]
-    
-    // MARK: Private
-    
-    private init() {
-        
-        self.attributes = [:]
+public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, Identifiable, Hashable {
+
+    // MARK: SnapshotResult
+
+    public typealias ObjectType = O
+
+
+    // MARK: Identifiable
+
+    public let id: O.ObjectID
+
+
+    // MARK: Equatable
+
+    public static func == (_ lhs: Self, _ rhs: Self) -> Bool {
+
+        return lhs.id == rhs.id
+            && lhs.values == rhs.values
     }
+
+
+    // MARK: Hashable
+
+    public func hash(into hasher: inout Hasher) {
+
+        hasher.combine(self.id)
+        hasher.combine(self.values)
+    }
+
+
+    // MARK: Internal
+
+    internal init(id: ID, context: NSManagedObjectContext) {
+
+        self.id = id
+        self.context = context
+        self.values = O.cs_snapshotDictionary(id: id, context: context) as NSDictionary
+    }
+
+
+    // MARK: Private
+
+    private let context: NSManagedObjectContext
+    private let values: NSDictionary
 }
+
 
 // MARK: - ObjectSnapshot where O: NSManagedObject
 
+@available(*, unavailable, message: "KeyPaths accessed from @dynamicMemberLookup types can't generate KVC keys yet (https://bugs.swift.org/browse/SR-11351)")
 extension ObjectSnapshot where O: NSManagedObject {
-    
-    /**
-     Initializes an `ObjectSnapshot` instance by copying all attribute values from the given `NSManagedObject`.
-     */
-    public init(from object: O) {
-        
-        self.attributes = object.dictionaryWithValues(
-            forKeys: Array(object.entity.attributesByName.keys)
-        )
-    }
-    
+
     /**
      Returns the value for the property identified by a given key.
      */
     public subscript<V: AllowedObjectiveCKeyPathValue>(dynamicMember member: KeyPath<O, V>) -> V {
-        
-        get {
-            
-            let key = String(keyPath: member)
-            return self.attributes[key]! as! V
-        }
-        set {
-            
-            let key = String(keyPath: member)
-            self.attributes[key] = newValue
-        }
+
+        let key = String(keyPath: member)
+        return self.values[key] as! V
     }
 }
 
@@ -83,61 +103,67 @@ extension ObjectSnapshot where O: NSManagedObject {
 // MARK: - ObjectSnapshot where O: CoreStoreObject
 
 extension ObjectSnapshot where O: CoreStoreObject {
-    
-    /**
-     Initializes an `ObjectSnapshot` instance by copying all attribute values from the given `CoreStoreObject`.
-     */
-    public init(from object: O) {
-    
-        var attributes: [KeyPathString: Any] = [:]
-        Self.initializeAttributes(
-            mirror: Mirror(reflecting: object),
-            object: object,
-            into: &attributes
-        )
-        self.attributes = attributes
-    }
-    
+
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<K: AttributeKeyPathStringConvertible>(dynamicMember member: KeyPath<O, K>) -> K.ReturnValueType {
-        
-        get {
-            
-            let key = String(keyPath: member)
-            return self.attributes[key]! as! K.ReturnValueType
-        }
-        set {
-            
-            let key = String(keyPath: member)
-            self.attributes[key] = newValue
-        }
+    public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Required<V>>) -> V {
+
+        let key = String(keyPath: member)
+        return self.values[key] as! V
     }
-    
-    
-    // MARK: Private
-    
-    private static func initializeAttributes(mirror: Mirror, object: CoreStoreObject, into attributes: inout [KeyPathString: Any]) {
-        
-        if let superClassMirror = mirror.superclassMirror {
-            
-            self.initializeAttributes(
-                mirror: superClassMirror,
-                object: object,
-                into: &attributes
-            )
-        }
-        for child in mirror.children {
-            
-            switch child.value {
-                
-            case let property as AttributeProtocol:
-                attributes[property.keyPath] = property.valueForSnapshot
-                
-            default:
-                continue
-            }
-        }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Optional<V>>) -> V? {
+
+        let key = String(keyPath: member)
+        return self.values[key] as! V?
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Required<V>>) -> V {
+
+        let key = String(keyPath: member)
+        return self.values[key] as! V
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Optional<V>>) -> V? {
+
+        let key = String(keyPath: member)
+        return self.values[key] as! V?
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToOne<D>>) -> D? {
+
+        let key = String(keyPath: member)
+        return self.values[key] as! D?
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyOrdered<D>>) -> [D] {
+
+        let key = String(keyPath: member)
+        return self.values[key] as! [D]
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyUnordered<D>>) -> Set<D> {
+
+        let key = String(keyPath: member)
+        return self.values[key] as! Set<D>
     }
 }

@@ -43,7 +43,12 @@ public protocol DynamicObject: AnyObject {
      Used internally by CoreStore. Do not call directly.
      */
     static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self
-    
+
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
+    static func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]
+
     /**
      Used internally by CoreStore. Do not call directly.
      */
@@ -97,6 +102,13 @@ extension NSManagedObject: DynamicObject {
         }
         return object
     }
+
+    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any] {
+
+        let object = context.fetchExisting(id)! as Self
+        let rawObject = object.cs_toRaw()
+        return rawObject.dictionaryWithValues(forKeys: rawObject.entity.properties.map({ $0.name }))
+    }
     
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
         
@@ -119,16 +131,6 @@ extension NSManagedObject: DynamicObject {
     }
 }
 
-extension DynamicObject where Self: NSManagedObject {
-    
-    // MARK: Public
-    
-    public func createSnapshot() -> ObjectSnapshot<Self> {
-        
-        return ObjectSnapshot(from: self)
-    }
-}
-
 
 // MARK: - CoreStoreObject
 
@@ -145,6 +147,43 @@ extension CoreStoreObject {
             context.assign(object, to: store)
         }
         return self.cs_fromRaw(object: object)
+    }
+
+    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any] {
+
+        func initializeAttributes(mirror: Mirror, object: Self, into attributes: inout [KeyPathString: Any]) {
+
+            if let superClassMirror = mirror.superclassMirror {
+
+                initializeAttributes(
+                    mirror: superClassMirror,
+                    object: object,
+                    into: &attributes
+                )
+            }
+            for child in mirror.children {
+
+                switch child.value {
+
+                case let property as AttributeProtocol:
+                    attributes[property.keyPath] = property.valueForSnapshot
+
+                case let property as RelationshipProtocol:
+                    attributes[property.keyPath] = property.valueForSnapshot
+
+                default:
+                    continue
+                }
+            }
+        }
+        let object = context.fetchExisting(id)! as Self
+        var values: [KeyPathString: Any] = [:]
+        initializeAttributes(
+            mirror: Mirror(reflecting: object),
+            object: object,
+            into: &values
+        )
+        return values
     }
     
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
@@ -179,15 +218,5 @@ extension CoreStoreObject {
     public func cs_toRaw() -> NSManagedObject {
         
         return self.rawObject!
-    }
-}
-
-extension DynamicObject where Self: CoreStoreObject {
-    
-    // MARK: Public
-    
-    public func createSnapshot() -> ObjectSnapshot<Self> {
-        
-        return ObjectSnapshot(from: self)
     }
 }

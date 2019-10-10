@@ -42,4 +42,5 @@ internal protocol RelationshipProtocol: AnyObject {
     var renamingIdentifier: () -> String? { get }
     var minCount: Int { get }
     var maxCount: Int { get }
+    var valueForSnapshot: Any { get }
 }
