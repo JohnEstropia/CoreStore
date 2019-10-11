@@ -283,9 +283,9 @@ public final class CoreStoreSchema: DynamicSchema {
         func createProperties(for type: CoreStoreObject.Type) -> [NSPropertyDescription] {
             
             var propertyDescriptions: [NSPropertyDescription] = []
-            for child in Mirror(reflecting: type.meta).children {
+            for property in type.metaProperties(includeSuperclasses: false) {
                 
-                switch child.value {
+                switch property {
                     
                 case let attribute as AttributeProtocol:
                     Internals.assert(
@@ -378,9 +378,10 @@ public final class CoreStoreSchema: DynamicSchema {
         for (entity, entityDescription) in entityDescriptionsByEntity {
             
             let relationshipsByName = relationshipsByNameByEntity[entity]!
-            for child in Mirror(reflecting: (entity.type as! CoreStoreObject.Type).meta).children {
+            let entityType = entity.type as! CoreStoreObject.Type
+            for property in entityType.metaProperties(includeSuperclasses: false) {
                 
-                switch child.value {
+                switch property {
                     
                 case let relationship as RelationshipProtocol:
                     let (destinationType, destinationKeyPath) = relationship.inverse

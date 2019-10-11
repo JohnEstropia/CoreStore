@@ -29,9 +29,8 @@ import CoreData
 
 // MARK: - RelationshipProtocol
 
-internal protocol RelationshipProtocol: AnyObject {
-    
-    var keyPath: KeyPathString { get }
+internal protocol RelationshipProtocol: PropertyProtocol {
+
     var isToMany: Bool { get }
     var isOrdered: Bool { get }
     var deleteRule: NSDeleteRule { get }

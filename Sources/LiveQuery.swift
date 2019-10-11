@@ -31,7 +31,7 @@
 //
 //
 //#warning("TODO: autoupdating doesn't work yet")
-//@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
+//@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 //@propertyWrapper
 //public struct LiveQuery<Result: LiveResult>: DynamicProperty {
 //    
@@ -143,7 +143,7 @@
 //
 //#if canImport(UIKit) || canImport(AppKit)
 //
-//@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
+//@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 //extension LiveQuery {
 //
 //    public init<D: DynamicObject>(liveList: LiveList<D>) where Result == LiveList<D> {

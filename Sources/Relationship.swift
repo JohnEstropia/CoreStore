@@ -249,11 +249,15 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         // MARK: RelationshipKeyPathStringConvertible
 
         public typealias ReturnValueType = DestinationValueType?
+
+
+        // MARK: PropertyProtocol
+
+        internal let keyPath: KeyPathString
         
         
         // MARK: RelationshipProtocol
-        
-        internal let keyPath: KeyPathString
+
         internal let isToMany = false
         internal let isOrdered = false
         internal let deleteRule: NSDeleteRule
@@ -540,11 +544,15 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         // MARK: RelationshipKeyPathStringConvertible
 
         public typealias ReturnValueType = [DestinationValueType]
+
+
+        // MARK: PropertyProtocol
+
+        internal let keyPath: KeyPathString
         
         
         // MARK: RelationshipProtocol
-        
-        internal let keyPath: KeyPathString
+
         internal let isToMany = true
         internal let isOptional = true
         internal let isOrdered = true
@@ -837,11 +845,15 @@ public enum RelationshipContainer<O: CoreStoreObject> {
         // MARK: RelationshipKeyPathStringConvertible
 
         public typealias ReturnValueType = Set<DestinationValueType>
+
+
+        // MARK: PropertyProtocol
+
+        internal let keyPath: KeyPathString
         
         
         // MARK: RelationshipProtocol
         
-        internal let keyPath: KeyPathString
         internal let isToMany = true
         internal let isOptional = true
         internal let isOrdered = false

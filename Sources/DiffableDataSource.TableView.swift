@@ -48,7 +48,7 @@ import CoreData
 //            self.tableView = tableView
 //            self.cellProvider = cellProvider
 //
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
+//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 //
 //                self.rawDataSource = UITableViewDiffableDataSource<String, D.ObjectID>(
 //                    tableView: tableView,
@@ -71,7 +71,7 @@ import CoreData
 //        public func apply(_ snapshot: ListSnapshot<ObjectType>, animatingDifferences: Bool = true) {
 //
 //            let dataSource = UITableViewDiffableDataSource<String, D>.
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
+//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 //
 //                self.rawDataSource! as! UITableViewDiffableDataSource<String, D>
 //
@@ -95,7 +95,7 @@ import CoreData
 //        private let cellProvider: (UITableView, IndexPath, ObjectType) -> UITableViewCell?
 //        private let rawDataSource: Any?
 //
-//        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
+//        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 //        private var diffableDataSource: UITableViewDiffableDataSource<String, D.ObjectID> {
 //
 //            return self.rawDataSource! as! UITableViewDiffableDataSource<String, D.ObjectID>

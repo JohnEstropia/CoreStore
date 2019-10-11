@@ -60,25 +60,48 @@ struct SwiftUIView: View {
                     }
                 }
             }
-            .navigationBarTitle(Text("SwiftUI"))
+            .navigationBarTitle(Text("SwiftUI (\(palettes.numberOfItems) objects)"))
             .navigationBarItems(
                 leading: EditButton(),
-                trailing: Button(
-                    action: {
+                trailing: HStack {
+                    Button(
+                        action: {
 
-                        self.dataStack.perform(
-                            asynchronous: { transaction in
+                            self.dataStack.perform(
+                                asynchronous: { transaction in
 
-                                let palette = transaction.create(Into<Palette>())
-                                palette.setInitialValues(in: transaction)
-                            },
-                            completion: { _ in }
-                        )
-                    },
-                    label: {
-                        Image(systemName: "plus")
-                    }
-                )
+                                    for palette in try transaction.fetchAll(From<Palette>()) {
+
+                                        palette.hue .= Palette.randomHue()
+                                        palette.colorName .= nil
+                                    }
+                                },
+                                completion: { _ in }
+                            )
+                        },
+                        label: {
+                            Image(systemName: "goforward")
+                        }
+                    )
+                    .frame(width: 30)
+                    Button(
+                        action: {
+
+                            self.dataStack.perform(
+                                asynchronous: { transaction in
+
+                                    let palette = transaction.create(Into<Palette>())
+                                    palette.setInitialValues(in: transaction)
+                                },
+                                completion: { _ in }
+                            )
+                        },
+                        label: {
+                            Image(systemName: "plus")
+                        }
+                    )
+                    .frame(width: 30)
+                }
             )
             .alert(
                 isPresented: $needsShowAlert,

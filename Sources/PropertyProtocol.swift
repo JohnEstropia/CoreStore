@@ -1,5 +1,5 @@
 //
-//  AttributeProtocol.swift
+//  PropertyProtocol.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -27,21 +27,9 @@ import Foundation
 import CoreData
 
 
-// MARK: - AttributeProtocol
+// MARK: - PropertyProtocol
 
-internal protocol AttributeProtocol: PropertyProtocol {
-    
-    static var attributeType: NSAttributeType { get }
-    
-    var isOptional: Bool { get }
-    var isTransient: Bool { get }
-    var allowsExternalBinaryDataStorage: Bool { get }
-    var versionHashModifier: () -> String? { get }
-    var renamingIdentifier: () -> String? { get }
-    var defaultValue: () -> Any? { get }
-    var affectedByKeyPaths: () -> Set<String> { get }
-    var rawObject: CoreStoreManagedObject? { get set }
-    var getter: CoreStoreManagedObject.CustomGetter? { get }
-    var setter: CoreStoreManagedObject.CustomSetter? { get }
-    var valueForSnapshot: Any { get }
+internal protocol PropertyProtocol: AnyObject {
+
+    var keyPath: KeyPathString { get }
 }

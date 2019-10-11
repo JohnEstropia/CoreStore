@@ -164,24 +164,72 @@ class DynamicModelTests: BaseTestDataTestCase {
                     
                     animal.color .= .yellow
                     XCTAssertEqual(animal.color.value, Color.yellow)
+
+                    for property in Animal.metaProperties(includeSuperclasses: true) {
+
+                        switch property.keyPath {
+
+                        case String(keyPath: \Animal.species):
+                            XCTAssertTrue(property is ValueContainer<Animal>.Required<String>)
+
+                        case String(keyPath: \Animal.master):
+                            XCTAssertTrue(property is RelationshipContainer<Animal>.ToOne<Person>)
+
+                        case String(keyPath: \Animal.color):
+                            XCTAssertTrue(property is TransformableContainer<Animal>.Optional<Color>)
+
+                        default:
+                            XCTFail("Unknown KeyPath: \"\(property.keyPath)\"")
+                        }
+                    }
                     
                     let dog = transaction.create(Into<Dog>())
                     XCTAssertEqual(dog.species.value, "Swift")
                     XCTAssertEqual(dog.nickname.value, nil)
                     XCTAssertEqual(dog.age.value, 1)
 
-                    #if swift(>=5.1)
+                    for property in Dog.metaProperties(includeSuperclasses: true) {
 
-                    let dogKeyPathBuilder = Dog.keyPathBuilder()
-                    XCTAssertEqual(dogKeyPathBuilder.species.keyPathString, "SELF.species")
-                    XCTAssertEqual(dogKeyPathBuilder.master.title.keyPathString, "SELF.master.title")
-                    let a = dogKeyPathBuilder.master
-                    let b = dogKeyPathBuilder.master.spouse
-                    let c = dogKeyPathBuilder.master.spouse.pets
-                    let d = dogKeyPathBuilder.master.spouse.pets.color
-                    XCTAssertEqual(dogKeyPathBuilder.master.spouse.pets.color.keyPathString, "SELF.master.spouse.pets.color")
+                        switch property.keyPath {
 
-                    #endif
+                        case String(keyPath: \Dog.species):
+                            XCTAssertTrue(property is ValueContainer<Animal>.Required<String>)
+
+                        case String(keyPath: \Dog.master):
+                            XCTAssertTrue(property is RelationshipContainer<Animal>.ToOne<Person>)
+
+                        case String(keyPath: \Dog.color):
+                            XCTAssertTrue(property is TransformableContainer<Animal>.Optional<Color>)
+
+                        case String(keyPath: \Dog.nickname):
+                            XCTAssertTrue(property is ValueContainer<Dog>.Optional<String>)
+
+                        case String(keyPath: \Dog.age):
+                            XCTAssertTrue(property is ValueContainer<Dog>.Required<Int>)
+
+                        case String(keyPath: \Dog.friends):
+                            XCTAssertTrue(property is RelationshipContainer<Dog>.ToManyOrdered<Dog>)
+
+                        case String(keyPath: \Dog.friendedBy):
+                            XCTAssertTrue(property is RelationshipContainer<Dog>.ToManyUnordered<Dog>)
+
+                        default:
+                            XCTFail("Unknown KeyPath: \"\(property.keyPath)\"")
+                        }
+                    }
+
+//                    #if swift(>=5.1)
+//
+//                    let dogKeyPathBuilder = Dog.keyPathBuilder()
+//                    XCTAssertEqual(dogKeyPathBuilder.species.keyPathString, "SELF.species")
+//                    XCTAssertEqual(dogKeyPathBuilder.master.title.keyPathString, "SELF.master.title")
+//                    let a = dogKeyPathBuilder.master
+//                    let b = dogKeyPathBuilder.master.spouse
+//                    let c = dogKeyPathBuilder.master.spouse.pets
+//                    let d = dogKeyPathBuilder.master.spouse.pets.color
+//                    XCTAssertEqual(dogKeyPathBuilder.master.spouse.pets.color.keyPathString, "SELF.master.spouse.pets.color")
+//
+//                    #endif
 
                     let didSetObserver = dog.species.observe(options: [.new, .old]) { (object, change) in
 
@@ -244,22 +292,22 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(person.name.value, "John")
                     XCTAssertEqual(person.displayName.value, "Mr. John") // Custom getter
                     
-                    let personSnapshot1 = person.createSnapshot()
-                    XCTAssertEqual(person.name.value, personSnapshot1.name)
-                    XCTAssertEqual(person.title.value, personSnapshot1.title)
-                    XCTAssertEqual(person.displayName.value, personSnapshot1.displayName)
+//                    let personSnapshot1 = person.createSnapshot()
+//                    XCTAssertEqual(person.name.value, personSnapshot1.name)
+//                    XCTAssertEqual(person.title.value, personSnapshot1.title)
+//                    XCTAssertEqual(person.displayName.value, personSnapshot1.displayName)
                     
                     person.title .= "Sir"
                     XCTAssertEqual(person.displayName.value, "Sir John")
                     
-                    XCTAssertEqual(personSnapshot1.name, "John")
-                    XCTAssertEqual(personSnapshot1.title, "Mr.")
-                    XCTAssertEqual(personSnapshot1.displayName, "Mr. John")
+//                    XCTAssertEqual(personSnapshot1.name, "John")
+//                    XCTAssertEqual(personSnapshot1.title, "Mr.")
+//                    XCTAssertEqual(personSnapshot1.displayName, "Mr. John")
                     
-                    let personSnapshot2 = person.createSnapshot()
-                    XCTAssertEqual(person.name.value, personSnapshot2.name)
-                    XCTAssertEqual(person.title.value, personSnapshot2.title)
-                    XCTAssertEqual(person.displayName.value, personSnapshot2.displayName)
+//                    let personSnapshot2 = person.createSnapshot()
+//                    XCTAssertEqual(person.name.value, personSnapshot2.name)
+//                    XCTAssertEqual(person.title.value, personSnapshot2.title)
+//                    XCTAssertEqual(person.displayName.value, personSnapshot2.displayName)
                     
                     person.pets.value.insert(dog)
                     XCTAssertEqual(person.pets.count, 1)

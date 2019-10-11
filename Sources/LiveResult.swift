@@ -36,8 +36,7 @@ import AppKit
 
 // MARK: - LiveResult
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
-public protocol LiveResult: ObservableObject {
+public protocol LiveResult: AnyObject {
     
     associatedtype ObjectType
     associatedtype SnapshotType: SnapshotResult where SnapshotType.ObjectType == Self.ObjectType

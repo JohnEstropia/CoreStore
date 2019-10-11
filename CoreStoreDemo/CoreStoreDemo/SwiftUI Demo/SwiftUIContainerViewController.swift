@@ -13,7 +13,7 @@ import CoreStore
 import SwiftUI
 
 #endif
-
+import Compression
 final class SwiftUIContainerViewController: UIViewController {
     
     override func viewDidLoad() {

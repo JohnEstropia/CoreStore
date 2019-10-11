@@ -49,10 +49,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
 
         willSet {
 
-            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
-
-                self.willChange()
-            }
+            self.willChange()
         }
     }
 
@@ -267,7 +264,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
             applyFetchClauses: applyFetchClauses
         )
 
-        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
+        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 
             #if canImport(Combine)
             self.rawObjectWillChange = ObservableObjectPublisher()
@@ -318,20 +315,33 @@ extension LiveList: FetchedDiffableDataSourceSnapshotHandler {
 #if canImport(Combine)
 import Combine
 
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+extension LiveList: ObservableObject {}
+
+#endif
+
 // MARK: - LiveList: LiveResult
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
 extension LiveList: LiveResult {
 
     // MARK: ObservableObject
 
+    #if canImport(Combine)
+
+    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
     public var objectWillChange: ObservableObjectPublisher {
 
         return self.rawObjectWillChange! as! ObservableObjectPublisher
     }
 
+    #endif
+
     public func willChange() {
 
+        guard #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) else {
+
+            return
+        }
         #if canImport(Combine)
 
         #if canImport(SwiftUI)
@@ -340,10 +350,9 @@ extension LiveList: LiveResult {
             self.objectWillChange.send()
         }
 
-        #else
-        self.objectWillChange.send()
-
         #endif
+
+        self.objectWillChange.send()
 
         #endif
     }
@@ -353,5 +362,3 @@ extension LiveList: LiveResult {
         // TODO:
     }
 }
-
-#endif

@@ -100,7 +100,7 @@ public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
 
         self.id = id
         self.context = context
-        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
+        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 
             #if canImport(Combine)
             self.rawObjectWillChange = ObservableObjectPublisher()
@@ -132,10 +132,7 @@ public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
                         return
                 }
                 self.$lazySnapshot.reset({ initializer(id, context) })
-                if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
-
-                    self.willChange()
-                }
+                self.willChange()
             }
         )
 
@@ -156,20 +153,33 @@ public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
 #if canImport(Combine)
 import Combine
 
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+extension LiveObject: ObservableObject {}
+
+#endif
+
 // MARK: - LiveObject: LiveResult
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
 extension LiveObject: LiveResult {
 
     // MARK: ObservableObject
 
+    #if canImport(Combine)
+
+    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
     public var objectWillChange: ObservableObjectPublisher {
 
         return self.rawObjectWillChange! as! ObservableObjectPublisher
     }
+    
+    #endif
 
     public func willChange() {
 
+        guard #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) else {
+
+            return
+        }
         #if canImport(Combine)
 
         #if canImport(SwiftUI)
@@ -178,10 +188,9 @@ extension LiveObject: LiveResult {
             self.objectWillChange.send()
         }
 
-        #else
-        self.objectWillChange.send()
-
         #endif
+
+        self.objectWillChange.send()
 
         #endif
     }
@@ -191,8 +200,6 @@ extension LiveObject: LiveResult {
         // TODO:
     }
 }
-
-#endif
 
 
 // MARK: - LiveObject where O: NSManagedObject

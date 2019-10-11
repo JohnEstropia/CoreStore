@@ -36,7 +36,6 @@ import AppKit
 
 // MARK: - SnapshotResult
 
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
 public protocol SnapshotResult {
     
     associatedtype ObjectType: DynamicObject

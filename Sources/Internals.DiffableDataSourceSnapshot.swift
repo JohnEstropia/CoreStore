@@ -48,18 +48,14 @@ extension Internals {
 
         // MARK: Internal
 
-        internal let nextStateTag: UUID
-
         init() {
 
             self.structure = .init()
-            self.nextStateTag = .init()
         }
 
-        init(sections: [NSFetchedResultsSectionInfo], previousStateTag: UUID, nextStateTag: UUID) {
+        init(sections: [NSFetchedResultsSectionInfo]) {
 
-            self.structure = .init(sections: sections, previousStateTag: previousStateTag)
-            self.nextStateTag = nextStateTag
+            self.structure = .init(sections: sections)
         }
 
         var numberOfItems: Int {
@@ -77,19 +73,9 @@ extension Internals {
             return self.structure.allSectionIDs
         }
 
-        var allSectionStateIDs: [SectionStateID] {
-
-            return self.structure.allSectionStateIDs
-        }
-
         var allItemIDs: [NSManagedObjectID] {
 
             return self.structure.allItemIDs
-        }
-
-        var allItemStateIDs: [ItemStateID] {
-
-            return self.structure.allItemStateIDs
         }
 
         func numberOfItems(inSection identifier: String) -> Int {
@@ -102,19 +88,9 @@ extension Internals {
             return self.structure.items(in: identifier)
         }
 
-        func itemStateIDs(inSection identifier: String) -> [ItemStateID] {
-
-            return self.structure.itemStateIDs(in: identifier)
-        }
-
         func sectionIDs(containingItem identifier: NSManagedObjectID) -> String? {
 
             return self.structure.section(containing: identifier)
-        }
-
-        func sectionStateIDs(containingItem identifier: NSManagedObjectID) -> SectionStateID? {
-
-            return self.structure.sectionStateID(containing: identifier)
         }
 
         func indexOfItemID(_ identifier: NSManagedObjectID) -> Int? {
@@ -127,24 +103,19 @@ extension Internals {
             return self.structure.allSectionIDs.firstIndex(of: identifier)
         }
 
-        func itemIDs(where stateCondition: @escaping (UUID) -> Bool) -> [NSManagedObjectID] {
+        mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?) {
 
-            return self.structure.itemsIDs(where: stateCondition)
+            self.structure.append(itemIDs: identifiers, to: sectionIdentifier)
         }
 
-        mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?, nextStateTag: UUID) {
+        mutating func insertItems(_ identifiers: [NSManagedObjectID], beforeItem beforeIdentifier: NSManagedObjectID) {
 
-            self.structure.append(itemIDs: identifiers, to: sectionIdentifier, nextStateTag: nextStateTag)
+            self.structure.insert(itemIDs: identifiers, before: beforeIdentifier)
         }
 
-        mutating func insertItems(_ identifiers: [NSManagedObjectID], beforeItem beforeIdentifier: NSManagedObjectID, nextStateTag: UUID) {
+        mutating func insertItems(_ identifiers: [NSManagedObjectID], afterItem afterIdentifier: NSManagedObjectID) {
 
-            self.structure.insert(itemIDs: identifiers, before: beforeIdentifier, nextStateTag: nextStateTag)
-        }
-
-        mutating func insertItems(_ identifiers: [NSManagedObjectID], afterItem afterIdentifier: NSManagedObjectID, nextStateTag: UUID) {
-
-            self.structure.insert(itemIDs: identifiers, after: afterIdentifier, nextStateTag: nextStateTag)
+            self.structure.insert(itemIDs: identifiers, after: afterIdentifier)
         }
 
         mutating func deleteItems(_ identifiers: [NSManagedObjectID]) {
@@ -172,19 +143,19 @@ extension Internals {
             self.structure.update(itemIDs: identifiers, nextStateTag: nextStateTag)
         }
 
-        mutating func appendSections(_ identifiers: [String], nextStateTag: UUID) {
+        mutating func appendSections(_ identifiers: [String]) {
 
-            self.structure.append(sectionIDs: identifiers, nextStateTag: nextStateTag)
+            self.structure.append(sectionIDs: identifiers)
         }
 
-        mutating func insertSections(_ identifiers: [String], beforeSection toIdentifier: String, nextStateTag: UUID) {
+        mutating func insertSections(_ identifiers: [String], beforeSection toIdentifier: String) {
 
-            self.structure.insert(sectionIDs: identifiers, before: toIdentifier, nextStateTag: nextStateTag)
+            self.structure.insert(sectionIDs: identifiers, before: toIdentifier)
         }
 
-        mutating func insertSections(_ identifiers: [String], afterSection toIdentifier: String, nextStateTag: UUID) {
+        mutating func insertSections(_ identifiers: [String], afterSection toIdentifier: String) {
 
-            self.structure.insert(sectionIDs: identifiers, after: toIdentifier, nextStateTag: nextStateTag)
+            self.structure.insert(sectionIDs: identifiers, after: toIdentifier)
         }
 
         mutating func deleteSections(_ identifiers: [String]) {
@@ -271,7 +242,7 @@ extension Internals {
                 self.sections = []
             }
 
-            init(sections: [NSFetchedResultsSectionInfo], previousStateTag: UUID) {
+            init(sections: [NSFetchedResultsSectionInfo]) {
 
                 self.sections = sections.map {
 
@@ -279,8 +250,7 @@ extension Internals {
                         id: $0.name,
                         items: $0.objects?
                             .compactMap({ ($0 as? NSManagedObject)?.objectID })
-                            .map({ Item(id: $0, stateTag: previousStateTag) }) ?? [],
-                        stateTag: previousStateTag
+                            .map({ Item(id: $0) }) ?? []
                     )
                 }
             }
@@ -290,19 +260,9 @@ extension Internals {
                 return self.sections.map({ $0.id })
             }
 
-            var allSectionStateIDs: [SectionStateID] {
-
-                return self.sections.map({ $0.stateID })
-            }
-
             var allItemIDs: [NSManagedObjectID] {
 
                 return self.sections.lazy.flatMap({ $0.elements }).map({ $0.id })
-            }
-
-            var allItemStateIDs: [ItemStateID] {
-
-                return self.sections.lazy.flatMap({ $0.elements }).map({ $0.stateID })
             }
 
             func items(in sectionID: String) -> [NSManagedObjectID] {
@@ -314,33 +274,12 @@ extension Internals {
                 return self.sections[sectionIndex].elements.map({ $0.id })
             }
 
-            func itemsIDs(where stateCondition: @escaping (UUID) -> Bool) -> [NSManagedObjectID] {
-
-                return self.sections.lazy
-                    .flatMap({ $0.elements.filter({ stateCondition($0.stateTag) }) })
-                    .map({ $0.id })
-            }
-
-            func itemStateIDs(in sectionID: String) -> [ItemStateID] {
-
-                guard let sectionIndex = self.sectionIndex(of: sectionID) else {
-
-                    Internals.abort("Section \"\(sectionID)\" does not exist")
-                }
-                return self.sections[sectionIndex].elements.map({ $0.stateID })
-            }
-
             func section(containing itemID: NSManagedObjectID) -> String? {
 
                 return self.itemPositionMap()[itemID]?.section.id
             }
 
-            func sectionStateID(containing itemID: NSManagedObjectID) -> SectionStateID? {
-
-                return self.itemPositionMap()[itemID]?.section.stateID
-            }
-
-            mutating func append(itemIDs: [NSManagedObjectID], to sectionID: String?, nextStateTag: UUID) {
+            mutating func append(itemIDs: [NSManagedObjectID], to sectionID: String?) {
 
                 let index: Array<Section>.Index
                 if let sectionID = sectionID {
@@ -360,22 +299,22 @@ extension Internals {
                     }
                     index = section.index(before: section.endIndex)
                 }
-                let items = itemIDs.lazy.map({ Item(id: $0, stateTag: nextStateTag) })
+                let items = itemIDs.lazy.map({ Item(id: $0) })
                 self.sections[index].elements.append(contentsOf: items)
             }
 
-            mutating func insert(itemIDs: [NSManagedObjectID], before beforeItemID: NSManagedObjectID, nextStateTag: UUID) {
+            mutating func insert(itemIDs: [NSManagedObjectID], before beforeItemID: NSManagedObjectID) {
 
                 guard let itemPosition = self.itemPositionMap()[beforeItemID] else {
 
                     Internals.abort("Item \(beforeItemID) does not exist")
                 }
-                let items = itemIDs.lazy.map({ Item(id: $0, stateTag: nextStateTag) })
+                let items = itemIDs.lazy.map({ Item(id: $0) })
                 self.sections[itemPosition.sectionIndex].elements
                     .insert(contentsOf: items, at: itemPosition.itemRelativeIndex)
             }
 
-            mutating func insert(itemIDs: [NSManagedObjectID], after afterItemID: NSManagedObjectID, nextStateTag: UUID) {
+            mutating func insert(itemIDs: [NSManagedObjectID], after afterItemID: NSManagedObjectID) {
 
                 guard let itemPosition = self.itemPositionMap()[afterItemID] else {
 
@@ -383,7 +322,7 @@ extension Internals {
                 }
                 let itemIndex = self.sections[itemPosition.sectionIndex].elements
                     .index(after: itemPosition.itemRelativeIndex)
-                let items = itemIDs.lazy.map({ Item(id: $0, stateTag: nextStateTag) })
+                let items = itemIDs.lazy.map({ Item(id: $0) })
                 self.sections[itemPosition.sectionIndex].elements
                     .insert(contentsOf: items, at: itemIndex)
             }
@@ -459,34 +398,34 @@ extension Internals {
                         continue
                     }
                     self.sections[itemPosition.sectionIndex]
-                        .elements[itemPosition.itemRelativeIndex].stateTag = nextStateTag
+                        .elements[itemPosition.itemRelativeIndex].isReloaded = true
                 }
             }
 
-            mutating func append(sectionIDs: [String], nextStateTag: UUID) {
+            mutating func append(sectionIDs: [String]) {
 
-                let newSections = sectionIDs.lazy.map({ Section(id: $0, stateTag: nextStateTag) })
+                let newSections = sectionIDs.lazy.map({ Section(id: $0) })
                 self.sections.append(contentsOf: newSections)
             }
 
-            mutating func insert(sectionIDs: [String], before beforeSectionID: String, nextStateTag: UUID) {
+            mutating func insert(sectionIDs: [String], before beforeSectionID: String) {
 
                 guard let sectionIndex = self.sectionIndex(of: beforeSectionID) else {
 
                     Internals.abort("Section \"\(beforeSectionID)\" does not exist")
                 }
-                let newSections = sectionIDs.lazy.map({ Section(id: $0, stateTag: nextStateTag) })
+                let newSections = sectionIDs.lazy.map({ Section(id: $0) })
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
-            mutating func insert(sectionIDs: [String], after afterSectionID: String, nextStateTag: UUID) {
+            mutating func insert(sectionIDs: [String], after afterSectionID: String) {
 
                 guard let beforeIndex = self.sectionIndex(of: afterSectionID) else {
 
                     Internals.abort("Section \"\(afterSectionID)\" does not exist")
                 }
                 let sectionIndex = self.sections.index(after: beforeIndex)
-                let newSections = sectionIDs.lazy.map({ Section(id: $0, stateTag: nextStateTag) })
+                let newSections = sectionIDs.lazy.map({ Section(id: $0) })
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
@@ -533,7 +472,7 @@ extension Internals {
 
                         continue
                     }
-                    self.sections[sectionIndex].stateTag = nextStateTag
+                    self.sections[sectionIndex].isReloaded = true
                 }
             }
 
@@ -589,22 +528,17 @@ extension Internals {
 
             fileprivate struct Item: Identifiable, Equatable {
 
-                var stateTag: UUID
+                var isReloaded: Bool
 
-                init(id: NSManagedObjectID, stateTag: UUID) {
+                init(id: NSManagedObjectID, isReloaded: Bool = false) {
 
                     self.id = id
-                    self.stateTag = stateTag
-                }
-
-                var stateID: ItemStateID {
-
-                    return .init(id: self.id, stateTag: self.stateTag)
+                    self.isReloaded = isReloaded
                 }
 
                 func isContentEqual(to source: Item) -> Bool {
 
-                    return self.id == source.id && self.stateTag == source.stateTag
+                    return !self.isReloaded && self.id == source.id
                 }
 
                 // MARK: Identifiable
@@ -618,27 +552,22 @@ extension Internals {
             fileprivate struct Section: Identifiable, Equatable {
 
                 var elements: [Item] = []
-                var stateTag: UUID
+                var isReloaded: Bool
 
-                init(id: String, items: [Item] = [], stateTag: UUID) {
+                init(id: String, items: [Item] = [], isReloaded: Bool = false) {
                     self.id = id
                     self.elements = items
-                    self.stateTag = stateTag
+                    self.isReloaded = isReloaded
                 }
 
                 init<S: Sequence>(source: Section, elements: S) where S.Element == Item {
 
-                    self.init(id: source.id, items: Array(elements), stateTag: source.stateTag)
-                }
-
-                var stateID: SectionStateID {
-
-                    return .init(id: self.id, stateTag: self.stateTag)
+                    self.init(id: source.id, items: Array(elements), isReloaded: source.isReloaded)
                 }
 
                 func isContentEqual(to source: Section) -> Bool {
 
-                    return self.id == source.id && self.stateTag == source.stateTag
+                    return !self.isReloaded && self.id == source.id
                 }
 
                 // MARK: Identifiable

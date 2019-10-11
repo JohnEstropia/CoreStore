@@ -77,7 +77,7 @@ extension Internals {
 
 //            #if canImport(UIKit) || canImport(AppKit)
 //
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *) {
+//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 //
 //                return
 //            }
@@ -96,7 +96,7 @@ extension Internals {
 
 //        #if canImport(UIKit) || canImport(AppKit)
 //
-//        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
+//        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
 //        @objc
 //        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
 //
@@ -111,48 +111,12 @@ extension Internals {
         @objc
         dynamic func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 
-            let nextStateTag: UUID = .init()
-            var dataSourceSnapshot = Internals.DiffableDataSourceSnapshot(
-                sections: controller.sections ?? [],
-                previousStateTag: self.previousStateTag,
-                nextStateTag: nextStateTag
-            )
-            dataSourceSnapshot.reloadItems(self.reloadedItemIDs, nextStateTag: nextStateTag)
-            dataSourceSnapshot.reloadSections(self.reloadedSectionIDs, nextStateTag: nextStateTag)
-
             self.handler?.controller(
                 controller,
-                didChangContentWith: dataSourceSnapshot
+                didChangContentWith: Internals.DiffableDataSourceSnapshot(
+                    sections: controller.sections ?? []
+                )
             )
-            self.previousStateTag = nextStateTag
         }
-
-        @objc
-        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-
-            let managedObject = anObject as! NSManagedObject
-            self.reloadedItemIDs.insert(managedObject.objectID)
-        }
-
-        @objc
-        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-
-            self.reloadedSectionIDs.insert(sectionInfo.name)
-        }
-
-
-        // MARK: Private
-
-        private var previousStateTag: UUID = .init() {
-
-            didSet {
-
-                self.reloadedItemIDs = []
-                self.reloadedSectionIDs = []
-            }
-        }
-
-        private var reloadedItemIDs: Set<NSManagedObjectID> = []
-        private var reloadedSectionIDs: Set<String> = []
     }
 }

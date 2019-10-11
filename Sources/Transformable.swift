@@ -209,6 +209,11 @@ public enum TransformableContainer<O: CoreStoreObject> {
         public typealias ReturnValueType = DestinationValueType
 
 
+        // MARK: PropertyProtocol
+
+        internal let keyPath: KeyPathString
+
+
         // MARK: AttributeProtocol
         
         internal static var attributeType: NSAttributeType {
@@ -216,7 +221,6 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return .transformableAttributeType
         }
 
-        internal let keyPath: KeyPathString
         internal let isOptional = false
         internal let isTransient: Bool
         internal let allowsExternalBinaryDataStorage: Bool
@@ -427,6 +431,11 @@ public enum TransformableContainer<O: CoreStoreObject> {
         public typealias ReturnValueType = DestinationValueType?
 
 
+        // MARK: PropertyProtocol
+
+        internal let keyPath: KeyPathString
+
+
         // MARK: AttributeProtocol
 
         internal static var attributeType: NSAttributeType {
@@ -434,7 +443,6 @@ public enum TransformableContainer<O: CoreStoreObject> {
             return .transformableAttributeType
         }
 
-        internal let keyPath: KeyPathString
         internal let isOptional = true
         internal let isTransient: Bool
         internal let allowsExternalBinaryDataStorage: Bool

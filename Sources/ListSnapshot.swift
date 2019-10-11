@@ -128,17 +128,17 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
 
     public mutating func appendItems(_ identifiers: [ItemID], toSection sectionIdentifier: SectionID? = nil) {
 
-        self.diffableSnapshot.appendItems(identifiers, toSection: sectionIdentifier, nextStateTag: .init())
+        self.diffableSnapshot.appendItems(identifiers, toSection: sectionIdentifier)
     }
 
     public mutating func insertItems(_ identifiers: [ItemID], beforeItem beforeIdentifier: ItemID) {
 
-        self.diffableSnapshot.insertItems(identifiers, beforeItem: beforeIdentifier, nextStateTag: .init())
+        self.diffableSnapshot.insertItems(identifiers, beforeItem: beforeIdentifier)
     }
 
     public mutating func insertItems(_ identifiers: [ItemID], afterItem afterIdentifier: ItemID) {
 
-        self.diffableSnapshot.insertItems(identifiers, afterItem: afterIdentifier, nextStateTag: .init())
+        self.diffableSnapshot.insertItems(identifiers, afterItem: afterIdentifier)
     }
 
     public mutating func deleteItems(_ identifiers: [ItemID]) {
@@ -168,17 +168,17 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
 
     public mutating func appendSections(_ identifiers: [SectionID]) {
 
-        self.diffableSnapshot.appendSections(identifiers, nextStateTag: .init())
+        self.diffableSnapshot.appendSections(identifiers)
     }
 
     public mutating func insertSections(_ identifiers: [SectionID], beforeSection toIdentifier: SectionID) {
 
-        self.diffableSnapshot.insertSections(identifiers, beforeSection: toIdentifier, nextStateTag: .init())
+        self.diffableSnapshot.insertSections(identifiers, beforeSection: toIdentifier)
     }
 
     public mutating func insertSections(_ identifiers: [SectionID], afterSection toIdentifier: SectionID) {
 
-        self.diffableSnapshot.insertSections(identifiers, afterSection: toIdentifier, nextStateTag: .init())
+        self.diffableSnapshot.insertSections(identifiers, afterSection: toIdentifier)
     }
 
     public mutating func deleteSections(_ identifiers: [SectionID]) {
@@ -262,16 +262,6 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
 
         self.diffableSnapshot = diffableSnapshot
         self.context = context
-    }
-
-    internal var nextStateTag: UUID {
-
-        return self.diffableSnapshot.nextStateTag
-    }
-
-    internal func itemIDs(where stateCondition: @escaping (UUID) -> Bool) -> [ItemID] {
-
-        return self.diffableSnapshot.itemIDs(where: stateCondition)
     }
     
     
