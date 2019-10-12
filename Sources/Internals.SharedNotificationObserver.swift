@@ -25,32 +25,83 @@
 
 import Foundation
 
-
 // MARK: - Internal
 
 extension Internals {
 
     // MARK: - SharedNotificationObserver
 
-    internal final class SharedNotificationObserver {
+    internal final class SharedNotificationObserver<T> {
 
         // MARK: Internal
 
-        let observer: NSObjectProtocol
-
-        init(notificationName: Notification.Name, object: Any?, queue: OperationQueue? = nil, closure: @escaping (_ note: Notification) -> Void) {
+        internal init(notificationName: Notification.Name, object: Any?, queue: OperationQueue? = nil, sharedValue: @escaping (_ note: Notification) -> T) {
 
             self.observer = NotificationCenter.default.addObserver(
                 forName: notificationName,
                 object: object,
                 queue: queue,
-                using: closure
+                using: { [weak self] (notification) in
+
+                    guard let self = self else {
+
+                        return
+                    }
+                    let value = sharedValue(notification)
+                    self.notifyObservers(value)
+                }
             )
         }
 
         deinit {
 
-            NotificationCenter.default.removeObserver(self.observer)
+            self.observer.map(NotificationCenter.default.removeObserver(_:))
+        }
+
+        internal func addObserver<U: AnyObject>(_ observer: U, closure: @escaping (T) -> Void) {
+
+            self.observers.setObject(Closure(closure), forKey: observer)
+        }
+
+
+        // MARK: Private
+
+        private var observer: NSObjectProtocol!
+        private let observers: NSMapTable<AnyObject, Closure> = .weakToStrongObjects()
+
+        private func notifyObservers(_ sharedValue: T) {
+
+            guard let enumerator = self.observers.objectEnumerator() else {
+
+                return
+            }
+            for closure in enumerator {
+
+                (closure as! Closure).invoke(with: sharedValue)
+            }
+        }
+
+
+        // MARK: - Closure
+
+        fileprivate final class Closure {
+
+            // MARK: FilePrivate
+
+            fileprivate init(_ closure: @escaping (T) -> Void) {
+
+                self.closure = closure
+            }
+
+            fileprivate func invoke(with argument: T) {
+
+                self.closure(argument)
+            }
+
+
+            // MARK: Private
+
+            private let closure: (T) -> Void
         }
     }
 }

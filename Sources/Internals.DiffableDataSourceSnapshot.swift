@@ -40,22 +40,24 @@ import AppKit
 
 extension Internals {
 
-
     // MARK: - DiffableDataSourceSnapshot
 
     // Implementation based on https://github.com/ra1028/DiffableDataSources
-    internal struct DiffableDataSourceSnapshot {
+    internal struct DiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol {
 
         // MARK: Internal
-
-        init() {
-
-            self.structure = .init()
-        }
 
         init(sections: [NSFetchedResultsSectionInfo]) {
 
             self.structure = .init(sections: sections)
+        }
+
+
+        // MARK: DiffableDataSourceSnapshotProtocol
+
+        init() {
+
+            self.structure = .init()
         }
 
         var numberOfItems: Int {
@@ -68,37 +70,37 @@ extension Internals {
             return self.structure.allSectionIDs.count
         }
 
-        var allSectionIDs: [String] {
+        var sectionIdentifiers: [String] {
 
             return self.structure.allSectionIDs
         }
 
-        var allItemIDs: [NSManagedObjectID] {
+        var itemIdentifiers: [NSManagedObjectID] {
 
             return self.structure.allItemIDs
         }
 
         func numberOfItems(inSection identifier: String) -> Int {
 
-            return self.itemIDs(inSection: identifier).count
+            return self.itemIdentifiers(inSection: identifier).count
         }
 
-        func itemIDs(inSection identifier: String) -> [NSManagedObjectID] {
+        func itemIdentifiers(inSection identifier: String) -> [NSManagedObjectID] {
 
             return self.structure.items(in: identifier)
         }
 
-        func sectionIDs(containingItem identifier: NSManagedObjectID) -> String? {
+        func sectionIdentifier(containingItem identifier: NSManagedObjectID) -> String? {
 
             return self.structure.section(containing: identifier)
         }
 
-        func indexOfItemID(_ identifier: NSManagedObjectID) -> Int? {
+        func indexOfItem(_ identifier: NSManagedObjectID) -> Int? {
 
             return self.structure.allItemIDs.firstIndex(of: identifier)
         }
 
-        func indexOfSectionID(_ identifier: String) -> Int? {
+        func indexOfSection(_ identifier: String) -> Int? {
 
             return self.structure.allSectionIDs.firstIndex(of: identifier)
         }
@@ -138,9 +140,9 @@ extension Internals {
             self.structure.move(itemID: identifier, after: toIdentifier)
         }
 
-        mutating func reloadItems<S: Sequence>(_ identifiers: S, nextStateTag: UUID) where S.Element == NSManagedObjectID {
+        mutating func reloadItems(_ identifiers: [NSManagedObjectID]) {
 
-            self.structure.update(itemIDs: identifiers, nextStateTag: nextStateTag)
+            self.structure.update(itemIDs: identifiers)
         }
 
         mutating func appendSections(_ identifiers: [String]) {
@@ -173,9 +175,9 @@ extension Internals {
             self.structure.move(sectionID: identifier, after: toIdentifier)
         }
 
-        mutating func reloadSections<S: Sequence>(_ identifiers: S, nextStateTag: UUID) where S.Element == String {
+        mutating func reloadSections(_ identifiers: [String]) {
 
-            self.structure.update(sectionIDs: identifiers, nextStateTag: nextStateTag)
+            self.structure.update(sectionIDs: identifiers)
         }
 
 
@@ -388,7 +390,7 @@ extension Internals {
                     .insert(removed, at: itemIndex)
             }
 
-            mutating func update<S: Sequence>(itemIDs: S, nextStateTag: UUID) where S.Element == NSManagedObjectID {
+            mutating func update<S: Sequence>(itemIDs: S) where S.Element == NSManagedObjectID {
 
                 let itemPositionMap = self.itemPositionMap()
                 for itemID in itemIDs {
@@ -464,7 +466,7 @@ extension Internals {
                 self.sections.insert(removed, at: sectionIndex)
             }
 
-            mutating func update<S: Sequence>(sectionIDs: S, nextStateTag: UUID) where S.Element == String {
+            mutating func update<S: Sequence>(sectionIDs: S) where S.Element == String {
 
                 for sectionID in sectionIDs {
 
@@ -586,6 +588,78 @@ extension Internals {
                 let sectionIndex: Int
             }
         }
+    }
+}
+
+
+// MARK: - NSDiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol
+
+@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
+extension NSDiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol where SectionIdentifierType == NSString, ItemIdentifierType == NSManagedObjectID {
+
+    internal var sectionIdentifiers: [String] {
+
+        return self.sectionIdentifiers as [NSString] as [String]
+    }
+
+    internal func numberOfItems(inSection identifier: String) -> Int {
+
+        return self.numberOfItems(inSection: identifier as NSString)
+    }
+
+    internal func itemIdentifiers(inSection identifier: String) -> [NSManagedObjectID] {
+
+        return self.itemIdentifiers(inSection: identifier as NSString)
+    }
+
+    internal func sectionIdentifier(containingItem identifier: NSManagedObjectID) -> String? {
+
+        return self.sectionIdentifier(containingItem: identifier) as NSString? as String?
+    }
+
+    internal func indexOfSection(_ identifier: String) -> Int? {
+
+        return self.indexOfSection(identifier as NSString)
+    }
+
+    internal mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?) {
+
+        self.appendItems(identifiers, toSection: sectionIdentifier as NSString?)
+    }
+
+    internal mutating func appendSections(_ identifiers: [String]) {
+
+        self.appendSections(identifiers as [NSString])
+    }
+
+    internal mutating func insertSections(_ identifiers: [String], beforeSection toIdentifier: String) {
+
+        self.insertSections(identifiers as [NSString], beforeSection: toIdentifier as NSString)
+    }
+
+    internal mutating func insertSections(_ identifiers: [String], afterSection toIdentifier: String) {
+
+        return self.insertSections(identifiers as [NSString], afterSection: toIdentifier as NSString)
+    }
+
+    internal mutating func deleteSections(_ identifiers: [String]) {
+
+        self.deleteSections(identifiers as [NSString])
+    }
+
+    internal mutating func moveSection(_ identifier: String, beforeSection toIdentifier: String) {
+
+        self.moveSection(identifier as NSString, beforeSection: toIdentifier as NSString)
+    }
+
+    internal mutating func moveSection(_ identifier: String, afterSection toIdentifier: String) {
+
+        self.moveSection(identifier as NSString, afterSection: toIdentifier as NSString)
+    }
+
+    internal mutating func reloadSections(_ identifiers: [String]) {
+
+        self.reloadSections(identifiers as [NSString])
     }
 }
 

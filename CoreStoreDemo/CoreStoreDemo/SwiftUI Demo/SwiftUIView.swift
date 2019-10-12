@@ -39,7 +39,7 @@ struct SwiftUIView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(palettes.sections, id: \.self) { (sectionID) in
+                ForEach(palettes.sectionIdentifiers, id: \.self) { (sectionID) in
                     Section(header: Text(sectionID)) {
                         ForEach(self.palettes[section: sectionID], id: \.self) { palette in
                             NavigationLink(
@@ -118,7 +118,6 @@ struct SwiftUIView: View {
                 self.needsShowAlert = true
             }
         }
-        .colorScheme(.dark)
     }
 
     @State

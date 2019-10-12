@@ -46,7 +46,7 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
     public subscript<S: Sequence>(indices indices: S) -> [LiveObject<O>] where S.Element == Index {
 
         let context = self.context!
-        let itemIDs = self.diffableSnapshot.allItemIDs
+        let itemIDs = self.diffableSnapshot.itemIdentifiers
         return indices.map { position in
 
             let itemID = itemIDs[position]
@@ -57,7 +57,7 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
     public subscript(section sectionID: SectionID) -> [LiveObject<O>] {
 
         let context = self.context!
-        let itemIDs = self.diffableSnapshot.itemIDs(inSection: sectionID)
+        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
         return itemIDs.map {
 
             return LiveObject<O>(id: $0, context: context)
@@ -67,7 +67,7 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
     public subscript<S: Sequence>(section sectionID: SectionID, itemIndices itemIndices: S) -> [LiveObject<O>] where S.Element == Int {
 
         let context = self.context!
-        let itemIDs = self.diffableSnapshot.itemIDs(inSection: sectionID)
+        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
         return itemIndices.map { position in
 
             let itemID = itemIDs[position]
@@ -85,14 +85,14 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
         return self.diffableSnapshot.numberOfSections
     }
 
-    public var sectionIDs: [SectionID] {
+    public var sectionIdentifiers: [SectionID] {
 
-        return self.diffableSnapshot.allSectionIDs
+        return self.diffableSnapshot.sectionIdentifiers
     }
 
     public var itemIdentifiers: [ItemID] {
 
-        return self.diffableSnapshot.allItemIDs
+        return self.diffableSnapshot.itemIdentifiers
     }
 
     public func numberOfItems(inSection identifier: SectionID) -> Int {
@@ -102,28 +102,28 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
 
     public func itemIdentifiers(inSection identifier: SectionID) -> [ItemID] {
 
-        return self.diffableSnapshot.itemIDs(inSection: identifier)
+        return self.diffableSnapshot.itemIdentifiers(inSection: identifier)
     }
 
     public func itemIdentifiers(inSection identifier: SectionID, atIndices indices: IndexSet) -> [ItemID] {
 
-        let itemIDs = self.diffableSnapshot.itemIDs(inSection: identifier)
+        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: identifier)
         return indices.map({ itemIDs[$0] })
     }
 
     public func sectionIdentifier(containingItem identifier: ItemID) -> SectionID? {
 
-        return self.diffableSnapshot.sectionIDs(containingItem: identifier)
+        return self.diffableSnapshot.sectionIdentifier(containingItem: identifier)
     }
 
     public func indexOfItem(_ identifier: ItemID) -> Index? {
 
-        return self.diffableSnapshot.indexOfItemID(identifier)
+        return self.diffableSnapshot.indexOfItem(identifier)
     }
 
     public func indexOfSection(_ identifier: SectionID) -> Int? {
 
-        return self.diffableSnapshot.indexOfSectionID(identifier)
+        return self.diffableSnapshot.indexOfSection(identifier)
     }
 
     public mutating func appendItems(_ identifiers: [ItemID], toSection sectionIdentifier: SectionID? = nil) {
@@ -163,7 +163,7 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
 
     public mutating func reloadItems(_ identifiers: [ItemID]) {
 
-        self.diffableSnapshot.reloadItems(identifiers, nextStateTag: .init())
+        self.diffableSnapshot.reloadItems(identifiers)
     }
 
     public mutating func appendSections(_ identifiers: [SectionID]) {
@@ -198,7 +198,7 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
 
     public mutating func reloadSections(_ identifiers: [SectionID]) {
 
-        self.diffableSnapshot.reloadSections(identifiers, nextStateTag: .init())
+        self.diffableSnapshot.reloadSections(identifiers)
     }
     
     
@@ -211,18 +211,18 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
     
     public var startIndex: Index {
         
-        return self.diffableSnapshot.allItemIDs.startIndex
+        return self.diffableSnapshot.itemIdentifiers.startIndex
     }
     
     public var endIndex: Index {
         
-        return self.diffableSnapshot.allItemIDs.endIndex
+        return self.diffableSnapshot.itemIdentifiers.endIndex
     }
     
     public subscript(position: Index) -> Element {
         
         let context = self.context!
-        let itemID = self.diffableSnapshot.allItemIDs[position]
+        let itemID = self.diffableSnapshot.itemIdentifiers[position]
         return LiveObject<O>(id: itemID, context: context)
     }
     
@@ -254,11 +254,11 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
     
     internal init() {
 
-        self.diffableSnapshot = .init()
+        self.diffableSnapshot = Internals.DiffableDataSourceSnapshot()
         self.context = nil
     }
     
-    internal init(diffableSnapshot: Internals.DiffableDataSourceSnapshot, context: NSManagedObjectContext) {
+    internal init(diffableSnapshot: DiffableDataSourceSnapshotProtocol, context: NSManagedObjectContext) {
 
         self.diffableSnapshot = diffableSnapshot
         self.context = context
@@ -270,5 +270,5 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
     private let id: UUID = .init()
     private let context: NSManagedObjectContext?
 
-    private var diffableSnapshot: Internals.DiffableDataSourceSnapshot
+    private var diffableSnapshot: DiffableDataSourceSnapshotProtocol
 }

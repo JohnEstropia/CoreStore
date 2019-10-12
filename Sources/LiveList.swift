@@ -63,9 +63,9 @@ public final class LiveList<O: DynamicObject>: Hashable {
         return self.snapshot.numberOfSections
     }
 
-    public var sections: [SectionID] {
+    public var sectionIdentifiers: [SectionID] {
 
-        return self.snapshot.sectionIDs
+        return self.snapshot.sectionIdentifiers
     }
 
     public subscript(section sectionID: SectionID) -> [LiveObject<O>] {
@@ -302,7 +302,7 @@ extension LiveList: FetchedDiffableDataSourceSnapshotHandler {
 
     // MARK: FetchedDiffableDataSourceSnapshotHandler
 
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangContentWith snapshot: Internals.DiffableDataSourceSnapshot) {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: DiffableDataSourceSnapshotProtocol) {
 
         self.snapshot = .init(
             diffableSnapshot: snapshot,

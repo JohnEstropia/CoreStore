@@ -89,7 +89,10 @@ extension NSManagedObjectContext {
     @nonobjc
     internal func liveObject<D: DynamicObject>(id: NSManagedObjectID) -> LiveObject<D> {
 
-        let cache = self.liveObjectsCache(D.self)
+        let cache: NSMapTable<NSManagedObjectID, LiveObject<D>> = self.userInfo(for: .liveObjectsCache(D.self)) {
+
+            return .strongToWeakObjects()
+        }
         return Internals.with {
 
             if let liveObject = cache.object(forKey: id) {
@@ -103,26 +106,37 @@ extension NSManagedObjectContext {
     }
 
     @nonobjc
-    private func liveObjectsCache<D: DynamicObject>(_ objectType: D.Type) -> NSMapTable<NSManagedObjectID, LiveObject<D>> {
+    internal func objectsDidChangeObserver<U: AnyObject>(for observer: U) -> Internals.SharedNotificationObserver<Set<NSManagedObjectID>> {
 
-        let key = Internals.typeName(objectType)
-        if let cache = self.userInfo[key] {
+        return self.userInfo(for: .objectsChangeObserver(U.self)) { [unowned self] in
 
-            return cache as! NSMapTable<NSManagedObjectID, LiveObject<D>>
+            return .init(
+                notificationName: .NSManagedObjectContextObjectsDidChange,
+                object: self,
+                queue: .main,
+                sharedValue: { (notification) -> Set<NSManagedObjectID> in
+
+                    guard let userInfo = notification.userInfo else {
+
+                        return []
+                    }
+                    var updatedObjectIDs: Set<NSManagedObjectID> = []
+                    if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObjectID> {
+
+                        updatedObjectIDs.formUnion(updatedObjects)
+                    }
+                    if let mergedObjects = userInfo[NSRefreshedObjectsKey] as? Set<NSManagedObjectID> {
+
+                        updatedObjectIDs.formUnion(mergedObjects)
+                    }
+                    return updatedObjectIDs
+                }
+            )
         }
-        let cache = NSMapTable<NSManagedObjectID, LiveObject<D>>.strongToWeakObjects()
-        self.userInfo[key] = cache
-        return cache
     }
     
     
     // MARK: Private
-    
-    private struct PropertyKeys {
-        
-        static var observerForWillSaveNotification: Void?
-        static var shouldCascadeSavesToParent: Void?
-    }
     
     @nonobjc
     private var observerForWillSaveNotification: Internals.NotificationObserver? {
@@ -141,6 +155,48 @@ extension NSManagedObjectContext {
                 forKey: &PropertyKeys.observerForWillSaveNotification,
                 inObject: self
             )
+        }
+    }
+
+    private func userInfo<T>(for key: UserInfoKeys, initialize: @escaping () -> T) -> T {
+
+        let keyString = key.keyString
+        if let value = self.userInfo[keyString] {
+
+            return value as! T
+        }
+        let value = initialize()
+        self.userInfo[keyString] = value
+        return value
+    }
+
+
+    // MARK: - PropertyKeys
+
+    private struct PropertyKeys {
+
+        static var observerForWillSaveNotification: Void?
+        static var shouldCascadeSavesToParent: Void?
+    }
+
+
+    // MARK: - UserInfoKeys
+
+    private enum UserInfoKeys {
+
+        case liveObjectsCache(DynamicObject.Type)
+        case objectsChangeObserver(AnyObject.Type)
+
+        var keyString: String {
+
+            switch self {
+
+            case .liveObjectsCache(let objectType):
+                return "CoreStore.liveObjectsCache(\(Internals.typeName(objectType)))"
+
+            case .objectsChangeObserver:
+                return "CoreStore.objectsChangeObserver"
+            }
         }
     }
 }

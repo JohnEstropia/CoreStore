@@ -114,36 +114,23 @@ public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
 
             self.rawObjectWillChange = nil
         }
-        self.observer = NotificationCenter.default.addObserver(
-            forName: .NSManagedObjectContextObjectsDidChange,
-            object: context,
-            queue: .main,
-            using: { [weak self] (notification) in
-
-                guard let self = self, let userInfo = notification.userInfo else {
-
-                    return
-                }
-                let updatedObjects = (userInfo[NSUpdatedObjectsKey] as! NSSet? ?? [])
-                let mergedObjects = (userInfo[NSRefreshedObjectsKey] as! NSSet? ?? [])
-                guard mergedObjects.contains(where: { ($0 as! NSManagedObject).objectID == id })
-                    || updatedObjects.contains(where: { ($0 as! NSManagedObject).objectID == id }) else {
-
-                        return
-                }
-                self.$lazySnapshot.reset({ initializer(id, context) })
-                self.willChange()
-            }
-        )
-
         self.$lazySnapshot.initialize({ initializer(id, context) })
+        
+        context.objectsDidChangeObserver(for: self).addObserver(self) { [weak self] (objectIDs) in
+
+            guard let self = self else {
+
+                return
+            }
+            self.$lazySnapshot.reset({ initializer(id, context) })
+            self.willChange()
+        }
     }
 
 
     // MARK: Private
     
     private let context: NSManagedObjectContext
-    private var observer: NSObjectProtocol?
 
     @Internals.LazyNonmutating(uninitialized: ())
     private var lazySnapshot: ObjectSnapshot<O>

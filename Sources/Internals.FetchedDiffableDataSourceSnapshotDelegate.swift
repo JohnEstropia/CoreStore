@@ -41,7 +41,7 @@ import AppKit
 
 internal protocol FetchedDiffableDataSourceSnapshotHandler: AnyObject {
 
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangContentWith snapshot: Internals.DiffableDataSourceSnapshot)
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: DiffableDataSourceSnapshotProtocol)
 }
 
 
@@ -75,14 +75,14 @@ extension Internals {
 
         internal func initialFetch() {
 
-//            #if canImport(UIKit) || canImport(AppKit)
-//
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                return
-//            }
-//
-//            #endif
+            #if canImport(UIKit) || canImport(AppKit)
+
+            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
+
+                return
+            }
+
+            #endif
 
             guard let fetchedResultsController = self.fetchedResultsController else {
 
@@ -94,26 +94,26 @@ extension Internals {
 
         // MARK: NSFetchedResultsControllerDelegate
 
-//        #if canImport(UIKit) || canImport(AppKit)
-//
-//        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-//        @objc
-//        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-//
-//            self.handler?.controller(
-//                controller,
-//                didChangContentWith: snapshot as NSDiffableDataSourceSnapshot<NSString, NSManagedObjectID>
-//            )
-//        }
-//
-//        #endif
+        #if canImport(UIKit) || canImport(AppKit)
+
+        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+        @objc
+        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+
+            self.handler?.controller(
+                controller,
+                didChangeContentWith: snapshot as NSDiffableDataSourceSnapshot<NSString, NSManagedObjectID>
+            )
+        }
+
+        #endif
         
         @objc
         dynamic func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 
             self.handler?.controller(
                 controller,
-                didChangContentWith: Internals.DiffableDataSourceSnapshot(
+                didChangeContentWith: Internals.DiffableDataSourceSnapshot(
                     sections: controller.sections ?? []
                 )
             )

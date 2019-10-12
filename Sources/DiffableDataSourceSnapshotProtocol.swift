@@ -31,4 +31,32 @@ import CoreData
 
 internal protocol DiffableDataSourceSnapshotProtocol {
 
+    init()
+
+    var numberOfItems: Int { get }
+    var numberOfSections: Int { get }
+    var sectionIdentifiers: [String] { get }
+    var itemIdentifiers: [NSManagedObjectID] { get }
+
+    func numberOfItems(inSection identifier: String) -> Int
+    func itemIdentifiers(inSection identifier: String) -> [NSManagedObjectID]
+    func sectionIdentifier(containingItem identifier: NSManagedObjectID) -> String?
+    func indexOfItem(_ identifier: NSManagedObjectID) -> Int?
+    func indexOfSection(_ identifier: String) -> Int?
+
+    mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?)
+    mutating func insertItems(_ identifiers: [NSManagedObjectID], beforeItem beforeIdentifier: NSManagedObjectID)
+    mutating func insertItems(_ identifiers: [NSManagedObjectID], afterItem afterIdentifier: NSManagedObjectID)
+    mutating func deleteItems(_ identifiers: [NSManagedObjectID])
+    mutating func deleteAllItems()
+    mutating func moveItem(_ identifier: NSManagedObjectID, beforeItem toIdentifier: NSManagedObjectID)
+    mutating func moveItem(_ identifier: NSManagedObjectID, afterItem toIdentifier: NSManagedObjectID)
+    mutating func reloadItems(_ identifiers: [NSManagedObjectID])
+    mutating func appendSections(_ identifiers: [String])
+    mutating func insertSections(_ identifiers: [String], beforeSection toIdentifier: String)
+    mutating func insertSections(_ identifiers: [String], afterSection toIdentifier: String)
+    mutating func deleteSections(_ identifiers: [String])
+    mutating func moveSection(_ identifier: String, beforeSection toIdentifier: String)
+    mutating func moveSection(_ identifier: String, afterSection toIdentifier: String)
+    mutating func reloadSections(_ identifiers: [String])
 }
