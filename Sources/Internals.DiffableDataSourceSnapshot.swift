@@ -51,6 +51,18 @@ extension Internals {
 
             self.structure = .init(sections: sections)
         }
+        
+        var sections: [Section] {
+            
+            get {
+                
+                return self.structure.sections
+            }
+            set {
+                
+                self.structure.sections = newValue
+            }
+        }
 
 
         // MARK: DiffableDataSourceSnapshotProtocol
@@ -186,48 +198,66 @@ extension Internals {
         private var structure: BackingStructure
 
 
-        // MARK: - ItemStateID
+        // MARK: - Section
 
-        internal struct ItemStateID: Identifiable, Equatable {
+        internal struct Section: DifferentiableSection, Equatable {
 
-            let stateTag: UUID
+            var isReloaded: Bool
 
-            init(id: NSManagedObjectID, stateTag: UUID) {
-
-                self.id = id
-                self.stateTag = stateTag
+            init(differenceIdentifier: String, items: [Item] = [], isReloaded: Bool = false) {
+                
+                self.differenceIdentifier = differenceIdentifier
+                self.elements = items
+                self.isReloaded = isReloaded
             }
 
-            func isContentEqual(to source: ItemStateID) -> Bool {
+            // MARK: Differentiable
 
-                return self.id == source.id && self.stateTag == source.stateTag
+            let differenceIdentifier: String
+
+            func isContentEqual(to source: Section) -> Bool {
+
+                return !self.isReloaded
+                    && self.differenceIdentifier == source.differenceIdentifier
             }
+            
+            
+            // MARK: DifferentiableSection
+            
+            var elements: [Item] = []
 
-            // MARK: Identifiable
+            init<S: Sequence>(source: Section, elements: S) where S.Element == Item {
 
-            let id: NSManagedObjectID
+                self.init(
+                    differenceIdentifier: source.differenceIdentifier,
+                    items: Array(elements),
+                    isReloaded: source.isReloaded
+                )
+            }
         }
 
 
-        // MARK: - SectionStateID
+        // MARK: - Item
 
-        internal struct SectionStateID: Identifiable, Equatable {
+        internal struct Item: Differentiable, Equatable {
 
-            let stateTag: UUID
+            var isReloaded: Bool
 
-            init(id: String, stateTag: UUID) {
-                self.id = id
-                self.stateTag = stateTag
+            init(differenceIdentifier: NSManagedObjectID, isReloaded: Bool = false) {
+
+                self.differenceIdentifier = differenceIdentifier
+                self.isReloaded = isReloaded
             }
 
-            func isContentEqual(to source: SectionStateID) -> Bool {
+            // MARK: Differentiable
 
-                return self.id == source.id && self.stateTag == source.stateTag
+            let differenceIdentifier: NSManagedObjectID
+
+            func isContentEqual(to source: Item) -> Bool {
+
+                return !self.isReloaded
+                    && self.differenceIdentifier == source.differenceIdentifier
             }
-
-            // MARK: Identifiable
-
-            let id: String
         }
 
 
@@ -249,22 +279,22 @@ extension Internals {
                 self.sections = sections.map {
 
                     Section(
-                        id: $0.name,
+                        differenceIdentifier: $0.name,
                         items: $0.objects?
                             .compactMap({ ($0 as? NSManagedObject)?.objectID })
-                            .map({ Item(id: $0) }) ?? []
+                            .map({ Item(differenceIdentifier: $0) }) ?? []
                     )
                 }
             }
 
             var allSectionIDs: [String] {
 
-                return self.sections.map({ $0.id })
+                return self.sections.map({ $0.differenceIdentifier })
             }
 
             var allItemIDs: [NSManagedObjectID] {
 
-                return self.sections.lazy.flatMap({ $0.elements }).map({ $0.id })
+                return self.sections.lazy.flatMap({ $0.elements }).map({ $0.differenceIdentifier })
             }
 
             func items(in sectionID: String) -> [NSManagedObjectID] {
@@ -273,12 +303,12 @@ extension Internals {
 
                     Internals.abort("Section \"\(sectionID)\" does not exist")
                 }
-                return self.sections[sectionIndex].elements.map({ $0.id })
+                return self.sections[sectionIndex].elements.map({ $0.differenceIdentifier })
             }
 
             func section(containing itemID: NSManagedObjectID) -> String? {
 
-                return self.itemPositionMap()[itemID]?.section.id
+                return self.itemPositionMap()[itemID]?.section.differenceIdentifier
             }
 
             mutating func append(itemIDs: [NSManagedObjectID], to sectionID: String?) {
@@ -301,7 +331,7 @@ extension Internals {
                     }
                     index = section.index(before: section.endIndex)
                 }
-                let items = itemIDs.lazy.map({ Item(id: $0) })
+                let items = itemIDs.lazy.map({ Item(differenceIdentifier: $0) })
                 self.sections[index].elements.append(contentsOf: items)
             }
 
@@ -311,7 +341,7 @@ extension Internals {
 
                     Internals.abort("Item \(beforeItemID) does not exist")
                 }
-                let items = itemIDs.lazy.map({ Item(id: $0) })
+                let items = itemIDs.lazy.map({ Item(differenceIdentifier: $0) })
                 self.sections[itemPosition.sectionIndex].elements
                     .insert(contentsOf: items, at: itemPosition.itemRelativeIndex)
             }
@@ -324,7 +354,7 @@ extension Internals {
                 }
                 let itemIndex = self.sections[itemPosition.sectionIndex].elements
                     .index(after: itemPosition.itemRelativeIndex)
-                let items = itemIDs.lazy.map({ Item(id: $0) })
+                let items = itemIDs.lazy.map({ Item(differenceIdentifier: $0) })
                 self.sections[itemPosition.sectionIndex].elements
                     .insert(contentsOf: items, at: itemIndex)
             }
@@ -406,7 +436,7 @@ extension Internals {
 
             mutating func append(sectionIDs: [String]) {
 
-                let newSections = sectionIDs.lazy.map({ Section(id: $0) })
+                let newSections = sectionIDs.lazy.map({ Section(differenceIdentifier: $0) })
                 self.sections.append(contentsOf: newSections)
             }
 
@@ -416,7 +446,7 @@ extension Internals {
 
                     Internals.abort("Section \"\(beforeSectionID)\" does not exist")
                 }
-                let newSections = sectionIDs.lazy.map({ Section(id: $0) })
+                let newSections = sectionIDs.lazy.map({ Section(differenceIdentifier: $0) })
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
@@ -427,7 +457,7 @@ extension Internals {
                     Internals.abort("Section \"\(afterSectionID)\" does not exist")
                 }
                 let sectionIndex = self.sections.index(after: beforeIndex)
-                let newSections = sectionIDs.lazy.map({ Section(id: $0) })
+                let newSections = sectionIDs.lazy.map({ Section(differenceIdentifier: $0) })
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
@@ -481,11 +511,9 @@ extension Internals {
 
             // MARK: Private
 
-            private static let zeroUUID: UUID = .init(uuid: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
-
             private func sectionIndex(of sectionID: String) -> Array<Section>.Index? {
 
-                return self.sections.firstIndex(where: { $0.id == sectionID })
+                return self.sections.firstIndex(where: { $0.differenceIdentifier == sectionID })
             }
 
             @discardableResult
@@ -515,7 +543,7 @@ extension Internals {
 
                     for (itemRelativeIndex, item) in section.element.elements.enumerated() {
 
-                        result[item.id] = ItemPosition(
+                        result[item.differenceIdentifier] = ItemPosition(
                             item: item,
                             itemRelativeIndex: itemRelativeIndex,
                             section: section.element,
@@ -523,58 +551,6 @@ extension Internals {
                         )
                     }
                 }
-            }
-
-
-            // MARK: - Item
-
-            fileprivate struct Item: Identifiable, Equatable {
-
-                var isReloaded: Bool
-
-                init(id: NSManagedObjectID, isReloaded: Bool = false) {
-
-                    self.id = id
-                    self.isReloaded = isReloaded
-                }
-
-                func isContentEqual(to source: Item) -> Bool {
-
-                    return !self.isReloaded && self.id == source.id
-                }
-
-                // MARK: Identifiable
-
-                let id: NSManagedObjectID
-            }
-
-
-            // MARK: - Section
-
-            fileprivate struct Section: Identifiable, Equatable {
-
-                var elements: [Item] = []
-                var isReloaded: Bool
-
-                init(id: String, items: [Item] = [], isReloaded: Bool = false) {
-                    self.id = id
-                    self.elements = items
-                    self.isReloaded = isReloaded
-                }
-
-                init<S: Sequence>(source: Section, elements: S) where S.Element == Item {
-
-                    self.init(id: source.id, items: Array(elements), isReloaded: source.isReloaded)
-                }
-
-                func isContentEqual(to source: Section) -> Bool {
-
-                    return !self.isReloaded && self.id == source.id
-                }
-
-                // MARK: Identifiable
-
-                let id: String
             }
 
 
@@ -595,73 +571,7 @@ extension Internals {
 // MARK: - NSDiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
-extension NSDiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol where SectionIdentifierType == NSString, ItemIdentifierType == NSManagedObjectID {
-
-    internal var sectionIdentifiers: [String] {
-
-        return self.sectionIdentifiers as [NSString] as [String]
-    }
-
-    internal func numberOfItems(inSection identifier: String) -> Int {
-
-        return self.numberOfItems(inSection: identifier as NSString)
-    }
-
-    internal func itemIdentifiers(inSection identifier: String) -> [NSManagedObjectID] {
-
-        return self.itemIdentifiers(inSection: identifier as NSString)
-    }
-
-    internal func sectionIdentifier(containingItem identifier: NSManagedObjectID) -> String? {
-
-        return self.sectionIdentifier(containingItem: identifier) as NSString? as String?
-    }
-
-    internal func indexOfSection(_ identifier: String) -> Int? {
-
-        return self.indexOfSection(identifier as NSString)
-    }
-
-    internal mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?) {
-
-        self.appendItems(identifiers, toSection: sectionIdentifier as NSString?)
-    }
-
-    internal mutating func appendSections(_ identifiers: [String]) {
-
-        self.appendSections(identifiers as [NSString])
-    }
-
-    internal mutating func insertSections(_ identifiers: [String], beforeSection toIdentifier: String) {
-
-        self.insertSections(identifiers as [NSString], beforeSection: toIdentifier as NSString)
-    }
-
-    internal mutating func insertSections(_ identifiers: [String], afterSection toIdentifier: String) {
-
-        return self.insertSections(identifiers as [NSString], afterSection: toIdentifier as NSString)
-    }
-
-    internal mutating func deleteSections(_ identifiers: [String]) {
-
-        self.deleteSections(identifiers as [NSString])
-    }
-
-    internal mutating func moveSection(_ identifier: String, beforeSection toIdentifier: String) {
-
-        self.moveSection(identifier as NSString, beforeSection: toIdentifier as NSString)
-    }
-
-    internal mutating func moveSection(_ identifier: String, afterSection toIdentifier: String) {
-
-        self.moveSection(identifier as NSString, afterSection: toIdentifier as NSString)
-    }
-
-    internal mutating func reloadSections(_ identifiers: [String]) {
-
-        self.reloadSections(identifiers as [NSString])
-    }
-}
+extension NSDiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol where SectionIdentifierType == String, ItemIdentifierType == NSManagedObjectID {}
 
 
 #endif

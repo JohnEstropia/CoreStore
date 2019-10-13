@@ -42,6 +42,24 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
 
     public typealias SectionID = String
     public typealias ItemID = O.ObjectID
+    
+    public init(byCloning snapshot: ListSnapshot<O>, for dataStack: DataStack) {
+
+//        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
+//
+//            self.init(
+//                diffableSnapshot: snapshot.diffableSnapshot as! NSDiffableDataSourceSnapshot<String, NSManagedObjectID>,
+//                context: dataStack.mainContext
+//            )
+//        }
+//        else {
+
+            self.init(
+                diffableSnapshot: snapshot.diffableSnapshot as! Internals.DiffableDataSourceSnapshot,
+                context: dataStack.mainContext
+            )
+//        }
+    }
 
     public subscript<S: Sequence>(indices indices: S) -> [LiveObject<O>] where S.Element == Index {
 
@@ -252,13 +270,29 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
     
     // MARK: Internal
     
+    internal private(set) var diffableSnapshot: DiffableDataSourceSnapshotProtocol
+    
     internal init() {
 
-        self.diffableSnapshot = Internals.DiffableDataSourceSnapshot()
+//        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
+//
+//            self.diffableSnapshot = NSDiffableDataSourceSnapshot<String, NSManagedObjectID>()
+//        }
+//        else {
+            
+            self.diffableSnapshot = Internals.DiffableDataSourceSnapshot()
+//        }
         self.context = nil
     }
     
-    internal init(diffableSnapshot: DiffableDataSourceSnapshotProtocol, context: NSManagedObjectContext) {
+//    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+//    internal init(diffableSnapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>, context: NSManagedObjectContext) {
+//
+//        self.diffableSnapshot = diffableSnapshot
+//        self.context = context
+//    }
+    
+    internal init(diffableSnapshot: Internals.DiffableDataSourceSnapshot, context: NSManagedObjectContext) {
 
         self.diffableSnapshot = diffableSnapshot
         self.context = context
@@ -270,5 +304,4 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
     private let id: UUID = .init()
     private let context: NSManagedObjectContext?
 
-    private var diffableSnapshot: DiffableDataSourceSnapshotProtocol
 }

@@ -45,29 +45,6 @@ public final class LiveList<O: DynamicObject>: Hashable {
     public typealias SectionID = SnapshotType.SectionID
     public typealias ItemID = SnapshotType.ItemID
 
-    public fileprivate(set) var snapshot: SnapshotType = .init() {
-
-        willSet {
-
-            self.willChange()
-        }
-    }
-
-    public var numberOfItems: Int {
-
-        return self.snapshot.numberOfItems
-    }
-
-    public var numberOfSections: Int {
-
-        return self.snapshot.numberOfSections
-    }
-
-    public var sectionIdentifiers: [SectionID] {
-
-        return self.snapshot.sectionIdentifiers
-    }
-
     public subscript(section sectionID: SectionID) -> [LiveObject<O>] {
 
         let context = self.context
@@ -85,6 +62,24 @@ public final class LiveList<O: DynamicObject>: Hashable {
         return self.context.liveObject(id: validID)
     }
 
+    public subscript(indexPath indexPath: IndexPath) -> LiveObject<O>? {
+        
+        let snapshot = self.snapshot
+        let sectionIdentifiers = snapshot.sectionIdentifiers
+        guard sectionIdentifiers.indices.contains(indexPath.section) else {
+            
+            return nil
+        }
+        let sectionID = sectionIdentifiers[indexPath.section]
+        let itemIdentifiers = snapshot.itemIdentifiers(inSection: sectionID)
+        guard itemIdentifiers.indices.contains(indexPath.item) else {
+            
+            return nil
+        }
+        let itemID = itemIdentifiers[indexPath.item]
+        return self.context.liveObject(id: itemID)
+    }
+
     public subscript<S: Sequence>(section sectionID: SectionID, itemIndices itemIndices: S) -> [LiveObject<O>] where S.Element == Int {
 
         let context = self.context
@@ -94,6 +89,34 @@ public final class LiveList<O: DynamicObject>: Hashable {
             let itemID = itemIDs[position]
             return context.liveObject(id: itemID)
         }
+    }
+
+    public fileprivate(set) var snapshot: SnapshotType = .init() {
+
+        willSet {
+
+            self.willChange()
+        }
+        didSet {
+            
+            self.notifyObservers(self.snapshot)
+            self.didChange()
+        }
+    }
+
+    public var numberOfItems: Int {
+
+        return self.snapshot.numberOfItems
+    }
+
+    public var numberOfSections: Int {
+
+        return self.snapshot.numberOfSections
+    }
+
+    public var sectionIdentifiers: [SectionID] {
+
+        return self.snapshot.sectionIdentifiers
     }
 
     public var items: [LiveObject<O>] {
@@ -140,6 +163,26 @@ public final class LiveList<O: DynamicObject>: Hashable {
     public func indexOfSection(_ identifier: SectionID) -> Int? {
 
         return self.snapshot.indexOfSection(identifier)
+    }
+    
+    public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (LiveList<O>, ListSnapshot<O>) -> Void) {
+        
+        self.observers.setObject(
+            Internals.Closure(callback),
+            forKey: observer
+        )
+        
+        callback(self, self.snapshot)
+    }
+    
+    public func removeObserver<T: AnyObject>(_ observer: T) {
+        
+        self.observers.removeObject(forKey: observer)
+    }
+
+    deinit {
+
+        self.observers.removeAllObjects()
     }
 
 
@@ -222,12 +265,14 @@ public final class LiveList<O: DynamicObject>: Hashable {
 
     private var fetchedResultsController: Internals.CoreStoreFetchedResultsController
     private var fetchedResultsControllerDelegate: Internals.FetchedDiffableDataSourceSnapshotDelegate
+    private let sectionIndexTransformer: (_ sectionName: KeyPathString?) -> String?
     private var applyFetchClauses: (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void
     private var observerForWillChangePersistentStore: Internals.NotificationObserver!
     private var observerForDidChangePersistentStore: Internals.NotificationObserver!
 
     private let from: From<ObjectType>
     private let sectionBy: SectionBy<ObjectType>?
+    private let observers: NSMapTable<AnyObject, Internals.Closure<(LiveList<O>, ListSnapshot<O>), Void>> = .weakToStrongObjects()
 
     private lazy var context: NSManagedObjectContext = self.fetchedResultsController.managedObjectContext
 
@@ -279,19 +324,30 @@ public final class LiveList<O: DynamicObject>: Hashable {
             self.rawObjectWillChange = nil
         }
 
+        if let sectionIndexTransformer = sectionBy?.sectionIndexTransformer {
 
-//        if let sectionIndexTransformer = sectionBy?.sectionIndexTransformer {
-//
-//            self.sectionIndexTransformer = sectionIndexTransformer
-//        }
-//        else {
-//
-//            self.sectionIndexTransformer = { $0 }
-//        }
+            self.sectionIndexTransformer = sectionIndexTransformer
+        }
+        else {
+
+            self.sectionIndexTransformer = { $0 }
+        }
         self.applyFetchClauses = applyFetchClauses
         self.fetchedResultsControllerDelegate.handler = self
 
         try! self.fetchedResultsController.performFetchFromSpecifiedStores()
+    }
+
+    private func notifyObservers(_ snapshot: ListSnapshot<O>) {
+
+        guard let enumerator = self.observers.objectEnumerator() else {
+
+            return
+        }
+        for closure in enumerator {
+
+            (closure as! Internals.Closure<(LiveList<O>, ListSnapshot<O>), Void>).invoke(with: (self, snapshot))
+        }
     }
 }
 
@@ -301,13 +357,27 @@ public final class LiveList<O: DynamicObject>: Hashable {
 extension LiveList: FetchedDiffableDataSourceSnapshotHandler {
 
     // MARK: FetchedDiffableDataSourceSnapshotHandler
+    
+//    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+//    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>) {
+//
+//        self.snapshot = .init(
+//            diffableSnapshot: snapshot,
+//            context: controller.managedObjectContext
+//        )
+//    }
 
-    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: DiffableDataSourceSnapshotProtocol) {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: Internals.DiffableDataSourceSnapshot) {
 
         self.snapshot = .init(
             diffableSnapshot: snapshot,
             context: controller.managedObjectContext
         )
+    }
+    
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+    
+        return self.sectionIndexTransformer(sectionName)
     }
 }
 

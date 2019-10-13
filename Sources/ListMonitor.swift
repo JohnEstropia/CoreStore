@@ -1453,7 +1453,7 @@ extension ListMonitor: FetchedResultsControllerHandler {
         )
     }
     
-   internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String?) -> String? {
     
         return self.sectionIndexTransformer(sectionName)
     }

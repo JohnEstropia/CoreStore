@@ -56,18 +56,19 @@ extension Internals {
         deinit {
 
             self.observer.map(NotificationCenter.default.removeObserver(_:))
+            self.observers.removeAllObjects()
         }
 
         internal func addObserver<U: AnyObject>(_ observer: U, closure: @escaping (T) -> Void) {
 
-            self.observers.setObject(Closure(closure), forKey: observer)
+            self.observers.setObject(Closure<T, Void>(closure), forKey: observer)
         }
 
 
         // MARK: Private
 
         private var observer: NSObjectProtocol!
-        private let observers: NSMapTable<AnyObject, Closure> = .weakToStrongObjects()
+        private let observers: NSMapTable<AnyObject, Closure<T, Void>> = .weakToStrongObjects()
 
         private func notifyObservers(_ sharedValue: T) {
 
@@ -77,31 +78,8 @@ extension Internals {
             }
             for closure in enumerator {
 
-                (closure as! Closure).invoke(with: sharedValue)
+                (closure as! Closure<T, Void>).invoke(with: sharedValue)
             }
-        }
-
-
-        // MARK: - Closure
-
-        fileprivate final class Closure {
-
-            // MARK: FilePrivate
-
-            fileprivate init(_ closure: @escaping (T) -> Void) {
-
-                self.closure = closure
-            }
-
-            fileprivate func invoke(with argument: T) {
-
-                self.closure(argument)
-            }
-
-
-            // MARK: Private
-
-            private let closure: (T) -> Void
         }
     }
 }

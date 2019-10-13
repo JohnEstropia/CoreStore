@@ -27,4 +27,20 @@ class ObserversViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
+    
+    
+    // MARK: Private
+    
+    @IBOutlet private dynamic weak var topContainerView: UIView?
+    @IBOutlet private dynamic weak var bottomContainerView: UIView?
+    
+    @IBAction private dynamic func toggleTopContainerView() {
+        
+        self.topContainerView?.isHidden.toggle()
+    }
+    
+    @IBAction private dynamic func toggleBottomContainerView() {
+        
+        self.bottomContainerView?.isHidden.toggle()
+    }
 }
