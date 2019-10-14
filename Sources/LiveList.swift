@@ -50,7 +50,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
         let context = self.context
         return self.snapshot
             .itemIdentifiers(inSection: sectionID)
-            .map({ context.liveObject(id: $0) })
+            .map({ context.liveObject(objectID: $0) })
     }
 
     public subscript(itemID itemID: ItemID) -> LiveObject<O>? {
@@ -59,7 +59,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
 
             return nil
         }
-        return self.context.liveObject(id: validID)
+        return self.context.liveObject(objectID: validID)
     }
 
     public subscript(indexPath indexPath: IndexPath) -> LiveObject<O>? {
@@ -77,7 +77,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
             return nil
         }
         let itemID = itemIdentifiers[indexPath.item]
-        return self.context.liveObject(id: itemID)
+        return self.context.liveObject(objectID: itemID)
     }
 
     public subscript<S: Sequence>(section sectionID: SectionID, itemIndices itemIndices: S) -> [LiveObject<O>] where S.Element == Int {
@@ -87,7 +87,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
         return itemIndices.map { position in
 
             let itemID = itemIDs[position]
-            return context.liveObject(id: itemID)
+            return context.liveObject(objectID: itemID)
         }
     }
 
@@ -99,7 +99,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
         }
         didSet {
             
-            self.notifyObservers(self.snapshot)
+            self.notifyObservers()
             self.didChange()
         }
     }
@@ -123,7 +123,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
 
         let context = self.context
         return self.snapshot.itemIdentifiers
-            .map({ context.liveObject(id: $0) })
+            .map({ context.liveObject(objectID: $0) })
     }
 
     public func numberOfItems(inSection identifier: SectionID) -> Int {
@@ -136,7 +136,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
         let context = self.context
         return self.snapshot
             .itemIdentifiers(inSection: identifier)
-            .map({ context.liveObject(id: $0) })
+            .map({ context.liveObject(objectID: $0) })
     }
 
     public func items(inSection identifier: SectionID, atIndices indices: IndexSet) -> [LiveObject<O>] {
@@ -146,18 +146,18 @@ public final class LiveList<O: DynamicObject>: Hashable {
         return indices.map { position in
 
             let itemID = itemIDs[position]
-            return context.liveObject(id: itemID)
+            return context.liveObject(objectID: itemID)
         }
     }
 
     public func section(containingItem item: LiveObject<O>) -> SectionID? {
 
-        return self.snapshot.sectionIdentifier(containingItem: item.id)
+        return self.snapshot.sectionIdentifier(containingItem: item.cs_id())
     }
 
     public func indexOfItem(_ item: LiveObject<O>) -> Int? {
 
-        return self.snapshot.indexOfItem(item.id)
+        return self.snapshot.indexOfItem(item.cs_id())
     }
 
     public func indexOfSection(_ identifier: SectionID) -> Int? {
@@ -165,14 +165,12 @@ public final class LiveList<O: DynamicObject>: Hashable {
         return self.snapshot.indexOfSection(identifier)
     }
     
-    public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (LiveList<O>, ListSnapshot<O>) -> Void) {
+    public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (LiveList<O>) -> Void) {
         
         self.observers.setObject(
             Internals.Closure(callback),
             forKey: observer
         )
-        
-        callback(self, self.snapshot)
     }
     
     public func removeObserver<T: AnyObject>(_ observer: T) {
@@ -272,7 +270,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
 
     private let from: From<ObjectType>
     private let sectionBy: SectionBy<ObjectType>?
-    private let observers: NSMapTable<AnyObject, Internals.Closure<(LiveList<O>, ListSnapshot<O>), Void>> = .weakToStrongObjects()
+    private lazy var observers: NSMapTable<AnyObject, Internals.Closure<LiveList<O>, Void>> = .weakToStrongObjects()
 
     private lazy var context: NSManagedObjectContext = self.fetchedResultsController.managedObjectContext
 
@@ -338,7 +336,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
         try! self.fetchedResultsController.performFetchFromSpecifiedStores()
     }
 
-    private func notifyObservers(_ snapshot: ListSnapshot<O>) {
+    private func notifyObservers() {
 
         guard let enumerator = self.observers.objectEnumerator() else {
 
@@ -346,7 +344,7 @@ public final class LiveList<O: DynamicObject>: Hashable {
         }
         for closure in enumerator {
 
-            (closure as! Internals.Closure<(LiveList<O>, ListSnapshot<O>), Void>).invoke(with: (self, snapshot))
+            (closure as! Internals.Closure<LiveList<O>, Void>).invoke(with: self)
         }
     }
 }

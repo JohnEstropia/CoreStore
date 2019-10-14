@@ -33,12 +33,12 @@ import CoreData
 extension DataStack {
     
     /**
-     Creates an `ObjectMonitor` for the specified `DynamicObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `DynamicObject`.
+     Creates an `ObjectMonitor` for the specified `ObjectRepresentation`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `DynamicObject`.
      
-     - parameter object: the `DynamicObject` to observe changes from
+     - parameter object: the `ObjectRepresentation` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
-    public func monitorObject<D>(_ object: D) -> ObjectMonitor<D> {
+    public func monitorObject<O: ObjectRepresentation>(_ object: O) -> ObjectMonitor<O.ObjectType> {
         
         Internals.assert(
             Thread.isMainThread,

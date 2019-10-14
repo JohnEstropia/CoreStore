@@ -68,7 +68,7 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
         return indices.map { position in
 
             let itemID = itemIDs[position]
-            return LiveObject<O>(id: itemID, context: context)
+            return LiveObject<O>(objectID: itemID, context: context)
         }
     }
 
@@ -78,7 +78,7 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
         let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
         return itemIDs.map {
 
-            return LiveObject<O>(id: $0, context: context)
+            return LiveObject<O>(objectID: $0, context: context)
         }
     }
 
@@ -89,7 +89,7 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
         return itemIndices.map { position in
 
             let itemID = itemIDs[position]
-            return LiveObject<O>(id: itemID, context: context)
+            return LiveObject<O>(objectID: itemID, context: context)
         }
     }
 
@@ -241,7 +241,7 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
         
         let context = self.context!
         let itemID = self.diffableSnapshot.itemIdentifiers[position]
-        return LiveObject<O>(id: itemID, context: context)
+        return LiveObject<O>(objectID: itemID, context: context)
     }
     
     

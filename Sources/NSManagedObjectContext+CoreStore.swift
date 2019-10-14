@@ -87,7 +87,7 @@ extension NSManagedObjectContext {
     }
 
     @nonobjc
-    internal func liveObject<D: DynamicObject>(id: NSManagedObjectID) -> LiveObject<D> {
+    internal func liveObject<D: DynamicObject>(objectID: NSManagedObjectID) -> LiveObject<D> {
 
         let cache: NSMapTable<NSManagedObjectID, LiveObject<D>> = self.userInfo(for: .liveObjectsCache(D.self)) {
 
@@ -95,12 +95,12 @@ extension NSManagedObjectContext {
         }
         return Internals.with {
 
-            if let liveObject = cache.object(forKey: id) {
+            if let liveObject = cache.object(forKey: objectID) {
 
                 return liveObject
             }
-            let liveObject = LiveObject<D>(id: id, context: self)
-            cache.setObject(liveObject, forKey: id)
+            let liveObject = LiveObject<D>(objectID: objectID, context: self)
+            cache.setObject(liveObject, forKey: objectID)
             return liveObject
         }
     }

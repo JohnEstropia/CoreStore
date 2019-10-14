@@ -108,51 +108,35 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
         
         return super.edit(into, objectID)
     }
-    
+
     /**
-     Deletes a specified `NSManagedObject` or `CoreStoreObject`.
-     
-     - parameter object: the `NSManagedObject` or `CoreStoreObject` to be deleted
+     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by series of `ObjectRepresentation`s.
+
+     - parameter object: the `ObjectRepresentation` representing an `NSManagedObject` or `CoreStoreObject` to be deleted
+     - parameter objects: other `ObjectRepresentation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public override func delete<D: DynamicObject>(_ object: D?) {
-        
-        Internals.assert(
-            !self.isCommitted,
-            "Attempted to delete an entity of type \(Internals.typeName(object)) from an already committed \(Internals.typeName(self))."
-        )
-        
-        super.delete(object)
-    }
-    
-    /**
-     Deletes the specified `DynamicObject`s.
-     
-     - parameter object1: the `DynamicObject` to be deleted
-     - parameter object2: another `DynamicObject` to be deleted
-     - parameter objects: other `DynamicObject`s to be deleted
-     */
-    public override func delete<D: DynamicObject>(_ object1: D?, _ object2: D?, _ objects: D?...) {
-        
+    public override func delete<O: ObjectRepresentation>(_ object: O?, _ objects: O?...) {
+
         Internals.assert(
             !self.isCommitted,
             "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
         )
-        
-        super.delete(([object1, object2] + objects).compactMap { $0 })
+
+        super.delete(([object] + objects).compactMap { $0 })
     }
-    
+
     /**
-     Deletes the specified `DynamicObject`s.
-     
-     - parameter objects: the `DynamicObject`s to be deleted
+    Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by an `ObjectRepresenation`.
+
+    - parameter objects: the `ObjectRepresenation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: DynamicObject {
-        
+    public override func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: ObjectRepresentation {
+
         Internals.assert(
             !self.isCommitted,
             "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
         )
-        
+
         super.delete(objects)
     }
     

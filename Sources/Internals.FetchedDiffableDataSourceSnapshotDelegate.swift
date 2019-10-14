@@ -116,12 +116,16 @@ extension Internals {
         @objc
         dynamic func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 
+            var snapshot = Internals.DiffableDataSourceSnapshot(
+                sections: controller.sections ?? []
+            )
+            snapshot.reloadItems(self.reloadedIDs)
+            
             self.handler?.controller(
                 controller,
-                didChangeContentWith: Internals.DiffableDataSourceSnapshot(
-                    sections: controller.sections ?? []
-                )
+                didChangeContentWith: snapshot
             )
+            self.reloadedIDs.removeAll()
         }
 
         @objc
@@ -132,5 +136,17 @@ extension Internals {
                 sectionIndexTitleForSectionName: sectionName
             )
         }
+        
+        @objc
+        dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+            
+            let object = anObject as! NSManagedObject
+            self.reloadedIDs.append(object.objectID)
+        }
+        
+        
+        // MARK: Private
+        
+        private var reloadedIDs: [NSManagedObjectID] = []
     }
 }

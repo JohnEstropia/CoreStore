@@ -136,14 +136,15 @@ class ListObserverDemoViewController: UITableViewController {
                 return cell
             }
         )
-        ColorsDemo.palettes.addObserver(self) { [weak self] (liveList, snapshot) in
+        ColorsDemo.palettes.addObserver(self) { [weak self] (liveList) in
             
             guard let self = self else {
                 
                 return
             }
-            self.dataSource?.apply(snapshot, animatingDifferences: true)
+            self.dataSource?.apply(liveList.snapshot, animatingDifferences: true)
         }
+        self.dataSource?.apply(ColorsDemo.palettes.snapshot, animatingDifferences: false)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -152,8 +153,8 @@ class ListObserverDemoViewController: UITableViewController {
         
         switch (segue.identifier, segue.destination, sender) {
             
-        case ("ObjectObserverDemoViewController"?, let destinationViewController as ObjectObserverDemoViewController, let palette as Palette):
-            destinationViewController.palette = palette
+        case ("ObjectObserverDemoViewController"?, let destinationViewController as ObjectObserverDemoViewController, let palette as LiveObject<Palette>):
+            destinationViewController.setPalette(palette)
             
         default:
             break
@@ -169,7 +170,7 @@ class ListObserverDemoViewController: UITableViewController {
         
         self.performSegue(
             withIdentifier: "ObjectObserverDemoViewController",
-            sender: ColorsDemo.palettes[indexPath: indexPath]?.object
+            sender: ColorsDemo.palettes[indexPath: indexPath]
         )
     }
     

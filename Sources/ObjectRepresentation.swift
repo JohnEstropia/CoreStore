@@ -2,8 +2,76 @@
 //  ObjectRepresentation.swift
 //  CoreStore
 //
-//  Created by John Estropia on 2019/10/11.
-//  Copyright © 2019 John Rommel Estropia. All rights reserved.
+//  Copyright © 2018 John Rommel Estropia
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
 //
 
-import Foundation
+import CoreData
+
+
+// MARK - ObjectRepresentation
+
+/**
+ An object that acts as interfaces for `CoreStoreObject`s or `NSManagedObject`s
+ */
+public protocol ObjectRepresentation {
+    
+    /**
+     The object type represented by this protocol
+     */
+    associatedtype ObjectType: DynamicObject
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
+    static func cs_fromRaw(object: NSManagedObject) -> Self
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
+    func cs_id() -> ObjectType.ObjectID
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
+    func cs_object() -> ObjectType?
+    
+    /**
+     Used internally by CoreStore. Do not call directly.
+     */
+    func cs_rawObject(in context: NSManagedObjectContext) -> NSManagedObject?
+}
+
+extension NSManagedObject: ObjectRepresentation {}
+
+extension CoreStoreObject: ObjectRepresentation {}
+
+extension DynamicObject where Self: ObjectRepresentation {
+    
+    public func cs_object() -> Self? {
+        
+        return self
+    }
+    
+    public func cs_rawObject(in context: NSManagedObjectContext) -> NSManagedObject? {
+        
+        return context.fetchExisting(self.cs_id())
+    }
+}

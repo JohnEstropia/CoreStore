@@ -33,22 +33,21 @@ import CoreData
  All CoreStore's utilities are designed around `DynamicObject` instances. `NSManagedObject` and `CoreStoreObject` instances all conform to `DynamicObject`.
  */
 public protocol DynamicObject: AnyObject {
-
     /**
      The object ID for this instance
      */
     typealias ObjectID = NSManagedObjectID
-
+    
     /**
      Used internally by CoreStore. Do not call directly.
      */
     static func cs_forceCreate(entityDescription: NSEntityDescription, into context: NSManagedObjectContext, assignTo store: NSPersistentStore) -> Self
-
+    
     /**
      Used internally by CoreStore. Do not call directly.
      */
     static func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]
-
+    
     /**
      Used internally by CoreStore. Do not call directly.
      */
@@ -62,22 +61,17 @@ public protocol DynamicObject: AnyObject {
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    func cs_id() -> ObjectID
+    func cs_toRaw() -> NSManagedObject
     
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    func cs_toRaw() -> NSManagedObject
+    func cs_id() -> ObjectID
 }
 
 extension DynamicObject {
-
-    // MARK: Internal
     
-//    internal static func keyPathBuilder() -> DynamicObjectMeta<Never, Self> {
-//
-//        return .init(keyPathString: "SELF")
-//    }
+    // MARK: Internal
     
     internal func runtimeType() -> Self.Type {
         
@@ -120,14 +114,14 @@ extension NSManagedObject: DynamicObject {
         return object.isKind(of: self)
     }
     
-    public func cs_id() -> ObjectID {
-        
-        return self.objectID
-    }
-    
     public func cs_toRaw() -> NSManagedObject {
         
         return self
+    }
+    
+    public func cs_id() -> ObjectID {
+        
+        return self.objectID
     }
 }
 
@@ -210,13 +204,13 @@ extension CoreStoreObject {
         return (self as AnyClass).isSubclass(of: type as AnyClass)
     }
     
-    public func cs_id() -> ObjectID {
-        
-        return self.rawObject!.objectID
-    }
-    
     public func cs_toRaw() -> NSManagedObject {
         
         return self.rawObject!
+    }
+    
+    public func cs_id() -> ObjectID {
+        
+        return self.rawObject!.objectID
     }
 }

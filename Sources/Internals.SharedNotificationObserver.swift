@@ -63,6 +63,11 @@ extension Internals {
 
             self.observers.setObject(Closure<T, Void>(closure), forKey: observer)
         }
+        
+        internal func removeObserver<U: AnyObject>(_ observer: U) {
+
+            self.observers.removeObject(forKey: observer)
+        }
 
 
         // MARK: Private

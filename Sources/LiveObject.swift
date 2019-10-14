@@ -39,7 +39,7 @@ import SwiftUI
 // MARK: - LiveObject
 
 @dynamicMemberLookup
-public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
+public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable {
 
     // MARK: Public
 
@@ -51,19 +51,60 @@ public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
         return self.lazySnapshot
     }
 
-    public private(set) lazy var object: O = self.context.fetchExisting(self.id)!
+    public private(set) lazy var object: O = self.context.fetchExisting(self.objectID)!
+    
+    public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (LiveObject<O>) -> Void) {
+        
+        self.observers.setObject(
+            Internals.Closure(callback),
+            forKey: observer
+        )
+    }
+    
+    public func removeObserver<T: AnyObject>(_ observer: T) {
+        
+        self.observers.removeObject(forKey: observer)
+    }
 
+    deinit {
 
-    // MARK: Identifiable
+        self.observers.removeAllObjects()
+    }
+    
+    
+    // MARK: ObjectRepresentation
 
-    public let id: O.ObjectID
+    public typealias ObjectType = O
+    
+    public static func cs_fromRaw(object: NSManagedObject) -> Self {
+        
+        return self.init(
+            objectID: object.objectID,
+            context: object.managedObjectContext!
+        )
+    }
+    
+    public func cs_id() -> O.ObjectID {
+        
+        return self.objectID
+    }
+    
+    public func cs_object() -> O? {
+        
+        return self.context.fetchExisting(self.objectID)
+    }
+    
+    public func cs_rawObject(in context: NSManagedObjectContext) -> NSManagedObject? {
+        
+        return self.object.cs_toRaw()
+    }
 
 
     // MARK: Equatable
 
     public static func == (_ lhs: LiveObject, _ rhs: LiveObject) -> Bool {
 
-        return lhs.id == rhs.id
+        return lhs.objectID == rhs.objectID
             && lhs.context == rhs.context
     }
 
@@ -72,23 +113,25 @@ public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
 
     public func hash(into hasher: inout Hasher) {
 
-        hasher.combine(self.id)
+        hasher.combine(self.objectID)
         hasher.combine(self.context)
     }
 
 
     // MARK: LiveResult
 
-    public typealias ObjectType = O
-
     public typealias SnapshotType = ObjectSnapshot<O>
 
 
     // MARK: Internal
 
-    internal convenience init(id: ID, context: NSManagedObjectContext) {
+    internal convenience init(objectID: O.ObjectID, context: NSManagedObjectContext) {
 
-        self.init(id: id, context: context, initializer: ObjectSnapshot<O>.init(id:context:))
+        self.init(
+            objectID: objectID,
+            context: context,
+            initializer: ObjectSnapshot<O>.init(id:context:)
+        )
     }
 
 
@@ -96,9 +139,9 @@ public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
 
     fileprivate let rawObjectWillChange: Any?
 
-    fileprivate init(id: O.ObjectID, context: NSManagedObjectContext, initializer: @escaping (NSManagedObjectID, NSManagedObjectContext) -> ObjectSnapshot<O>) {
+    fileprivate init(objectID: O.ObjectID, context: NSManagedObjectContext, initializer: @escaping (NSManagedObjectID, NSManagedObjectContext) -> ObjectSnapshot<O>) {
 
-        self.id = id
+        self.objectID = objectID
         self.context = context
         if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 
@@ -114,7 +157,7 @@ public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
 
             self.rawObjectWillChange = nil
         }
-        self.$lazySnapshot.initialize({ initializer(id, context) })
+        self.$lazySnapshot.initialize({ initializer(objectID, context) })
         
         context.objectsDidChangeObserver(for: self).addObserver(self) { [weak self] (objectIDs) in
 
@@ -122,18 +165,36 @@ public final class LiveObject<O: DynamicObject>: Identifiable, Hashable {
 
                 return
             }
-            self.$lazySnapshot.reset({ initializer(id, context) })
             self.willChange()
+            self.$lazySnapshot.reset({ initializer(objectID, context) })
+            self.notifyObservers()
+            self.didChange()
         }
     }
 
 
     // MARK: Private
     
+    private let objectID: O.ObjectID
     private let context: NSManagedObjectContext
 
     @Internals.LazyNonmutating(uninitialized: ())
     private var lazySnapshot: ObjectSnapshot<O>
+    
+    private lazy var observers: NSMapTable<AnyObject, Internals.Closure<LiveObject<O>, Void>> = .weakToStrongObjects()
+
+    private func notifyObservers() {
+
+        guard let enumerator = self.observers.objectEnumerator() else {
+
+            return
+        }
+        for closure in enumerator {
+
+            (closure as! Internals.Closure<LiveObject
+                <O>, Void>).invoke(with: self)
+        }
+    }
 }
 
 

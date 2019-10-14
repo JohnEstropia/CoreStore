@@ -40,12 +40,7 @@ import CoreData
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
 @available(macOS 10.12, *)
-public final class ObjectMonitor<D: DynamicObject>: Equatable {
-    
-    /**
-     The type for the object contained by the `ObjectMonitor`
-     */
-    public typealias ObjectType = D
+public final class ObjectMonitor<D: DynamicObject>: ObjectRepresentation, Equatable {
     
     /**
      Returns the `DynamicObject` instance being observed, or `nil` if the object was already deleted.
@@ -125,6 +120,34 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     public let userInfo = UserInfo()
     
     
+    // MARK: ObjectRepresentation
+    
+    public typealias ObjectType = D
+    
+    public static func cs_fromRaw(object: NSManagedObject) -> Self {
+        
+        return self.init(
+            context: object.managedObjectContext!,
+            objectID: object.objectID
+        )
+    }
+    
+    public func cs_id() -> ObjectType.ObjectID {
+        
+        return self.objectID
+    }
+    
+    public func cs_object() -> D? {
+        
+        return self.object
+    }
+    
+    public func cs_rawObject(in context: NSManagedObjectContext) -> NSManagedObject? {
+     
+        return context.fetchExisting(self.objectID)
+    }
+    
+    
     // MARK: Equatable
     
     public static func == (lhs: ObjectMonitor<ObjectType>, rhs: ObjectMonitor<ObjectType>) -> Bool {
@@ -158,14 +181,14 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     
     // MARK: Internal
     
-    internal convenience init(dataStack: DataStack, object: ObjectType) {
+    internal convenience init<O: ObjectRepresentation>(dataStack: DataStack, object: O) where O.ObjectType == ObjectType {
         
-        self.init(context: dataStack.mainContext, object: object)
+        self.init(context: dataStack.mainContext, objectID: object.cs_id())
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, object: ObjectType) {
+    internal convenience init<O: ObjectRepresentation>(unsafeTransaction: UnsafeDataTransaction, object: O) where O.ObjectType == ObjectType {
         
-        self.init(context: unsafeTransaction.context, object: object)
+        self.init(context: unsafeTransaction.context, objectID: object.cs_id())
     }
     
     internal func registerObserver<U: AnyObject>(_ observer: U, willChangeObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType, _ changedPersistentKeys: Set<String>) -> Void) {
@@ -250,6 +273,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     
     // MARK: Private
     
+    private let objectID: ObjectType.ObjectID
     private let fetchedResultsController: Internals.CoreStoreFetchedResultsController
     private let fetchedResultsControllerDelegate: Internals.FetchedResultsControllerDelegate
     private var lastCommittedAttributes = [String: NSObject]()
@@ -258,9 +282,8 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
     private var didDeleteObjectKey: Void?
     private var didUpdateObjectKey: Void?
     
-    private init(context: NSManagedObjectContext, object: ObjectType) {
+    private init(context: NSManagedObjectContext, objectID: ObjectType.ObjectID) {
         
-        let objectID = object.cs_id()
         let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
         fetchRequest.entity = objectID.entity
         fetchRequest.fetchLimit = 0
@@ -278,6 +301,7 @@ public final class ObjectMonitor<D: DynamicObject>: Equatable {
         
         let fetchedResultsControllerDelegate = Internals.FetchedResultsControllerDelegate()
         
+        self.objectID = objectID
         self.fetchedResultsController = fetchedResultsController
         self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
         

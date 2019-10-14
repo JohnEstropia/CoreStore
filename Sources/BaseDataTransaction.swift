@@ -156,47 +156,36 @@ public /*abstract*/ class BaseDataTransaction {
     }
     
     /**
-     Deletes a specified `NSManagedObject` or `CoreStoreObject`.
+     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by series of `ObjectRepresentation`s.
      
-     - parameter object: the `NSManagedObject` or `CoreStoreObject` to be deleted
+     - parameter object: the `ObjectRepresentation` representing an `NSManagedObject` or `CoreStoreObject` to be deleted
+     - parameter objects: other `ObjectRepresentation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public func delete<D: DynamicObject>(_ object: D?) {
+    public func delete<O: ObjectRepresentation>(_ object: O?, _ objects: O?...) {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to delete an entity outside its designated queue."
         )
-        let context = self.context
-        object
-            .flatMap(context.fetchExisting)
-            .flatMap({ context.delete($0.cs_toRaw()) })
+        self.delete(([object] + objects).compactMap { $0 })
     }
     
     /**
-     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s.
+     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by an `ObjectRepresenation`.
      
-     - parameter object1: the `NSManagedObject` or `CoreStoreObject` to be deleted
-     - parameter object2: another `NSManagedObject` or `CoreStoreObject` to be deleted
-     - parameter objects: other `NSManagedObject`s or `CoreStoreObject`s to be deleted
+     - parameter objects: the `ObjectRepresenation`s representing `NSManagedObject`s or `CoreStoreObject`s to be deleted
      */
-    public func delete<D: DynamicObject>(_ object1: D?, _ object2: D?, _ objects: D?...) {
-        
-        self.delete(([object1, object2] + objects).compactMap { $0 })
-    }
-    
-    /**
-     Deletes the specified `NSManagedObject`s or `CoreStoreObject`s.
-     
-     - parameter objects: the `NSManagedObject`s or `CoreStoreObject`s to be deleted
-     */
-    public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: DynamicObject {
+    public func delete<S: Sequence>(_ objects: S) where S.Iterator.Element: ObjectRepresentation {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
             "Attempted to delete entities outside their designated queue."
         )
         let context = self.context
-        objects.forEach { context.fetchExisting($0).flatMap({ context.delete($0.cs_toRaw()) }) }
+        objects.forEach {
+            
+            $0.cs_rawObject(in: context).map({ context.delete($0) })
+        }
     }
     
     /**
@@ -217,10 +206,10 @@ public /*abstract*/ class BaseDataTransaction {
     /**
      Returns `true` if the object has any property values changed. This method should not be called after the `commit()` method was called.
 
-     - parameter entity: the `DynamicObject` instance
+     - parameter object: the `DynamicObject` instance
      - returns: `true` if the object has any property values changed.
      */
-    public func objectHasPersistentChangedValues<D: DynamicObject>(_ entity: D) -> Bool {
+    public func objectHasPersistentChangedValues<D: DynamicObject>(_ object: D) -> Bool {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -230,7 +219,7 @@ public /*abstract*/ class BaseDataTransaction {
             !self.isCommitted,
             "Attempted to access inserted objects from an already committed \(Internals.typeName(self))."
         )
-        return entity.cs_toRaw().hasPersistentChangedValues
+        return object.cs_toRaw().hasPersistentChangedValues
     }
     
     /**
