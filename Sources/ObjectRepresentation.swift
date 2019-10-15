@@ -39,35 +39,66 @@ public protocol ObjectRepresentation {
     associatedtype ObjectType: DynamicObject
     
     /**
-     Used internally by CoreStore. Do not call directly.
+     The internal ID for the object.
      */
-    static func cs_fromRaw(object: NSManagedObject) -> Self
+    func objectID() -> ObjectType.ObjectID
     
     /**
-     Used internally by CoreStore. Do not call directly.
+     An instance that may be observed for object changes.
      */
-    func cs_id() -> ObjectType.ObjectID
+    func asLiveObject(in dataStack: DataStack) -> LiveObject<ObjectType>?
     
     /**
-     Used internally by CoreStore. Do not call directly.
+     An instance that may be mutated within a transaction.
      */
-    func cs_object() -> ObjectType?
+    func asEditable(in transaction: BaseDataTransaction) -> ObjectType?
     
     /**
-     Used internally by CoreStore. Do not call directly.
+     A thread-safe `struct` that is a full-copy of the object's properties
      */
-    func cs_rawObject(in context: NSManagedObjectContext) -> NSManagedObject?
+    func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<ObjectType>?
+    
+    /**
+     A thread-safe `struct` that is a full-copy of the object's properties
+     */
+    func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<ObjectType>?
+    
+    /**
+     An instance that may be observed for property-specific changes.
+     */
+    func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<ObjectType>?
 }
 
-extension NSManagedObject: ObjectRepresentation {}
+extension LiveObject {
+    
+    public static func cs_object(in context: NSManagedObjectContext) -> LiveObject<O>? {
+        
+        return nil
+    }
+}
 
-extension CoreStoreObject: ObjectRepresentation {}
+extension ObjectMonitor {
+    
+    public static func cs_object(in context: NSManagedObjectContext) -> LiveObject<D>? {
+        
+        return nil
+    }
+}
+
+extension NSManagedObject: ObjectRepresentation {
+    
+    
+}
+
+extension CoreStoreObject: ObjectRepresentation {
+    
+}
 
 extension DynamicObject where Self: ObjectRepresentation {
     
-    public func cs_object() -> Self? {
+    public static func cs_object(in context: NSManagedObjectContext) -> LiveObject<Self>? {
         
-        return self
+        fatalError()
     }
     
     public func cs_rawObject(in context: NSManagedObjectContext) -> NSManagedObject? {

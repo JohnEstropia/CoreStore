@@ -122,6 +122,44 @@ public final class ObjectMonitor<D: DynamicObject>: ObjectRepresentation, Equata
     
     // MARK: ObjectRepresentation
     
+    public func objectID() -> D.ObjectID {
+        
+        return self.id
+    }
+    
+    public func asLiveObject(in dataStack: DataStack) -> LiveObject<D>? {
+        
+        let context = dataStack.unsafeContext()
+        return .init(objectID: self.id, context: context)
+    }
+    
+    public func asEditable(in transaction: BaseDataTransaction) -> D? {
+        
+        return self.context.fetchExisting(self.id)
+    }
+    
+    public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<D>? {
+        
+        let context = dataStack.unsafeContext()
+        return .init(id: self.id, context: context)
+    }
+    
+    public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<D>? {
+        
+        let context = transaction.unsafeContext()
+        return .init(id: self.id, context: context)
+    }
+    
+    public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<D>? {
+        
+        let context = dataStack.unsafeContext()
+        if self.context == context {
+            
+            return self
+        }
+        return .init(objectID: self.id, context: dataStack.unsafeContext())
+    }
+    
     public typealias ObjectType = D
     
     public static func cs_fromRaw(object: NSManagedObject) -> Self {
@@ -181,14 +219,34 @@ public final class ObjectMonitor<D: DynamicObject>: ObjectRepresentation, Equata
     
     // MARK: Internal
     
-    internal convenience init<O: ObjectRepresentation>(dataStack: DataStack, object: O) where O.ObjectType == ObjectType {
+    internal init(objectID: ObjectType.ObjectID, context: NSManagedObjectContext) {
         
-        self.init(context: dataStack.mainContext, objectID: object.cs_id())
-    }
-    
-    internal convenience init<O: ObjectRepresentation>(unsafeTransaction: UnsafeDataTransaction, object: O) where O.ObjectType == ObjectType {
+        let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
+        fetchRequest.entity = objectID.entity
+        fetchRequest.fetchLimit = 0
+        fetchRequest.resultType = .managedObjectResultType
+        fetchRequest.sortDescriptors = []
+        fetchRequest.includesPendingChanges = false
+        fetchRequest.shouldRefreshRefetchedObjects = true
         
-        self.init(context: unsafeTransaction.context, objectID: object.cs_id())
+        let fetchedResultsController = Internals.CoreStoreFetchedResultsController(
+            context: context,
+            fetchRequest: fetchRequest,
+            from: From<ObjectType>([objectID.persistentStore?.configurationName]),
+            applyFetchClauses: Where<ObjectType>("SELF", isEqualTo: objectID).applyToFetchRequest
+        )
+        
+        let fetchedResultsControllerDelegate = Internals.FetchedResultsControllerDelegate()
+        
+        self.objectID = objectID
+        self.fetchedResultsController = fetchedResultsController
+        self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
+        
+        fetchedResultsControllerDelegate.handler = self
+        fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
+        try! fetchedResultsController.performFetchFromSpecifiedStores()
+        
+        self.lastCommittedAttributes = (self.object?.cs_toRaw().committedValues(forKeys: nil) as? [String: NSObject]) ?? [:]
     }
     
     internal func registerObserver<U: AnyObject>(_ observer: U, willChangeObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType, _ changedPersistentKeys: Set<String>) -> Void) {
@@ -281,36 +339,6 @@ public final class ObjectMonitor<D: DynamicObject>: ObjectRepresentation, Equata
     private var willChangeObjectKey: Void?
     private var didDeleteObjectKey: Void?
     private var didUpdateObjectKey: Void?
-    
-    private init(context: NSManagedObjectContext, objectID: ObjectType.ObjectID) {
-        
-        let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
-        fetchRequest.entity = objectID.entity
-        fetchRequest.fetchLimit = 0
-        fetchRequest.resultType = .managedObjectResultType
-        fetchRequest.sortDescriptors = []
-        fetchRequest.includesPendingChanges = false
-        fetchRequest.shouldRefreshRefetchedObjects = true
-        
-        let fetchedResultsController = Internals.CoreStoreFetchedResultsController(
-            context: context,
-            fetchRequest: fetchRequest,
-            from: From<ObjectType>([objectID.persistentStore?.configurationName]),
-            applyFetchClauses: Where<ObjectType>("SELF", isEqualTo: objectID).applyToFetchRequest
-        )
-        
-        let fetchedResultsControllerDelegate = Internals.FetchedResultsControllerDelegate()
-        
-        self.objectID = objectID
-        self.fetchedResultsController = fetchedResultsController
-        self.fetchedResultsControllerDelegate = fetchedResultsControllerDelegate
-        
-        fetchedResultsControllerDelegate.handler = self
-        fetchedResultsControllerDelegate.fetchedResultsController = fetchedResultsController
-        try! fetchedResultsController.performFetchFromSpecifiedStores()
-        
-        self.lastCommittedAttributes = (self.object?.cs_toRaw().committedValues(forKeys: nil) as? [String: NSObject]) ?? [:]
-    }
     
     private func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ObjectMonitor<ObjectType>) -> Void) {
         

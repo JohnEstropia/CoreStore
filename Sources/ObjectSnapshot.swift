@@ -37,16 +37,55 @@ import AppKit
 // MARK: - ObjectSnapshot
 
 @dynamicMemberLookup
-public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, Identifiable, Hashable {
+public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresentation, Hashable {
 
     // MARK: SnapshotResult
 
     public typealias ObjectType = O
-
-
-    // MARK: Identifiable
-
-    public let id: O.ObjectID
+    
+    
+    // MARK: ObjectRepresentation
+    
+    public func objectID() -> O.ObjectID {
+        
+        return self.id
+    }
+    
+    public func asLiveObject(in dataStack: DataStack) -> LiveObject<O>? {
+        
+        let context = dataStack.unsafeContext()
+        return .init(objectID: self.id, context: context)
+    }
+    
+    public func asEditable(in transaction: BaseDataTransaction) -> O? {
+        
+        return self.context.fetchExisting(self.id)
+    }
+    
+    public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
+        
+        let context = dataStack.unsafeContext()
+        if self.context == context {
+            
+            return self
+        }
+        return .init(id: self.id, context: context)
+    }
+    
+    public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
+        
+        let context = transaction.unsafeContext()
+        if self.context == context {
+            
+            return self
+        }
+        return .init(id: self.id, context: context)
+    }
+    
+    public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<O>? {
+        
+        return .init(objectID: self.id, context: dataStack.unsafeContext())
+    }
 
 
     // MARK: Equatable
@@ -79,6 +118,7 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, Identifiable, Ha
 
     // MARK: Private
 
+    private let id: O.ObjectID
     private let context: NSManagedObjectContext
     private let values: NSDictionary
 }

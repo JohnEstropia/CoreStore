@@ -50,8 +50,6 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 
         return self.lazySnapshot
     }
-
-    public private(set) lazy var object: O = self.context.fetchExisting(self.objectID)!
     
     public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (LiveObject<O>) -> Void) {
         
@@ -76,27 +74,49 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 
     public typealias ObjectType = O
     
-    public static func cs_fromRaw(object: NSManagedObject) -> Self {
+    public func objectID() -> O.ObjectID {
         
-        return self.init(
-            objectID: object.objectID,
-            context: object.managedObjectContext!
-        )
+        return self.id
     }
     
-    public func cs_id() -> O.ObjectID {
+    public func asLiveObject(in dataStack: DataStack) -> LiveObject<O>? {
         
-        return self.objectID
+        let context = dataStack.unsafeContext()
+        if self.context == context {
+            
+            return self
+        }
+        return Self.init(objectID: self.id, context: context)
     }
     
-    public func cs_object() -> O? {
+    public func asEditable(in transaction: BaseDataTransaction) -> O? {
         
-        return self.context.fetchExisting(self.objectID)
+        return self.context.fetchExisting(self.id)
     }
     
-    public func cs_rawObject(in context: NSManagedObjectContext) -> NSManagedObject? {
+    public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
         
-        return self.object.cs_toRaw()
+        let context = dataStack.unsafeContext()
+        if self.context == context {
+            
+            return self.lazySnapshot
+        }
+        return .init(id: self.id, context: context)
+    }
+    
+    public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
+        
+        let context = transaction.unsafeContext()
+        if self.context == context {
+            
+            return self.lazySnapshot
+        }
+        return .init(id: self.id, context: context)
+    }
+    
+    public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<O>? {
+        
+        return .init(objectID: self.id, context: dataStack.unsafeContext())
     }
 
 
@@ -104,7 +124,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 
     public static func == (_ lhs: LiveObject, _ rhs: LiveObject) -> Bool {
 
-        return lhs.objectID == rhs.objectID
+        return lhs.id == rhs.id
             && lhs.context == rhs.context
     }
 
@@ -113,7 +133,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 
     public func hash(into hasher: inout Hasher) {
 
-        hasher.combine(self.objectID)
+        hasher.combine(self.id)
         hasher.combine(self.context)
     }
 
@@ -141,7 +161,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 
     fileprivate init(objectID: O.ObjectID, context: NSManagedObjectContext, initializer: @escaping (NSManagedObjectID, NSManagedObjectContext) -> ObjectSnapshot<O>) {
 
-        self.objectID = objectID
+        self.id = objectID
         self.context = context
         if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 
@@ -175,7 +195,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 
     // MARK: Private
     
-    private let objectID: O.ObjectID
+    private let id: O.ObjectID
     private let context: NSManagedObjectContext
 
     @Internals.LazyNonmutating(uninitialized: ())
