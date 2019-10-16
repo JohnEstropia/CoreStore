@@ -42,7 +42,7 @@ extension DiffableDataSource {
         public typealias ObjectType = O
 
         @nonobjc
-        public init(collectionView: UICollectionView, dataStack: DataStack, cellProvider: @escaping (UICollectionView, IndexPath, ObjectType) -> UICollectionViewCell?, supplementaryViewProvider: @escaping (UICollectionView, String, IndexPath) -> UICollectionReusableView? = { _, _, _ in nil }) {
+        public init(collectionView: UICollectionView, dataStack: DataStack, cellProvider: @escaping (UICollectionView, IndexPath, O) -> UICollectionViewCell?, supplementaryViewProvider: @escaping (UICollectionView, String, IndexPath) -> UICollectionReusableView? = { _, _, _ in nil }) {
 
             self.collectionView = collectionView
             self.cellProvider = cellProvider
@@ -77,7 +77,7 @@ extension DiffableDataSource {
             collectionView.dataSource = self
         }
 
-        public func apply(_ snapshot: ListSnapshot<ObjectType>, animatingDifferences: Bool = true) {
+        public func apply(_ snapshot: ListSnapshot<O>, animatingDifferences: Bool = true) {
 
             let diffableSnapshot = snapshot.diffableSnapshot
 //            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
@@ -199,7 +199,7 @@ extension DiffableDataSource {
         private weak var collectionView: UICollectionView?
 
         private let dataStack: DataStack
-        private let cellProvider: (UICollectionView, IndexPath, ObjectType) -> UICollectionViewCell?
+        private let cellProvider: (UICollectionView, IndexPath, O) -> UICollectionViewCell?
         private let supplementaryViewProvider: (UICollectionView, String, IndexPath) -> UICollectionReusableView?
         private var rawDataSource: Any!
 

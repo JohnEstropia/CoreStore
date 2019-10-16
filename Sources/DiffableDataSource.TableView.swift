@@ -48,7 +48,7 @@ extension DiffableDataSource {
         public typealias ObjectType = O
         
         @nonobjc
-        public init(tableView: UITableView, dataStack: DataStack, cellProvider: @escaping (UITableView, IndexPath, ObjectType) -> UITableViewCell?) {
+        public init(tableView: UITableView, dataStack: DataStack, cellProvider: @escaping (UITableView, IndexPath, O) -> UITableViewCell?) {
 
             self.tableView = tableView
             self.cellProvider = cellProvider
@@ -82,7 +82,7 @@ extension DiffableDataSource {
             tableView.dataSource = self
         }
 
-        public func apply(_ snapshot: ListSnapshot<ObjectType>, animatingDifferences: Bool = true) {
+        public func apply(_ snapshot: ListSnapshot<O>, animatingDifferences: Bool = true) {
 
             let diffableSnapshot = snapshot.diffableSnapshot
 //            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
@@ -221,7 +221,7 @@ extension DiffableDataSource {
         private weak var tableView: UITableView?
         
         private let dataStack: DataStack
-        private let cellProvider: (UITableView, IndexPath, ObjectType) -> UITableViewCell?
+        private let cellProvider: (UITableView, IndexPath, O) -> UITableViewCell?
         private var rawDataSource: Any!
         
 //        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)

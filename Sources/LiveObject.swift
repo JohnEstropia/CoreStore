@@ -88,10 +88,15 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
         }
         return Self.init(objectID: self.id, context: context)
     }
+
+    public func asReadOnly(in dataStack: DataStack) -> O? {
+
+        return dataStack.unsafeContext().fetchExisting(self.id)
+    }
     
     public func asEditable(in transaction: BaseDataTransaction) -> O? {
         
-        return self.context.fetchExisting(self.id)
+        return transaction.unsafeContext().fetchExisting(self.id)
     }
     
     public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
@@ -112,11 +117,6 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
             return self.lazySnapshot
         }
         return .init(objectID: self.id, context: context)
-    }
-    
-    public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<O>? {
-        
-        return .init(objectID: self.id, context: dataStack.unsafeContext())
     }
 
 
@@ -353,13 +353,5 @@ extension LiveObject where O: CoreStoreObject {
     public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyUnordered<D>>) -> Set<D> {
 
         return self.snapshot[dynamicMember: member]
-    }
-
-    /**
-     Returns the value for the property identified by a given key.
-     */
-    public subscript<T>(dynamicMember member: KeyPath<O, T>) -> T {
-
-        return self.object[keyPath: member]
     }
 }

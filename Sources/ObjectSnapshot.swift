@@ -56,10 +56,15 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
         let context = dataStack.unsafeContext()
         return .init(objectID: self.id, context: context)
     }
+
+    public func asReadOnly(in dataStack: DataStack) -> O? {
+
+        return dataStack.unsafeContext().fetchExisting(self.id)
+    }
     
     public func asEditable(in transaction: BaseDataTransaction) -> O? {
         
-        return self.context.fetchExisting(self.id)
+        return transaction.unsafeContext().fetchExisting(self.id)
     }
     
     public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
@@ -80,11 +85,6 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
             return self
         }
         return .init(objectID: self.id, context: context)
-    }
-    
-    public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<O>? {
-        
-        return .init(objectID: self.id, context: dataStack.unsafeContext())
     }
 
 
@@ -112,7 +112,7 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
 
         self.id = objectID
         self.context = context
-        self.values = O.cs_snapshotDictionary(id: id, context: context) as NSDictionary
+        self.values = O.cs_snapshotDictionary(id: objectID, context: context) as NSDictionary
     }
 
 

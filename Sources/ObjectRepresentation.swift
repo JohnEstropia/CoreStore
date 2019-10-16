@@ -47,9 +47,14 @@ public protocol ObjectRepresentation {
      An instance that may be observed for object changes.
      */
     func asLiveObject(in dataStack: DataStack) -> LiveObject<ObjectType>?
+
+    /**
+     A read-only instance in the `DataStack`.
+     */
+    func asReadOnly(in dataStack: DataStack) -> ObjectType?
     
     /**
-     An instance that may be mutated within a transaction.
+     An instance that may be mutated within a `BaseDataTransaction`.
      */
     func asEditable(in transaction: BaseDataTransaction) -> ObjectType?
     
@@ -62,11 +67,6 @@ public protocol ObjectRepresentation {
      A thread-safe `struct` that is a full-copy of the object's properties
      */
     func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<ObjectType>?
-    
-    /**
-     An instance that may be observed for property-specific changes.
-     */
-    func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<ObjectType>?
 }
 
 extension NSManagedObject: ObjectRepresentation {}
@@ -88,6 +88,16 @@ extension DynamicObject where Self: ObjectRepresentation {
         return .init(objectID: self.cs_id(), context: context)
     }
 
+    public func asReadOnly(in dataStack: DataStack) -> Self? {
+
+        let context = dataStack.unsafeContext()
+        if self.cs_toRaw().managedObjectContext == context {
+
+            return self
+        }
+        return context.fetchExisting(self.cs_id())
+    }
+
     public func asEditable(in transaction: BaseDataTransaction) -> Self? {
 
         let context = transaction.unsafeContext()
@@ -107,12 +117,6 @@ extension DynamicObject where Self: ObjectRepresentation {
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<Self>? {
 
         let context = transaction.unsafeContext()
-        return .init(objectID: self.cs_id(), context: context)
-    }
-
-    public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<Self>? {
-
-        let context = dataStack.unsafeContext()
         return .init(objectID: self.cs_id(), context: context)
     }
 }

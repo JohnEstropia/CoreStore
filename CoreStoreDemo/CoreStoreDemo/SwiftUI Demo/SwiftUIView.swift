@@ -20,22 +20,6 @@ struct SwiftUIView: View {
     @ObservedObject
     var palettes: LiveList<Palette>
 
-    @available(iOS 13.0.0, *)
-    struct ColorCell: View {
-
-        @ObservedObject
-        var palette: LiveObject<Palette>
-
-        var body: some View {
-            HStack {
-                Color(palette.color)
-                    .cornerRadius(5)
-                    .frame(width: 30, height: 30, alignment: .leading)
-                Text(palette.colorText)
-            }
-        }
-    }
-
     var body: some View {
         NavigationView {
             List {
@@ -122,6 +106,22 @@ struct SwiftUIView: View {
 
     @State
     private var needsShowAlert = false
+}
+
+@available(iOS 13.0.0, *)
+struct ColorCell: View {
+
+    @ObservedObject
+    var palette: LiveObject<Palette>
+
+    var body: some View {
+        HStack {
+            Color(palette.color)
+                .cornerRadius(5)
+                .frame(width: 30, height: 30, alignment: .leading)
+            Text(palette.colorText)
+        }
+    }
 }
 
 @available(iOS 13.0.0, *)

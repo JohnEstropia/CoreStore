@@ -40,17 +40,22 @@ import CoreData
  Observers registered via `addObserver(_:)` are not retained. `ObjectMonitor` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
  */
 @available(macOS 10.12, *)
-public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equatable {
+public final class ObjectMonitor<O: DynamicObject>: Equatable {
+
+    /**
+     The object type represented by this `ObjectMonitor`
+     */
+    public typealias ObjectType = O
     
     /**
      Returns the `DynamicObject` instance being observed, or `nil` if the object was already deleted.
      */
-    public var object: ObjectType? {
+    public var object: O? {
         
         return self.fetchedResultsController
             .fetchedObjects?
             .first
-            .flatMap({ ObjectType.cs_fromRaw(object: $0) })
+            .flatMap({ O.cs_fromRaw(object: $0) })
     }
     
     /**
@@ -72,7 +77,7 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
      
      - parameter observer: an `ObjectObserver` to send change notifications to
      */
-    public func addObserver<U: ObjectObserver>(_ observer: U) where U.ObjectEntityType == ObjectType {
+    public func addObserver<U: ObjectObserver>(_ observer: U) where U.ObjectEntityType == O {
         
         self.unregisterObserver(observer)
         self.registerObserver(
@@ -99,7 +104,7 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
      
      - parameter observer: an `ObjectObserver` to unregister notifications to
      */
-    public func removeObserver<U: ObjectObserver>(_ observer: U) where U.ObjectEntityType == ObjectType {
+    public func removeObserver<U: ObjectObserver>(_ observer: U) where U.ObjectEntityType == O {
         
         self.unregisterObserver(observer)
     }
@@ -120,50 +125,9 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
     public let userInfo = UserInfo()
     
     
-    // MARK: ObjectRepresentation
-    
-    public func objectID() -> O.ObjectID {
-        
-        return self.id
-    }
-    
-    public func asLiveObject(in dataStack: DataStack) -> LiveObject<O>? {
-        
-        let context = dataStack.unsafeContext()
-        return .init(objectID: self.id, context: context)
-    }
-    
-    public func asEditable(in transaction: BaseDataTransaction) -> O? {
-        
-        return self.context.fetchExisting(self.id)
-    }
-    
-    public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
-        
-        let context = dataStack.unsafeContext()
-        return .init(objectID: self.id, context: context)
-    }
-    
-    public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
-        
-        let context = transaction.unsafeContext()
-        return .init(objectID: self.id, context: context)
-    }
-    
-    public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<O>? {
-        
-        let context = dataStack.unsafeContext()
-        if self.context == context {
-            
-            return self
-        }
-        return .init(objectID: self.id, context: dataStack.unsafeContext())
-    }
-    
-    
     // MARK: Equatable
     
-    public static func == (lhs: ObjectMonitor<ObjectType>, rhs: ObjectMonitor<ObjectType>) -> Bool {
+    public static func == (lhs: ObjectMonitor<O>, rhs: ObjectMonitor<O>) -> Bool {
         
         return lhs === rhs
     }
@@ -173,7 +137,7 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
-    public static func ~= (lhs: ObjectMonitor<ObjectType>, rhs: ObjectMonitor<ObjectType>) -> Bool {
+    public static func ~= (lhs: ObjectMonitor<O>, rhs: ObjectMonitor<O>) -> Bool {
         
         return lhs === rhs
     }
@@ -194,7 +158,7 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
     
     // MARK: Internal
     
-    internal init(objectID: ObjectType.ObjectID, context: NSManagedObjectContext) {
+    internal init(objectID: O.ObjectID, context: NSManagedObjectContext) {
         
         let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
         fetchRequest.entity = objectID.entity
@@ -207,8 +171,8 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
         let fetchedResultsController = Internals.CoreStoreFetchedResultsController(
             context: context,
             fetchRequest: fetchRequest,
-            from: From<ObjectType>([objectID.persistentStore?.configurationName]),
-            applyFetchClauses: Where<ObjectType>("SELF", isEqualTo: objectID).applyToFetchRequest
+            from: From<O>([objectID.persistentStore?.configurationName]),
+            applyFetchClauses: Where<O>("SELF", isEqualTo: objectID).applyToFetchRequest
         )
         
         let fetchedResultsControllerDelegate = Internals.FetchedResultsControllerDelegate()
@@ -224,7 +188,7 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
         self.lastCommittedAttributes = (self.object?.cs_toRaw().committedValues(forKeys: nil) as? [String: NSObject]) ?? [:]
     }
     
-    internal func registerObserver<U: AnyObject>(_ observer: U, willChangeObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType, _ changedPersistentKeys: Set<String>) -> Void) {
+    internal func registerObserver<U: AnyObject>(_ observer: U, willChangeObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<O>, _ object: O) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<O>, _ object: O) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ObjectMonitor<O>, _ object: O, _ changedPersistentKeys: Set<String>) -> Void) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -320,7 +284,7 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
         return self.fetchedResultsController.managedObjectContext
     }
     
-    private func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ObjectMonitor<ObjectType>) -> Void) {
+    private func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ObjectMonitor<O>) -> Void) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -340,7 +304,7 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
         )
     }
     
-    private func registerObjectNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ObjectMonitor<ObjectType>, _ object: ObjectType) -> Void) {
+    private func registerObjectNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ObjectMonitor<O>, _ object: O) -> Void) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -354,7 +318,7 @@ public final class ObjectMonitor<O: DynamicObject>: ObjectRepresentation, Equata
                             
                             return
                     }
-                    callback(self, ObjectType.cs_fromRaw(object: object))
+                    callback(self, O.cs_fromRaw(object: object))
                 }
             ),
             forKey: notificationKey,
