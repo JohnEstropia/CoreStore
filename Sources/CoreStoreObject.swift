@@ -63,7 +63,7 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     /**
      Do not call this directly. This is exposed as public only as a required initializer.
-     - Important: subclasses that need a custom initializer should override both `init(_:)` and `init(asMeta:)`, and to call their corresponding super implementations.
+     - Important: subclasses that need a custom initializer should override both `init(rawObject:)` and `init(asMeta:)`, and to call their corresponding super implementations.
      */
     public required init(rawObject: NSManagedObject) {
         
@@ -77,7 +77,7 @@ open /*abstract*/ class CoreStoreObject: DynamicObject, Hashable {
     
     /**
      Do not call this directly. This is exposed as public only as a required initializer.
-     - Important: subclasses that need a custom initializer should override both `init(_:)` and `init(asMeta:)`, and to call their corresponding super implementations.
+     - Important: subclasses that need a custom initializer should override both `init(rawObject:)` and `init(asMeta:)`, and to call their corresponding super implementations.
      */
     public required init(asMeta: Void) {
         

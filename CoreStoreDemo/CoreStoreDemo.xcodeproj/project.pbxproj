@@ -37,6 +37,7 @@
 		B569651A1B30888A0075EE4A /* FetchingResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56965191B30888A0075EE4A /* FetchingResultsViewController.swift */; };
 		B569651C1B30889A0075EE4A /* QueryingResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569651B1B30889A0075EE4A /* QueryingResultsViewController.swift */; };
 		B56965291B3582D30075EE4A /* MigrationDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B56965271B3582D30075EE4A /* MigrationDemo.xcdatamodeld */; };
+		B5AA37EF2357D30300FFD4B9 /* ColorsDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AA37EE2357D30300FFD4B9 /* ColorsDemo.swift */; };
 		B5E599321B5240F50084BD5F /* OrganismTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */; };
 		B5E89AD01C5292A2003B04A9 /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; };
 		B5E89AD11C5292A2003B04A9 /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -95,6 +96,7 @@
 		B56965191B30888A0075EE4A /* FetchingResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchingResultsViewController.swift; sourceTree = "<group>"; };
 		B569651B1B30889A0075EE4A /* QueryingResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryingResultsViewController.swift; sourceTree = "<group>"; };
 		B56965281B3582D30075EE4A /* MigrationDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemo.xcdatamodel; sourceTree = "<group>"; };
+		B5AA37EE2357D30300FFD4B9 /* ColorsDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsDemo.swift; sourceTree = "<group>"; };
 		B5BDC9211C202429008147CD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganismTableViewCell.swift; path = "CoreStoreDemo/MIgrations Demo/OrganismTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		B5EE25801B36E1B00000406B /* MigrationDemoV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemoV2.xcdatamodel; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 		B503FADA1AFDC71700F90881 /* List and Object Observers Demo */ = {
 			isa = PBXGroup;
 			children = (
+				B5AA37EE2357D30300FFD4B9 /* ColorsDemo.swift */,
 				B52977D81B120B80003D50A5 /* ObserversViewController.swift */,
 				B503FADB1AFDC71700F90881 /* ListObserverDemoViewController.swift */,
 				B503FADC1AFDC71700F90881 /* ObjectObserverDemoViewController.swift */,
@@ -354,6 +357,7 @@
 				B50132282344E5E900FC238B /* SwiftUIContainerViewController.swift in Sources */,
 				B56964D71B231AE90075EE4A /* StackSetupDemo.xcdatamodeld in Sources */,
 				B56964DC1B231BCB0075EE4A /* FemaleAccount.swift in Sources */,
+				B5AA37EF2357D30300FFD4B9 /* ColorsDemo.swift in Sources */,
 				B5EE259E1B3EC1B20000406B /* OrganismProtocol.swift in Sources */,
 				B5EE258C1B36E40D0000406B /* MigrationsDemoViewController.swift in Sources */,
 				B50132242344E24300FC238B /* SwiftUIView.swift in Sources */,
