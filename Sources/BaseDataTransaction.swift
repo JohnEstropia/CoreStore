@@ -183,8 +183,8 @@ public /*abstract*/ class BaseDataTransaction {
         )
         let context = self.context
         objects.forEach {
-            
-            $0.cs_rawObject(in: context).map({ context.delete($0) })
+
+            $0.asEditable(in: self).map({ context.delete($0.cs_toRaw()) })
         }
     }
     

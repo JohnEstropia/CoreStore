@@ -16,13 +16,13 @@ class ObjectObserverDemoViewController: UIViewController, ObjectObserver {
     
     func setPalette<O: ObjectRepresentation>(_ newValue: O?) where O.ObjectType == Palette {
         
-        guard self.monitor?.cs_id() != newValue?.cs_id() else {
+        guard self.monitor?.objectID() != newValue?.objectID() else {
             
             return
         }
         if let newValue = newValue {
             
-            self.monitor = ColorsDemo.stack.monitorObject(newValue)
+            self.monitor = newValue.asObjectMonitor(in: ColorsDemo.stack)
         }
         else {
             

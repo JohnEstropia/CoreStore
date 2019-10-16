@@ -69,40 +69,50 @@ public protocol ObjectRepresentation {
     func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<ObjectType>?
 }
 
-extension LiveObject {
-    
-    public static func cs_object(in context: NSManagedObjectContext) -> LiveObject<O>? {
-        
-        return nil
-    }
-}
+extension NSManagedObject: ObjectRepresentation {}
 
-extension ObjectMonitor {
-    
-    public static func cs_object(in context: NSManagedObjectContext) -> LiveObject<D>? {
-        
-        return nil
-    }
-}
-
-extension NSManagedObject: ObjectRepresentation {
-    
-    
-}
-
-extension CoreStoreObject: ObjectRepresentation {
-    
-}
+extension CoreStoreObject: ObjectRepresentation {}
 
 extension DynamicObject where Self: ObjectRepresentation {
-    
-    public static func cs_object(in context: NSManagedObjectContext) -> LiveObject<Self>? {
-        
-        fatalError()
+
+    // MARK: ObjectRepresentation
+
+    public func objectID() -> Self.ObjectID {
+
+        return self.cs_id()
     }
-    
-    public func cs_rawObject(in context: NSManagedObjectContext) -> NSManagedObject? {
-        
+
+    public func asLiveObject(in dataStack: DataStack) -> LiveObject<Self>? {
+
+        let context = dataStack.unsafeContext()
+        return .init(objectID: self.cs_id(), context: context)
+    }
+
+    public func asEditable(in transaction: BaseDataTransaction) -> Self? {
+
+        let context = transaction.unsafeContext()
+        if self.cs_toRaw().managedObjectContext == context {
+
+            return self
+        }
         return context.fetchExisting(self.cs_id())
+    }
+
+    public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<Self>? {
+
+        let context = dataStack.unsafeContext()
+        return .init(objectID: self.cs_id(), context: context)
+    }
+
+    public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<Self>? {
+
+        let context = transaction.unsafeContext()
+        return .init(objectID: self.cs_id(), context: context)
+    }
+
+    public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<Self>? {
+
+        let context = dataStack.unsafeContext()
+        return .init(objectID: self.cs_id(), context: context)
     }
 }

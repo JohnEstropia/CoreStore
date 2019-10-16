@@ -38,12 +38,9 @@ extension UnsafeDataTransaction {
      - parameter object: the `ObjectRepresentation` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
-    public func monitorObject<O: ObjectRepresentation>(_ object: O) -> ObjectMonitor<O.ObjectType> {
-        
-        return ObjectMonitor(
-            unsafeTransaction: self,
-            object: object
-        )
+    public func monitorObject<O: DynamicObject>(_ object: O) -> ObjectMonitor<O> {
+
+        return .init(objectID: object.cs_id(), context: self.unsafeContext())
     }
     
     /**

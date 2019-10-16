@@ -101,7 +101,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
             
             return self.lazySnapshot
         }
-        return .init(id: self.id, context: context)
+        return .init(objectID: self.id, context: context)
     }
     
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
@@ -111,7 +111,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
             
             return self.lazySnapshot
         }
-        return .init(id: self.id, context: context)
+        return .init(objectID: self.id, context: context)
     }
     
     public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<O>? {
@@ -150,7 +150,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
         self.init(
             objectID: objectID,
             context: context,
-            initializer: ObjectSnapshot<O>.init(id:context:)
+            initializer: ObjectSnapshot<O>.init(objectID:context:)
         )
     }
 
@@ -190,6 +190,11 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
             self.notifyObservers()
             self.didChange()
         }
+    }
+
+    fileprivate var object: O {
+
+        return self.context.fetchExisting(self.id)!
     }
 
 

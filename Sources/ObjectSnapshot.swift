@@ -69,7 +69,7 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
             
             return self
         }
-        return .init(id: self.id, context: context)
+        return .init(objectID: self.id, context: context)
     }
     
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
@@ -79,7 +79,7 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
             
             return self
         }
-        return .init(id: self.id, context: context)
+        return .init(objectID: self.id, context: context)
     }
     
     public func asObjectMonitor(in dataStack: DataStack) -> ObjectMonitor<O>? {
@@ -108,9 +108,9 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
 
     // MARK: Internal
 
-    internal init(id: ID, context: NSManagedObjectContext) {
+    internal init(objectID: O.ObjectID, context: NSManagedObjectContext) {
 
-        self.id = id
+        self.id = objectID
         self.context = context
         self.values = O.cs_snapshotDictionary(id: id, context: context) as NSDictionary
     }

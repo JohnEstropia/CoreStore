@@ -183,7 +183,7 @@ class ListObserverDemoViewController: UITableViewController {
             ColorsDemo.stack.perform(
                 asynchronous: { (transaction) in
                     
-                    transaction.delete(palette?.object)
+                    transaction.delete(palette)
                 },
                 completion: { _ in }
             )

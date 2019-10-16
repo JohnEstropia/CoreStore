@@ -152,12 +152,12 @@ public final class LiveList<O: DynamicObject>: Hashable {
 
     public func section(containingItem item: LiveObject<O>) -> SectionID? {
 
-        return self.snapshot.sectionIdentifier(containingItem: item.cs_id())
+        return self.snapshot.sectionIdentifier(containingItem: item.objectID())
     }
 
     public func indexOfItem(_ item: LiveObject<O>) -> Int? {
 
-        return self.snapshot.indexOfItem(item.cs_id())
+        return self.snapshot.indexOfItem(item.objectID())
     }
 
     public func indexOfSection(_ identifier: SectionID) -> Int? {

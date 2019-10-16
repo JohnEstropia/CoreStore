@@ -39,7 +39,7 @@ extension CoreStore {
      - parameter object: the `ObjectRepresentation` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
-    public static func monitorObject<O: ObjectRepresentation>(_ object: O) -> ObjectMonitor<O.ObjectType> {
+    public static func monitorObject<O: DynamicObject>(_ object: O) -> ObjectMonitor<O> {
         
         return Shared.defaultStack.monitorObject(object)
     }

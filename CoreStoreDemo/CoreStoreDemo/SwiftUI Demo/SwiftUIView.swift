@@ -48,7 +48,7 @@ struct SwiftUIView: View {
                             )
                         }
                         .onDelete { itemIndices in
-                            let objectsToDelete = self.palettes[section: sectionID, itemIndices: itemIndices].map({ $0.object })
+                            let objectsToDelete = self.palettes[section: sectionID, itemIndices: itemIndices]
                             self.dataStack.perform(
                                 asynchronous: { transaction in
 

@@ -465,6 +465,10 @@
 		B56321B31BD6521C006C9394 /* NSManagedObjectContext+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */; };
 		B56321B41BD6521C006C9394 /* NSManagedObjectContext+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */; };
 		B56321B61BD6521C006C9394 /* Internals.WeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2D1AFF849C0064E85B /* Internals.WeakObject.swift */; };
+		B5635D142356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */; };
+		B5635D152356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */; };
+		B5635D162356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */; };
+		B5635D172356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */; };
 		B56507941D3930BC000596DA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56507931D3930BC000596DA /* CoreData.framework */; };
 		B56507961D3930C1000596DA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56507951D3930C1000596DA /* Foundation.framework */; };
 		B56507981D3930CC000596DA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56507971D3930CC000596DA /* CoreData.framework */; };
@@ -977,6 +981,7 @@
 		B563216F1BD65082006C9394 /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56321791BD650DE006C9394 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
 		B563217B1BD650E3006C9394 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSource.CollectionView.swift; sourceTree = "<group>"; };
 		B56507931D3930BC000596DA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
 		B56507951D3930C1000596DA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B56507971D3930CC000596DA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS3.0.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
@@ -1609,6 +1614,7 @@
 				B5E294DC2349F8E7003E5956 /* SnapshotResult.swift */,
 				B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */,
 				B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView.swift */,
+				B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */,
 			);
 			name = DataSources;
 			sourceTree = "<group>";
@@ -2151,6 +2157,7 @@
 				B5F335582348D75D00FD649F /* LiveResult.swift in Sources */,
 				B5E84F121AFF847B0064E85B /* OrderBy.swift in Sources */,
 				B546F9581C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
+				B5635D142356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */,
 				B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */,
 				B5FAD6AE1B518DCB00714891 /* CoreStore+Migration.swift in Sources */,
 				B50E175223517C6B004F033C /* Internals.DiffableDataUIDispatcher.Changeset.swift in Sources */,
@@ -2315,6 +2322,7 @@
 			files = (
 				82BA18B61C4BBD3F00A0916E /* DataStack+Querying.swift in Sources */,
 				B5ECDBFB1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
+				B5635D152356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */,
 				B5CA2B091F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5C976E81C6E3A5D00B1AF90 /* Internals.CoreStoreFetchedResultsController.swift in Sources */,
 				B56923F61EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
@@ -2539,6 +2547,7 @@
 			files = (
 				B5220E1E1D13080D009BC71E /* CSListMonitor.swift in Sources */,
 				B5DBE2D01C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
+				B5635D172356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */,
 				B5CA2B0B1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B56923F81EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
 				B52DD1BE1BE1F94300949AFE /* Progress+Convenience.swift in Sources */,
@@ -2763,6 +2772,7 @@
 			files = (
 				B56321A91BD65219006C9394 /* Progress+Convenience.swift in Sources */,
 				B5ECDBFC1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
+				B5635D162356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */,
 				B5CA2B0A1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5C976E91C6E3A5E00B1AF90 /* Internals.CoreStoreFetchedResultsController.swift in Sources */,
 				B56923F71EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,

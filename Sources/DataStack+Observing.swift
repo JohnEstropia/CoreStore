@@ -38,13 +38,13 @@ extension DataStack {
      - parameter object: the `ObjectRepresentation` to observe changes from
      - returns: a `ObjectMonitor` that monitors changes to `object`
      */
-    public func monitorObject<O: ObjectRepresentation>(_ object: O) -> ObjectMonitor<O.ObjectType> {
+    public func monitorObject<O: DynamicObject>(_ object: O) -> ObjectMonitor<O> {
         
         Internals.assert(
             Thread.isMainThread,
             "Attempted to observe objects from \(Internals.typeName(self)) outside the main thread."
         )
-        return ObjectMonitor(dataStack: self, object: object)
+        return .init(objectID: object.cs_id(), context: self.unsafeContext())
     }
     
     /**
