@@ -8,7 +8,10 @@
 
 import UIKit
 
-class PaletteTableViewCell: UITableViewCell {
+
+// MARK: - PaletteTableViewCell
+
+final class PaletteTableViewCell: UITableViewCell {
     
     @IBOutlet weak var colorView: UIView?
     @IBOutlet weak var label: UILabel?

@@ -26,6 +26,8 @@
 		B54AAD5B1AF4D26E00848AE0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B54AAD5A1AF4D26E00848AE0 /* Images.xcassets */; };
 		B54AAD5E1AF4D26E00848AE0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B54AAD5C1AF4D26E00848AE0 /* LaunchScreen.xib */; };
 		B560070F1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B560070E1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift */; };
+		B5635D192357F9F700B80E6B /* CollectionViewDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D182357F9F700B80E6B /* CollectionViewDemoViewController.swift */; };
+		B5635D1B2357FA4B00B80E6B /* PaletteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D1A2357FA4B00B80E6B /* PaletteCollectionViewCell.swift */; };
 		B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */; };
 		B566E3321B11DF3200F4F0C6 /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = B566E3311B11DF3200F4F0C6 /* UserAccount.swift */; };
 		B56964C91B20AC780075EE4A /* CustomLoggerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56964C81B20AC780075EE4A /* CustomLoggerViewController.swift */; };
@@ -38,6 +40,7 @@
 		B569651C1B30889A0075EE4A /* QueryingResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B569651B1B30889A0075EE4A /* QueryingResultsViewController.swift */; };
 		B56965291B3582D30075EE4A /* MigrationDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B56965271B3582D30075EE4A /* MigrationDemo.xcdatamodeld */; };
 		B5AA37EF2357D30300FFD4B9 /* ColorsDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AA37EE2357D30300FFD4B9 /* ColorsDemo.swift */; };
+		B5C37EE52357FEBE0035A20D /* PaletteCollectionSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C37EE42357FEBE0035A20D /* PaletteCollectionSectionHeaderView.swift */; };
 		B5E599321B5240F50084BD5F /* OrganismTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */; };
 		B5E89AD01C5292A2003B04A9 /* CoreStore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; };
 		B5E89AD11C5292A2003B04A9 /* CoreStore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5BDC9211C202429008147CD /* CoreStore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -85,6 +88,8 @@
 		B54AAD5A1AF4D26E00848AE0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B54AAD5D1AF4D26E00848AE0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		B560070E1B3EC90F00A9A8F9 /* OrganismV2ToV3MigrationPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganismV2ToV3MigrationPolicy.swift; sourceTree = "<group>"; };
+		B5635D182357F9F700B80E6B /* CollectionViewDemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewDemoViewController.swift; sourceTree = "<group>"; };
+		B5635D1A2357FA4B00B80E6B /* PaletteCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteCollectionViewCell.swift; sourceTree = "<group>"; };
 		B566E3291B117B1F00F4F0C6 /* StackSetupDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackSetupDemoViewController.swift; sourceTree = "<group>"; };
 		B566E3311B11DF3200F4F0C6 /* UserAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccount.swift; sourceTree = "<group>"; };
 		B56964C81B20AC780075EE4A /* CustomLoggerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLoggerViewController.swift; sourceTree = "<group>"; };
@@ -98,6 +103,7 @@
 		B56965281B3582D30075EE4A /* MigrationDemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemo.xcdatamodel; sourceTree = "<group>"; };
 		B5AA37EE2357D30300FFD4B9 /* ColorsDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorsDemo.swift; sourceTree = "<group>"; };
 		B5BDC9211C202429008147CD /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5C37EE42357FEBE0035A20D /* PaletteCollectionSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteCollectionSectionHeaderView.swift; sourceTree = "<group>"; };
 		B5E599311B5240F50084BD5F /* OrganismTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrganismTableViewCell.swift; path = "CoreStoreDemo/MIgrations Demo/OrganismTableViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		B5EE25801B36E1B00000406B /* MigrationDemoV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MigrationDemoV2.xcdatamodel; sourceTree = "<group>"; };
 		B5EE25841B36E23C0000406B /* OrganismV1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrganismV1.swift; sourceTree = "<group>"; };
@@ -138,9 +144,12 @@
 				B5AA37EE2357D30300FFD4B9 /* ColorsDemo.swift */,
 				B52977D81B120B80003D50A5 /* ObserversViewController.swift */,
 				B503FADB1AFDC71700F90881 /* ListObserverDemoViewController.swift */,
+				B5635D182357F9F700B80E6B /* CollectionViewDemoViewController.swift */,
 				B503FADC1AFDC71700F90881 /* ObjectObserverDemoViewController.swift */,
 				B503FADD1AFDC71700F90881 /* Palette.swift */,
 				B503FADE1AFDC71700F90881 /* PaletteTableViewCell.swift */,
+				B5635D1A2357FA4B00B80E6B /* PaletteCollectionViewCell.swift */,
+				B5C37EE42357FEBE0035A20D /* PaletteCollectionSectionHeaderView.swift */,
 			);
 			path = "List and Object Observers Demo";
 			sourceTree = "<group>";
@@ -333,6 +342,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B56965181B2E20CC0075EE4A /* TimeZone.swift in Sources */,
+				B5C37EE52357FEBE0035A20D /* PaletteCollectionSectionHeaderView.swift in Sources */,
 				B56965291B3582D30075EE4A /* MigrationDemo.xcdatamodeld in Sources */,
 				B5E599321B5240F50084BD5F /* OrganismTableViewCell.swift in Sources */,
 				B5EE25851B36E23C0000406B /* OrganismV1.swift in Sources */,
@@ -344,6 +354,7 @@
 				B503FAE01AFDC71700F90881 /* ObjectObserverDemoViewController.swift in Sources */,
 				B52977D91B120B80003D50A5 /* ObserversViewController.swift in Sources */,
 				B56964C91B20AC780075EE4A /* CustomLoggerViewController.swift in Sources */,
+				B5635D192357F9F700B80E6B /* CollectionViewDemoViewController.swift in Sources */,
 				B566E32A1B117B1F00F4F0C6 /* StackSetupDemoViewController.swift in Sources */,
 				B56964DA1B231BCA0075EE4A /* MaleAccount.swift in Sources */,
 				B566E3321B11DF3200F4F0C6 /* UserAccount.swift in Sources */,
@@ -355,6 +366,7 @@
 				B503FADF1AFDC71700F90881 /* ListObserverDemoViewController.swift in Sources */,
 				B54AAD4F1AF4D26E00848AE0 /* AppDelegate.swift in Sources */,
 				B50132282344E5E900FC238B /* SwiftUIContainerViewController.swift in Sources */,
+				B5635D1B2357FA4B00B80E6B /* PaletteCollectionViewCell.swift in Sources */,
 				B56964D71B231AE90075EE4A /* StackSetupDemo.xcdatamodeld in Sources */,
 				B56964DC1B231BCB0075EE4A /* FemaleAccount.swift in Sources */,
 				B5AA37EF2357D30300FFD4B9 /* ColorsDemo.swift in Sources */,

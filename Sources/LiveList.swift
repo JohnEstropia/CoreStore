@@ -178,10 +178,52 @@ public final class LiveList<O: DynamicObject>: Hashable {
         self.observers.removeObject(forKey: observer)
     }
 
-    deinit {
 
-        self.observers.removeAllObjects()
+    // MARK: Public (Refetching)
+
+    /**
+     Asks the `ListMonitor` to refetch its objects using the specified series of `FetchClause`s. Note that this method does not execute the fetch immediately; the actual fetching will happen after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes.
+
+     `refetch(...)` broadcasts `listMonitorWillRefetch(...)` to its observers immediately, and then `listMonitorDidRefetch(...)` after the new fetch request completes.
+
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
+     */
+    public func refetch(_ fetchClauses: FetchClause...) {
+
+        self.refetch(fetchClauses)
     }
+
+    /**
+     Asks the `ListMonitor` to refetch its objects using the specified series of `FetchClause`s. Note that this method does not execute the fetch immediately; the actual fetching will happen after the `NSFetchedResultsController`'s last `controllerDidChangeContent(_:)` notification completes.
+
+     `refetch(...)` broadcasts `listMonitorWillRefetch(...)` to its observers immediately, and then `listMonitorDidRefetch(...)` after the new fetch request completes.
+
+     - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
+     - Important: Starting CoreStore 4.0, all `FetchClause`s required by the `ListMonitor` should be provided in the arguments list of `refetch(...)`.
+     */
+    public func refetch(_ fetchClauses: [FetchClause]) {
+
+        self.refetch { (fetchRequest) in
+
+            fetchClauses.forEach { $0.applyToFetchRequest(fetchRequest) }
+        }
+    }
+
+
+    // MARK: Public (3rd Party Utilities)
+
+    /**
+     Allow external libraries to store custom data in the `ListMonitor`. App code should rarely have a need for this.
+     ```
+     enum Static {
+         static var myDataKey: Void?
+     }
+     monitor.userInfo[&Static.myDataKey] = myObject
+     ```
+     - Important: Do not use this method to store thread-sensitive data.
+     */
+    public let userInfo = UserInfo()
 
 
     // MARK: Equatable
@@ -251,6 +293,44 @@ public final class LiveList<O: DynamicObject>: Hashable {
             applyFetchClauses: applyFetchClauses,
             createAsynchronously: createAsynchronously
         )
+    }
+
+    internal func refetch(_ applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+
+        self.applyFetchClauses = applyFetchClauses
+
+        DispatchQueue.main.async { [weak self] () -> Void in
+
+            guard let `self` = self else {
+
+                return
+            }
+
+            let (newFetchedResultsController, newFetchedResultsControllerDelegate) = Self.recreateFetchedResultsController(
+                context: self.fetchedResultsController.managedObjectContext,
+                from: self.from,
+                sectionBy: self.sectionBy,
+                applyFetchClauses: self.applyFetchClauses
+            )
+            newFetchedResultsControllerDelegate.handler = self
+
+            do {
+
+                try newFetchedResultsController.performFetchFromSpecifiedStores()
+            }
+            catch {
+
+                // DataStack may have been deallocated
+                return
+            }
+            (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = (newFetchedResultsController, newFetchedResultsControllerDelegate)
+        }
+    }
+
+    deinit {
+
+        self.fetchedResultsControllerDelegate.fetchedResultsController = nil
+        self.observers.removeAllObjects()
     }
 
 

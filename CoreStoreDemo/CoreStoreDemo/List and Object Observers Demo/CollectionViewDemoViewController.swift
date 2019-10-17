@@ -1,25 +1,25 @@
 //
-//  ListObserverDemoViewController.swift
+//  CollectionViewDemoViewController.swift
 //  CoreStoreDemo
 //
-//  Created by John Rommel Estropia on 2015/05/02.
-//  Copyright © 2018 John Rommel Estropia. All rights reserved.
+//  Created by John Estropia on 2019/10/17.
+//  Copyright © 2019 John Rommel Estropia. All rights reserved.
 //
 
 import UIKit
 import CoreStore
 
 
-// MARK: - ListObserverDemoViewController
+// MARK: - CollectionViewDemoViewController
 
-class ListObserverDemoViewController: UITableViewController {
-    
+final class CollectionViewDemoViewController: UICollectionViewController {
+
     // MARK: UIViewController
 
     override func viewDidLoad() {
-        
+
         super.viewDidLoad()
-        
+
         let navigationItem = self.navigationItem
         navigationItem.leftBarButtonItems = [
             self.editButtonItem,
@@ -29,7 +29,7 @@ class ListObserverDemoViewController: UITableViewController {
                 action: #selector(self.resetBarButtonItemTouched(_:))
             )
         ]
-        
+
         let filterBarButton = UIBarButtonItem(
             title: ColorsDemo.filter.rawValue,
             style: .plain,
@@ -51,21 +51,34 @@ class ListObserverDemoViewController: UITableViewController {
         ]
         self.filterBarButton = filterBarButton
 
-        self.dataSource = DiffableDataSource.TableView<Palette>(
-            tableView: self.tableView,
+        self.dataSource = DiffableDataSource.CollectionView<Palette>(
+            collectionView: self.collectionView,
             dataStack: ColorsDemo.stack,
-            cellProvider: { (tableView, indexPath, palette) in
-                
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PaletteTableViewCell") as! PaletteTableViewCell
+            cellProvider: { (collectionView, indexPath, palette) in
+
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PaletteCollectionViewCell", for: indexPath) as! PaletteCollectionViewCell
                 cell.colorView?.backgroundColor = palette.color
                 cell.label?.text = palette.colorText
                 return cell
+            },
+            supplementaryViewProvider: { (collectionView, kind, indexPath) in
+
+                switch kind {
+
+                case UICollectionView.elementKindSectionHeader:
+                    let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "PaletteCollectionSectionHeaderView", for: indexPath) as! PaletteCollectionSectionHeaderView
+                    view.label?.text = ColorsDemo.palettes.sectionIdentifiers[indexPath.section]
+                    return view
+
+                default:
+                    return nil
+                }
             }
         )
         ColorsDemo.palettes.addObserver(self) { [weak self] (liveList) in
-            
+
             guard let self = self else {
-                
+
                 return
             }
             self.filterBarButton?.title = ColorsDemo.filter.rawValue
@@ -73,85 +86,66 @@ class ListObserverDemoViewController: UITableViewController {
         }
         self.dataSource?.apply(ColorsDemo.palettes.snapshot, animatingDifferences: false)
     }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+
         super.prepare(for: segue, sender: sender)
-        
+
         switch (segue.identifier, segue.destination, sender) {
-            
+
         case ("ObjectObserverDemoViewController"?, let destinationViewController as ObjectObserverDemoViewController, let palette as LiveObject<Palette>):
             destinationViewController.setPalette(palette)
-            
+
         default:
             break
         }
     }
-    
-    
-    // MARK: UITableViewDelegate
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-        
+
+
+    // MARK: UICollectionViewDelegate
+
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        collectionView.deselectItem(at: indexPath, animated: true)
+
         self.performSegue(
             withIdentifier: "ObjectObserverDemoViewController",
             sender: ColorsDemo.palettes[indexPath: indexPath]
         )
     }
-    
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        switch editingStyle {
-            
-        case .delete:
-            let palette = ColorsDemo.palettes[indexPath: indexPath]
-            ColorsDemo.stack.perform(
-                asynchronous: { (transaction) in
-                    
-                    transaction.delete(palette)
-                },
-                completion: { _ in }
-            )
-            
-        default:
-            break
-        }
-    }
-    
-    
+
+
     // MARK: Private
-    
+
     private var filterBarButton: UIBarButtonItem?
-    private var dataSource: DiffableDataSource.TableView<Palette>?
-    
+    private var dataSource: DiffableDataSource.CollectionView<Palette>?
+
     deinit {
-        
+
         ColorsDemo.palettes.removeObserver(self)
     }
-    
+
     @IBAction private dynamic func resetBarButtonItemTouched(_ sender: AnyObject?) {
-        
+
         ColorsDemo.stack.perform(
             asynchronous: { (transaction) in
-                
+
                 try transaction.deleteAll(From<Palette>())
             },
             completion: { _ in }
         )
     }
-    
+
     @IBAction private dynamic func filterBarButtonItemTouched(_ sender: AnyObject?) {
-        
+
         ColorsDemo.filter = ColorsDemo.filter.next()
     }
-    
+
     @IBAction private dynamic func addBarButtonItemTouched(_ sender: AnyObject?) {
-        
+
         ColorsDemo.stack.perform(
             asynchronous: { (transaction) in
-                
+
                 let palette = transaction.create(Into<Palette>())
                 palette.setInitialValues(in: transaction)
             },
@@ -173,4 +167,3 @@ class ListObserverDemoViewController: UITableViewController {
         )
     }
 }
-
