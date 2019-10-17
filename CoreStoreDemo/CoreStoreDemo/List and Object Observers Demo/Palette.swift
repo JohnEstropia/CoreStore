@@ -75,24 +75,6 @@ extension Palette {
     }
 }
 
-extension LiveObject where ObjectType == Palette {
-
-    var color: UIColor {
-
-        return UIColor(
-            hue: CGFloat(self.hue) / 360.0,
-            saturation: CGFloat(self.saturation),
-            brightness: CGFloat(self.brightness),
-            alpha: 1.0
-        )
-    }
-
-    var colorText: String {
-
-        return "H: \(self.hue)˚, S: \(round(self.saturation * 100.0))%, B: \(round(self.brightness * 100.0))%"
-    }
-}
-
 extension Palette {
 
     func setInitialValues(in transaction: BaseDataTransaction) {

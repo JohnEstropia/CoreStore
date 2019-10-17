@@ -46,7 +46,7 @@ public protocol ObjectRepresentation {
     /**
      An instance that may be observed for object changes.
      */
-    func asLiveObject(in dataStack: DataStack) -> LiveObject<ObjectType>?
+    func asLiveObject(in dataStack: DataStack) -> LiveObject<ObjectType>
 
     /**
      A read-only instance in the `DataStack`.
@@ -82,10 +82,10 @@ extension DynamicObject where Self: ObjectRepresentation {
         return self.cs_id()
     }
 
-    public func asLiveObject(in dataStack: DataStack) -> LiveObject<Self>? {
+    public func asLiveObject(in dataStack: DataStack) -> LiveObject<Self> {
 
         let context = dataStack.unsafeContext()
-        return .init(objectID: self.cs_id(), context: context)
+        return LiveObject<Self>(objectID: self.cs_id(), context: context)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> Self? {
@@ -111,12 +111,12 @@ extension DynamicObject where Self: ObjectRepresentation {
     public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<Self>? {
 
         let context = dataStack.unsafeContext()
-        return .init(objectID: self.cs_id(), context: context)
+        return ObjectSnapshot<Self>(objectID: self.cs_id(), context: context)
     }
 
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<Self>? {
 
         let context = transaction.unsafeContext()
-        return .init(objectID: self.cs_id(), context: context)
+        return ObjectSnapshot<Self>(objectID: self.cs_id(), context: context)
     }
 }

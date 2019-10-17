@@ -46,10 +46,12 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
     public typealias SectionID = String
     public typealias ItemID = O.ObjectID
 
-    public var snapshot: SnapshotType {
+    public var snapshot: ObjectSnapshot<O>? {
 
         return self.lazySnapshot
     }
+
+    public lazy var object: O? = self.context.fetchExisting(self.id)
     
     public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (LiveObject<O>) -> Void) {
         
@@ -79,7 +81,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
         return self.id
     }
     
-    public func asLiveObject(in dataStack: DataStack) -> LiveObject<O>? {
+    public func asLiveObject(in dataStack: DataStack) -> LiveObject<O> {
         
         let context = dataStack.unsafeContext()
         if self.context == context {
@@ -106,7 +108,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
             
             return self.lazySnapshot
         }
-        return .init(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(objectID: self.id, context: context)
     }
     
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
@@ -116,7 +118,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
             
             return self.lazySnapshot
         }
-        return .init(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(objectID: self.id, context: context)
     }
 
 
@@ -159,7 +161,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 
     fileprivate let rawObjectWillChange: Any?
 
-    fileprivate init(objectID: O.ObjectID, context: NSManagedObjectContext, initializer: @escaping (NSManagedObjectID, NSManagedObjectContext) -> ObjectSnapshot<O>) {
+    fileprivate init(objectID: O.ObjectID, context: NSManagedObjectContext, initializer: @escaping (NSManagedObjectID, NSManagedObjectContext) -> ObjectSnapshot<O>?) {
 
         self.id = objectID
         self.context = context
@@ -179,22 +181,29 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
         }
         self.$lazySnapshot.initialize({ initializer(objectID, context) })
         
-        context.objectsDidChangeObserver(for: self).addObserver(self) { [weak self] (objectIDs) in
+        context.objectsDidChangeObserver(for: self).addObserver(self) { [weak self] (updatedIDs, deletedIDs) in
 
             guard let self = self else {
 
                 return
             }
-            self.willChange()
-            self.$lazySnapshot.reset({ initializer(objectID, context) })
-            self.notifyObservers()
-            self.didChange()
+            if deletedIDs.contains(objectID) {
+
+                self.object = nil
+
+                self.willChange()
+                self.$lazySnapshot.reset({ nil })
+                self.notifyObservers()
+                self.didChange()
+            }
+            else if updatedIDs.contains(objectID) {
+
+                self.willChange()
+                self.$lazySnapshot.reset({ initializer(objectID, context) })
+                self.notifyObservers()
+                self.didChange()
+            }
         }
-    }
-
-    fileprivate var object: O {
-
-        return self.context.fetchExisting(self.id)!
     }
 
 
@@ -204,7 +213,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
     private let context: NSManagedObjectContext
 
     @Internals.LazyNonmutating(uninitialized: ())
-    private var lazySnapshot: ObjectSnapshot<O>
+    private var lazySnapshot: ObjectSnapshot<O>?
     
     private lazy var observers: NSMapTable<AnyObject, Internals.Closure<LiveObject<O>, Void>> = .weakToStrongObjects()
 
@@ -302,9 +311,9 @@ extension LiveObject where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Required<V>>) -> V {
+    public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Required<V>>) -> V? {
 
-        return self.snapshot[dynamicMember: member]
+        return self.object?[keyPath: member].value
     }
 
     /**
@@ -312,15 +321,15 @@ extension LiveObject where O: CoreStoreObject {
      */
     public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Optional<V>>) -> V? {
 
-        return self.snapshot[dynamicMember: member]
+        return self.object?[keyPath: member].value
     }
 
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Required<V>>) -> V {
+    public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Required<V>>) -> V? {
 
-        return self.snapshot[dynamicMember: member]
+        return self.object?[keyPath: member].value
     }
 
     /**
@@ -328,7 +337,7 @@ extension LiveObject where O: CoreStoreObject {
      */
     public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Optional<V>>) -> V? {
 
-        return self.snapshot[dynamicMember: member]
+        return self.object?[keyPath: member].value
     }
 
     /**
@@ -336,22 +345,30 @@ extension LiveObject where O: CoreStoreObject {
      */
     public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToOne<D>>) -> D? {
 
-        return self.snapshot[dynamicMember: member]
+        return self.object?[keyPath: member].value
     }
 
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyOrdered<D>>) -> [D] {
+    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyOrdered<D>>) -> [D]? {
 
-        return self.snapshot[dynamicMember: member]
+        return self.object?[keyPath: member].value
     }
 
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyUnordered<D>>) -> Set<D> {
+    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyUnordered<D>>) -> Set<D>? {
 
-        return self.snapshot[dynamicMember: member]
+        return self.object?[keyPath: member].value
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public subscript<V>(dynamicMember member: KeyPath<O, V>) -> V? {
+
+        return self.object?[keyPath: member]
     }
 }

@@ -292,22 +292,32 @@ class DynamicModelTests: BaseTestDataTestCase {
                     XCTAssertEqual(person.name.value, "John")
                     XCTAssertEqual(person.displayName.value, "Mr. John") // Custom getter
                     
-                    let personSnapshot1 = person.asSnapshot(in: transaction)
-                    XCTAssertEqual(person.name.value, personSnapshot1?.name)
-                    XCTAssertEqual(person.title.value, personSnapshot1?.title)
-                    XCTAssertEqual(person.displayName.value, personSnapshot1?.displayName)
+                    let personSnapshot1 = person.asSnapshot(in: transaction)!
+                    XCTAssertEqual(person.name.value, personSnapshot1.name)
+                    XCTAssertEqual(person.title.value, personSnapshot1.title)
+                    XCTAssertEqual(person.displayName.value, personSnapshot1.displayName)
                     
                     person.title .= "Sir"
                     XCTAssertEqual(person.displayName.value, "Sir John")
                     
-                    XCTAssertEqual(personSnapshot1?.name, "John")
-                    XCTAssertEqual(personSnapshot1?.title, "Mr.")
-                    XCTAssertEqual(personSnapshot1?.displayName, "Mr. John")
+                    XCTAssertEqual(personSnapshot1.name, "John")
+                    XCTAssertEqual(personSnapshot1.title, "Mr.")
+                    XCTAssertEqual(personSnapshot1.displayName, "Mr. John")
                     
-                    let personSnapshot2 = person.asSnapshot(in: transaction)
-                    XCTAssertEqual(person.name.value, personSnapshot2?.name)
-                    XCTAssertEqual(person.title.value, personSnapshot2?.title)
-                    XCTAssertEqual(person.displayName.value, personSnapshot2?.displayName)
+                    let personSnapshot2 = person.asSnapshot(in: transaction)!
+                    XCTAssertEqual(person.name.value, personSnapshot2.name)
+                    XCTAssertEqual(person.title.value, personSnapshot2.title)
+                    XCTAssertEqual(person.displayName.value, personSnapshot2.displayName)
+
+                    var personSnapshot3 = personSnapshot2
+                    personSnapshot3.name = "James"
+                    XCTAssertEqual(personSnapshot1.name, "John")
+                    XCTAssertEqual(personSnapshot1.displayName, "Mr. John")
+                    XCTAssertEqual(personSnapshot2.name, "John")
+                    XCTAssertEqual(personSnapshot2.displayName, "Sir John")
+                    XCTAssertEqual(personSnapshot3.name, "James")
+                    XCTAssertEqual(personSnapshot3.displayName, "Sir John")
+
                     
                     person.pets.value.insert(dog)
                     XCTAssertEqual(person.pets.count, 1)

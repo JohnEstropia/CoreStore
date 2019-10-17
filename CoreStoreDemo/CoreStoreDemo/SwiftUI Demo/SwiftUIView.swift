@@ -116,10 +116,10 @@ struct ColorCell: View {
 
     var body: some View {
         HStack {
-            Color(palette.color)
+            Color(palette.color ?? UIColor.clear)
                 .cornerRadius(5)
                 .frame(width: 30, height: 30, alignment: .leading)
-            Text(palette.colorText)
+            Text(palette.colorText ?? "<Deleted>")
         }
     }
 }
@@ -140,18 +140,18 @@ struct DetailView: View {
     init(palette: LiveObject<Palette>) {
 
         self.palette = palette
-        self.hue = Float(palette.hue)
-        self.saturation = palette.saturation
-        self.brightness = palette.brightness
+        self.hue = Float(palette.hue ?? 0)
+        self.saturation = palette.saturation ?? 0
+        self.brightness = palette.brightness ?? 0
     }
 
     var body: some View {
         ZStack {
-            Color(palette.color)
+            Color(palette.color ?? UIColor.clear)
                 .cornerRadius(20)
                 .padding(20)
             VStack {
-                Text(palette.colorText)
+                Text(palette.colorText ?? "<Deleted>")
                     .navigationBarTitle(Text("Color"))
                 Slider(value: $hue, in: 0.0 ... 359.0 as ClosedRange<Float>)
                 Slider(value: $saturation, in: 0.0 ... 1.0 as ClosedRange<Float>)

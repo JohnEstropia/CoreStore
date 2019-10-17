@@ -46,7 +46,7 @@ public protocol DynamicObject: AnyObject {
     /**
      Used internally by CoreStore. Do not call directly.
      */
-    static func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]
+    static func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]?
     
     /**
      Used internally by CoreStore. Do not call directly.
@@ -97,11 +97,19 @@ extension NSManagedObject: DynamicObject {
         return object
     }
 
-    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any] {
+    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]? {
 
-        let object = context.fetchExisting(id)! as Self
+        guard let object = context.fetchExisting(id) as NSManagedObject? else {
+
+            return nil
+        }
         let rawObject = object.cs_toRaw()
-        return rawObject.dictionaryWithValues(forKeys: rawObject.entity.properties.map({ $0.name }))
+        var dictionary = rawObject.dictionaryWithValues(forKeys: Array(rawObject.entity.attributesByName.keys))
+        for case (let key, let target as NSManagedObject) in rawObject.dictionaryWithValues(forKeys: Array(rawObject.entity.relationshipsByName.keys)) {
+
+            dictionary[key] = target.objectID
+        }
+        return dictionary
     }
     
     public class func cs_fromRaw(object: NSManagedObject) -> Self {
@@ -143,7 +151,7 @@ extension CoreStoreObject {
         return self.cs_fromRaw(object: object)
     }
 
-    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any] {
+    public class func cs_snapshotDictionary(id: ObjectID, context: NSManagedObjectContext) -> [String: Any]? {
 
         func initializeAttributes(mirror: Mirror, object: Self, into attributes: inout [KeyPathString: Any]) {
 
@@ -170,11 +178,14 @@ extension CoreStoreObject {
                 }
             }
         }
-        let object = context.fetchExisting(id)! as Self
+        guard let object = context.fetchExisting(id) as CoreStoreObject? else {
+
+            return nil
+        }
         var values: [KeyPathString: Any] = [:]
         initializeAttributes(
             mirror: Mirror(reflecting: object),
-            object: object,
+            object: object as! Self,
             into: &values
         )
         return values

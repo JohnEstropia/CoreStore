@@ -106,7 +106,7 @@ extension NSManagedObjectContext {
     }
 
     @nonobjc
-    internal func objectsDidChangeObserver<U: AnyObject>(for observer: U) -> Internals.SharedNotificationObserver<Set<NSManagedObjectID>> {
+    internal func objectsDidChangeObserver<U: AnyObject>(for observer: U) -> Internals.SharedNotificationObserver<(updated: Set<NSManagedObjectID>, deleted: Set<NSManagedObjectID>)> {
 
         return self.userInfo(for: .objectsChangeObserver(U.self)) { [unowned self] in
 
@@ -114,11 +114,11 @@ extension NSManagedObjectContext {
                 notificationName: .NSManagedObjectContextObjectsDidChange,
                 object: self,
                 queue: .main,
-                sharedValue: { (notification) -> Set<NSManagedObjectID> in
+                sharedValue: { (notification) -> (updated: Set<NSManagedObjectID>, deleted: Set<NSManagedObjectID>) in
 
                     guard let userInfo = notification.userInfo else {
 
-                        return []
+                        return (updated: [], deleted: [])
                     }
                     var updatedObjectIDs: Set<NSManagedObjectID> = []
                     if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObjectID> {
@@ -129,7 +129,8 @@ extension NSManagedObjectContext {
 
                         updatedObjectIDs.formUnion(mergedObjects)
                     }
-                    return updatedObjectIDs
+                    let deletedObjectIDs: Set<NSManagedObjectID> = (userInfo[NSDeletedObjectsKey] as? Set<NSManagedObjectID>) ?? []
+                    return (updated: updatedObjectIDs, deleted: deletedObjectIDs)
                 }
             )
         }

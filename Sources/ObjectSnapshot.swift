@@ -51,10 +51,10 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
         return self.id
     }
     
-    public func asLiveObject(in dataStack: DataStack) -> LiveObject<O>? {
+    public func asLiveObject(in dataStack: DataStack) -> LiveObject<O> {
         
         let context = dataStack.unsafeContext()
-        return .init(objectID: self.id, context: context)
+        return LiveObject<O>(objectID: self.id, context: context)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> O? {
@@ -70,21 +70,13 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
     public func asSnapshot(in dataStack: DataStack) -> ObjectSnapshot<O>? {
         
         let context = dataStack.unsafeContext()
-        if self.context == context {
-            
-            return self
-        }
-        return .init(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(objectID: self.id, context: context)
     }
     
     public func asSnapshot(in transaction: BaseDataTransaction) -> ObjectSnapshot<O>? {
         
         let context = transaction.unsafeContext()
-        if self.context == context {
-            
-            return self
-        }
-        return .init(objectID: self.id, context: context)
+        return ObjectSnapshot<O>(objectID: self.id, context: context)
     }
 
 
@@ -93,7 +85,7 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
     public static func == (_ lhs: Self, _ rhs: Self) -> Bool {
 
         return lhs.id == rhs.id
-            && lhs.values == rhs.values
+            && lhs.valuesRef == rhs.valuesRef
     }
 
 
@@ -102,25 +94,32 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
     public func hash(into hasher: inout Hasher) {
 
         hasher.combine(self.id)
-        hasher.combine(self.values)
+        hasher.combine(self.valuesRef)
     }
 
 
     // MARK: Internal
 
-    internal init(objectID: O.ObjectID, context: NSManagedObjectContext) {
+    internal init?(objectID: O.ObjectID, context: NSManagedObjectContext) {
 
+        guard let values = O.cs_snapshotDictionary(id: objectID, context: context) else {
+
+            return nil
+        }
         self.id = objectID
-        self.context = context
-        self.values = O.cs_snapshotDictionary(id: objectID, context: context) as NSDictionary
+        self.values = values
     }
 
 
     // MARK: Private
 
     private let id: O.ObjectID
-    private let context: NSManagedObjectContext
-    private let values: NSDictionary
+    private var values: [String: Any]
+
+    private var valuesRef: NSDictionary {
+
+        return self.values as NSDictionary
+    }
 }
 
 
@@ -149,8 +148,16 @@ extension ObjectSnapshot where O: CoreStoreObject {
      */
     public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Required<V>>) -> V {
 
-        let key = String(keyPath: member)
-        return self.values[key] as! V
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! V
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
     }
 
     /**
@@ -158,8 +165,16 @@ extension ObjectSnapshot where O: CoreStoreObject {
      */
     public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Optional<V>>) -> V? {
 
-        let key = String(keyPath: member)
-        return self.values[key] as! V?
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! V?
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
     }
 
     /**
@@ -167,8 +182,16 @@ extension ObjectSnapshot where O: CoreStoreObject {
      */
     public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Required<V>>) -> V {
 
-        let key = String(keyPath: member)
-        return self.values[key] as! V
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! V
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
     }
 
     /**
@@ -176,34 +199,66 @@ extension ObjectSnapshot where O: CoreStoreObject {
      */
     public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Optional<V>>) -> V? {
 
-        let key = String(keyPath: member)
-        return self.values[key] as! V?
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! V?
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
     }
 
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToOne<D>>) -> D? {
+    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToOne<D>>) -> D.ObjectID? {
 
-        let key = String(keyPath: member)
-        return self.values[key] as! D?
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! D.ObjectID?
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
     }
 
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyOrdered<D>>) -> [D] {
+    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyOrdered<D>>) -> [D.ObjectID] {
 
-        let key = String(keyPath: member)
-        return self.values[key] as! [D]
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! [D.ObjectID]
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
     }
 
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyUnordered<D>>) -> Set<D> {
+    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyUnordered<D>>) -> Set<D.ObjectID> {
 
-        let key = String(keyPath: member)
-        return self.values[key] as! Set<D>
+        get {
+
+            let key = String(keyPath: member)
+            return self.values[key] as! Set<D.ObjectID>
+        }
+        set {
+
+            let key = String(keyPath: member)
+            self.values[key] = newValue
+        }
     }
 }
