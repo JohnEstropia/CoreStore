@@ -38,6 +38,37 @@ import SwiftUI
 
 // MARK: - LiveList
 
+/**
+ `LiveList` tracks a diffable list of `DynamicObject` instances. Unlike `ListMonitor`s, `LiveList` are more lightweight and access objects lazily. `LiveList`s are also designed to work well with `DiffableDataSource.TableView`s and `DiffableDataSource.CollectionView`s. Objects that need to be notified of `LiveList` changes may register themselves to its `addObserver(_:_:)` method:
+ ```
+ let liveList = Shared.defaultStack.liveList(
+     From<Person>()
+         .where(\.title == "Engineer")
+         .orderBy(.ascending(\.lastName))
+ )
+ liveList.addObserver(self) { (liveList) in
+ 
+     // Handle changes
+ }
+ ```
+ The `LiveList` instance needs to be held on (retained) for as long as the list needs to be observed.
+ Observers registered via `addObserver(_:_:)` are not retained. `LiveList` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
+ 
+ `LiveList`s may optionally be created with sections:
+ ```
+ let liveList = Shared.defaultStack.liveList(
+     From<Person>()
+         .sectionBy(\.age") { "Age \($0)" }
+         .where(\.title == "Engineer")
+         .orderBy(.ascending(\.lastName))
+ )
+ liveList.addObserver(self) { (liveList) in
+ 
+     // Handle changes
+ }
+ ```
+ */
+@available(macOS 10.12, *)
 public final class LiveList<O: DynamicObject>: Hashable {
     
     // MARK: Public

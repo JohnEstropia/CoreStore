@@ -1,5 +1,5 @@
 //
-//  EnvironmentKeys.swift
+//  EnvironmentValues+DataSources.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -28,20 +28,6 @@
 import SwiftUI
 
 
-// MARK: - DataStackEnvironmentKey
-
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-public struct DataStackEnvironmentKey: EnvironmentKey {
-
-    // MARK: Public
-    
-    public static var defaultValue: DataStack {
-        
-        return Shared.defaultStack
-    }
-}
-
-
 // MARK: - EnvironmentValues
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
@@ -49,12 +35,36 @@ extension EnvironmentValues {
 
     // MARK: Public
 
+    /**
+     The `DataStack` instance injected to `self`:
+     ```
+     @Environment(\.dataStack)
+     var dataStack: DataStack
+     ```
+     */
     public var dataStack: DataStack {
+        
         get {
-            return self[DataStackEnvironmentKey.self]
+            
+            return self[DataStackKey.self]
         }
         set {
-            self[DataStackEnvironmentKey.self] = newValue
+            
+            self[DataStackKey.self] = newValue
+        }
+    }
+
+
+    // MARK: - DataStackEnvironmentKey
+
+    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+    fileprivate struct DataStackKey: EnvironmentKey {
+
+        // MARK: FilePrivate
+        
+        fileprivate static var defaultValue: DataStack {
+            
+            return Shared.defaultStack
         }
     }
 }

@@ -408,10 +408,10 @@
 		B55BB4D5235012AE00C33E34 /* ObjectRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55BB4D3235012AE00C33E34 /* ObjectRepresentation.swift */; };
 		B55BB4D6235012AE00C33E34 /* ObjectRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55BB4D3235012AE00C33E34 /* ObjectRepresentation.swift */; };
 		B55BB4D7235012AE00C33E34 /* ObjectRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55BB4D3235012AE00C33E34 /* ObjectRepresentation.swift */; };
-		B55BB4D823503B9500C33E34 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F849702348A6690029D57B /* EnvironmentKeys.swift */; };
-		B55BB4D923503B9600C33E34 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F849702348A6690029D57B /* EnvironmentKeys.swift */; };
-		B55BB4DA23503B9600C33E34 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F849702348A6690029D57B /* EnvironmentKeys.swift */; };
-		B55BB4DB23503B9700C33E34 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F849702348A6690029D57B /* EnvironmentKeys.swift */; };
+		B55BB4D823503B9500C33E34 /* EnvironmentValues+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F849702348A6690029D57B /* EnvironmentValues+DataSources.swift */; };
+		B55BB4D923503B9600C33E34 /* EnvironmentValues+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F849702348A6690029D57B /* EnvironmentValues+DataSources.swift */; };
+		B55BB4DA23503B9600C33E34 /* EnvironmentValues+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F849702348A6690029D57B /* EnvironmentValues+DataSources.swift */; };
+		B55BB4DB23503B9700C33E34 /* EnvironmentValues+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F849702348A6690029D57B /* EnvironmentValues+DataSources.swift */; };
 		B56007111B3F6BD500A9A8F9 /* Into.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007101B3F6BD500A9A8F9 /* Into.swift */; };
 		B56007141B3F6C2800A9A8F9 /* SectionBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007131B3F6C2800A9A8F9 /* SectionBy.swift */; };
 		B56007161B4018AB00A9A8F9 /* MigrationChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56007151B4018AB00A9A8F9 /* MigrationChain.swift */; };
@@ -822,10 +822,6 @@
 		B5F335592348D76300FD649F /* LiveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F335572348D75D00FD649F /* LiveResult.swift */; };
 		B5F3355A2348D76500FD649F /* LiveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F335572348D75D00FD649F /* LiveResult.swift */; };
 		B5F3355B2348D76500FD649F /* LiveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F335572348D75D00FD649F /* LiveResult.swift */; };
-		B5F3355C2348D93700FD649F /* LiveQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F84966234887EB0029D57B /* LiveQuery.swift */; };
-		B5F3355D2348D93800FD649F /* LiveQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F84966234887EB0029D57B /* LiveQuery.swift */; };
-		B5F3355E2348D93900FD649F /* LiveQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F84966234887EB0029D57B /* LiveQuery.swift */; };
-		B5F3355F2348D93900FD649F /* LiveQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F84966234887EB0029D57B /* LiveQuery.swift */; };
 		B5F8496C234898240029D57B /* ListSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F8496B234898240029D57B /* ListSnapshot.swift */; };
 		B5F8496D234898240029D57B /* ListSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F8496B234898240029D57B /* ListSnapshot.swift */; };
 		B5F8496E234898240029D57B /* ListSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F8496B234898240029D57B /* ListSnapshot.swift */; };
@@ -1120,9 +1116,8 @@
 		B5F1DA8C1B9AA97D007C5CBB /* ImportableObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportableObject.swift; sourceTree = "<group>"; };
 		B5F1DA8F1B9AA991007C5CBB /* ImportableUniqueObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportableUniqueObject.swift; sourceTree = "<group>"; };
 		B5F335572348D75D00FD649F /* LiveResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveResult.swift; sourceTree = "<group>"; };
-		B5F84966234887EB0029D57B /* LiveQuery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveQuery.swift; sourceTree = "<group>"; };
 		B5F8496B234898240029D57B /* ListSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSnapshot.swift; sourceTree = "<group>"; };
-		B5F849702348A6690029D57B /* EnvironmentKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentKeys.swift; sourceTree = "<group>"; };
+		B5F849702348A6690029D57B /* EnvironmentValues+DataSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+DataSources.swift"; sourceTree = "<group>"; };
 		B5FAD6A81B50A4B300714891 /* Progress+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Progress+Convenience.swift"; sourceTree = "<group>"; };
 		B5FAD6AB1B51285300714891 /* Internals.MigrationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Internals.MigrationManager.swift; sourceTree = "<group>"; };
 		B5FAD6AD1B518DCB00714891 /* CoreStore+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "CoreStore+Migration.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -1601,8 +1596,7 @@
 		B5E5FA4C22D15D3C00330931 /* DataSources */ = {
 			isa = PBXGroup;
 			children = (
-				B5F849702348A6690029D57B /* EnvironmentKeys.swift */,
-				B5F84966234887EB0029D57B /* LiveQuery.swift */,
+				B5F849702348A6690029D57B /* EnvironmentValues+DataSources.swift */,
 				B50132292344ECB500FC238B /* LiveList.swift */,
 				B5BF7FC0234D7B2E0070E741 /* LiveObject.swift */,
 				B5F8496B234898240029D57B /* ListSnapshot.swift */,
@@ -2095,7 +2089,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5DE5230230BDA1300A22534 /* Shared.swift in Sources */,
-				B55BB4DB23503B9700C33E34 /* EnvironmentKeys.swift in Sources */,
+				B55BB4DB23503B9700C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
 				B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */,
 				B5ECDBF91CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
 				B5CA2B081F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
@@ -2276,7 +2270,6 @@
 				B5E84F151AFF847B0064E85B /* CoreStore+Querying.swift in Sources */,
 				B5E84F241AFF84860064E85B /* ListObserver.swift in Sources */,
 				B501322A2344ECB500FC238B /* LiveList.swift in Sources */,
-				B5F3355C2348D93700FD649F /* LiveQuery.swift in Sources */,
 				B5F8496C234898240029D57B /* ListSnapshot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2374,7 +2367,7 @@
 				B509C7F51E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
 				82BA18B31C4BBD3900A0916E /* ImportableUniqueObject.swift in Sources */,
 				B50EE14323473C96009B8C47 /* CoreStoreObject+DataSources.swift in Sources */,
-				B55BB4DA23503B9600C33E34 /* EnvironmentKeys.swift in Sources */,
+				B55BB4DA23503B9600C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
 				B5E1B5951CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
 				18166887232B9ED60097C275 /* String+KeyPaths.swift in Sources */,
 				B5ECDC2B1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
@@ -2409,7 +2402,6 @@
 				B5E41EC11EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
 				B501FDE41CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
 				B5A1DAC91F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
-				B5F3355D2348D93800FD649F /* LiveQuery.swift in Sources */,
 				B5FE4DA31C8481E100FA6A91 /* StorageInterface.swift in Sources */,
 				B5ECDC131CA816E500C7F112 /* CSTweak.swift in Sources */,
 				B56923C51EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
@@ -2599,7 +2591,7 @@
 				B509C7F71E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
 				B5220E1F1D130810009BC71E /* CSListObserver.swift in Sources */,
 				B50EE14523473C97009B8C47 /* CoreStoreObject+DataSources.swift in Sources */,
-				B55BB4D823503B9500C33E34 /* EnvironmentKeys.swift in Sources */,
+				B55BB4D823503B9500C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
 				B52DD1941BE1F92500949AFE /* CoreStore.swift in Sources */,
 				18166889232B9ED80097C275 /* String+KeyPaths.swift in Sources */,
 				B52DD1A61BE1F92F00949AFE /* BaseDataTransaction+Importing.swift in Sources */,
@@ -2634,7 +2626,6 @@
 				B5220E131D1305ED009BC71E /* SectionBy.swift in Sources */,
 				B559CD4D1CAA8C6D00E4D58B /* CSStorageInterface.swift in Sources */,
 				B5E41EC31EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
-				B5F3355F2348D93900FD649F /* LiveQuery.swift in Sources */,
 				B5ECDBE91CA6BEA300C7F112 /* CSClauseTypes.swift in Sources */,
 				B5A1DACB1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B52DD1B81BE1F94000949AFE /* DataStack+Migration.swift in Sources */,
@@ -2824,7 +2815,7 @@
 				B509C7F61E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
 				B5E1B5961CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
 				B50EE14423473C97009B8C47 /* CoreStoreObject+DataSources.swift in Sources */,
-				B55BB4D923503B9600C33E34 /* EnvironmentKeys.swift in Sources */,
+				B55BB4D923503B9600C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
 				B5ECDC2C1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				18166888232B9ED70097C275 /* String+KeyPaths.swift in Sources */,
 				B56321911BD65216006C9394 /* BaseDataTransaction+Importing.swift in Sources */,
@@ -2859,7 +2850,6 @@
 				B501FDEA1CA8D20500BE22EF /* CSListObserver.swift in Sources */,
 				B501FDE51CA8D1F500BE22EF /* CSListMonitor.swift in Sources */,
 				B5E41EC21EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */,
-				B5F3355E2348D93900FD649F /* LiveQuery.swift in Sources */,
 				B5ECDC141CA816E500C7F112 /* CSTweak.swift in Sources */,
 				B5A1DACA1F111BFA003CF369 /* KeyPath+Querying.swift in Sources */,
 				B56321AE1BD6521C006C9394 /* Internals.NotificationObserver.swift in Sources */,

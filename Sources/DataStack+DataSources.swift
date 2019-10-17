@@ -32,6 +32,17 @@ import CoreData
 // MARK: - DataStack
 
 extension DataStack {
+    
+    /**
+     Creates a `LiveObject` for the specified `DynamicObject`. Multiple objects may then register themselves to be notified when changes are made to the `DynamicObject`.
+     
+     - parameter object: the `DynamicObject` to observe changes from
+     - returns: a `LiveObject` that broadcasts changes to `object`
+     */
+    public func liveObject<O: DynamicObject>(_ object: O) -> LiveObject<O> {
+
+        return LiveObject<O>(objectID: object.cs_id(), context: self.unsafeContext())
+    }
 
     public func liveList<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> LiveList<D> {
 
