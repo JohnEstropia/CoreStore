@@ -682,6 +682,9 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bottomContainerView" destination="6So-f3-4Gp" id="C7O-e2-k0l"/>
+                        <outlet property="stackView" destination="cce-yT-4dn" id="r5B-BT-mUM"/>
+                        <outlet property="toggleBottomBarButtonItem" destination="aPM-OC-EB8" id="kEV-gg-XOX"/>
+                        <outlet property="toggleTopBarButtonItem" destination="6q3-Zk-A9p" id="usC-Zu-DQm"/>
                         <outlet property="topContainerView" destination="L5f-tW-lXf" id="DRV-mm-rBY"/>
                     </connections>
                 </viewController>
@@ -900,7 +903,7 @@
             <objects>
                 <collectionViewController id="EKY-1g-ALK" customClass="CollectionViewDemoViewController" customModule="CoreStoreDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="hx3-j3-Q80">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="311"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="311.5"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="X6n-f9-yEl">
@@ -961,6 +964,9 @@
                         </connections>
                     </collectionView>
                     <navigationItem key="navigationItem" title="LiveList" id="goy-Zu-94A"/>
+                    <connections>
+                        <segue destination="dX3-kR-CYC" kind="show" identifier="ObjectObserverDemoViewController" id="k4E-dJ-1lz"/>
+                    </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fmi-gN-RXz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1170,4 +1176,7 @@
     <resources>
         <image name="second" width="30" height="30"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="k4E-dJ-1lz"/>
+    </inferredMetricsTieBreakers>
 </document>

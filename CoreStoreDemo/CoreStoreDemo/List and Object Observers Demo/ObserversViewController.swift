@@ -30,17 +30,30 @@ class ObserversViewController: UIViewController {
     
     
     // MARK: Private
-    
+
+    @IBOutlet private dynamic weak var toggleTopBarButtonItem: UIBarButtonItem?
+    @IBOutlet private dynamic weak var toggleBottomBarButtonItem: UIBarButtonItem?
+    @IBOutlet private dynamic weak var stackView: UIStackView?
     @IBOutlet private dynamic weak var topContainerView: UIView?
     @IBOutlet private dynamic weak var bottomContainerView: UIView?
     
     @IBAction private dynamic func toggleTopContainerView() {
-        
-        self.topContainerView?.isHidden.toggle()
+
+        UIView.animate(withDuration: 0.2) {
+
+            self.topContainerView!.isHidden.toggle()
+        }
+        self.toggleTopBarButtonItem!.isEnabled = !self.bottomContainerView!.isHidden
+        self.toggleBottomBarButtonItem!.isEnabled = !self.topContainerView!.isHidden
     }
     
     @IBAction private dynamic func toggleBottomContainerView() {
-        
-        self.bottomContainerView?.isHidden.toggle()
+
+        UIView.animate(withDuration: 0.2) {
+
+            self.bottomContainerView!.isHidden.toggle()
+        }
+        self.toggleTopBarButtonItem!.isEnabled = !self.bottomContainerView!.isHidden
+        self.toggleBottomBarButtonItem!.isEnabled = !self.topContainerView!.isHidden
     }
 }

@@ -12,7 +12,32 @@ import CoreStore
 
 // MARK: - ListObserverDemoViewController
 
-class ListObserverDemoViewController: UITableViewController {
+final class ListObserverDemoViewController: UITableViewController {
+
+    // MARK: - EditableDataSource
+
+    final class EditableDataSource: DiffableDataSource.TableView<Palette> {
+
+        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
+            switch editingStyle {
+
+            case .delete:
+                let palette = ColorsDemo.palettes[indexPath: indexPath]
+                ColorsDemo.stack.perform(
+                    asynchronous: { (transaction) in
+
+                        transaction.delete(palette)
+                    },
+                    completion: { _ in }
+                )
+
+            default:
+                break
+            }
+        }
+    }
+
     
     // MARK: UIViewController
 
@@ -51,7 +76,7 @@ class ListObserverDemoViewController: UITableViewController {
         ]
         self.filterBarButton = filterBarButton
 
-        self.dataSource = DiffableDataSource.TableView<Palette>(
+        self.dataSource = EditableDataSource(
             tableView: self.tableView,
             dataStack: ColorsDemo.stack,
             cellProvider: { (tableView, indexPath, palette) in
@@ -99,25 +124,6 @@ class ListObserverDemoViewController: UITableViewController {
             withIdentifier: "ObjectObserverDemoViewController",
             sender: ColorsDemo.palettes[indexPath: indexPath]
         )
-    }
-    
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        switch editingStyle {
-            
-        case .delete:
-            let palette = ColorsDemo.palettes[indexPath: indexPath]
-            ColorsDemo.stack.perform(
-                asynchronous: { (transaction) in
-                    
-                    transaction.delete(palette)
-                },
-                completion: { _ in }
-            )
-            
-        default:
-            break
-        }
     }
     
     

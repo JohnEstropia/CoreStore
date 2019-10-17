@@ -215,6 +215,21 @@ extension DiffableDataSource {
 //            }
         }
 
+        @objc
+        open dynamic func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+
+            return true
+        }
+
+        @objc
+        open dynamic func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+
+            return .delete
+        }
+
+        @objc
+        open dynamic func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {}
+
 
         // MARK: Private
 
