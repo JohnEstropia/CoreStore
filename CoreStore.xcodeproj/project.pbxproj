@@ -70,10 +70,10 @@
 		82BA18D81C4BBD7100A0916E /* Internals.WeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2D1AFF849C0064E85B /* Internals.WeakObject.swift */; };
 		82BA18DC1C4BBD9C00A0916E /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		82BA18DD1C4BBE1400A0916E /* NSFetchedResultsController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5202CF91C04688100DED140 /* NSFetchedResultsController+Convenience.swift */; };
-		B501322A2344ECB500FC238B /* LiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* LiveList.swift */; };
-		B501322B2346A9AE00FC238B /* LiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* LiveList.swift */; };
-		B501322D2346A9B000FC238B /* LiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* LiveList.swift */; };
-		B501322E2346A9B100FC238B /* LiveList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* LiveList.swift */; };
+		B501322A2344ECB500FC238B /* ListPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* ListPublisher.swift */; };
+		B501322B2346A9AE00FC238B /* ListPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* ListPublisher.swift */; };
+		B501322D2346A9B000FC238B /* ListPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* ListPublisher.swift */; };
+		B501322E2346A9B100FC238B /* ListPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50132292344ECB500FC238B /* ListPublisher.swift */; };
 		B50132302346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501322F2346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift */; };
 		B50132312346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501322F2346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift */; };
 		B50132322346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B501322F2346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift */; };
@@ -600,10 +600,10 @@
 		B5BF7FBD234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FBB234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift */; };
 		B5BF7FBE234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FBB234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift */; };
 		B5BF7FBF234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FBB234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift */; };
-		B5BF7FC1234D7B2E0070E741 /* LiveObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC0234D7B2E0070E741 /* LiveObject.swift */; };
-		B5BF7FC2234D7B2E0070E741 /* LiveObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC0234D7B2E0070E741 /* LiveObject.swift */; };
-		B5BF7FC3234D7B2E0070E741 /* LiveObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC0234D7B2E0070E741 /* LiveObject.swift */; };
-		B5BF7FC4234D7B2E0070E741 /* LiveObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC0234D7B2E0070E741 /* LiveObject.swift */; };
+		B5BF7FC1234D7B2E0070E741 /* ObjectPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC0234D7B2E0070E741 /* ObjectPublisher.swift */; };
+		B5BF7FC2234D7B2E0070E741 /* ObjectPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC0234D7B2E0070E741 /* ObjectPublisher.swift */; };
+		B5BF7FC3234D7B2E0070E741 /* ObjectPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC0234D7B2E0070E741 /* ObjectPublisher.swift */; };
+		B5BF7FC4234D7B2E0070E741 /* ObjectPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC0234D7B2E0070E741 /* ObjectPublisher.swift */; };
 		B5BF7FC6234D7E460070E741 /* ObjectSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC5234D7E460070E741 /* ObjectSnapshot.swift */; };
 		B5BF7FC7234D7E460070E741 /* ObjectSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC5234D7E460070E741 /* ObjectSnapshot.swift */; };
 		B5BF7FC8234D7E460070E741 /* ObjectSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FC5234D7E460070E741 /* ObjectSnapshot.swift */; };
@@ -668,9 +668,9 @@
 		B5D8CA772346EAEE0055D7D1 /* DataStack+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8CA752346E7590055D7D1 /* DataStack+DataSources.swift */; };
 		B5D8CA782346EAEF0055D7D1 /* DataStack+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8CA752346E7590055D7D1 /* DataStack+DataSources.swift */; };
 		B5D8CA792346EAEF0055D7D1 /* DataStack+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8CA752346E7590055D7D1 /* DataStack+DataSources.swift */; };
-		B5D8CA7C2346EC5F0055D7D1 /* LiveListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8CA7A2346EC550055D7D1 /* LiveListTests.swift */; };
-		B5D8CA7D2346EC610055D7D1 /* LiveListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8CA7A2346EC550055D7D1 /* LiveListTests.swift */; };
-		B5D8CA7E2346EC610055D7D1 /* LiveListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8CA7A2346EC550055D7D1 /* LiveListTests.swift */; };
+		B5D8CA7C2346EC5F0055D7D1 /* ListPublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8CA7A2346EC550055D7D1 /* ListPublisherTests.swift */; };
+		B5D8CA7D2346EC610055D7D1 /* ListPublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8CA7A2346EC550055D7D1 /* ListPublisherTests.swift */; };
+		B5D8CA7E2346EC610055D7D1 /* ListPublisherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D8CA7A2346EC550055D7D1 /* ListPublisherTests.swift */; };
 		B5DAFB482203D9F8003FCCD0 /* Where.Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAFB472203D9F8003FCCD0 /* Where.Expression.swift */; };
 		B5DAFB4A2203E01D003FCCD0 /* KeyPathGenericBindings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAFB492203E01D003FCCD0 /* KeyPathGenericBindings.swift */; };
 		B5DBE2CD1C9914A900B5CEFA /* CSCoreStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DBE2CC1C9914A900B5CEFA /* CSCoreStore.swift */; };
@@ -722,10 +722,6 @@
 		B5E2222C1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E222291CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift */; };
 		B5E2222D1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E222291CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift */; };
 		B5E2222E1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E222291CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift */; };
-		B5E294DD2349F8E7003E5956 /* SnapshotResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E294DC2349F8E7003E5956 /* SnapshotResult.swift */; };
-		B5E294DE2349F8E7003E5956 /* SnapshotResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E294DC2349F8E7003E5956 /* SnapshotResult.swift */; };
-		B5E294DF2349F8E7003E5956 /* SnapshotResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E294DC2349F8E7003E5956 /* SnapshotResult.swift */; };
-		B5E294E02349F8E7003E5956 /* SnapshotResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E294DC2349F8E7003E5956 /* SnapshotResult.swift */; };
 		B5E41EC01EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E41EBF1EA9BB37006240F0 /* DynamicSchema+Convenience.swift */; };
 		B5E41EC11EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E41EBF1EA9BB37006240F0 /* DynamicSchema+Convenience.swift */; };
 		B5E41EC21EA9BB37006240F0 /* DynamicSchema+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E41EBF1EA9BB37006240F0 /* DynamicSchema+Convenience.swift */; };
@@ -818,10 +814,6 @@
 		B5ECDC331CA81CDC00C7F112 /* CSCoreStore+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5ECDC2E1CA81CDC00C7F112 /* CSCoreStore+Transaction.swift */; };
 		B5F1DA8D1B9AA97D007C5CBB /* ImportableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1DA8C1B9AA97D007C5CBB /* ImportableObject.swift */; };
 		B5F1DA901B9AA991007C5CBB /* ImportableUniqueObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1DA8F1B9AA991007C5CBB /* ImportableUniqueObject.swift */; };
-		B5F335582348D75D00FD649F /* LiveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F335572348D75D00FD649F /* LiveResult.swift */; };
-		B5F335592348D76300FD649F /* LiveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F335572348D75D00FD649F /* LiveResult.swift */; };
-		B5F3355A2348D76500FD649F /* LiveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F335572348D75D00FD649F /* LiveResult.swift */; };
-		B5F3355B2348D76500FD649F /* LiveResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F335572348D75D00FD649F /* LiveResult.swift */; };
 		B5F8496C234898240029D57B /* ListSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F8496B234898240029D57B /* ListSnapshot.swift */; };
 		B5F8496D234898240029D57B /* ListSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F8496B234898240029D57B /* ListSnapshot.swift */; };
 		B5F8496E234898240029D57B /* ListSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F8496B234898240029D57B /* ListSnapshot.swift */; };
@@ -884,7 +876,7 @@
 		82BA18DE1C4BBE2600A0916E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		82BA18E01C4BBE2C00A0916E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
 		B500810F2290CDF800F4CEA5 /* bitrise.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = bitrise.yml; sourceTree = SOURCE_ROOT; };
-		B50132292344ECB500FC238B /* LiveList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveList.swift; sourceTree = "<group>"; };
+		B50132292344ECB500FC238B /* ListPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPublisher.swift; sourceTree = "<group>"; };
 		B501322F2346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.FetchedDiffableDataSourceSnapshotDelegate.swift; sourceTree = "<group>"; };
 		B501323623477F9300FC238B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
 		B501323823477FAC00FC238B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -1021,7 +1013,7 @@
 		B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSource.swift; sourceTree = "<group>"; };
 		B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSource.TableView.swift; sourceTree = "<group>"; };
 		B5BF7FBB234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.DiffableDataUIDispatcher.swift; sourceTree = "<group>"; };
-		B5BF7FC0234D7B2E0070E741 /* LiveObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveObject.swift; sourceTree = "<group>"; };
+		B5BF7FC0234D7B2E0070E741 /* ObjectPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectPublisher.swift; sourceTree = "<group>"; };
 		B5BF7FC5234D7E460070E741 /* ObjectSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectSnapshot.swift; sourceTree = "<group>"; };
 		B5BF7FCA234D80910070E741 /* Internals.LazyNonmutating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.LazyNonmutating.swift; sourceTree = "<group>"; };
 		B5C976E21C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UnsafeDataTransaction+Observing.swift"; sourceTree = "<group>"; };
@@ -1042,7 +1034,7 @@
 		B5D39A0119FD00C9000E91BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B5D7A5B51CA3BF8F005C752B /* CSInto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSInto.swift; sourceTree = "<group>"; };
 		B5D8CA752346E7590055D7D1 /* DataStack+DataSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataStack+DataSources.swift"; sourceTree = "<group>"; };
-		B5D8CA7A2346EC550055D7D1 /* LiveListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveListTests.swift; sourceTree = "<group>"; };
+		B5D8CA7A2346EC550055D7D1 /* ListPublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPublisherTests.swift; sourceTree = "<group>"; };
 		B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = CoreStore.podspec; sourceTree = SOURCE_ROOT; };
 		B5DAFB472203D9F8003FCCD0 /* Where.Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Where.Expression.swift; sourceTree = "<group>"; };
 		B5DAFB492203E01D003FCCD0 /* KeyPathGenericBindings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPathGenericBindings.swift; sourceTree = "<group>"; };
@@ -1062,7 +1054,6 @@
 		B5E1B5A71CAA49E2007FD580 /* CSDataStack+Migrating.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSDataStack+Migrating.swift"; sourceTree = "<group>"; };
 		B5E222221CA4E12600BA2E95 /* CSSynchronousDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSSynchronousDataTransaction.swift; sourceTree = "<group>"; };
 		B5E222291CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSUnsafeDataTransaction.swift; sourceTree = "<group>"; };
-		B5E294DC2349F8E7003E5956 /* SnapshotResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotResult.swift; sourceTree = "<group>"; };
 		B5E41EBF1EA9BB37006240F0 /* DynamicSchema+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DynamicSchema+Convenience.swift"; sourceTree = "<group>"; };
 		B5E834B81B76311F001D3D50 /* BaseDataTransaction+Importing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BaseDataTransaction+Importing.swift"; sourceTree = "<group>"; };
 		B5E84ED81AFF82360064E85B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
@@ -1115,7 +1106,6 @@
 		B5ECDC2E1CA81CDC00C7F112 /* CSCoreStore+Transaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSCoreStore+Transaction.swift"; sourceTree = "<group>"; };
 		B5F1DA8C1B9AA97D007C5CBB /* ImportableObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportableObject.swift; sourceTree = "<group>"; };
 		B5F1DA8F1B9AA991007C5CBB /* ImportableUniqueObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportableUniqueObject.swift; sourceTree = "<group>"; };
-		B5F335572348D75D00FD649F /* LiveResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveResult.swift; sourceTree = "<group>"; };
 		B5F8496B234898240029D57B /* ListSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSnapshot.swift; sourceTree = "<group>"; };
 		B5F849702348A6690029D57B /* EnvironmentValues+DataSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+DataSources.swift"; sourceTree = "<group>"; };
 		B5FAD6A81B50A4B300714891 /* Progress+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Progress+Convenience.swift"; sourceTree = "<group>"; };
@@ -1264,7 +1254,7 @@
 				B5220E0B1D0D0D19009BC71E /* ImportTests.swift */,
 				B525576B1CFAF18F00E51965 /* IntoTests.swift */,
 				B5220E0F1D0DA6AB009BC71E /* ListObserverTests.swift */,
-				B5D8CA7A2346EC550055D7D1 /* LiveListTests.swift */,
+				B5D8CA7A2346EC550055D7D1 /* ListPublisherTests.swift */,
 				B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */,
 				B5220E071D0C5F8D009BC71E /* ObjectObserverTests.swift */,
 				B52557771D02826E00E51965 /* OrderByTests.swift */,
@@ -1597,15 +1587,13 @@
 			isa = PBXGroup;
 			children = (
 				B5F849702348A6690029D57B /* EnvironmentValues+DataSources.swift */,
-				B50132292344ECB500FC238B /* LiveList.swift */,
-				B5BF7FC0234D7B2E0070E741 /* LiveObject.swift */,
+				B50132292344ECB500FC238B /* ListPublisher.swift */,
 				B5F8496B234898240029D57B /* ListSnapshot.swift */,
+				B5BF7FC0234D7B2E0070E741 /* ObjectPublisher.swift */,
 				B5BF7FC5234D7E460070E741 /* ObjectSnapshot.swift */,
 				B55BB4D3235012AE00C33E34 /* ObjectRepresentation.swift */,
 				B50EE14123473C92009B8C47 /* CoreStoreObject+DataSources.swift */,
 				B5D8CA752346E7590055D7D1 /* DataStack+DataSources.swift */,
-				B5F335572348D75D00FD649F /* LiveResult.swift */,
-				B5E294DC2349F8E7003E5956 /* SnapshotResult.swift */,
 				B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */,
 				B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView.swift */,
 				B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */,
@@ -2119,7 +2107,6 @@
 				B5D339E21E948C3600C880DE /* Value.swift in Sources */,
 				B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */,
 				B53FBA0B1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,
-				B5E294DD2349F8E7003E5956 /* SnapshotResult.swift in Sources */,
 				B5E84F141AFF847B0064E85B /* DataStack+Querying.swift in Sources */,
 				B5D7A5B61CA3BF8F005C752B /* CSInto.swift in Sources */,
 				B56007141B3F6C2800A9A8F9 /* SectionBy.swift in Sources */,
@@ -2133,7 +2120,7 @@
 				B51B5C2D22D43E38009FA3BA /* KeyPath+KeyPaths.swift in Sources */,
 				B50564D32350CC3100482308 /* PropertyProtocol.swift in Sources */,
 				B5D8CA762346E7590055D7D1 /* DataStack+DataSources.swift in Sources */,
-				B5BF7FC1234D7B2E0070E741 /* LiveObject.swift in Sources */,
+				B5BF7FC1234D7B2E0070E741 /* ObjectPublisher.swift in Sources */,
 				B5E1B5A81CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
 				B50132302346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift in Sources */,
 				B5D339F11E94AF5800C880DE /* CoreStoreStrings.swift in Sources */,
@@ -2148,7 +2135,6 @@
 				B50E175C2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5ECDC291CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				B56923F01EB827F6007C4DC9 /* XcodeSchemaMappingProvider.swift in Sources */,
-				B5F335582348D75D00FD649F /* LiveResult.swift in Sources */,
 				B5E84F121AFF847B0064E85B /* OrderBy.swift in Sources */,
 				B546F9581C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
 				B5635D142356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */,
@@ -2269,7 +2255,7 @@
 				B5ECDC0B1CA8161B00C7F112 /* CSGroupBy.swift in Sources */,
 				B5E84F151AFF847B0064E85B /* CoreStore+Querying.swift in Sources */,
 				B5E84F241AFF84860064E85B /* ListObserver.swift in Sources */,
-				B501322A2344ECB500FC238B /* LiveList.swift in Sources */,
+				B501322A2344ECB500FC238B /* ListPublisher.swift in Sources */,
 				B5F8496C234898240029D57B /* ListSnapshot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2283,7 +2269,7 @@
 				B5220E101D0DA6AB009BC71E /* ListObserverTests.swift in Sources */,
 				B5519A401CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B525577C1D0291FE00E51965 /* GroupByTests.swift in Sources */,
-				B5D8CA7C2346EC5F0055D7D1 /* LiveListTests.swift in Sources */,
+				B5D8CA7C2346EC5F0055D7D1 /* ListPublisherTests.swift in Sources */,
 				B52557741D02791400E51965 /* WhereTests.swift in Sources */,
 				B5DC47C61C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B525576C1CFAF18F00E51965 /* IntoTests.swift in Sources */,
@@ -2329,7 +2315,7 @@
 				82BA18CE1C4BBD7100A0916E /* Internals.FetchedResultsControllerDelegate.swift in Sources */,
 				B56923FB1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
 				B55514EB1EED8BF900BAB888 /* From+Querying.swift in Sources */,
-				B5BF7FC2234D7B2E0070E741 /* LiveObject.swift in Sources */,
+				B5BF7FC2234D7B2E0070E741 /* ObjectPublisher.swift in Sources */,
 				B596BBBC1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B5ECDC011CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B55BB4D5235012AE00C33E34 /* ObjectRepresentation.swift in Sources */,
@@ -2352,7 +2338,6 @@
 				82BA18BD1C4BBD4A00A0916E /* GroupBy.swift in Sources */,
 				B5ECDC1F1CA81A2100C7F112 /* CSDataStack+Querying.swift in Sources */,
 				B5BF7FCC234D80910070E741 /* Internals.LazyNonmutating.swift in Sources */,
-				B5E294DE2349F8E7003E5956 /* SnapshotResult.swift in Sources */,
 				B5C976E41C6C9F9A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B50564D42350CC3100482308 /* PropertyProtocol.swift in Sources */,
 				B53FBA141CAB63CB00F0D40A /* Progress+ObjectiveC.swift in Sources */,
@@ -2455,7 +2440,6 @@
 				82BA18AF1C4BBD3100A0916E /* CoreStore+Transaction.swift in Sources */,
 				82BA18CB1C4BBD6400A0916E /* NSManagedObject+Convenience.swift in Sources */,
 				82BA18B51C4BBD3F00A0916E /* BaseDataTransaction+Querying.swift in Sources */,
-				B5F335592348D76300FD649F /* LiveResult.swift in Sources */,
 				B501FDDF1CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
 				B5BF7FAE234C41E90070E741 /* Internals.DiffableDataSourceSnapshot.swift in Sources */,
 				B538BA781D15B3E30003A766 /* CoreStoreBridge.m in Sources */,
@@ -2477,7 +2461,7 @@
 				B5E8A72121C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
 				B50E175D2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D162227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
-				B501322B2346A9AE00FC238B /* LiveList.swift in Sources */,
+				B501322B2346A9AE00FC238B /* ListPublisher.swift in Sources */,
 				B56924001EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5215CAF1FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				82BA18D61C4BBD7100A0916E /* NSManagedObjectContext+Transaction.swift in Sources */,
@@ -2507,7 +2491,7 @@
 				B5220E111D0DA6AB009BC71E /* ListObserverTests.swift in Sources */,
 				B5519A411CA1B17B002BEF78 /* ErrorTests.swift in Sources */,
 				B525577D1D0291FE00E51965 /* GroupByTests.swift in Sources */,
-				B5D8CA7D2346EC610055D7D1 /* LiveListTests.swift in Sources */,
+				B5D8CA7D2346EC610055D7D1 /* ListPublisherTests.swift in Sources */,
 				B52557751D02791400E51965 /* WhereTests.swift in Sources */,
 				B5DC47C71C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B5DBE2E01C9939E100B5CEFA /* BridgingTests.m in Sources */,
@@ -2553,7 +2537,7 @@
 				B52DD1951BE1F92500949AFE /* CoreStoreError.swift in Sources */,
 				B56923FD1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
 				B55514ED1EED8BF900BAB888 /* From+Querying.swift in Sources */,
-				B5BF7FC4234D7B2E0070E741 /* LiveObject.swift in Sources */,
+				B5BF7FC4234D7B2E0070E741 /* ObjectPublisher.swift in Sources */,
 				B596BBBE1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B546F9601C9A12B800D5AC55 /* CSSQliteStore.swift in Sources */,
 				B55BB4D7235012AE00C33E34 /* ObjectRepresentation.swift in Sources */,
@@ -2576,7 +2560,6 @@
 				B52DD1A11BE1F92C00949AFE /* DataStack+Transaction.swift in Sources */,
 				B5220E1C1D130801009BC71E /* Internals.FetchedResultsControllerDelegate.swift in Sources */,
 				B5BF7FCE234D80910070E741 /* Internals.LazyNonmutating.swift in Sources */,
-				B5E294E02349F8E7003E5956 /* SnapshotResult.swift in Sources */,
 				B52DD19E1BE1F92C00949AFE /* AsynchronousDataTransaction.swift in Sources */,
 				B50564D62350CC3100482308 /* PropertyProtocol.swift in Sources */,
 				B5831B781F34AC7A00A9F647 /* RelationshipProtocol.swift in Sources */,
@@ -2679,7 +2662,6 @@
 				B5220E191D130761009BC71E /* ListMonitor.swift in Sources */,
 				B5220E181D130711009BC71E /* ObjectObserver.swift in Sources */,
 				B5220E251D13088E009BC71E /* ListObserver.swift in Sources */,
-				B5F3355B2348D76500FD649F /* LiveResult.swift in Sources */,
 				B538BA7A1D15B3E30003A766 /* CoreStoreBridge.m in Sources */,
 				B5BF7FB0234C41E90070E741 /* Internals.DiffableDataSourceSnapshot.swift in Sources */,
 				B51260821E97A18000402229 /* CoreStoreObject+Convenience.swift in Sources */,
@@ -2701,7 +2683,7 @@
 				B5E8A72321C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
 				B50E175F2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D182227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
-				B501322E2346A9B100FC238B /* LiveList.swift in Sources */,
+				B501322E2346A9B100FC238B /* ListPublisher.swift in Sources */,
 				B56924021EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5215CB11FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				B5220E171D1306DF009BC71E /* UnsafeDataTransaction+Observing.swift in Sources */,
@@ -2731,7 +2713,7 @@
 				B5220E271D1308D1009BC71E /* ObjectObserverTests.swift in Sources */,
 				B525577E1D0291FE00E51965 /* GroupByTests.swift in Sources */,
 				B52557761D02791400E51965 /* WhereTests.swift in Sources */,
-				B5D8CA7E2346EC610055D7D1 /* LiveListTests.swift in Sources */,
+				B5D8CA7E2346EC610055D7D1 /* ListPublisherTests.swift in Sources */,
 				B5DC47C81C93D22900FA3BF3 /* MigrationChainTests.swift in Sources */,
 				B5DBE2E11C9939E100B5CEFA /* BridgingTests.m in Sources */,
 				B5220E0E1D0D0D19009BC71E /* ImportTests.swift in Sources */,
@@ -2777,7 +2759,7 @@
 				B5ECDC021CA80CBA00C7F112 /* CSWhere.swift in Sources */,
 				B56923FC1EB82956007C4DC9 /* CSXcodeDataModelSchema.swift in Sources */,
 				B55514EC1EED8BF900BAB888 /* From+Querying.swift in Sources */,
-				B5BF7FC3234D7B2E0070E741 /* LiveObject.swift in Sources */,
+				B5BF7FC3234D7B2E0070E741 /* ObjectPublisher.swift in Sources */,
 				B596BBBD1DD5C39F001DCDD9 /* QueryableSource.swift in Sources */,
 				B5ECDC081CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B55BB4D6235012AE00C33E34 /* ObjectRepresentation.swift in Sources */,
@@ -2800,7 +2782,6 @@
 				B5ECDC201CA81A2100C7F112 /* CSDataStack+Querying.swift in Sources */,
 				B5C976E51C6C9F9B00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B5BF7FCD234D80910070E741 /* Internals.LazyNonmutating.swift in Sources */,
-				B5E294DF2349F8E7003E5956 /* SnapshotResult.swift in Sources */,
 				B53FBA151CAB63CB00F0D40A /* Progress+ObjectiveC.swift in Sources */,
 				B50564D52350CC3100482308 /* PropertyProtocol.swift in Sources */,
 				B5E1B5AB1CAA49E2007FD580 /* CSDataStack+Migrating.swift in Sources */,
@@ -2903,7 +2884,6 @@
 				B5DE522D230BD7D600A22534 /* Internals.swift in Sources */,
 				B56321851BD65216006C9394 /* CoreStore+Logging.swift in Sources */,
 				B56321921BD65216006C9394 /* BaseDataTransaction+Querying.swift in Sources */,
-				B5F3355A2348D76500FD649F /* LiveResult.swift in Sources */,
 				B501FDE01CA8D05000BE22EF /* CSSectionBy.swift in Sources */,
 				B5BF7FAF234C41E90070E741 /* Internals.DiffableDataSourceSnapshot.swift in Sources */,
 				B538BA791D15B3E30003A766 /* CoreStoreBridge.m in Sources */,
@@ -2925,7 +2905,7 @@
 				B5E8A72221C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
 				B50E175E2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D172227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
-				B501322D2346A9B000FC238B /* LiveList.swift in Sources */,
+				B501322D2346A9B000FC238B /* ListPublisher.swift in Sources */,
 				B56924011EB82976007C4DC9 /* CSUnsafeDataModelSchema.swift in Sources */,
 				B5215CB01FA4812500139E3A /* SectionMonitorBuilder.swift in Sources */,
 				B56321B41BD6521C006C9394 /* NSManagedObjectContext+Transaction.swift in Sources */,

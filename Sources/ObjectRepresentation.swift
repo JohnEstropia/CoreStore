@@ -46,7 +46,7 @@ public protocol ObjectRepresentation {
     /**
      An instance that may be observed for object changes.
      */
-    func asLiveObject(in dataStack: DataStack) -> LiveObject<ObjectType>
+    func asPublisher(in dataStack: DataStack) -> ObjectPublisher<ObjectType>
 
     /**
      A read-only instance in the `DataStack`.
@@ -82,10 +82,10 @@ extension DynamicObject where Self: ObjectRepresentation {
         return self.cs_id()
     }
 
-    public func asLiveObject(in dataStack: DataStack) -> LiveObject<Self> {
+    public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<Self> {
 
         let context = dataStack.unsafeContext()
-        return LiveObject<Self>(objectID: self.cs_id(), context: context)
+        return ObjectPublisher<Self>(objectID: self.cs_id(), context: context)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> Self? {

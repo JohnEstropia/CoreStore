@@ -75,9 +75,9 @@ struct ColorsDemo {
         return dataStack
     }()
     
-    static let palettes: LiveList<Palette> = {
+    static let palettes: ListPublisher<Palette> = {
 
-        return ColorsDemo.stack.liveList(
+        return ColorsDemo.stack.listPublisher(
             From<Palette>()
                 .sectionBy(\.colorName)
                 .orderBy(.ascending(\.hue))

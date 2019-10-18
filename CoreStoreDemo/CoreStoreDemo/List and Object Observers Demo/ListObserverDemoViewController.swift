@@ -87,14 +87,14 @@ final class ListObserverDemoViewController: UITableViewController {
                 return cell
             }
         )
-        ColorsDemo.palettes.addObserver(self) { [weak self] (liveList) in
+        ColorsDemo.palettes.addObserver(self) { [weak self] (listPublisher) in
             
             guard let self = self else {
                 
                 return
             }
             self.filterBarButton?.title = ColorsDemo.filter.rawValue
-            self.dataSource?.apply(liveList.snapshot, animatingDifferences: true)
+            self.dataSource?.apply(listPublisher.snapshot, animatingDifferences: true)
         }
         self.dataSource?.apply(ColorsDemo.palettes.snapshot, animatingDifferences: false)
     }
@@ -105,7 +105,7 @@ final class ListObserverDemoViewController: UITableViewController {
         
         switch (segue.identifier, segue.destination, sender) {
             
-        case ("ObjectObserverDemoViewController"?, let destinationViewController as ObjectObserverDemoViewController, let palette as LiveObject<Palette>):
+        case ("ObjectObserverDemoViewController"?, let destinationViewController as ObjectObserverDemoViewController, let palette as ObjectPublisher<Palette>):
             destinationViewController.setPalette(palette)
             
         default:

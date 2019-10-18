@@ -37,9 +37,7 @@ import AppKit
 // MARK: - ObjectSnapshot
 
 @dynamicMemberLookup
-public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresentation, Hashable {
-
-    // MARK: SnapshotResult
+public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
 
     public typealias ObjectType = O
     
@@ -51,10 +49,10 @@ public struct ObjectSnapshot<O: DynamicObject>: SnapshotResult, ObjectRepresenta
         return self.id
     }
     
-    public func asLiveObject(in dataStack: DataStack) -> LiveObject<O> {
+    public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
         let context = dataStack.unsafeContext()
-        return LiveObject<O>(objectID: self.id, context: context)
+        return ObjectPublisher<O>(objectID: self.id, context: context)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> O? {

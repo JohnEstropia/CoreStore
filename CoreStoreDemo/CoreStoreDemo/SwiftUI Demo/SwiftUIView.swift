@@ -18,7 +18,7 @@ struct SwiftUIView: View {
     var dataStack: DataStack
 
     @ObservedObject
-    var palettes: LiveList<Palette>
+    var palettes: ListPublisher<Palette>
 
     var body: some View {
         NavigationView {
@@ -92,7 +92,7 @@ struct SwiftUIView: View {
                 content: {
                     Alert(
                         title: Text("SwiftUI Binding Demo"),
-                        message: Text("This demo shows how to bind to LiveList and to CoreStoreObject when using SwiftUI"),
+                        message: Text("This demo shows how to bind to ListPublisher and to CoreStoreObject when using SwiftUI"),
                         dismissButton: .cancel(Text("OK"))
                     )
                 }
@@ -112,7 +112,7 @@ struct SwiftUIView: View {
 struct ColorCell: View {
 
     @ObservedObject
-    var palette: LiveObject<Palette>
+    var palette: ObjectPublisher<Palette>
 
     var body: some View {
         HStack {
@@ -131,13 +131,13 @@ struct DetailView: View {
     var dataStack: DataStack
 
     @ObservedObject
-    var palette: LiveObject<Palette>
+    var palette: ObjectPublisher<Palette>
 
     @State var hue: Float = 0
     @State var saturation: Float = 0
     @State var brightness: Float = 0
 
-    init(palette: LiveObject<Palette>) {
+    init(palette: ObjectPublisher<Palette>) {
 
         self.palette = palette
         self.hue = Float(palette.hue ?? 0)
@@ -166,7 +166,7 @@ struct SwiftUIView_Previews: PreviewProvider {
     
     static var previews: some View {
         SwiftUIView(
-            palettes: ColorsDemo.stack.liveList(
+            palettes: ColorsDemo.stack.listPublisher(
                 From<Palette>()
                     .sectionBy(\.colorName)
                     .orderBy(.ascending(\.hue))

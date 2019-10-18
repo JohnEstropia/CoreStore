@@ -34,24 +34,24 @@ import CoreData
 extension DataStack {
     
     /**
-     Creates a `LiveObject` for the specified `DynamicObject`. Multiple objects may then register themselves to be notified when changes are made to the `DynamicObject`.
+     Creates a `ObjectPublisher` for the specified `DynamicObject`. Multiple objects may then register themselves to be notified when changes are made to the `DynamicObject`.
      
      - parameter object: the `DynamicObject` to observe changes from
-     - returns: a `LiveObject` that broadcasts changes to `object`
+     - returns: a `ObjectPublisher` that broadcasts changes to `object`
      */
-    public func liveObject<O: DynamicObject>(_ object: O) -> LiveObject<O> {
+    public func objectPublisher<O: DynamicObject>(_ object: O) -> ObjectPublisher<O> {
 
-        return LiveObject<O>(objectID: object.cs_id(), context: self.unsafeContext())
+        return ObjectPublisher<O>(objectID: object.cs_id(), context: self.unsafeContext())
     }
 
-    public func liveList<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> LiveList<D> {
+    public func listPublisher<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> ListPublisher<D> {
 
-        return self.liveList(from, fetchClauses)
+        return self.listPublisher(from, fetchClauses)
     }
 
-    public func liveList<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> LiveList<D> {
+    public func listPublisher<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> ListPublisher<D> {
 
-        return LiveList(
+        return ListPublisher(
             dataStack: self,
             from: from,
             sectionBy: nil,
@@ -61,31 +61,31 @@ extension DataStack {
 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(LiveList<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListPublisher<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )
     }
 
-    public func liveList<B: FetchChainableBuilderType>(_ clauseChain: B) -> LiveList<B.ObjectType> {
+    public func listPublisher<B: FetchChainableBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
 
-        return self.liveList(
+        return self.listPublisher(
             clauseChain.from,
             clauseChain.fetchClauses
         )
     }
 
-    public func liveList<D>(createAsynchronously: @escaping (LiveList<D>) -> Void, _ from: From<D>, _ fetchClauses: FetchClause...) {
+    public func listPublisher<D>(createAsynchronously: @escaping (ListPublisher<D>) -> Void, _ from: From<D>, _ fetchClauses: FetchClause...) {
 
-        self.liveList(
+        self.listPublisher(
             createAsynchronously: createAsynchronously,
             from, fetchClauses
         )
     }
 
-    public func liveList<D>(createAsynchronously: @escaping (LiveList<D>) -> Void, _ from: From<D>, _ fetchClauses: [FetchClause])  {
+    public func listPublisher<D>(createAsynchronously: @escaping (ListPublisher<D>) -> Void, _ from: From<D>, _ fetchClauses: [FetchClause])  {
 
-        _ = LiveList(
+        _ = ListPublisher(
             dataStack: self,
             from: from,
             sectionBy: nil,
@@ -95,25 +95,25 @@ extension DataStack {
 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(LiveList<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListPublisher<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             },
             createAsynchronously: createAsynchronously
         )
     }
 
-    public func liveList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> LiveList<D> {
+    public func listPublisher<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> ListPublisher<D> {
 
-        return self.liveList(
+        return self.listPublisher(
             from,
             sectionBy,
             fetchClauses
         )
     }
 
-    public func liveList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> LiveList<D> {
+    public func listPublisher<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> ListPublisher<D> {
 
-        return LiveList(
+        return ListPublisher(
             dataStack: self,
             from: from,
             sectionBy: sectionBy,
@@ -123,24 +123,24 @@ extension DataStack {
 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(LiveList<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListPublisher<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )
     }
 
-    public func liveList<B: SectionMonitorBuilderType>(_ clauseChain: B) -> LiveList<B.ObjectType> {
+    public func listPublisher<B: SectionMonitorBuilderType>(_ clauseChain: B) -> ListPublisher<B.ObjectType> {
 
-        return self.liveList(
+        return self.listPublisher(
             clauseChain.from,
             clauseChain.sectionBy,
             clauseChain.fetchClauses
         )
     }
 
-    public func liveList<D>(createAsynchronously: @escaping (LiveList<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) {
+    public func listPublisher<D>(createAsynchronously: @escaping (ListPublisher<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) {
 
-        self.liveList(
+        self.listPublisher(
             createAsynchronously: createAsynchronously,
             from,
             sectionBy,
@@ -148,9 +148,9 @@ extension DataStack {
         )
     }
 
-    public func liveList<D>(createAsynchronously: @escaping (LiveList<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) {
+    public func listPublisher<D>(createAsynchronously: @escaping (ListPublisher<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) {
 
-        _ = LiveList(
+        _ = ListPublisher(
             dataStack: self,
             from: from,
             sectionBy: sectionBy,
@@ -160,16 +160,16 @@ extension DataStack {
 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(LiveList<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListPublisher<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             },
             createAsynchronously: createAsynchronously
         )
     }
 
-    public func liveList<B: SectionMonitorBuilderType>(createAsynchronously: @escaping (LiveList<B.ObjectType>) -> Void, _ clauseChain: B) {
+    public func listPublisher<B: SectionMonitorBuilderType>(createAsynchronously: @escaping (ListPublisher<B.ObjectType>) -> Void, _ clauseChain: B) {
 
-        self.liveList(
+        self.listPublisher(
             createAsynchronously: createAsynchronously,
             clauseChain.from,
             clauseChain.sectionBy,

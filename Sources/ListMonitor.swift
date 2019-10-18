@@ -67,14 +67,14 @@ import CoreData
  In the example above, both `person1` and `person2` will contain the object at section=2, index=3.
  */
 @available(macOS 10.12, *)
-public final class ListMonitor<D: DynamicObject>: Hashable {
+public final class ListMonitor<O: DynamicObject>: Hashable {
     
     // MARK: Public (Accessors)
     
     /**
      The type for the objects contained bye the `ListMonitor`
      */
-    public typealias ObjectType = D
+    public typealias ObjectType = O
     
     /**
      Returns the object at the given index within the first section. This subscript indexer is typically used for `ListMonitor`s created with `monitorList(_:)`.
@@ -82,7 +82,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      - parameter index: the index of the object. Using an index above the valid range will raise an exception.
      - returns: the `DynamicObject` at the specified index
      */
-    public subscript(index: Int) -> ObjectType {
+    public subscript(index: Int) -> O {
         
         Internals.assert(
             !self.isPendingRefetch || Thread.isMainThread,
@@ -90,7 +90,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
         if self.isSectioned {
             
-            return ObjectType.cs_fromRaw(object: (self.fetchedResultsController.fetchedObjects as NSArray?)![index] as! NSManagedObject)
+            return O.cs_fromRaw(object: (self.fetchedResultsController.fetchedObjects as NSArray?)![index] as! NSManagedObject)
         }
         return self[0, index]
     }
@@ -101,14 +101,14 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      - parameter index: the index for the object. Using an index above the valid range will return `nil`.
      - returns: the `DynamicObject` at the specified index, or `nil` if out of bounds
      */
-    public subscript(safeIndex index: Int) -> ObjectType? {
+    public subscript(safeIndex index: Int) -> O? {
         
         if self.isSectioned {
             
             let fetchedObjects = (self.fetchedResultsController.fetchedObjects as NSArray?)!
             if index < fetchedObjects.count && index >= 0 {
                 
-                return ObjectType.cs_fromRaw(object: fetchedObjects[index] as! NSManagedObject)
+                return O.cs_fromRaw(object: fetchedObjects[index] as! NSManagedObject)
             }
             return nil
         }
@@ -122,7 +122,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will raise an exception.
      - returns: the `DynamicObject` at the specified section and item index
      */
-    public subscript(sectionIndex: Int, itemIndex: Int) -> ObjectType {
+    public subscript(sectionIndex: Int, itemIndex: Int) -> O {
         
         return self[IndexPath(indexes: [sectionIndex, itemIndex])]
     }
@@ -134,7 +134,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will return `nil`.
      - returns: the `DynamicObject` at the specified section and item index, or `nil` if out of bounds
      */
-    public subscript(safeSectionIndex sectionIndex: Int, safeItemIndex itemIndex: Int) -> ObjectType? {
+    public subscript(safeSectionIndex sectionIndex: Int, safeItemIndex itemIndex: Int) -> O? {
         
         guard let section = self.sectionInfo(safelyAt: sectionIndex) else {
             
@@ -153,13 +153,13 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      - parameter indexPath: the `IndexPath` for the object. Using an `indexPath` with an invalid range will raise an exception.
      - returns: the `DynamicObject` at the specified index path
      */
-    public subscript(indexPath: IndexPath) -> ObjectType {
+    public subscript(indexPath: IndexPath) -> O {
         
         Internals.assert(
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(Internals.typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return ObjectType.cs_fromRaw(object: self.fetchedResultsController.object(at: indexPath))
+        return O.cs_fromRaw(object: self.fetchedResultsController.object(at: indexPath))
     }
     
     /**
@@ -168,7 +168,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      - parameter indexPath: the `IndexPath` for the object. Using an `indexPath` with an invalid range will return `nil`.
      - returns: the `DynamicObject` at the specified index path, or `nil` if out of bounds
      */
-    public subscript(safeIndexPath indexPath: IndexPath) -> ObjectType? {
+    public subscript(safeIndexPath indexPath: IndexPath) -> O? {
         
         return self[
             safeSectionIndex: indexPath[0],
@@ -345,7 +345,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      - parameter object: the `DynamicObject` to search the index of
      - returns: the index of the `DynamicObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
      */
-    public func index(of object: ObjectType) -> Int? {
+    public func index(of object: O) -> Int? {
         
         Internals.assert(
             !self.isPendingRefetch || Thread.isMainThread,
@@ -364,7 +364,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      - parameter object: the `DynamicObject` to search the index of
      - returns: the `IndexPath` of the `DynamicObject` if it exists in the `ListMonitor`'s fetched objects, or `nil` if not found.
      */
-    public func indexPath(of object: ObjectType) -> IndexPath? {
+    public func indexPath(of object: O) -> IndexPath? {
         
         Internals.assert(
             !self.isPendingRefetch || Thread.isMainThread,
@@ -387,7 +387,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      - parameter observer: a `ListObserver` to send change notifications to
      */
-    public func addObserver<U: ListObserver>(_ observer: U) where U.ListEntityType == ObjectType {
+    public func addObserver<U: ListObserver>(_ observer: U) where U.ListEntityType == O {
         
         self.unregisterObserver(observer)
         self.registerObserver(
@@ -422,7 +422,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      - parameter observer: a `ListObjectObserver` to send change notifications to
      */
-    public func addObserver<U: ListObjectObserver>(_ observer: U) where U.ListEntityType == ObjectType {
+    public func addObserver<U: ListObjectObserver>(_ observer: U) where U.ListEntityType == O {
         
         self.unregisterObserver(observer)
         self.registerObserver(
@@ -476,7 +476,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      - parameter observer: a `ListSectionObserver` to send change notifications to
      */
-    public func addObserver<U: ListSectionObserver>(_ observer: U) where U.ListEntityType == ObjectType {
+    public func addObserver<U: ListSectionObserver>(_ observer: U) where U.ListEntityType == O {
         
         self.unregisterObserver(observer)
         self.registerObserver(
@@ -537,7 +537,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
      
      - parameter observer: a `ListObserver` to unregister notifications to
      */
-    public func removeObserver<U: ListObserver>(_ observer: U) where U.ListEntityType == ObjectType {
+    public func removeObserver<U: ListObserver>(_ observer: U) where U.ListEntityType == O {
         
         self.unregisterObserver(observer)
     }
@@ -597,7 +597,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
     // MARK: Equatable
     
-    public static func == (lhs: ListMonitor<ObjectType>, rhs: ListMonitor<ObjectType>) -> Bool {
+    public static func == (lhs: ListMonitor<O>, rhs: ListMonitor<O>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
@@ -607,7 +607,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
     
-    public static func ~= (lhs: ListMonitor<ObjectType>, rhs: ListMonitor<ObjectType>) -> Bool {
+    public static func ~= (lhs: ListMonitor<O>, rhs: ListMonitor<O>) -> Bool {
         
         return lhs.fetchedResultsController === rhs.fetchedResultsController
     }
@@ -628,7 +628,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
     
     // MARK: Internal
     
-    internal convenience init(dataStack: DataStack, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(dataStack: DataStack, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -640,7 +640,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal convenience init(dataStack: DataStack, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<ObjectType>) -> Void) {
+    internal convenience init(dataStack: DataStack, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<O>) -> Void) {
         
         self.init(
             context: dataStack.mainContext,
@@ -652,7 +652,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -664,7 +664,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<ObjectType>) -> Void) {
+    internal convenience init(unsafeTransaction: UnsafeDataTransaction, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest:  Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: @escaping (ListMonitor<O>) -> Void) {
         
         self.init(
             context: unsafeTransaction.context,
@@ -676,7 +676,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<ObjectType>) -> Void) {
+    internal func registerChangeNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<O>) -> Void) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -696,7 +696,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObjectNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<ObjectType>, _ object: ObjectType, _ indexPath: IndexPath?, _ newIndexPath: IndexPath?) -> Void) {
+    internal func registerObjectNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<O>, _ object: O, _ indexPath: IndexPath?, _ newIndexPath: IndexPath?) -> Void) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -712,7 +712,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
                     }
                     callback(
                         self,
-                        ObjectType.cs_fromRaw(object: rawObject),
+                        O.cs_fromRaw(object: rawObject),
                         userInfo[String(describing: IndexPath.self)] as? IndexPath,
                         userInfo["\(String(describing: IndexPath.self)).New"] as? IndexPath
                     )
@@ -723,7 +723,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerSectionNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<ObjectType>, _ sectionInfo: NSFetchedResultsSectionInfo, _ sectionIndex: Int) -> Void) {
+    internal func registerSectionNotification(_ notificationKey: UnsafeRawPointer, name: Notification.Name, toObserver observer: AnyObject, callback: @escaping (_ monitor: ListMonitor<O>, _ sectionInfo: NSFetchedResultsSectionInfo, _ sectionIndex: Int) -> Void) {
         
         Internals.setAssociatedRetainedObject(
             Internals.NotificationObserver(
@@ -746,7 +746,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(_ observer: U, willChange: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>) -> Void, didChange: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>) -> Void, willRefetch: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>) -> Void, didRefetch: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>) -> Void) {
+    internal func registerObserver<U: AnyObject>(_ observer: U, willChange: @escaping (_ observer: U, _ monitor: ListMonitor<O>) -> Void, didChange: @escaping (_ observer: U, _ monitor: ListMonitor<O>) -> Void, willRefetch: @escaping (_ observer: U, _ monitor: ListMonitor<O>) -> Void, didRefetch: @escaping (_ observer: U, _ monitor: ListMonitor<O>) -> Void) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -806,7 +806,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(_ observer: U, didInsertObject: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>, _ object: ObjectType, _ toIndexPath: IndexPath) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>, _ object: ObjectType, _ fromIndexPath: IndexPath) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>, _ object: ObjectType, _ atIndexPath: IndexPath) -> Void, didMoveObject: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>, _ object: ObjectType, _ fromIndexPath: IndexPath, _ toIndexPath: IndexPath) -> Void) {
+    internal func registerObserver<U: AnyObject>(_ observer: U, didInsertObject: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ object: O, _ toIndexPath: IndexPath) -> Void, didDeleteObject: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ object: O, _ fromIndexPath: IndexPath) -> Void, didUpdateObject: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ object: O, _ atIndexPath: IndexPath) -> Void, didMoveObject: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ object: O, _ fromIndexPath: IndexPath, _ toIndexPath: IndexPath) -> Void) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -867,7 +867,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         )
     }
     
-    internal func registerObserver<U: AnyObject>(_ observer: U, didInsertSection: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>, _ sectionInfo: NSFetchedResultsSectionInfo, _ toIndex: Int) -> Void, didDeleteSection: @escaping (_ observer: U, _ monitor: ListMonitor<ObjectType>, _ sectionInfo: NSFetchedResultsSectionInfo, _ fromIndex: Int) -> Void) {
+    internal func registerObserver<U: AnyObject>(_ observer: U, didInsertSection: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ sectionInfo: NSFetchedResultsSectionInfo, _ toIndex: Int) -> Void, didDeleteSection: @escaping (_ observer: U, _ monitor: ListMonitor<O>, _ sectionInfo: NSFetchedResultsSectionInfo, _ fromIndex: Int) -> Void) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -1052,7 +1052,7 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         }
     }
     
-    private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) -> (controller: Internals.CoreStoreFetchedResultsController, delegate: Internals.FetchedResultsControllerDelegate) {
+    private static func recreateFetchedResultsController(context: NSManagedObjectContext, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void) -> (controller: Internals.CoreStoreFetchedResultsController, delegate: Internals.FetchedResultsControllerDelegate) {
         
         let fetchRequest = Internals.CoreStoreFetchRequest<NSManagedObject>()
         fetchRequest.fetchLimit = 0
@@ -1075,10 +1075,10 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
         return (fetchedResultsController, fetchedResultsControllerDelegate)
     }
     
-    private let from: From<ObjectType>
-    private let sectionBy: SectionBy<ObjectType>?
+    private let from: From<O>
+    private let sectionBy: SectionBy<O>?
     
-    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<ObjectType>, sectionBy: SectionBy<ObjectType>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<ObjectType>) -> Void)?) {
+    private init(context: NSManagedObjectContext, transactionQueue: DispatchQueue, from: From<O>, sectionBy: SectionBy<O>?, applyFetchClauses: @escaping (_ fetchRequest: Internals.CoreStoreFetchRequest<NSManagedObject>) -> Void, createAsynchronously: ((ListMonitor<O>) -> Void)?) {
         
         self.isSectioned = (sectionBy != nil)
         self.from = from
@@ -1173,77 +1173,26 @@ public final class ListMonitor<D: DynamicObject>: Hashable {
             try! self.fetchedResultsController.performFetchFromSpecifiedStores()
         }
     }
-
-
-    // MARK: Deprecated
-
-    @available(*, deprecated, renamed: "hasObjects(in:)")
-    public func hasObjectsInSection(_ section: Int) -> Bool {
-
-        return self.hasObjects(in: section)
-    }
-
-    @available(*, deprecated, renamed: "numberOfObjects(in:)")
-    public func numberOfObjectsInSection(_ section: Int) -> Int {
-
-        return self.numberOfObjects(in: section)
-    }
-
-    @available(*, deprecated, renamed: "numberOfObjects(safelyIn:)")
-    public func numberOfObjectsInSection(safeSectionIndex section: Int) -> Int? {
-
-        return self.numberOfObjects(safelyIn: section)
-    }
-
-    @available(*, deprecated, renamed: "sectionInfo(at:)")
-    public func sectionInfoAtIndex(_ section: Int) -> NSFetchedResultsSectionInfo {
-
-        return self.sectionInfo(at: section)
-    }
-
-    @available(*, deprecated, renamed: "sectionInfo(safelyAt:)")
-    public func sectionInfoAtIndex(safeSectionIndex section: Int) -> NSFetchedResultsSectionInfo? {
-
-        return self.sectionInfo(safelyAt: section)
-    }
-
-    @available(*, deprecated, renamed: "targetSection(forSectionIndexTitle:at:)")
-    public func targetSectionForSectionIndex(title: String, index: Int) -> Int {
-
-        return self.targetSection(forSectionIndexTitle: title, at: index)
-    }
-
-    @available(*, deprecated, renamed: "index(of:)")
-    public func indexOf(_ object: ObjectType) -> Int? {
-
-        return self.index(of: object)
-    }
-
-    @available(*, deprecated, renamed: "indexPath(of:)")
-    public func indexPathOf(_ object: ObjectType) -> IndexPath? {
-
-        return self.indexPath(of: object)
-    }
 }
 
     
-// MARK: - ListMonitor where ListMonitor.ObjectType: NSManagedObject
+// MARK: - ListMonitor where O: NSManagedObject
 
 @available(macOS 10.12, *)
-extension ListMonitor where ListMonitor.ObjectType: NSManagedObject {
+extension ListMonitor where O: NSManagedObject {
     
     /**
      Returns all objects in all sections
      
      - returns: all objects in all sections
      */
-    public func objectsInAllSections() -> [ObjectType] {
+    public func objectsInAllSections() -> [O] {
         
         Internals.assert(
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(Internals.typeName(self)) outside the main thread while a refetch is in progress."
         )
-        return (self.fetchedResultsController.dynamicCast() as NSFetchedResultsController<ObjectType>).fetchedObjects ?? []
+        return (self.fetchedResultsController.dynamicCast() as NSFetchedResultsController<O>).fetchedObjects ?? []
     }
     
     /**
@@ -1252,9 +1201,9 @@ extension ListMonitor where ListMonitor.ObjectType: NSManagedObject {
      - parameter section: the section index. Using an index outside the valid range will raise an exception.
      - returns: all objects in the specified section
      */
-    public func objects(in section: Int) -> [ObjectType] {
+    public func objects(in section: Int) -> [O] {
         
-        return (self.sectionInfo(at: section).objects as! [ObjectType]?) ?? []
+        return (self.sectionInfo(at: section).objects as! [O]?) ?? []
     }
     
     /**
@@ -1263,46 +1212,46 @@ extension ListMonitor where ListMonitor.ObjectType: NSManagedObject {
      - parameter section: the section index. Using an index outside the valid range will return `nil`.
      - returns: all objects in the specified section
      */
-    public func objects(safelyIn section: Int) -> [ObjectType]? {
+    public func objects(safelyIn section: Int) -> [O]? {
         
-        return self.sectionInfo(safelyAt: section)?.objects as! [ObjectType]?
+        return self.sectionInfo(safelyAt: section)?.objects as! [O]?
     }
 
 
     // MARK: Deprecated
 
     @available(*, deprecated, renamed: "objects(in:)")
-    public func objectsInSection(_ section: Int) -> [ObjectType] {
+    public func objectsInSection(_ section: Int) -> [O] {
 
         return self.objects(in: section)
     }
 
     @available(*, deprecated, renamed: "objects(safelyIn:)")
-    public func objectsInSection(safeSectionIndex section: Int) -> [ObjectType]? {
+    public func objectsInSection(safeSectionIndex section: Int) -> [O]? {
 
         return self.objects(safelyIn: section)
     }
 }
 
 
-// MARK: - ListMonitor where ListMonitor.ObjectType: CoreStoreObject
+// MARK: - ListMonitor where O: CoreStoreObject
 
 @available(macOS 10.12, *)
-extension ListMonitor where ListMonitor.ObjectType: CoreStoreObject {
+extension ListMonitor where O: CoreStoreObject {
     
     /**
      Returns all objects in all sections
      
      - returns: all objects in all sections
      */
-    public func objectsInAllSections() -> [ObjectType] {
+    public func objectsInAllSections() -> [O] {
         
         Internals.assert(
             !self.isPendingRefetch || Thread.isMainThread,
             "Attempted to access a \(Internals.typeName(self)) outside the main thread while a refetch is in progress."
         )
         return (self.fetchedResultsController.fetchedObjects ?? [])
-            .map(ObjectType.cs_fromRaw)
+            .map(O.cs_fromRaw)
     }
     
     /**
@@ -1311,10 +1260,10 @@ extension ListMonitor where ListMonitor.ObjectType: CoreStoreObject {
      - parameter section: the section index. Using an index outside the valid range will raise an exception.
      - returns: all objects in the specified section
      */
-    public func objects(in section: Int) -> [ObjectType] {
+    public func objects(in section: Int) -> [O] {
         
         return (self.sectionInfo(at: section).objects ?? [])
-            .map({ ObjectType.cs_fromRaw(object: $0 as! NSManagedObject) })
+            .map({ O.cs_fromRaw(object: $0 as! NSManagedObject) })
     }
     
     /**
@@ -1323,26 +1272,17 @@ extension ListMonitor where ListMonitor.ObjectType: CoreStoreObject {
      - parameter section: the section index. Using an index outside the valid range will return `nil`.
      - returns: all objects in the specified section
      */
-    public func objects(safelyIn section: Int) -> [ObjectType]? {
+    public func objects(safelyIn section: Int) -> [O]? {
         
         return (self.sectionInfo(safelyAt: section)?.objects)?
-            .map({ ObjectType.cs_fromRaw(object: $0 as! NSManagedObject) })
+            .map({ O.cs_fromRaw(object: $0 as! NSManagedObject) })
     }
 
 
-    // MARK: Deprecated
+    // MARK: - Deprecated
 
-    @available(*, deprecated, renamed: "objects(in:)")
-    public func objectsInSection(_ section: Int) -> [ObjectType] {
-
-        return self.objects(in: section)
-    }
-
-    @available(*, deprecated, renamed: "objects(safelyIn:)")
-    public func objectsInSection(safeSectionIndex section: Int) -> [ObjectType]? {
-
-        return self.objects(safelyIn: section)
-    }
+    @available(*, deprecated, renamed: "O")
+    public typealias D = O
 }
 
 

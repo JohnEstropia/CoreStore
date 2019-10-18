@@ -36,62 +36,173 @@ import AppKit
 
 // MARK: - ListSnapshot
 
-public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollection, Hashable {
+/**
+ A `ListSnapshot` holds a stable list of `DynamicObject` identifiers. This is typically created by a `ListPublisher` and are designed to work well with `DiffableDataSource.TableView`s and `DiffableDataSource.CollectionView`s. For detailed examples, see the documentation on `DiffableDataSource.TableView` and `DiffableDataSource.CollectionView`.
 
-    // MARK: Public
+ While the `ListSnapshot` stores only object identifiers, all accessors to its items return `ObjectPublisher`s, which are lazily created. For more details, see the documentation on `ListObject`.
 
+ Since `ListSnapshot` is a value type, you can freely modify its items.
+ */
+public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
+
+    // MARK: Public (Accessors)
+
+    /**
+     The `DynamicObject` type associated with this list
+     */
+    public typealias ObjectType = O
+
+    /**
+     The type for the section IDs
+     */
     public typealias SectionID = String
+
+    /**
+     The type for the item IDs
+     */
     public typealias ItemID = O.ObjectID
-    
-    public init(byCloning snapshot: ListSnapshot<O>, for dataStack: DataStack) {
 
-//        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//            self.init(
-//                diffableSnapshot: snapshot.diffableSnapshot as! NSDiffableDataSourceSnapshot<String, NSManagedObjectID>,
-//                context: dataStack.mainContext
-//            )
-//        }
-//        else {
+    /**
+     Returns the object at the given index.
 
-            self.init(
-                diffableSnapshot: snapshot.diffableSnapshot as! Internals.DiffableDataSourceSnapshot,
-                context: dataStack.mainContext
-            )
-//        }
+     - parameter index: the index of the object. Using an index above the valid range will raise an exception.
+     - returns: the `ObjectPublisher<O>` interfacing the object at the specified index
+     */
+    public subscript(index: Index) -> ObjectPublisher<O> {
+
+        let context = self.context!
+        let itemID = self.diffableSnapshot.itemIdentifiers[index]
+        return context.objectPublisher(objectID: itemID)
     }
 
-    public subscript<S: Sequence>(indices indices: S) -> [LiveObject<O>] where S.Element == Index {
+    /**
+     Returns the object at the given index, or `nil` if out of bounds.
+
+     - parameter index: the index for the object. Using an index above the valid range will return `nil`.
+     - returns: the `ObjectPublisher<O>` interfacing the object at the specified index, or `nil` if out of bounds
+     */
+    public subscript(safeIndex index: Index) -> ObjectPublisher<O>? {
 
         let context = self.context!
         let itemIDs = self.diffableSnapshot.itemIdentifiers
-        return indices.map { position in
+        guard itemIDs.indices.contains(index) else {
 
-            let itemID = itemIDs[position]
-            return LiveObject<O>(objectID: itemID, context: context)
+            return nil
         }
+        let itemID = itemIDs[index]
+        return context.objectPublisher(objectID: itemID)
     }
 
-    public subscript(section sectionID: SectionID) -> [LiveObject<O>] {
+    /**
+     Returns the object at the given `sectionIndex` and `itemIndex`.
+
+     - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will raise an exception.
+     - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will raise an exception.
+     - returns: the `ObjectPublisher<O>` interfacing the object at the specified section and item index
+     */
+    public subscript(sectionIndex: Int, itemIndex: Int) -> ObjectPublisher<O> {
 
         let context = self.context!
-        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
-        return itemIDs.map {
-
-            return LiveObject<O>(objectID: $0, context: context)
-        }
+        let snapshot = self.diffableSnapshot
+        let sectionID = snapshot.sectionIdentifiers[sectionIndex]
+        let itemID = snapshot.itemIdentifiers(inSection: sectionID)[itemIndex]
+        return context.objectPublisher(objectID: itemID)
     }
 
-    public subscript<S: Sequence>(section sectionID: SectionID, itemIndices itemIndices: S) -> [LiveObject<O>] where S.Element == Int {
+    /**
+     Returns the object at the given section and item index, or `nil` if out of bounds.
+
+     - parameter sectionIndex: the section index for the object. Using a `sectionIndex` with an invalid range will return `nil`.
+     - parameter itemIndex: the index for the object within the section. Using an `itemIndex` with an invalid range will return `nil`.
+     - returns: the `ObjectPublisher<O>` interfacing the object at the specified section and item index, or `nil` if out of bounds
+     */
+    public subscript(safeSectionIndex sectionIndex: Int, safeItemIndex itemIndex: Int) -> ObjectPublisher<O>? {
 
         let context = self.context!
-        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
-        return itemIndices.map { position in
+        let snapshot = self.diffableSnapshot
+        let sectionIDs = snapshot.sectionIdentifiers
+        guard sectionIDs.indices.contains(sectionIndex) else {
 
-            let itemID = itemIDs[position]
-            return LiveObject<O>(objectID: itemID, context: context)
+            return nil
         }
+        let sectionID = sectionIDs[sectionIndex]
+        let itemIDs = snapshot.itemIdentifiers(inSection: sectionID)
+        guard itemIDs.indices.contains(itemIndex) else {
+
+            return nil
+        }
+        let itemID = itemIDs[itemIndex]
+        return context.objectPublisher(objectID: itemID)
     }
+
+    /**
+     Returns the object at the given `IndexPath`.
+
+     - parameter indexPath: the `IndexPath` for the object. Using an `indexPath` with an invalid range will raise an exception.
+     - returns: the `ObjectPublisher<O>` interfacing the object at the specified index path
+     */
+    public subscript(indexPath: IndexPath) -> ObjectPublisher<O> {
+
+        return self[indexPath[0], indexPath[1]]
+    }
+
+    /**
+     Returns the object at the given `IndexPath`, or `nil` if out of bounds.
+
+     - parameter indexPath: the `IndexPath` for the object. Using an `indexPath` with an invalid range will return `nil`.
+     - returns: the `ObjectPublisher<O>` interfacing the object at the specified index path, or `nil` if out of bounds
+     */
+    public subscript(safeIndexPath indexPath: IndexPath) -> ObjectPublisher<O>? {
+
+        return self[
+            safeSectionIndex: indexPath[0],
+            safeItemIndex: indexPath[1]
+        ]
+    }
+
+    /**
+     Checks if the `ListSnapshot` has at least one section
+
+     - returns: `true` if at least one section exists, `false` otherwise
+     */
+    public func hasSections() -> Bool {
+
+        return self.diffableSnapshot.numberOfSections > 0
+    }
+
+    /**
+     Checks if the `ListSnapshot` has at least one object in any section.
+
+     - returns: `true` if at least one object in any section exists, `false` otherwise
+     */
+    public func hasObjects() -> Bool {
+
+        return self.diffableSnapshot.numberOfItems > 0
+    }
+
+    /**
+     Checks if the `ListSnapshot` has at least one object the specified section.
+
+     - parameter section: the section index. Using an index outside the valid range will return `false`.
+     - returns: `true` if at least one object in the specified section exists, `false` otherwise
+     */
+    public func hasObjects(in sectionIndex: Int) -> Bool {
+
+        let snapshot = self.diffableSnapshot
+        let sectionIDs = snapshot.sectionIdentifiers
+        guard sectionIDs.indices.contains(sectionIndex) else {
+
+            return false
+        }
+        let sectionID = sectionIDs[sectionIndex]
+        return snapshot.numberOfItems(inSection: sectionID) > 0
+    }
+
+
+
+
+
+
 
     public var numberOfItems: Int {
 
@@ -218,11 +329,39 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
 
         self.diffableSnapshot.reloadSections(identifiers)
     }
-    
-    
-    // MARK: SnapshotResult
-    
-    public typealias ObjectType = O
+
+    public func items<S: Sequence>(atIndices indices: S) -> [ObjectPublisher<O>] where S.Element == Index {
+
+        let context = self.context!
+        let itemIDs = self.diffableSnapshot.itemIdentifiers
+        return indices.map { position in
+
+            let itemID = itemIDs[position]
+            return ObjectPublisher<O>(objectID: itemID, context: context)
+        }
+    }
+
+    public subscript(section sectionID: SectionID) -> [ObjectPublisher<O>] {
+
+        let context = self.context!
+        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
+        return itemIDs.map {
+
+            return ObjectPublisher<O>(objectID: $0, context: context)
+        }
+    }
+
+    public subscript<S: Sequence>(section sectionID: SectionID, itemIndices itemIndices: S) -> [ObjectPublisher<O>] where S.Element == Int {
+
+        let context = self.context!
+        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
+        return itemIndices.map { position in
+
+            let itemID = itemIDs[position]
+            return ObjectPublisher<O>(objectID: itemID, context: context)
+        }
+    }
+
     
     
     // MARK: RandomAccessCollection
@@ -237,17 +376,10 @@ public struct ListSnapshot<O: DynamicObject>: SnapshotResult, RandomAccessCollec
         return self.diffableSnapshot.itemIdentifiers.endIndex
     }
     
-    public subscript(position: Index) -> Element {
-        
-        let context = self.context!
-        let itemID = self.diffableSnapshot.itemIdentifiers[position]
-        return LiveObject<O>(objectID: itemID, context: context)
-    }
-    
     
     // MARK: Sequence
     
-    public typealias Element = LiveObject<O>
+    public typealias Element = ObjectPublisher<O>
     
     public typealias Index = Int
     

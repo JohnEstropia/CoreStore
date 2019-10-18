@@ -1,5 +1,5 @@
 //
-//  LiveObject.swift
+//  ObjectPublisher.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -36,44 +36,89 @@ import SwiftUI
 #endif
 
 
-// MARK: - LiveObject
+// MARK: - ObjectPublisher
 
+/**
+ The `ObjectPublisher` tracks changes to a single `DynamicObject` instance. Objects that need to be notified of `ObjectPublisher` changes may register themselves to its `addObserver(_:_:)` method:
+ ```
+ let objectPublisher = Shared.defaultStack.objectPublisher(object)
+ objectPublisher.addObserver(self) { (objectPublisher) in
+     // Handle changes
+ }
+ ```
+ The created `ObjectPublisher` instance needs to be held on (retained) for as long as the object needs to be observed.
+
+ Observers registered via `addObserver(_:_:)` are not retained. `ObjectPublisher` only keeps a `weak` reference to all observers, thus keeping itself free from retain-cycles.
+
+ The `ObjectPublisher`'s `snapshot` value is a lazy copy operation that extracts all property values at a specific point time. This cached copy is invalidated right before the `ObjectPublisher` broadcasts any changes to its observers.
+ */
 @dynamicMemberLookup
-public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable {
+public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hashable {
 
-    // MARK: Public
-
-    public typealias SectionID = String
-    public typealias ItemID = O.ObjectID
-
+    // MARK: Public (Accessors)
+    /**
+     A snapshot of the latest state of this list. Returns `nil` if the object has been deleted.
+     */
     public var snapshot: ObjectSnapshot<O>? {
 
         return self.lazySnapshot
     }
 
-    public lazy var object: O? = self.context.fetchExisting(self.id)
-    
-    public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (LiveObject<O>) -> Void) {
-        
+    /**
+     The actual `DynamicObject` instance. Becomes `nil` if the object has been deleted.
+     */
+    public private(set) lazy var object: O? = self.context.fetchExisting(self.id)
+
+
+
+    // MARK: Public (Observers)
+
+    /**
+     Registers an object as an observer to be notified when changes to the `ObjectPublisher`'s snapshot occur.
+
+     To prevent retain-cycles, `ObjectPublisher` only keeps `weak` references to its observers.
+
+     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
+
+     Calling `addObserver(_:_:)` multiple times on the same observer is safe.
+
+     - parameter observer: an object to become owner of the specified `callback`
+     - parameter callback: the closure to execute when changes occur
+     */
+    public func addObserver<T: AnyObject>(_ observer: T, _ callback: @escaping (ObjectPublisher<O>) -> Void) {
+
+        Internals.assert(
+            Thread.isMainThread,
+            "Attempted to add an observer of type \(Internals.typeName(observer)) outside the main thread."
+        )
         self.observers.setObject(
             Internals.Closure(callback),
             forKey: observer
         )
     }
-    
+
+    /**
+     Unregisters an object from receiving notifications for changes to the `ObjectPublisher`'s snapshot.
+
+     For thread safety, this method needs to be called from the main thread. An assertion failure will occur (on debug builds only) if called from any thread other than the main thread.
+
+     - parameter observer: the object whose notifications will be unregistered
+     */
     public func removeObserver<T: AnyObject>(_ observer: T) {
-        
+
+        Internals.assert(
+            Thread.isMainThread,
+            "Attempted to remove an observer of type \(Internals.typeName(observer)) outside the main thread."
+        )
         self.observers.removeObject(forKey: observer)
-    }
-
-    deinit {
-
-        self.observers.removeAllObjects()
     }
     
     
     // MARK: ObjectRepresentation
 
+    /**
+     The `DynamicObject` type associated with this list
+     */
     public typealias ObjectType = O
     
     public func objectID() -> O.ObjectID {
@@ -81,7 +126,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
         return self.id
     }
     
-    public func asLiveObject(in dataStack: DataStack) -> LiveObject<O> {
+    public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
         let context = dataStack.unsafeContext()
         if self.context == context {
@@ -124,7 +169,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 
     // MARK: Equatable
 
-    public static func == (_ lhs: LiveObject, _ rhs: LiveObject) -> Bool {
+    public static func == (_ lhs: ObjectPublisher, _ rhs: ObjectPublisher) -> Bool {
 
         return lhs.id == rhs.id
             && lhs.context == rhs.context
@@ -140,11 +185,6 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
     }
 
 
-    // MARK: LiveResult
-
-    public typealias SnapshotType = ObjectSnapshot<O>
-
-
     // MARK: Internal
 
     internal convenience init(objectID: O.ObjectID, context: NSManagedObjectContext) {
@@ -154,6 +194,11 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
             context: context,
             initializer: ObjectSnapshot<O>.init(objectID:context:)
         )
+    }
+
+    deinit {
+
+        self.observers.removeAllObjects()
     }
 
 
@@ -193,15 +238,15 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 
                 self.willChange()
                 self.$lazySnapshot.reset({ nil })
-                self.notifyObservers()
                 self.didChange()
+                self.notifyObservers()
             }
             else if updatedIDs.contains(objectID) {
 
                 self.willChange()
                 self.$lazySnapshot.reset({ initializer(objectID, context) })
-                self.notifyObservers()
                 self.didChange()
+                self.notifyObservers()
             }
         }
     }
@@ -215,7 +260,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
     @Internals.LazyNonmutating(uninitialized: ())
     private var lazySnapshot: ObjectSnapshot<O>?
     
-    private lazy var observers: NSMapTable<AnyObject, Internals.Closure<LiveObject<O>, Void>> = .weakToStrongObjects()
+    private lazy var observers: NSMapTable<AnyObject, Internals.Closure<ObjectPublisher<O>, Void>> = .weakToStrongObjects()
 
     private func notifyObservers() {
 
@@ -225,7 +270,7 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
         }
         for closure in enumerator {
 
-            (closure as! Internals.Closure<LiveObject
+            (closure as! Internals.Closure<ObjectPublisher
                 <O>, Void>).invoke(with: self)
         }
     }
@@ -236,13 +281,13 @@ public final class LiveObject<O: DynamicObject>: ObjectRepresentation, Hashable 
 import Combine
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-extension LiveObject: ObservableObject {}
+extension ObjectPublisher: ObservableObject {}
 
 #endif
 
-// MARK: - LiveObject: LiveResult
+// MARK: - ObjectPublisher
 
-extension LiveObject: LiveResult {
+extension ObjectPublisher {
 
     // MARK: ObservableObject
 
@@ -256,7 +301,7 @@ extension LiveObject: LiveResult {
     
     #endif
 
-    public func willChange() {
+    fileprivate func willChange() {
 
         guard #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) else {
 
@@ -277,17 +322,17 @@ extension LiveObject: LiveResult {
         #endif
     }
 
-    public func didChange() {
+    fileprivate func didChange() {
 
-        // TODO:
+        // nothing
     }
 }
 
 
-// MARK: - LiveObject where O: NSManagedObject
+// MARK: - ObjectPublisher where O: NSManagedObject
 
 @available(*, unavailable, message: "KeyPaths accessed from @dynamicMemberLookup types can't generate KVC keys yet (https://bugs.swift.org/browse/SR-11351)")
-extension LiveObject where O: NSManagedObject {
+extension ObjectPublisher where O: NSManagedObject {
 
     // MARK: Public
 
@@ -302,9 +347,9 @@ extension LiveObject where O: NSManagedObject {
 }
 
 
-// MARK: - LiveObject where O: CoreStoreObject
+// MARK: - ObjectPublisher where O: CoreStoreObject
 
-extension LiveObject where O: CoreStoreObject {
+extension ObjectPublisher where O: CoreStoreObject {
 
     // MARK: Public
 

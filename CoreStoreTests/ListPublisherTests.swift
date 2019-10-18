@@ -1,5 +1,5 @@
 //
-//  LiveListTests.swift
+//  ListPublisherTests.swift
 //  CoreStore iOS
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -31,18 +31,18 @@ import XCTest
 import CoreStore
 
 
-// MARK: - LiveListTests
+// MARK: - ListPublisherTests
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-class LiveListTests: BaseTestDataTestCase {
+class ListPublisherTests: BaseTestDataTestCase {
 
     @objc
-    dynamic func test_ThatLiveLists_CanReceiveInsertNotifications() {
+    dynamic func test_ThatListPublishers_CanReceiveInsertNotifications() {
 
         self.prepareStack { (stack) in
 
 //            let observer = TestListObserver()
-            let liveList = stack.liveList(
+            let listPublisher = stack.listPublisher(
                 From<TestEntity1>(),
                 SectionBy(#keyPath(TestEntity1.testBoolean)),
                 OrderBy<TestEntity1>(.ascending(#keyPath(TestEntity1.testBoolean)), .ascending(#keyPath(TestEntity1.testEntityID)))
@@ -160,7 +160,7 @@ class LiveListTests: BaseTestDataTestCase {
             )
             self.waitAndCheckExpectations()
 
-            withExtendedLifetime(liveList, {})
+            withExtendedLifetime(listPublisher, {})
         }
     }
 

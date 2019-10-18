@@ -87,21 +87,21 @@ extension NSManagedObjectContext {
     }
 
     @nonobjc
-    internal func liveObject<D: DynamicObject>(objectID: NSManagedObjectID) -> LiveObject<D> {
+    internal func objectPublisher<D: DynamicObject>(objectID: NSManagedObjectID) -> ObjectPublisher<D> {
 
-        let cache: NSMapTable<NSManagedObjectID, LiveObject<D>> = self.userInfo(for: .liveObjectsCache(D.self)) {
+        let cache: NSMapTable<NSManagedObjectID, ObjectPublisher<D>> = self.userInfo(for: .objectPublishersCache(D.self)) {
 
             return .strongToWeakObjects()
         }
         return Internals.with {
 
-            if let liveObject = cache.object(forKey: objectID) {
+            if let objectPublisher = cache.object(forKey: objectID) {
 
-                return liveObject
+                return objectPublisher
             }
-            let liveObject = LiveObject<D>(objectID: objectID, context: self)
-            cache.setObject(liveObject, forKey: objectID)
-            return liveObject
+            let objectPublisher = ObjectPublisher<D>(objectID: objectID, context: self)
+            cache.setObject(objectPublisher, forKey: objectID)
+            return objectPublisher
         }
     }
 
@@ -185,15 +185,15 @@ extension NSManagedObjectContext {
 
     private enum UserInfoKeys {
 
-        case liveObjectsCache(DynamicObject.Type)
+        case objectPublishersCache(DynamicObject.Type)
         case objectsChangeObserver(AnyObject.Type)
 
         var keyString: String {
 
             switch self {
 
-            case .liveObjectsCache(let objectType):
-                return "CoreStore.liveObjectsCache(\(Internals.typeName(objectType)))"
+            case .objectPublishersCache(let objectType):
+                return "CoreStore.objectPublishersCache(\(Internals.typeName(objectType)))"
 
             case .objectsChangeObserver:
                 return "CoreStore.objectsChangeObserver"

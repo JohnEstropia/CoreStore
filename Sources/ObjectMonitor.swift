@@ -325,6 +325,12 @@ public final class ObjectMonitor<O: DynamicObject>: Equatable {
             inObject: observer
         )
     }
+
+
+    // MARK: - Deprecated
+
+    @available(*, deprecated, renamed: "O")
+    public typealias D = O
 }
 
 

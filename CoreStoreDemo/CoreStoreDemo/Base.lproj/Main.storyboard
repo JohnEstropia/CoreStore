@@ -717,7 +717,7 @@
             </objects>
             <point key="canvasLocation" x="1822" y="2013"/>
         </scene>
-        <!--LiveList-->
+        <!--ListPublisher-->
         <scene sceneID="gkX-bd-Rel">
             <objects>
                 <tableViewController id="3AE-ED-0oj" customClass="ListObserverDemoViewController" customModule="CoreStoreDemo" customModuleProvider="target" sceneMemberID="viewController">
@@ -768,7 +768,7 @@
                         </connections>
                     </tableView>
                     <extendedEdge key="edgesForExtendedLayout" top="YES"/>
-                    <navigationItem key="navigationItem" title="LiveList" id="5kj-jr-HoL"/>
+                    <navigationItem key="navigationItem" title="ListPublisher" id="5kj-jr-HoL"/>
                     <connections>
                         <segue destination="dX3-kR-CYC" kind="show" identifier="ObjectObserverDemoViewController" id="hyN-De-zte"/>
                     </connections>
@@ -898,7 +898,7 @@
             </objects>
             <point key="canvasLocation" x="4404" y="1144.5"/>
         </scene>
-        <!--LiveList-->
+        <!--ListPublisher-->
         <scene sceneID="CXQ-vG-dtK">
             <objects>
                 <collectionViewController id="EKY-1g-ALK" customClass="CollectionViewDemoViewController" customModule="CoreStoreDemo" customModuleProvider="target" sceneMemberID="viewController">
@@ -963,7 +963,7 @@
                             <outlet property="delegate" destination="EKY-1g-ALK" id="r9k-Fz-mWc"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" title="LiveList" id="goy-Zu-94A"/>
+                    <navigationItem key="navigationItem" title="ListPublisher" id="goy-Zu-94A"/>
                     <connections>
                         <segue destination="dX3-kR-CYC" kind="show" identifier="ObjectObserverDemoViewController" id="k4E-dJ-1lz"/>
                     </connections>
