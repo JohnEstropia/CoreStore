@@ -23,20 +23,23 @@ struct SwiftUIView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(palettes.sectionIdentifiers, id: \.self) { (sectionID) in
+                ForEach(palettes.snapshot.sectionIDs, id: \.self) { (sectionID) in
                     Section(header: Text(sectionID)) {
-                        ForEach(self.palettes[section: sectionID], id: \.self) { palette in
+                        ForEach(self.palettes.snapshot.items(inSectionWithID: sectionID), id: \.self) { palette in
                             NavigationLink(
                                 destination: DetailView(palette: palette),
                                 label: { ColorCell(palette: palette) }
                             )
                         }
                         .onDelete { itemIndices in
-                            let objectsToDelete = self.palettes[section: sectionID, itemIndices: itemIndices]
+                            let objectIDsToDelete = self.palettes.snapshot.itemIDs(
+                                inSectionWithID: sectionID,
+                                atIndices: itemIndices
+                            )
                             self.dataStack.perform(
                                 asynchronous: { transaction in
 
-                                    transaction.delete(objectsToDelete)
+                                    transaction.delete(objectIDs: objectIDsToDelete)
                                 },
                                 completion: { _ in }
                             )
@@ -44,7 +47,7 @@ struct SwiftUIView: View {
                     }
                 }
             }
-            .navigationBarTitle(Text("SwiftUI (\(palettes.numberOfItems) objects)"))
+            .navigationBarTitle(Text("SwiftUI (\(palettes.snapshot.numberOfItems) objects)"))
             .navigationBarItems(
                 leading: EditButton(),
                 trailing: HStack {

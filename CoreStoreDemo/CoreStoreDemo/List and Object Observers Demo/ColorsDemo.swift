@@ -45,9 +45,11 @@ struct ColorsDemo {
         
         didSet {
             
-            self.palettes.refetch(
-                self.filter.whereClause(),
-                OrderBy<Palette>(.ascending(\.hue))
+            try! self.palettes.refetch(
+                From<Palette>()
+                    .sectionBy(\.colorName)
+                    .where(self.filter.whereClause())
+                    .orderBy(.ascending(\.hue))
             )
         }
     }

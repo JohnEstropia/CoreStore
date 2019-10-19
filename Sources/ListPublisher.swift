@@ -279,11 +279,6 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
             sectionBy: sectionBy,
             applyFetchClauses: applyFetchClauses
         )
-
-        try newFetchedResultsController.performFetchFromSpecifiedStores()
-
-        newFetchedResultsControllerDelegate.handler = self
-
         self.query = (
             from: from,
             sectionBy: sectionBy,
@@ -291,6 +286,9 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
             applyFetchClauses: applyFetchClauses
         )
         (self.fetchedResultsController, self.fetchedResultsControllerDelegate) = (newFetchedResultsController, newFetchedResultsControllerDelegate)
+
+        newFetchedResultsControllerDelegate.handler = self
+        try newFetchedResultsController.performFetchFromSpecifiedStores()
     }
 
     deinit {

@@ -99,6 +99,21 @@ public final class SynchronousDataTransaction: BaseDataTransaction {
     }
 
     /**
+     Deletes the objects with the specified `NSManagedObjectID`s.
+
+     - parameter objectIDs: the `NSManagedObjectID`s of the objects to delete
+     */
+    public override func delete<S: Sequence>(objectIDs: S) where S.Iterator.Element: NSManagedObjectID {
+
+        Internals.assert(
+            !self.isCommitted,
+            "Attempted to delete an entities from an already committed \(Internals.typeName(self))."
+        )
+
+        super.delete(objectIDs: objectIDs)
+    }
+
+    /**
      Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by series of `ObjectRepresentation`s.
 
      - parameter object: the `ObjectRepresentation` representing an `NSManagedObject` or `CoreStoreObject` to be deleted

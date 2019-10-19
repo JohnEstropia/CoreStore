@@ -119,13 +119,15 @@ extension Internals {
             var snapshot = Internals.DiffableDataSourceSnapshot(
                 sections: controller.sections ?? []
             )
-            snapshot.reloadItems(self.reloadedIDs)
+            snapshot.reloadSections(self.reloadedSectionIDs)
+            snapshot.reloadItems(self.reloadedItemIDs)
             
             self.handler?.controller(
                 controller,
                 didChangeContentWith: snapshot
             )
-            self.reloadedIDs.removeAll()
+            self.reloadedItemIDs.removeAll()
+            self.reloadedSectionIDs.removeAll()
         }
 
         @objc
@@ -139,14 +141,45 @@ extension Internals {
         
         @objc
         dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-            
-            let object = anObject as! NSManagedObject
-            self.reloadedIDs.append(object.objectID)
+
+            switch type {
+
+            case .update,
+                 .move where indexPath == newIndexPath:
+                let object = anObject as! NSManagedObject
+                self.reloadedItemIDs.append(object.objectID)
+
+            case .insert,
+                 .delete,
+                 .move:
+                 return
+
+            @unknown default:
+                return
+            }
+        }
+
+        func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+
+            switch type {
+
+            case .update:
+                self.reloadedSectionIDs.append(sectionInfo.name)
+
+            case .insert,
+                 .delete,
+                 .move:
+                return
+
+            @unknown default:
+                return
+            }
         }
         
         
         // MARK: Private
-        
-        private var reloadedIDs: [NSManagedObjectID] = []
+
+        private var reloadedItemIDs: [NSManagedObjectID] = []
+        private var reloadedSectionIDs: [String] = []
     }
 }

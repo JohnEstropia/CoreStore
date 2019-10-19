@@ -23,7 +23,7 @@ final class ListObserverDemoViewController: UITableViewController {
             switch editingStyle {
 
             case .delete:
-                let palette = ColorsDemo.palettes[indexPath: indexPath]
+                let palette = ColorsDemo.palettes.snapshot[indexPath]
                 ColorsDemo.stack.perform(
                     asynchronous: { (transaction) in
 
@@ -122,7 +122,7 @@ final class ListObserverDemoViewController: UITableViewController {
         
         self.performSegue(
             withIdentifier: "ObjectObserverDemoViewController",
-            sender: ColorsDemo.palettes[indexPath: indexPath]
+            sender: ColorsDemo.palettes.snapshot[indexPath]
         )
     }
     

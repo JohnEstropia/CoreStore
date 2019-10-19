@@ -154,6 +154,24 @@ public /*abstract*/ class BaseDataTransaction {
         )
         return self.fetchExisting(objectID)
     }
+
+    /**
+     Deletes the objects with the specified `NSManagedObjectID`s.
+
+     - parameter objectIDs: the `NSManagedObjectID`s of the objects to delete
+     */
+    public func delete<S: Sequence>(objectIDs: S) where S.Iterator.Element: NSManagedObjectID {
+
+        Internals.assert(
+            self.isRunningInAllowedQueue(),
+            "Attempted to delete an entity outside its designated queue."
+        )
+        let context = self.context
+        objectIDs.forEach {
+
+            context.fetchExisting($0).map(context.delete(_:))
+        }
+    }
     
     /**
      Deletes the specified `NSManagedObject`s or `CoreStoreObject`s represented by series of `ObjectRepresentation`s.

@@ -67,7 +67,7 @@ final class CollectionViewDemoViewController: UICollectionViewController {
 
                 case UICollectionView.elementKindSectionHeader:
                     let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "PaletteCollectionSectionHeaderView", for: indexPath) as! PaletteCollectionSectionHeaderView
-                    view.label?.text = ColorsDemo.palettes.sectionIdentifiers[indexPath.section]
+                    view.label?.text = ColorsDemo.palettes.snapshot.sectionIDs[indexPath.section]
                     return view
 
                 default:
@@ -110,7 +110,7 @@ final class CollectionViewDemoViewController: UICollectionViewController {
 
         self.performSegue(
             withIdentifier: "ObjectObserverDemoViewController",
-            sender: ColorsDemo.palettes[indexPath: indexPath]
+            sender: ColorsDemo.palettes.snapshot[indexPath]
         )
     }
 

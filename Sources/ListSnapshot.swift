@@ -175,18 +175,18 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
      - returns: `true` if at least one object in any section exists, `false` otherwise
      */
-    public func hasObjects() -> Bool {
+    public func hasItems() -> Bool {
 
         return self.diffableSnapshot.numberOfItems > 0
     }
 
     /**
-     Checks if the `ListSnapshot` has at least one object the specified section.
+     Checks if the `ListSnapshot` has at least one object in the specified section.
 
-     - parameter section: the section index. Using an index outside the valid range will return `false`.
+     - parameter sectionIndex: the section index. Using an index outside the valid range will return `false`.
      - returns: `true` if at least one object in the specified section exists, `false` otherwise
      */
-    public func hasObjects(in sectionIndex: Int) -> Bool {
+    public func hasItems(inSectionIndex sectionIndex: Int) -> Bool {
 
         let snapshot = self.diffableSnapshot
         let sectionIDs = snapshot.sectionIdentifiers
@@ -198,138 +198,141 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         return snapshot.numberOfItems(inSection: sectionID) > 0
     }
 
+    /**
+     Checks if the `ListSnapshot` has at least one object the specified section.
 
+     - parameter sectionID: the section identifier. Using an index outside the valid range will return `false`.
+     - returns: `true` if at least one object in the specified section exists, `false` otherwise
+     */
+    public func hasItems(inSectionWithID sectionID: SectionID) -> Bool {
 
+        let snapshot = self.diffableSnapshot
+        guard snapshot.sectionIdentifiers.contains(sectionID) else {
 
+            return false
+        }
+        return snapshot.numberOfItems(inSection: sectionID) > 0
+    }
 
-
-
+    /**
+     The number of items in all sections in the `ListSnapshot`
+     */
     public var numberOfItems: Int {
 
         return self.diffableSnapshot.numberOfItems
     }
 
+    /**
+     The number of sections in the `ListSnapshot`
+     */
     public var numberOfSections: Int {
 
         return self.diffableSnapshot.numberOfSections
     }
 
-    public var sectionIdentifiers: [SectionID] {
+    /**
+     Returns the number of items for the specified `SectionID`.
+
+     - parameter sectionID: the `SectionID`. Specifying an invalid value will raise an exception.
+     - returns: The number of items in the given `SectionID`
+     */
+    public func numberOfItems(inSectionWithID sectionID: SectionID) -> Int {
+
+        return self.diffableSnapshot.numberOfItems(inSection: sectionID)
+    }
+
+    /**
+     Returns the number of items at the specified section index.
+
+     - parameter sectionIndex: the index of the section. Specifying an invalid value will raise an exception.
+     - returns: The number of items in the given `SectionID`
+     */
+    public func numberOfItems(inSectionIndex sectionIndex: Int) -> Int {
+
+        let snapshot = self.diffableSnapshot
+        let sectionID = snapshot.sectionIdentifiers[sectionIndex]
+        return snapshot.numberOfItems(inSection: sectionID)
+    }
+
+    /**
+     All section identifiers in the `ListSnapshot`
+     */
+    public var sectionIDs: [SectionID] {
 
         return self.diffableSnapshot.sectionIdentifiers
     }
 
-    public var itemIdentifiers: [ItemID] {
+    /**
+     Returns the `SectionID` that the specified `ItemID` belongs to, or `nil` if it is not in the list.
+
+     - parameter itemID: the `ItemID`
+     - returns: the `SectionID` that the specified `ItemID` belongs to, or `nil` if it is not in the list
+     */
+    public func sectionID(containingItemWithID itemID: ItemID) -> SectionID? {
+
+        return self.diffableSnapshot.sectionIdentifier(containingItem: itemID)
+    }
+
+    /**
+     All object identifiers in the `ListSnapshot`
+     */
+    public var itemIDs: [ItemID] {
 
         return self.diffableSnapshot.itemIdentifiers
     }
 
-    public func numberOfItems(inSection identifier: SectionID) -> Int {
+    /**
+     Returns the item identifiers belonging to the specified `SectionID`.
 
-        return self.diffableSnapshot.numberOfItems(inSection: identifier)
+     - parameter sectionID: the `SectionID`. Specifying an invalid value will raise an exception.
+     - returns: the `ItemID` array belonging to the given `SectionID`
+     */
+    public func itemIDs(inSectionWithID sectionID: SectionID) -> [ItemID] {
+
+        return self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
     }
 
-    public func itemIdentifiers(inSection identifier: SectionID) -> [ItemID] {
+    /**
+     Returns the item identifiers belonging to the specified `SectionID` and a `Sequence` of item indices.
 
-        return self.diffableSnapshot.itemIdentifiers(inSection: identifier)
-    }
+     - parameter sectionID: the `SectionID`. Specifying an invalid value will raise an exception.
+     - parameter indices: the positions of the itemIDs to return. Specifying an invalid value will raise an exception.
+     - returns: the `ItemID` array belonging to the given `SectionID` at the specified indices
+     */
+    public func itemIDs<S: Sequence>(inSectionWithID sectionID: SectionID, atIndices indices: S) -> [ItemID] where S.Element == Int {
 
-    public func itemIdentifiers(inSection identifier: SectionID, atIndices indices: IndexSet) -> [ItemID] {
-
-        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: identifier)
+        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
         return indices.map({ itemIDs[$0] })
     }
 
-    public func sectionIdentifier(containingItem identifier: ItemID) -> SectionID? {
+    /**
+     Returns the index of the specified `ItemID` in the whole list, or `nil` if it is not in the list.
 
-        return self.diffableSnapshot.sectionIdentifier(containingItem: identifier)
+     - parameter itemID: the `ItemID`
+     - returns: the index of the specified `ItemID`, or `nil` if it is not in the list
+     */
+    public func indexOfItem(withID itemID: ItemID) -> Index? {
+
+        return self.diffableSnapshot.indexOfItem(itemID)
     }
 
-    public func indexOfItem(_ identifier: ItemID) -> Index? {
+    /**
+     Returns the index of the specified `SectionID`, or `nil` if it is not in the list.
 
-        return self.diffableSnapshot.indexOfItem(identifier)
+     - parameter sectionID: the `SectionID`
+     - returns: the index of the specified `SectionID`, or `nil` if it is not in the list
+     */
+    public func indexOfSection(withID sectionID: SectionID) -> Int? {
+
+        return self.diffableSnapshot.indexOfSection(sectionID)
     }
 
-    public func indexOfSection(_ identifier: SectionID) -> Int? {
+    /**
+     Returns an array of `ObjectPublisher`s for the items at the specified indices
 
-        return self.diffableSnapshot.indexOfSection(identifier)
-    }
-
-    public mutating func appendItems(_ identifiers: [ItemID], toSection sectionIdentifier: SectionID? = nil) {
-
-        self.diffableSnapshot.appendItems(identifiers, toSection: sectionIdentifier)
-    }
-
-    public mutating func insertItems(_ identifiers: [ItemID], beforeItem beforeIdentifier: ItemID) {
-
-        self.diffableSnapshot.insertItems(identifiers, beforeItem: beforeIdentifier)
-    }
-
-    public mutating func insertItems(_ identifiers: [ItemID], afterItem afterIdentifier: ItemID) {
-
-        self.diffableSnapshot.insertItems(identifiers, afterItem: afterIdentifier)
-    }
-
-    public mutating func deleteItems(_ identifiers: [ItemID]) {
-
-        self.diffableSnapshot.deleteItems(identifiers)
-    }
-
-    public mutating func deleteAllItems() {
-
-        self.diffableSnapshot.deleteAllItems()
-    }
-
-    public mutating func moveItem(_ identifier: ItemID, beforeItem toIdentifier: ItemID) {
-
-        self.diffableSnapshot.moveItem(identifier, beforeItem: toIdentifier)
-    }
-
-    public mutating func moveItem(_ identifier: ItemID, afterItem toIdentifier: ItemID) {
-
-        self.diffableSnapshot.moveItem(identifier, afterItem: toIdentifier)
-    }
-
-    public mutating func reloadItems(_ identifiers: [ItemID]) {
-
-        self.diffableSnapshot.reloadItems(identifiers)
-    }
-
-    public mutating func appendSections(_ identifiers: [SectionID]) {
-
-        self.diffableSnapshot.appendSections(identifiers)
-    }
-
-    public mutating func insertSections(_ identifiers: [SectionID], beforeSection toIdentifier: SectionID) {
-
-        self.diffableSnapshot.insertSections(identifiers, beforeSection: toIdentifier)
-    }
-
-    public mutating func insertSections(_ identifiers: [SectionID], afterSection toIdentifier: SectionID) {
-
-        self.diffableSnapshot.insertSections(identifiers, afterSection: toIdentifier)
-    }
-
-    public mutating func deleteSections(_ identifiers: [SectionID]) {
-
-        self.diffableSnapshot.deleteSections(identifiers)
-    }
-
-    public mutating func moveSection(_ identifier: SectionID, beforeSection toIdentifier: SectionID) {
-
-        self.diffableSnapshot.moveSection(identifier, beforeSection: toIdentifier)
-    }
-
-    public mutating func moveSection(_ identifier: SectionID, afterSection toIdentifier: SectionID) {
-
-        self.diffableSnapshot.moveSection(identifier, afterSection: toIdentifier)
-    }
-
-    public mutating func reloadSections(_ identifiers: [SectionID]) {
-
-        self.diffableSnapshot.reloadSections(identifiers)
-    }
-
+     - parameter indices: the positions of items. Specifying an invalid value will raise an exception.
+     - returns: an array of `ObjectPublisher`s for the items at the specified indices
+     */
     public func items<S: Sequence>(atIndices indices: S) -> [ObjectPublisher<O>] where S.Element == Index {
 
         let context = self.context!
@@ -341,7 +344,13 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         }
     }
 
-    public subscript(section sectionID: SectionID) -> [ObjectPublisher<O>] {
+    /**
+     Returns an array of `ObjectPublisher`s for the items in the specified `SectionID`
+
+     - parameter sectionID: the `SectionID`. Specifying an invalid value will raise an exception.
+     - returns: an array of `ObjectPublisher`s for the items in the specified `SectionID`
+     */
+    public func items(inSectionWithID sectionID: SectionID) -> [ObjectPublisher<O>] {
 
         let context = self.context!
         let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
@@ -351,7 +360,14 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         }
     }
 
-    public subscript<S: Sequence>(section sectionID: SectionID, itemIndices itemIndices: S) -> [ObjectPublisher<O>] where S.Element == Int {
+    /**
+     Returns an array of `ObjectPublisher`s for the items in the specified `SectionID` and indices
+
+     - parameter sectionID: the `SectionID`. Specifying an invalid value will raise an exception.
+     - parameter itemIndices: the positions of items within the section. Specifying an invalid value will raise an exception.
+     - returns: an array of `ObjectPublisher`s for the items in the specified `SectionID` and indices
+     */
+    public func items<S: Sequence>(inSectionWithID sectionID: SectionID, atIndices itemIndices: S) -> [ObjectPublisher<O>] where S.Element == Int {
 
         let context = self.context!
         let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
@@ -360,6 +376,135 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
             let itemID = itemIDs[position]
             return ObjectPublisher<O>(objectID: itemID, context: context)
         }
+    }
+
+    /**
+     Returns a lazy sequence of `ObjectPublisher`s for the items at the specified indices
+
+     - parameter indices: the positions of items. Specifying an invalid value will raise an exception.
+     - returns: a lazy sequence of `ObjectPublisher`s for the items at the specified indices
+     */
+    public func lazy<S: Sequence>(atIndices indices: S) -> LazyMapSequence<S, ObjectPublisher<O>> where S.Element == Index {
+
+        let context = self.context!
+        let itemIDs = self.diffableSnapshot.itemIdentifiers
+        return indices.lazy.map { position in
+
+            let itemID = itemIDs[position]
+            return ObjectPublisher<O>(objectID: itemID, context: context)
+        }
+    }
+
+    /**
+     Returns a lazy sequence of `ObjectPublisher`s for the items in the specified `SectionID`
+
+     - parameter sectionID: the `SectionID`. Specifying an invalid value will raise an exception.
+     - returns: a lazy sequence of `ObjectPublisher`s for the items in the specified `SectionID`
+     */
+    public func lazy(inSectionWithID sectionID: SectionID) -> LazyMapSequence<[NSManagedObjectID], ObjectPublisher<O>> {
+
+        let context = self.context!
+        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
+        return itemIDs.lazy.map {
+
+            return ObjectPublisher<O>(objectID: $0, context: context)
+        }
+    }
+
+    /**
+     Returns a lazy sequence of `ObjectPublisher`s for the items in the specified `SectionID` and indices
+
+     - parameter sectionID: the `SectionID`. Specifying an invalid value will raise an exception.
+     - parameter itemIndices: the positions of items within the section. Specifying an invalid value will raise an exception.
+     - returns: a lazy sequence of `ObjectPublisher`s for the items in the specified `SectionID` and indices
+     */
+    public func lazy<S: Sequence>(inSectionWithID sectionID: SectionID, atIndices itemIndices: S) -> LazyMapSequence<S, ObjectPublisher<O>> where S.Element == Int {
+
+        let context = self.context!
+        let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
+        return itemIndices.lazy.map { position in
+
+            let itemID = itemIDs[position]
+            return ObjectPublisher<O>(objectID: itemID, context: context)
+        }
+    }
+
+
+    // MARK: Public (Mutators)
+
+    public mutating func appendItems(withIDs itemIDs: [ItemID], toSectionWithID sectionID: SectionID? = nil) {
+
+        self.diffableSnapshot.appendItems(itemIDs, toSection: sectionID)
+    }
+
+    public mutating func insertItems(withIDs itemIDs: [ItemID], beforeItemID: ItemID) {
+
+        self.diffableSnapshot.insertItems(itemIDs, beforeItem: beforeItemID)
+    }
+
+    public mutating func insertItems(withIDs itemIDs: [ItemID], afterItemID: ItemID) {
+
+        self.diffableSnapshot.insertItems(itemIDs, afterItem: afterItemID)
+    }
+
+    public mutating func deleteItems(withIDs itemIDs: [ItemID]) {
+
+        self.diffableSnapshot.deleteItems(itemIDs)
+    }
+
+    public mutating func deleteAllItems() {
+
+        self.diffableSnapshot.deleteAllItems()
+    }
+
+    public mutating func moveItem(withID itemID: ItemID, beforeItemID: ItemID) {
+
+        self.diffableSnapshot.moveItem(itemID, beforeItem: beforeItemID)
+    }
+
+    public mutating func moveItem(withID itemID: ItemID, afterItemID: ItemID) {
+
+        self.diffableSnapshot.moveItem(itemID, afterItem: afterItemID)
+    }
+
+    public mutating func reloadItems(withIDs itemIDs: [ItemID]) {
+
+        self.diffableSnapshot.reloadItems(itemIDs)
+    }
+
+    public mutating func appendSections(withIDs sectionIDs: [SectionID]) {
+
+        self.diffableSnapshot.appendSections(sectionIDs)
+    }
+
+    public mutating func insertSections(withIDs sectionIDs: [SectionID], beforeSectionID: SectionID) {
+
+        self.diffableSnapshot.insertSections(sectionIDs, beforeSection: beforeSectionID)
+    }
+
+    public mutating func insertSections(withIDs sectionIDs: [SectionID], afterSectionID: SectionID) {
+
+        self.diffableSnapshot.insertSections(sectionIDs, afterSection: afterSectionID)
+    }
+
+    public mutating func deleteSections(withIDs sectionIDs: [SectionID]) {
+
+        self.diffableSnapshot.deleteSections(sectionIDs)
+    }
+
+    public mutating func moveSection(withID sectionID: SectionID, beforeSectionID: SectionID) {
+
+        self.diffableSnapshot.moveSection(sectionID, beforeSection: beforeSectionID)
+    }
+
+    public mutating func moveSection(withID sectionID: SectionID, afterSectionID: SectionID) {
+
+        self.diffableSnapshot.moveSection(sectionID, afterSection: afterSectionID)
+    }
+
+    public mutating func reloadSections(withIDs sectionIDs: [SectionID]) {
+
+        self.diffableSnapshot.reloadSections(sectionIDs)
     }
 
     
