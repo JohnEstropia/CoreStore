@@ -30,7 +30,7 @@ import CoreData
 // MARK: - ObjectObserver
 
 /**
- Implement the `ObjectObserver` protocol to observe changes to a single `DynamicObject` instance. `ObjectObserver`s may register themselves to a `ObjectMonitor`'s `addObserver(_:)` method:
+ Implement the `ObjectObserver` protocol to observe changes to a single `DynamicObject` instance. `ObjectObserver`s may register themselves to an `ObjectMonitor`'s `addObserver(_:)` method:
  ```
  let monitor = CoreStore.monitorObject(object)
  monitor.addObserver(self)

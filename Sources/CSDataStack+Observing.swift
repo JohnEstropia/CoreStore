@@ -36,7 +36,7 @@ extension CSDataStack {
      Creates a `CSObjectMonitor` for the specified `NSManagedObject`. Multiple `ObjectObserver`s may then register themselves to be notified when changes are made to the `NSManagedObject`.
      
      - parameter object: the `NSManagedObject` to observe changes from
-     - returns: a `ObjectMonitor` that monitors changes to `object`
+     - returns: an `ObjectMonitor` that monitors changes to `object`
      */
     @objc
     public func monitorObject(_ object: NSManagedObject) -> CSObjectMonitor {

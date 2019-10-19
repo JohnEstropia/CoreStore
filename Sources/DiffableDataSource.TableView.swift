@@ -35,18 +35,66 @@ extension DiffableDataSource {
 
     // MARK: - TableView
 
+    /**
+     The `DiffableDataSource.TableView` serves as a `UITableViewDataSource` that handles `ListPublisher` snapshots for a `UITableView`. Subclasses of `DiffableDataSource.TableView` may override some `UITableViewDataSource` methods as needed.
+     The `DiffableDataSource.TableView` instance needs to be held on (retained) for as long as the `UITableView`'s lifecycle.
+     ```
+     self.dataSource = DiffableDataSource.TableView<Person>(
+         tableView: self.tableView,
+         dataStack: Shared.defaultStack,
+         cellProvider: { (tableView, indexPath, person) in
+             let cell = tableView.dequeueReusableCell(withIdentifier: "PersonCell") as! PersonCell
+             cell.setPerson(person)
+             return cell
+         }
+     )
+     ```
+     The dataSource can then apply changes from a `ListPublisher` as shown:
+     ```
+     listPublisher.addObserver(self) { [weak self] (listPublisher) in
+        self?.dataSource?.apply(
+            listPublisher.snapshot,
+            animatingDifferences: true
+        )
+     }
+     ```
+     `DiffableDataSource.TableView` fully handles the reload animations. To turn change the default animation, set the `defaultRowAnimation`.
+     */
     open class TableView<O: DynamicObject>: NSObject, UITableViewDataSource {
         
         // MARK: Open
 
+        /**
+         The animation style for row changes
+         */
         @nonobjc
         open var defaultRowAnimation: UITableView.RowAnimation = .automatic
         
 
         // MARK: Public
 
+        /**
+         The object type represented by this dataSource
+         */
         public typealias ObjectType = O
-        
+
+        /**
+         Initializes the `DiffableDataSource.TableView`. This instance needs to be held on (retained) for as long as the `UITableView`'s lifecycle.
+         ```
+         self.dataSource = DiffableDataSource.TableView<Person>(
+             tableView: self.tableView,
+             dataStack: Shared.defaultStack,
+             cellProvider: { (tableView, indexPath, person) in
+                 let cell = tableView.dequeueReusableCell(withIdentifier: "PersonCell") as! PersonCell
+                 cell.setPerson(person)
+                 return cell
+             }
+         )
+         ```
+         - parameter tableView: the `UITableView` to set the `dataSource` of. This instance is not retained by the `DiffableDataSource.TableView`.
+         - parameter dataStack: the `DataStack` instance that the dataSource will fetch objects from
+         - parameter cellProvider: a closure that configures and returns the `UITableViewCell` for the object
+         */
         @nonobjc
         public init(tableView: UITableView, dataStack: DataStack, cellProvider: @escaping (UITableView, IndexPath, O) -> UITableViewCell?) {
 
@@ -81,7 +129,23 @@ extension DiffableDataSource {
 
             tableView.dataSource = self
         }
-
+        
+        /**
+         Reloads the `UITableView` using a `ListSnapshot`. This is typically from the `snapshot` property of a `ListPublisher`:
+         ```
+         listPublisher.addObserver(self) { [weak self] (listPublisher) in
+            self?.dataSource?.apply(
+                listPublisher.snapshot,
+                animatingDifferences: true
+            )
+         }
+         ```
+         If the `defaultRowAnimation` is configured to, animations are also applied accordingly.
+         
+         - parameter snapshot: the `ListSnapshot` used to reload the `UITableView` with. This is typically from the `snapshot` property of a `ListPublisher`.
+         - parameter animatingDifferences: if `true`, animations will be applied as configured by the `defaultRowAnimation` value. Defaults to `true`.
+         */
+        @nonobjc
         public func apply(_ snapshot: ListSnapshot<O>, animatingDifferences: Bool = true) {
 
             let diffableSnapshot = snapshot.diffableSnapshot
@@ -110,8 +174,15 @@ extension DiffableDataSource {
                 )
 //            }
         }
-
-        public func itemIdentifier(for indexPath: IndexPath) -> O.ObjectID? {
+        
+        /**
+         Returns the object identifier for the item at the specified `IndexPath`, or `nil` if not found
+         
+         - parameter indexPath: the `IndexPath` to search for
+         - returns: the object identifier for the item at the specified `IndexPath`, or `nil` if not found
+         */
+        @nonobjc
+        public func itemID(for indexPath: IndexPath) -> O.ObjectID? {
             
 //            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 //
@@ -122,8 +193,15 @@ extension DiffableDataSource {
                 return self.legacyDataSource.itemIdentifier(for: indexPath)
 //            }
         }
-
-        public func indexPath(for itemIdentifier: O.ObjectID) -> IndexPath? {
+        
+        /**
+         Returns the `IndexPath` for the item with the specified object identifier, or `nil` if not found
+         
+         - parameter itemID: the object identifier to search for
+         - returns: the `IndexPath` for the item with the specified object identifier, or `nil` if not found
+         */
+        @nonobjc
+        public func indexPath(for itemID: O.ObjectID) -> IndexPath? {
             
 //            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 //
@@ -131,7 +209,7 @@ extension DiffableDataSource {
 //            }
 //            else {
              
-                return self.legacyDataSource.indexPath(for: itemIdentifier)
+                return self.legacyDataSource.indexPath(for: itemID)
 //            }
         }
         
@@ -232,11 +310,17 @@ extension DiffableDataSource {
 
 
         // MARK: Private
-
+        
+        @nonobjc
         private weak var tableView: UITableView?
         
+        @nonobjc
         private let dataStack: DataStack
+        
+        @nonobjc
         private let cellProvider: (UITableView, IndexPath, O) -> UITableViewCell?
+        
+        @nonobjc
         private var rawDataSource: Any!
         
 //        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
@@ -245,6 +329,7 @@ extension DiffableDataSource {
 //            return self.rawDataSource as! UITableViewDiffableDataSource<String, O.ObjectID>
 //        }
         
+        @nonobjc
         private var legacyDataSource: Internals.DiffableDataUIDispatcher<O> {
             
             return self.rawDataSource as! Internals.DiffableDataUIDispatcher<O>

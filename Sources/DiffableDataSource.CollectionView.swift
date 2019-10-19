@@ -34,13 +34,59 @@ import CoreData
 extension DiffableDataSource {
 
     // MARK: - CollectionView
-
+    
+    /**
+     The `DiffableDataSource.CollectionView` serves as a `UICollectionViewDataSource` that handles `ListPublisher` snapshots for a `UICollectionView`. Subclasses of `DiffableDataSource.CollectionView` may override some `UICollectionViewDataSource` methods as needed.
+     The `DiffableDataSource.CollectionView` instance needs to be held on (retained) for as long as the `UICollectionView`'s lifecycle.
+     ```
+     self.dataSource = DiffableDataSource.CollectionView<Person>(
+         collectionView: self.collectionView,
+         dataStack: Shared.defaultStack,
+         cellProvider: { (collectionView, indexPath, person) in
+             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PersonCell") as! PersonCell
+             cell.setPerson(person)
+             return cell
+         }
+     )
+     ```
+     The dataSource can then apply changes from a `ListPublisher` as shown:
+     ```
+     listPublisher.addObserver(self) { [weak self] (listPublisher) in
+        self?.dataSource?.apply(
+            listPublisher.snapshot,
+            animatingDifferences: true
+        )
+     }
+     ```
+     `DiffableDataSource.CollectionView` fully handles the reload animations.
+     */
     open class CollectionView<O: DynamicObject>: NSObject, UICollectionViewDataSource {
 
         // MARK: Public
-
+        
+        /**
+         The object type represented by this dataSource
+         */
         public typealias ObjectType = O
-
+        
+        /**
+         Initializes the `DiffableDataSource.CollectionView`. This instance needs to be held on (retained) for as long as the `UICollectionView`'s lifecycle.
+         ```
+         self.dataSource = DiffableDataSource.CollectionView<Person>(
+             collectionView: self.collectionView,
+             dataStack: Shared.defaultStack,
+             cellProvider: { (collectionView, indexPath, person) in
+                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PersonCell") as! PersonCell
+                 cell.setPerson(person)
+                 return cell
+             }
+         )
+         ```
+         - parameter collectionView: the `UICollectionView` to set the `dataSource` of. This instance is not retained by the `DiffableDataSource.CollectionView`.
+         - parameter dataStack: the `DataStack` instance that the dataSource will fetch objects from
+         - parameter cellProvider: a closure that configures and returns the `UICollectionViewCell` for the object
+         - parameter supplementaryViewProvider: an optional closure for providing `UICollectionReusableView` supplementary views. If not set, defaults to returning `nil`
+         */
         @nonobjc
         public init(collectionView: UICollectionView, dataStack: DataStack, cellProvider: @escaping (UICollectionView, IndexPath, O) -> UICollectionViewCell?, supplementaryViewProvider: @escaping (UICollectionView, String, IndexPath) -> UICollectionReusableView? = { _, _, _ in nil }) {
 
@@ -76,7 +122,21 @@ extension DiffableDataSource {
 
             collectionView.dataSource = self
         }
-
+        
+        /**
+         Reloads the `UICollectionView` using a `ListSnapshot`. This is typically from the `snapshot` property of a `ListPublisher`:
+         ```
+         listPublisher.addObserver(self) { [weak self] (listPublisher) in
+            self?.dataSource?.apply(
+                listPublisher.snapshot,
+                animatingDifferences: true
+            )
+         }
+         ```
+         
+         - parameter snapshot: the `ListSnapshot` used to reload the `UITableView` with. This is typically from the `snapshot` property of a `ListPublisher`.
+         - parameter animatingDifferences: if `true`, animations will be applied as configured by the `defaultRowAnimation` value. Defaults to `true`.
+         */
         public func apply(_ snapshot: ListSnapshot<O>, animatingDifferences: Bool = true) {
 
             let diffableSnapshot = snapshot.diffableSnapshot
@@ -104,8 +164,15 @@ extension DiffableDataSource {
                 )
 //            }
         }
-
-        public func itemIdentifier(for indexPath: IndexPath) -> O.ObjectID? {
+        
+        /**
+         Returns the object identifier for the item at the specified `IndexPath`, or `nil` if not found
+         
+         - parameter indexPath: the `IndexPath` to search for
+         - returns: the object identifier for the item at the specified `IndexPath`, or `nil` if not found
+         */
+        @nonobjc
+        public func itemID(for indexPath: IndexPath) -> O.ObjectID? {
 
 //            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 //
@@ -116,8 +183,15 @@ extension DiffableDataSource {
                 return self.legacyDataSource.itemIdentifier(for: indexPath)
 //            }
         }
-
-        public func indexPath(for itemIdentifier: O.ObjectID) -> IndexPath? {
+        
+        /**
+         Returns the `IndexPath` for the item with the specified object identifier, or `nil` if not found
+         
+         - parameter itemID: the object identifier to search for
+         - returns: the `IndexPath` for the item with the specified object identifier, or `nil` if not found
+         */
+        @nonobjc
+        public func indexPath(for itemID: O.ObjectID) -> IndexPath? {
 
 //            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
 //
@@ -125,7 +199,7 @@ extension DiffableDataSource {
 //            }
 //            else {
 
-                return self.legacyDataSource.indexPath(for: itemIdentifier)
+                return self.legacyDataSource.indexPath(for: itemID)
 //            }
         }
 

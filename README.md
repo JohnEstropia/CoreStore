@@ -1476,7 +1476,7 @@ class MyViewController: UIViewController, ObjectObserver {
     }
 }
 ```
-We then need to keep a `ObjectMonitor` instance and register our `ObjectObserver` as an observer:
+We then need to keep an `ObjectMonitor` instance and register our `ObjectObserver` as an observer:
 ```swift
 let person: MyPersonEntity = // ...
 self.monitor = CoreStore.monitorObject(person)

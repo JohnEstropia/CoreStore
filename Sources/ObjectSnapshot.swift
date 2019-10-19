@@ -36,13 +36,15 @@ import AppKit
 
 // MARK: - ObjectSnapshot
 
+/**
+ The `ObjectSnapshot` is a full copy of a `DynamicObject`'s properties at a given point in time. This is useful especially when keeping thread-safe state values, in ViewModels for example. Since this is a value type, any changes in this `struct` does not affect the actual object.
+ */
 @dynamicMemberLookup
 public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
-
-    public typealias ObjectType = O
-    
     
     // MARK: ObjectRepresentation
+
+    public typealias ObjectType = O
     
     public func objectID() -> O.ObjectID {
         

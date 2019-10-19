@@ -116,9 +116,6 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
     
     // MARK: ObjectRepresentation
 
-    /**
-     The `DynamicObject` type associated with this list
-     */
     public typealias ObjectType = O
     
     public func objectID() -> O.ObjectID {

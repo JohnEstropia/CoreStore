@@ -431,77 +431,159 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
 
     // MARK: Public (Mutators)
+    
+    /**
+     Appends extra items to the specified section
 
+     - parameter itemIDs: the object identifiers for the objects to append
+     - parameter sectionID: the section to append the items to
+     */
     public mutating func appendItems(withIDs itemIDs: [ItemID], toSectionWithID sectionID: SectionID? = nil) {
 
         self.diffableSnapshot.appendItems(itemIDs, toSection: sectionID)
     }
+    
+    /**
+     Inserts extra items before a specified item
 
+     - parameter itemIDs: the object identifiers for the objects to insert
+     - parameter beforeItemID: an existing identifier to insert items before of. Specifying an invalid value will raise an exception.
+     */
     public mutating func insertItems(withIDs itemIDs: [ItemID], beforeItemID: ItemID) {
 
         self.diffableSnapshot.insertItems(itemIDs, beforeItem: beforeItemID)
     }
+    
+    /**
+     Inserts extra items after a specified item
 
+     - parameter itemIDs: the object identifiers for the objects to insert
+     - parameter beforeItemID: an existing identifier to insert items after of. Specifying an invalid value will raise an exception.
+     */
     public mutating func insertItems(withIDs itemIDs: [ItemID], afterItemID: ItemID) {
 
         self.diffableSnapshot.insertItems(itemIDs, afterItem: afterItemID)
     }
+    
+    /**
+     Deletes the specified items
 
+     - parameter itemIDs: the object identifiers for the objects to delete
+     */
     public mutating func deleteItems(withIDs itemIDs: [ItemID]) {
 
         self.diffableSnapshot.deleteItems(itemIDs)
     }
-
+    
+    /**
+     Deletes all items
+     */
     public mutating func deleteAllItems() {
 
         self.diffableSnapshot.deleteAllItems()
     }
+    
+    /**
+     Moves an item before another specified item
 
+     - parameter itemID: an object identifier in the list to move. Specifying an invalid value will raise an exception.
+     - parameter beforeItemID: another identifier to move the item before of. Specifying an invalid value will raise an exception.
+     */
     public mutating func moveItem(withID itemID: ItemID, beforeItemID: ItemID) {
 
         self.diffableSnapshot.moveItem(itemID, beforeItem: beforeItemID)
     }
+    
+    /**
+     Moves an item after another specified item
 
+     - parameter itemID: an object identifier in the list to move. Specifying an invalid value will raise an exception.
+     - parameter beforeItemID: another identifier to move the item after of. Specifying an invalid value will raise an exception.
+     */
     public mutating func moveItem(withID itemID: ItemID, afterItemID: ItemID) {
 
         self.diffableSnapshot.moveItem(itemID, afterItem: afterItemID)
     }
+    
+    /**
+     Marks the specified items as reloaded
 
+     - parameter itemIDs: the object identifiers to reload
+     */
     public mutating func reloadItems(withIDs itemIDs: [ItemID]) {
 
         self.diffableSnapshot.reloadItems(itemIDs)
     }
+    
+    /**
+     Appends new section identifiers to the end of the list
 
+     - parameter sectionIDs: the sections to append
+     */
     public mutating func appendSections(withIDs sectionIDs: [SectionID]) {
 
         self.diffableSnapshot.appendSections(sectionIDs)
     }
+    
+    /**
+     Inserts new sections before an existing section
 
+     - parameter sectionIDs: the section identifiers for the sections to insert
+     - parameter beforeSectionID: an existing identifier to insert items before of. Specifying an invalid value will raise an exception.
+     */
     public mutating func insertSections(withIDs sectionIDs: [SectionID], beforeSectionID: SectionID) {
 
         self.diffableSnapshot.insertSections(sectionIDs, beforeSection: beforeSectionID)
     }
+    
+    /**
+     Inserts new sections after an existing section
 
+     - parameter sectionIDs: the section identifiers for the sections to insert
+     - parameter beforeSectionID: an existing identifier to insert items after of. Specifying an invalid value will raise an exception.
+     */
     public mutating func insertSections(withIDs sectionIDs: [SectionID], afterSectionID: SectionID) {
 
         self.diffableSnapshot.insertSections(sectionIDs, afterSection: afterSectionID)
     }
+    
+    /**
+     Deletes the specified sections
 
+     - parameter sectionIDs: the section identifiers for the sections to delete
+     */
     public mutating func deleteSections(withIDs sectionIDs: [SectionID]) {
 
         self.diffableSnapshot.deleteSections(sectionIDs)
     }
+    
+    /**
+     Moves a section before another specified section
 
+     - parameter sectionID: a section identifier in the list to move. Specifying an invalid value will raise an exception.
+     - parameter beforeSectionID: another identifier to move the section before of. Specifying an invalid value will raise an exception.
+     */
     public mutating func moveSection(withID sectionID: SectionID, beforeSectionID: SectionID) {
 
         self.diffableSnapshot.moveSection(sectionID, beforeSection: beforeSectionID)
     }
+    
+    /**
+     Moves a section after another specified section
 
+     - parameter sectionID: a section identifier in the list to move. Specifying an invalid value will raise an exception.
+     - parameter afterSectionID: another identifier to move the section after of. Specifying an invalid value will raise an exception.
+     */
     public mutating func moveSection(withID sectionID: SectionID, afterSectionID: SectionID) {
 
         self.diffableSnapshot.moveSection(sectionID, afterSection: afterSectionID)
     }
+    
+    /**
+     Marks the specified sections as reloaded
 
+     - parameter sectionIDs: the section identifiers to reload
+     */
     public mutating func reloadSections(withIDs sectionIDs: [SectionID]) {
 
         self.diffableSnapshot.reloadSections(sectionIDs)
