@@ -23,6 +23,7 @@
 //  SOFTWARE.
 //
 
+#if os(iOS) || os(tvOS) || os(macOS)
 
 // MARK: - DiffableDataSource
 
@@ -30,3 +31,5 @@
  Namespace for diffable data source types. See `DiffableDataSource.TableView` and `DiffableDataSource.CollectionView` for actual implementations
  */
 public enum DiffableDataSource {}
+
+#endif

@@ -46,8 +46,8 @@ public final class CSCoreStore: NSObject {
     @objc
     public static var defaultStack: CSDataStack {
         
-        get { return Shared.defaultStack.bridgeToObjectiveC }
-        set { Shared.defaultStack = newValue.bridgeToSwift }
+        get { return CoreStoreDefaults.dataStack.bridgeToObjectiveC }
+        set { CoreStoreDefaults.dataStack = newValue.bridgeToSwift }
     }
     
     

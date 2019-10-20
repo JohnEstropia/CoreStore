@@ -30,7 +30,7 @@ import CoreData
 // MARK: - AsynchronousDataTransaction
 
 /**
- The `AsynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.perform(asynchronous:...)`, or from `CoreStore.perform(synchronous:...)`.
+ The `AsynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.perform(asynchronous:...)`.
  */
 public final class AsynchronousDataTransaction: BaseDataTransaction {
     

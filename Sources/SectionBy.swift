@@ -32,7 +32,7 @@ import CoreData
 /**
  The `SectionBy` clause indicates the key path to use to group the `ListMonitor` objects into sections. An optional closure can also be provided to transform the value into an appropriate section name:
  ```
- let monitor = CoreStore.monitorSectionedList(
+ let monitor = dataStack.monitorSectionedList(
      From<Person>(),
      SectionBy("age") { "Age \($0)" },
      OrderBy(.ascending("lastName"))

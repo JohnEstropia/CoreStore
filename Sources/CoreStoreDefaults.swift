@@ -1,5 +1,5 @@
 //
-//  Shared.swift
+//  CoreStoreDefaults.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -26,19 +26,25 @@
 import Foundation
 
 
-// MARK: - Shared
+// MARK: - CoreStoreDefaults
 
 /**
 Global utilities
 */
-public enum Shared {
+public enum CoreStoreDefaults {
 
     /**
     The `CoreStoreLogger` instance to be used. The default logger is an instance of a `DefaultLogger`.
     */
     public static var logger: CoreStoreLogger = DefaultLogger()
-
-    public static var defaultStack: DataStack {
+    
+    /**
+     The default `DataStack` instance to be used. If `defaultStack` is not set during the first time accessed, a default-configured `DataStack` will be created.
+     - SeeAlso: `DataStack`
+     - Note: Changing `dataStack` is thread safe, but it is recommended to setup `DataStacks` on a common queue (e.g. the main queue).
+     - Important: If `dataStack` is not set during the first time accessed, a default-configured `DataStack` will be created.
+     */
+    public static var dataStack: DataStack {
 
         get {
 

@@ -1,5 +1,5 @@
 //
-//  DiffableDataSource.TableView.swift
+//  DiffableDataSource.TableView-UIKit.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -23,7 +23,7 @@
 //  SOFTWARE.
 //
 
-#if canImport(UIKit)
+#if canImport(UIKit) && (os(iOS) || os(tvOS))
 
 import UIKit
 import CoreData
@@ -41,7 +41,7 @@ extension DiffableDataSource {
      ```
      self.dataSource = DiffableDataSource.TableView<Person>(
          tableView: self.tableView,
-         dataStack: Shared.defaultStack,
+         dataStack: CoreStoreDefaults.dataStack,
          cellProvider: { (tableView, indexPath, person) in
              let cell = tableView.dequeueReusableCell(withIdentifier: "PersonCell") as! PersonCell
              cell.setPerson(person)
@@ -83,7 +83,7 @@ extension DiffableDataSource {
          ```
          self.dataSource = DiffableDataSource.TableView<Person>(
              tableView: self.tableView,
-             dataStack: Shared.defaultStack,
+             dataStack: CoreStoreDefaults.dataStack,
              cellProvider: { (tableView, indexPath, person) in
                  let cell = tableView.dequeueReusableCell(withIdentifier: "PersonCell") as! PersonCell
                  cell.setPerson(person)
@@ -101,31 +101,9 @@ extension DiffableDataSource {
             self.tableView = tableView
             self.cellProvider = cellProvider
             self.dataStack = dataStack
+            self.dispatcher = Internals.DiffableDataUIDispatcher<O>(dataStack: dataStack)
 
             super.init()
-            
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                self.rawDataSource = UITableViewDiffableDataSource<String, O.ObjectID>(
-//                    tableView: tableView,
-//                    cellProvider: { [weak self] (tableView, indexPath, objectID) -> UITableViewCell? in
-//
-//                        guard let self = self else {
-//
-//                            return nil
-//                        }
-//                        guard let object = self.dataStack.fetchExisting(objectID) as O? else {
-//
-//                            return nil
-//                        }
-//                        return self.cellProvider(tableView, indexPath, object)
-//                    }
-//                )
-//            }
-//            else {
-                
-                self.rawDataSource = Internals.DiffableDataUIDispatcher<O>(dataStack: dataStack)
-//            }
 
             tableView.dataSource = self
         }
@@ -159,7 +137,7 @@ extension DiffableDataSource {
 //            }
 //            else {
                 
-                self.legacyDataSource.apply(
+                self.dispatcher.apply(
                     diffableSnapshot as! Internals.DiffableDataSourceSnapshot,
                     view: self.tableView,
                     animatingDifferences: animatingDifferences,
@@ -184,14 +162,7 @@ extension DiffableDataSource {
         @nonobjc
         public func itemID(for indexPath: IndexPath) -> O.ObjectID? {
             
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                return self.modernDataSource.itemIdentifier(for: indexPath)
-//            }
-//            else {
-             
-                return self.legacyDataSource.itemIdentifier(for: indexPath)
-//            }
+            return self.dispatcher.itemIdentifier(for: indexPath)
         }
         
         /**
@@ -203,14 +174,7 @@ extension DiffableDataSource {
         @nonobjc
         public func indexPath(for itemID: O.ObjectID) -> IndexPath? {
             
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                return self.modernDataSource.indexPath(for: itemIdentifier)
-//            }
-//            else {
-             
-                return self.legacyDataSource.indexPath(for: itemID)
-//            }
+            return self.dispatcher.indexPath(for: itemID)
         }
         
         
@@ -219,78 +183,43 @@ extension DiffableDataSource {
         @objc
         public dynamic func numberOfSections(in tableView: UITableView) -> Int {
             
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                return self.modernDataSource.numberOfSections(in: tableView)
-//            }
-//            else {
-             
-                return self.legacyDataSource.numberOfSections()
-//            }
+            return self.dispatcher.numberOfSections()
         }
 
         @objc
         public dynamic func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                return self.modernDataSource.tableView(tableView, numberOfRowsInSection: section)
-//            }
-//            else {
-             
-                return self.legacyDataSource.numberOfItems(inSection: section)
-//            }
+            return self.dispatcher.numberOfItems(inSection: section)
         }
 
         @objc
         open dynamic func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
             
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                return self.modernDataSource.snapshot().sectionIdentifiers[section]
-//            }
-//            else {
-
-                return self.legacyDataSource.sectionIdentifier(inSection: section)
-//            }
+            return self.dispatcher.sectionIdentifier(inSection: section)
         }
 
         @objc
         open dynamic func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
             
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                return self.modernDataSource.tableView(tableView, titleForFooterInSection: section)
-//            }
-//            else {
-
-                return nil
-//            }
+            return nil
         }
         
         @objc
         open dynamic func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                return self.modernDataSource.tableView(tableView, cellForRowAt: indexPath)
-//            }
-//            else {
-             
-                guard let objectID = self.legacyDataSource.itemIdentifier(for: indexPath) else {
-                    
-                    Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) already removed from list")
-                }
-                guard let object = self.dataStack.fetchExisting(objectID) as O? else {
-                    
-                    Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) has been deleted")
-                }
-                guard let cell = self.cellProvider(tableView, indexPath, object) else {
-                    
-                    Internals.abort("\(Internals.typeName(UITableViewDataSource.self)) returned a `nil` cell for \(Internals.typeName(IndexPath.self)) \(indexPath)")
-                }
-                return cell
-//            }
+            guard let objectID = self.dispatcher.itemIdentifier(for: indexPath) else {
+                
+                Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) already removed from list")
+            }
+            guard let object = self.dataStack.fetchExisting(objectID) as O? else {
+                
+                Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) has been deleted")
+            }
+            guard let cell = self.cellProvider(tableView, indexPath, object) else {
+                
+                Internals.abort("\(Internals.typeName(UITableViewDataSource.self)) returned a `nil` cell for \(Internals.typeName(IndexPath.self)) \(indexPath)")
+            }
+            return cell
         }
 
         @objc
@@ -321,19 +250,7 @@ extension DiffableDataSource {
         private let cellProvider: (UITableView, IndexPath, O) -> UITableViewCell?
         
         @nonobjc
-        private var rawDataSource: Any!
-        
-//        @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-//        private var modernDataSource: UITableViewDiffableDataSource<String, O.ObjectID> {
-//
-//            return self.rawDataSource as! UITableViewDiffableDataSource<String, O.ObjectID>
-//        }
-        
-        @nonobjc
-        private var legacyDataSource: Internals.DiffableDataUIDispatcher<O> {
-            
-            return self.rawDataSource as! Internals.DiffableDataUIDispatcher<O>
-        }
+        private let dispatcher: Internals.DiffableDataUIDispatcher<O>
     }
 }
 

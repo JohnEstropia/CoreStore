@@ -6,10 +6,12 @@
 //  Copyright © 2019 John Rommel Estropia. All rights reserved.
 //
 
-#if canImport(SwiftUI)
-
+#if canImport(SwiftUI) && canImport(Combine)
 import SwiftUI
+import Combine
+
 import CoreStore
+
 
 @available(iOS 13.0.0, *)
 struct SwiftUIView: View {

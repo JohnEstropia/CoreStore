@@ -30,7 +30,7 @@ import CoreData
 // MARK: - SynchronousDataTransaction
 
 /**
- The `SynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginSynchronous(_:)`, or from `CoreStore.beginSynchronous(_:)`.
+ The `SynchronousDataTransaction` provides an interface for `DynamicObject` creates, updates, and deletes. A transaction object should typically be only used from within a transaction block initiated from `DataStack.beginSynchronous(_:)`.
  */
 public final class SynchronousDataTransaction: BaseDataTransaction {
     

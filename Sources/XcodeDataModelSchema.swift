@@ -32,7 +32,7 @@ import Foundation
 /**
  The `XcodeDataModelSchema` describes a model version declared in a single *.xcdatamodeld file.
  ```
- CoreStore.defaultStack = DataStack(
+ CoreStoreDefaults.dataStack = DataStack(
      XcodeDataModelSchema(modelName: "MyAppV1", bundle: .main)
  )
  ```
@@ -109,7 +109,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
     /**
      Initializes an `XcodeDataModelSchema` from an *.xcdatamodeld version name and its containing `Bundle`.
      ```
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          XcodeDataModelSchema(modelName: "MyAppV1", bundle: .main)
      )
      ```
@@ -135,7 +135,7 @@ public final class XcodeDataModelSchema: DynamicSchema {
     /**
      Initializes an `XcodeDataModelSchema` from an *.xcdatamodeld file URL.
      ```
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          XcodeDataModelSchema(modelName: "MyAppV1", modelVersionFileURL: fileURL)
      )
      ```

@@ -35,7 +35,7 @@ extension Internals {
     @inline(__always)
     internal static func log(_ level: LogLevel, message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
 
-        Shared.logger.log(
+        CoreStoreDefaults.logger.log(
             level: level,
             message: message,
             fileName: fileName,
@@ -47,7 +47,7 @@ extension Internals {
     @inline(__always)
     internal static func log(_ error: CoreStoreError, _ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
 
-        Shared.logger.log(
+        CoreStoreDefaults.logger.log(
             error: error,
             message: message,
             fileName: fileName,
@@ -59,7 +59,7 @@ extension Internals {
     @inline(__always)
     internal static func assert( _ condition: @autoclosure () -> Bool, _ message: @autoclosure () -> String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) {
 
-        Shared.logger.assert(
+        CoreStoreDefaults.logger.assert(
             condition(),
             message: message(),
             fileName: fileName,
@@ -71,7 +71,7 @@ extension Internals {
     @inline(__always)
     internal static func abort(_ message: String, fileName: StaticString = #file, lineNumber: Int = #line, functionName: StaticString = #function) -> Never  {
 
-        Shared.logger.abort(
+        CoreStoreDefaults.logger.abort(
             message,
             fileName: fileName,
             lineNumber: lineNumber,

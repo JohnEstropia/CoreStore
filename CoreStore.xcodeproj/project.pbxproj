@@ -465,10 +465,10 @@
 		B56321B31BD6521C006C9394 /* NSManagedObjectContext+Setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F321AFF85470064E85B /* NSManagedObjectContext+Setup.swift */; };
 		B56321B41BD6521C006C9394 /* NSManagedObjectContext+Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F331AFF85470064E85B /* NSManagedObjectContext+Transaction.swift */; };
 		B56321B61BD6521C006C9394 /* Internals.WeakObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E84F2D1AFF849C0064E85B /* Internals.WeakObject.swift */; };
-		B5635D142356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */; };
-		B5635D152356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */; };
-		B5635D162356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */; };
-		B5635D172356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */; };
+		B5635D142356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift */; };
+		B5635D152356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift */; };
+		B5635D162356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift */; };
+		B5635D172356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift */; };
 		B56507941D3930BC000596DA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56507931D3930BC000596DA /* CoreData.framework */; };
 		B56507961D3930C1000596DA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56507951D3930C1000596DA /* Foundation.framework */; };
 		B56507981D3930CC000596DA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B56507971D3930CC000596DA /* CoreData.framework */; };
@@ -580,6 +580,11 @@
 		B5A992201EA898720091A2E3 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9921E1EA898710091A2E3 /* UserInfo.swift */; };
 		B5A992211EA898720091A2E3 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9921E1EA898710091A2E3 /* UserInfo.swift */; };
 		B5A992221EA898720091A2E3 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9921E1EA898710091A2E3 /* UserInfo.swift */; };
+		B5AA37F1235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AA37F0235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift */; };
+		B5AA37F2235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AA37F0235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift */; };
+		B5AA37F3235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AA37F0235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift */; };
+		B5AA37F4235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AA37F0235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift */; };
+		B5AA37FD235C3D1A00FFD4B9 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5AA37FC235C3D1A00FFD4B9 /* SwiftUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B5AEFAB51C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
 		B5AEFAB61C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
 		B5AEFAB71C9962AE00AD137F /* CoreStoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */; };
@@ -592,10 +597,10 @@
 		B5BF7FB3234C97910070E741 /* DiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */; };
 		B5BF7FB4234C97910070E741 /* DiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */; };
 		B5BF7FB5234C97910070E741 /* DiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */; };
-		B5BF7FB7234C97CE0070E741 /* DiffableDataSource.TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView.swift */; };
-		B5BF7FB8234C97CE0070E741 /* DiffableDataSource.TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView.swift */; };
-		B5BF7FB9234C97CE0070E741 /* DiffableDataSource.TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView.swift */; };
-		B5BF7FBA234C97CE0070E741 /* DiffableDataSource.TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView.swift */; };
+		B5BF7FB7234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift */; };
+		B5BF7FB8234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift */; };
+		B5BF7FB9234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift */; };
+		B5BF7FBA234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift */; };
 		B5BF7FBC234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FBB234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift */; };
 		B5BF7FBD234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FBB234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift */; };
 		B5BF7FBE234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5BF7FBB234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift */; };
@@ -694,10 +699,10 @@
 		B5DE522C230BD7D500A22534 /* Internals.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522A230BD7CC00A22534 /* Internals.swift */; };
 		B5DE522D230BD7D600A22534 /* Internals.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522A230BD7CC00A22534 /* Internals.swift */; };
 		B5DE522E230BD7D600A22534 /* Internals.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522A230BD7CC00A22534 /* Internals.swift */; };
-		B5DE5230230BDA1300A22534 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522F230BDA1300A22534 /* Shared.swift */; };
-		B5DE5231230BDA1300A22534 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522F230BDA1300A22534 /* Shared.swift */; };
-		B5DE5232230BDA1300A22534 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522F230BDA1300A22534 /* Shared.swift */; };
-		B5DE5233230BDA1300A22534 /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522F230BDA1300A22534 /* Shared.swift */; };
+		B5DE5230230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522F230BDA1300A22534 /* CoreStoreDefaults.swift */; };
+		B5DE5231230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522F230BDA1300A22534 /* CoreStoreDefaults.swift */; };
+		B5DE5232230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522F230BDA1300A22534 /* CoreStoreDefaults.swift */; };
+		B5DE5233230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DE522F230BDA1300A22534 /* CoreStoreDefaults.swift */; };
 		B5E1B5931CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1B5921CAA0C15007FD580 /* CSObjectMonitor.swift */; };
 		B5E1B5951CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1B5921CAA0C15007FD580 /* CSObjectMonitor.swift */; };
 		B5E1B5961CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E1B5921CAA0C15007FD580 /* CSObjectMonitor.swift */; };
@@ -875,7 +880,6 @@
 		82BA18921C4BBCBA00A0916E /* CoreStoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CoreStoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		82BA18DE1C4BBE2600A0916E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		82BA18E01C4BBE2C00A0916E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS9.1.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
-		B500810F2290CDF800F4CEA5 /* bitrise.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = bitrise.yml; sourceTree = SOURCE_ROOT; };
 		B50132292344ECB500FC238B /* ListPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPublisher.swift; sourceTree = "<group>"; };
 		B501322F2346B76E00FC238B /* Internals.FetchedDiffableDataSourceSnapshotDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.FetchedDiffableDataSourceSnapshotDelegate.swift; sourceTree = "<group>"; };
 		B501323623477F9300FC238B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
@@ -969,7 +973,7 @@
 		B563216F1BD65082006C9394 /* CoreStore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CoreStore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56321791BD650DE006C9394 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
 		B563217B1BD650E3006C9394 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSource.CollectionView.swift; sourceTree = "<group>"; };
+		B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DiffableDataSource.CollectionView-UIKit.swift"; sourceTree = "<group>"; };
 		B56507931D3930BC000596DA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
 		B56507951D3930C1000596DA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		B56507971D3930CC000596DA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS3.0.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
@@ -1006,12 +1010,14 @@
 		B5A80DF52212C1BC006096AA /* Playground_iOS.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Playground_iOS.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B5A991EB1E9DC2CE0091A2E3 /* VersionLock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VersionLock.swift; sourceTree = "<group>"; };
 		B5A9921E1EA898710091A2E3 /* UserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
+		B5AA37F0235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "diffableDataSource.CollectionView-AppKit.swift"; sourceTree = "<group>"; };
+		B5AA37FA235C3D1300FFD4B9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS6.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		B5AA37FC235C3D1A00FFD4B9 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS6.0.sdk/System/Library/Frameworks/SwiftUI.framework; sourceTree = DEVELOPER_DIR; };
 		B5AD60CD1C90141E00F2B2E8 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = SOURCE_ROOT; };
 		B5AEFAB41C9962AE00AD137F /* CoreStoreBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreStoreBridge.swift; sourceTree = "<group>"; };
-		B5BDC9271C2024F2008147CD /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = SOURCE_ROOT; };
 		B5BF7FAC234C41E90070E741 /* Internals.DiffableDataSourceSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.DiffableDataSourceSnapshot.swift; sourceTree = "<group>"; };
 		B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSource.swift; sourceTree = "<group>"; };
-		B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSource.TableView.swift; sourceTree = "<group>"; };
+		B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DiffableDataSource.TableView-UIKit.swift"; sourceTree = "<group>"; };
 		B5BF7FBB234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.DiffableDataUIDispatcher.swift; sourceTree = "<group>"; };
 		B5BF7FC0234D7B2E0070E741 /* ObjectPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectPublisher.swift; sourceTree = "<group>"; };
 		B5BF7FC5234D7E460070E741 /* ObjectSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectSnapshot.swift; sourceTree = "<group>"; };
@@ -1046,7 +1052,7 @@
 		B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MigrationChainTests.swift; sourceTree = "<group>"; };
 		B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StorageInterfaceTests.swift; sourceTree = "<group>"; };
 		B5DE522A230BD7CC00A22534 /* Internals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.swift; sourceTree = "<group>"; };
-		B5DE522F230BDA1300A22534 /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
+		B5DE522F230BDA1300A22534 /* CoreStoreDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreStoreDefaults.swift; sourceTree = "<group>"; };
 		B5E1B5921CAA0C15007FD580 /* CSObjectMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSObjectMonitor.swift; sourceTree = "<group>"; };
 		B5E1B5971CAA0C23007FD580 /* CSObjectObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSObjectObserver.swift; sourceTree = "<group>"; };
 		B5E1B59C1CAA2568007FD580 /* CSDataStack+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CSDataStack+Observing.swift"; sourceTree = "<group>"; };
@@ -1141,8 +1147,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B501323F23477FE800FC238B /* SwiftUI.framework in Frameworks */,
 				B501323D23477FD500FC238B /* UIKit.framework in Frameworks */,
+				B501323F23477FE800FC238B /* SwiftUI.framework in Frameworks */,
 				B56507961D3930C1000596DA /* Foundation.framework in Frameworks */,
 				B56507941D3930BC000596DA /* CoreData.framework in Frameworks */,
 			);
@@ -1179,6 +1185,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5AA37FD235C3D1A00FFD4B9 /* SwiftUI.framework in Frameworks */,
 				B565079A1D3930D1000596DA /* Foundation.framework in Frameworks */,
 				B56507981D3930CC000596DA /* CoreData.framework in Frameworks */,
 			);
@@ -1229,11 +1236,9 @@
 			children = (
 				2F03A53419C5C6DA005002A5 /* Info.plist */,
 				B5E84ED81AFF82360064E85B /* README.md */,
-				B500810F2290CDF800F4CEA5 /* bitrise.yml */,
 				B5E84ED91AFF82360064E85B /* LICENSE */,
 				B5D9C8F61B160ED200E64F0E /* CoreStore.podspec */,
 				B5D2D5A91F7558CB00A4DE67 /* .cocoapods.yml */,
-				B5BDC9271C2024F2008147CD /* .travis.yml */,
 				B524E78721CA20AC00BEB794 /* .jazzy.yaml */,
 				B5AD60CD1C90141E00F2B2E8 /* Package.swift */,
 			);
@@ -1287,6 +1292,8 @@
 		2F291E3119C6D4D3007AF63F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B5AA37FC235C3D1A00FFD4B9 /* SwiftUI.framework */,
+				B5AA37FA235C3D1300FFD4B9 /* UIKit.framework */,
 				B501323E23477FE800FC238B /* SwiftUI.framework */,
 				B501323C23477FD500FC238B /* UIKit.framework */,
 				B501323A23477FB600FC238B /* AppKit.framework */,
@@ -1513,7 +1520,7 @@
 			isa = PBXGroup;
 			children = (
 				2F291E2619C6D3CF007AF63F /* CoreStore.swift */,
-				B5DE522F230BDA1300A22534 /* Shared.swift */,
+				B5DE522F230BDA1300A22534 /* CoreStoreDefaults.swift */,
 				B5D1E22B19FA9FBC003B2874 /* CoreStoreError.swift */,
 				B549F6721E56A92800FBAB2D /* CoreDataNativeType.swift */,
 				B5D339F01E94AF5800C880DE /* CoreStoreStrings.swift */,
@@ -1595,8 +1602,9 @@
 				B50EE14123473C92009B8C47 /* CoreStoreObject+DataSources.swift */,
 				B5D8CA752346E7590055D7D1 /* DataStack+DataSources.swift */,
 				B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */,
-				B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView.swift */,
-				B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView.swift */,
+				B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift */,
+				B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift */,
+				B5AA37F0235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift */,
 			);
 			name = DataSources;
 			sourceTree = "<group>";
@@ -2076,8 +2084,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5DE5230230BDA1300A22534 /* Shared.swift in Sources */,
-				B55BB4DB23503B9700C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
+				B5DE5230230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
 				B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */,
 				B5ECDBF91CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
 				B5CA2B081F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
@@ -2102,17 +2109,19 @@
 				B52FD3AA1E3B3EF10001D919 /* NSManagedObject+Logging.swift in Sources */,
 				B52F74411E9B8724005F3DAC /* UnsafeDataModelSchema.swift in Sources */,
 				B51FE5AB1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
+				B55BB4DB23503B9700C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
 				B5A9921F1EA898710091A2E3 /* UserInfo.swift in Sources */,
 				B54A6A551BA15F2A007870FD /* Internals.FetchedResultsControllerDelegate.swift in Sources */,
 				B5D339E21E948C3600C880DE /* Value.swift in Sources */,
 				B5A261211B64BFDB006EB6D3 /* MigrationType.swift in Sources */,
 				B53FBA0B1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,
 				B5E84F141AFF847B0064E85B /* DataStack+Querying.swift in Sources */,
+				B5AA37F1235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift in Sources */,
 				B5D7A5B61CA3BF8F005C752B /* CSInto.swift in Sources */,
 				B56007141B3F6C2800A9A8F9 /* SectionBy.swift in Sources */,
 				B5DE522B230BD7CC00A22534 /* Internals.swift in Sources */,
 				B5E84F371AFF85470064E85B /* NSManagedObjectContext+Transaction.swift in Sources */,
-				B5BF7FB7234C97CE0070E741 /* DiffableDataSource.TableView.swift in Sources */,
+				B5BF7FB7234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */,
 				B5ECDC1D1CA81A2100C7F112 /* CSDataStack+Querying.swift in Sources */,
 				B5C976E31C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B53FBA121CAB63CB00F0D40A /* Progress+ObjectiveC.swift in Sources */,
@@ -2137,7 +2146,7 @@
 				B56923F01EB827F6007C4DC9 /* XcodeSchemaMappingProvider.swift in Sources */,
 				B5E84F121AFF847B0064E85B /* OrderBy.swift in Sources */,
 				B546F9581C99B17400D5AC55 /* CSCoreStore+Setup.swift in Sources */,
-				B5635D142356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */,
+				B5635D142356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift in Sources */,
 				B5E84F361AFF85470064E85B /* NSManagedObjectContext+Setup.swift in Sources */,
 				B5FAD6AE1B518DCB00714891 /* CoreStore+Migration.swift in Sources */,
 				B50E175223517C6B004F033C /* Internals.DiffableDataUIDispatcher.Changeset.swift in Sources */,
@@ -2301,7 +2310,7 @@
 			files = (
 				82BA18B61C4BBD3F00A0916E /* DataStack+Querying.swift in Sources */,
 				B5ECDBFB1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
-				B5635D152356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */,
+				B5635D152356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift in Sources */,
 				B5CA2B091F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5C976E81C6E3A5D00B1AF90 /* Internals.CoreStoreFetchedResultsController.swift in Sources */,
 				B56923F61EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
@@ -2393,7 +2402,7 @@
 				82BA18C91C4BBD5900A0916E /* MigrationType.swift in Sources */,
 				B5D8CA772346EAEE0055D7D1 /* DataStack+DataSources.swift in Sources */,
 				82BA18D01C4BBD7100A0916E /* Internals.MigrationManager.swift in Sources */,
-				B5DE5231230BDA1300A22534 /* Shared.swift in Sources */,
+				B5DE5231230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
 				B52F74461E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */,
 				82BA18C61C4BBD5900A0916E /* DataStack+Migration.swift in Sources */,
 				B59851491C90289D00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
@@ -2459,6 +2468,7 @@
 				B52F743E1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
 				18166884232B9ED00097C275 /* KeyPath+KeyPaths.swift in Sources */,
 				B5E8A72121C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
+				B5AA37F2235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift in Sources */,
 				B50E175D2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D162227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
 				B501322B2346A9AE00FC238B /* ListPublisher.swift in Sources */,
@@ -2476,7 +2486,7 @@
 				B5D339E81E9493A500C880DE /* Entity.swift in Sources */,
 				B5BF7FC7234D7E460070E741 /* ObjectSnapshot.swift in Sources */,
 				82BA18CC1C4BBD6400A0916E /* Progress+Convenience.swift in Sources */,
-				B5BF7FB8234C97CE0070E741 /* DiffableDataSource.TableView.swift in Sources */,
+				B5BF7FB8234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */,
 				82BA18C01C4BBD5300A0916E /* DataStack+Observing.swift in Sources */,
 				82BA18A61C4BBD2900A0916E /* DefaultLogger.swift in Sources */,
 			);
@@ -2523,7 +2533,7 @@
 			files = (
 				B5220E1E1D13080D009BC71E /* CSListMonitor.swift in Sources */,
 				B5DBE2D01C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
-				B5635D172356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */,
+				B5635D172356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift in Sources */,
 				B5CA2B0B1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B56923F81EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
 				B52DD1BE1BE1F94300949AFE /* Progress+Convenience.swift in Sources */,
@@ -2615,7 +2625,7 @@
 				B5ECDC091CA8138100C7F112 /* CSOrderBy.swift in Sources */,
 				B5D8CA792346EAEF0055D7D1 /* DataStack+DataSources.swift in Sources */,
 				B56923C71EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
-				B5DE5233230BDA1300A22534 /* Shared.swift in Sources */,
+				B5DE5233230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
 				B52DD1A51BE1F92F00949AFE /* ImportableUniqueObject.swift in Sources */,
 				B5E222271CA4E12600BA2E95 /* CSSynchronousDataTransaction.swift in Sources */,
 				B52F74481E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */,
@@ -2681,6 +2691,7 @@
 				B52F74401E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
 				18166886232B9ED20097C275 /* KeyPath+KeyPaths.swift in Sources */,
 				B5E8A72321C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
+				B5AA37F4235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift in Sources */,
 				B50E175F2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D182227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
 				B501322E2346A9B100FC238B /* ListPublisher.swift in Sources */,
@@ -2698,7 +2709,7 @@
 				B5D339EA1E9493A500C880DE /* Entity.swift in Sources */,
 				B5BF7FC9234D7E460070E741 /* ObjectSnapshot.swift in Sources */,
 				B52DD1AA1BE1F93500949AFE /* TypeErasedClauses.swift in Sources */,
-				B5BF7FBA234C97CE0070E741 /* DiffableDataSource.TableView.swift in Sources */,
+				B5BF7FBA234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */,
 				B53FBA021CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B51FE5AF1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
 			);
@@ -2745,7 +2756,7 @@
 			files = (
 				B56321A91BD65219006C9394 /* Progress+Convenience.swift in Sources */,
 				B5ECDBFC1CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
-				B5635D162356C39500B80E6B /* DiffableDataSource.CollectionView.swift in Sources */,
+				B5635D162356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift in Sources */,
 				B5CA2B0A1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B5C976E91C6E3A5E00B1AF90 /* Internals.CoreStoreFetchedResultsController.swift in Sources */,
 				B56923F71EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
@@ -2838,7 +2849,7 @@
 				B5D8CA782346EAEF0055D7D1 /* DataStack+DataSources.swift in Sources */,
 				B56923C61EB823B4007C4DC9 /* NSEntityDescription+Migration.swift in Sources */,
 				B56321A71BD65216006C9394 /* MigrationResult.swift in Sources */,
-				B5DE5232230BDA1300A22534 /* Shared.swift in Sources */,
+				B5DE5232230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
 				B598514A1C90289E00C99590 /* NSPersistentStoreCoordinator+Setup.swift in Sources */,
 				B52F74471E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */,
 				B5FEC1901C9166E700532541 /* NSPersistentStore+Setup.swift in Sources */,
@@ -2903,6 +2914,7 @@
 				B52F743F1E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
 				18166885232B9ED10097C275 /* KeyPath+KeyPaths.swift in Sources */,
 				B5E8A72221C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
+				B5AA37F3235C28EE00FFD4B9 /* diffableDataSource.CollectionView-AppKit.swift in Sources */,
 				B50E175E2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D172227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
 				B501322D2346A9B000FC238B /* ListPublisher.swift in Sources */,
@@ -2920,7 +2932,7 @@
 				B5D339E91E9493A500C880DE /* Entity.swift in Sources */,
 				B5BF7FC8234D7E460070E741 /* ObjectSnapshot.swift in Sources */,
 				B56321A41BD65216006C9394 /* CoreStore+Migration.swift in Sources */,
-				B5BF7FB9234C97CE0070E741 /* DiffableDataSource.TableView.swift in Sources */,
+				B5BF7FB9234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */,
 				B56321A01BD65216006C9394 /* ObjectObserver.swift in Sources */,
 				B56321951BD65216006C9394 /* TypeErasedClauses.swift in Sources */,
 			);

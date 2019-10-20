@@ -41,7 +41,7 @@ import SwiftUI
 /**
  `ListPublisher` tracks a diffable list of `DynamicObject` instances. Unlike `ListMonitor`s, `ListPublisher` are more lightweight and access objects lazily. Objects that need to be notified of `ListPublisher` changes may register themselves to its `addObserver(_:_:)` method:
  ```
- let listPublisher = Shared.defaultStack.listPublisher(
+ let listPublisher = CoreStoreDefaults.dataStack.listPublisher(
      From<Person>()
          .where(\.title == "Engineer")
          .orderBy(.ascending(\.lastName))
@@ -55,7 +55,7 @@ import SwiftUI
  
  `ListPublisher`s may optionally be created with sections:
  ```
- let listPublisher = Shared.defaultStack.listPublisher(
+ let listPublisher = CoreStoreDefaults.dataStack.listPublisher(
      From<Person>()
          .sectionBy(\.age") { "Age \($0)" }
          .where(\.title == "Engineer")

@@ -568,10 +568,4 @@ extension Internals {
 }
 
 
-// MARK: - NSDiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol
-
-@available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 15.0, *)
-extension NSDiffableDataSourceSnapshot: DiffableDataSourceSnapshotProtocol where SectionIdentifierType == String, ItemIdentifierType == NSManagedObjectID {}
-
-
 #endif

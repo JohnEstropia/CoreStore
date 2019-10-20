@@ -43,7 +43,7 @@ import Foundation
      let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
  }
  
- CoreStore.defaultStack = DataStack(
+ CoreStoreDefaults.dataStack = DataStack(
      CoreStoreSchema(
          modelVersion: "V1",
          entities: [
@@ -76,7 +76,7 @@ public final class CoreStoreSchema: DynamicSchema {
          let pet = Relationship.ToOne<Animal>("pet", inverse: { $0.master })
      }
      
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          CoreStoreSchema(
              modelVersion: "V1",
              entities: [
@@ -120,7 +120,7 @@ public final class CoreStoreSchema: DynamicSchema {
          let name = Value.Required<String>("name", initial: "")
      }
      
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          CoreStoreSchema(
              modelVersion: "V1",
              entityConfigurations: [

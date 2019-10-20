@@ -32,7 +32,7 @@ import CoreData
 /**
  The `ListMonitor` monitors changes to a list of `DynamicObject` instances. Observers that implement the `ListObserver` protocol may then register themselves to the `ListMonitor`'s `addObserver(_:)` method:
  ```
- let monitor = CoreStore.monitorList(
+ let monitor = dataStack.monitorList(
      From<Person>(),
      Where("title", isEqualTo: "Engineer"),
      OrderBy(.ascending("lastName"))
@@ -50,7 +50,7 @@ import CoreData
  
  Creating a sectioned-list is also possible with the `monitorSectionedList(...)` method:
  ```
- let monitor = CoreStore.monitorSectionedList(
+ let monitor = dataStack.monitorSectionedList(
      From<Person>(),
      SectionBy("age") { "Age \($0)" },
      Where("title", isEqualTo: "Engineer"),

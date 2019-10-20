@@ -13,13 +13,19 @@ import CoreStore
 import SwiftUI
 
 #endif
+
+#if canImport(Combine)
+import Combine
+
+#endif
+
 import Compression
 final class SwiftUIContainerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        #if canImport(SwiftUI)
+        #if canImport(SwiftUI) && canImport(Combine)
         
         if #available(iOS 13, *) {
             

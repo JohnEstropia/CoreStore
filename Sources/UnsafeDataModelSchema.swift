@@ -37,7 +37,7 @@ public final class UnsafeDataModelSchema: DynamicSchema {
     /**
      Initializes a `UnsafeDataModelSchema` from an `NSManagedObjectModel`.
      ```
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          UnsafeDataModelSchema(modelName: "MyAppV1", model: model)
      )
      ```

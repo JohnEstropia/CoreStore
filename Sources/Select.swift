@@ -57,7 +57,7 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
     /**
      Provides a `SelectTerm` to a `Select` clause for querying an entity attribute. A shorter way to do the same is to assign from the string keypath directly:
      ```
-     let fullName = CoreStore.queryValue(
+     let fullName = dataStack.queryValue(
          From<MyPersonEntity>(),
          Select<String>(.attribute("fullName")),
          Where("employeeID", isEqualTo: 1111)
@@ -65,7 +65,7 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
      ```
      is equivalent to:
      ```
-     let fullName = CoreStore.queryValue(
+     let fullName = dataStack.queryValue(
          From<MyPersonEntity>(),
          Select<String>("fullName"),
          Where("employeeID", isEqualTo: 1111)
@@ -82,7 +82,7 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
     /**
      Provides a `SelectTerm` to a `Select` clause for querying the average value of an attribute.
      ```
-     let averageAge = CoreStore.queryValue(
+     let averageAge = dataStack.queryValue(
          From<MyPersonEntity>(),
          Select<Int>(.average("age"))
      )
@@ -104,7 +104,7 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
     /**
      Provides a `SelectTerm` to a `Select` clause for a count query.
      ```
-     let numberOfEmployees = CoreStore.queryValue(
+     let numberOfEmployees = dataStack.queryValue(
          From<MyPersonEntity>(),
          Select<Int>(.count("employeeID"))
      )
@@ -126,7 +126,7 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
     /**
      Provides a `SelectTerm` to a `Select` clause for querying the maximum value for an attribute.
      ```
-     let maximumAge = CoreStore.queryValue(
+     let maximumAge = dataStack.queryValue(
          From<MyPersonEntity>(),
          Select<Int>(.maximum("age"))
      )
@@ -148,7 +148,7 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
     /**
      Provides a `SelectTerm` to a `Select` clause for querying the minimum value for an attribute.
      ```
-     let minimumAge = CoreStore.queryValue(
+     let minimumAge = dataStack.queryValue(
          From<MyPersonEntity>(),
          Select<Int>(.minimum("age"))
      )
@@ -170,7 +170,7 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
     /**
      Provides a `SelectTerm` to a `Select` clause for querying the sum value for an attribute.
      ```
-     let totalAge = CoreStore.queryValue(
+     let totalAge = dataStack.queryValue(
          From<MyPersonEntity>(),
          Select<Int>(.sum("age"))
      )
@@ -192,7 +192,7 @@ public enum SelectTerm<D: DynamicObject>: ExpressibleByStringLiteral, Hashable {
     /**
      Provides a `SelectTerm` to a `Select` clause for querying the `NSManagedObjectID`.
      ```
-     let objectID = CoreStore.queryValue(
+     let objectID = dataStack.queryValue(
          From<MyPersonEntity>(),
          Select<NSManagedObjectID>(),
          Where("employeeID", isEqualTo: 1111)
@@ -651,14 +651,14 @@ extension SelectTerm where D: CoreStoreObject {
  
  You can bind the return type by specializing the initializer:
  ```
- let maximumAge = CoreStore.queryValue(
+ let maximumAge = dataStack.queryValue(
      From<MyPersonEntity>(),
      Select<Int>(.maximum("age"))
  )
  ```
  or by casting the type of the return value:
  ```
- let maximumAge: Int = CoreStore.queryValue(
+ let maximumAge: Int = dataStack.queryValue(
      From<MyPersonEntity>(),
      Select(.maximum("age"))
  )

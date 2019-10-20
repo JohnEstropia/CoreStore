@@ -32,7 +32,7 @@ import CoreData
 /**
  The `ObjectMonitor` monitors changes to a single `DynamicObject` instance. Observers that implement the `ObjectObserver` protocol may then register themselves to the `ObjectMonitor`'s `addObserver(_:)` method:
  ```
- let monitor = CoreStore.monitorObject(object)
+ let monitor = dataStack.monitorObject(object)
  monitor.addObserver(self)
  ```
  The created `ObjectMonitor` instance needs to be held on (retained) for as long as the object needs to be observed.

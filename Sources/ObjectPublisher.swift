@@ -41,7 +41,7 @@ import SwiftUI
 /**
  The `ObjectPublisher` tracks changes to a single `DynamicObject` instance. Objects that need to be notified of `ObjectPublisher` changes may register themselves to its `addObserver(_:_:)` method:
  ```
- let objectPublisher = Shared.defaultStack.objectPublisher(object)
+ let objectPublisher = CoreStoreDefaults.dataStack.objectPublisher(object)
  objectPublisher.addObserver(self) { (objectPublisher) in
      // Handle changes
  }
@@ -307,6 +307,7 @@ extension ObjectPublisher {
         #if canImport(Combine)
 
         #if canImport(SwiftUI)
+        
         withAnimation {
 
             self.objectWillChange.send()

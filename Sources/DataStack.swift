@@ -63,7 +63,7 @@ public final class DataStack: Equatable {
     /**
      Convenience initializer for `DataStack` that creates a `SchemaHistory` from a list of `DynamicSchema` versions.
      ```
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          XcodeDataModelSchema(modelName: "MyModelV1"),
          CoreStoreSchema(
              modelVersion: "MyModelV2",
@@ -92,7 +92,7 @@ public final class DataStack: Equatable {
     /**
      Initializes a `DataStack` from a `SchemaHistory` instance.
      ```
-     CoreStore.defaultStack = DataStack(
+     CoreStoreDefaults.dataStack = DataStack(
          schemaHistory: SchemaHistory(
              XcodeDataModelSchema(modelName: "MyModelV1"),
              CoreStoreSchema(
@@ -472,7 +472,7 @@ public final class DataStack: Equatable {
      enum Static {
         static var myDataKey: Void?
      }
-     CoreStore.defaultStack.userInfo[&Static.myDataKey] = myObject
+     CoreStoreDefaults.dataStack.userInfo[&Static.myDataKey] = myObject
      ```
      - Important: Do not use this method to store thread-sensitive data.
      */

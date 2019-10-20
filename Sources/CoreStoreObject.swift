@@ -45,7 +45,7 @@ import Foundation
  ```
  `CoreStoreObject` entities for a model version should be added to `CoreStoreSchema` instance.
  ```
- CoreStore.defaultStack = DataStack(
+ CoreStoreDefaults.dataStack = DataStack(
      CoreStoreSchema(
          modelVersion: "V1",
          entities: [

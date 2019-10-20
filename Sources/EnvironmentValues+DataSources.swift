@@ -23,9 +23,12 @@
 //  SOFTWARE.
 //
 
-#if canImport(SwiftUI)
+#if canImport(SwiftUI) && canImport(Combine)
 
 import SwiftUI
+import Combine
+
+import CoreData
 
 
 // MARK: - EnvironmentValues
@@ -64,7 +67,7 @@ extension EnvironmentValues {
         
         fileprivate static var defaultValue: DataStack {
             
-            return Shared.defaultStack
+            return CoreStoreDefaults.dataStack
         }
     }
 }
