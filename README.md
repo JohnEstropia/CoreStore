@@ -1398,15 +1398,15 @@ These are all implemented with `CustomDebugStringConvertible.debugDescription`, 
 
 CoreStore provides type-safe wrappers for observing managed objects:
 
-| | *ListMonitor* | 🆕*ListPublisher* | *ObjectMonitor* | 🆕*ObjectPublisher* |
+| | 🆕[*ObjectPublisher*](#observe-a-single-objects-updates) | [*ObjectMonitor*](#observe-a-single-objects-per-property-updates) | 🆕[*ListPublisher*](#observe-a-diffable-list) | [*ListMonitor*](#observe-detailed-list-changes) |
 | --- | --- | --- | --- | --- |
-| *Number of objects* | N | N | 1 | 1 |
+| *Number of objects* | 1 | 1 | N | N |
 | *Allows multiple observers* | ✅ | ✅ | ✅ | ✅ |
-| *Emits fine-grained changes* | ✅ | ❌ | ✅ | ❌ |
+| *Emits fine-grained changes* | ❌ | ✅ | ❌ | ✅ |
 | *Emits DiffableDataSource snapshots* | ❌ | ✅ | ❌ | ✅ |
-| *Closure callback* | ❌ | ✅ | ❌ | ✅ |
-| *Delegate methods* | ✅ | ❌ | ✅ | ❌ |
-| *SwiftUI support* | ❌ | ✅ | ❌ | ✅ |
+| *Closure callback* | ✅ | ❌ | ✅ | ❌ |
+| *Delegate methods* | ❌ | ✅ | ❌ | ✅ |
+| *SwiftUI support* | ✅ | ❌ | ✅ | ❌ |
 
 ### Observe a single property
 To get notifications for single property changes in an object, there are two methods depending on the object's base class.
@@ -1839,8 +1839,8 @@ Once the version lock is set, any changes in the properties or to the model will
 # Installation
 - Requires:
     - iOS 10 SDK and above
-    - Swift 5.0 (Xcode 10+)
-    - For previous Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1)
+    - Swift 5.1 (Xcode 11+)
+    - For previous Swift versions: [Swift 3.2](https://github.com/JohnEstropia/CoreStore/tree/4.2.3), [Swift 4.2](https://github.com/JohnEstropia/CoreStore/tree/6.2.1), [Swift 5.0](https://github.com/JohnEstropia/CoreStore/tree/6.3.2)
 - Dependencies:
     - *None*
 - Other notes:
