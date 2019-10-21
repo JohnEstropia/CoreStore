@@ -33,6 +33,7 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
 
 ### Features
 
+- 🆕**Backwards-portable DiffableDataSources implementation!** `UITableViews` and `UICollectionViews` now have a new ally: `ListPublisher`s provide diffable snapshots that make reloading animations very easy and very safe. Say goodbye to `UITableViews` and `UICollectionViews` reload errors!
 - **💎Tight design around Swift’s code elegance and type safety.** CoreStore fully utilizes Swift's community-driven language features.
 - **🚦Safer concurrency architecture.** CoreStore makes it hard to fall into common concurrency mistakes. The main `NSManagedObjectContext` is strictly read-only, while all updates are done through serial *transactions*. *(See [Saving and processing transactions](#saving-and-processing-transactions))*
 - **🔍Clean fetching and querying API.** Fetching objects is easy, but querying for raw aggregates (`min`, `max`, etc.) and raw property values is now just as convenient. *(See [Fetching and querying](#fetching-and-querying))*
@@ -87,9 +88,9 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
     - [Logging and error reporting](#logging-and-error-reporting)
     - [Observing changes and notifications](#observing-changes-and-notifications)
         - [Observe a single property](#observe-a-single-property)
-        - [Observe a single object's updates](#observe-a-single-objects-updates)
+        - 🆕[Observe a single object's updates](#observe-a-single-objects-updates)
         - [Observe a single object's per-property updates](#observe-a-single-objects-per-property-updates)
-        - [Observe a diffable list](#observe-a-diffable-list)
+        - 🆕[Observe a diffable list](#observe-a-diffable-list)
         - [Observe detailed list changes](#observe-detailed-list-changes)
     - [Objective-C support](#objective-c-support)
     - [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects)
