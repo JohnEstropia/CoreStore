@@ -59,6 +59,7 @@ extension DiffableDataSource {
      }
      ```
      `DiffableDataSource.TableView` fully handles the reload animations. To turn change the default animation, set the `defaultRowAnimation`.
+     - SeeAlso: CoreStore's DiffableDataSource implementation is based on https://github.com/ra1028/DiffableDataSources
      */
     open class TableView<O: DynamicObject>: NSObject, UITableViewDataSource {
         
@@ -261,6 +262,7 @@ extension UITableView {
 
     // MARK: FilePrivate
     
+    // Implementation based on https://github.com/ra1028/DiffableDataSources
     @nonobjc
     fileprivate func reload<C, O>(
         using stagedChangeset: Internals.DiffableDataUIDispatcher<O>.StagedChangeset<C>,
@@ -282,6 +284,7 @@ extension UITableView {
         )
     }
     
+    // Implementation based on https://github.com/ra1028/DiffableDataSources
     @nonobjc
     fileprivate func reload<C, O>(
         using stagedChangeset: Internals.DiffableDataUIDispatcher<O>.StagedChangeset<C>,

@@ -33,7 +33,8 @@ import Foundation
 extension Internals.DiffableDataUIDispatcher {
     
     // MARK: - StagedChangeset
-
+    
+    // Implementation based on https://github.com/ra1028/DifferenceKit
     internal struct StagedChangeset<C: Collection>: ExpressibleByArrayLiteral, Equatable, RandomAccessCollection, RangeReplaceableCollection where C: Equatable {
         
         @usableFromInline

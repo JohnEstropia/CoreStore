@@ -87,8 +87,10 @@ CoreStore was (and is) heavily shaped by real-world needs of developing data-dep
     - [Logging and error reporting](#logging-and-error-reporting)
     - [Observing changes and notifications](#observing-changes-and-notifications)
         - [Observe a single property](#observe-a-single-property)
-        - [Observe a single object](#observe-a-single-object)
-        - [Observe a list of objects](#observe-a-list-of-objects)
+        - [Observe a single object's updates](#observe-a-single-objects-updates)
+        - [Observe a single object's per-property updates](#observe-a-single-objects-per-property-updates)
+        - [Observe a diffable list](#observe-a-diffable-list)
+        - [Observe detailed list changes](#observe-detailed-list-changes)
     - [Objective-C support](#objective-c-support)
     - [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects)
         - [`VersionLock`s](#versionlocks)
@@ -174,15 +176,15 @@ If you are already familiar with the inner workings of CoreData, here is a mappi
 
 | *Core Data* | *CoreStore* |
 | --- | --- |
-| `NSManagedObjectModel` / `NSPersistentStoreCoordinator`<br />(.xcdatamodeld file) | `DataStack` |
-| `NSPersistentStore`<br />("Configuration"s in the .xcdatamodeld file) | `StorageInterface` implementations<br />(`InMemoryStore`, `SQLiteStore`, `ICloudStore`) |
+| `NSPersistentContainer`<br />(.xcdatamodeld file) | `DataStack` |
+| `NSPersistentStoreDescription`<br />("Configuration"s in the .xcdatamodeld file) | `StorageInterface` implementations<br />(`InMemoryStore`, `SQLiteStore`) |
 | `NSManagedObjectContext` | `BaseDataTransaction` subclasses<br />(`SynchronousDataTransaction`, `AsynchronousDataTransaction`, `UnsafeDataTransaction`) |
 
 A lot of Core Data wrapper libraries set up their `NSManagedObjectContext`s this way:
 
 <img src="https://cloud.githubusercontent.com/assets/3029684/16707160/984ef25c-4600-11e6-869f-8db7d2c63668.png" alt="nested contexts" height=380 />
 
-Nesting saves from child context to the root context ensures maximum data integrity between contexts without blocking the main queue. But <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">in reality</a>, merging contexts is still by far faster than saving contexts. CoreStore's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context, and only allows changes to be made within *transactions* on the child context:
+Nesting saves from child context to the root context ensures maximum data integrity between contexts without blocking the main queue. But <a href="http://floriankugler.com/2013/04/29/concurrent-core-data-stack-performance-shootout/">in reality</a>, merging contexts is still by far faster than saving contexts. CoreStore's `DataStack` takes the best of both worlds by treating the main `NSManagedObjectContext` as a read-only context (or "viewContext"), and only allows changes to be made within *transactions* on the child context:
 
 <img src="https://cloud.githubusercontent.com/assets/3029684/16707161/9adeb962-4600-11e6-8bc8-4ec85764dba4.png" alt="nested contexts and merge hybrid" height=292 />
 
@@ -242,7 +244,7 @@ class MyViewController: UIViewController {
         }
     }
     func methodToBeCalledLaterOn() {
-        let objects = self.dataStack.fetchAll(From(MyEntity))
+        let objects = self.dataStack.fetchAll(From<MyEntity>())
         print(objects)
     }
 }
@@ -250,7 +252,7 @@ class MyViewController: UIViewController {
 
 > 💡By default, CoreStore will initialize `NSManagedObject`s from *.xcdatamodeld* files, but you can create models completely from source code using `CoreStoreObject`s and `CoreStoreSchema`.  To use this feature, refer to [Type-safe `CoreStoreObject`s](#type-safe-corestoreobjects).
 
-Notice that in our previous examples, `addStorageAndWait(_:)` and `addStorage(_:completion:)` both accept either `InMemoryStore`, `SQLiteStore`, or `ICloudStore`. These implement the `StorageInterface` protocol.
+Notice that in our previous examples, `addStorageAndWait(_:)` and `addStorage(_:completion:)` both accept either `InMemoryStore`, or `SQLiteStore`. These implement the `StorageInterface` protocol.
 
 ### In-memory store
 The most basic `StorageInterface` concrete type is the `InMemoryStore`, which just stores objects in memory. Since `InMemoryStore`s always start with a fresh empty data, they do not need any migration information.
@@ -298,16 +300,7 @@ If you have custom `NSIncrementalStore` or `NSAtomicStore` subclasses, you can i
 ## Migrations
 
 ### Declaring model versions
-Until CoreStore 4.0, model versions were always assumed to be declared in *.xcdatamodeld* files. The `DataStack` loads these for us by accepting the *.xcdatamodeld* file name and the `Bundle` where the files can be found:
-```swift
-CoreStoreDefaults.dataStack = DataStack(
-    xcodeModelName: "MyModel",
-    bundle: Bundle.main,
-    migrationChain: ["MyAppModel", "MyAppModelV2", "MyAppModelV3", "MyAppModelV4"]
-)
-```
-
-Starting CoreStore 4.0, model versions are now expressed as a first-class protocol, `DynamicSchema`. CoreStore currently supports the following schema classes:
+Model versions are now expressed as a first-class protocol, `DynamicSchema`. CoreStore currently supports the following schema classes:
 - **`XcodeDataModelSchema`**: a model version with entities loaded from a *.xcdatamodeld* file.
 - **`CoreStoreSchema`**: a model version created with `CoreStoreObject` entities. *(See [Type-safe `CoreStoreObject`s](#type-safe-corestore-objects))*
 - **`UnsafeDataModelSchema`**: a model version created with an existing `NSManagedObjectModel` instance.
@@ -432,7 +425,7 @@ CoreStoreDefaults.dataStack = DataStack(
 
 
 ### Starting migrations
-We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's *~AndWait* suffix suggests though, this method blocks so it should not do long tasks such as store migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.allowSynchronousLightweightMigration` option:
+We have seen `addStorageAndWait(...)` used to initialize our persistent store. As the method name's *~AndWait* suffix suggests though, this method blocks so it should not do long tasks such as data migrations. In fact CoreStore will only attempt a synchronous **lightweight** migration if you explicitly provide the `.allowSynchronousLightweightMigration` option:
 ```swift
 try dataStack.addStorageAndWait(
     SQLiteStore(
@@ -542,11 +535,11 @@ Each `MigrationType` indicates the migration type for each step in the `Migratio
 
 ### Custom migrations
 
-Before CoreStore 4.0, the only way to implement custom migrations is to use Core Data's standard method: declaring entity mappings through *.xcmappingmodel* files. Starting CoreStore 4.0, new ways to declare migration mappings have been added:
+CoreStore offers several ways to declare migration mappings:
 
-- `InferredSchemaMappingProvider`: The default mapping provider which tries to infer model migration between two `DynamicSchema` versions either by searching all *.xcmappingmodel* files from `Bundle.allBundles`, or by relying on lightweight migration if possible.
-- `XcodeSchemaMappingProvider`: A mapping provider which loads entity mappings from *.xcmappingmodel* files in a specified `Bundle`.
 - `CustomSchemaMappingProvider`: A mapping provider that infers mapping initially, but also accepts custom mappings for specified entities. This was added to support custom migrations with `CoreStoreObject`s as well, but may also be used with `NSManagedObject`s.
+- `XcodeSchemaMappingProvider`: A mapping provider which loads entity mappings from *.xcmappingmodel* files in a specified `Bundle`.
+- `InferredSchemaMappingProvider`: The default mapping provider which tries to infer model migration between two `DynamicSchema` versions either by searching all *.xcmappingmodel* files from `Bundle.allBundles`, or by relying on lightweight migration if possible.
 
 These mapping providers conform to `SchemaMappingProvider` and can be passed to `SQLiteStore`'s initializer:
 ```swift
@@ -613,18 +606,7 @@ dataStack.perform(
     }
 )
 ```
-or for the default stack, directly from `CoreStore`:
-```swift
-dataStack.perform(
-    asynchronous: { (transaction) -> Void in
-        // make changes
-    },
-    completion: { (result) -> Void in
-        // ...
-    }
-)
-```
-Transaction blocks automatically save changes once the block completes. To cancel and rollback a transaction, throw a `CoreStoreError.userCancelled` from inside the closure by calling `try transaction.cancel()`:
+Transaction closures automatically save changes once the closures completes. To cancel and rollback a transaction, throw a `CoreStoreError.userCancelled` from inside the closure by calling `try transaction.cancel()`:
 ```swift
 dataStack.perform(
     asynchronous: { (transaction) -> Void in
@@ -907,7 +889,7 @@ dataStack.perform(
 
 
 ## Importing data
-Some times, if not most of the time, the data that we save to Core Data comes from external sources such as web servers or external files. If you have for example a JSON dictionary, you may be extracting values as such:
+Some times, if not most of the time, the data that we save to Core Data comes from external sources such as web servers or external files. If you have a JSON dictionary for example, you may be extracting values as such:
 ```swift
 let json: [String: Any] = // ...
 person.name = json["name"] as? NSString
@@ -1089,7 +1071,7 @@ dataStack.perform(
     completion: { _ in }
 )
 ```
-As with `ImportableObject`, you can control wether to skip importing an object by implementing 
+As with `ImportableObject`, you can control whether to skip importing an object by implementing 
 `shouldInsert(from:in:)` and `shouldUpdate(from:in:)`, or to cancel all objects by `throw`ing an error from the `uniqueID(from:in:)`, `didInsert(from:in:)` or `update(from:in:)` methods.
 
 
@@ -1154,7 +1136,7 @@ var people = dataStack.fetchAll(
     Where<MyPersonEntity>(predicate) // predicate initializer
 )
 ```
-⭐️Starting CoreStore 5.0, `Where` clauses became more type-safe and are now generic types. To avoid verbose repetition of the generic object type, fetch methods now support **Fetch Chain builders**. We can also use Swift's Smart KeyPaths as the `Where` clause expression:
+ `Where` clauses are generic types. To avoid verbose repetition of the generic object type, fetch methods support **Fetch Chain builders**. We can also use Swift's Smart KeyPaths as the `Where` clause expression:
 ```swift
 var people = try dataStack.fetchAll(
     From<MyPersonEntity>()
@@ -1180,7 +1162,7 @@ var mostValuablePeople = try dataStack.fetchAll(
 )
 ```
 As seen above, `OrderBy` accepts a list of `SortKey` enumeration values, which can be either `.ascending` or `.descending`.
-⭐️As with `Where` clauses, CoreStore 5.0 turned `OrderBy` clauses into generic types. To avoid verbose repetition of the generic object type, fetch methods now support **Fetch Chain builders**. We can also use Swift's Smart KeyPaths as the `OrderBy` clause expression:
+As with `Where` clauses, `OrderBy` clauses are also generic types. To avoid verbose repetition of the generic object type, fetch methods support **Fetch Chain builders**. We can also use Swift's Smart KeyPaths as the `OrderBy` clause expression:
 ```swift
 var people = try dataStack.fetchAll(
     From<MyPersonEntity>()
@@ -1251,7 +1233,7 @@ The `Select<T>` clause specifies the target attribute/aggregate key, as well as 
 let johnsAge = try dataStack.queryValue(
     From<MyPersonEntity>(),
     Select<Int>("age"),
-    Where("name == %@", "John Smith")
+    Where<MyPersonEntity>("name == %@", "John Smith")
 )
 ```
 The example above queries the "age" property for the first object that matches the `Where` condition. `johnsAge` will be bound to type `Int?`, as indicated by the `Select<Int>` generic type. For `queryValue(...)`, types that conform to `QueryableAttributeType` are allowed as the return type (and therefore as the generic type for `Select<T>`).
@@ -1263,7 +1245,7 @@ let allAges = try dataStack.queryAttributes(
     Select("age")
 )
 ```
-⭐️Starting CoreStore 5.0, query methods now support **Query Chain builders**. We can also use Swift's Smart KeyPaths to use in the expressions:
+query methods also support **Query Chain builders**. We can also use Swift's Smart KeyPaths to use in the expressions:
 ```swift
 let johnsAge = try dataStack.queryValue(
     From<MyPersonEntity>()
@@ -1357,7 +1339,7 @@ let personJSON = try dataStack.queryAttributes(
     GroupBy("age")
 )
 ```
-⭐️Starting CoreStore 5.0, `GroupBy` clauses are now also generic types and now support **Query Chain builders**. We can also use Swift's Smart KeyPaths to use in the expressions:
+`GroupBy` clauses are also generic types and support **Query Chain builders**. We can also use Swift's Smart KeyPaths to use in the expressions:
 ```swift
 let personJSON = try dataStack.queryAttributes(
     From<MyPersonEntity>()
@@ -1401,8 +1383,7 @@ Take special care when implementing `CoreStoreLogger`'s `assert(...)` and `abort
 - `assert(...)`: The behavior between `DEBUG` and release builds, or `-O` and `-Onone`, are all left to the implementers' responsibility. CoreStore calls `CoreStoreLogger.assert(...)` only for invalid but usually recoverable errors (for example, early validation failures that may cause an error thrown and handled somewhere else)
 - `abort(...)`: This method is *the* last-chance for your app to *synchronously* log a fatal error within CoreStore. The app will be terminated right after this function is called (CoreStore calls `fatalError()` internally)
 
-Starting CoreStore 2.0, all CoreStore types now have very useful (and pretty formatted!) `print(...)` outputs. 
-
+All CoreStore types have very useful (and pretty formatted!) `print(...)` outputs. 
 A couple of examples, `ListMonitor`:
 
 <img width="369" alt="screen shot 2016-07-10 at 22 56 44" src="https://cloud.githubusercontent.com/assets/3029684/16713994/ae06e702-46f1-11e6-83a8-dee48b480bab.png" />
@@ -1417,8 +1398,15 @@ These are all implemented with `CustomDebugStringConvertible.debugDescription`, 
 
 CoreStore provides type-safe wrappers for observing managed objects:
 
-- `ObjectMonitor`: use to monitor changes to a single `NSManagedObject` or `CoreStoreObject` instance (instead of Key-Value Observing)
-- `ListMonitor`: use to monitor changes to a list of `NSManagedObject` or `CoreStoreObject` instances (instead of `NSFetchedResultsController`)
+| | *ListMonitor* | 🆕*ListPublisher* | *ObjectMonitor* | 🆕*ObjectPublisher* |
+| --- | --- | --- | --- | --- |
+| *Number of objects* | N | N | 1 | 1 |
+| *Allows multiple observers* | ✅ | ✅ | ✅ | ✅ |
+| *Emits fine-grained changes* | ✅ | ❌ | ✅ | ❌ |
+| *Emits DiffableDataSource snapshots* | ❌ | ✅ | ❌ | ✅ |
+| *Closure callback* | ❌ | ✅ | ❌ | ✅ |
+| *Delegate methods* | ✅ | ❌ | ✅ | ❌ |
+| *SwiftUI support* | ❌ | ✅ | ❌ | ✅ |
 
 ### Observe a single property
 To get notifications for single property changes in an object, there are two methods depending on the object's base class.
@@ -1439,10 +1427,35 @@ let observer = person.age.observe(options: [.new]) { (person, change)
 
 For both methods, you will need to keep a reference to the returned `observer` for the duration of the observation.  
 
+### Observe a single object's updates
 
-### Observe a single object
+Observers of an  `ObjectPublisher` can receive notifications if any of the object's property changes. You can  create an `ObjectPublisher` from the object directly:
+```swift
+let objectPublisher: ObjectPublisher<Person> = person.asPublisher(in: dataStack)
+```
+or by indexing a `ListPublisher`'s `ListSnapshot`:
+```swift
+let listPublisher: ListPublisher<Person> = // ...
+// ...
+let objectPublisher = listPublisher.snapshot[indexPath]
+```
+(See [`ListPublisher` examples](#observe-a-diffable-list) below)
 
-To observe an object itself as a whole, implement the `ObjectObserver` protocol and specify the `EntityType`:
+To receive notifications, call the  `ObjectPublisher`'s `addObserve(...)` method passing the owner of the callback closure:
+```swift
+objectPublisher.addObserver(self) { [weak self] (objectPublisher) in
+    let snapshot: ObjectSnapshot<Person> = objectPublisher.snapshot
+    // handle changes
+}
+```
+Note that the owner instance will not be retained. You may call `ObjectPublisher.removeObserver(...)` explicitly to stop receiving notifications, but the `ObjectPublisher` also discontinues sending events to deallocated observers.
+
+The `ObjectSnapshot` returned from the `ObjectPublisher.snapshot` property returns a full-copy `struct` of all properties of the object. This is ideal for managing states as they are thread-safe and are not affected by further changes to the actual object.  `ObjectPublisher` automatically updates its `snapshot` value to the latest state of the object. 
+
+
+### Observe a single object's per-property updates
+
+If you need to track specifically which properties change in an object, implement the `ObjectObserver` protocol and specify the `EntityType`:
 ```swift
 class MyViewController: UIViewController, ObjectObserver {
     func objectMonitor(monitor: ObjectMonitor<MyPersonEntity>, willUpdateObject object: MyPersonEntity) {
@@ -1470,8 +1483,51 @@ You can get `ObjectMonitor`'s object through its `object` property. If the objec
 
 While `ObjectMonitor` exposes `removeObserver(...)` as well, it only stores `weak` references of the observers and will safely unregister deallocated observers. 
 
-### Observe a list of objects
-To observe a list of objects, implement one of the `ListObserver` protocols and specify the `EntityType`:
+### Observe a diffable list
+
+Observers of a  `ListPublisher` can receive notifications whenever its fetched result set changes. You can  create a `ListPublisher` by fetching from the `DataStack`:
+```swift
+let listPublisher = dataStack.listPublisher(
+    From<Person>()
+        .sectionBy(\.age") { "Age \($0)" } // sections are optional
+        .where(\.title == "Engineer")
+        .orderBy(.ascending(\.lastName))
+)
+```
+To receive notifications, call the  `ListPublisher`'s `addObserve(...)` method passing the owner of the callback closure:
+```swift
+listPublisher.addObserver(self) { [weak self] (listPublisher) in
+    let snapshot: ListSnapshot<Person> = listPublisher.snapshot
+    // handle changes
+}
+```
+Note that the owner instance will not be retained. You may call `ListPublisher.removeObserver(...)` explicitly to stop receiving notifications, but the `ListPublisher` also discontinues sending events to deallocated observers.
+
+The `ListSnapshot` returned from the `ListPublisher.snapshot` property returns a full-copy `struct` of all sections and `NSManagedObject` items in the list. This is ideal for managing states as they are thread-safe and are not affected by further changes to the result set.  `ListPublisher` automatically updates its `snapshot` value to the latest state of the fetch. 
+
+Unlike  `ListMonitor`s (See [`ListMonitor` examples](#observe-detailed-list-changes) below), a `ListPublisher` does not track detailed inserts, deletes, and moves. In return, a `ListPublisher` is a lot more lightweight and are designed to work well with `DiffableDataSource.TableView`s and `DiffableDataSource.CollectionView`s:
+```swift
+self.dataSource = DiffableDataSource.CollectionView<Person>(
+    collectionView: self.collectionView,
+    dataStack: CoreStoreDefaults.dataStack,
+    cellProvider: { (collectionView, indexPath, person) in
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PersonCell") as! PersonCell
+        cell.setPerson(person)
+        return cell
+    }
+)
+
+// ...
+
+listPublisher.addObserver(self) { [weak self] (listPublisher) in
+   self?.dataSource?.apply(
+       listPublisher.snapshot, animatingDifferences: true
+   )
+}
+```
+
+### Observe detailed list changes
+If you need to track each object's inserts, deletes, moves, and updates, implement one of the `ListObserver` protocols and specify the `EntityType`:
 ```swift
 class MyViewController: UIViewController, ListObserver {
     func listMonitorDidChange(monitor: ListMonitor<MyPersonEntity>) {

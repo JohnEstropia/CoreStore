@@ -54,50 +54,6 @@ extension AsynchronousDataTransaction: CustomDebugStringConvertible, CoreStoreDe
 }
 
 
-// MARK: - CloudStorageOptions
-
-extension CloudStorageOptions: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {
-    
-    // MARK: CustomDebugStringConvertible
-    
-    public var debugDescription: String {
-        
-        return formattedDebugDescription(self)
-    }
-    
-    
-    // MARK: CoreStoreDebugStringConvertible
-    
-    public var coreStoreDumpString: String {
-        
-        var flags = [String]()
-        if self.contains(.recreateLocalStoreOnModelMismatch) {
-            
-            flags.append(".recreateLocalStoreOnModelMismatch")
-        }
-        if self.contains(.allowSynchronousLightweightMigration) {
-            
-            flags.append(".allowSynchronousLightweightMigration")
-        }
-        switch flags.count {
-            
-        case 0:
-            return "[.none]"
-            
-        case 1:
-            return "[.\(flags[0])]"
-            
-        default:
-            var string = "[\n"
-            string.append(flags.joined(separator: ",\n"))
-            string.indent(1)
-            string.append("\n]")
-            return string
-        }
-    }
-}
-
-
 // MARK: - CoreStoreError
 
 extension CoreStoreError: CustomDebugStringConvertible, CoreStoreDebugStringConvertible {

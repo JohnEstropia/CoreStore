@@ -74,38 +74,6 @@ extension CoreStore {
         
         return CoreStoreDefaults.dataStack.addStorage(storage, completion: completion)
     }
-    
-    /**
-     Asynchronously adds a `CloudStorage` to the `CoreStoreDefaults.dataStack`. Migrations are also initiated by default.
-     ```
-     guard let storage = ICloudStore(
-         ubiquitousContentName: "MyAppCloudData",
-         ubiquitousContentTransactionLogsSubdirectory: "logs/config1",
-         ubiquitousContainerID: "iCloud.com.mycompany.myapp.containername",
-         ubiquitousPeerToken: "9614d658014f4151a95d8048fb717cf0",
-         configuration: "Config1",
-         cloudStorageOptions: .recreateLocalStoreOnModelMismatch
-     ) else {
-         // iCloud is not available on the device
-         return
-     }
-     let migrationProgress = dataStack.addStorage(
-         storage,
-         completion: { result in
-             switch result {
-             case .success(let storage): // ...
-             case .failure(let error): // ...
-             }
-         }
-     )
-     ```
-     - parameter storage: the cloud storage
-     - parameter completion: the closure to be executed on the main queue when the process completes, either due to success or failure. The closure's `SetupResult` argument indicates the result. Note that the `CloudStorage` associated to the `SetupResult.success` may not always be the same instance as the parameter argument if a previous `CloudStorage` was already added at the same URL and with the same configuration.
-     */
-    public static func addStorage<T: CloudStorage>(_ storage: T, completion: @escaping (SetupResult<T>) -> Void) {
-        
-        CoreStoreDefaults.dataStack.addStorage(storage, completion: completion)
-    }
 
     /**
      Migrates a local storage to match the `CoreStoreDefaults.dataStack`'s managed object model version. This method does NOT add the migrated store to the data stack.

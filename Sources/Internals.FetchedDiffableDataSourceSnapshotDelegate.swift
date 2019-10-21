@@ -142,38 +142,13 @@ extension Internals {
         @objc
         dynamic func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
 
-            switch type {
-
-            case .update,
-                 .move where indexPath == newIndexPath:
-                let object = anObject as! NSManagedObject
-                self.reloadedItemIDs.append(object.objectID)
-
-            case .insert,
-                 .delete,
-                 .move:
-                 return
-
-            @unknown default:
-                return
-            }
+            let object = anObject as! NSManagedObject
+            self.reloadedItemIDs.append(object.objectID)
         }
 
         func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
 
-            switch type {
-
-            case .update:
-                self.reloadedSectionIDs.append(sectionInfo.name)
-
-            case .insert,
-                 .delete,
-                 .move:
-                return
-
-            @unknown default:
-                return
-            }
+            self.reloadedSectionIDs.append(sectionInfo.name)
         }
         
         

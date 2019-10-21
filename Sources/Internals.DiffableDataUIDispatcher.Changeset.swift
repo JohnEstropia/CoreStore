@@ -34,6 +34,7 @@ extension Internals.DiffableDataUIDispatcher {
     
     // MARK: - ChangeSet
     
+    // Implementation based on https://github.com/ra1028/DifferenceKit
     internal struct Changeset<C: Collection>: Equatable where C: Equatable {
         
         var data: C

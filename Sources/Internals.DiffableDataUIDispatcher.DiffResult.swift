@@ -34,6 +34,7 @@ extension Internals.DiffableDataUIDispatcher {
     
     // MARK: - DiffResult
     
+    // Implementation based on https://github.com/ra1028/DifferenceKit
     @usableFromInline
     internal struct DiffResult<Index> {
         
@@ -209,7 +210,8 @@ extension Internals.DiffableDataUIDispatcher {
         
         
         // MARK: - Trace
-        
+
+        // Implementation based on https://github.com/ra1028/DifferenceKit
         @usableFromInline
         internal struct Trace<Index> {
             
@@ -228,7 +230,8 @@ extension Internals.DiffableDataUIDispatcher {
         
         
         // MARK: - Occurrence
-        
+
+        // Implementation based on https://github.com/ra1028/DifferenceKit
         @usableFromInline
         internal enum Occurrence {
             
@@ -238,7 +241,8 @@ extension Internals.DiffableDataUIDispatcher {
         
         
         // MARK: - IndicesReference
-        
+
+        // Implementation based on https://github.com/ra1028/DifferenceKit
         @usableFromInline
         internal final class IndicesReference {
             
@@ -277,7 +281,8 @@ extension Internals.DiffableDataUIDispatcher {
         
         
         // MARK: - TableKey
-        
+
+        // Implementation based on https://github.com/ra1028/DifferenceKit
         @usableFromInline
         internal struct TableKey<T: Hashable>: Hashable {
             

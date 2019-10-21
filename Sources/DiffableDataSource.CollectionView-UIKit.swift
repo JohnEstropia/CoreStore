@@ -59,6 +59,7 @@ extension DiffableDataSource {
      }
      ```
      `DiffableDataSource.CollectionView` fully handles the reload animations.
+     - SeeAlso: CoreStore's DiffableDataSource implementation is based on https://github.com/ra1028/DiffableDataSources     
      */
     open class CollectionView<O: DynamicObject>: NSObject, UICollectionViewDataSource {
 
@@ -217,7 +218,8 @@ extension DiffableDataSource {
 extension UICollectionView {
 
     // MARK: FilePrivate
-
+    
+    // Implementation based on https://github.com/ra1028/DiffableDataSources
     @nonobjc
     fileprivate func reload<C, O>(
         using stagedChangeset: Internals.DiffableDataUIDispatcher<O>.StagedChangeset<C>,
