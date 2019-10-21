@@ -1248,7 +1248,7 @@
 		2F03A53C19C5C6DA005002A5 /* CoreStoreTests */ = {
 			isa = PBXGroup;
 			children = (
-				B5489F4A1CF5F743008B4978 /* BaseTests */,
+				B5AA37FE235DEBD700FFD4B9 /* BaseTests */,
 				B5DBE2DD1C9939E100B5CEFA /* BridgingTests.h */,
 				B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */,
 				B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */,
@@ -1270,7 +1270,7 @@
 				B596BBAD1DD59FDB001DCDD9 /* ConvenienceTests.swift */,
 				B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */,
 				2F03A53D19C5C6DA005002A5 /* Supporting Files */,
-				B5489F3C1CF5EEBC008B4978 /* TestEntities */,
+				B5AA37FF235DEBF500FFD4B9 /* TestEntities */,
 				B5489F451CF5F017008B4978 /* TransactionTests.swift */,
 				B525577F1D029D2500E51965 /* TweakTests.swift */,
 				B59A51822256C85E00CEF3C5 /* VersionLockTests.swift */,
@@ -1406,24 +1406,6 @@
 			name = StorageInterfaces;
 			sourceTree = "<group>";
 		};
-		B5489F3C1CF5EEBC008B4978 /* TestEntities */ = {
-			isa = PBXGroup;
-			children = (
-				B5489F3D1CF5EEBC008B4978 /* TestEntity1.swift */,
-				B5489F3E1CF5EEBC008B4978 /* TestEntity2.swift */,
-			);
-			path = TestEntities;
-			sourceTree = "<group>";
-		};
-		B5489F4A1CF5F743008B4978 /* BaseTests */ = {
-			isa = PBXGroup;
-			children = (
-				B5489F4B1CF5F743008B4978 /* BaseTestCase.swift */,
-				B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */,
-			);
-			path = BaseTests;
-			sourceTree = "<group>";
-		};
 		B5519A5D1CA20093002BEF78 /* Transactions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1537,6 +1519,24 @@
 				B5E84F291AFF849C0064E85B /* Internals */,
 			);
 			name = Swift;
+			sourceTree = "<group>";
+		};
+		B5AA37FE235DEBD700FFD4B9 /* BaseTests */ = {
+			isa = PBXGroup;
+			children = (
+				B5489F4B1CF5F743008B4978 /* BaseTestCase.swift */,
+				B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */,
+			);
+			name = BaseTests;
+			sourceTree = "<group>";
+		};
+		B5AA37FF235DEBF500FFD4B9 /* TestEntities */ = {
+			isa = PBXGroup;
+			children = (
+				B5489F3D1CF5EEBC008B4978 /* TestEntity1.swift */,
+				B5489F3E1CF5EEBC008B4978 /* TestEntity2.swift */,
+			);
+			name = TestEntities;
 			sourceTree = "<group>";
 		};
 		B5DBE2CB1C99148100B5CEFA /* ObjectiveC */ = {
@@ -3106,6 +3106,10 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 7.0.0;
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3125,6 +3129,10 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MARKETING_VERSION = 7.0.0;
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -3180,6 +3188,10 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3201,6 +3213,10 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -3261,6 +3277,10 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3285,6 +3305,10 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -3346,6 +3370,10 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3369,6 +3397,10 @@
 				GCC_NO_COMMON_BLOCKS = YES;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					Combine,
+				);
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
