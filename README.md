@@ -1404,9 +1404,9 @@ CoreStore provides type-safe wrappers for observing managed objects:
 | *Number of objects* | 1 | 1 | N | N |
 | *Allows multiple observers* | ✅ | ✅ | ✅ | ✅ |
 | *Emits fine-grained changes* | ❌ | ✅ | ❌ | ✅ |
-| *Emits DiffableDataSource snapshots* | ❌ | ✅ | ❌ | ✅ |
-| *Closure callback* | ✅ | ❌ | ✅ | ❌ |
+| *Emits DiffableDataSource snapshots* | ✅ | ❌ | ✅ | ❌ |
 | *Delegate methods* | ❌ | ✅ | ❌ | ✅ |
+| *Closure callback* | ✅ | ❌ | ✅ | ❌ |
 | *SwiftUI support* | ✅ | ❌ | ✅ | ❌ |
 
 ### Observe a single property
