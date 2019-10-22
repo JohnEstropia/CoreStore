@@ -184,24 +184,15 @@ extension Internals {
 
             // MARK: FilePrivate
 
-            fileprivate init() {
-
-                self.executingCount.initialize(to: 0)
-            }
-
-            deinit {
-
-                self.executingCount.deinitialize(count: 1)
-                self.executingCount.deallocate()
-            }
+            fileprivate init() {}
 
             fileprivate func dispatch(_ action: @escaping () -> Void) {
 
-                let count = OSAtomicIncrement32(self.executingCount)
+                let count = self.executingCount.incrementAndGet()
                 if Thread.isMainThread && count == 1 {
 
                     action()
-                    OSAtomicDecrement32(executingCount)
+                    self.executingCount.decrement()
                 }
                 else {
 
@@ -212,7 +203,7 @@ extension Internals {
                             return
                         }
                         action()
-                        OSAtomicDecrement32(self.executingCount)
+                        self.executingCount.decrement()
                     }
                 }
             }
@@ -220,7 +211,42 @@ extension Internals {
 
             // MARK: Private
 
-            private let executingCount: UnsafeMutablePointer<Int32> = .allocate(capacity: 1)
+            private let executingCount: AtomicInt = .init()
+
+            
+            // MARK: - AtomicInt
+            
+            fileprivate class AtomicInt {
+                
+                // MARK: FilePrivate
+
+                fileprivate func incrementAndGet() -> Int {
+
+                    self.lock.wait()
+                    defer {
+                        
+                        self.lock.signal()
+                    }
+                    self.value += 1
+                    return self.value
+                }
+
+                fileprivate func decrement() {
+
+                    self.lock.wait()
+                    defer {
+                        
+                        self.lock.signal()
+                    }
+                    self.value -= 1
+                }
+
+                
+                // MARK: Private
+
+                private let lock = DispatchSemaphore(value: 1)
+                private var value = 0
+            }
         }
         
     }
