@@ -39,16 +39,22 @@ import CoreData
  )
  ```
  */
-public struct QueryChainBuilder<D: DynamicObject, R: SelectResultType>: QueryChainableBuilderType {
+public struct QueryChainBuilder<O: DynamicObject, R: SelectResultType>: QueryChainableBuilderType {
     
     // MARK: QueryChainableBuilderType
     
-    public typealias ObjectType = D
+    public typealias ObjectType = O
     public typealias ResultType = R
     
-    public var from: From<D>
-    public var select: Select<D, R>
+    public var from: From<O>
+    public var select: Select<O, R>
     public var queryClauses: [QueryClause] = []
+    
+    
+    // MARK: Deprecated
+
+    @available(*, deprecated, renamed: "O")
+    public typealias D = O
 }
 
 

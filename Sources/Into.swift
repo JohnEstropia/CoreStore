@@ -39,12 +39,12 @@ import CoreData
  let person = transaction.create(Into<MyPersonEntity>("Configuration1"))
  ```
  */
-public struct Into<D: DynamicObject>: Hashable {
+public struct Into<O: DynamicObject>: Hashable {
     
     /**
      The associated `NSManagedObject` or `CoreStoreObject` entity class
      */
-    public let entityClass: D.Type
+    public let entityClass: O.Type
     
     /**
      The `NSPersistentStore` configuration name to associate objects from.
@@ -60,7 +60,7 @@ public struct Into<D: DynamicObject>: Hashable {
      */
     public init() {
         
-        self.init(entityClass: D.self, configuration: nil, inferStoreIfPossible: true)
+        self.init(entityClass: O.self, configuration: nil, inferStoreIfPossible: true)
     }
     
     /**
@@ -70,7 +70,7 @@ public struct Into<D: DynamicObject>: Hashable {
      ```
      - parameter entity: the `NSManagedObject` or `CoreStoreObject` type to be created
      */
-    public init(_ entity: D.Type) {
+    public init(_ entity: O.Type) {
         
         self.init(entityClass: entity, configuration: nil, inferStoreIfPossible: true)
     }
@@ -84,7 +84,7 @@ public struct Into<D: DynamicObject>: Hashable {
      */
     public init(_ configuration: ModelConfiguration) {
         
-        self.init(entityClass: D.self, configuration: configuration, inferStoreIfPossible: false)
+        self.init(entityClass: O.self, configuration: configuration, inferStoreIfPossible: false)
     }
     
     /**
@@ -95,7 +95,7 @@ public struct Into<D: DynamicObject>: Hashable {
      - parameter entity: the `NSManagedObject` or `CoreStoreObject` type to be created
      - parameter configuration: the `NSPersistentStore` configuration name to associate the object to. This parameter is required if multiple configurations contain the created `NSManagedObject`'s or `CoreStoreObject`'s entity type. Set to `nil` to use the default configuration.
      */
-    public init(_ entity: D.Type, _ configuration: ModelConfiguration) {
+    public init(_ entity: O.Type, _ configuration: ModelConfiguration) {
         
         self.init(entityClass: entity, configuration: configuration, inferStoreIfPossible: false)
     }
@@ -125,10 +125,16 @@ public struct Into<D: DynamicObject>: Hashable {
     
     internal let inferStoreIfPossible: Bool
     
-    internal init(entityClass: D.Type, configuration: ModelConfiguration, inferStoreIfPossible: Bool) {
+    internal init(entityClass: O.Type, configuration: ModelConfiguration, inferStoreIfPossible: Bool) {
         
         self.entityClass = entityClass
         self.configuration = configuration
         self.inferStoreIfPossible = inferStoreIfPossible
     }
+    
+    
+    // MARK: Deprecated
+
+    @available(*, deprecated, renamed: "O")
+    public typealias D = O
 }

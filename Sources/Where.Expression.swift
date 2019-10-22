@@ -80,7 +80,7 @@ extension Where {
 
         // MARK: KeyPathStringConvertible
 
-        public typealias ObjectType = D
+        public typealias ObjectType = O
         public typealias DestinationValueType = V
 
 
@@ -103,6 +103,12 @@ extension Where {
 
             self.cs_keyPathString = component1 + "." + component2
         }
+        
+        
+        // MARK: Deprecated
+
+        @available(*, deprecated, renamed: "O")
+        public typealias D = O
     }
 
 
@@ -133,7 +139,7 @@ extension Where {
  let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~<D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<D, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.SingleTarget, V> {
+public func ~<O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<O, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.SingleTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -144,7 +150,7 @@ public func ~<D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPat
  let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<D, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.SingleTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCKeyPathValue>(_ lhs: KeyPath<O, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.SingleTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -155,7 +161,7 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCKeyPa
  let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<D, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<O, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -166,7 +172,7 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToMan
  let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<D, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: KeyPath<O, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -177,7 +183,7 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, V: AllowedObjectiveCToMan
  let johnsSonInLaw = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<T, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<T, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -188,7 +194,7 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKe
  let johnsSonInLaw = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.name) == "John"))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<T, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<T, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -199,7 +205,7 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCKe
  let spouseHasSiblings = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -210,7 +216,7 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCTo
  let spouseHasSiblings = dataStack.fetchOne(From<Person>().where((\.spouse ~ \.father ~ \.children).count() > 0))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, V: AllowedObjectiveCToManyRelationshipKeyPathValue>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -221,7 +227,7 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, V: AllowedObjectiveCTo
  let spousesWithBadNamingSense = dataStack.fetchAll(From<Person>().where((\.spouse ~ \.pets ~ \.name).any() == "Spot"))
  ```
  */
-public func ~ <D: NSManagedObject, O: NSManagedObject, T, C: AllowedObjectiveCToManyRelationshipKeyPathValue, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<D>.Expression<T, C>, _ rhs: KeyPath<O, V>) -> Where<D>.Expression<Where<D>.CollectionTarget, V> {
+public func ~ <O: NSManagedObject, D: NSManagedObject, T, C: AllowedObjectiveCToManyRelationshipKeyPathValue, V: AllowedObjectiveCKeyPathValue>(_ lhs: Where<O>.Expression<T, C>, _ rhs: KeyPath<D, V>) -> Where<O>.Expression<Where<O>.CollectionTarget, V> {
 
     return .init(lhs.cs_keyPathString, rhs.cs_keyPathString)
 }
@@ -235,11 +241,11 @@ public func ~ <D: NSManagedObject, O: NSManagedObject, T, C: AllowedObjectiveCTo
  let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: KeyPathStringConvertible>(_ lhs: KeyPath<D, RelationshipContainer<D>.ToOne<O>>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.SingleTarget, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, K: KeyPathStringConvertible>(_ lhs: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.SingleTarget, K.DestinationValueType> where K.ObjectType == D {
 
     return .init(
-        D.meta[keyPath: lhs].cs_keyPathString, 
-        O.meta[keyPath: rhs].cs_keyPathString
+        O.meta[keyPath: lhs].cs_keyPathString,
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
@@ -249,11 +255,11 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: KeyPathStringConvertib
  let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<T, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<T, K.DestinationValueType> where K.ObjectType == D {
 
     return .init(
         lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
@@ -263,11 +269,11 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: KeyPathStringConver
  let owner = dataStack.fetchOne(From<Pet>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<T, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: KeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<T, K.DestinationValueType> where K.ObjectType == D {
 
     return .init(
         lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
@@ -277,11 +283,11 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: KeyPathStringConver
  let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: KeyPath<D, RelationshipContainer<D>.ToOne<O>>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: KeyPath<O, RelationshipContainer<O>.ToOne<D>>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.CollectionTarget, K.DestinationValueType> where K.ObjectType == D {
 
     return .init(
-        D.meta[keyPath: lhs].cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        O.meta[keyPath: lhs].cs_keyPathString,
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
@@ -291,11 +297,11 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, K: ToManyRelationshipKeyP
  let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, D>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
@@ -305,11 +311,11 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: ToManyRelationshipK
  let happyPets = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets).count() > 1))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, O?>, _ rhs: KeyPath<O, K>) -> Where<D>.Expression<Where<D>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, K: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, D?>, _ rhs: KeyPath<D, K>) -> Where<O>.Expression<Where<O>.CollectionTarget, K.DestinationValueType> where K.ObjectType == O {
 
     return .init(
         lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
@@ -319,11 +325,11 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, K: ToManyRelationshipK
  let spousesWithBadNamingSense = dataStack.fetchAll(From<Pet>().where((\.master ~ \.pets ~ \.name).any() == "Spot"))
  ```
  */
-public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, KC: ToManyRelationshipKeyPathStringConvertible, KV: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<D>.Expression<T, KC>, _ rhs: KeyPath<O, KV>) -> Where<D>.Expression<Where<D>.CollectionTarget, KV.DestinationValueType> where KC.ObjectType == D, KV.ObjectType == O {
+public func ~ <O: CoreStoreObject, D: CoreStoreObject, T, KC: ToManyRelationshipKeyPathStringConvertible, KV: ToManyRelationshipKeyPathStringConvertible>(_ lhs: Where<O>.Expression<T, KC>, _ rhs: KeyPath<D, KV>) -> Where<O>.Expression<Where<O>.CollectionTarget, KV.DestinationValueType> where KC.ObjectType == O, KV.ObjectType == D {
 
     return .init(
         lhs.cs_keyPathString,
-        O.meta[keyPath: rhs].cs_keyPathString
+        D.meta[keyPath: rhs].cs_keyPathString
     )
 }
 
@@ -336,9 +342,9 @@ public func ~ <D: CoreStoreObject, O: CoreStoreObject, T, KC: ToManyRelationship
  let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func == <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
@@ -347,9 +353,9 @@ public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V
  let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) != "John"))
  ```
  */
-public func != <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func != <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return !Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return !Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
@@ -358,9 +364,9 @@ public func != <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V
  let dog = dataStack.fetchOne(From<Dog>().where(["John", "Joe"] ~= (\.master ~ \.name))
  ```
  */
-public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ expression: Where<D>.Expression<T, V>) -> Where<D> where S.Iterator.Element == V {
+public func ~= <O, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ expression: Where<O>.Expression<T, V>) -> Where<O> where S.Iterator.Element == V {
 
-    return Where<D>(expression.cs_keyPathString, isMemberOf: sequence)
+    return Where<O>(expression.cs_keyPathString, isMemberOf: sequence)
 }
 
 
@@ -372,9 +378,9 @@ public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ e
  let lonelyDog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.pets).count() < 2))
  ```
  */
-public func < <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func < <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return  Where<D>(expression: lhs, function: "<", operand: rhs)
+    return  Where<O>(expression: lhs, function: "<", operand: rhs)
 }
 
 /**
@@ -383,9 +389,9 @@ public func < <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Exp
  let lonelyDog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.pets).count() <= 1)
  ```
  */
-public func <= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func <= <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return  Where<D>(expression: lhs, function: "<=", operand: rhs)
+    return  Where<O>(expression: lhs, function: "<=", operand: rhs)
 }
 
 /**
@@ -394,9 +400,9 @@ public func <= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Ex
  let happyDog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.pets).count() > 1)
  ```
  */
-public func > <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func > <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return  Where<D>(expression: lhs, function: ">", operand: rhs)
+    return  Where<O>(expression: lhs, function: ">", operand: rhs)
 }
 
 /**
@@ -405,9 +411,9 @@ public func > <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Exp
  let happyDog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.pets).count() >= 2)
  ```
  */
-public func >= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V>, _ rhs: V) -> Where<D> {
+public func >= <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V>, _ rhs: V) -> Where<O> {
 
-    return  Where<D>(expression: lhs, function: ">=", operand: rhs)
+    return  Where<O>(expression: lhs, function: ">=", operand: rhs)
 }
 
 
@@ -419,9 +425,9 @@ public func >= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Ex
  let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+public func == <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V) -> Where<O> {
 
-    return Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
@@ -430,9 +436,9 @@ public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V
  let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) == "John"))
  ```
  */
-public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+public func == <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V?) -> Where<O> {
 
-    return Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
@@ -441,9 +447,9 @@ public func == <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V
  let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) != "John"))
  ```
  */
-public func != <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+public func != <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V) -> Where<O> {
 
-    return !Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return !Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
@@ -452,9 +458,9 @@ public func != <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V
  let dog = dataStack.fetchOne(From<Dog>().where((\.master ~ \.name) != "John"))
  ```
  */
-public func != <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+public func != <O, T, V: QueryableAttributeType>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V?) -> Where<O> {
 
-    return !Where<D>(lhs.cs_keyPathString, isEqualTo: rhs)
+    return !Where<O>(lhs.cs_keyPathString, isEqualTo: rhs)
 }
 
 /**
@@ -463,9 +469,9 @@ public func != <D, T, V: QueryableAttributeType>(_ lhs: Where<D>.Expression<T, V
  let dog = dataStack.fetchOne(From<Dog>().where(["John", "Joe"] ~= (\.master ~ \.name))
  ```
  */
-public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ expression: Where<D>.Expression<T, V?>) -> Where<D> where S.Iterator.Element == V {
+public func ~= <O, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ expression: Where<O>.Expression<T, V?>) -> Where<O> where S.Iterator.Element == V {
 
-    return Where<D>(expression.cs_keyPathString, isMemberOf: sequence)
+    return Where<O>(expression.cs_keyPathString, isMemberOf: sequence)
 }
 
 
@@ -477,9 +483,9 @@ public func ~= <D, T, V: QueryableAttributeType, S: Sequence>(_ sequence: S, _ e
  let childsPet = dataStack.fetchOne(From<Dog>().where((\.master ~ \.age) < 10))
  ```
  */
-public func < <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+public func < <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V) -> Where<O> {
 
-    return Where<D>(expression: lhs, function: "<", operand: rhs)
+    return Where<O>(expression: lhs, function: "<", operand: rhs)
 }
 
 /**
@@ -488,9 +494,9 @@ public func < <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Exp
  let childsPet = dataStack.fetchOne(From<Dog>().where((\.master ~ \.age) <= 10))
  ```
  */
-public func <= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+public func <= <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V?) -> Where<O> {
 
-    return Where<D>(expression: lhs, function: "<=", operand: rhs)
+    return Where<O>(expression: lhs, function: "<=", operand: rhs)
 }
 
 /**
@@ -499,9 +505,9 @@ public func <= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Ex
  let teensPet = dataStack.fetchOne(From<Dog>().where((\.master ~ \.age) > 10))
  ```
  */
-public func > <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V) -> Where<D> {
+public func > <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V) -> Where<O> {
 
-    return Where<D>(expression: lhs, function: ">", operand: rhs)
+    return Where<O>(expression: lhs, function: ">", operand: rhs)
 }
 
 /**
@@ -510,9 +516,9 @@ public func > <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Exp
  let teensPet = dataStack.fetchOne(From<Dog>().where((\.master ~ \.age) >= 10))
  ```
  */
-public func >= <D, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<D>.Expression<T, V?>, _ rhs: V?) -> Where<D> {
+public func >= <O, T, V: QueryableAttributeType & Comparable>(_ lhs: Where<O>.Expression<T, V?>, _ rhs: V?) -> Where<O> {
 
-    return Where<D>(expression: lhs, function: ">=", operand: rhs)
+    return Where<O>(expression: lhs, function: ">=", operand: rhs)
 }
 
 
@@ -532,9 +538,9 @@ extension KeyPath where Root: NSManagedObject, Value: AllowedObjectiveCToManyRel
     }
 }
 
-// MARK: - Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue
+// MARK: - Where.Expression where O: NSManagedObject, T == Where<O>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue
 
-extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue {
+extension Where.Expression where O: NSManagedObject, T == Where<O>.CollectionTarget, V: AllowedObjectiveCToManyRelationshipKeyPathValue {
 
     /**
      Creates a `Where.Expression` clause for COUNT
@@ -542,16 +548,16 @@ extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTar
      let dogsWithPlaymates = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
      ```
      */
-    public func count() -> Where<D>.Expression<T, Int> {
+    public func count() -> Where<O>.Expression<T, Int> {
 
         return .init(self.cs_keyPathString, "@count")
     }
 }
 
 
-// MARK: - Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCKeyPathValue
+// MARK: - Where.Expression where O: NSManagedObject, T == Where<O>.CollectionTarget, V: AllowedObjectiveCKeyPathValue
 
-extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTarget, V: AllowedObjectiveCKeyPathValue {
+extension Where.Expression where O: NSManagedObject, T == Where<O>.CollectionTarget, V: AllowedObjectiveCKeyPathValue {
 
     /**
      Creates a `Where.Expression` clause for ANY
@@ -559,7 +565,7 @@ extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTar
      let dogsWithBadNamingSense = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
      ```
      */
-    public func any() -> Where<D>.Expression<T, V> {
+    public func any() -> Where<O>.Expression<T, V> {
 
         return .init("ANY " + self.cs_keyPathString)
     }
@@ -570,7 +576,7 @@ extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTar
      let allPlaymatePuppies = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.age).all() > 5))
      ```
      */
-    public func all() -> Where<D>.Expression<T, V> {
+    public func all() -> Where<O>.Expression<T, V> {
 
         return .init("ALL " + self.cs_keyPathString)
     }
@@ -581,7 +587,7 @@ extension Where.Expression where D: NSManagedObject, T == Where<D>.CollectionTar
      let dogs = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
      ```
      */
-    public func none() -> Where<D>.Expression<T, V> {
+    public func none() -> Where<O>.Expression<T, V> {
 
         return .init("NONE " + self.cs_keyPathString)
     }
@@ -605,9 +611,9 @@ extension KeyPath where Root: CoreStoreObject, Value: ToManyRelationshipKeyPathS
 }
 
 
-// MARK: - Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTarget
+// MARK: - Where.Expression where O: CoreStoreObject, T == Where<O>.CollectionTarget
 
-extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTarget {
+extension Where.Expression where O: CoreStoreObject, T == Where<O>.CollectionTarget {
 
     /**
      Creates a `Where.Expression` clause for COUNT
@@ -615,7 +621,7 @@ extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTar
      let dogsWithPlaymates = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets).count() > 1))
      ```
      */
-    public func count() -> Where<D>.Expression<T, Int> {
+    public func count() -> Where<O>.Expression<T, Int> {
 
         return .init(self.cs_keyPathString, "@count")
     }
@@ -626,7 +632,7 @@ extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTar
      let dogsWithBadNamingSense = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
      ```
      */
-    public func any() -> Where<D>.Expression<T, V> {
+    public func any() -> Where<O>.Expression<T, V> {
 
         return .init("ANY " + self.cs_keyPathString)
     }
@@ -637,7 +643,7 @@ extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTar
      let allPlaymatePuppies = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.age).all() > 5))
      ```
      */
-    public func all() -> Where<D>.Expression<T, V> {
+    public func all() -> Where<O>.Expression<T, V> {
 
         return .init("ALL " + self.cs_keyPathString)
     }
@@ -648,7 +654,7 @@ extension Where.Expression where D: CoreStoreObject, T == Where<D>.CollectionTar
      let dogs = dataStack.fetchAll(From<Dog>().where((\.master ~ \.pets ~ \.name).any() > "Spot"))
      ```
      */
-    public func none() -> Where<D>.Expression<T, V> {
+    public func none() -> Where<O>.Expression<T, V> {
 
         return .init("NONE " + self.cs_keyPathString)
     }
@@ -661,17 +667,17 @@ extension Where {
 
     // MARK: FilePrivate
 
-    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V>, function: String, operand: V) {
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<O>.Expression<T, V>, function: String, operand: V) {
 
         self.init("\(expression.cs_keyPathString) \(function) %@", operand.cs_toQueryableNativeType())
     }
 
-    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V?>, function: String, operand: V) {
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<O>.Expression<T, V?>, function: String, operand: V) {
 
         self.init("\(expression.cs_keyPathString) \(function) %@", operand.cs_toQueryableNativeType())
     }
 
-    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V>, function: String, operand: V?) {
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<O>.Expression<T, V>, function: String, operand: V?) {
 
         if let operand = operand {
 
@@ -683,7 +689,7 @@ extension Where {
         }
     }
 
-    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<D>.Expression<T, V?>, function: String, operand: V?) {
+    fileprivate init<T, V: QueryableAttributeType & Comparable>(expression: Where<O>.Expression<T, V?>, function: String, operand: V?) {
 
         if let operand = operand {
 

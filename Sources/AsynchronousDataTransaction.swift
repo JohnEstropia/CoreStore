@@ -66,7 +66,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `CoreStoreObject` entity type and the destination configuration
      - returns: a new `NSManagedObject` or `CoreStoreObject` instance of the specified entity type.
      */
-    public override func create<D>(_ into: Into<D>) -> D {
+    public override func create<O>(_ into: Into<O>) -> O {
         
         Internals.assert(
             !self.isCommitted,
@@ -82,7 +82,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - parameter object: the `NSManagedObject` or `CoreStoreObject` to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public override func edit<D: DynamicObject>(_ object: D?) -> D? {
+    public override func edit<O: DynamicObject>(_ object: O?) -> O? {
         
         Internals.assert(
             !self.isCommitted,
@@ -99,7 +99,7 @@ public final class AsynchronousDataTransaction: BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public override func edit<D>(_ into: Into<D>, _ objectID: NSManagedObjectID) -> D? {
+    public override func edit<O>(_ into: Into<O>, _ objectID: NSManagedObjectID) -> O? {
         
         Internals.assert(
             !self.isCommitted,

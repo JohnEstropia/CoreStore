@@ -112,7 +112,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
     
     public let bridgeToSwift: OrderBy<NSManagedObject>
     
-    public init<D: NSManagedObject>(_ swiftValue: OrderBy<D>) {
+    public init<O: NSManagedObject>(_ swiftValue: OrderBy<O>) {
         
         self.bridgeToSwift = swiftValue.downcast()
         super.init()
@@ -122,7 +122,7 @@ public final class CSOrderBy: NSObject, CSFetchClause, CSQueryClause, CSDeleteCl
 
 // MARK: - OrderBy
 
-extension OrderBy where D: NSManagedObject {
+extension OrderBy where O: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     

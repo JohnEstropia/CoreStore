@@ -39,14 +39,20 @@ import CoreData
  )
  ```
  */
-public struct FetchChainBuilder<D: DynamicObject>: FetchChainableBuilderType {
+public struct FetchChainBuilder<O: DynamicObject>: FetchChainableBuilderType {
     
     // MARK: FetchChainableBuilderType
     
-    public typealias ObjectType = D
+    public typealias ObjectType = O
     
-    public var from: From<D>
+    public var from: From<O>
     public var fetchClauses: [FetchClause] = []
+    
+    
+    // MARK: Deprecated
+
+    @available(*, deprecated, renamed: "O")
+    public typealias D = O
 }
 
 

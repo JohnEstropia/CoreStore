@@ -50,7 +50,7 @@ extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
+    public func monitorList<O>(_ from: From<O>, _ fetchClauses: FetchClause...) -> ListMonitor<O> {
         
         return self.monitorList(from, fetchClauses)
     }
@@ -62,10 +62,10 @@ extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
+    public func monitorList<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) -> ListMonitor<O> {
         
         Internals.assert(
-            fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
+            fetchClauses.filter { $0 is OrderBy<O> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
@@ -109,7 +109,7 @@ extension UnsafeDataTransaction {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: FetchClause...) {
+    public func monitorList<O>(createAsynchronously: @escaping (ListMonitor<O>) -> Void, _ from: From<O>, _ fetchClauses: FetchClause...) {
         
         self.monitorList(createAsynchronously: createAsynchronously, from, fetchClauses)
     }
@@ -121,10 +121,10 @@ extension UnsafeDataTransaction {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: [FetchClause])  {
+    public func monitorList<O>(createAsynchronously: @escaping (ListMonitor<O>) -> Void, _ from: From<O>, _ fetchClauses: [FetchClause])  {
         
         Internals.assert(
-            fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
+            fetchClauses.filter { $0 is OrderBy<O> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
@@ -173,7 +173,7 @@ extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
+    public func monitorSectionedList<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: FetchClause...) -> ListMonitor<O> {
         
         return self.monitorSectionedList(from, sectionBy, fetchClauses)
     }
@@ -186,10 +186,10 @@ extension UnsafeDataTransaction {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
+    public func monitorSectionedList<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: [FetchClause]) -> ListMonitor<O> {
         
         Internals.assert(
-            fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
+            fetchClauses.filter { $0 is OrderBy<O> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         
@@ -234,7 +234,7 @@ extension UnsafeDataTransaction {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) {
+    public func monitorSectionedList<O>(createAsynchronously: @escaping (ListMonitor<O>) -> Void, _ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: FetchClause...) {
         
         self.monitorSectionedList(createAsynchronously: createAsynchronously, from, sectionBy, fetchClauses)
     }
@@ -247,10 +247,10 @@ extension UnsafeDataTransaction {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) {
+    public func monitorSectionedList<O>(createAsynchronously: @escaping (ListMonitor<O>) -> Void, _ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: [FetchClause]) {
         
         Internals.assert(
-            fetchClauses.filter { $0 is OrderBy<D> }.count > 0,
+            fetchClauses.filter { $0 is OrderBy<O> }.count > 0,
             "A ListMonitor requires an OrderBy clause."
         )
         

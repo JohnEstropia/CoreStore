@@ -112,7 +112,7 @@ public final class CSInto: NSObject {
     
     public let bridgeToSwift: Into<NSManagedObject>
     
-    public required init<D: NSManagedObject>(_ swiftValue: Into<D>) {
+    public required init<O: NSManagedObject>(_ swiftValue: Into<O>) {
         
         self.bridgeToSwift = swiftValue.downcast()
         super.init()
@@ -122,7 +122,7 @@ public final class CSInto: NSObject {
 
 // MARK: - Into
 
-extension Into where D: NSManagedObject {
+extension Into where O: NSManagedObject {
     
     // MARK: CoreStoreSwiftType
     

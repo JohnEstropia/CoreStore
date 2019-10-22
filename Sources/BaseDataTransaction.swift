@@ -50,7 +50,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter into: the `Into` clause indicating the destination `NSManagedObject` or `CoreStoreObject` entity type and the destination configuration
      - returns: a new `NSManagedObject` or `CoreStoreObject` instance of the specified entity type.
      */
-    public func create<D>(_ into: Into<D>) -> D {
+    public func create<O>(_ into: Into<O>) -> O {
         
         let entityClass = into.entityClass
         Internals.assert(
@@ -121,7 +121,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object: the `NSManagedObject` or `CoreStoreObject` type to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public func edit<D: DynamicObject>(_ object: D?) -> D? {
+    public func edit<O: DynamicObject>(_ object: O?) -> O? {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -141,7 +141,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter objectID: the `NSManagedObjectID` for the object to be edited
      - returns: an editable proxy for the specified `NSManagedObject` or `CoreStoreObject`.
      */
-    public func edit<D>(_ into: Into<D>, _ objectID: NSManagedObjectID) -> D? {
+    public func edit<O>(_ into: Into<O>, _ objectID: NSManagedObjectID) -> O? {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -227,7 +227,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter object: the `DynamicObject` instance
      - returns: `true` if the object has any property values changed.
      */
-    public func objectHasPersistentChangedValues<D: DynamicObject>(_ object: D) -> Bool {
+    public func objectHasPersistentChangedValues<O: DynamicObject>(_ object: O) -> Bool {
 
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -246,7 +246,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `DynamicObject`s of the specified type that were inserted to the transaction.
      */
-    public func insertedObjects<D: DynamicObject>(_ entity: D.Type) -> Set<D> {
+    public func insertedObjects<O: DynamicObject>(_ entity: O.Type) -> Set<O> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -283,7 +283,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were inserted to the transaction.
      */
-    public func insertedObjectIDs<D: DynamicObject>(_ entity: D.Type) -> Set<NSManagedObjectID> {
+    public func insertedObjectIDs<O: DynamicObject>(_ entity: O.Type) -> Set<NSManagedObjectID> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -302,7 +302,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `DynamicObject`s of the specified type that were updated in the transaction.
      */
-    public func updatedObjects<D: DynamicObject>(_ entity: D.Type) -> Set<D> {
+    public func updatedObjects<O: DynamicObject>(_ entity: O.Type) -> Set<O> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -339,7 +339,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were updated in the transaction.
      */
-    public func updatedObjectIDs<D: DynamicObject>(_ entity: D.Type) -> Set<NSManagedObjectID> {
+    public func updatedObjectIDs<O: DynamicObject>(_ entity: O.Type) -> Set<NSManagedObjectID> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -358,7 +358,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `DynamicObject`s of the specified type that were deleted from the transaction.
      */
-    public func deletedObjects<D: DynamicObject>(_ entity: D.Type) -> Set<D> {
+    public func deletedObjects<O: DynamicObject>(_ entity: O.Type) -> Set<O> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),
@@ -396,7 +396,7 @@ public /*abstract*/ class BaseDataTransaction {
      - parameter entity: the `DynamicObject` subclass to filter
      - returns: a `Set` of pending `NSManagedObjectID`s of the specified type that were deleted from the transaction.
      */
-    public func deletedObjectIDs<D: DynamicObject>(_ entity: D.Type) -> Set<NSManagedObjectID> {
+    public func deletedObjectIDs<O: DynamicObject>(_ entity: O.Type) -> Set<NSManagedObjectID> {
         
         Internals.assert(
             self.isRunningInAllowedQueue(),

@@ -51,7 +51,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func listPublisher<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> ListPublisher<D> {
+    public func listPublisher<O>(_ from: From<O>, _ fetchClauses: FetchClause...) -> ListPublisher<O> {
 
         return self.listPublisher(from, fetchClauses)
     }
@@ -63,7 +63,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func listPublisher<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> ListPublisher<D> {
+    public func listPublisher<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) -> ListPublisher<O> {
 
         return ListPublisher(
             dataStack: self,
@@ -75,7 +75,7 @@ extension DataStack {
 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(ListPublisher<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListPublisher<O>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<O>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )
@@ -115,7 +115,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func listPublisher<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> ListPublisher<D> {
+    public func listPublisher<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: FetchClause...) -> ListPublisher<O> {
 
         return self.listPublisher(
             from,
@@ -132,7 +132,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListPublisher` that broadcasts changes to the fetched results
      */
-    public func listPublisher<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> ListPublisher<D> {
+    public func listPublisher<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: [FetchClause]) -> ListPublisher<O> {
 
         return ListPublisher(
             dataStack: self,
@@ -144,7 +144,7 @@ extension DataStack {
 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(ListPublisher<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListPublisher<O>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<O>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )

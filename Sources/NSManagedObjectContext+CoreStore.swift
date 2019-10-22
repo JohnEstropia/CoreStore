@@ -87,9 +87,9 @@ extension NSManagedObjectContext {
     }
 
     @nonobjc
-    internal func objectPublisher<D: DynamicObject>(objectID: NSManagedObjectID) -> ObjectPublisher<D> {
+    internal func objectPublisher<O: DynamicObject>(objectID: NSManagedObjectID) -> ObjectPublisher<O> {
 
-        let cache: NSMapTable<NSManagedObjectID, ObjectPublisher<D>> = self.userInfo(for: .objectPublishersCache(D.self)) {
+        let cache: NSMapTable<NSManagedObjectID, ObjectPublisher<O>> = self.userInfo(for: .objectPublishersCache(O.self)) {
 
             return .strongToWeakObjects()
         }
@@ -99,7 +99,7 @@ extension NSManagedObjectContext {
 
                 return objectPublisher
             }
-            let objectPublisher = ObjectPublisher<D>(objectID: objectID, context: self)
+            let objectPublisher = ObjectPublisher<O>(objectID: objectID, context: self)
             cache.setObject(objectPublisher, forKey: objectID)
             return objectPublisher
         }

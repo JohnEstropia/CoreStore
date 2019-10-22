@@ -54,7 +54,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<D>(_ from: From<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
+    public func monitorList<O>(_ from: From<O>, _ fetchClauses: FetchClause...) -> ListMonitor<O> {
         
         return self.monitorList(from, fetchClauses)
     }
@@ -66,7 +66,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorList<D>(_ from: From<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
+    public func monitorList<O>(_ from: From<O>, _ fetchClauses: [FetchClause]) -> ListMonitor<O> {
         
         Internals.assert(
             Thread.isMainThread,
@@ -82,7 +82,7 @@ extension DataStack {
                 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(ListMonitor<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListMonitor<O>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<O>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )
@@ -115,7 +115,7 @@ extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: FetchClause...) {
+    public func monitorList<O>(createAsynchronously: @escaping (ListMonitor<O>) -> Void, _ from: From<O>, _ fetchClauses: FetchClause...) {
         
         self.monitorList(
             createAsynchronously: createAsynchronously,
@@ -131,7 +131,7 @@ extension DataStack {
      - parameter from: a `From` clause indicating the entity type
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ fetchClauses: [FetchClause])  {
+    public func monitorList<O>(createAsynchronously: @escaping (ListMonitor<O>) -> Void, _ from: From<O>, _ fetchClauses: [FetchClause])  {
         
         Internals.assert(
             Thread.isMainThread,
@@ -147,7 +147,7 @@ extension DataStack {
                 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(ListMonitor<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListMonitor<O>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<O>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             },
             createAsynchronously: createAsynchronously
@@ -187,7 +187,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) -> ListMonitor<D> {
+    public func monitorSectionedList<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: FetchClause...) -> ListMonitor<O> {
         
         return self.monitorSectionedList(
             from,
@@ -204,7 +204,7 @@ extension DataStack {
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      - returns: a `ListMonitor` instance that monitors changes to the list
      */
-    public func monitorSectionedList<D>(_ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) -> ListMonitor<D> {
+    public func monitorSectionedList<O>(_ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: [FetchClause]) -> ListMonitor<O> {
         
         Internals.assert(
             Thread.isMainThread,
@@ -221,7 +221,7 @@ extension DataStack {
                 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(ListMonitor<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListMonitor<O>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<O>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             }
         )
@@ -257,7 +257,7 @@ extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: FetchClause...) {
+    public func monitorSectionedList<O>(createAsynchronously: @escaping (ListMonitor<O>) -> Void, _ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: FetchClause...) {
         
         self.monitorSectionedList(
             createAsynchronously: createAsynchronously,
@@ -275,7 +275,7 @@ extension DataStack {
      - parameter sectionBy: a `SectionBy` clause indicating the keyPath for the attribute to use when sorting the list into sections.
      - parameter fetchClauses: a series of `FetchClause` instances for fetching the object list. Accepts `Where`, `OrderBy`, and `Tweak` clauses.
      */
-    public func monitorSectionedList<D>(createAsynchronously: @escaping (ListMonitor<D>) -> Void, _ from: From<D>, _ sectionBy: SectionBy<D>, _ fetchClauses: [FetchClause]) {
+    public func monitorSectionedList<O>(createAsynchronously: @escaping (ListMonitor<O>) -> Void, _ from: From<O>, _ sectionBy: SectionBy<O>, _ fetchClauses: [FetchClause]) {
         
         Internals.assert(
             Thread.isMainThread,
@@ -292,7 +292,7 @@ extension DataStack {
                 
                 Internals.assert(
                     fetchRequest.sortDescriptors?.isEmpty == false,
-                    "An \(Internals.typeName(ListMonitor<D>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<D>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
+                    "An \(Internals.typeName(ListMonitor<O>.self)) requires a sort information. Specify from a \(Internals.typeName(OrderBy<O>.self)) clause or any custom \(Internals.typeName(FetchClause.self)) that provides a sort descriptor."
                 )
             },
             createAsynchronously: createAsynchronously

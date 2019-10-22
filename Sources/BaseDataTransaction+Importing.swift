@@ -39,9 +39,9 @@ extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the created `ImportableObject` instance, or `nil` if the import was ignored
      */
-    public func importObject<D: ImportableObject>(
-        _ into: Into<D>,
-        source: D.ImportSource) throws -> D? {
+    public func importObject<O: ImportableObject>(
+        _ into: Into<O>,
+        source: O.ImportSource) throws -> O? {
             
             Internals.assert(
                 self.isRunningInAllowedQueue(),
@@ -65,13 +65,13 @@ extension BaseDataTransaction {
     /**
      Updates an existing `ImportableObject` by importing values from the specified import source.
      
-     - parameter object: the `NSManagedObject` to update
+     - parameter object: the `ImportableObject` to update
      - parameter source: the object to import values from
      - throws: an `Error` thrown from any of the `ImportableObject` methods
      */
-    public func importObject<D: ImportableObject>(
-        _ object: D,
-        source: D.ImportSource) throws {
+    public func importObject<O: ImportableObject>(
+        _ object: O,
+        source: O.ImportSource) throws {
             
             Internals.assert(
                 self.isRunningInAllowedQueue(),
@@ -97,9 +97,9 @@ extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableObject` methods
      - returns: the array of created `ImportableObject` instances
      */
-    public func importObjects<D: ImportableObject, S: Sequence>(
-        _ into: Into<D>,
-        sourceArray: S) throws -> [D] where S.Iterator.Element == D.ImportSource {
+    public func importObjects<O: ImportableObject, S: Sequence>(
+        _ into: Into<O>,
+        sourceArray: S) throws -> [O] where S.Iterator.Element == O.ImportSource {
             
             Internals.assert(
                 self.isRunningInAllowedQueue(),
@@ -108,7 +108,7 @@ extension BaseDataTransaction {
             
             return try autoreleasepool {
                 
-                return try sourceArray.compactMap { (source) -> D? in
+                return try sourceArray.compactMap { (source) -> O? in
                   
                     let entityType = into.entityClass 
                     guard entityType.shouldInsert(from: source, in: self) else {
@@ -133,9 +133,9 @@ extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the created/updated `ImportableUniqueObject` instance, or `nil` if the import was ignored
      */
-    public func importUniqueObject<D: ImportableUniqueObject>(
-        _ into: Into<D>,
-        source: D.ImportSource) throws -> D? {
+    public func importUniqueObject<O: ImportableUniqueObject>(
+        _ into: Into<O>,
+        source: O.ImportSource) throws -> O? {
             
             Internals.assert(
                 self.isRunningInAllowedQueue(),
@@ -151,7 +151,7 @@ extension BaseDataTransaction {
                     return nil
                 }
                 
-                if let object = try self.fetchOne(From(entityType), Where<D>(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
+                if let object = try self.fetchOne(From(entityType), Where<O>(uniqueIDKeyPath, isEqualTo: uniqueIDValue)) {
                     
                     guard entityType.shouldUpdate(from: source, in: self) else {
                         
@@ -185,10 +185,10 @@ extension BaseDataTransaction {
      - throws: an `Error` thrown from any of the `ImportableUniqueObject` methods
      - returns: the array of created/updated `ImportableUniqueObject` instances
      */
-    public func importUniqueObjects<D: ImportableUniqueObject, S: Sequence>(
-        _ into: Into<D>,
+    public func importUniqueObjects<O: ImportableUniqueObject, S: Sequence>(
+        _ into: Into<O>,
         sourceArray: S,
-        preProcess: @escaping (_ mapping: [D.UniqueIDType: D.ImportSource]) throws -> [D.UniqueIDType: D.ImportSource] = { $0 }) throws -> [D] where S.Iterator.Element == D.ImportSource {
+        preProcess: @escaping (_ mapping: [O.UniqueIDType: O.ImportSource]) throws -> [O.UniqueIDType: O.ImportSource] = { $0 }) throws -> [O] where S.Iterator.Element == O.ImportSource {
             
             Internals.assert(
                 self.isRunningInAllowedQueue(),
@@ -198,10 +198,10 @@ extension BaseDataTransaction {
             return try autoreleasepool {
               
                 let entityType = into.entityClass 
-                var importSourceByID = Dictionary<D.UniqueIDType, D.ImportSource>()
+                var importSourceByID = Dictionary<O.UniqueIDType, O.ImportSource>()
                 let sortedIDs = try autoreleasepool {
                   
-                    return try sourceArray.compactMap { (source) -> D.UniqueIDType? in
+                    return try sourceArray.compactMap { (source) -> O.UniqueIDType? in
                         
                         guard let uniqueIDValue = try entityType.uniqueID(from: source, in: self) else {
                             
@@ -214,13 +214,13 @@ extension BaseDataTransaction {
                 
                 importSourceByID = try autoreleasepool { try preProcess(importSourceByID) }
 
-                var existingObjectsByID = Dictionary<D.UniqueIDType, D>()
+                var existingObjectsByID = Dictionary<O.UniqueIDType, O>()
                 try self
-                    .fetchAll(From(entityType), Where<D>(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))
+                    .fetchAll(From(entityType), Where<O>(entityType.uniqueIDKeyPath, isMemberOf: sortedIDs))
                     .forEach { existingObjectsByID[$0.uniqueIDValue] = $0 }
               
-                var processedObjectIDs = Set<D.UniqueIDType>()
-                var result = [D]()
+                var processedObjectIDs = Set<O.UniqueIDType>()
+                var result = [O]()
               
                 for objectID in sortedIDs where !processedObjectIDs.contains(objectID) {
                     

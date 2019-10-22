@@ -32,7 +32,7 @@ import CoreData
 /**
  The `GroupBy` clause specifies that the result of a query be grouped accoording to the specified key path.
  */
-public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
+public struct GroupBy<O: DynamicObject>: GroupByClause, QueryClause, Hashable {
     
     /**
      Initializes a `GroupBy` clause with an empty list of key path strings
@@ -66,7 +66,7 @@ public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
     
     // MARK: GroupByClause
     
-    public typealias ObjectType = D
+    public typealias ObjectType = O
     
     public let keyPaths: [KeyPathString]
     
@@ -101,31 +101,37 @@ public struct GroupBy<D: DynamicObject>: GroupByClause, QueryClause, Hashable {
 
         hasher.combine(self.keyPaths)
     }
+    
+    
+    // MARK: Deprecated
+
+    @available(*, deprecated, renamed: "O")
+    public typealias D = O
 }
 
-extension GroupBy where D: NSManagedObject {
+extension GroupBy where O: NSManagedObject {
     
     /**
      Initializes a `GroupBy` clause with a key path
      
      - parameter keyPath: a key path to group results with
      */
-    public init<T>(_ keyPath: KeyPath<D, T>) {
+    public init<T>(_ keyPath: KeyPath<O, T>) {
         
         self.init([keyPath._kvcKeyPathString!])
     }
 }
 
-extension GroupBy where D: CoreStoreObject {
+extension GroupBy where O: CoreStoreObject {
     
     /**
      Initializes a `GroupBy` clause with a key path
      
      - parameter keyPath: a key path to group results with
      */
-    public init<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Required<T>>) {
+    public init<T>(_ keyPath: KeyPath<O, ValueContainer<O>.Required<T>>) {
         
-        self.init([D.meta[keyPath: keyPath].keyPath])
+        self.init([O.meta[keyPath: keyPath].keyPath])
     }
     
     /**
@@ -133,9 +139,9 @@ extension GroupBy where D: CoreStoreObject {
      
      - parameter keyPath: a key path to group results with
      */
-    public init<T>(_ keyPath: KeyPath<D, ValueContainer<D>.Optional<T>>) {
+    public init<T>(_ keyPath: KeyPath<O, ValueContainer<O>.Optional<T>>) {
         
-        self.init([D.meta[keyPath: keyPath].keyPath])
+        self.init([O.meta[keyPath: keyPath].keyPath])
     }
     
     /**
@@ -143,9 +149,9 @@ extension GroupBy where D: CoreStoreObject {
      
      - parameter keyPath: a key path to group results with
      */
-    public init<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Required<T>>) {
+    public init<T>(_ keyPath: KeyPath<O, TransformableContainer<O>.Required<T>>) {
         
-        self.init([D.meta[keyPath: keyPath].keyPath])
+        self.init([O.meta[keyPath: keyPath].keyPath])
     }
     
     /**
@@ -153,9 +159,9 @@ extension GroupBy where D: CoreStoreObject {
      
      - parameter keyPath: a key path to group results with
      */
-    public init<T>(_ keyPath: KeyPath<D, TransformableContainer<D>.Optional<T>>) {
+    public init<T>(_ keyPath: KeyPath<O, TransformableContainer<O>.Optional<T>>) {
         
-        self.init([D.meta[keyPath: keyPath].keyPath])
+        self.init([O.meta[keyPath: keyPath].keyPath])
     }
 }
 
