@@ -1160,7 +1160,7 @@ extension NSEntityDescription: CoreStoreDebugStringConvertible {
             
             info.append(("compoundIndexes", self.compoundIndexes))
         }
-        if #available(macOS 10.11, *) {
+        if #available(macOS 10.11, iOS 9.0, *) {
             
             info.append(("uniquenessConstraints", self.uniquenessConstraints))
         }

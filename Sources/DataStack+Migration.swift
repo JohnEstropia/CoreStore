@@ -614,7 +614,7 @@ extension DataStack {
         }
         let fileManager = FileManager.default
         let systemTemporaryDirectoryURL: URL
-        if #available(macOS 10.12, *) {
+        if #available(macOS 10.12, iOS 10.0, *) {
 
             systemTemporaryDirectoryURL = fileManager.temporaryDirectory
         }
