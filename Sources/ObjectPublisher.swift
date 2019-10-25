@@ -354,7 +354,7 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Required<V>>) -> V? {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>) -> V? {
 
         return self.object?[keyPath: member].value
     }
@@ -362,7 +362,7 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Optional<V>>) -> V? {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Optional<V>>) -> V? {
 
         return self.object?[keyPath: member].value
     }
@@ -370,7 +370,7 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Required<V>>) -> V? {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Required<V>>) -> V? {
 
         return self.object?[keyPath: member].value
     }
@@ -378,7 +378,7 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Optional<V>>) -> V? {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Optional<V>>) -> V? {
 
         return self.object?[keyPath: member].value
     }
@@ -386,7 +386,7 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToOne<D>>) -> D? {
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToOne<D>>) -> D? {
 
         return self.object?[keyPath: member].value
     }
@@ -394,7 +394,7 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyOrdered<D>>) -> [D]? {
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyOrdered<D>>) -> [D]? {
 
         return self.object?[keyPath: member].value
     }
@@ -402,7 +402,7 @@ extension ObjectPublisher where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyUnordered<D>>) -> Set<D>? {
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyUnordered<D>>) -> Set<D>? {
 
         return self.object?[keyPath: member].value
     }

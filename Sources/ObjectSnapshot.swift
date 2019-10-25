@@ -146,7 +146,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Required<V>>) -> V {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Required<V>>) -> V {
 
         get {
 
@@ -163,7 +163,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, ValueContainer<O>.Optional<V>>) -> V? {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, ValueContainer<OBase>.Optional<V>>) -> V? {
 
         get {
 
@@ -180,7 +180,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Required<V>>) -> V {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Required<V>>) -> V {
 
         get {
 
@@ -197,7 +197,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<V>(dynamicMember member: KeyPath<O, TransformableContainer<O>.Optional<V>>) -> V? {
+    public subscript<OBase, V>(dynamicMember member: KeyPath<O, TransformableContainer<OBase>.Optional<V>>) -> V? {
 
         get {
 
@@ -214,7 +214,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToOne<D>>) -> D.ObjectID? {
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToOne<D>>) -> D.ObjectID? {
 
         get {
 
@@ -231,7 +231,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyOrdered<D>>) -> [D.ObjectID] {
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyOrdered<D>>) -> [D.ObjectID] {
 
         get {
 
@@ -248,7 +248,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<D>(dynamicMember member: KeyPath<O, RelationshipContainer<O>.ToManyUnordered<D>>) -> Set<D.ObjectID> {
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyUnordered<D>>) -> Set<D.ObjectID> {
 
         get {
 
