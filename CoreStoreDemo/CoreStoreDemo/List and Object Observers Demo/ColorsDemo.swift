@@ -79,7 +79,7 @@ struct ColorsDemo {
     
     static let palettes: ListPublisher<Palette> = {
 
-        return ColorsDemo.stack.listPublisher(
+        return ColorsDemo.stack.publishList(
             From<Palette>()
                 .sectionBy(\.colorName)
                 .orderBy(.ascending(\.hue))

@@ -56,8 +56,8 @@ class ObjectPublisherTests: BaseTestDataTestCase {
             let didChangeExpectation = self.expectation(description: "didChange")
             objectPublisher.addObserver(observer) { objectPublisher in
 
-                XCTAssertEqual(objectPublisher.snapshot?.testNumber, NSNumber(value: 10))
-                XCTAssertEqual(objectPublisher.snapshot?.testString, "nil:TestEntity1:10")
+                XCTAssertEqual(objectPublisher.object?.testNumber, NSNumber(value: 10))
+                XCTAssertEqual(objectPublisher.object?.testString, "nil:TestEntity1:10")
 
                 didChangeExpectation.fulfill()
             }

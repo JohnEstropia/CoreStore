@@ -120,17 +120,27 @@ extension NSManagedObjectContext {
 
                         return (updated: [], deleted: [])
                     }
+                    if userInfo[NSInvalidatedAllObjectsKey] != nil {
+
+                        let context = notification.object as! NSManagedObjectContext
+                        return (updated: Set(context.registeredObjects.map({ $0.objectID })), deleted: [])
+                    }
+
                     var updatedObjectIDs: Set<NSManagedObjectID> = []
-                    if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObjectID> {
+                    if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
 
-                        updatedObjectIDs.formUnion(updatedObjects)
+                        updatedObjectIDs.formUnion(updatedObjects.map({ $0.objectID }))
                     }
-                    if let mergedObjects = userInfo[NSRefreshedObjectsKey] as? Set<NSManagedObjectID> {
+                    if let mergedObjects = userInfo[NSRefreshedObjectsKey] as? Set<NSManagedObject> {
 
-                        updatedObjectIDs.formUnion(mergedObjects)
+                        updatedObjectIDs.formUnion(mergedObjects.map({ $0.objectID }))
                     }
-                    let deletedObjectIDs: Set<NSManagedObjectID> = (userInfo[NSDeletedObjectsKey] as? Set<NSManagedObjectID>) ?? []
-                    return (updated: updatedObjectIDs, deleted: deletedObjectIDs)
+                    if let mergedObjects = userInfo[NSInvalidatedObjectsKey] as? Set<NSManagedObject> {
+
+                        updatedObjectIDs.formUnion(mergedObjects.map({ $0.objectID }))
+                    }
+                    let deletedObjectIDs: Set<NSManagedObject> = (userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>) ?? []
+                    return (updated: updatedObjectIDs, deleted: Set(deletedObjectIDs.map({ $0.objectID })))
                 }
             )
         }

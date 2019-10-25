@@ -203,8 +203,8 @@ class ListPublisherTests: BaseTestDataTestCase {
                 XCTAssertEqual(listPublisher.snapshot.numberOfSections, 2)
                 XCTAssertTrue(listPublisher.snapshot.hasItems())
                 XCTAssertTrue(listPublisher.snapshot.hasItems(inSectionIndex: 0))
-                XCTAssertEqual(listPublisher.snapshot.numberOfItems(inSectionIndex: 0), 2)
-                XCTAssertEqual(listPublisher.snapshot.numberOfItems(inSectionIndex: 1), 3)
+                XCTAssertEqual(listPublisher.snapshot.numberOfItems(inSectionIndex: 0), 1)
+                XCTAssertEqual(listPublisher.snapshot.numberOfItems(inSectionIndex: 1), 4)
 
                 didChangeExpectation.fulfill()
             }

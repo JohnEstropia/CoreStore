@@ -31,7 +31,7 @@ final class SwiftUIContainerViewController: UIViewController {
             
             let hostingController = UIHostingController(
                 rootView: SwiftUIView(
-                    palettes: ColorsDemo.stack.listPublisher(
+                    palettes: ColorsDemo.stack.publishList(
                         From<Palette>()
                             .sectionBy(\.colorName)
                             .orderBy(.ascending(\.hue))

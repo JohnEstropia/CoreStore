@@ -171,7 +171,7 @@ struct SwiftUIView_Previews: PreviewProvider {
     
     static var previews: some View {
         SwiftUIView(
-            palettes: ColorsDemo.stack.listPublisher(
+            palettes: ColorsDemo.stack.publishList(
                 From<Palette>()
                     .sectionBy(\.colorName)
                     .orderBy(.ascending(\.hue))
