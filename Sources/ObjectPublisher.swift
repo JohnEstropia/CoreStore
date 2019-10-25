@@ -195,6 +195,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
 
     deinit {
 
+        self.context.objectsDidChangeObserver(remove: self)
         self.observers.removeAllObjects()
     }
 
@@ -221,30 +222,36 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
 
             self.rawObjectWillChange = nil
         }
-        self.$lazySnapshot.initialize({ initializer(objectID, context) })
-        
-        context.objectsDidChangeObserver(for: self).addObserver(self) { [weak self] (updatedIDs, deletedIDs) in
+        self.$lazySnapshot.initialize { [weak self] in
 
             guard let self = self else {
 
-                return
+                return initializer(objectID, context)
             }
-            if deletedIDs.contains(objectID) {
+            context.objectsDidChangeObserver(for: self).addObserver(self) { [weak self] (updatedIDs, deletedIDs) in
 
-                self.object = nil
+                guard let self = self else {
 
-                self.willChange()
-                self.$lazySnapshot.reset({ nil })
-                self.didChange()
-                self.notifyObservers()
+                    return
+                }
+                if deletedIDs.contains(objectID) {
+
+                    self.object = nil
+
+                    self.willChange()
+                    self.$lazySnapshot.reset({ nil })
+                    self.didChange()
+                    self.notifyObservers()
+                }
+                else if updatedIDs.contains(objectID) {
+
+                    self.willChange()
+                    self.$lazySnapshot.reset({ initializer(objectID, context) })
+                    self.didChange()
+                    self.notifyObservers()
+                }
             }
-            else if updatedIDs.contains(objectID) {
-
-                self.willChange()
-                self.$lazySnapshot.reset({ initializer(objectID, context) })
-                self.didChange()
-                self.notifyObservers()
-            }
+            return initializer(objectID, context)
         }
     }
 

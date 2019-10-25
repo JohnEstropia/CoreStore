@@ -145,6 +145,12 @@ extension NSManagedObjectContext {
             )
         }
     }
+
+    @nonobjc
+    internal func objectsDidChangeObserver<U: AnyObject>(remove: U) {
+
+        _ = self.userInfo(for: .objectsChangeObserver(U.self), initialize: { nil as Any? })
+    }
     
     
     // MARK: Private

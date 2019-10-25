@@ -107,6 +107,7 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
             return nil
         }
         self.id = objectID
+        self.context = context
         self.values = values
     }
 
@@ -114,6 +115,7 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
     // MARK: Private
 
     private let id: O.ObjectID
+    private let context: NSManagedObjectContext
     private var values: [String: Any]
 
     private var valuesRef: NSDictionary {
@@ -214,51 +216,59 @@ extension ObjectSnapshot where O: CoreStoreObject {
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToOne<D>>) -> D.ObjectID? {
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToOne<D>>) -> ObjectPublisher<D>? {
 
         get {
 
             let key = String(keyPath: member)
-            return self.values[key] as! D.ObjectID?
+            guard let id = self.values[key] as! D.ObjectID? else {
+
+                return nil
+            }
+            return self.context.objectPublisher(objectID: id)
         }
         set {
 
             let key = String(keyPath: member)
-            self.values[key] = newValue
+            self.values[key] = newValue?.objectID()
         }
     }
 
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyOrdered<D>>) -> [D.ObjectID] {
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyOrdered<D>>) -> [ObjectPublisher<D>] {
 
         get {
 
             let key = String(keyPath: member)
-            return self.values[key] as! [D.ObjectID]
+            let context = self.context
+            let ids = self.values[key] as! [D.ObjectID]
+            return ids.map(context.objectPublisher(objectID:))
         }
         set {
 
             let key = String(keyPath: member)
-            self.values[key] = newValue
+            self.values[key] = newValue.map({ $0.objectID() })
         }
     }
 
     /**
      Returns the value for the property identified by a given key.
      */
-    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyUnordered<D>>) -> Set<D.ObjectID> {
+    public subscript<OBase, D>(dynamicMember member: KeyPath<O, RelationshipContainer<OBase>.ToManyUnordered<D>>) -> Set<ObjectPublisher<D>> {
 
         get {
 
             let key = String(keyPath: member)
-            return self.values[key] as! Set<D.ObjectID>
+            let context = self.context
+            let ids = self.values[key] as! Set<D.ObjectID>
+            return Set(ids.map(context.objectPublisher(objectID:)))
         }
         set {
 
             let key = String(keyPath: member)
-            self.values[key] = newValue
+            self.values[key] = Set(newValue.map({ $0.objectID() }))
         }
     }
 }
