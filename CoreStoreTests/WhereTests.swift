@@ -109,8 +109,8 @@ final class WhereTests: XCTestCase {
                 )
                 XCTAssertAllEqual(
                     "master.pets.species",
-                    (\Animal.master ~ \.pets ~ \.species).description,
-                    String(keyPath: \Animal.master ~ \.pets ~ \.species)
+                    (\Animal.master ~ \.pets ~ \.$species).description,
+                    String(keyPath: \Animal.master ~ \.pets ~ \.$species)
                 )
                 XCTAssertAllEqual(
                     "master.pets.master",
@@ -167,8 +167,8 @@ final class WhereTests: XCTestCase {
                 )
                 XCTAssertAllEqual(
                     "ANY master.pets.species",
-                    (\Animal.master ~ \.pets ~ \.species).any().description,
-                    String(keyPath: (\Animal.master ~ \.pets ~ \.species).any())
+                    (\Animal.master ~ \.pets ~ \.$species).any().description,
+                    String(keyPath: (\Animal.master ~ \.pets ~ \.$species).any())
                 )
             }
         }
@@ -196,8 +196,8 @@ final class WhereTests: XCTestCase {
                 )
                 XCTAssertAllEqual(
                     "ALL master.pets.species",
-                    (\Animal.master ~ \.pets ~ \.species).all().description,
-                    String(keyPath: (\Animal.master ~ \.pets ~ \.species).all())
+                    (\Animal.master ~ \.pets ~ \.$species).all().description,
+                    String(keyPath: (\Animal.master ~ \.pets ~ \.$species).all())
                 )
             }
         }
@@ -225,8 +225,8 @@ final class WhereTests: XCTestCase {
                 )
                 XCTAssertAllEqual(
                     "NONE master.pets.species",
-                    (\Animal.master ~ \.pets ~ \.species).none().description,
-                    String(keyPath: (\Animal.master ~ \.pets ~ \.species).none())
+                    (\Animal.master ~ \.pets ~ \.$species).none().description,
+                    String(keyPath: (\Animal.master ~ \.pets ~ \.$species).none())
                 )
             }
         }
@@ -301,7 +301,7 @@ final class WhereTests: XCTestCase {
             }
             do {
 
-                let whereClause: Where<Animal> = (\.master ~ \.pets ~ \.species).any() == dummy
+                let whereClause: Where<Animal> = (\.master ~ \.pets ~ \.$species).any() == dummy
                 let predicate = NSPredicate(format: "ANY master.pets.species == %@", dummy)
                 XCTAssertAllEqual(whereClause, Where<Animal>(predicate))
                 XCTAssertAllEqual(whereClause.predicate, predicate)
@@ -319,7 +319,7 @@ final class WhereTests: XCTestCase {
             }
             do {
 
-                let whereClause: Where<Animal> = (\.master ~ \.pets ~ \.species).all() == dummy
+                let whereClause: Where<Animal> = (\.master ~ \.pets ~ \.$species).all() == dummy
                 let predicate = NSPredicate(format: "ALL master.pets.species == %@", dummy)
                 XCTAssertAllEqual(whereClause, Where<Animal>(predicate))
                 XCTAssertAllEqual(whereClause.predicate, predicate)
@@ -337,7 +337,7 @@ final class WhereTests: XCTestCase {
             }
             do {
 
-                let whereClause: Where<Animal> = (\.master ~ \.pets ~ \.species).none() == dummy
+                let whereClause: Where<Animal> = (\.master ~ \.pets ~ \.$species).none() == dummy
                 let predicate = NSPredicate(format: "NONE master.pets.species == %@", dummy)
                 XCTAssertAllEqual(whereClause, Where<Animal>(predicate))
                 XCTAssertAllEqual(whereClause.predicate, predicate)

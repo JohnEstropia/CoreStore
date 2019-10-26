@@ -73,6 +73,7 @@ public enum ValueContainer<O: CoreStoreObject> {
      ```
      - Important: `Value.Required` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
+    @propertyWrapper
     public final class Required<V: ImportableAttributeType>: AttributeKeyPathStringConvertible, AttributeProtocol {
         
         /**
@@ -110,7 +111,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter customSetter: use this closure as an "override" for the default property setter. The closure receives a `PartialObject<O>`, which acts as a fast, type-safe KVC interface for `CoreStoreObject`. The reason a `CoreStoreObject` instance is not passed directly is because the Core Data runtime is not aware of `CoreStoreObject` properties' static typing, and so loading those info everytime KVO invokes this accessor method incurs a cumulative performance hit (especially in KVO-heavy operations such as `ListMonitor` observing.) When accessing the property value from `PartialObject<O>`, make sure to use `PartialObject<O>.setPrimitiveValue(_:for:)` instead of `PartialObject<O>.setValue(_:for:)`, which would unintentionally execute the same closure again recursively.
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public init(
+        public convenience init(
             _ keyPath: KeyPathString,
             initial: @autoclosure @escaping () -> V,
             isTransient: Bool = false,
@@ -119,15 +120,17 @@ public enum ValueContainer<O: CoreStoreObject> {
             customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
-            
-            self.keyPath = keyPath
-            self.isTransient = isTransient
-            self.defaultValue = { initial().cs_toQueryableNativeType() }
-            self.versionHashModifier = versionHashModifier
-            self.renamingIdentifier = renamingIdentifier
-            self.customGetter = customGetter
-            self.customSetter = customSetter
-            self.affectedByKeyPaths = affectedByKeyPaths
+
+            self.init(
+                wrappedValue: initial(),
+                keyPath,
+                isTransient: isTransient,
+                versionHashModifier: versionHashModifier(),
+                renamingIdentifier: renamingIdentifier(),
+                customGetter: customGetter,
+                customSetter: customSetter,
+                affectedByKeyPaths: affectedByKeyPaths()
+            )
         }
 
         /**
@@ -137,22 +140,57 @@ public enum ValueContainer<O: CoreStoreObject> {
             
             get {
                 
+                return self.wrappedValue
+            }
+            set {
+                
+                self.wrappedValue = newValue
+            }
+        }
+
+        
+        // MARK: @propertyWrapper
+
+        public init(
+            wrappedValue initialValue: @autoclosure @escaping () -> V,
+            _ keyPath: KeyPathString,
+            isTransient: Bool = false,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
+            customGetter: ((_ partialObject: PartialObject<O>) -> V)? = nil,
+            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V) -> Void)? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
+
+            self.keyPath = keyPath
+            self.isTransient = isTransient
+            self.defaultValue = { initialValue().cs_toQueryableNativeType() }
+            self.versionHashModifier = versionHashModifier
+            self.renamingIdentifier = renamingIdentifier
+            self.customGetter = customGetter
+            self.customSetter = customSetter
+            self.affectedByKeyPaths = affectedByKeyPaths
+        }
+        
+        public var wrappedValue: V {
+            
+            get {
+                
                 Internals.assert(
                     self.rawObject != nil,
                     "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.rawObject!) { (object) in
-                    
+                return withExtendedLifetime(self.rawObject!) { (rawObject) in
+
                     Internals.assert(
-                        object.isRunningInAllowedQueue() == true,
+                        rawObject.isRunningInAllowedQueue() == true,
                         "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
                     if let customGetter = self.customGetter {
-                        
-                        return customGetter(PartialObject<O>(object))
+
+                        return customGetter(PartialObject<O>(rawObject))
                     }
                     return V.cs_fromQueryableNativeType(
-                        object.value(forKey: self.keyPath)! as! V.QueryableNativeType
+                        rawObject.value(forKey: self.keyPath)! as! V.QueryableNativeType
                     )!
                 }
             }
@@ -162,26 +200,31 @@ public enum ValueContainer<O: CoreStoreObject> {
                     self.rawObject != nil,
                     "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.rawObject!) { (object) in
-                    
+                return withExtendedLifetime(self.rawObject!) { (rawObject) in
+
                     Internals.assert(
-                        object.isRunningInAllowedQueue() == true,
+                        rawObject.isRunningInAllowedQueue() == true,
                         "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
                     Internals.assert(
-                        object.isEditableInContext() == true,
+                        rawObject.isEditableInContext() == true,
                         "Attempted to update a \(Internals.typeName(O.self))'s value from outside a transaction."
                     )
                     if let customSetter = self.customSetter {
-                        
-                        return customSetter(PartialObject<O>(object), newValue)
+
+                        return customSetter(PartialObject<O>(rawObject), newValue)
                     }
-                    return object.setValue(
+                    return rawObject.setValue(
                         newValue.cs_toQueryableNativeType(),
                         forKey: self.keyPath
                     )
                 }
             }
+        }
+        
+        public var projectedValue: ValueContainer<O>.Required<V> {
+            
+            return self
         }
 
 
@@ -293,6 +336,7 @@ public enum ValueContainer<O: CoreStoreObject> {
      ```
      - Important: `Value.Optional` properties are required to be stored properties. Computed properties will be ignored, including `lazy` and `weak` properties.
      */
+    @propertyWrapper
     public final class Optional<V: ImportableAttributeType>: AttributeKeyPathStringConvertible, AttributeProtocol {
         
         /**
@@ -333,7 +377,7 @@ public enum ValueContainer<O: CoreStoreObject> {
          - parameter originalNewValue: the original new value
          - parameter affectedByKeyPaths: a set of key paths for properties whose values affect the value of the receiver. This is similar to `NSManagedObject.keyPathsForValuesAffectingValue(forKey:)`.
          */
-        public init(
+        public convenience init(
             _ keyPath: KeyPathString,
             initial: @autoclosure @escaping () -> V? = nil,
             isTransient: Bool = false,
@@ -343,14 +387,16 @@ public enum ValueContainer<O: CoreStoreObject> {
             customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)? = nil,
             affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
             
-            self.keyPath = keyPath
-            self.isTransient = isTransient
-            self.defaultValue = { initial()?.cs_toQueryableNativeType() }
-            self.versionHashModifier = versionHashModifier
-            self.renamingIdentifier = renamingIdentifier
-            self.customGetter = customGetter
-            self.customSetter = customSetter
-            self.affectedByKeyPaths = affectedByKeyPaths
+            self.init(
+                wrappedValue: initial(),
+                keyPath,
+                isTransient: isTransient,
+                versionHashModifier: versionHashModifier(),
+                renamingIdentifier: renamingIdentifier(),
+                customGetter: customGetter,
+                customSetter: customSetter,
+                affectedByKeyPaths: affectedByKeyPaths()
+            )
         }
 
         /**
@@ -360,21 +406,56 @@ public enum ValueContainer<O: CoreStoreObject> {
             
             get {
                 
+                return self.wrappedValue
+            }
+            set {
+                
+                self.wrappedValue = newValue
+            }
+        }
+        
+        
+        // MARK: @propertyWrapper
+
+        public init(
+            wrappedValue initialValue: @autoclosure @escaping () -> V?,
+            _ keyPath: KeyPathString,
+            isTransient: Bool = false,
+            versionHashModifier: @autoclosure @escaping () -> String? = nil,
+            renamingIdentifier: @autoclosure @escaping () -> String? = nil,
+            customGetter: ((_ partialObject: PartialObject<O>) -> V?)? = nil,
+            customSetter: ((_ partialObject: PartialObject<O>, _ newValue: V?) -> Void)? = nil,
+            affectedByKeyPaths: @autoclosure @escaping () -> Set<String> = []) {
+            
+            self.keyPath = keyPath
+            self.isTransient = isTransient
+            self.defaultValue = { initialValue()?.cs_toQueryableNativeType() }
+            self.versionHashModifier = versionHashModifier
+            self.renamingIdentifier = renamingIdentifier
+            self.customGetter = customGetter
+            self.customSetter = customSetter
+            self.affectedByKeyPaths = affectedByKeyPaths
+        }
+        
+        public var wrappedValue: V? {
+            
+            get {
+                
                 Internals.assert(
                     self.rawObject != nil,
                     "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.rawObject!) { (object) in
+                return withExtendedLifetime(self.rawObject!) { (rawObject) in
                     
                     Internals.assert(
-                        object.isRunningInAllowedQueue() == true,
+                        rawObject.isRunningInAllowedQueue() == true,
                         "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
                     if let customGetter = self.customGetter {
                         
-                        return customGetter(PartialObject<O>(object))
+                        return customGetter(PartialObject<O>(rawObject))
                     }
-                    return (object.value(forKey: self.keyPath) as! V.QueryableNativeType?)
+                    return (rawObject.value(forKey: self.keyPath) as! V.QueryableNativeType?)
                         .flatMap(V.cs_fromQueryableNativeType)
                 }
             }
@@ -384,26 +465,31 @@ public enum ValueContainer<O: CoreStoreObject> {
                     self.rawObject != nil,
                     "Attempted to access values from a \(Internals.typeName(O.self)) meta object. Meta objects are only used for querying keyPaths and infering types."
                 )
-                return withExtendedLifetime(self.rawObject!) { (object) in
+                return withExtendedLifetime(self.rawObject!) { (rawObject) in
                     
                     Internals.assert(
-                        object.isRunningInAllowedQueue() == true,
+                        rawObject.isRunningInAllowedQueue() == true,
                         "Attempted to access \(Internals.typeName(O.self))'s value outside it's designated queue."
                     )
                     Internals.assert(
-                        object.isEditableInContext() == true,
+                        rawObject.isEditableInContext() == true,
                         "Attempted to update a \(Internals.typeName(O.self))'s value from outside a transaction."
                     )
                     if let customSetter = self.customSetter {
                         
-                        return customSetter(PartialObject<O>(object), newValue)
+                        return customSetter(PartialObject<O>(rawObject), newValue)
                     }
-                    object.setValue(
+                    rawObject.setValue(
                         newValue?.cs_toQueryableNativeType(),
                         forKey: self.keyPath
                     )
                 }
             }
+        }
+        
+        public var projectedValue: ValueContainer<O>.Optional<V> {
+            
+            return self
         }
 
 

@@ -187,17 +187,6 @@
     XCTAssertEqualObjects([[sqliteStorage class] storeType], [CSSQLiteStore storeType]);
     XCTAssertEqualObjects([[sqliteStorage class] storeType], NSSQLiteStoreType);
     XCTAssertNil(sqliteStorage.configuration);
-    NSDictionary *storeOptions;
-    if (@available(iOS 11.0, macOS 10.13, tvOS 11.0, *)) {
-        
-        storeOptions = @{ NSSQLitePragmasOption: @{ @"journal_mode": @"WAL" },
-                          NSBinaryStoreInsecureDecodingCompatibilityOption: @YES };
-    }
-    else {
-        
-        storeOptions = @{ NSSQLitePragmasOption: @{ @"journal_mode": @"WAL" }};
-    }
-    XCTAssertEqualObjects(sqliteStorage.storeOptions, storeOptions);
     XCTAssertNil(sqliteError);
 }
 

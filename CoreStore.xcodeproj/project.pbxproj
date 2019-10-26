@@ -125,10 +125,6 @@
 		B50E17622351FA66004F033C /* Internals.Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50E17602351FA66004F033C /* Internals.Closure.swift */; };
 		B50E17632351FA66004F033C /* Internals.Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50E17602351FA66004F033C /* Internals.Closure.swift */; };
 		B50E17642351FA66004F033C /* Internals.Closure.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50E17602351FA66004F033C /* Internals.Closure.swift */; };
-		B50EE14223473C92009B8C47 /* CoreStoreObject+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50EE14123473C92009B8C47 /* CoreStoreObject+DataSources.swift */; };
-		B50EE14323473C96009B8C47 /* CoreStoreObject+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50EE14123473C92009B8C47 /* CoreStoreObject+DataSources.swift */; };
-		B50EE14423473C97009B8C47 /* CoreStoreObject+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50EE14123473C92009B8C47 /* CoreStoreObject+DataSources.swift */; };
-		B50EE14523473C97009B8C47 /* CoreStoreObject+DataSources.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50EE14123473C92009B8C47 /* CoreStoreObject+DataSources.swift */; };
 		B512607F1E97A18000402229 /* CoreStoreObject+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512607E1E97A18000402229 /* CoreStoreObject+Convenience.swift */; };
 		B51260801E97A18000402229 /* CoreStoreObject+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512607E1E97A18000402229 /* CoreStoreObject+Convenience.swift */; };
 		B51260811E97A18000402229 /* CoreStoreObject+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = B512607E1E97A18000402229 /* CoreStoreObject+Convenience.swift */; };
@@ -902,7 +898,6 @@
 		B50E175623517DE4004F033C /* Differentiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Differentiable.swift; sourceTree = "<group>"; };
 		B50E175B2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.DiffableDataUIDispatcher.DiffResult.swift; sourceTree = "<group>"; };
 		B50E17602351FA66004F033C /* Internals.Closure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Internals.Closure.swift; sourceTree = "<group>"; };
-		B50EE14123473C92009B8C47 /* CoreStoreObject+DataSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreStoreObject+DataSources.swift"; sourceTree = "<group>"; };
 		B512607E1E97A18000402229 /* CoreStoreObject+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStoreObject+Convenience.swift"; sourceTree = "<group>"; };
 		B51260881E9B252B00402229 /* NSEntityDescription+DynamicModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSEntityDescription+DynamicModel.swift"; sourceTree = "<group>"; };
 		B51260921E9B28F100402229 /* Internals.EntityIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Internals.EntityIdentifier.swift; sourceTree = "<group>"; };
@@ -1604,7 +1599,6 @@
 				B5BF7FC0234D7B2E0070E741 /* ObjectPublisher.swift */,
 				B5BF7FC5234D7E460070E741 /* ObjectSnapshot.swift */,
 				B55BB4D3235012AE00C33E34 /* ObjectRepresentation.swift */,
-				B50EE14123473C92009B8C47 /* CoreStoreObject+DataSources.swift */,
 				B5D8CA752346E7590055D7D1 /* DataStack+DataSources.swift */,
 				B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */,
 				B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift */,
@@ -2187,7 +2181,6 @@
 				B5E84F0D1AFF847B0064E85B /* BaseDataTransaction+Querying.swift in Sources */,
 				B52F74451E9B8724005F3DAC /* XcodeDataModelSchema.swift in Sources */,
 				B5FAD6AC1B51285300714891 /* Internals.MigrationManager.swift in Sources */,
-				B50EE14223473C92009B8C47 /* CoreStoreObject+DataSources.swift in Sources */,
 				B5E84EF61AFF846E0064E85B /* DataStack+Transaction.swift in Sources */,
 				B5FEC18E1C9166E200532541 /* NSPersistentStore+Setup.swift in Sources */,
 				B5BF7FCB234D80910070E741 /* Internals.LazyNonmutating.swift in Sources */,
@@ -2366,7 +2359,6 @@
 				B549F6741E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
 				B509C7F51E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
 				82BA18B31C4BBD3900A0916E /* ImportableUniqueObject.swift in Sources */,
-				B50EE14323473C96009B8C47 /* CoreStoreObject+DataSources.swift in Sources */,
 				B55BB4DA23503B9600C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
 				B5E1B5951CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
 				18166887232B9ED60097C275 /* String+KeyPaths.swift in Sources */,
@@ -2590,7 +2582,6 @@
 				B549F6761E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
 				B509C7F71E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
 				B5220E1F1D130810009BC71E /* CSListObserver.swift in Sources */,
-				B50EE14523473C97009B8C47 /* CoreStoreObject+DataSources.swift in Sources */,
 				B55BB4D823503B9500C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
 				B52DD1941BE1F92500949AFE /* CoreStore.swift in Sources */,
 				18166889232B9ED80097C275 /* String+KeyPaths.swift in Sources */,
@@ -2814,7 +2805,6 @@
 				B549F6751E56A92800FBAB2D /* CoreDataNativeType.swift in Sources */,
 				B509C7F61E54511B0061C547 /* ImportableAttributeType.swift in Sources */,
 				B5E1B5961CAA0C15007FD580 /* CSObjectMonitor.swift in Sources */,
-				B50EE14423473C97009B8C47 /* CoreStoreObject+DataSources.swift in Sources */,
 				B55BB4D923503B9600C33E34 /* EnvironmentValues+DataSources.swift in Sources */,
 				B5ECDC2C1CA81CC700C7F112 /* CSDataStack+Transaction.swift in Sources */,
 				18166888232B9ED70097C275 /* String+KeyPaths.swift in Sources */,
