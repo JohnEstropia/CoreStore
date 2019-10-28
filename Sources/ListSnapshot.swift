@@ -629,27 +629,13 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     
     // MARK: Internal
     
-    internal private(set) var diffableSnapshot: DiffableDataSourceSnapshotProtocol
+    internal private(set) var diffableSnapshot: Internals.DiffableDataSourceSnapshot
     
     internal init() {
 
-//        if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//            self.diffableSnapshot = NSDiffableDataSourceSnapshot<String, NSManagedObjectID>()
-//        }
-//        else {
-            
-            self.diffableSnapshot = Internals.DiffableDataSourceSnapshot()
-//        }
+        self.diffableSnapshot = Internals.DiffableDataSourceSnapshot()
         self.context = nil
     }
-    
-//    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-//    internal init(diffableSnapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>, context: NSManagedObjectContext) {
-//
-//        self.diffableSnapshot = diffableSnapshot
-//        self.context = context
-//    }
     
     internal init(diffableSnapshot: Internals.DiffableDataSourceSnapshot, context: NSManagedObjectContext) {
 

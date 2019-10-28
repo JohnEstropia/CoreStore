@@ -41,6 +41,14 @@ import AppKit
  */
 @dynamicMemberLookup
 public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
+
+    // MARK: Public
+
+    public func dictionaryForValues() -> [String: Any] {
+
+        return self.values
+    }
+
     
     // MARK: ObjectRepresentation
 
@@ -127,16 +135,25 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
 
 // MARK: - ObjectSnapshot where O: NSManagedObject
 
-@available(*, unavailable, message: "KeyPaths accessed from @dynamicMemberLookup types can't generate KVC keys yet (https://bugs.swift.org/browse/SR-11351)")
 extension ObjectSnapshot where O: NSManagedObject {
 
     /**
      Returns the value for the property identified by a given key.
      */
+    @available(*, unavailable, message: "KeyPaths accessed from @dynamicMemberLookup types can't generate KVC keys yet (https://bugs.swift.org/browse/SR-11351)")
     public subscript<V: AllowedObjectiveCKeyPathValue>(dynamicMember member: KeyPath<O, V>) -> V {
 
         let key = String(keyPath: member)
         return self.values[key] as! V
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
+
+        let key = String(keyPath: keyPath)
+        return self.values[key] as! V?
     }
 }
 

@@ -397,15 +397,6 @@ public final class ListPublisher<O: DynamicObject>: Hashable {
 extension ListPublisher: FetchedDiffableDataSourceSnapshotHandler {
 
     // MARK: FetchedDiffableDataSourceSnapshotHandler
-    
-//    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
-//    internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>) {
-//
-//        self.snapshot = .init(
-//            diffableSnapshot: snapshot,
-//            context: controller.managedObjectContext
-//        )
-//    }
 
     internal func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: Internals.DiffableDataSourceSnapshot) {
 
