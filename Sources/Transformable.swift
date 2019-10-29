@@ -380,7 +380,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
 
                         return customGetter(PartialObject<O>(object))
                     }
-                    return object.value(forKey: self.keyPath) as! V?
+                    return object.value(forKey: self.keyPath) as? V
                 }
             }
             set {
@@ -489,7 +489,7 @@ public enum TransformableContainer<O: CoreStoreObject> {
                 }
                 customSetter(
                     PartialObject<O>(rawObject),
-                    newValue as! V?
+                    newValue as? V
                 )
             }
         }

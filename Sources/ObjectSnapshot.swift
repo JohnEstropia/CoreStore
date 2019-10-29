@@ -120,11 +120,15 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
     }
 
 
+    // MARK: FilePrivate
+
+    fileprivate var values: [String: Any]
+
+
     // MARK: Private
 
     private let id: O.ObjectID
     private let context: NSManagedObjectContext
-    private var values: [String: Any]
 
     private var valuesRef: NSDictionary {
 
@@ -153,7 +157,16 @@ extension ObjectSnapshot where O: NSManagedObject {
     public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
 
         let key = String(keyPath: keyPath)
-        return self.values[key] as! V?
+        return self.values[key] as? V
+    }
+
+    /**
+     Mutates the value for the property identified by a given key.
+     */
+    public mutating func setValue<V: AllowedObjectiveCKeyPathValue>(_ value: V!, forKeyPath keyPath: KeyPath<O, V>) {
+
+        let key = String(keyPath: keyPath)
+        self.values[key] = value
     }
 }
 
@@ -187,7 +200,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
         get {
 
             let key = String(keyPath: member)
-            return self.values[key] as! V?
+            return self.values[key] as? V
         }
         set {
 
@@ -221,7 +234,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
         get {
 
             let key = String(keyPath: member)
-            return self.values[key] as! V?
+            return self.values[key] as? V
         }
         set {
 
@@ -238,7 +251,7 @@ extension ObjectSnapshot where O: CoreStoreObject {
         get {
 
             let key = String(keyPath: member)
-            guard let id = self.values[key] as! D.ObjectID? else {
+            guard let id = self.values[key] as? D.ObjectID else {
 
                 return nil
             }
