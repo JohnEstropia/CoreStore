@@ -356,7 +356,7 @@ extension ObjectPublisher where O: NSManagedObject {
     public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
 
         let key = String(keyPath: keyPath)
-        return self.snapshot?.dictionaryForValues()[key] as? V
+        return self.snapshot?.dictionaryForValues()[key] as! V?
     }
 }
 

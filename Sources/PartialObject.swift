@@ -191,7 +191,7 @@ public struct PartialObject<O: CoreStoreObject> {
      */
     public func value<V>(for property: (O) -> TransformableContainer<O>.Optional<V>) -> V? {
         
-        return self.rawObject.value(forKey: property(O.meta).keyPath) as? V
+        return self.rawObject.value(forKey: property(O.meta).keyPath) as! V?
     }
     
     /**
@@ -212,7 +212,7 @@ public struct PartialObject<O: CoreStoreObject> {
      */
     public func primitiveValue<V>(for property: (O) -> TransformableContainer<O>.Optional<V>) -> V? {
         
-        return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as? V
+        return self.rawObject.primitiveValue(forKey: property(O.meta).keyPath) as! V?
     }
     
     /**

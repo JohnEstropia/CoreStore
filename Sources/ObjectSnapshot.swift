@@ -157,7 +157,7 @@ extension ObjectSnapshot where O: NSManagedObject {
     public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
 
         let key = String(keyPath: keyPath)
-        return self.values[key] as? V
+        return self.values[key] as! V?
     }
 
     /**

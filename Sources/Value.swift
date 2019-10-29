@@ -267,9 +267,9 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
         }
         
-        internal var valueForSnapshot: Any {
+        internal var valueForSnapshot: Any? {
 
-            return self.value as Any
+            return self.value
         }
         
         
@@ -489,9 +489,9 @@ public enum ValueContainer<O: CoreStoreObject> {
             }
         }
         
-        internal var valueForSnapshot: Any {
+        internal var valueForSnapshot: Any? {
 
-            return self.value as Any
+            return self.value
         }
         
         

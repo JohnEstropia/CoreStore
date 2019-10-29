@@ -120,7 +120,7 @@ extension DiffableDataSource {
 
             let diffableSnapshot = snapshot.diffableSnapshot
             self.dispatcher.apply(
-                diffableSnapshot as! Internals.DiffableDataSourceSnapshot,
+                diffableSnapshot,
                 view: self.collectionView,
                 animatingDifferences: animatingDifferences,
                 performUpdates: { collectionView, changeset, setSections in
