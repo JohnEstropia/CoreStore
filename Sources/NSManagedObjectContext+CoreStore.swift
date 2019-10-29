@@ -178,9 +178,9 @@ extension NSManagedObjectContext {
     private func userInfo<T>(for key: UserInfoKeys, initialize: @escaping () -> T) -> T {
 
         let keyString = key.keyString
-        if let value = self.userInfo[keyString] {
+        if let value = self.userInfo[keyString] as? T {
 
-            return value as! T
+            return value
         }
         let value = initialize()
         self.userInfo[keyString] = value
