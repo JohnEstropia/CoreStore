@@ -336,7 +336,6 @@ extension ObjectPublisher {
 
 // MARK: - ObjectPublisher where O: NSManagedObject
 
-@available(*, unavailable, message: "KeyPaths accessed from @dynamicMemberLookup types can't generate KVC keys yet (https://bugs.swift.org/browse/SR-11351)")
 extension ObjectPublisher where O: NSManagedObject {
 
     // MARK: Public
@@ -344,10 +343,20 @@ extension ObjectPublisher where O: NSManagedObject {
     /**
      Returns the value for the property identified by a given key.
      */
+     @available(*, unavailable, message: "KeyPaths accessed from @dynamicMemberLookup types can't generate KVC keys yet (https://bugs.swift.org/browse/SR-11351)")
     public subscript<V: AllowedObjectiveCKeyPathValue>(dynamicMember member: KeyPath<O, V>) -> V {
 
         fatalError()
 //        return self.snapshot[dynamicMember: member]
+    }
+
+    /**
+     Returns the value for the property identified by a given key.
+     */
+    public func value<V: AllowedObjectiveCKeyPathValue>(forKeyPath keyPath: KeyPath<O, V>) -> V! {
+
+        let key = String(keyPath: keyPath)
+        return self.snapshot?.dictionaryForValues()[key] as! V?
     }
 }
 

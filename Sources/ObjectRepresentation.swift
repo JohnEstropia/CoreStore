@@ -75,6 +75,19 @@ extension CoreStoreObject: ObjectRepresentation {}
 
 extension DynamicObject where Self: ObjectRepresentation {
 
+    // MARK: Public
+
+    /**
+     A thread-safe `struct` that is a full-copy of the object's properties
+     */
+    public func asSnapshot() -> ObjectSnapshot<Self>? {
+
+        return self.cs_toRaw()
+            .managedObjectContext
+            .flatMap({ ObjectSnapshot<Self>(objectID: self.cs_id(), context: $0) })
+    }
+
+
     // MARK: ObjectRepresentation
 
     public func objectID() -> Self.ObjectID {

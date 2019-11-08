@@ -41,5 +41,5 @@ internal protocol RelationshipProtocol: PropertyProtocol {
     var renamingIdentifier: () -> String? { get }
     var minCount: Int { get }
     var maxCount: Int { get }
-    var valueForSnapshot: Any { get }
+    var valueForSnapshot: Any? { get }
 }

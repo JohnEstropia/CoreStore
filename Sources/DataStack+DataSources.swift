@@ -41,7 +41,18 @@ extension DataStack {
      */
     public func publishObject<O: DynamicObject>(_ object: O) -> ObjectPublisher<O> {
 
-        return ObjectPublisher<O>(objectID: object.cs_id(), context: self.unsafeContext())
+        return self.publishObject(object.cs_id())
+    }
+
+    /**
+     Creates an `ObjectPublisher` for a `DynamicObject` with the specified `ObjectID`. Multiple objects may then register themselves to be notified when changes are made to the `DynamicObject`.
+
+     - parameter objectID: the `ObjectID` of the object to observe changes from
+     - returns: an `ObjectPublisher` that broadcasts changes to `object`
+     */
+    public func publishObject<O: DynamicObject>(_ objectID: O.ObjectID) -> ObjectPublisher<O> {
+
+        return ObjectPublisher<O>(objectID: objectID, context: self.unsafeContext())
     }
     
     /**

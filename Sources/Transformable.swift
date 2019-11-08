@@ -272,9 +272,9 @@ public enum TransformableContainer<O: CoreStoreObject> {
             }
         }
         
-        internal var valueForSnapshot: Any {
+        internal var valueForSnapshot: Any? {
 
-            return self.value as Any
+            return self.value
         }
 
 
@@ -494,9 +494,9 @@ public enum TransformableContainer<O: CoreStoreObject> {
             }
         }
         
-        internal var valueForSnapshot: Any {
+        internal var valueForSnapshot: Any? {
             
-            return self.value as Any
+            return self.value
         }
 
 

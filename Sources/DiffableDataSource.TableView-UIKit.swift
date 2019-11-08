@@ -127,31 +127,19 @@ extension DiffableDataSource {
         @nonobjc
         public func apply(_ snapshot: ListSnapshot<O>, animatingDifferences: Bool = true) {
 
-            let diffableSnapshot = snapshot.diffableSnapshot
-//            if #available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *) {
-//
-//                self.modernDataSource.apply(
-//                    diffableSnapshot as! NSDiffableDataSourceSnapshot<String, NSManagedObjectID>,
-//                    animatingDifferences: animatingDifferences,
-//                    completion: nil
-//                )
-//            }
-//            else {
-                
-                self.dispatcher.apply(
-                    diffableSnapshot as! Internals.DiffableDataSourceSnapshot,
-                    view: self.tableView,
-                    animatingDifferences: animatingDifferences,
-                    performUpdates: { tableView, changeset, setSections in
-                        
-                        tableView.reload(
-                            using: changeset,
-                            with: self.defaultRowAnimation,
-                            setData: setSections
-                        )
-                    }
-                )
-//            }
+            self.dispatcher.apply(
+                snapshot.diffableSnapshot,
+                view: self.tableView,
+                animatingDifferences: animatingDifferences,
+                performUpdates: { tableView, changeset, setSections in
+
+                    tableView.reload(
+                        using: changeset,
+                        with: self.defaultRowAnimation,
+                        setData: setSections
+                    )
+                }
+            )
         }
         
         /**

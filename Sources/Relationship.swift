@@ -313,9 +313,9 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             }
         }
 
-        internal var valueForSnapshot: Any {
+        internal var valueForSnapshot: Any? {
 
-            return self.value?.objectID() as Any
+            return self.value?.objectID()
         }
         
         
@@ -609,9 +609,9 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             }
         }
 
-        internal var valueForSnapshot: Any {
+        internal var valueForSnapshot: Any? {
 
-            return self.value.map({ $0.objectID() }) as Any
+            return self.value.map({ $0.objectID() })
         }
         
         
@@ -910,9 +910,9 @@ public enum RelationshipContainer<O: CoreStoreObject> {
             }
         }
 
-        internal var valueForSnapshot: Any {
+        internal var valueForSnapshot: Any? {
 
-            return Set(self.value.map({ $0.objectID() })) as Any
+            return Set(self.value.map({ $0.objectID() }))
         }
         
         
