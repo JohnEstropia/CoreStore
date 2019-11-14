@@ -192,6 +192,17 @@ extension Internals {
             self.structure.update(sectionIDs: identifiers)
         }
 
+        mutating func resize(limit: Int) {
+
+            let itemIdentifiers = self.itemIdentifiers
+            guard itemIdentifiers.endIndex > limit else {
+
+                return
+            }
+            self.structure.remove(itemIDs: itemIdentifiers.suffix(from: limit))
+            self.structure.removeAllEmptySections()
+        }
+
 
         // MARK: Private
 
@@ -359,7 +370,7 @@ extension Internals {
                     .insert(contentsOf: items, at: itemIndex)
             }
 
-            mutating func remove(itemIDs: [NSManagedObjectID]) {
+            mutating func remove<C: Collection>(itemIDs: C) where C.Element == NSManagedObjectID {
 
                 let itemPositionMap = self.itemPositionMap()
                 var removeIndexSetMap: [Int: IndexSet] = [:]
@@ -388,6 +399,11 @@ extension Internals {
 
                     self.sections[sectionIndex].elements.removeAll()
                 }
+            }
+
+            mutating func removeAllEmptySections() {
+
+                self.sections.removeAll(where: { $0.elements.isEmpty })
             }
 
             mutating func move(itemID: NSManagedObjectID, before beforeItemID: NSManagedObjectID) {

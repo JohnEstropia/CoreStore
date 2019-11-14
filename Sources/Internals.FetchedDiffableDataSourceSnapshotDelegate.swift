@@ -93,6 +93,11 @@ extension Internals {
             var snapshot = Internals.DiffableDataSourceSnapshot(
                 sections: controller.sections ?? []
             )
+            let fetchLimit = controller.fetchRequest.fetchLimit
+            if fetchLimit > 0 {
+
+                snapshot.resize(limit: fetchLimit)
+            }
             snapshot.reloadSections(self.reloadedSectionIDs)
             snapshot.reloadItems(self.reloadedItemIDs)
             
