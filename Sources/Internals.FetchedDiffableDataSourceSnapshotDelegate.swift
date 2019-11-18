@@ -91,13 +91,10 @@ extension Internals {
         dynamic func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
 
             var snapshot = Internals.DiffableDataSourceSnapshot(
-                sections: controller.sections ?? []
+                sections: controller.sections ?? [],
+                fetchOffset: controller.fetchRequest.fetchOffset,
+                fetchLimit: controller.fetchRequest.fetchLimit
             )
-            let fetchLimit = controller.fetchRequest.fetchLimit
-            if fetchLimit > 0 {
-
-                snapshot.resize(limit: fetchLimit)
-            }
             snapshot.reloadSections(self.reloadedSectionIDs)
             snapshot.reloadItems(self.reloadedItemIDs)
             

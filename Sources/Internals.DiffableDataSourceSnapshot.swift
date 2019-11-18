@@ -47,9 +47,13 @@ extension Internals {
 
         // MARK: Internal
 
-        init(sections: [NSFetchedResultsSectionInfo]) {
+        init(sections: [NSFetchedResultsSectionInfo], fetchOffset: Int, fetchLimit: Int) {
 
-            self.structure = .init(sections: sections)
+            self.structure = .init(
+                sections: sections,
+                fetchOffset: Swift.max(0, fetchOffset),
+                fetchLimit: (fetchLimit > 0) ? fetchLimit : nil
+            )
         }
         
         var sections: [Section] {
@@ -192,17 +196,6 @@ extension Internals {
             self.structure.update(sectionIDs: identifiers)
         }
 
-        mutating func resize(limit: Int) {
-
-            let itemIdentifiers = self.itemIdentifiers
-            guard itemIdentifiers.endIndex > limit else {
-
-                return
-            }
-            self.structure.remove(itemIDs: itemIdentifiers.suffix(from: limit))
-            self.structure.removeAllEmptySections()
-        }
-
 
         // MARK: Private
 
@@ -285,17 +278,45 @@ extension Internals {
                 self.sections = []
             }
 
-            init(sections: [NSFetchedResultsSectionInfo]) {
+            init(sections: [NSFetchedResultsSectionInfo], fetchOffset: Int, fetchLimit: Int?) {
 
-                self.sections = sections.map {
+                let sliceItems: (_ array: [Any], _ offset: Int) -> Array<Any>.SubSequence
+                if let fetchLimit = fetchLimit {
 
-                    Section(
-                        differenceIdentifier: $0.name,
-                        items: $0.objects?
-                            .compactMap({ ($0 as? NSManagedObject)?.objectID })
-                            .map({ Item(differenceIdentifier: $0) }) ?? []
+                    var remainingCount = fetchLimit
+                    sliceItems = {
+
+                        let slice = $0[$1...].prefix(remainingCount)
+                        remainingCount -= slice.count
+                        return slice
+                    }
+                }
+                else {
+
+                    sliceItems = { $0[$1...] }
+                }
+                var newSections: [Internals.DiffableDataSourceSnapshot.Section] = []
+                var ignoreCount = fetchOffset
+                for section in sections {
+
+                    let objects = section.objects ?? []
+                    guard objects.indices.contains(ignoreCount) else {
+
+                        ignoreCount -= objects.count
+                        continue
+                    }
+                    let items = sliceItems(objects, ignoreCount)
+                        .map({ Item(differenceIdentifier: ($0 as! NSManagedObject).objectID) })
+                    ignoreCount = 0
+                    guard !items.isEmpty else {
+
+                        continue
+                    }
+                    newSections.append(
+                        Section(differenceIdentifier: section.name, items: items)
                     )
                 }
+                self.sections = newSections
             }
 
             var allSectionIDs: [String] {
