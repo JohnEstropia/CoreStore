@@ -45,7 +45,7 @@ let package = Package(
         .testTarget(
             name: "CoreStoreSwiftTests",
             dependencies: ["CoreStore"],
-            path: "CoreStoreTests/Swift",
+            path: "CoreStoreTests/Swift"
         ),
         .testTarget(
           name: "CoreStoreObjCTests",
