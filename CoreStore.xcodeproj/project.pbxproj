@@ -1198,6 +1198,57 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A62F6F6238816F400B2893D /* ObjectiveC */ = {
+			isa = PBXGroup;
+			children = (
+				B5DBE2DD1C9939E100B5CEFA /* BridgingTests.h */,
+				B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */,
+			);
+			path = ObjectiveC;
+			sourceTree = "<group>";
+		};
+		0A62F6F82388171100B2893D /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				B5489F451CF5F017008B4978 /* TransactionTests.swift */,
+				B525577F1D029D2500E51965 /* TweakTests.swift */,
+				B59A51822256C85E00CEF3C5 /* VersionLockTests.swift */,
+				B52557731D02791400E51965 /* WhereTests.swift */,
+				0A62F6F92388174C00B2893D /* TestEntities */,
+				B5489F4B1CF5F743008B4978 /* BaseTestCase.swift */,
+				B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */,
+				B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */,
+				B5519A3F1CA1B17B002BEF78 /* ErrorTests.swift */,
+				B52557871D02DE8100E51965 /* FetchTests.swift */,
+				B5489F4F1CF603D5008B4978 /* FromTests.swift */,
+				B525577B1D0291FE00E51965 /* GroupByTests.swift */,
+				B5220E0B1D0D0D19009BC71E /* ImportTests.swift */,
+				B525576B1CFAF18F00E51965 /* IntoTests.swift */,
+				B5220E0F1D0DA6AB009BC71E /* ListObserverTests.swift */,
+				B5D8CA7A2346EC550055D7D1 /* ListPublisherTests.swift */,
+				B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */,
+				B5220E071D0C5F8D009BC71E /* ObjectObserverTests.swift */,
+				B581B9312362BB8C002BDB2B /* ObjectPublisherTests.swift */,
+				B52557771D02826E00E51965 /* OrderByTests.swift */,
+				B57D27C11D0BC20100539C58 /* QueryTests.swift */,
+				B52557831D02A07400E51965 /* SectionByTests.swift */,
+				B525576F1D02561A00E51965 /* SelectTests.swift */,
+				B58085741CDF7F00004C2EEB /* SetupTests.swift */,
+				B596BBAD1DD59FDB001DCDD9 /* ConvenienceTests.swift */,
+				B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */,
+			);
+			path = Swift;
+			sourceTree = "<group>";
+		};
+		0A62F6F92388174C00B2893D /* TestEntities */ = {
+			isa = PBXGroup;
+			children = (
+				B5489F3D1CF5EEBC008B4978 /* TestEntity1.swift */,
+				B5489F3E1CF5EEBC008B4978 /* TestEntity2.swift */,
+			);
+			path = TestEntities;
+			sourceTree = "<group>";
+		};
 		2F03A52619C5C6DA005002A5 = {
 			isa = PBXGroup;
 			children = (
@@ -1252,34 +1303,9 @@
 		2F03A53C19C5C6DA005002A5 /* CoreStoreTests */ = {
 			isa = PBXGroup;
 			children = (
-				B5AA37FE235DEBD700FFD4B9 /* BaseTests */,
-				B5DBE2DD1C9939E100B5CEFA /* BridgingTests.h */,
-				B5DBE2DE1C9939E100B5CEFA /* BridgingTests.m */,
-				B5D339B31E925C2B00C880DE /* DynamicModelTests.swift */,
-				B5519A3F1CA1B17B002BEF78 /* ErrorTests.swift */,
-				B52557871D02DE8100E51965 /* FetchTests.swift */,
-				B5489F4F1CF603D5008B4978 /* FromTests.swift */,
-				B525577B1D0291FE00E51965 /* GroupByTests.swift */,
-				B5220E0B1D0D0D19009BC71E /* ImportTests.swift */,
-				B525576B1CFAF18F00E51965 /* IntoTests.swift */,
-				B5220E0F1D0DA6AB009BC71E /* ListObserverTests.swift */,
-				B5D8CA7A2346EC550055D7D1 /* ListPublisherTests.swift */,
-				B5DC47C51C93D22900FA3BF3 /* MigrationChainTests.swift */,
-				B5220E071D0C5F8D009BC71E /* ObjectObserverTests.swift */,
-				B581B9312362BB8C002BDB2B /* ObjectPublisherTests.swift */,
-				B52557771D02826E00E51965 /* OrderByTests.swift */,
-				B57D27C11D0BC20100539C58 /* QueryTests.swift */,
-				B52557831D02A07400E51965 /* SectionByTests.swift */,
-				B525576F1D02561A00E51965 /* SelectTests.swift */,
-				B58085741CDF7F00004C2EEB /* SetupTests.swift */,
-				B596BBAD1DD59FDB001DCDD9 /* ConvenienceTests.swift */,
-				B5DC47C91C93D9C800FA3BF3 /* StorageInterfaceTests.swift */,
+				0A62F6F82388171100B2893D /* Swift */,
+				0A62F6F6238816F400B2893D /* ObjectiveC */,
 				2F03A53D19C5C6DA005002A5 /* Supporting Files */,
-				B5AA37FF235DEBF500FFD4B9 /* TestEntities */,
-				B5489F451CF5F017008B4978 /* TransactionTests.swift */,
-				B525577F1D029D2500E51965 /* TweakTests.swift */,
-				B59A51822256C85E00CEF3C5 /* VersionLockTests.swift */,
-				B52557731D02791400E51965 /* WhereTests.swift */,
 			);
 			path = CoreStoreTests;
 			sourceTree = "<group>";
@@ -1524,24 +1550,6 @@
 				B5E84F291AFF849C0064E85B /* Internals */,
 			);
 			name = Swift;
-			sourceTree = "<group>";
-		};
-		B5AA37FE235DEBD700FFD4B9 /* BaseTests */ = {
-			isa = PBXGroup;
-			children = (
-				B5489F4B1CF5F743008B4978 /* BaseTestCase.swift */,
-				B57D27BD1D0BBE8200539C58 /* BaseTestDataTestCase.swift */,
-			);
-			name = BaseTests;
-			sourceTree = "<group>";
-		};
-		B5AA37FF235DEBF500FFD4B9 /* TestEntities */ = {
-			isa = PBXGroup;
-			children = (
-				B5489F3D1CF5EEBC008B4978 /* TestEntity1.swift */,
-				B5489F3E1CF5EEBC008B4978 /* TestEntity2.swift */,
-			);
-			name = TestEntities;
 			sourceTree = "<group>";
 		};
 		B5DBE2CB1C99148100B5CEFA /* ObjectiveC */ = {
