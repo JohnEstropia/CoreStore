@@ -48,5 +48,5 @@ let package = Package(
             path: "CoreStoreTests"
         )
     ],
-    swiftLanguageVersions: [.v5_1]
+    swiftLanguageVersions: [.v5]
 )
