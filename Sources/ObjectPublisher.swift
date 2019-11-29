@@ -130,7 +130,7 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
             
             return self
         }
-        return Self.init(objectID: self.id, context: context)
+        return context.objectPublisher(objectID: self.id)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> O? {
@@ -184,9 +184,9 @@ public final class ObjectPublisher<O: DynamicObject>: ObjectRepresentation, Hash
 
     // MARK: Internal
 
-    internal convenience init(objectID: O.ObjectID, context: NSManagedObjectContext) {
+    internal static func createUncached(objectID: O.ObjectID, context: NSManagedObjectContext) -> ObjectPublisher<O> {
 
-        self.init(
+        return self.init(
             objectID: objectID,
             context: context,
             initializer: ObjectSnapshot<O>.init(objectID:context:)

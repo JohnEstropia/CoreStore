@@ -215,6 +215,28 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     }
 
     /**
+     Checks if the `ListSnapshot` has changes in the specified section.
+
+     - parameter sectionID: the section identifier. Using an index outside the valid range will return `nil`.
+     - returns: `true` if the specified section has changes, `false` if no changes, or `nil` if the `sectionID` does not exist
+     */
+    public func hasChanges(sectionID: String) -> Bool? {
+
+        return self.diffableSnapshot.isReloaded(sectionID: sectionID)
+    }
+
+    /**
+     Checks if the `ListSnapshot` has changes for the specified item.
+
+     - parameter itemID: the item identifier. Using an index outside the valid range will return `nil`.
+     - returns: `true` if the specified item has changes, `false` if no changes, or `nil` if the `itemID` does not exist
+     */
+    public func hasChanges(itemID: NSManagedObjectID) -> Bool? {
+
+        return self.diffableSnapshot.isReloaded(itemID: itemID)
+    }
+
+    /**
      The number of items in all sections in the `ListSnapshot`
      */
     public var numberOfItems: Int {
@@ -340,7 +362,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         return indices.map { position in
 
             let itemID = itemIDs[position]
-            return ObjectPublisher<O>(objectID: itemID, context: context)
+            return context.objectPublisher(objectID: itemID)
         }
     }
 
@@ -354,10 +376,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         let context = self.context!
         let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
-        return itemIDs.map {
-
-            return ObjectPublisher<O>(objectID: $0, context: context)
-        }
+        return itemIDs.map(context.objectPublisher(objectID:))
     }
 
     /**
@@ -374,7 +393,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         return itemIndices.map { position in
 
             let itemID = itemIDs[position]
-            return ObjectPublisher<O>(objectID: itemID, context: context)
+            return context.objectPublisher(objectID: itemID)
         }
     }
 
@@ -391,7 +410,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         return indices.lazy.map { position in
 
             let itemID = itemIDs[position]
-            return ObjectPublisher<O>(objectID: itemID, context: context)
+            return context.objectPublisher(objectID: itemID)
         }
     }
 
@@ -405,10 +424,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
         let context = self.context!
         let itemIDs = self.diffableSnapshot.itemIdentifiers(inSection: sectionID)
-        return itemIDs.lazy.map {
-
-            return ObjectPublisher<O>(objectID: $0, context: context)
-        }
+        return itemIDs.lazy.map(context.objectPublisher(objectID:))
     }
 
     /**
@@ -425,7 +441,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
         return itemIndices.lazy.map { position in
 
             let itemID = itemIDs[position]
-            return ObjectPublisher<O>(objectID: itemID, context: context)
+            return context.objectPublisher(objectID: itemID)
         }
     }
 

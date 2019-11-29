@@ -99,7 +99,7 @@ extension NSManagedObjectContext {
 
                 return objectPublisher
             }
-            let objectPublisher = ObjectPublisher<O>(objectID: objectID, context: self)
+            let objectPublisher = ObjectPublisher<O>.createUncached(objectID: objectID, context: self)
             cache.setObject(objectPublisher, forKey: objectID)
             return objectPublisher
         }

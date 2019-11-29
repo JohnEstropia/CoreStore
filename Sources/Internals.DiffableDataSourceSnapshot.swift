@@ -121,6 +121,16 @@ extension Internals {
             return self.structure.allSectionIDs.firstIndex(of: identifier)
         }
 
+        func isReloaded(sectionID: String) -> Bool? {
+
+            return self.structure.isReloaded(sectionID: sectionID)
+        }
+
+        func isReloaded(itemID: NSManagedObjectID) -> Bool? {
+
+            return self.structure.isReloaded(itemID: itemID)
+        }
+
         mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?) {
 
             self.structure.append(itemIDs: identifiers, to: sectionIdentifier)
@@ -329,6 +339,24 @@ extension Internals {
                 return self.sections.lazy.flatMap({ $0.elements }).map({ $0.differenceIdentifier })
             }
 
+            func isReloaded(sectionID: String) -> Bool? {
+
+                return self.sections.first(where: { $0.differenceIdentifier == sectionID })?.isReloaded
+            }
+
+            func isReloaded(itemID: NSManagedObjectID) -> Bool? {
+
+                for section in self.sections {
+
+                    guard let item = section.elements.first(where: { $0.differenceIdentifier == itemID }) else {
+
+                        return nil
+                    }
+                    return item.isReloaded
+                }
+                return nil
+            }
+
             func items(in sectionID: String) -> [NSManagedObjectID] {
 
                 guard let sectionIndex = self.sectionIndex(of: sectionID) else {
@@ -340,7 +368,7 @@ extension Internals {
 
             func section(containing itemID: NSManagedObjectID) -> String? {
 
-                return self.itemPositionMap()[itemID]?.section.differenceIdentifier
+                return self.itemPositionMap(itemID)?.section.differenceIdentifier
             }
 
             mutating func append(itemIDs: [NSManagedObjectID], to sectionID: String?) {
@@ -369,7 +397,7 @@ extension Internals {
 
             mutating func insert(itemIDs: [NSManagedObjectID], before beforeItemID: NSManagedObjectID) {
 
-                guard let itemPosition = self.itemPositionMap()[beforeItemID] else {
+                guard let itemPosition = self.itemPositionMap(beforeItemID) else {
 
                     Internals.abort("Item \(beforeItemID) does not exist")
                 }
@@ -380,7 +408,7 @@ extension Internals {
 
             mutating func insert(itemIDs: [NSManagedObjectID], after afterItemID: NSManagedObjectID) {
 
-                guard let itemPosition = self.itemPositionMap()[afterItemID] else {
+                guard let itemPosition = self.itemPositionMap(afterItemID) else {
 
                     Internals.abort("Item \(afterItemID) does not exist")
                 }
@@ -433,7 +461,7 @@ extension Internals {
 
                     Internals.abort("Item \(itemID) does not exist")
                 }
-                guard let itemPosition = self.itemPositionMap()[beforeItemID] else {
+                guard let itemPosition = self.itemPositionMap(beforeItemID) else {
 
                     Internals.abort("Item \(beforeItemID) does not exist")
                 }
@@ -447,7 +475,7 @@ extension Internals {
 
                     Internals.abort("Item \(itemID) does not exist")
                 }
-                guard let itemPosition = self.itemPositionMap()[afterItemID] else {
+                guard let itemPosition = self.itemPositionMap(afterItemID) else {
 
                     Internals.abort("Item \(afterItemID) does not exist")
                 }
@@ -556,7 +584,7 @@ extension Internals {
             @discardableResult
             private mutating func remove(itemID: NSManagedObjectID) -> Item? {
 
-                guard let itemPosition = self.itemPositionMap()[itemID] else {
+                guard let itemPosition = self.itemPositionMap(itemID) else {
 
                     return nil
                 }
@@ -572,6 +600,28 @@ extension Internals {
                     return nil
                 }
                 return self.sections.remove(at: sectionIndex)
+            }
+
+            private func itemPositionMap(_ itemID: NSManagedObjectID) -> ItemPosition? {
+
+                let sections = self.sections
+                for (sectionIndex, section) in sections.enumerated() {
+
+                    for (itemRelativeIndex, item) in section.elements.enumerated() {
+
+                        guard item.differenceIdentifier == itemID else {
+
+                            continue
+                        }
+                        return ItemPosition(
+                            item: item,
+                            itemRelativeIndex: itemRelativeIndex,
+                            section: section,
+                            sectionIndex: sectionIndex
+                        )
+                    }
+                }
+                return nil
             }
 
             private func itemPositionMap() -> [NSManagedObjectID: ItemPosition] {

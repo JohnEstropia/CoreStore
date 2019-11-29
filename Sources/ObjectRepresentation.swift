@@ -98,7 +98,7 @@ extension DynamicObject where Self: ObjectRepresentation {
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<Self> {
 
         let context = dataStack.unsafeContext()
-        return ObjectPublisher<Self>(objectID: self.cs_id(), context: context)
+        return context.objectPublisher(objectID: self.cs_id())
     }
 
     public func asReadOnly(in dataStack: DataStack) -> Self? {

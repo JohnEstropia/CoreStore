@@ -62,7 +62,7 @@ public struct ObjectSnapshot<O: DynamicObject>: ObjectRepresentation, Hashable {
     public func asPublisher(in dataStack: DataStack) -> ObjectPublisher<O> {
         
         let context = dataStack.unsafeContext()
-        return ObjectPublisher<O>(objectID: self.id, context: context)
+        return context.objectPublisher(objectID: self.id)
     }
 
     public func asReadOnly(in dataStack: DataStack) -> O? {
