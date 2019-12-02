@@ -215,25 +215,11 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     }
 
     /**
-     Checks if the `ListSnapshot` has changes in the specified section.
-
-     - parameter sectionID: the section identifier. Using an index outside the valid range will return `nil`.
-     - returns: `true` if the specified section has changes, `false` if no changes, or `nil` if the `sectionID` does not exist
+     Returns item identifiers for updated objects. This is mainly useful for Data Source adapters such as `UICollectionViewDiffableDataSource` or `UITableViewDiffableDataSource` which work on collection diffs when reloading. Since objects with same IDs resolve as "equal" in their old and new states, adapters may need extra heuristics to determine which row items need reloading. If your row items are all observing changes from each corresponding `ObjectPublisher`, or if you are using CoreStore's built-in `DiffableDataSource`s, there is no need to inspect this property.
      */
-    public func hasChanges(sectionID: String) -> Bool? {
+    var updatedItemIdentifiers: Set<NSManagedObjectID> {
 
-        return self.diffableSnapshot.isReloaded(sectionID: sectionID)
-    }
-
-    /**
-     Checks if the `ListSnapshot` has changes for the specified item.
-
-     - parameter itemID: the item identifier. Using an index outside the valid range will return `nil`.
-     - returns: `true` if the specified item has changes, `false` if no changes, or `nil` if the `itemID` does not exist
-     */
-    public func hasChanges(itemID: NSManagedObjectID) -> Bool? {
-
-        return self.diffableSnapshot.isReloaded(itemID: itemID)
+        return self.diffableSnapshot.updatedItemIdentifiers
     }
 
     /**

@@ -96,6 +96,11 @@ extension Internals {
             return self.structure.allItemIDs
         }
 
+        var updatedItemIdentifiers: Set<NSManagedObjectID> {
+
+            return self.structure.reloadedItems
+        }
+
         func numberOfItems(inSection identifier: String) -> Int {
 
             return self.itemIdentifiers(inSection: identifier).count
@@ -119,16 +124,6 @@ extension Internals {
         func indexOfSection(_ identifier: String) -> Int? {
 
             return self.structure.allSectionIDs.firstIndex(of: identifier)
-        }
-
-        func isReloaded(sectionID: String) -> Bool? {
-
-            return self.structure.isReloaded(sectionID: sectionID)
-        }
-
-        func isReloaded(itemID: NSManagedObjectID) -> Bool? {
-
-            return self.structure.isReloaded(itemID: itemID)
         }
 
         mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?) {
@@ -282,10 +277,12 @@ extension Internals {
             // MARK: Internal
 
             var sections: [Section]
+            private(set) var reloadedItems: Set<NSManagedObjectID>
 
             init() {
 
                 self.sections = []
+                self.reloadedItems = []
             }
 
             init(sections: [NSFetchedResultsSectionInfo], fetchOffset: Int, fetchLimit: Int?) {
@@ -327,6 +324,7 @@ extension Internals {
                     )
                 }
                 self.sections = newSections
+                self.reloadedItems = []
             }
 
             var allSectionIDs: [String] {
@@ -337,24 +335,6 @@ extension Internals {
             var allItemIDs: [NSManagedObjectID] {
 
                 return self.sections.lazy.flatMap({ $0.elements }).map({ $0.differenceIdentifier })
-            }
-
-            func isReloaded(sectionID: String) -> Bool? {
-
-                return self.sections.first(where: { $0.differenceIdentifier == sectionID })?.isReloaded
-            }
-
-            func isReloaded(itemID: NSManagedObjectID) -> Bool? {
-
-                for section in self.sections {
-
-                    guard let item = section.elements.first(where: { $0.differenceIdentifier == itemID }) else {
-
-                        return nil
-                    }
-                    return item.isReloaded
-                }
-                return nil
             }
 
             func items(in sectionID: String) -> [NSManagedObjectID] {
@@ -488,6 +468,7 @@ extension Internals {
             mutating func update<S: Sequence>(itemIDs: S) where S.Element == NSManagedObjectID {
 
                 let itemPositionMap = self.itemPositionMap()
+                var newItemIDs: Set<NSManagedObjectID> = []
                 for itemID in itemIDs {
 
                     guard let itemPosition = itemPositionMap[itemID] else {
@@ -496,7 +477,9 @@ extension Internals {
                     }
                     self.sections[itemPosition.sectionIndex]
                         .elements[itemPosition.itemRelativeIndex].isReloaded = true
+                    newItemIDs.insert(itemID)
                 }
+                self.reloadedItems.formUnion(newItemIDs)
             }
 
             mutating func append(sectionIDs: [String]) {
