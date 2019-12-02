@@ -217,7 +217,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
     /**
      Returns item identifiers for updated objects. This is mainly useful for Data Source adapters such as `UICollectionViewDiffableDataSource` or `UITableViewDiffableDataSource` which work on collection diffs when reloading. Since objects with same IDs resolve as "equal" in their old and new states, adapters may need extra heuristics to determine which row items need reloading. If your row items are all observing changes from each corresponding `ObjectPublisher`, or if you are using CoreStore's built-in `DiffableDataSource`s, there is no need to inspect this property.
      */
-    var updatedItemIdentifiers: Set<NSManagedObjectID> {
+    public var updatedItemIdentifiers: Set<NSManagedObjectID> {
 
         return self.diffableSnapshot.updatedItemIdentifiers
     }
