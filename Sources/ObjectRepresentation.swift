@@ -78,6 +78,16 @@ extension DynamicObject where Self: ObjectRepresentation {
     // MARK: Public
 
     /**
+     An `ObjectPublisher` wrapper for the exact same object
+     */
+    public func asPublisher() -> ObjectPublisher<Self>? {
+
+        return self.cs_toRaw()
+            .managedObjectContext
+            .map({ $0.objectPublisher(objectID: self.cs_id()) })
+    }
+
+    /**
      A thread-safe `struct` that is a full-copy of the object's properties
      */
     public func asSnapshot() -> ObjectSnapshot<Self>? {
