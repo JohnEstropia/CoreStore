@@ -1,5 +1,5 @@
 //
-//  DiffableDataSource.CollectionViewAdapter-AppKit.swift
+//  DiffableDataSource.CollectionViewAdapter-UIKit.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -23,9 +23,9 @@
 //  SOFTWARE.
 //
 
-#if canImport(AppKit) && os(macOS)
+#if canImport(UIKit) && (os(iOS) || os(tvOS))
 
-import AppKit
+import UIKit
 import CoreData
 
 
@@ -36,16 +36,16 @@ extension DiffableDataSource {
     // MARK: - CollectionView
     
     /**
-     The `DiffableDataSource.CollectionViewAdapter` serves as a `NSCollectionViewDataSource` that handles `ListPublisher` snapshots for a `NSCollectionView`. Subclasses of `DiffableDataSource.CollectionViewAdapter` may override some `NSCollectionViewDataSource` methods as needed.
-     The `DiffableDataSource.CollectionViewAdapter` instance needs to be held on (retained) for as long as the `NSCollectionView`'s lifecycle.
+     The `DiffableDataSource.CollectionViewAdapter` serves as a `UICollectionViewDataSource` that handles `ListPublisher` snapshots for a `UICollectionView`. Subclasses of `DiffableDataSource.CollectionViewAdapter` may override some `UICollectionViewDataSource` methods as needed.
+     The `DiffableDataSource.CollectionViewAdapter` instance needs to be held on (retained) for as long as the `UICollectionView`'s lifecycle.
      ```
      self.dataSource = DiffableDataSource.CollectionViewAdapter<Person>(
          collectionView: self.collectionView,
          dataStack: CoreStoreDefaults.dataStack,
-         itemProvider: { (collectionView, indexPath, person) in
-             let item = collectionView.makeItem(withIdentifier: .collectionViewItem, for: indexPath) as! PersonItem
-             item.setPerson(person)
-             return item
+         cellProvider: { (collectionView, indexPath, person) in
+             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PersonCell") as! PersonCell
+             cell.setPerson(person)
+             return cell
          }
      )
      ```
@@ -61,31 +61,31 @@ extension DiffableDataSource {
      `DiffableDataSource.CollectionViewAdapter` fully handles the reload animations.
      - SeeAlso: CoreStore's DiffableDataSource implementation is based on https://github.com/ra1028/DiffableDataSources     
      */
-    open class CollectionViewAdapter<O: DynamicObject>: BaseAdapter<O, DefaultCollectionViewTarget<NSCollectionView>>, NSCollectionViewDataSource {
+    open class CollectionViewAdapter<O: DynamicObject>: BaseAdapter<O, DefaultCollectionViewTarget<UICollectionView>>, UICollectionViewDataSource {
 
         // MARK: Public
         
         /**
-         Initializes the `DiffableDataSource.CollectionViewAdapter`. This instance needs to be held on (retained) for as long as the `NSCollectionView`'s lifecycle.
+         Initializes the `DiffableDataSource.CollectionViewAdapter`. This instance needs to be held on (retained) for as long as the `UICollectionView`'s lifecycle.
          ```
          self.dataSource = DiffableDataSource.CollectionViewAdapter<Person>(
              collectionView: self.collectionView,
              dataStack: CoreStoreDefaults.dataStack,
-             itemProvider: { (collectionView, indexPath, person) in
-                 let item = collectionView.makeItem(withIdentifier: .collectionViewItem, for: indexPath) as! PersonItem
-                 item.setPerson(person)
-                 return item
+             cellProvider: { (collectionView, indexPath, person) in
+                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PersonCell") as! PersonCell
+                 cell.setPerson(person)
+                 return cell
              }
          )
          ```
-         - parameter collectionView: the `NSCollectionView` to set the `dataSource` of. This instance is not retained by the `DiffableDataSource.CollectionViewAdapter`.
+         - parameter collectionView: the `UICollectionView` to set the `dataSource` of. This instance is not retained by the `DiffableDataSource.CollectionViewAdapter`.
          - parameter dataStack: the `DataStack` instance that the dataSource will fetch objects from
-         - parameter itemProvider: a closure that configures and returns the `NSCollectionViewItem` for the object
+         - parameter cellProvider: a closure that configures and returns the `UICollectionViewCell` for the object
+         - parameter supplementaryViewProvider: an optional closure for providing `UICollectionReusableView` supplementary views. If not set, defaults to returning `nil`
          */
-        @nonobjc
-        public init(collectionView: NSCollectionView, dataStack: DataStack, itemProvider: @escaping (NSCollectionView, IndexPath, O) -> NSCollectionViewItem?, supplementaryViewProvider: @escaping (NSCollectionView, String, IndexPath) -> NSView? = { _, _, _ in nil }) {
+        public init(collectionView: UICollectionView, dataStack: DataStack, cellProvider: @escaping (UICollectionView, IndexPath, O) -> UICollectionViewCell?, supplementaryViewProvider: @escaping (UICollectionView, String, IndexPath) -> UICollectionReusableView? = { _, _, _ in nil }) {
 
-            self.itemProvider = itemProvider
+            self.cellProvider = cellProvider
             self.supplementaryViewProvider = supplementaryViewProvider
 
             super.init(target: .init(collectionView), dataStack: dataStack)
@@ -94,22 +94,22 @@ extension DiffableDataSource {
         }
 
 
-        // MARK: - NSCollectionViewDataSource
+        // MARK: - UICollectionViewDataSource
 
         @objc
-        public dynamic func numberOfSections(in collectionView: NSCollectionView) -> Int {
+        public dynamic func numberOfSections(in collectionView: UICollectionView) -> Int {
 
             return self.numberOfSections()
         }
 
         @objc
-        public dynamic func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        public dynamic func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 
             return self.numberOfItems(inSection: section) ?? 0
         }
 
         @objc
-        open dynamic func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        open dynamic func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
             guard let objectID = self.itemID(for: indexPath) else {
 
@@ -119,19 +119,19 @@ extension DiffableDataSource {
 
                 Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) has been deleted")
             }
-            guard let item = self.itemProvider(collectionView, indexPath, object) else {
+            guard let cell = self.cellProvider(collectionView, indexPath, object) else {
 
-                Internals.abort("\(Internals.typeName(NSCollectionViewDataSource.self)) returned a `nil` item for \(Internals.typeName(IndexPath.self)) \(indexPath)")
+                Internals.abort("\(Internals.typeName(UICollectionViewDataSource.self)) returned a `nil` cell for \(Internals.typeName(IndexPath.self)) \(indexPath)")
             }
-            return item
+            return cell
         }
 
         @objc
-        open dynamic func collectionView(_ collectionView: NSCollectionView, viewForSupplementaryElementOfKind kind: NSCollectionView.SupplementaryElementKind, at indexPath: IndexPath) -> NSView {
+        open dynamic func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 
             guard let view = self.supplementaryViewProvider(collectionView, kind, indexPath) else {
 
-                return NSView()
+                return UICollectionReusableView()
             }
             return view
         }
@@ -139,20 +139,20 @@ extension DiffableDataSource {
 
         // MARK: Private
 
-        private let itemProvider: (NSCollectionView, IndexPath, O) -> NSCollectionViewItem?
-        private let supplementaryViewProvider: (NSCollectionView, String, IndexPath) -> NSView?
+        private let cellProvider: (UICollectionView, IndexPath, O) -> UICollectionViewCell?
+        private let supplementaryViewProvider: (UICollectionView, String, IndexPath) -> UICollectionReusableView?
     }
 
 
     // MARK: - DefaultCollectionViewTarget
 
-    public struct DefaultCollectionViewTarget<T: NSCollectionView>: Target {
+    public struct DefaultCollectionViewTarget<T: UICollectionView>: Target {
 
         // MARK: Public
 
         public typealias Base = T
 
-        public internal(set) weak var base: Base?
+        public private(set) weak var base: Base?
 
         public init(_ base: Base) {
 
@@ -160,7 +160,7 @@ extension DiffableDataSource {
         }
 
 
-        // MARK: DiffableDataSource.Target:
+        // MARK: DiffableDataSource.Target
 
         public var shouldSuspendBatchUpdates: Bool {
 
@@ -189,17 +189,17 @@ extension DiffableDataSource {
 
         public func deleteItems(at indexPaths: [IndexPath], animated: Bool) {
 
-            self.base?.deleteItems(at: Set(indexPaths))
+            self.base?.deleteItems(at: indexPaths)
         }
 
         public func insertItems(at indexPaths: [IndexPath], animated: Bool) {
 
-            self.base?.insertItems(at: Set(indexPaths))
+            self.base?.insertItems(at: indexPaths)
         }
 
         public func reloadItems(at indexPaths: [IndexPath], animated: Bool) {
 
-            self.base?.reloadItems(at: Set(indexPaths))
+            self.base?.reloadItems(at: indexPaths)
         }
 
         public func moveItem(at indexPath: IndexPath, to newIndexPath: IndexPath, animated: Bool) {
@@ -209,7 +209,7 @@ extension DiffableDataSource {
 
         public func performBatchUpdates(updates: () -> Void, animated: Bool) {
 
-            self.base?.animator().performBatchUpdates(updates, completionHandler: nil)
+            self.base?.performBatchUpdates(updates, completion: nil)
         }
 
         public func reloadData() {
@@ -227,6 +227,5 @@ extension DiffableDataSource {
     @available(*, deprecated, renamed: "CollectionViewAdapter")
     public typealias CollectionView = CollectionViewAdapter
 }
-
 
 #endif

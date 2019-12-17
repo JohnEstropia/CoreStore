@@ -83,7 +83,10 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      */
     public subscript(safeIndex index: Index) -> ObjectPublisher<O>? {
 
-        let context = self.context!
+        guard let context = self.context else {
+
+            return nil
+        }
         let itemIDs = self.diffableSnapshot.itemIdentifiers
         guard itemIDs.indices.contains(index) else {
 
@@ -118,7 +121,10 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      */
     public subscript(safeSectionIndex sectionIndex: Int, safeItemIndex itemIndex: Int) -> ObjectPublisher<O>? {
 
-        let context = self.context!
+        guard let context = self.context else {
+
+            return nil
+        }
         let snapshot = self.diffableSnapshot
         let sectionIDs = snapshot.sectionIdentifiers
         guard sectionIDs.indices.contains(sectionIndex) else {

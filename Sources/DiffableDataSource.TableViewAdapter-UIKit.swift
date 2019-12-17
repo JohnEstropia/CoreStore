@@ -174,7 +174,7 @@ extension DiffableDataSource {
 
         public typealias Base = T
 
-        public internal(set) weak var base: Base?
+        public private(set) weak var base: Base?
 
         public init(_ base: Base) {
 

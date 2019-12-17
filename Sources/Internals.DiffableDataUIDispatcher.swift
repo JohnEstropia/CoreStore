@@ -51,6 +51,26 @@ extension Internals {
             
             self.dataStack = dataStack
         }
+
+        func purge<Target: DiffableDataSource.Target>(
+            target: Target?,
+            animatingDifferences: Bool,
+            performUpdates: @escaping (
+                Target,
+                StagedChangeset<[Internals.DiffableDataSourceSnapshot.Section]>,
+                @escaping ([Internals.DiffableDataSourceSnapshot.Section]) -> Void
+            ) -> Void,
+            completion: @escaping () -> Void
+        ) {
+
+            self.apply(
+                .init(),
+                target: target,
+                animatingDifferences: animatingDifferences,
+                performUpdates: performUpdates,
+                completion: completion
+            )
+        }
         
         func apply<Target: DiffableDataSource.Target>(
             _ snapshot: DiffableDataSourceSnapshot,

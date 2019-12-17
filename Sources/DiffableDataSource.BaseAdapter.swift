@@ -101,7 +101,28 @@ extension DiffableDataSource {
         }
 
         /**
-         Reloads the `UITableView` using a `ListSnapshot`. This is typically from the `snapshot` property of a `ListPublisher`:
+         Clears the target.
+         - parameter animatingDifferences: if `true`, animations may be applied accordingly. Defaults to `true`.
+         */
+        open func purge(animatingDifferences: Bool = true, completion: @escaping () -> Void = {}) {
+
+            self.dispatcher.purge(
+                target: self.target,
+                animatingDifferences: animatingDifferences,
+                performUpdates: { target, changeset, setSections in
+
+                    target.reload(
+                        using: changeset,
+                        animated: animatingDifferences,
+                        setData: setSections
+                    )
+                },
+                completion: completion
+            )
+        }
+
+        /**
+         Reloads the target using a `ListSnapshot`. This is typically from the `snapshot` property of a `ListPublisher`:
          ```
          listPublisher.addObserver(self) { [weak self] (listPublisher) in
             self?.dataSource?.apply(
@@ -109,11 +130,9 @@ extension DiffableDataSource {
                 animatingDifferences: true
             )
          }
-         ```
-         If the `defaultRowAnimation` is configured to, animations are also applied accordingly.
-
-         - parameter snapshot: the `ListSnapshot` used to reload the `UITableView` with. This is typically from the `snapshot` property of a `ListPublisher`.
-         - parameter animatingDifferences: if `true`, animations will be applied as configured by the `defaultRowAnimation` value. Defaults to `true`.
+         ``
+         - parameter snapshot: the `ListSnapshot` used to reload the target with. This is typically from the `snapshot` property of a `ListPublisher`.
+         - parameter animatingDifferences: if `true`, animations may be applied accordingly. Defaults to `true`.
          */
         open func apply(_ snapshot: ListSnapshot<O>, animatingDifferences: Bool = true, completion: @escaping () -> Void = {}) {
 
