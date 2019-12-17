@@ -141,6 +141,13 @@
 		B51260941E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51260921E9B28F100402229 /* Internals.EntityIdentifier.swift */; };
 		B51260951E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51260921E9B28F100402229 /* Internals.EntityIdentifier.swift */; };
 		B51260961E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51260921E9B28F100402229 /* Internals.EntityIdentifier.swift */; };
+		B514EF0E23A8BEEA0093DBA4 /* DiffableDataSource.Target.swift in Sources */ = {isa = PBXBuildFile; fileRef = B514EF0D23A8BEEA0093DBA4 /* DiffableDataSource.Target.swift */; };
+		B514EF0F23A8DB180093DBA4 /* DiffableDataSource.Target.swift in Sources */ = {isa = PBXBuildFile; fileRef = B514EF0D23A8BEEA0093DBA4 /* DiffableDataSource.Target.swift */; };
+		B514EF1023A8DB190093DBA4 /* DiffableDataSource.Target.swift in Sources */ = {isa = PBXBuildFile; fileRef = B514EF0D23A8BEEA0093DBA4 /* DiffableDataSource.Target.swift */; };
+		B514EF1123A8DB190093DBA4 /* DiffableDataSource.Target.swift in Sources */ = {isa = PBXBuildFile; fileRef = B514EF0D23A8BEEA0093DBA4 /* DiffableDataSource.Target.swift */; };
+		B514EF1223A8DB1D0093DBA4 /* DiffableDataSource.BaseAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4A6B623A236DC00D7373F /* DiffableDataSource.BaseAdapter.swift */; };
+		B514EF1323A8DB1D0093DBA4 /* DiffableDataSource.BaseAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4A6B623A236DC00D7373F /* DiffableDataSource.BaseAdapter.swift */; };
+		B514EF1423A8DB1E0093DBA4 /* DiffableDataSource.BaseAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4A6B623A236DC00D7373F /* DiffableDataSource.BaseAdapter.swift */; };
 		B51B5C2B22D43931009FA3BA /* String+KeyPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51B5C2A22D43931009FA3BA /* String+KeyPaths.swift */; };
 		B51B5C2D22D43E38009FA3BA /* KeyPath+KeyPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51B5C2C22D43E38009FA3BA /* KeyPath+KeyPaths.swift */; };
 		B51FE5AB1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */; };
@@ -668,6 +675,7 @@
 		B5D33A041E96012400C880DE /* Relationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D33A001E96012400C880DE /* Relationship.swift */; };
 		B5D372841A39CD6900F583D9 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B5D372821A39CD6900F583D9 /* Model.xcdatamodeld */; };
 		B5D39A0219FD00C9000E91BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D39A0119FD00C9000E91BB /* Foundation.framework */; };
+		B5D4A6B723A236DC00D7373F /* DiffableDataSource.BaseAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D4A6B623A236DC00D7373F /* DiffableDataSource.BaseAdapter.swift */; };
 		B5D7A5B61CA3BF8F005C752B /* CSInto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D7A5B51CA3BF8F005C752B /* CSInto.swift */; };
 		B5D7A5B81CA3BF8F005C752B /* CSInto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D7A5B51CA3BF8F005C752B /* CSInto.swift */; };
 		B5D7A5B91CA3BF8F005C752B /* CSInto.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D7A5B51CA3BF8F005C752B /* CSInto.swift */; };
@@ -906,6 +914,7 @@
 		B512607E1E97A18000402229 /* CoreStoreObject+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStoreObject+Convenience.swift"; sourceTree = "<group>"; };
 		B51260881E9B252B00402229 /* NSEntityDescription+DynamicModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSEntityDescription+DynamicModel.swift"; sourceTree = "<group>"; };
 		B51260921E9B28F100402229 /* Internals.EntityIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Internals.EntityIdentifier.swift; sourceTree = "<group>"; };
+		B514EF0D23A8BEEA0093DBA4 /* DiffableDataSource.Target.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSource.Target.swift; sourceTree = "<group>"; };
 		B51B5C2A22D43931009FA3BA /* String+KeyPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+KeyPaths.swift"; sourceTree = "<group>"; };
 		B51B5C2C22D43E38009FA3BA /* KeyPath+KeyPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyPath+KeyPaths.swift"; sourceTree = "<group>"; };
 		B51FE5AA1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreStore+CustomDebugStringConvertible.swift"; sourceTree = "<group>"; };
@@ -1042,6 +1051,7 @@
 		B5D33A001E96012400C880DE /* Relationship.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Relationship.swift; sourceTree = "<group>"; };
 		B5D372831A39CD6900F583D9 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		B5D39A0119FD00C9000E91BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B5D4A6B623A236DC00D7373F /* DiffableDataSource.BaseAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSource.BaseAdapter.swift; sourceTree = "<group>"; };
 		B5D7A5B51CA3BF8F005C752B /* CSInto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CSInto.swift; sourceTree = "<group>"; };
 		B5D8CA752346E7590055D7D1 /* DataStack+DataSources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataStack+DataSources.swift"; sourceTree = "<group>"; };
 		B5D8CA7A2346EC550055D7D1 /* ListPublisherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPublisherTests.swift; sourceTree = "<group>"; };
@@ -1607,6 +1617,8 @@
 				B50EE14123473C92009B8C47 /* CoreStoreObject+DataSources.swift */,
 				B5D8CA752346E7590055D7D1 /* DataStack+DataSources.swift */,
 				B5BF7FB1234C97910070E741 /* DiffableDataSource.swift */,
+				B514EF0D23A8BEEA0093DBA4 /* DiffableDataSource.Target.swift */,
+				B5D4A6B623A236DC00D7373F /* DiffableDataSource.BaseAdapter.swift */,
 				B5BF7FB6234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift */,
 				B5635D132356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift */,
 				B5AA37F0235C28EE00FFD4B9 /* DiffableDataSource.CollectionView-AppKit.swift */,
@@ -2089,6 +2101,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5BF7FB7234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */,
 				B5DE5230230BDA1300A22534 /* CoreStoreDefaults.swift in Sources */,
 				B5E84F221AFF84860064E85B /* ObjectMonitor.swift in Sources */,
 				B5ECDBF91CA804FD00C7F112 /* NSManagedObjectContext+ObjectiveC.swift in Sources */,
@@ -2126,7 +2139,6 @@
 				B56007141B3F6C2800A9A8F9 /* SectionBy.swift in Sources */,
 				B5DE522B230BD7CC00A22534 /* Internals.swift in Sources */,
 				B5E84F371AFF85470064E85B /* NSManagedObjectContext+Transaction.swift in Sources */,
-				B5BF7FB7234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */,
 				B5ECDC1D1CA81A2100C7F112 /* CSDataStack+Querying.swift in Sources */,
 				B5C976E31C6C9F6A00B1AF90 /* UnsafeDataTransaction+Observing.swift in Sources */,
 				B53FBA121CAB63CB00F0D40A /* Progress+ObjectiveC.swift in Sources */,
@@ -2224,6 +2236,7 @@
 				B5BF7FBC234C99190070E741 /* Internals.DiffableDataUIDispatcher.swift in Sources */,
 				B5215CA41FA47DFD00139E3A /* FetchChainBuilder.swift in Sources */,
 				B5D33A011E96012400C880DE /* Relationship.swift in Sources */,
+				B514EF0E23A8BEEA0093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B5E84EE81AFF84610064E85B /* CoreStoreLogger.swift in Sources */,
 				B56923C91EB82410007C4DC9 /* NSManagedObjectModel+Migration.swift in Sources */,
 				B56923E41EB827F5007C4DC9 /* CustomSchemaMappingProvider.swift in Sources */,
@@ -2240,6 +2253,7 @@
 				B512607F1E97A18000402229 /* CoreStoreObject+Convenience.swift in Sources */,
 				B5E84EF81AFF846E0064E85B /* CoreStore+Transaction.swift in Sources */,
 				B5E84F301AFF849C0064E85B /* NSManagedObjectContext+CoreStore.swift in Sources */,
+				B5D4A6B723A236DC00D7373F /* DiffableDataSource.BaseAdapter.swift in Sources */,
 				B5831B7A1F34ACBA00A9F647 /* Transformable.swift in Sources */,
 				B5BF7FB2234C97910070E741 /* DiffableDataSource.swift in Sources */,
 				B546F9691C9AF26D00D5AC55 /* CSInMemoryStore.swift in Sources */,
@@ -2387,6 +2401,7 @@
 				B53FBA001CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B5DBE2D31C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
 				82BA18B41C4BBD3900A0916E /* BaseDataTransaction+Importing.swift in Sources */,
+				B514EF1223A8DB1D0093DBA4 /* DiffableDataSource.BaseAdapter.swift in Sources */,
 				B53FBA1A1CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift in Sources */,
 				82BA18CA1C4BBD5900A0916E /* MigrationResult.swift in Sources */,
 				B5519A5A1CA2008C002BEF78 /* CSBaseDataTransaction.swift in Sources */,
@@ -2435,6 +2450,7 @@
 				B5215CAA1FA4810300139E3A /* QueryChainBuilder.swift in Sources */,
 				B50E175823517DE4004F033C /* Differentiable.swift in Sources */,
 				82BA18BA1C4BBD4A00A0916E /* Select.swift in Sources */,
+				B514EF0F23A8DB180093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B52F744B1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
 				B5AEFAB61C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,
 				B5E2222C1CA51B6E00BA2E95 /* CSUnsafeDataTransaction.swift in Sources */,
@@ -2538,9 +2554,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5BF7FB5234C97910070E741 /* DiffableDataSource.swift in Sources */,
 				B5220E1E1D13080D009BC71E /* CSListMonitor.swift in Sources */,
-				B5DBE2D01C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
+				B5AA37F4235C28EE00FFD4B9 /* DiffableDataSource.CollectionView-AppKit.swift in Sources */,
+				B5BF7FBA234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */,
 				B5635D172356C39500B80E6B /* DiffableDataSource.CollectionView-UIKit.swift in Sources */,
+				B5DBE2D01C9914A900B5CEFA /* CSCoreStore.swift in Sources */,
 				B5CA2B0B1F7E5ACA004B1936 /* WhereClauseType.swift in Sources */,
 				B56923F81EB828BF007C4DC9 /* CSDynamicSchema.swift in Sources */,
 				B52DD1BE1BE1F94300949AFE /* Progress+Convenience.swift in Sources */,
@@ -2581,7 +2600,6 @@
 				B50564D62350CC3100482308 /* PropertyProtocol.swift in Sources */,
 				B5831B781F34AC7A00A9F647 /* RelationshipProtocol.swift in Sources */,
 				B52DD1981BE1F92500949AFE /* CoreStore+Setup.swift in Sources */,
-				B5BF7FB5234C97910070E741 /* DiffableDataSource.swift in Sources */,
 				B5D339F41E94AF5800C880DE /* CoreStoreStrings.swift in Sources */,
 				B5220E241D13085E009BC71E /* NSFetchedResultsController+Convenience.swift in Sources */,
 				B559CD471CAA8B6300E4D58B /* CSSetupResult.swift in Sources */,
@@ -2609,6 +2627,7 @@
 				B53FBA1C1CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift in Sources */,
 				B5F8496F234898240029D57B /* ListSnapshot.swift in Sources */,
 				B5831F452212700500D8604C /* Where.Expression.swift in Sources */,
+				B514EF1423A8DB1E0093DBA4 /* DiffableDataSource.BaseAdapter.swift in Sources */,
 				B51260961E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
 				B5ECDBE31CA6BB2B00C7F112 /* CSBaseDataTransaction+Querying.swift in Sources */,
 				B5ECDC031CA80CBA00C7F112 /* CSWhere.swift in Sources */,
@@ -2657,6 +2676,7 @@
 				B5220E1A1D130791009BC71E /* Internals.CoreStoreFetchedResultsController.swift in Sources */,
 				B5215CAC1FA4810300139E3A /* QueryChainBuilder.swift in Sources */,
 				B53FBA0F1CAB5E6500F0D40A /* CSCoreStore+Migrating.swift in Sources */,
+				B514EF1123A8DB190093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B50E175A23517DE4004F033C /* Differentiable.swift in Sources */,
 				B52F744D1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
 				B52DD19A1BE1F92800949AFE /* CoreStore+Logging.swift in Sources */,
@@ -2698,7 +2718,6 @@
 				B52F74401E9B8724005F3DAC /* DynamicSchema.swift in Sources */,
 				18166886232B9ED20097C275 /* KeyPath+KeyPaths.swift in Sources */,
 				B5E8A72321C1015300EF006A /* CoreStoreObject+Observing.swift in Sources */,
-				B5AA37F4235C28EE00FFD4B9 /* DiffableDataSource.CollectionView-AppKit.swift in Sources */,
 				B50E175F2351848E004F033C /* Internals.DiffableDataUIDispatcher.DiffResult.swift in Sources */,
 				B5474D182227C08700B21FEC /* Internals.CoreStoreFetchRequest.swift in Sources */,
 				B501322E2346A9B100FC238B /* ListPublisher.swift in Sources */,
@@ -2716,7 +2735,6 @@
 				B5D339EA1E9493A500C880DE /* Entity.swift in Sources */,
 				B5BF7FC9234D7E460070E741 /* ObjectSnapshot.swift in Sources */,
 				B52DD1AA1BE1F93500949AFE /* TypeErasedClauses.swift in Sources */,
-				B5BF7FBA234C97CE0070E741 /* DiffableDataSource.TableView-UIKit.swift in Sources */,
 				B53FBA021CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B51FE5AF1CD4D00300E54258 /* CoreStore+CustomDebugStringConvertible.swift in Sources */,
 			);
@@ -2835,6 +2853,7 @@
 				B51260951E9B28F100402229 /* Internals.EntityIdentifier.swift in Sources */,
 				B53FBA011CAB2D2F00F0D40A /* CSMigrationResult.swift in Sources */,
 				B5DBE2D41C991B3E00B5CEFA /* CSDataStack.swift in Sources */,
+				B514EF1323A8DB1D0093DBA4 /* DiffableDataSource.BaseAdapter.swift in Sources */,
 				B50392FA1C47963F009900CA /* NSManagedObject+Transaction.swift in Sources */,
 				B53FBA1B1CAB63E200F0D40A /* NSManagedObject+ObjectiveC.swift in Sources */,
 				B5519A5B1CA2008C002BEF78 /* CSBaseDataTransaction.swift in Sources */,
@@ -2883,6 +2902,7 @@
 				B56321A21BD65216006C9394 /* ListObserver.swift in Sources */,
 				B50E175923517DE4004F033C /* Differentiable.swift in Sources */,
 				B5215CAB1FA4810300139E3A /* QueryChainBuilder.swift in Sources */,
+				B514EF1023A8DB190093DBA4 /* DiffableDataSource.Target.swift in Sources */,
 				B563218A1BD65216006C9394 /* SynchronousDataTransaction.swift in Sources */,
 				B52F744C1E9B8740005F3DAC /* CoreStoreSchema.swift in Sources */,
 				B5AEFAB71C9962AE00AD137F /* CoreStoreBridge.swift in Sources */,

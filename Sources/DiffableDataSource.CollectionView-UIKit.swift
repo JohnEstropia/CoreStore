@@ -1,5 +1,5 @@
 //
-//  DiffableDataSource.CollectionView-UIKit.swift
+//  DiffableDataSource.CollectionViewAdapter-UIKit.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -36,10 +36,10 @@ extension DiffableDataSource {
     // MARK: - CollectionView
     
     /**
-     The `DiffableDataSource.CollectionView` serves as a `UICollectionViewDataSource` that handles `ListPublisher` snapshots for a `UICollectionView`. Subclasses of `DiffableDataSource.CollectionView` may override some `UICollectionViewDataSource` methods as needed.
-     The `DiffableDataSource.CollectionView` instance needs to be held on (retained) for as long as the `UICollectionView`'s lifecycle.
+     The `DiffableDataSource.CollectionViewAdapter` serves as a `UICollectionViewDataSource` that handles `ListPublisher` snapshots for a `UICollectionView`. Subclasses of `DiffableDataSource.CollectionViewAdapter` may override some `UICollectionViewDataSource` methods as needed.
+     The `DiffableDataSource.CollectionViewAdapter` instance needs to be held on (retained) for as long as the `UICollectionView`'s lifecycle.
      ```
-     self.dataSource = DiffableDataSource.CollectionView<Person>(
+     self.dataSource = DiffableDataSource.CollectionViewAdapter<Person>(
          collectionView: self.collectionView,
          dataStack: CoreStoreDefaults.dataStack,
          cellProvider: { (collectionView, indexPath, person) in
@@ -58,22 +58,17 @@ extension DiffableDataSource {
         )
      }
      ```
-     `DiffableDataSource.CollectionView` fully handles the reload animations.
+     `DiffableDataSource.CollectionViewAdapter` fully handles the reload animations.
      - SeeAlso: CoreStore's DiffableDataSource implementation is based on https://github.com/ra1028/DiffableDataSources     
      */
-    open class CollectionView<O: DynamicObject>: NSObject, UICollectionViewDataSource {
+    open class CollectionViewAdapter<O: DynamicObject>: BaseAdapter<O, DefaultCollectionViewTarget<UICollectionView>>, UICollectionViewDataSource {
 
         // MARK: Public
         
         /**
-         The object type represented by this dataSource
-         */
-        public typealias ObjectType = O
-        
-        /**
-         Initializes the `DiffableDataSource.CollectionView`. This instance needs to be held on (retained) for as long as the `UICollectionView`'s lifecycle.
+         Initializes the `DiffableDataSource.CollectionViewAdapter`. This instance needs to be held on (retained) for as long as the `UICollectionView`'s lifecycle.
          ```
-         self.dataSource = DiffableDataSource.CollectionView<Person>(
+         self.dataSource = DiffableDataSource.CollectionViewAdapter<Person>(
              collectionView: self.collectionView,
              dataStack: CoreStoreDefaults.dataStack,
              cellProvider: { (collectionView, indexPath, person) in
@@ -83,78 +78,19 @@ extension DiffableDataSource {
              }
          )
          ```
-         - parameter collectionView: the `UICollectionView` to set the `dataSource` of. This instance is not retained by the `DiffableDataSource.CollectionView`.
+         - parameter collectionView: the `UICollectionView` to set the `dataSource` of. This instance is not retained by the `DiffableDataSource.CollectionViewAdapter`.
          - parameter dataStack: the `DataStack` instance that the dataSource will fetch objects from
          - parameter cellProvider: a closure that configures and returns the `UICollectionViewCell` for the object
          - parameter supplementaryViewProvider: an optional closure for providing `UICollectionReusableView` supplementary views. If not set, defaults to returning `nil`
          */
-        @nonobjc
         public init(collectionView: UICollectionView, dataStack: DataStack, cellProvider: @escaping (UICollectionView, IndexPath, O) -> UICollectionViewCell?, supplementaryViewProvider: @escaping (UICollectionView, String, IndexPath) -> UICollectionReusableView? = { _, _, _ in nil }) {
 
-            self.collectionView = collectionView
             self.cellProvider = cellProvider
             self.supplementaryViewProvider = supplementaryViewProvider
-            self.dataStack = dataStack
-            self.dispatcher = Internals.DiffableDataUIDispatcher<O>(dataStack: dataStack)
 
-            super.init()
+            super.init(target: .init(collectionView), dataStack: dataStack)
 
             collectionView.dataSource = self
-        }
-        
-        /**
-         Reloads the `UICollectionView` using a `ListSnapshot`. This is typically from the `snapshot` property of a `ListPublisher`:
-         ```
-         listPublisher.addObserver(self) { [weak self] (listPublisher) in
-            self?.dataSource?.apply(
-                listPublisher.snapshot,
-                animatingDifferences: true
-            )
-         }
-         ```
-         
-         - parameter snapshot: the `ListSnapshot` used to reload the `UITableView` with. This is typically from the `snapshot` property of a `ListPublisher`.
-         - parameter animatingDifferences: if `true`, animations will be applied as configured by the `defaultRowAnimation` value. Defaults to `true`.
-         */
-        public func apply(_ snapshot: ListSnapshot<O>, animatingDifferences: Bool = true) {
-
-            let diffableSnapshot = snapshot.diffableSnapshot
-            self.dispatcher.apply(
-                diffableSnapshot,
-                view: self.collectionView,
-                animatingDifferences: animatingDifferences,
-                performUpdates: { collectionView, changeset, setSections in
-
-                    collectionView.reload(
-                        using: changeset,
-                        setData: setSections
-                    )
-                }
-            )
-        }
-        
-        /**
-         Returns the object identifier for the item at the specified `IndexPath`, or `nil` if not found
-         
-         - parameter indexPath: the `IndexPath` to search for
-         - returns: the object identifier for the item at the specified `IndexPath`, or `nil` if not found
-         */
-        @nonobjc
-        public func itemID(for indexPath: IndexPath) -> O.ObjectID? {
-
-            return self.dispatcher.itemIdentifier(for: indexPath)
-        }
-        
-        /**
-         Returns the `IndexPath` for the item with the specified object identifier, or `nil` if not found
-         
-         - parameter itemID: the object identifier to search for
-         - returns: the `IndexPath` for the item with the specified object identifier, or `nil` if not found
-         */
-        @nonobjc
-        public func indexPath(for itemID: O.ObjectID) -> IndexPath? {
-
-            return self.dispatcher.indexPath(for: itemID)
         }
 
 
@@ -163,19 +99,19 @@ extension DiffableDataSource {
         @objc
         public dynamic func numberOfSections(in collectionView: UICollectionView) -> Int {
 
-            return self.dispatcher.numberOfSections()
+            return self.numberOfSections()
         }
 
         @objc
         public dynamic func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 
-            return self.dispatcher.numberOfItems(inSection: section)
+            return self.numberOfItems(inSection: section) ?? 0
         }
 
         @objc
         open dynamic func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-            guard let objectID = self.dispatcher.itemIdentifier(for: indexPath) else {
+            guard let objectID = self.itemID(for: indexPath) else {
 
                 Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) already removed from list")
             }
@@ -203,95 +139,93 @@ extension DiffableDataSource {
 
         // MARK: Private
 
-        private weak var collectionView: UICollectionView?
-
-        private let dataStack: DataStack
         private let cellProvider: (UICollectionView, IndexPath, O) -> UICollectionViewCell?
         private let supplementaryViewProvider: (UICollectionView, String, IndexPath) -> UICollectionReusableView?
-        private let dispatcher: Internals.DiffableDataUIDispatcher<O>
     }
-}
 
 
-// MARK: - UICollectionView
+    // MARK: - DefaultCollectionViewTarget
 
-extension UICollectionView {
+    public struct DefaultCollectionViewTarget<T: UICollectionView>: Target {
 
-    // MARK: FilePrivate
-    
-    // Implementation based on https://github.com/ra1028/DiffableDataSources
-    @nonobjc
-    fileprivate func reload<C, O>(
-        using stagedChangeset: Internals.DiffableDataUIDispatcher<O>.StagedChangeset<C>,
-        interrupt: ((Internals.DiffableDataUIDispatcher<O>.Changeset<C>) -> Bool)? = nil,
-        setData: (C) -> Void
-    ) {
+        // MARK: Public
 
-        if case .none = window, let data = stagedChangeset.last?.data {
+        public typealias Base = T
 
-            setData(data)
-            self.reloadData()
-            return
+        public internal(set) weak var base: Base?
+
+        public init(_ base: Base) {
+
+            self.base = base
         }
-        for changeset in stagedChangeset {
 
-            if let interrupt = interrupt, interrupt(changeset), let data = stagedChangeset.last?.data {
 
-                setData(data)
-                self.reloadData()
-                return
-            }
-            self.performBatchUpdates(
-                {
-                    setData(changeset.data)
+        // MARK: DiffableDataSource.Target
 
-                    if !changeset.sectionDeleted.isEmpty {
+        public var shouldSuspendBatchUpdates: Bool {
 
-                        self.deleteSections(IndexSet(changeset.sectionDeleted))
-                    }
-                    if !changeset.sectionInserted.isEmpty {
+            return self.base?.window == nil
+        }
 
-                        self.insertSections(IndexSet(changeset.sectionInserted))
-                    }
-                    if !changeset.sectionUpdated.isEmpty {
+        public func deleteSections(at indices: IndexSet, animated: Bool) {
 
-                        self.reloadSections(IndexSet(changeset.sectionUpdated))
-                    }
-                    for (source, target) in changeset.sectionMoved {
+            self.base?.deleteSections(indices)
+        }
 
-                        self.moveSection(source, toSection: target)
-                    }
-                    if !changeset.elementDeleted.isEmpty {
+        public func insertSections(at indices: IndexSet, animated: Bool) {
 
-                        self.deleteItems(
-                            at: changeset.elementDeleted.map { IndexPath(item: $0.element, section: $0.section) }
-                        )
-                    }
-                    if !changeset.elementInserted.isEmpty {
+            self.base?.insertSections(indices)
+        }
 
-                        self.insertItems(
-                            at: changeset.elementInserted.map { IndexPath(item: $0.element, section: $0.section) }
-                        )
-                    }
-                    if !changeset.elementUpdated.isEmpty {
+        public func reloadSections(at indices: IndexSet, animated: Bool) {
 
-                        self.reloadItems(
-                            at: changeset.elementUpdated.map { IndexPath(item: $0.element, section: $0.section) }
-                        )
-                    }
-                    for (source, target) in changeset.elementMoved {
+            self.base?.reloadSections(indices)
+        }
 
-                        self.moveItem(
-                            at: IndexPath(item: source.element, section: source.section),
-                            to: IndexPath(item: target.element, section: target.section)
-                        )
-                    }
-                },
-                completion: nil
-            )
+        public func moveSection(at index: IndexSet.Element, to newIndex: IndexSet.Element, animated: Bool) {
+
+            self.base?.moveSection(index, toSection: newIndex)
+        }
+
+        public func deleteItems(at indexPaths: [IndexPath], animated: Bool) {
+
+            self.base?.deleteItems(at: indexPaths)
+        }
+
+        public func insertItems(at indexPaths: [IndexPath], animated: Bool) {
+
+            self.base?.insertItems(at: indexPaths)
+        }
+
+        public func reloadItems(at indexPaths: [IndexPath], animated: Bool) {
+
+            self.base?.reloadItems(at: indexPaths)
+        }
+
+        public func moveItem(at indexPath: IndexPath, to newIndexPath: IndexPath, animated: Bool) {
+
+            self.base?.moveItem(at: indexPath, to: newIndexPath)
+        }
+
+        public func performBatchUpdates(updates: () -> Void, animated: Bool) {
+
+            self.base?.performBatchUpdates(updates, completion: nil)
+        }
+
+        public func reloadData() {
+
+            self.base?.reloadData()
         }
     }
 }
 
+
+// MARK: - Deprecated
+
+extension DiffableDataSource {
+
+    @available(*, deprecated, renamed: "CollectionViewAdapter")
+    public typealias CollectionView = CollectionViewAdapter
+}
 
 #endif

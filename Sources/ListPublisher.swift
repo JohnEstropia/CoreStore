@@ -62,7 +62,7 @@ import SwiftUI
          .orderBy(.ascending(\.lastName))
  )
  ```
- All access to the `ListPublisher` items should be done via its `snapshot` value, which is a `struct` of type `ListSnapshot<O>`. `ListSnapshot`s are also designed to work well with `DiffableDataSource.TableView`s and `DiffableDataSource.CollectionView`s. For detailed examples, refer to the documentation for `DiffableDataSource.TableView` and `DiffableDataSource.CollectionView`.
+ All access to the `ListPublisher` items should be done via its `snapshot` value, which is a `struct` of type `ListSnapshot<O>`. `ListSnapshot`s are also designed to work well with `DiffableDataSource.TableViewAdapter`s and `DiffableDataSource.CollectionViewAdapter`s. For detailed examples, refer to the documentation for `DiffableDataSource.TableViewAdapter` and `DiffableDataSource.CollectionViewAdapter`.
  */
 @available(macOS 10.12, *)
 public final class ListPublisher<O: DynamicObject>: Hashable {

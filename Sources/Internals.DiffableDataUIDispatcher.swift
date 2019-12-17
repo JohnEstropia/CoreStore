@@ -52,7 +52,17 @@ extension Internals {
             self.dataStack = dataStack
         }
         
-        func apply<View: AnyObject>(_ snapshot: DiffableDataSourceSnapshot, view: View?, animatingDifferences: Bool, performUpdates: @escaping (View, StagedChangeset<[Internals.DiffableDataSourceSnapshot.Section]>, @escaping ([Internals.DiffableDataSourceSnapshot.Section]) -> Void) -> Void) {
+        func apply<Target: DiffableDataSource.Target>(
+            _ snapshot: DiffableDataSourceSnapshot,
+            target: Target?,
+            animatingDifferences: Bool,
+            performUpdates: @escaping (
+                Target,
+                StagedChangeset<[Internals.DiffableDataSourceSnapshot.Section]>,
+                @escaping ([Internals.DiffableDataSourceSnapshot.Section]) -> Void
+            ) -> Void,
+            completion: @escaping () -> Void
+        ) {
             
             self.dispatcher.dispatch { [weak self] in
                 
@@ -64,36 +74,42 @@ extension Internals {
                 self.currentSnapshot = snapshot
 
                 let newSections = snapshot.sections
-                guard let view = view else {
+                guard let target = target else {
                     
-                    return self.sections = newSections
+                    self.sections = newSections
+                    return
                 }
 
                 let performDiffingUpdates: () -> Void = {
                     
                     let changeset = StagedChangeset(source: self.sections, target: newSections)
-                    performUpdates(view, changeset) { sections in
+                    performUpdates(target, changeset) { sections in
                         
                         self.sections = sections
                     }
                 }
 
                 #if canImport(QuartzCore)
-                
+
+                CATransaction.begin()
+                CATransaction.setCompletionBlock(completion)
+
                 if !animatingDifferences {
-                    
-                    CATransaction.begin()
+
                     CATransaction.setDisableActions(true)
-                    
-                    performDiffingUpdates()
-                    
-                    CATransaction.commit()
-                    return
                 }
-                
-                #endif
-                
                 performDiffingUpdates()
+
+                CATransaction.commit()
+
+
+                #else
+
+                performDiffingUpdates()
+                completion()
+
+
+                #endif
             }
         }
 
@@ -104,14 +120,23 @@ extension Internals {
             return snapshot
         }
 
+        func sectionIdentifier(inSection section: Int) -> String? {
+
+            guard self.sections.indices.contains(section) else {
+
+                return nil
+            }
+            return self.sections[section].differenceIdentifier
+        }
+
         func itemIdentifier(for indexPath: IndexPath) -> O.ObjectID? {
-            
-            guard (0 ..< self.sections.endIndex) ~= indexPath.section else {
+
+            guard self.sections.indices.contains(indexPath.section) else {
                 
                 return nil
             }
             let items = self.sections[indexPath.section].elements
-            guard (0 ..< items.endIndex) ~= indexPath.item else {
+            guard items.indices.contains(indexPath.item) else {
                 
                 return nil
             }
@@ -138,14 +163,13 @@ extension Internals {
             return self.sections.count
         }
 
-        func numberOfItems(inSection section: Int) -> Int {
-            
+        func numberOfItems(inSection section: Int) -> Int? {
+
+            guard self.sections.indices.contains(section) else {
+
+                return nil
+            }
             return self.sections[section].elements.count
-        }
-        
-        func sectionIdentifier(inSection section: Int) -> String {
-            
-            return self.sections[section].differenceIdentifier
         }
 
 

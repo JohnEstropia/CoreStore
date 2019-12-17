@@ -37,7 +37,7 @@ import AppKit
 // MARK: - ListSnapshot
 
 /**
- A `ListSnapshot` holds a stable list of `DynamicObject` identifiers. This is typically created by a `ListPublisher` and are designed to work well with `DiffableDataSource.TableView`s and `DiffableDataSource.CollectionView`s. For detailed examples, see the documentation on `DiffableDataSource.TableView` and `DiffableDataSource.CollectionView`.
+ A `ListSnapshot` holds a stable list of `DynamicObject` identifiers. This is typically created by a `ListPublisher` and are designed to work well with `DiffableDataSource.TableViewAdapter`s and `DiffableDataSource.CollectionViewAdapter`s. For detailed examples, see the documentation on `DiffableDataSource.TableViewAdapter` and `DiffableDataSource.CollectionViewAdapter`.
 
  While the `ListSnapshot` stores only object identifiers, all accessors to its items return `ObjectPublisher`s, which are lazily created. For more details, see the documentation on `ListObject`.
 

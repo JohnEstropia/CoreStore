@@ -1,5 +1,5 @@
 //
-//  DiffableDataSource.TableView-UIKit.swift
+//  DiffableDataSource.TableViewAdapter-UIKit.swift
 //  CoreStore
 //
 //  Copyright © 2018 John Rommel Estropia
@@ -33,13 +33,13 @@ import CoreData
 
 extension DiffableDataSource {
 
-    // MARK: - TableView
+    // MARK: - TableViewAdapter
 
     /**
-     The `DiffableDataSource.TableView` serves as a `UITableViewDataSource` that handles `ListPublisher` snapshots for a `UITableView`. Subclasses of `DiffableDataSource.TableView` may override some `UITableViewDataSource` methods as needed.
-     The `DiffableDataSource.TableView` instance needs to be held on (retained) for as long as the `UITableView`'s lifecycle.
+     The `DiffableDataSource.TableViewAdapterAdapter` serves as a `UITableViewDataSource` that handles `ListPublisher` snapshots for a `UITableView`. Subclasses of `DiffableDataSource.TableViewAdapter` may override some `UITableViewDataSource` methods as needed.
+     The `DiffableDataSource.TableViewAdapterAdapter` instance needs to be held on (retained) for as long as the `UITableView`'s lifecycle.
      ```
-     self.dataSource = DiffableDataSource.TableView<Person>(
+     self.dataSource = DiffableDataSource.TableViewAdapter<Person>(
          tableView: self.tableView,
          dataStack: CoreStoreDefaults.dataStack,
          cellProvider: { (tableView, indexPath, person) in
@@ -58,31 +58,17 @@ extension DiffableDataSource {
         )
      }
      ```
-     `DiffableDataSource.TableView` fully handles the reload animations. To turn change the default animation, set the `defaultRowAnimation`.
+     `DiffableDataSource.TableViewAdapter` fully handles the reload animations.
      - SeeAlso: CoreStore's DiffableDataSource implementation is based on https://github.com/ra1028/DiffableDataSources
      */
-    open class TableView<O: DynamicObject>: NSObject, UITableViewDataSource {
-        
-        // MARK: Open
+    open class TableViewAdapter<O: DynamicObject>: BaseAdapter<O, DefaultTableViewTarget<UITableView>>, UITableViewDataSource {
+
+        // MARK: Publi
 
         /**
-         The animation style for row changes
-         */
-        @nonobjc
-        open var defaultRowAnimation: UITableView.RowAnimation = .automatic
-        
-
-        // MARK: Public
-
-        /**
-         The object type represented by this dataSource
-         */
-        public typealias ObjectType = O
-
-        /**
-         Initializes the `DiffableDataSource.TableView`. This instance needs to be held on (retained) for as long as the `UITableView`'s lifecycle.
+         Initializes the `DiffableDataSource.TableViewAdapter`. This instance needs to be held on (retained) for as long as the `UITableView`'s lifecycle.
          ```
-         self.dataSource = DiffableDataSource.TableView<Person>(
+         self.dataSource = DiffableDataSource.TableViewAdapter<Person>(
              tableView: self.tableView,
              dataStack: CoreStoreDefaults.dataStack,
              cellProvider: { (tableView, indexPath, person) in
@@ -92,78 +78,24 @@ extension DiffableDataSource {
              }
          )
          ```
-         - parameter tableView: the `UITableView` to set the `dataSource` of. This instance is not retained by the `DiffableDataSource.TableView`.
+         - parameter tableView: the `UITableView` to set the `dataSource` of. This instance is not retained by the `DiffableDataSource.TableViewAdapter`.
          - parameter dataStack: the `DataStack` instance that the dataSource will fetch objects from
          - parameter cellProvider: a closure that configures and returns the `UITableViewCell` for the object
          */
-        @nonobjc
         public init(tableView: UITableView, dataStack: DataStack, cellProvider: @escaping (UITableView, IndexPath, O) -> UITableViewCell?) {
 
-            self.tableView = tableView
             self.cellProvider = cellProvider
-            self.dataStack = dataStack
-            self.dispatcher = Internals.DiffableDataUIDispatcher<O>(dataStack: dataStack)
-
-            super.init()
+            super.init(target: .init(tableView), dataStack: dataStack)
 
             tableView.dataSource = self
         }
-        
-        /**
-         Reloads the `UITableView` using a `ListSnapshot`. This is typically from the `snapshot` property of a `ListPublisher`:
-         ```
-         listPublisher.addObserver(self) { [weak self] (listPublisher) in
-            self?.dataSource?.apply(
-                listPublisher.snapshot,
-                animatingDifferences: true
-            )
-         }
-         ```
-         If the `defaultRowAnimation` is configured to, animations are also applied accordingly.
-         
-         - parameter snapshot: the `ListSnapshot` used to reload the `UITableView` with. This is typically from the `snapshot` property of a `ListPublisher`.
-         - parameter animatingDifferences: if `true`, animations will be applied as configured by the `defaultRowAnimation` value. Defaults to `true`.
-         */
-        @nonobjc
-        public func apply(_ snapshot: ListSnapshot<O>, animatingDifferences: Bool = true) {
 
-            self.dispatcher.apply(
-                snapshot.diffableSnapshot,
-                view: self.tableView,
-                animatingDifferences: animatingDifferences,
-                performUpdates: { tableView, changeset, setSections in
+        /**
+         The target `UITableView`
+         */
+        public var tableView: UITableView? {
 
-                    tableView.reload(
-                        using: changeset,
-                        with: self.defaultRowAnimation,
-                        setData: setSections
-                    )
-                }
-            )
-        }
-        
-        /**
-         Returns the object identifier for the item at the specified `IndexPath`, or `nil` if not found
-         
-         - parameter indexPath: the `IndexPath` to search for
-         - returns: the object identifier for the item at the specified `IndexPath`, or `nil` if not found
-         */
-        @nonobjc
-        public func itemID(for indexPath: IndexPath) -> O.ObjectID? {
-            
-            return self.dispatcher.itemIdentifier(for: indexPath)
-        }
-        
-        /**
-         Returns the `IndexPath` for the item with the specified object identifier, or `nil` if not found
-         
-         - parameter itemID: the object identifier to search for
-         - returns: the `IndexPath` for the item with the specified object identifier, or `nil` if not found
-         */
-        @nonobjc
-        public func indexPath(for itemID: O.ObjectID) -> IndexPath? {
-            
-            return self.dispatcher.indexPath(for: itemID)
+            return self.target.base
         }
         
         
@@ -172,19 +104,19 @@ extension DiffableDataSource {
         @objc
         public dynamic func numberOfSections(in tableView: UITableView) -> Int {
             
-            return self.dispatcher.numberOfSections()
+            return self.numberOfSections()
         }
 
         @objc
         public dynamic func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             
-            return self.dispatcher.numberOfItems(inSection: section)
+            return self.numberOfItems(inSection: section) ?? 0
         }
 
         @objc
         open dynamic func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
             
-            return self.dispatcher.sectionIdentifier(inSection: section)
+            return self.sectionID(for: section)
         }
 
         @objc
@@ -196,7 +128,7 @@ extension DiffableDataSource {
         @objc
         open dynamic func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             
-            guard let objectID = self.dispatcher.itemIdentifier(for: indexPath) else {
+            guard let objectID = self.itemID(for: indexPath) else {
                 
                 Internals.abort("Object at \(Internals.typeName(IndexPath.self)) \(indexPath) already removed from list")
             }
@@ -230,131 +162,105 @@ extension DiffableDataSource {
         // MARK: Private
         
         @nonobjc
-        private weak var tableView: UITableView?
-        
-        @nonobjc
-        private let dataStack: DataStack
-        
-        @nonobjc
         private let cellProvider: (UITableView, IndexPath, O) -> UITableViewCell?
-        
-        @nonobjc
-        private let dispatcher: Internals.DiffableDataUIDispatcher<O>
     }
-}
 
 
-// MARK: - UITableView
+    // MARK: - DefaultTableViewTarget
 
-extension UITableView {
+    public struct DefaultTableViewTarget<T: UITableView>: Target {
 
-    // MARK: FilePrivate
-    
-    // Implementation based on https://github.com/ra1028/DiffableDataSources
-    @nonobjc
-    fileprivate func reload<C, O>(
-        using stagedChangeset: Internals.DiffableDataUIDispatcher<O>.StagedChangeset<C>,
-        with animation: @autoclosure () -> RowAnimation,
-        interrupt: ((Internals.DiffableDataUIDispatcher<O>.Changeset<C>) -> Bool)? = nil,
-        setData: (C) -> Void
-    ) {
-        
-        self.reload(
-            using: stagedChangeset,
-            deleteSectionsAnimation: animation(),
-            insertSectionsAnimation: animation(),
-            reloadSectionsAnimation: animation(),
-            deleteRowsAnimation: animation(),
-            insertRowsAnimation: animation(),
-            reloadRowsAnimation: animation(),
-            interrupt: interrupt,
-            setData: setData
-        )
-    }
-    
-    // Implementation based on https://github.com/ra1028/DiffableDataSources
-    @nonobjc
-    fileprivate func reload<C, O>(
-        using stagedChangeset: Internals.DiffableDataUIDispatcher<O>.StagedChangeset<C>,
-        deleteSectionsAnimation: @autoclosure () -> RowAnimation,
-        insertSectionsAnimation: @autoclosure () -> RowAnimation,
-        reloadSectionsAnimation: @autoclosure () -> RowAnimation,
-        deleteRowsAnimation: @autoclosure () -> RowAnimation,
-        insertRowsAnimation: @autoclosure () -> RowAnimation,
-        reloadRowsAnimation: @autoclosure () -> RowAnimation,
-        interrupt: ((Internals.DiffableDataUIDispatcher<O>.Changeset<C>) -> Bool)? = nil,
-        setData: (C) -> Void
-    ) {
-        
-        if case .none = window, let data = stagedChangeset.last?.data {
-            
-            setData(data)
-            self.reloadData()
-            return
+        // MARK: Public
+
+        public typealias Base = T
+
+        public internal(set) weak var base: Base?
+
+        public init(_ base: Base) {
+
+            self.base = base
         }
-        for changeset in stagedChangeset {
-            
-            if let interrupt = interrupt, interrupt(changeset), let data = stagedChangeset.last?.data {
-                
-                setData(data)
-                self.reloadData()
+
+
+        // MARK: DiffableDataSource.Target
+
+        public var shouldSuspendBatchUpdates: Bool {
+
+            return self.base?.window == nil
+        }
+
+        public func deleteSections(at indices: IndexSet, animated: Bool) {
+
+            self.base?.deleteSections(indices, with: .automatic)
+        }
+
+        public func insertSections(at indices: IndexSet, animated: Bool) {
+
+            self.base?.insertSections(indices, with: .automatic)
+        }
+
+        public func reloadSections(at indices: IndexSet, animated: Bool) {
+
+            self.base?.reloadSections(indices, with: .automatic)
+        }
+
+        public func moveSection(at index: IndexSet.Element, to newIndex: IndexSet.Element, animated: Bool) {
+
+            self.base?.moveSection(index, toSection: newIndex)
+        }
+
+        public func deleteItems(at indexPaths: [IndexPath], animated: Bool) {
+
+            self.base?.deleteRows(at: indexPaths, with: .automatic)
+        }
+
+        public func insertItems(at indexPaths: [IndexPath], animated: Bool) {
+
+            self.base?.insertRows(at: indexPaths, with: .automatic)
+        }
+
+        public func reloadItems(at indexPaths: [IndexPath], animated: Bool) {
+
+            self.base?.reloadRows(at: indexPaths, with: .automatic)
+        }
+
+        public func moveItem(at indexPath: IndexPath, to newIndexPath: IndexPath, animated: Bool) {
+
+            self.base?.moveRow(at: indexPath, to: newIndexPath)
+        }
+
+        public func performBatchUpdates(updates: () -> Void, animated: Bool) {
+
+            guard let base = self.base else {
+
                 return
             }
-            self.cs_performBatchUpdates {
-                
-                setData(changeset.data)
+            if #available(iOS 11.0, tvOS 11.0, *) {
 
-                if !changeset.sectionDeleted.isEmpty {
-                    
-                    self.deleteSections(IndexSet(changeset.sectionDeleted), with: deleteSectionsAnimation())
-                }
-                if !changeset.sectionInserted.isEmpty {
-                    
-                    self.insertSections(IndexSet(changeset.sectionInserted), with: insertSectionsAnimation())
-                }
-                if !changeset.sectionUpdated.isEmpty {
-                    
-                    self.reloadSections(IndexSet(changeset.sectionUpdated), with: reloadSectionsAnimation())
-                }
-                for (source, target) in changeset.sectionMoved {
-                    
-                    self.moveSection(source, toSection: target)
-                }
-                if !changeset.elementDeleted.isEmpty {
-                    
-                    self.deleteRows(at: changeset.elementDeleted.map { IndexPath(row: $0.element, section: $0.section) }, with: deleteRowsAnimation())
-                }
-                if !changeset.elementInserted.isEmpty {
-                    
-                    self.insertRows(at: changeset.elementInserted.map { IndexPath(row: $0.element, section: $0.section) }, with: insertRowsAnimation())
-                }
-                if !changeset.elementUpdated.isEmpty {
-                    
-                    self.reloadRows(at: changeset.elementUpdated.map { IndexPath(row: $0.element, section: $0.section) }, with: reloadRowsAnimation())
-                }
-                for (source, target) in changeset.elementMoved {
-                    
-                    self.moveRow(at: IndexPath(row: source.element, section: source.section), to: IndexPath(row: target.element, section: target.section))
-                }
+                base.performBatchUpdates(updates)
+            }
+            else {
+
+                base.beginUpdates()
+                updates()
+                base.endUpdates()
             }
         }
-    }
 
-    @nonobjc
-    private func cs_performBatchUpdates(_ updates: () -> Void) {
-        
-        if #available(iOS 11.0, tvOS 11.0, *) {
-            
-            self.performBatchUpdates(updates)
-        }
-        else {
-            
-            self.beginUpdates()
-            updates()
-            self.endUpdates()
+        public func reloadData() {
+
+            self.base?.reloadData()
         }
     }
 }
 
+
+// MARK: - Deprecated
+
+extension DiffableDataSource {
+
+    @available(*, deprecated, renamed: "TableViewAdapter")
+    public typealias TableView = TableViewAdapter
+}
 
 #endif

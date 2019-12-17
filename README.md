@@ -1506,9 +1506,9 @@ Note that the owner instance will not be retained. You may call `ListPublisher.r
 
 The `ListSnapshot` returned from the `ListPublisher.snapshot` property returns a full-copy `struct` of all sections and `NSManagedObject` items in the list. This is ideal for managing states as they are thread-safe and are not affected by further changes to the result set.  `ListPublisher` automatically updates its `snapshot` value to the latest state of the fetch. 
 
-Unlike  `ListMonitor`s (See [`ListMonitor` examples](#observe-detailed-list-changes) below), a `ListPublisher` does not track detailed inserts, deletes, and moves. In return, a `ListPublisher` is a lot more lightweight and are designed to work well with `DiffableDataSource.TableView`s and `DiffableDataSource.CollectionView`s:
+Unlike  `ListMonitor`s (See [`ListMonitor` examples](#observe-detailed-list-changes) below), a `ListPublisher` does not track detailed inserts, deletes, and moves. In return, a `ListPublisher` is a lot more lightweight and are designed to work well with `DiffableDataSource.TableViewAdapter`s and `DiffableDataSource.CollectionViewAdapter`s:
 ```swift
-self.dataSource = DiffableDataSource.CollectionView<Person>(
+self.dataSource = DiffableDataSource.CollectionViewAdapter<Person>(
     collectionView: self.collectionView,
     dataStack: CoreStoreDefaults.dataStack,
     cellProvider: { (collectionView, indexPath, person) in

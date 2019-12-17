@@ -51,7 +51,7 @@ final class CollectionViewDemoViewController: UICollectionViewController {
         ]
         self.filterBarButton = filterBarButton
 
-        self.dataSource = DiffableDataSource.CollectionView<Palette>(
+        self.dataSource = DiffableDataSource.CollectionViewAdapter<Palette>(
             collectionView: self.collectionView,
             dataStack: ColorsDemo.stack,
             cellProvider: { (collectionView, indexPath, palette) in
@@ -118,7 +118,7 @@ final class CollectionViewDemoViewController: UICollectionViewController {
     // MARK: Private
 
     private var filterBarButton: UIBarButtonItem?
-    private var dataSource: DiffableDataSource.CollectionView<Palette>?
+    private var dataSource: DiffableDataSource.CollectionViewAdapter<Palette>?
 
     deinit {
 

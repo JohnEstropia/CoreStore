@@ -16,7 +16,7 @@ final class ListObserverDemoViewController: UITableViewController {
 
     // MARK: - EditableDataSource
 
-    final class EditableDataSource: DiffableDataSource.TableView<Palette> {
+    final class EditableDataSource: DiffableDataSource.TableViewAdapter<Palette> {
 
         override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 
@@ -130,7 +130,7 @@ final class ListObserverDemoViewController: UITableViewController {
     // MARK: Private
     
     private var filterBarButton: UIBarButtonItem?
-    private var dataSource: DiffableDataSource.TableView<Palette>?
+    private var dataSource: DiffableDataSource.TableViewAdapter<Palette>?
     
     deinit {
         

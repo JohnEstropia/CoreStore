@@ -28,7 +28,7 @@
 // MARK: - DiffableDataSource
 
 /**
- Namespace for diffable data source types. See `DiffableDataSource.TableView` and `DiffableDataSource.CollectionView` for actual implementations
+ Namespace for diffable data source types. See `DiffableDataSource.TableViewAdapter` and `DiffableDataSource.CollectionViewAdapter` for actual implementations
  */
 public enum DiffableDataSource {}
 
