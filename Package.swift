@@ -45,8 +45,9 @@ let package = Package(
         .testTarget(
             name: "CoreStoreTests",
             dependencies: ["CoreStore"],
-            path: "CoreStoreTests"
+            path: "CoreStoreTests",
+            exclude: ["*.h", "*.m"]
         )
     ],
-    swiftLanguageVersions: [.v5_1]
+    swiftLanguageVersions: [.v5]
 )
