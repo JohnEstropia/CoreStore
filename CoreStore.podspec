@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name = "CoreStore"
-    s.version = "7.0.1"
+    s.version = "7.0.2"
     s.swift_version = "5.1"
     s.license = "MIT"
     s.homepage = "https://github.com/JohnEstropia/CoreStore"
