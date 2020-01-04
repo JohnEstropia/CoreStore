@@ -446,7 +446,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      - parameter itemIDs: the object identifiers for the objects to append
      - parameter sectionID: the section to append the items to
      */
-    public mutating func appendItems(withIDs itemIDs: [ItemID], toSectionWithID sectionID: SectionID? = nil) {
+    public mutating func appendItems<C: Collection>(withIDs itemIDs: C, toSectionWithID sectionID: SectionID? = nil) where C.Element == ItemID {
 
         self.diffableSnapshot.appendItems(itemIDs, toSection: sectionID)
     }
@@ -457,7 +457,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      - parameter itemIDs: the object identifiers for the objects to insert
      - parameter beforeItemID: an existing identifier to insert items before of. Specifying an invalid value will raise an exception.
      */
-    public mutating func insertItems(withIDs itemIDs: [ItemID], beforeItemID: ItemID) {
+    public mutating func insertItems<C: Collection>(withIDs itemIDs: C, beforeItemID: ItemID) where C.Element == ItemID {
 
         self.diffableSnapshot.insertItems(itemIDs, beforeItem: beforeItemID)
     }
@@ -468,7 +468,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      - parameter itemIDs: the object identifiers for the objects to insert
      - parameter beforeItemID: an existing identifier to insert items after of. Specifying an invalid value will raise an exception.
      */
-    public mutating func insertItems(withIDs itemIDs: [ItemID], afterItemID: ItemID) {
+    public mutating func insertItems<C: Collection>(withIDs itemIDs: C, afterItemID: ItemID) where C.Element == ItemID {
 
         self.diffableSnapshot.insertItems(itemIDs, afterItem: afterItemID)
     }
@@ -478,7 +478,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
      - parameter itemIDs: the object identifiers for the objects to delete
      */
-    public mutating func deleteItems(withIDs itemIDs: [ItemID]) {
+    public mutating func deleteItems<S: Sequence>(withIDs itemIDs: S) where S.Element == ItemID {
 
         self.diffableSnapshot.deleteItems(itemIDs)
     }
@@ -518,7 +518,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
      - parameter itemIDs: the object identifiers to reload
      */
-    public mutating func reloadItems(withIDs itemIDs: [ItemID]) {
+    public mutating func reloadItems<S: Sequence>(withIDs itemIDs: S) where S.Element == ItemID {
 
         self.diffableSnapshot.reloadItems(itemIDs)
     }
@@ -528,7 +528,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
      - parameter sectionIDs: the sections to append
      */
-    public mutating func appendSections(withIDs sectionIDs: [SectionID]) {
+    public mutating func appendSections<C: Collection>(withIDs sectionIDs: C) where C.Element == SectionID {
 
         self.diffableSnapshot.appendSections(sectionIDs)
     }
@@ -539,7 +539,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      - parameter sectionIDs: the section identifiers for the sections to insert
      - parameter beforeSectionID: an existing identifier to insert items before of. Specifying an invalid value will raise an exception.
      */
-    public mutating func insertSections(withIDs sectionIDs: [SectionID], beforeSectionID: SectionID) {
+    public mutating func insertSections<C: Collection>(withIDs sectionIDs: C, beforeSectionID: SectionID) where C.Element == SectionID {
 
         self.diffableSnapshot.insertSections(sectionIDs, beforeSection: beforeSectionID)
     }
@@ -550,7 +550,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
      - parameter sectionIDs: the section identifiers for the sections to insert
      - parameter beforeSectionID: an existing identifier to insert items after of. Specifying an invalid value will raise an exception.
      */
-    public mutating func insertSections(withIDs sectionIDs: [SectionID], afterSectionID: SectionID) {
+    public mutating func insertSections<C: Collection>(withIDs sectionIDs: C, afterSectionID: SectionID) where C.Element == SectionID {
 
         self.diffableSnapshot.insertSections(sectionIDs, afterSection: afterSectionID)
     }
@@ -560,7 +560,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
      - parameter sectionIDs: the section identifiers for the sections to delete
      */
-    public mutating func deleteSections(withIDs sectionIDs: [SectionID]) {
+    public mutating func deleteSections<S: Sequence>(withIDs sectionIDs: S) where S.Element == SectionID {
 
         self.diffableSnapshot.deleteSections(sectionIDs)
     }
@@ -592,7 +592,7 @@ public struct ListSnapshot<O: DynamicObject>: RandomAccessCollection, Hashable {
 
      - parameter sectionIDs: the section identifiers to reload
      */
-    public mutating func reloadSections(withIDs sectionIDs: [SectionID]) {
+    public mutating func reloadSections<S: Sequence>(withIDs sectionIDs: S) where S.Element == SectionID {
 
         self.diffableSnapshot.reloadSections(sectionIDs)
     }

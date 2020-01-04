@@ -126,22 +126,22 @@ extension Internals {
             return self.structure.allSectionIDs.firstIndex(of: identifier)
         }
 
-        mutating func appendItems(_ identifiers: [NSManagedObjectID], toSection sectionIdentifier: String?) {
+        mutating func appendItems<C: Collection>(_ identifiers: C, toSection sectionIdentifier: String?) where C.Element == NSManagedObjectID {
 
             self.structure.append(itemIDs: identifiers, to: sectionIdentifier)
         }
 
-        mutating func insertItems(_ identifiers: [NSManagedObjectID], beforeItem beforeIdentifier: NSManagedObjectID) {
+        mutating func insertItems<C: Collection>(_ identifiers: C, beforeItem beforeIdentifier: NSManagedObjectID) where C.Element == NSManagedObjectID {
 
             self.structure.insert(itemIDs: identifiers, before: beforeIdentifier)
         }
 
-        mutating func insertItems(_ identifiers: [NSManagedObjectID], afterItem afterIdentifier: NSManagedObjectID) {
+        mutating func insertItems<C: Collection>(_ identifiers: C, afterItem afterIdentifier: NSManagedObjectID) where C.Element == NSManagedObjectID {
 
             self.structure.insert(itemIDs: identifiers, after: afterIdentifier)
         }
 
-        mutating func deleteItems(_ identifiers: [NSManagedObjectID]) {
+        mutating func deleteItems<S: Sequence>(_ identifiers: S) where S.Element == NSManagedObjectID {
 
             self.structure.remove(itemIDs: identifiers)
         }
@@ -161,27 +161,27 @@ extension Internals {
             self.structure.move(itemID: identifier, after: toIdentifier)
         }
 
-        mutating func reloadItems(_ identifiers: [NSManagedObjectID]) {
+        mutating func reloadItems<S: Sequence>(_ identifiers: S) where S.Element == NSManagedObjectID {
 
             self.structure.update(itemIDs: identifiers)
         }
 
-        mutating func appendSections(_ identifiers: [String]) {
+        mutating func appendSections<C: Collection>(_ identifiers: C) where C.Element == String {
 
             self.structure.append(sectionIDs: identifiers)
         }
 
-        mutating func insertSections(_ identifiers: [String], beforeSection toIdentifier: String) {
+        mutating func insertSections<C: Collection>(_ identifiers: C, beforeSection toIdentifier: String) where C.Element == String {
 
             self.structure.insert(sectionIDs: identifiers, before: toIdentifier)
         }
 
-        mutating func insertSections(_ identifiers: [String], afterSection toIdentifier: String) {
+        mutating func insertSections<C: Collection>(_ identifiers: C, afterSection toIdentifier: String) where C.Element == String {
 
             self.structure.insert(sectionIDs: identifiers, after: toIdentifier)
         }
 
-        mutating func deleteSections(_ identifiers: [String]) {
+        mutating func deleteSections<S: Sequence>(_ identifiers: S) where S.Element == String {
 
             self.structure.remove(sectionIDs: identifiers)
         }
@@ -196,7 +196,7 @@ extension Internals {
             self.structure.move(sectionID: identifier, after: toIdentifier)
         }
 
-        mutating func reloadSections(_ identifiers: [String]) {
+        mutating func reloadSections<S: Sequence>(_ identifiers: S) where S.Element == String {
 
             self.structure.update(sectionIDs: identifiers)
         }
@@ -351,7 +351,7 @@ extension Internals {
                 return self.itemPositionMap(itemID)?.section.differenceIdentifier
             }
 
-            mutating func append(itemIDs: [NSManagedObjectID], to sectionID: String?) {
+            mutating func append<C: Collection>(itemIDs: C, to sectionID: String?) where C.Element == NSManagedObjectID {
 
                 let index: Array<Section>.Index
                 if let sectionID = sectionID {
@@ -375,7 +375,7 @@ extension Internals {
                 self.sections[index].elements.append(contentsOf: items)
             }
 
-            mutating func insert(itemIDs: [NSManagedObjectID], before beforeItemID: NSManagedObjectID) {
+            mutating func insert<C: Collection>(itemIDs: C, before beforeItemID: NSManagedObjectID) where C.Element == NSManagedObjectID {
 
                 guard let itemPosition = self.itemPositionMap(beforeItemID) else {
 
@@ -386,7 +386,7 @@ extension Internals {
                     .insert(contentsOf: items, at: itemPosition.itemRelativeIndex)
             }
 
-            mutating func insert(itemIDs: [NSManagedObjectID], after afterItemID: NSManagedObjectID) {
+            mutating func insert<C: Collection>(itemIDs: C, after afterItemID: NSManagedObjectID) where C.Element == NSManagedObjectID {
 
                 guard let itemPosition = self.itemPositionMap(afterItemID) else {
 
@@ -399,7 +399,7 @@ extension Internals {
                     .insert(contentsOf: items, at: itemIndex)
             }
 
-            mutating func remove<C: Collection>(itemIDs: C) where C.Element == NSManagedObjectID {
+            mutating func remove<S: Sequence>(itemIDs: S) where S.Element == NSManagedObjectID {
 
                 let itemPositionMap = self.itemPositionMap()
                 var removeIndexSetMap: [Int: IndexSet] = [:]
@@ -482,13 +482,13 @@ extension Internals {
                 self.reloadedItems.formUnion(newItemIDs)
             }
 
-            mutating func append(sectionIDs: [String]) {
+            mutating func append<C: Collection>(sectionIDs: C) where C.Element == String {
 
                 let newSections = sectionIDs.lazy.map({ Section(differenceIdentifier: $0) })
                 self.sections.append(contentsOf: newSections)
             }
 
-            mutating func insert(sectionIDs: [String], before beforeSectionID: String) {
+            mutating func insert<C: Collection>(sectionIDs: C, before beforeSectionID: String) where C.Element == String {
 
                 guard let sectionIndex = self.sectionIndex(of: beforeSectionID) else {
 
@@ -498,7 +498,7 @@ extension Internals {
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
-            mutating func insert(sectionIDs: [String], after afterSectionID: String) {
+            mutating func insert<C: Collection>(sectionIDs: C, after afterSectionID: String) where C.Element == String {
 
                 guard let beforeIndex = self.sectionIndex(of: afterSectionID) else {
 
@@ -509,7 +509,7 @@ extension Internals {
                 self.sections.insert(contentsOf: newSections, at: sectionIndex)
             }
 
-            mutating func remove(sectionIDs: [String]) {
+            mutating func remove<S: Sequence>(sectionIDs: S) where S.Element == String {
 
                 for sectionID in sectionIDs {
 
